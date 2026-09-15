@@ -1,23 +1,24 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Notifications.Contracts.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
-using FoodDiary.Application.Abstractions.RecipeComments.Models;
-using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.DeleteRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.UpdateRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
+using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Tests.RecipeComments;
+namespace FoodDiary.Modules.RecipeCommunity.Application.Tests.RecipeComments;
 
 [ExcludeFromCodeCoverage]
 public class RecipeCommentsFeatureTests {
@@ -457,13 +458,9 @@ public class RecipeCommentsFeatureTests {
         IRecipeCommentReadModelRepository commentRepository,
         IRecipeAccessService? recipeAccessService = null) =>
         new(
-            CreateRecipeCommentReadService(commentRepository),
+            commentRepository,
             recipeAccessService ?? CreateRecipeAccessService(Recipe.Create(UserId.New(), "Accessible recipe", 1)),
             CreateCurrentUserAccessService());
-
-    private static IRecipeCommentReadService CreateRecipeCommentReadService(
-        IRecipeCommentReadModelRepository commentRepository) =>
-        new RecipeCommentReadService(commentRepository);
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();

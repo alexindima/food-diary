@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.RecentItems.Domain.Enums;
 
 public enum RecentItemType {
     Product = 1,

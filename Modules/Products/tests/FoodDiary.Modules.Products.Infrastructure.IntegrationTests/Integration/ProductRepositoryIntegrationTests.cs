@@ -1,14 +1,16 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.ReadModel.Composition.Products;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Infrastructure.Persistence;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Products.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

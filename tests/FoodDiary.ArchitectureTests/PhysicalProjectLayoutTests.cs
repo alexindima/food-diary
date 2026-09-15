@@ -4,13 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj -> Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
-        "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj -> Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj",
-        "Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj -> Modules/RecentItems/Infrastructure/Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj",
-        "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj -> Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj",
-        "Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj -> Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj",
-        "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj -> Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj",
-        "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj -> Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj",
         "Modules/Usda/Application/FoodDiary.Application.Usda.csproj -> Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
         "Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj -> Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj",
         "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj -> Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",

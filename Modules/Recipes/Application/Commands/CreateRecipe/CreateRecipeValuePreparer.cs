@@ -5,7 +5,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 
 internal static class CreateRecipeValuePreparer {
     public static async Task<Result<CreateRecipeValues>> PrepareAsync(

@@ -1,11 +1,13 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Events;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Entities;
 using System.Reflection;
 using FoodDiary.Domain.ValueObjects.Ids;
 

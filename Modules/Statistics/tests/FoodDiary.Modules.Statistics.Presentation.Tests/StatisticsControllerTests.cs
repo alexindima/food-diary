@@ -1,16 +1,17 @@
-using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Statistics.Application.Models;
+using FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Statistics;
-using FoodDiary.Presentation.Api.Features.Statistics.Requests;
-using FoodDiary.Presentation.Api.Features.Statistics.Responses;
+using FoodDiary.Modules.Statistics.Presentation.Controllers;
+using FoodDiary.Modules.Statistics.Presentation.Requests;
+using FoodDiary.Modules.Statistics.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Statistics.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class StatisticsControllerTests {

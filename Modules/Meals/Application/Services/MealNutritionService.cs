@@ -1,10 +1,12 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Services;
 

@@ -1,7 +1,7 @@
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Modules.Recipes.Application.Services;
 
 internal static class RecipeNutritionApplier {
     public static Result Apply(

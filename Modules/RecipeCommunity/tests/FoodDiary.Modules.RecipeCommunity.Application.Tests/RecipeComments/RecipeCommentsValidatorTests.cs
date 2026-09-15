@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;
 
-namespace FoodDiary.Application.Tests.RecipeComments;
+namespace FoodDiary.Modules.RecipeCommunity.Application.Tests.RecipeComments;
 
 [ExcludeFromCodeCoverage]
 public class RecipeCommentsValidatorTests {

@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
+
+namespace FoodDiary.Modules.Products.Application.Commands.CreateProduct;
 
 public sealed class CreateProductCommandHandler(
     IProductWriteRepository productRepository,

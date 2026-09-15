@@ -1,8 +1,8 @@
 # Recipes logical module
 
-Recipes owns the Recipe aggregate, steps, ingredients, recipe-only value objects/events, and focused domain tests. Keep stable `FoodDiary.Domain.*` namespaces. Recipe IDs are owned by dependency-free `Domain.Contracts`; Consumers reference that ID seam directly. Recipes Domain references Users and Products owners, its own Domain.Contracts and shared Primitives. Do not restore User.Recipes, Product.RecipeIngredients, Recipe.MealItems, or MealItem.Recipe inverse CLR navigations; preserve their database relationships through explicit unidirectional EF mappings.
+Recipes owns the Recipe aggregate, steps, ingredients, recipe-only value objects/events, and focused domain tests. Use canonical project and folder namespaces.Domain.*` namespaces. Recipe IDs are owned by dependency-free `Domain.Contracts`; Consumers reference that ID seam directly. Recipes Domain references Users and Products owners, its own Domain.Contracts and shared Primitives. Do not restore User.Recipes, Product.RecipeIngredients, Recipe.MealItems, or MealItem.Recipe inverse CLR navigations; preserve their database relationships through explicit unidirectional EF mappings.
 
-Own recipe use cases, aggregate ports, projection contracts, EF mappings and adapters. Preserve legacy Application assembly and CLR namespaces. RecipeCommunity stays a separate owner. Remove foreign CLR navigations only with explicit schema-equivalent foreign keys and verified owner projections; preserve FK/delete/schema semantics.
+Own recipe use cases, aggregate ports, projection contracts, EF mappings and adapters. Use canonical project identities and folder namespaces. RecipeCommunity stays a separate owner. Remove foreign CLR navigations only with explicit schema-equivalent foreign keys and verified owner projections; preserve FK/delete/schema semantics.
 
 RecipesDbContext owns runtime recipe, step and ingredient tracking, applying ApplyRecipesPersistenceModel. Central DbContext/DbSets remain for composed reads and migration history/snapshot; shared IUnitOfWork coordinates atomic saves. Products and Recipes coordinate through Serializable transactions with whole-attempt retries (ADR 0035). Hosts call AddRecipesModule; JobManager calls AddRecipesPersistence only, preserving its application registration set.
 
@@ -14,3 +14,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Current module convention: all projects use `FoodDiary.Modules.Recipes.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

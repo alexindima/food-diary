@@ -1,11 +1,11 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +19,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"plan-snapshot-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Rice dish", 2);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Rice dish", 2);
         recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
         var plan = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);

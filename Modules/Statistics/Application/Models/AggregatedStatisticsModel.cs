@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Statistics.Models;
+namespace FoodDiary.Modules.Statistics.Application.Models;
 
 public sealed record AggregatedStatisticsModel(
     DateTime DateFrom,

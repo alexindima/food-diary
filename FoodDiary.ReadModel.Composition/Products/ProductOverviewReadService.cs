@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

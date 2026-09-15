@@ -14,7 +14,7 @@ using FoodDiary.Modules.Dietologist.Presentation;
 using FoodDiary.Modules.Export.Presentation;
 using FoodDiary.Modules.Images.Presentation.Requests;
 using FoodDiary.Modules.OpenFoodFacts.Presentation;
-using FoodDiary.Presentation.Api.Features.Products;
+using FoodDiary.Modules.Products.Presentation;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Features.Usda;

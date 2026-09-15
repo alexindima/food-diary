@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.CreateProduct;
 
 internal sealed record CreateProductValues(
     UserId UserId,

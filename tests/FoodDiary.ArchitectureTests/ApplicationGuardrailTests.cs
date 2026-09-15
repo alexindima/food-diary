@@ -577,9 +577,9 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Modules/Admin/Application.Abstractions/Common/AdminMailInboxErrors.cs", "AdminMailInboxErrors", "MailInbox")]
     [InlineData("Modules/Meals/Application.Abstractions/Common/MealErrors.cs", "MealErrors", "Meal")]
     [InlineData("Modules/MealPlanning/Application.Abstractions/MealPlans/Common/MealPlanErrors.cs", "MealPlanErrors", "MealPlan")]
-    [InlineData("Modules/Products/Contracts/Products/Common/ProductErrors.cs", "ProductErrors", "Product")]
-    [InlineData("Modules/Recipes/Contracts/Recipes/Common/RecipeErrors.cs", "RecipeErrors", "Recipe")]
-    [InlineData("Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/RecipeCommentErrors.cs", "RecipeCommentErrors", "RecipeComment")]
+    [InlineData("Modules/Products/Contracts/Common/ProductErrors.cs", "ProductErrors", "Product")]
+    [InlineData("Modules/Recipes/Contracts/Common/RecipeErrors.cs", "RecipeErrors", "Recipe")]
+    [InlineData("Modules/RecipeCommunity/Application.Abstractions/RecipeComments/Common/RecipeCommentErrors.cs", "RecipeCommentErrors", "RecipeComment")]
     [InlineData("Modules/MealPlanning/Application.Abstractions/ShoppingLists/Common/ShoppingListErrors.cs", "ShoppingListErrors", "ShoppingList")]
     [InlineData("Modules/Usda/Application/Abstractions/Common/UsdaErrors.cs", "UsdaErrors", "Usda")]
     [InlineData("Modules/Users/Contracts/Users/Common/UserErrors.cs", "UserErrors", "User")]
@@ -638,7 +638,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "Modules", "Products", "Application", "Abstractions",
+            "Modules", "Products", "Application.Abstractions",
             "Products",
             "Common",
             "IProductReadRepository.cs");
@@ -662,7 +662,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Modules.Products.Domain.Entities.Product", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -678,7 +678,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Modules.Products.Domain.Entities.Product", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -694,7 +694,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Modules.Products.Domain.Entities.Product", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -708,11 +708,11 @@ public sealed class ApplicationGuardrailTests {
             "GetRecentProductsQueryHandler.cs");
         string source = File.ReadAllText(handlerPath);
 
-        Assert.Contains("IRecentProductReadService", source, StringComparison.Ordinal);
+        Assert.Contains("RecentProductLoader", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecentItemReadRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("RecentProductUsage", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Modules.Products.Domain.Entities.Product", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -790,7 +790,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "Modules", "Recipes", "Application", "Abstractions",
+            "Modules", "Recipes", "Application.Abstractions",
             "Recipes", "Common", "IRecipeReadRepository.cs");
         string source = File.ReadAllText(contractPath);
 
@@ -813,7 +813,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -829,7 +829,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -845,7 +845,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -859,11 +859,11 @@ public sealed class ApplicationGuardrailTests {
             "GetRecentRecipesQueryHandler.cs");
         string source = File.ReadAllText(handlerPath);
 
-        Assert.Contains("IRecentRecipeReadService", source, StringComparison.Ordinal);
+        Assert.Contains("RecentRecipeLoader", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecentItemReadRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("RecentRecipeUsage", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -879,7 +879,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1428,7 +1428,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Wearables", "Application", "Abstractions", "Common", "IWearableSyncReadRepository.cs"),
             Path.Combine(root, "Modules", "Usda", "Application", "Abstractions", "Common", "IUsdaFoodReadRepository.cs"),
             Path.Combine(root, "Modules", "MealPlanning", "Application.Abstractions", "ShoppingLists", "Common", "IShoppingListReadRepository.cs"),
-            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "Abstractions", "RecipeComments", "Common", "IRecipeCommentReadRepository.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application.Abstractions", "RecipeComments", "Common", "IRecipeCommentReadRepository.cs"),
         ];
 
         string[] violations = [
@@ -2025,7 +2025,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void WebPushSubscriptionReadService_UsesReadModelsInsteadOfSubscriptionAggregates() {
+    public void ProfileNotificationReadService_UsesReadModelsInsteadOfSubscriptionAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
@@ -2033,7 +2033,7 @@ public sealed class ApplicationGuardrailTests {
             "Notifications",
             "Application",
             "Services",
-            "WebPushSubscriptionReadService.cs");
+            "ProfileNotificationReadService.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
@@ -2313,8 +2313,8 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "Modules", "RecipeCommunity", "Application");
         string[] serviceFiles = [
-            Path.Combine(applicationRoot, "RecipeLikes", "Services", "RecipeLikeReadService.cs"),
-            Path.Combine(applicationRoot, "RecipeComments", "Services", "RecipeCommentReadService.cs"),
+            Path.Combine(applicationRoot, "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
         ];
 
         string[] violations = [
@@ -2904,7 +2904,7 @@ public sealed class ApplicationGuardrailTests {
             (Path.Combine(root, "Modules/Dashboard/Application"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(root, "Modules", "Gamification", "Application"), string.Empty),
             (Path.Combine(root, "Modules", "Hydration", "Application"), string.Empty),
-            (Path.Combine(root, "Modules", "Tdee", "Application"), Path.Combine("Services", "TdeeUserProfileService.cs")),
+            (Path.Combine(root, "Modules", "Tdee", "Application"), Path.Combine("Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs")),
             (Path.Combine(root, "Modules", "WeeklyCheckIn", "Application"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
         ];
 

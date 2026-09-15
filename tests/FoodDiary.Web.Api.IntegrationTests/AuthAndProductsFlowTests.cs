@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Products.Requests;
+using FoodDiary.Modules.Products.Presentation.Requests;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Xunit.Abstractions;

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Recipes.Common;
+namespace FoodDiary.Modules.Recipes.Application.Common;
 
 internal static class RecipeRequiredIdParser {
     public static Result<TId> Parse<TId>(

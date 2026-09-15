@@ -1,6 +1,6 @@
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;

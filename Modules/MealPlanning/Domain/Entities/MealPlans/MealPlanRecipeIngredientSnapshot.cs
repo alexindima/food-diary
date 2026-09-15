@@ -1,5 +1,5 @@
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 

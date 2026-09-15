@@ -1,23 +1,25 @@
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipes;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Common;
+
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
+namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,
-    IRecentRecipeReadService recentRecipeReadService,
+    RecentRecipeLoader recentRecipeLoader,
     ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesOverviewQuery, Result<RecipeOverviewModel>> {
@@ -58,7 +60,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             .ToList();
         var favoriteLookup = allFavorites.ToDictionary(ToFavoriteRecipeId);
 
-        IReadOnlyList<RecipeOverviewReadItem> recentItems = await recentRecipeReadService.GetRecentOverviewItemsAsync(
+        IReadOnlyList<RecipeOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
             options.UserId,
             options.RecentLimit,
             query.IncludePublic,
@@ -123,4 +125,33 @@ public sealed class GetRecipesOverviewQueryHandler(
         FavoriteRecipeModel? favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Id);
         return recipe.ToModel(favorite is not null, favorite?.Id);
     }
+    private async Task<IReadOnlyList<RecipeOverviewReadItem>> GetRecentOverviewItemsAsync(
+        UserId userId,
+        int limit,
+        bool includePublic,
+        RecipeQueryFilters filters,
+        CancellationToken cancellationToken = default) {
+        if (!string.IsNullOrWhiteSpace(filters.Search)) {
+            return [];
+        }
+
+        IReadOnlyList<RecipeOverviewReadItem> items = await recentRecipeLoader.LoadAsync(
+            userId,
+            limit,
+            includePublic,
+            cancellationToken).ConfigureAwait(false);
+
+        return [.. items.Where(item => MatchesFilters(item, filters))];
+    }
+    private static bool MatchesFilters(RecipeOverviewReadItem recipe, RecipeQueryFilters filters) =>
+        (string.IsNullOrWhiteSpace(filters.Category) ||
+         (recipe.Category?.Contains(filters.Category.Trim(), StringComparison.OrdinalIgnoreCase) ?? false)) &&
+        (!filters.MaxTotalTime.HasValue || (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0) <= filters.MaxTotalTime.Value) &&
+        (!filters.CaloriesFrom.HasValue || (recipe.TotalCalories ?? 0) >= filters.CaloriesFrom.Value) &&
+        (!filters.CaloriesTo.HasValue || (recipe.TotalCalories ?? 0) <= filters.CaloriesTo.Value) &&
+        (!filters.HasImage.HasValue || HasImage(recipe) == filters.HasImage.Value);
+
+    private static bool HasImage(RecipeOverviewReadItem recipe) =>
+        recipe.ImageUrl is not null || recipe.ImageAssetId is not null;
+
 }

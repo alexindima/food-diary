@@ -1,9 +1,9 @@
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Application.Services;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Mappings;
+namespace FoodDiary.Modules.Recipes.Application.Mappings;
 
 public static class RecipeMappings {
     public static RecipeModel ToModel(

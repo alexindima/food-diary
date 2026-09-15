@@ -1,14 +1,15 @@
-using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace FoodDiary.Infrastructure.Persistence.Recipes;
+namespace FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 
 public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotReadService productSnapshots, IRecipeUsageQuery usageQuery, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IRecipeRepository {
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {

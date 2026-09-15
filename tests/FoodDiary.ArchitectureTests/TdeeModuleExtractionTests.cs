@@ -5,7 +5,7 @@ public sealed class TdeeModuleExtractionTests {
     [Fact]
     public void TdeeApplicationSource_LivesOnlyInLogicalModule() {
         string originalLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Tdee");
-        string extractedLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Tdee");
+        string extractedLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Modules.Tdee.Application");
         string moduleApplicationRoot = ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application");
 
         Assert.Empty(Directory.Exists(originalLegacyRoot) ? SourceScanner.SourceFiles(originalLegacyRoot) : []);
@@ -20,7 +20,7 @@ public sealed class TdeeModuleExtractionTests {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Contracts", "FoodDiary.Modules.Tdee.Contracts.csproj")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Domain")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Infrastructure")));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application", "Abstractions")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application.Abstractions")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.Tdee.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
             "Modules",
@@ -39,14 +39,14 @@ public sealed class TdeeModuleExtractionTests {
     }
 
     [Fact]
-    public void TdeeApplicationAssembly_PreservesLegacyBinaryIdentity() {
+    public void TdeeApplicationAssembly_UsesCanonicalProjectIdentity() {
         string project = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules",
             "Tdee",
             "Application",
             "FoodDiary.Modules.Tdee.Application.csproj"));
 
-        Assert.Contains("<AssemblyName>FoodDiary.Application.Tdee</AssemblyName>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<AssemblyName>", project, StringComparison.Ordinal);
     }
 
     [Theory]

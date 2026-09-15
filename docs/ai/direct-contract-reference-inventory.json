@@ -536,8 +536,8 @@
     "removed": []
   },
   {
-    "path": "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
-    "project": "FoodDiary.Application.RecipeCommunity",
+    "path": "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj",
+    "project": "FoodDiary.Modules.RecipeCommunity.Application",
     "added": [
       "FoodDiary.Modules.Notifications.Application.Abstractions",
       "FoodDiary.Modules.Recipes.Contracts"
@@ -615,7 +615,7 @@
     "removed": []
   },
   {
-    "path": "Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj",
+    "path": "Modules/Recipes/PersistenceModel/FoodDiary.Modules.Recipes.PersistenceModel.csproj",
     "project": "FoodDiary.Modules.Recipes.PersistenceModel",
     "added": [
       "FoodDiary.Modules.Products.Domain.Contracts"
@@ -649,7 +649,7 @@
     "removed": []
   },
   {
-    "path": "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
+    "path": "Modules/Products/Application.Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
     "project": "FoodDiary.Modules.Products.Application.Abstractions",
     "added": [
       "FoodDiary.Modules.Products.Domain.Contracts"

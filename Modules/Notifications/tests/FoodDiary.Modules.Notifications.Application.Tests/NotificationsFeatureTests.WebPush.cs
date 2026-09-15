@@ -34,7 +34,7 @@ public partial class NotificationsFeatureTests {
             utcNow.AddMinutes(-1));
         var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            CreateWebPushSubscriptionReadService(repository),
+            repository,
             CreateCurrentUserAccessService(user),
             new FixedDateTimeProvider(utcNow));
 
@@ -50,7 +50,7 @@ public partial class NotificationsFeatureTests {
     [Fact]
     public async Task GetWebPushSubscriptions_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            CreateWebPushSubscriptionReadService(new InMemoryWebPushSubscriptionRepository()),
+            new InMemoryWebPushSubscriptionRepository(),
             CreateCurrentUserAccessService(CreateUser()),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
@@ -64,7 +64,7 @@ public partial class NotificationsFeatureTests {
     public async Task GetWebPushSubscriptions_WhenUserDeleted_ReturnsAccessFailure() {
         var userId = UserId.New();
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            CreateWebPushSubscriptionReadService(new InMemoryWebPushSubscriptionRepository()),
+            new InMemoryWebPushSubscriptionRepository(),
             CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new FixedDateTimeProvider(DateTime.UtcNow));
 

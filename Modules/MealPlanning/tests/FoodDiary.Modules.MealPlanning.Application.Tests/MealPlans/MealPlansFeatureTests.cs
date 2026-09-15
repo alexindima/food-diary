@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
@@ -15,10 +18,9 @@ using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShop
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;

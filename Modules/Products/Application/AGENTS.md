@@ -17,3 +17,5 @@ Rules for `Modules/Products/Application/`.
 - Build: `dotnet build Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj`
 - Focused tests: `dotnet test Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj`
 - Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+Current module convention: all projects use `FoodDiary.Modules.Products.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

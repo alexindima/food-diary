@@ -1,10 +1,10 @@
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
-using FoodDiary.Presentation.Api.Features.RecipeLikes.Mappings;
-using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Mappings;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.RecipeCommunity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipeLikeHttpMappingsTests {

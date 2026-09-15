@@ -1232,6 +1232,7 @@
       "fooddiary.modules.recentitems.contracts": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"

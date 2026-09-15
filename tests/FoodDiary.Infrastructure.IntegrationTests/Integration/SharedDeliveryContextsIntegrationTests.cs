@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -20,9 +21,8 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 

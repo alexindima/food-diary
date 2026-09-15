@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.RecipeCommunity.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {

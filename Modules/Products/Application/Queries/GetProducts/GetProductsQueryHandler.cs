@@ -1,17 +1,18 @@
+using FoodDiary.Modules.Products.Application.Mappings;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
+
+using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Queries.GetProducts;
+namespace FoodDiary.Modules.Products.Application.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler(
     IProductOverviewReadService productOverviewReadService,

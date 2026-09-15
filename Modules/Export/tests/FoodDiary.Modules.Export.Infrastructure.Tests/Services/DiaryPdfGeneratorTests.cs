@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -8,9 +10,8 @@ using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using QuestPDF.Fluent;

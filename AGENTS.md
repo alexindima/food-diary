@@ -117,32 +117,33 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Open Food Facts persistence model: `Modules/OpenFoodFacts/PersistenceModel/AGENTS.md`
 - Products logical module: `Modules/Products/AGENTS.md`
 - Products application: `Modules/Products/Application/AGENTS.md`
-- Products ports: `Modules/Products/Application/Abstractions/AGENTS.md`
+- Products ports: `Modules/Products/Application.Abstractions/AGENTS.md`
 - Products contracts: `Modules/Products/Contracts/AGENTS.md`
 - Products domain contracts: `Modules/Products/Domain.Contracts/AGENTS.md`
 - Products domain: `Modules/Products/Domain/AGENTS.md`
 - Products food quality: `Modules/Products/FoodQuality/AGENTS.md`
 - Products infrastructure: `Modules/Products/Infrastructure/AGENTS.md`
-- Products persistence model: `Modules/Products/Infrastructure/Model/AGENTS.md`
+- Products persistence model: `Modules/Products/PersistenceModel/AGENTS.md`
 - Products tests: `Modules/Products/tests/AGENTS.md`
 - RecentItems logical module: `Modules/RecentItems/AGENTS.md`
-- RecentItems application abstractions: `Modules/RecentItems/Application/Abstractions/AGENTS.md`
+- RecentItems application: `Modules/RecentItems/Application/AGENTS.md`
+- RecentItems application abstractions: `Modules/RecentItems/Application.Abstractions/AGENTS.md`
 - RecentItems domain: `Modules/RecentItems/Domain/AGENTS.md`
 - RecentItems infrastructure: `Modules/RecentItems/Infrastructure/AGENTS.md`
-- RecentItems persistence model: `Modules/RecentItems/Infrastructure/Model/AGENTS.md`
+- RecentItems persistence model: `Modules/RecentItems/PersistenceModel/AGENTS.md`
 - RecentItems tests: `Modules/RecentItems/tests/AGENTS.md`
 - Recipe community logical module: `Modules/RecipeCommunity/AGENTS.md`
 - Recipe community Application: `Modules/RecipeCommunity/Application/AGENTS.md`
-- Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application/Abstractions/AGENTS.md`
+- Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application.Abstractions/AGENTS.md`
 - Recipe community Domain: `Modules/RecipeCommunity/Domain/AGENTS.md`
 - Recipe community Infrastructure: `Modules/RecipeCommunity/Infrastructure/AGENTS.md`
-- Recipe community Infrastructure/Model: `Modules/RecipeCommunity/Infrastructure/Model/AGENTS.md`
+- Recipe community Infrastructure/Model: `Modules/RecipeCommunity/PersistenceModel/AGENTS.md`
 - Recipes logical module: `Modules/Recipes/AGENTS.md`
 - Recipes application: `Modules/Recipes/Application/AGENTS.md`
-- Recipes ports: `Modules/Recipes/Application/Abstractions/AGENTS.md`
+- Recipes ports: `Modules/Recipes/Application.Abstractions/AGENTS.md`
 - Recipes contracts: `Modules/Recipes/Contracts/AGENTS.md`
 - Recipes infrastructure: `Modules/Recipes/Infrastructure/AGENTS.md`
-- Recipes persistence model: `Modules/Recipes/Infrastructure/Model/AGENTS.md`
+- Recipes persistence model: `Modules/Recipes/PersistenceModel/AGENTS.md`
 - Recipes tests: `Modules/Recipes/tests/AGENTS.md`
 - Statistics logical module: `Modules/Statistics/AGENTS.md`
 - Statistics application: `Modules/Statistics/Application/AGENTS.md`

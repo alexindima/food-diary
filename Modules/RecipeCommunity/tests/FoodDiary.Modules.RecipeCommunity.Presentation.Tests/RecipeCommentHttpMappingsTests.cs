@@ -1,15 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
-using FoodDiary.Presentation.Api.Features.RecipeComments.Mappings;
-using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
-using FoodDiary.Presentation.Api.Features.RecipeComments.Responses;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.DeleteRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.UpdateRecipeComment;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeComments.Mappings;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeComments.Requests;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeComments.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.RecipeCommunity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipeCommentHttpMappingsTests {

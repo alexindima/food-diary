@@ -1,10 +1,12 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Services;
+namespace FoodDiary.Modules.Products.Application.Services;
 
 public sealed class ProductUsdaLinkService(IProductWriteRepository productRepository) : IUsdaProductLinkService {
     public async Task<Result> IsAccessibleForUpdateAsync(

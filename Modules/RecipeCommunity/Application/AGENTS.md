@@ -15,3 +15,7 @@ Rules for `Modules/RecipeCommunity/Application/`.
 - Do not reference the core `FoodDiary.Application` project.
 - Register handlers, validators, and read services through `AddRecipeCommunityApplication`; hosts use Infrastructure `AddRecipeCommunityModule`.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.
+
+Current module convention: all projects use `FoodDiary.Modules.RecipeCommunity.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.
+
+Comment and like reads live in their handlers. GetRecipeLikeStatus checks recipe access before reading any like data and returns the existing Recipe.NotFound error for missing or inaccessible recipes.

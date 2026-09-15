@@ -1,7 +1,9 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Social;
+namespace FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 
 public sealed class RecipeLike : Entity<RecipeLikeId> {
     public UserId UserId { get; private set; }

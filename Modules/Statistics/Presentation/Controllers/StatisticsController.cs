@@ -1,0 +1,38 @@
+using FoodDiary.Modules.Statistics.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+
+using FoodDiary.Modules.Statistics.Presentation.Requests;
+using FoodDiary.Modules.Statistics.Presentation.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+
+namespace FoodDiary.Modules.Statistics.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/statistics")]
+public sealed class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet]
+    [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
+    [ProducesResponseType<List<AggregatedStatisticsHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
+
+    [HttpGet("summary")]
+    [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
+    [ProducesResponseType<StatisticsSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) =>
+        HandleOk(query.ToSummaryQuery(userId), static value => value.ToHttpResponse());
+
+    [HttpGet("diary-summary")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [ProducesResponseType<DiaryStatisticsSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetDiarySummary([FromCurrentUser] Guid userId, [FromQuery] GetDiaryStatisticsHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+}

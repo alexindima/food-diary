@@ -5,7 +5,7 @@ public sealed class StatisticsModuleExtractionTests {
     [Fact]
     public void StatisticsApplicationSource_LivesOnlyInExtractedAssembly() {
         string originalLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Statistics");
-        string extractedLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Statistics");
+        string extractedLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Modules.Statistics.Application");
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Statistics", "Application");
         Assert.Empty(Directory.Exists(originalLegacyRoot) ? SourceScanner.SourceFiles(originalLegacyRoot) : []);
         Assert.False(Directory.Exists(extractedLegacyRoot), $"Legacy project directory still exists: {extractedLegacyRoot}");
@@ -20,15 +20,15 @@ public sealed class StatisticsModuleExtractionTests {
     }
 
     [Fact]
-    public void StatisticsApplicationAssembly_PreservesLegacyBinaryIdentity() {
+    public void StatisticsApplicationAssembly_UsesCanonicalProjectIdentity() {
         string project = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules",
             "Statistics",
             "Application",
             "FoodDiary.Modules.Statistics.Application.csproj"));
 
-        Assert.Contains("<AssemblyName>FoodDiary.Application.Statistics</AssemblyName>", project, StringComparison.Ordinal);
-        Assert.Contains("<RootNamespace>FoodDiary.Application.Statistics</RootNamespace>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<AssemblyName>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<RootNamespace>", project, StringComparison.Ordinal);
     }
 
     [Fact]

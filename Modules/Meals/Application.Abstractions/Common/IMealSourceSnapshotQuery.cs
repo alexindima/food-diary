@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Application.Abstractions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Application.Abstractions.Common;
 

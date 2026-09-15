@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

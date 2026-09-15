@@ -1,17 +1,17 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.ReadModel.Composition.Meals;
-using FoodDiary.Infrastructure.Persistence.Products;
+using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Infrastructure.Persistence;
@@ -29,7 +29,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");
         var image = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
-        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Legacy recipe", 2);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Legacy recipe", 2);
         recipe.SetManualNutrition(600, 20, 30, 50, fiber: null, alcohol: null);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         meal.AddRecipe(recipe.Id, 1);
@@ -55,7 +55,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
     public async Task Projection_PreservesRecipeSnapshotOverCurrentSourceNutrition() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"snapshot-{Guid.NewGuid():N}@example.com", "hash");
-        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Current recipe", 4);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Current recipe", 4);
         recipe.SetManualNutrition(1000, 40, 20, 160, 5, 0);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         meal.AddRecipe(recipe.Id, 1).ApplyRecipeSnapshot("Saved recipe", imageUrl: null, 2, 600, 20, 30, 50, 0, 0);

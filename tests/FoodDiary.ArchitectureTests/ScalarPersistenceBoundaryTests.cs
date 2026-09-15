@@ -1,3 +1,7 @@
+using FoodDiary.Modules.Recipes.PersistenceModel;
+using FoodDiary.Modules.RecipeCommunity.PersistenceModel;
+using FoodDiary.Modules.RecentItems.PersistenceModel;
+using FoodDiary.Modules.Products.PersistenceModel;
 using FoodDiary.Modules.Meals.PersistenceModel;
 using FoodDiary.Modules.Images.PersistenceModel;
 using FoodDiary.Modules.Gamification.PersistenceModel;

@@ -1,6 +1,6 @@
-using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Modules.Tdee.Contracts.Models;
 
-namespace FoodDiary.Application.Tdee.Services;
+namespace FoodDiary.Modules.Tdee.Application.Services;
 
 public sealed record AdaptiveTdeeResult(
     double? AdaptiveTdee,

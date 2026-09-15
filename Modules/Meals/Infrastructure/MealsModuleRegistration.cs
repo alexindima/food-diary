@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;

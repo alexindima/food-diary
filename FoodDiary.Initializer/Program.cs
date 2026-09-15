@@ -1,3 +1,7 @@
+using FoodDiary.Modules.Recipes.Infrastructure;
+using FoodDiary.Modules.RecipeCommunity.Infrastructure;
+using FoodDiary.Modules.RecentItems.Infrastructure;
+using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.Meals.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -36,9 +40,9 @@ using FoodDiary.Modules.Favorites.Infrastructure;
 using FoodDiary.Modules.Identity.Application;
 using FoodDiary.Modules.Images.Application;
 
-using FoodDiary.Application.Statistics;
+using FoodDiary.Modules.Statistics.Application;
 
-using FoodDiary.Application.Tdee;
+using FoodDiary.Modules.Tdee.Application;
 using FoodDiary.Modules.Notifications.Application;
 
 using FoodDiary.Modules.Wearables.Infrastructure;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;

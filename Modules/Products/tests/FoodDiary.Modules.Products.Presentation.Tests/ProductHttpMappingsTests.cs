@@ -1,20 +1,20 @@
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Application.Products.Commands.CreateProduct;
-using FoodDiary.Application.Products.Commands.DeleteProduct;
-using FoodDiary.Application.Products.Commands.DuplicateProduct;
-using FoodDiary.Application.Products.Commands.UpdateProduct;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Queries.GetProductById;
-using FoodDiary.Application.Products.Queries.GetProducts;
-using FoodDiary.Application.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
-using FoodDiary.Presentation.Api.Features.Products.Mappings;
-using FoodDiary.Presentation.Api.Features.Products.Requests;
-using FoodDiary.Presentation.Api.Features.Products.Responses;
+using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
+using FoodDiary.Modules.Products.Application.Commands.DeleteProduct;
+using FoodDiary.Modules.Products.Application.Commands.DuplicateProduct;
+using FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Modules.Products.Application.Queries.GetProductById;
+using FoodDiary.Modules.Products.Application.Queries.GetProducts;
+using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
+using FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
+using FoodDiary.Modules.Products.Application.Queries.SearchProductSuggestions;
+using FoodDiary.Modules.Products.Presentation.Mappings;
+using FoodDiary.Modules.Products.Presentation.Requests;
+using FoodDiary.Modules.Products.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Products.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProductHttpMappingsTests {

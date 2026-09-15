@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Products.Domain.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct ProductNutrition {

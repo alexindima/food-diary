@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Products.Application.Models;
 
-namespace FoodDiary.Application.Products.Mappings;
+namespace FoodDiary.Modules.Products.Application.Mappings;
 
 public static class ProductOverviewReadMappings {
     public static ProductModel ToModel(

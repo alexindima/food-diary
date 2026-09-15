@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Statistics.Application.Mappings;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -5,12 +6,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Statistics.Common;
-using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Modules.Statistics.Application.Common;
+using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
+namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
 
 public sealed class GetStatisticsQueryHandler(
     ISender sender,
@@ -61,26 +62,7 @@ public sealed class GetStatisticsQueryHandler(
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(statisticsResult.Error);
         }
 
-        return Result.Success<IReadOnlyList<AggregatedStatisticsModel>>([.. statisticsResult.Value.Select(ToModel)]);
+        return Result.Success<IReadOnlyList<AggregatedStatisticsModel>>([.. statisticsResult.Value.Select(StatisticsMappings.ToModel)]);
     }
 
-    private static AggregatedStatisticsModel ToModel(DashboardStatisticsBucketReadModel model) =>
-        new(
-            model.DateFrom,
-            model.DateTo,
-            model.TotalCalories,
-            model.AverageProteins,
-            model.AverageFats,
-            model.AverageCarbs,
-            model.AverageFiber,
-            model.TotalProteins,
-            model.TotalFats,
-            model.TotalCarbs,
-            model.TotalFiber,
-            model.BreakfastCalories,
-            model.LunchCalories,
-            model.DinnerCalories,
-            model.SnackCalories,
-            model.MealCount,
-            model.TrackedDayCount);
 }

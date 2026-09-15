@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
-  </PropertyGroup>
-
   <ItemGroup>
+    <ProjectReference Include="../../../RecentItems/Application/FoodDiary.Modules.RecentItems.Application.csproj" />
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.Recipes.Application.Tests.Support" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,11 +21,11 @@
     <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../../../Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj" />
-    <ProjectReference Include="../../../RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../RecentItems/Application.Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../RecentItems/Contracts/FoodDiary.Modules.RecentItems.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
   </ItemGroup>

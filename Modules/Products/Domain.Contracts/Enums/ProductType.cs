@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Products.Domain.Contracts.Enums;
 
 public enum ProductType {
     Unknown = 0,

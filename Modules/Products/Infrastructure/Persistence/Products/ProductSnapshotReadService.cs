@@ -1,10 +1,10 @@
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Products;
+namespace FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 
 public sealed class ProductSnapshotReadService(DbSet<Product> records, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IProductSnapshotReadService {
     public async Task<IReadOnlyDictionary<ProductId, ProductSnapshotReadModel>> GetByIdsAsync(

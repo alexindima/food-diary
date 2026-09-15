@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 

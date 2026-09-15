@@ -1,18 +1,17 @@
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.Abstractions.RecipeLikes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Services;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
 
-namespace FoodDiary.Application.Tests.RecipeLikes;
+namespace FoodDiary.Modules.RecipeCommunity.Application.Tests.RecipeLikes;
 
 [ExcludeFromCodeCoverage]
 public class RecipeLikesFeatureTests {
@@ -127,6 +126,18 @@ public class RecipeLikesFeatureTests {
     }
 
     [Fact]
+    public async Task GetRecipeLikeStatus_WhenRecipeInaccessible_DoesNotReadLikes() {
+        IRecipeLikeReadRepository repository = Substitute.For<IRecipeLikeReadRepository>();
+        var handler = new GetRecipeLikeStatusQueryHandler(repository, CreateRecipeAccessService(recipe: null), CreateCurrentUserAccessService());
+        var recipeId = RecipeId.New();
+        Result<RecipeLikeStatusModel> result = await handler.Handle(new GetRecipeLikeStatusQuery(UserId.New().Value, recipeId.Value), CancellationToken.None);
+        ResultAssert.Failure(result);
+        Assert.Equal(RecipeErrors.NotFound(recipeId.Value), result.Error);
+        await repository.DidNotReceive().ExistsByUserAndRecipeAsync(Arg.Any<UserId>(), Arg.Any<RecipeId>(), Arg.Any<CancellationToken>());
+        await repository.DidNotReceive().CountByRecipeAsync(Arg.Any<RecipeId>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task GetRecipeLikeStatus_WithNullUserId_ReturnsFailure() {
         GetRecipeLikeStatusQueryHandler handler = CreateRecipeLikeStatusHandler(new InMemoryRecipeLikeRepository());
 
@@ -173,11 +184,7 @@ public class RecipeLikesFeatureTests {
 
     private static GetRecipeLikeStatusQueryHandler CreateRecipeLikeStatusHandler(
         IRecipeLikeReadRepository likeRepository) =>
-        new(CreateRecipeLikeReadService(likeRepository), CreateCurrentUserAccessService());
-
-    private static IRecipeLikeReadService CreateRecipeLikeReadService(
-        IRecipeLikeReadRepository likeRepository) =>
-        new RecipeLikeReadService(likeRepository);
+        new(likeRepository, CreateRecipeAccessService(Recipe.Create(UserId.New(), "Visible", 1)), CreateCurrentUserAccessService());
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();

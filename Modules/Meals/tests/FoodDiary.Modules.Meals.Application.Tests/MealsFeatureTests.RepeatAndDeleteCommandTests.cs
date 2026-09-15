@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -10,7 +12,6 @@ using FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
 using FoodDiary.Modules.Meals.Application.Services;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;

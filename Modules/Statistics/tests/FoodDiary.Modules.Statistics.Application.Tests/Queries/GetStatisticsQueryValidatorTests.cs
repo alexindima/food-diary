@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
 
-namespace FoodDiary.Application.Tests.Queries;
+namespace FoodDiary.Modules.Statistics.Application.Tests.Queries;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetStatisticsQueryValidatorTests {

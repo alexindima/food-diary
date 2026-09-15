@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Entities;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
 internal static class ProductUpdateLimitValidator {
     public static Result Validate(Product product, UpdateProductCommand command, ProductUpdateValues values) {

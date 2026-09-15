@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Recipes.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipesIdConversionTests {

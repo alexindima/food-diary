@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 
 internal static class RecipeCreateFactory {
     public static Recipe Create(CreateRecipeCommand command, CreateRecipeValues values) =>

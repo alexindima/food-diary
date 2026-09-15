@@ -1,3 +1,5 @@
+using FoodDiary.Modules.RecipeCommunity.Infrastructure;
+using FoodDiary.Modules.RecentItems.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -64,7 +66,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
         global::FoodDiary.Modules.Admin.Infrastructure.AdminModuleRegistration.AddAdminPersistence(services);
         services.AddRecipeCommunityModule();
         global::FoodDiary.Modules.Wearables.Infrastructure.ModuleRegistration.AddWearablesModule(services);
-        global::FoodDiary.Infrastructure.ProductsModuleRegistration.AddProductsPersistence(services);
+        global::FoodDiary.Modules.Products.Infrastructure.ProductsModuleRegistration.AddProductsPersistence(services);
         global::FoodDiary.Modules.Dietologist.Infrastructure.ModuleRegistration.AddDietologistModule(services);
         global::FoodDiary.Modules.Fasting.Infrastructure.ModuleRegistration.AddFastingModule(services);
         services.AddRecentItemsModule();
@@ -74,7 +76,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
         global::FoodDiary.Modules.Meals.Infrastructure.MealsModuleRegistration.AddMealsPersistence(services);
         global::FoodDiary.Modules.MealPlanning.Infrastructure.ModuleRegistration.AddMealPlanningModule(services);
         global::FoodDiary.Modules.Notifications.Infrastructure.ModuleRegistration.AddNotificationsPersistence(services);
-        global::FoodDiary.Infrastructure.RecipesModuleRegistration.AddRecipesPersistence(services);
+        global::FoodDiary.Modules.Recipes.Infrastructure.RecipesModuleRegistration.AddRecipesPersistence(services);
         global::FoodDiary.Modules.Images.Infrastructure.DependencyInjection.AddImagesInfrastructure(services);
         global::FoodDiary.Modules.Marketing.Infrastructure.ModuleRegistration.AddMarketingModule(services);
         global::FoodDiary.Modules.Lessons.Infrastructure.ModuleRegistration.AddLessonsModule(services);

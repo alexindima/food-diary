@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
 
-namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public record ToggleRecipeLikeCommand(
     Guid? UserId,

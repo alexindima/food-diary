@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;

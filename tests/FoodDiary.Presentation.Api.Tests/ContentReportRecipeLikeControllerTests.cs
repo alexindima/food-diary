@@ -1,16 +1,16 @@
 using FoodDiary.Modules.ContentReports.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.ContentReports.Presentation.Controllers;
 using FoodDiary.Modules.ContentReports.Presentation.Requests;
 using FoodDiary.Modules.ContentReports.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.RecipeLikes;
-using FoodDiary.Presentation.Api.Features.RecipeLikes.Requests;
-using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Controllers;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Requests;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

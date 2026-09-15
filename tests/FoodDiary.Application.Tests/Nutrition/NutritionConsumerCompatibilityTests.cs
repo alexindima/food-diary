@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Products.Application.Mappings;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Application.Mappings;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Nutrition;
@@ -25,9 +25,9 @@ public sealed class NutritionConsumerCompatibilityTests {
         var recipe = Recipe.Create(userId, "Quality sample", 1);
         recipe.SetManualNutrition(calories, 0, 0, 0, fiber, 0);
 
-        FoodDiary.Application.Products.Models.ProductModel productModel = product.ToModel();
+        FoodDiary.Modules.Products.Application.Models.ProductModel productModel = product.ToModel();
         FoodDiary.Modules.Meals.Service.Contracts.Models.MealModel mealModel = meal.ToModel();
-        FoodDiary.Application.Recipes.Models.RecipeModel recipeModel = recipe.ToModel(0, isOwnedByCurrentUser: true);
+        FoodDiary.Modules.Recipes.Application.Models.RecipeModel recipeModel = recipe.ToModel(0, isOwnedByCurrentUser: true);
 
         Assert.Multiple(
             () => Assert.Equal(expectedScore, product.GetQualityScore().Score),

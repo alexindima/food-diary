@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Tests;
 

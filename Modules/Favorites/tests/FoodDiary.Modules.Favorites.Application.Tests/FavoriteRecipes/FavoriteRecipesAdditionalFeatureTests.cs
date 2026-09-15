@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
@@ -11,14 +12,14 @@ using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Commo
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

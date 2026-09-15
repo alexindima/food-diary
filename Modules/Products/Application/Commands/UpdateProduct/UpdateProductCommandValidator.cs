@@ -1,9 +1,9 @@
 using FluentValidation;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
 public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
     public UpdateProductCommandValidator() {

@@ -1,16 +1,17 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Application.Queries.ExploreRecipes;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Recipes;
-using FoodDiary.Presentation.Api.Features.Recipes.Requests;
-using FoodDiary.Presentation.Api.Features.Recipes.Responses;
+using FoodDiary.Modules.Recipes.Presentation.Controllers;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Recipes.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipeExploreControllerTests {

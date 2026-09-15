@@ -80,7 +80,7 @@
         "context:CurrentTransaction"
       ],
       "reason": "Owner runtime context shares the central connection; a live transaction accessor preserves immediate SQL and post-commit execution.",
-      "technicalSourceSha256": "ceb8c50998516a016513b8fb27c1377077e95e7013239dd24840f833e8480c3e"
+      "technicalSourceSha256": "74a35c8f9b5305759e2897cfde96fe7465fe0e6b1f2b87c00c4ebf74ca97742a"
     },
     "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
       "module": "ContentReports",
@@ -178,7 +178,7 @@
         "tracked:RecipeLike"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "477e842732f3154d6d0fd515842d6134d256b7edc78ea9bf68a46a2427954b0c"
+      "technicalSourceSha256": "7722cf495eea7ac039743a4a4a9528ca01453ea5fdf8529c3d7c3da543cf289a"
     },
     "Modules/Fasting/Infrastructure/ModuleRegistration.cs": {
       "module": "Fasting",
@@ -1064,7 +1064,7 @@
         "context:ExecuteSerializableAsync"
       ],
       "reason": "Delegate Serializable mutation execution, retries, reset and Result rollback to the scoped host coordinator; no direct context, independent save or transaction.",
-      "technicalSourceSha256": "add93dd6e620d48be2f1951d5f3f7a7ef116364b72e2c0cd99cfcb8df14ca986"
+      "technicalSourceSha256": "652eca421e1e14a06ef22d357109ee52594a2fe306b9c10baea44f665bace529"
     },
     "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs": {
       "module": "Products",
@@ -1075,7 +1075,7 @@
         "write:Product"
       ],
       "reason": "Owner product persistence and parameterized row locking. Cross-module usage count is delegated to the host-composed query in the same scoped transaction.",
-      "technicalSourceSha256": "241c99491f0698ceb243ec096101b73b7bdb1277a197d0a9161fdc269d5f46b0"
+      "technicalSourceSha256": "fcd31b9ddfcd00f1082be716327df46dc578b33bacbbb8a9960397fc821ffb62"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
@@ -1087,7 +1087,7 @@
         "write:Product"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "6e18ed3ff3aaa901f0f9791fcc31e308f8b80208b70b97675b0279981c7ebdc8"
+      "technicalSourceSha256": "3f11e4a1b66ed20a455c5c1c2dda16b56d8903197eac1b1c76b0ad76e7a578f6"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -1101,7 +1101,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
-      "technicalSourceSha256": "0be89212184082a797ae28b2fbb706963c5ce1c12651eb96e2e9b1cdd9ca571a"
+      "technicalSourceSha256": "5ea97b50b0eac775f2e82343960e5e82c8e45298ede3f26139b1db63268dedc9"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
@@ -1113,7 +1113,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "6dd80421072f63dded7b8bf4d3ca1d12299f86ff4b1eeee325a3a8b8f6b2d045"
+      "technicalSourceSha256": "f3f988c614747860ef6846bfb13ced924b02d8b0bf0b508fe09cf0b5f54e8e53"
     },
     "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs": {
       "module": "RecipeCommunity",
@@ -1139,7 +1139,7 @@
         "context:ExecuteSerializableAsync"
       ],
       "reason": "Delegate Serializable mutation execution, retries, reset and Result rollback to the scoped host coordinator; no direct context, independent save or transaction.",
-      "technicalSourceSha256": "d615bd33511632d4f23a439f5d7f93c820b726a9b33a4c82850f43fdb1d9ecbb"
+      "technicalSourceSha256": "b22987ac16c2ab64637090bd25f399035f66bc905f33877285f9f3e84faaa9d8"
     },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs": {
       "module": "Recipes",
@@ -1152,7 +1152,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. Usage counts delegate to IRecipeUsageQuery in host composition. Ingredient product snapshots are transient immutable projections from the owner batch port; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "f323defe61aa5852a8b196e85d6feaaaf711debeae09b131a183ebc160651ceb"
+      "technicalSourceSha256": "faa5bd97ce05818d958994d0bb1e315836dcfc3c19abee9130f0662ce7a90cda"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
@@ -1166,7 +1166,7 @@
         "write:Recipe"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "181aee39bc41209856c5be388f4b547c0d4a61165e3deb0a4b3ba1b28fa30806"
+      "technicalSourceSha256": "5b342c301f59ec198b1dc9f1a4ce7f6af14669473400a1a61e1a5b2d4b32d149"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1596,7 +1596,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose the owner context and narrow repositories; synchronize owner queries with the live IModuleTransactionCoordinator transaction, including after intermediate recognition flush.",
-      "technicalSourceSha256": "4072256ab0bafda5fe3fb4d5009d9682f8839d67045b09882cf2ffa16a1b30a7"
+      "technicalSourceSha256": "1b4a3dfcae968d849d5b44f6510547db5b1dbd2240b5688752901c32fd400782"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1626,7 +1626,7 @@
         "tracked:Product"
       ],
       "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "7d756a70c47e8d6ba9733df90bce3ed5b539adc701db539b7f5fa6c2a064f980"
+      "technicalSourceSha256": "5c945d9e162972bf9c1a556a1dcf6a8f22e8639dfab99c172c0cde0cba8e4af5"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1644,7 +1644,7 @@
         "context:Database"
       ],
       "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "424e0ea5cd17c67c906e2a50fbf0e930c4fa4b49e8a0d19ccc94d220ddf5c4df"
+      "technicalSourceSha256": "183f84795d7860c611c5fe04a7e5e4da8c531b4b128c94cda8e4a0911faf2c3c"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",

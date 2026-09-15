@@ -5,7 +5,7 @@ Current ownership follows ADRs 0031, 0038 and 0040. Code, scoped guides and arch
 | Responsibility | Current owner and boundary |
 | --- | --- |
 | Commands, queries, validation and application mapping | `Modules/Products/Application`; preserve the `FoodDiary.Application.Products` assembly identity and existing use-case behavior. |
-| Aggregate repository, mutation transaction and usage-query ports | `Modules/Products/Application/Abstractions`; owner orchestration consumes these ports without acquiring foreign aggregate writes. |
+| Aggregate repository, mutation transaction and usage-query ports | `Modules/Products/Application.Abstractions`; owner orchestration consumes these ports without acquiring foreign aggregate writes. |
 | Consumer projections, lookup and semantic USDA linking contracts | `Modules/Products/Contracts`; no foreign aggregate-returning API. Product errors also belong here. |
 | Product aggregate and invariants | `Modules/Products/Domain`; foreign links use scalar IDs. Product IDs, product type and measurement unit belong to `Modules/Products/Domain.Contracts`. |
 | Food-quality formula | `Modules/Products/FoodQuality`; consumers reference this narrow owner project directly. |

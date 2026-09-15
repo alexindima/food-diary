@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.RecipeLikes.Common;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.RecipeLikes;
+namespace FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence.RecipeLikes;
 
 internal sealed class RecipeLikeRepository(DbSet<RecipeLike> entries) : IRecipeLikeRepository {
     public async Task<RecipeLike?> GetByUserAndRecipeAsync(

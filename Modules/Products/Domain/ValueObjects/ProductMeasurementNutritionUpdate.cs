@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Products.Domain.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct ProductMeasurementNutritionUpdate(

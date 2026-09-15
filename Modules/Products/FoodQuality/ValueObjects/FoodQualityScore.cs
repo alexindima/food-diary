@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct FoodQualityScore {

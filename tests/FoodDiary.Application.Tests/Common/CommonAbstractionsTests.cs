@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -6,7 +7,7 @@ using FluentValidation.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
@@ -14,7 +15,7 @@ using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Runtime.Common.Behaviors;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -64,9 +65,9 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
                 typeof(FoodDiary.Modules.Meals.Application.Abstractions.Common.MealErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.MealPlanErrors),
-                typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors),
-                typeof(FoodDiary.Application.Abstractions.Recipes.Common.RecipeErrors),
-                typeof(FoodDiary.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
+                typeof(FoodDiary.Modules.Products.Contracts.Common.ProductErrors),
+                typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors),
+                typeof(FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
                 typeof(FoodDiary.Application.Abstractions.Usda.Common.UsdaErrors),
                 typeof(FoodDiary.Application.Abstractions.Users.Common.UserErrors),
@@ -687,9 +688,9 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
                 typeof(FoodDiary.Modules.Meals.Application.Abstractions.Common.MealErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.MealPlanErrors),
-                typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors),
-                typeof(FoodDiary.Application.Abstractions.Recipes.Common.RecipeErrors),
-                typeof(FoodDiary.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
+                typeof(FoodDiary.Modules.Products.Contracts.Common.ProductErrors),
+                typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors),
+                typeof(FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
                 typeof(FoodDiary.Application.Abstractions.Usda.Common.UsdaErrors),
                 typeof(FoodDiary.Application.Abstractions.Users.Common.UserErrors),

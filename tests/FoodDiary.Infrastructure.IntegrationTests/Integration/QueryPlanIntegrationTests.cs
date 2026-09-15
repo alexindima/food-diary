@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Domain.Primitives;
@@ -5,11 +6,10 @@ using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

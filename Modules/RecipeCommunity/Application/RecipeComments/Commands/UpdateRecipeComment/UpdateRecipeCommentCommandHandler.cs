@@ -1,12 +1,14 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.UpdateRecipeComment;
 
 public sealed class UpdateRecipeCommentCommandHandler(
     IRecipeCommentWriteRepository commentRepository,

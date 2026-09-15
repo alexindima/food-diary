@@ -1,12 +1,15 @@
-using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Domain.Entities.Recents;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
-namespace FoodDiary.Infrastructure.Persistence.RecentItems;
+namespace FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
 
 public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTransaction?> currentTransaction, TimeProvider dateTimeProvider) : IRecentItemRepository {
     private const int MaxStoredPerType = 100;

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 
-namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Queries.GetRecipeComments;
 
 public record GetRecipeCommentsQuery(
     Guid? UserId,

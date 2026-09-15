@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Favorites.Application.FavoriteProducts.Mappings;
 

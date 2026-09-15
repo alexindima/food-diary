@@ -1,8 +1,8 @@
-using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Modules.Tdee.Contracts.Models;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
-namespace FoodDiary.Application.Tdee.Services;
+namespace FoodDiary.Modules.Tdee.Application.Services;
 
 public static class TdeeCalculator {
     private const double KcalPerKgBodyWeight = 7700.0;

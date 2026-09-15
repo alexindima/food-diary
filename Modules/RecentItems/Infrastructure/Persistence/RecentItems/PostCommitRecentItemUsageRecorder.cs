@@ -1,8 +1,11 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence.RecentItems;
+namespace FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
 
 public sealed class PostCommitRecentItemUsageRecorder(
     IRecentItemWriteRepository repository,

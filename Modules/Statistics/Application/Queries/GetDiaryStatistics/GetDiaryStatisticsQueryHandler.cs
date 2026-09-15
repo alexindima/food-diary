@@ -5,12 +5,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Statistics.Common;
-using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Modules.Statistics.Application.Common;
+using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Statistics.Queries.GetDiaryStatistics;
+namespace FoodDiary.Modules.Statistics.Application.Queries.GetDiaryStatistics;
 
 public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService accessService, IUserDashboardProfileReadService profiles,
     ISender sender, TimeProvider timeProvider)

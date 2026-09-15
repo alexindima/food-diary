@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;

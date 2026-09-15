@@ -2,10 +2,10 @@
 
 Products owns application slices, mutation ports, consumed read/link contracts,
 persistence adapters and explicit EF mapping. Follow the narrower layer guides.
-Preserve FoodDiary.Application.Products assembly identity and existing CLR namespaces.
+Use FoodDiary.Modules.Products.<Project> identities and folder namespaces.
 Compatibility requires coordinated host rebuilds, not old binary compatibility.
 
-Product, product value objects and focused invariant tests live in the module Domain with stable CLR namespaces. FoodQualityScore and FoodQualityGrade live in the narrow Products-owned FoodQuality project, referencing only Products Domain.Contracts and shared primitives. ProductId, ProductType and MeasurementUnit live in Domain.Contracts, which references only shared primitives. The central and Nutrition domain assemblies are retired. Product keeps scalar UserId and UsdaFdcId; its model owns the schema-equivalent foreign keys. RecipeIngredient uses an immutable product snapshot; Users-owned User and MealItem expose no Product CLR navigation. Other modules reference Products FoodQuality directly for the existing shared formula; the scoring dependency exposes no Product aggregate.
+Product, product value objects and focused invariant tests live in the module Domain with canonical folder namespaces. FoodQualityScore and FoodQualityGrade live in the narrow Products-owned FoodQuality project, referencing only Products Domain.Contracts and shared primitives. ProductId, ProductType and MeasurementUnit live in Domain.Contracts, which references only shared primitives. The central and Nutrition domain assemblies are retired. Product keeps scalar UserId and UsdaFdcId; its model owns the schema-equivalent foreign keys. RecipeIngredient uses an immutable product snapshot; Users-owned User and MealItem expose no Product CLR navigation. Other modules reference Products FoodQuality directly for the existing shared formula; the scoring dependency exposes no Product aggregate.
 ProductsDbContext owns runtime Product tracking. Shared transaction coordination and migrations/snapshot stay central; composition uses Serializable transactions under ADR 0035.
 See docs/ai/products-ownership-inventory.md for source evidence.
 
@@ -23,3 +23,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Current module convention: all projects use `FoodDiary.Modules.Products.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

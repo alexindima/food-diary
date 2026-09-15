@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;

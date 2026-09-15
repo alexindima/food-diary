@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using System.Globalization;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Recipes.Domain.ValueObjects;
 
 public readonly record struct RecipeStepContentState {
     public const int TitleMaxLength = 256;

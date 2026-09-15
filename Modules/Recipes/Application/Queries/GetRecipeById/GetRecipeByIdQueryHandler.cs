@@ -1,14 +1,16 @@
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Modules.Recipes.Application.Common;
+
+using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
+namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipeById;
 
 public sealed class GetRecipeByIdQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,

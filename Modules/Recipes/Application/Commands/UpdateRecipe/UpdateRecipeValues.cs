@@ -1,11 +1,12 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 
 internal sealed record UpdateRecipeValues(
     UserId UserId,

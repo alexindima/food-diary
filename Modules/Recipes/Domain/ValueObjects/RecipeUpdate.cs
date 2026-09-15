@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Recipes.Domain.ValueObjects;
 
 public readonly record struct RecipeUpdate(
     string? Name = null,

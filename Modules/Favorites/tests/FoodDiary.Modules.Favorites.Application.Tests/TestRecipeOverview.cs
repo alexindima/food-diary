@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Favorites.Application.Tests;

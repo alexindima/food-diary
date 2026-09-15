@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
@@ -11,7 +13,7 @@ using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Comm
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
@@ -19,9 +21,8 @@ using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFa
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteProducts;

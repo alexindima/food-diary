@@ -1,18 +1,20 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Services;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 
 internal static class UpdateRecipeValuePreparer {
     public static async Task<Result<UpdateRecipeValues>> PrepareAsync(

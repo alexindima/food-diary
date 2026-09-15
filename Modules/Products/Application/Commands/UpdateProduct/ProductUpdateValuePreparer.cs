@@ -1,14 +1,15 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Application.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
 internal static class ProductUpdateValuePreparer {
     public static async Task<Result<ProductUpdateValues>> PrepareAsync(

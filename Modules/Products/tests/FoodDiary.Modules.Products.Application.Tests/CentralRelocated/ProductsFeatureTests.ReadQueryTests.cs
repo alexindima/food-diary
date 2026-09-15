@@ -1,15 +1,15 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Modules.Products.Application.Models;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;
 
 public partial class ProductsFeatureTests {
 

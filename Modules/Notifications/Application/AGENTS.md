@@ -24,3 +24,7 @@ wire compatibility until an explicit API change is approved. See docs/ai/feature
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
+
+GetWebPushSubscriptionsQueryHandler reads active subscription projections directly.
+ProfileNotificationReadService implements only the Users-owned profile read port;
+do not restore a same-module forwarding subscription service or unused read methods.

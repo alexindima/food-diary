@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

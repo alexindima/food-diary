@@ -64,13 +64,13 @@
     <ProjectReference Include="../Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <ProjectReference Include="../Modules/OpenFoodFacts/PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
-    <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Products/PersistenceModel/FoodDiary.Modules.Products.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj" />
-    <ProjectReference Include="../Modules/RecentItems/Infrastructure/Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/RecentItems/PersistenceModel/FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
-    <ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/PersistenceModel/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
-    <ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Recipes/PersistenceModel/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
     <ProjectReference Include="../Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

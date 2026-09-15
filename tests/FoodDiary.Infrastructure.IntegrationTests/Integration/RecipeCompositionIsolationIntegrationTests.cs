@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Products;
-using FoodDiary.Infrastructure.Persistence.Recipes;
+using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 

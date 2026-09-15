@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Meals.Application.Mappings;
 

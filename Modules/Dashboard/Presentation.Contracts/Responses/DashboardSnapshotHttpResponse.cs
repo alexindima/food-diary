@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Hydration.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
-using FoodDiary.Presentation.Api.Features.Tdee.Responses;
+using FoodDiary.Modules.Tdee.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
 using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;

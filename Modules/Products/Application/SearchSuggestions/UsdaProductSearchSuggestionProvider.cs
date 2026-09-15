@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Application.Models;
 
-namespace FoodDiary.Application.Products.SearchSuggestions;
+namespace FoodDiary.Modules.Products.Application.SearchSuggestions;
 
 public sealed class UsdaProductSearchSuggestionProvider(
     IUsdaProductSuggestionReadService usdaProductSuggestionReadService,

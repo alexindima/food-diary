@@ -4,12 +4,12 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ProductsModuleExtractionTests {
     [Theory]
     [InlineData("Application/FoodDiary.Modules.Products.Application.csproj")]
-    [InlineData("Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj")]
+    [InlineData("Application.Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj")]
     [InlineData("Contracts/FoodDiary.Modules.Products.Contracts.csproj")]
     [InlineData("Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj")]
     [InlineData("Domain/FoodDiary.Modules.Products.Domain.csproj")]
     [InlineData("Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj")]
-    [InlineData("Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj")]
+    [InlineData("PersistenceModel/FoodDiary.Modules.Products.PersistenceModel.csproj")]
     [InlineData("tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj")]
     [InlineData("tests/FoodDiary.Modules.Products.Domain.Tests/FoodDiary.Modules.Products.Domain.Tests.csproj")]
     [InlineData("tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests.csproj")]
@@ -18,7 +18,7 @@ public sealed class ProductsModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Application.Products")]
+    [InlineData("FoodDiary.Modules.Products.Application")]
     [InlineData("FoodDiary.Application.Abstractions/Products")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Products")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Configurations/Products")]
@@ -30,8 +30,8 @@ public sealed class ProductsModuleExtractionTests {
     [Fact]
     public void ProductDomainOwnership_IsPhysicalAndAcyclic() {
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/User.cs"));
-        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
-        string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs"));
+        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Product.cs"));
+        string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/RecipeIngredient.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/MealItem.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Product> Products", user, StringComparison.Ordinal);
         Assert.DoesNotContain("IReadOnlyCollection<MealItem> MealItems", product, StringComparison.Ordinal);
@@ -71,7 +71,7 @@ public sealed class ProductsModuleExtractionTests {
             "IProductWriteRepository",
         ]));
         string writePort = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "Modules/Products/Application/Abstractions/Products/Common/IProductWriteRepository.cs"));
+            "Modules/Products/Application.Abstractions/Common/IProductWriteRepository.cs"));
         Assert.DoesNotContain("IProductWriteRepository : IProductReadRepository", writePort, StringComparison.Ordinal);
     }
 

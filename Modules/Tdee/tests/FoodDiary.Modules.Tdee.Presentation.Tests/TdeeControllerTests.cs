@@ -1,13 +1,14 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Tdee.Models;
-using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
+using FoodDiary.Modules.Tdee.Contracts.Models;
+using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Tdee;
-using FoodDiary.Presentation.Api.Features.Tdee.Responses;
+using FoodDiary.Modules.Tdee.Presentation.Controllers;
+using FoodDiary.Modules.Tdee.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Tdee.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TdeeControllerTests {

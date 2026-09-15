@@ -1,10 +1,11 @@
-using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Contracts.Models;
+
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.RecipeCommunity.Application.Tests;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class TestRecipeOverview {

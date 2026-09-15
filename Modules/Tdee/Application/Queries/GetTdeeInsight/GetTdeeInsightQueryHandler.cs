@@ -1,22 +1,24 @@
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Tdee.Application.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Exercises.Contracts.Models;
-using FoodDiary.Application.Tdee.Common;
-using FoodDiary.Application.Tdee.Models;
-using FoodDiary.Application.Tdee.Services;
+using FoodDiary.Modules.Tdee.Contracts.Models;
+using FoodDiary.Modules.Tdee.Application.Services;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
+namespace FoodDiary.Modules.Tdee.Application.Queries.GetTdeeInsight;
 
 public sealed class GetTdeeInsightQueryHandler(
-    ITdeeUserProfileService tdeeUserProfileService,
+    IUserTdeeProfileReadService userProfileReadService,
     ISender sender,
     IMealDailyCalorieReadService statisticsReadService,
     TimeProvider dateTimeProvider,
@@ -36,7 +38,7 @@ public sealed class GetTdeeInsightQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<TdeeUserProfile> profileResult = await tdeeUserProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<TdeeUserProfile> profileResult = await GetProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (profileResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(profileResult.Error);
         }
@@ -95,4 +97,20 @@ public sealed class GetTdeeInsightQueryHandler(
         IReadOnlyList<MealDailyCalories> dailyCalories,
         IReadOnlyList<ExerciseEntryModel> exercises) =>
         TdeeCalculator.CalculateAdaptive(weights, ToDailyCalories(dailyCalories), AnalysisPeriodDays, exercises);
+    private async Task<Result<TdeeUserProfile>> GetProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        Result<UserTdeeProfileModel> profileResult = await userProfileReadService
+            .GetTdeeProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<TdeeUserProfile>(profileResult.Error);
+        }
+
+        UserTdeeProfileModel profile = profileResult.Value;
+        return Result.Success(new TdeeUserProfile(
+            profile.Bmr,
+            profile.EstimatedTdee,
+            profile.WeightKg,
+            profile.DesiredWeightKg,
+            profile.DailyCalorieTarget));
+    }
 }

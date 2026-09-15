@@ -24,9 +24,9 @@ public sealed class RoleAndQualityBoundaryTests {
             ProjectReferenceReader.ReadProjectReferences(
                 "Modules/Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj"));
 
-        Type[] publicTypes = typeof(FoodDiary.Domain.ValueObjects.FoodQualityScore).Assembly.GetExportedTypes();
+        Type[] publicTypes = typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityScore).Assembly.GetExportedTypes();
         Assert.Equal(
-            [typeof(FoodDiary.Domain.ValueObjects.FoodQualityGrade), typeof(FoodDiary.Domain.ValueObjects.FoodQualityScore)],
+            [typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityGrade), typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityScore)],
             publicTypes.OrderBy(type => type.FullName, StringComparer.Ordinal));
     }
 }

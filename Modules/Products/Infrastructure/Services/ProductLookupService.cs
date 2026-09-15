@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Modules.Products.Infrastructure.Services;
 
 public sealed class ProductLookupService(IProductOverviewReadService productOverviewReadService) : IProductLookupService {
     public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(

@@ -26,9 +26,9 @@ using FoodDiary.Modules.Marketing.Presentation.Controllers;
 using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Controllers;
 using FoodDiary.Modules.Notifications.Presentation.Controllers;
 using FoodDiary.Modules.OpenFoodFacts.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Products;
-using FoodDiary.Presentation.Api.Features.Recipes;
-using FoodDiary.Presentation.Api.Features.RecipeLikes;
+using FoodDiary.Modules.Products.Presentation.Controllers;
+using FoodDiary.Modules.Recipes.Presentation.Controllers;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Controllers;
 using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries;
 using FoodDiary.Presentation.Api.Features.Wearables;
@@ -313,7 +313,7 @@ public sealed class ControllerSecurityContractTests {
             (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
             (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
             (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
+            (typeof(global::FoodDiary.Modules.Recipes.Presentation.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
             (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
             (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
         ];

@@ -3,7 +3,7 @@ using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Modules.Tdee.Contracts.Models;
 
 namespace FoodDiary.Modules.Dashboard.Application.Services;
 

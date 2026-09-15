@@ -1,14 +1,15 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.RecipeLikes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public sealed class ToggleRecipeLikeCommandHandler(
     IRecipeLikeWriteRepository likeRepository,

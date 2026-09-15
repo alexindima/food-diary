@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 
-namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
+namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 
 public sealed class GetStatisticsSummaryQueryValidator : AbstractValidator<GetStatisticsSummaryQuery> {
     public GetStatisticsSummaryQueryValidator() {

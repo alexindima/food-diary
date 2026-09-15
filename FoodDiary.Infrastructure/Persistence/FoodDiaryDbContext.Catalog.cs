@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recents;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Modules.Images.PersistenceModel.Images;
 using Microsoft.EntityFrameworkCore;

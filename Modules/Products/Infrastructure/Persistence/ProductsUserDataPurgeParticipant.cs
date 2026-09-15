@@ -1,12 +1,11 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Modules.Products.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Products.Infrastructure.Persistence;
 
 internal sealed class ProductsUserDataPurgeParticipant(
     ProductsDbContext context,

@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 
-namespace FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+namespace FoodDiary.Modules.Recipes.Application.Queries.ExploreRecipes;
 
 public sealed class ExploreRecipesQueryValidator : AbstractValidator<ExploreRecipesQuery> {
     private static readonly string[] ValidSortValues = ["newest", "popular"];

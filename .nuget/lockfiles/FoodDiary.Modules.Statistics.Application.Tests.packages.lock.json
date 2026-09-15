@@ -135,7 +135,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.Statistics": {
+      "FoodDiary.Modules.Statistics.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",

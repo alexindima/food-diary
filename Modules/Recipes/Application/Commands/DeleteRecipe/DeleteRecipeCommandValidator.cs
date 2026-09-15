@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.DeleteRecipe;
 
 public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand> {
     public DeleteRecipeCommandValidator() {

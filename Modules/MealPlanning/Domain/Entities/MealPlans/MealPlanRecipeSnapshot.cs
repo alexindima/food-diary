@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 

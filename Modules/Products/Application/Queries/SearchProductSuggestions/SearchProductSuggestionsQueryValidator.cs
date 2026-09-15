@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+namespace FoodDiary.Modules.Products.Application.Queries.SearchProductSuggestions;
 
 public sealed class SearchProductSuggestionsQueryValidator : AbstractValidator<SearchProductSuggestionsQuery> {
     public const int MaximumSearchLength = 100;

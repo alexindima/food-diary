@@ -283,10 +283,6 @@ public partial class NotificationsFeatureTests {
         return new UserNotificationProfileService(repository, repository);
     }
 
-    private static IWebPushSubscriptionReadService CreateWebPushSubscriptionReadService(
-        IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository) =>
-        new WebPushSubscriptionReadService(webPushSubscriptionRepository);
-
     [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository, ICurrentUserAccessService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

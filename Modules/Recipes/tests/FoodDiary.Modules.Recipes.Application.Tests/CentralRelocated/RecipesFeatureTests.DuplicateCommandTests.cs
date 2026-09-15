@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Application.Commands.DuplicateRecipe;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Modules.Recipes.Application.Models;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
 

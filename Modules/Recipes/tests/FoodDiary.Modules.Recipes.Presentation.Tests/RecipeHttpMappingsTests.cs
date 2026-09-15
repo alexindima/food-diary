@@ -1,19 +1,20 @@
+using FoodDiary.Modules.Recipes.Presentation.Mappings;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Application.Recipes.Commands.CreateRecipe;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipeById;
-using FoodDiary.Application.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
-using FoodDiary.Presentation.Api.Features.Recipes.Mappings;
-using FoodDiary.Presentation.Api.Features.Recipes.Requests;
-using FoodDiary.Presentation.Api.Features.Recipes.Responses;
+using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
+using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Application.Queries.ExploreRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecentRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipeById;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Responses;
+
+namespace FoodDiary.Modules.Recipes.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipeHttpMappingsTests {

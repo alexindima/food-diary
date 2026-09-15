@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Modules.Recipes.Infrastructure.Services;
 
 public sealed class RecipeLookupService(IRecipeOverviewReadService recipeReadService) : IRecipeLookupService {
     public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(

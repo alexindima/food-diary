@@ -4,6 +4,15 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SolutionModuleFolderTests {
+    [Theory]
+    [InlineData("Domain")]
+    [InlineData("Domain.Contracts")]
+    public void ProductsDomainProjects_DoNotRegrowSolutionWrappers(string layer) {
+        string path = $"Modules/Products/{layer}/FoodDiary.Modules.Products.{layer}.csproj";
+        XElement project = Assert.Single(LoadSolution().Descendants("Project"), node => ProjectPath(node).Equals(path, StringComparison.Ordinal));
+        Assert.Equal("/Modules/Products/", project.Parent?.Attribute("Name")?.Value);
+    }
+
     [Fact]
     public void SolutionFolders_HaveProjectsOrFilesInTheirSubtree() {
         AssertNoViolations(FindEmptyFolders(LoadSolution()), "Empty solution folders");

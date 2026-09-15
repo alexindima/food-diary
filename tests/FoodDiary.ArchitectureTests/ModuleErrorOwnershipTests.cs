@@ -7,9 +7,9 @@ public sealed class ModuleErrorOwnershipTests {
     [InlineData("Dietologist", "Common", "DietologistErrors")]
     [InlineData("Fasting", "Common", "FastingErrors")]
     [InlineData("Hydration", "Common", "HydrationEntryErrors")]
-    [InlineData("Meals", "Meals/Common", "MealErrors")]
+    [InlineData("Meals", "Common", "MealErrors")]
     public void ErrorFactory_IsModuleOwnedWithoutCentralDependency(string module, string relativeFolder, string type) {
-        string abstractions = module is "DailyAdvices" or "Dietologist" ? "Application.Abstractions" : "Application/Abstractions";
+        const string abstractions = "Application.Abstractions";
         string source = ArchitectureTestPaths.FromRoot($"Modules/{module}/{abstractions}/{relativeFolder}/{type}.cs");
         Assert.True(File.Exists(source), $"Missing owned factory: {source}");
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot($"FoodDiary.Application.Abstractions/{module}/Common/{type}.cs")));

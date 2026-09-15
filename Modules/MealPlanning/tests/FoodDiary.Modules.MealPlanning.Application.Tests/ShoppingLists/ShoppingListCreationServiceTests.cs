@@ -1,10 +1,12 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

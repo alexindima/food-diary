@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Products.Domain.ValueObjects;
 
 public readonly record struct ProductIdentityState(
     string Name,

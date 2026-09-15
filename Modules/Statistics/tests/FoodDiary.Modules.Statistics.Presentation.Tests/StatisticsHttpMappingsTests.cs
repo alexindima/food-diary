@@ -1,13 +1,14 @@
-using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Application.Statistics.Queries.GetStatistics;
-using FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
+using FoodDiary.Modules.Statistics.Presentation.Mappings;
+using FoodDiary.Modules.Statistics.Application.Models;
+using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
+using FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
-using FoodDiary.Presentation.Api.Features.Statistics.Mappings;
-using FoodDiary.Presentation.Api.Features.Statistics.Requests;
-using FoodDiary.Presentation.Api.Features.Statistics.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Statistics.Presentation.Requests;
+using FoodDiary.Modules.Statistics.Presentation.Responses;
+
+namespace FoodDiary.Modules.Statistics.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class StatisticsHttpMappingsTests {

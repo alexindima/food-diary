@@ -295,7 +295,8 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.FavoriteProducts",
         "FoodDiary.Application.Images.Common",
         "FoodDiary.Application.OpenFoodFacts.Common",
-        "FoodDiary.Application.Products",
+        "FoodDiary.Modules.Products.Application",
+        "FoodDiary.Modules.Products.Application",
         "FoodDiary.Application.RecentItems.Common",
         "FoodDiary.Application.Users.Common",
         "FoodDiary.Application.Usda.Common",
@@ -315,7 +316,8 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Images.Common",
         "FoodDiary.Application.Abstractions.Nutrition.Common",
         "FoodDiary.Application.RecentItems.Common",
-        "FoodDiary.Application.Recipes",
+        "FoodDiary.Modules.Recipes.Application",
+        "FoodDiary.Modules.Recipes.Application",
         "FoodDiary.Application.Users.Common",
     };
 
@@ -354,10 +356,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Users",
         "FoodDiary.Application.Common",
-        "FoodDiary.Modules.Dietologist.Application",
         "FoodDiary.Application.Images.Common",
-        "FoodDiary.Modules.Notifications.Application",
         "FoodDiary.Application.Users",
+        "FoodDiary.Modules.Users.Application",
     };
 
     private static readonly HashSet<string> ApprovedAuthenticationApplicationDependencies = new(StringComparer.Ordinal) {
@@ -368,6 +369,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Application.Abstractions.Users.Models",
         "FoodDiary.Application.Authentication",
+        "FoodDiary.Modules.Identity.Application",
         "FoodDiary.Application.Identity.Authentication",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Abstractions.Admin.Common",
@@ -396,11 +398,13 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void FastingApplicationAbstractions_DoNotDependOnOtherFeatureContracts() {
-        string moduleRoot = Path.Combine(ModuleSourceCatalog.ApplicationRoot("Fasting"), "Abstractions");
+        string moduleRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Fasting", "Application.Abstractions");
 
         string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
-            .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Fasting", StringComparison.Ordinal) &&
+            .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Modules.Fasting.Application.Abstractions", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.StartsWith("FoodDiary.Modules.Fasting.Application.Abstractions.", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Fasting", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Fasting.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Common", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Common.", StringComparison.Ordinal))
@@ -435,7 +439,9 @@ public sealed class BusinessModuleBoundaryTests {
 
         string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
-            .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Notifications", StringComparison.Ordinal) &&
+            .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Modules.Notifications.Application.Abstractions", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.StartsWith("FoodDiary.Modules.Notifications.Application.Abstractions.", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Notifications", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Notifications.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Common", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Common.", StringComparison.Ordinal))
@@ -708,10 +714,10 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("ProductConfiguration.cs", "Modules/Products/Infrastructure/Model/Configurations/Products")]
-    [InlineData("RecipeConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
-    [InlineData("RecipeIngredientConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
-    [InlineData("RecipeStepConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
+    [InlineData("ProductConfiguration.cs", "Modules/Products/PersistenceModel/Configurations/Products")]
+    [InlineData("RecipeConfiguration.cs", "Modules/Recipes/PersistenceModel/Configurations/Recipes")]
+    [InlineData("RecipeIngredientConfiguration.cs", "Modules/Recipes/PersistenceModel/Configurations/Recipes")]
+    [InlineData("RecipeStepConfiguration.cs", "Modules/Recipes/PersistenceModel/Configurations/Recipes")]
     public void CatalogAggregateConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
@@ -795,7 +801,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("MealItemConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
     [InlineData("MealAiSessionConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
     [InlineData("MealAiItemConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
-    [InlineData("RecentItemConfiguration.cs", "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems")]
+    [InlineData("RecentItemConfiguration.cs", "Modules/RecentItems/PersistenceModel/Configurations/RecentItems")]
     public void MealAndRecentItemConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
@@ -955,7 +961,7 @@ public sealed class BusinessModuleBoundaryTests {
             ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Dietologist", "PersistenceModel", "Configurations", fileName)
             : Path.Combine(
                 ArchitectureTestPaths.RepositoryRoot,
-                "Modules", "RecipeCommunity", "Infrastructure", "Model",
+                "Modules", "RecipeCommunity", "PersistenceModel",
                 expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
                 fileName);
 
@@ -1152,26 +1158,54 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Theory]
+    [InlineData("using FoodDiary.Application.Meals.Common;", "FoodDiary.Application.Meals.Common")]
+    [InlineData("using FoodDiary.Modules.Meals.Application.Services;", "FoodDiary.Modules.Meals.Application.Services")]
+    [InlineData("using Port = global::FoodDiary.Modules.Notifications.Application.Abstractions.Common.IPort;", "FoodDiary.Modules.Notifications.Application.Abstractions.Common.IPort")]
+    [InlineData("class Consumer { global::FoodDiary.Modules.Meals.Application.Services.Reader reader; }", "FoodDiary.Modules.Meals.Application.Services.Reader")]
+    [InlineData("using FoodDiary.Modules.Meals.Contracts.Models;", null)]
+    [InlineData("using FoodDiary.Modules.Meals.ApplicationExtra;", null)]
+    public void ApplicationDependencyDiscovery_RecognizesLegacyAndCanonicalReferences(string source, string? expected) {
+        NamespaceDependency[] dependencies = [.. ReadApplicationNamespaceDependencies(CSharpSyntaxTree.ParseText(source))];
+        if (expected is null) {
+            Assert.Empty(dependencies);
+        } else {
+            Assert.Equal(expected, Assert.Single(dependencies).Namespace);
+        }
+    }
+
+    private static bool IsModuleApplicationNamespace(string value) =>
+        value.Split('.') is ["FoodDiary", "Modules", _, "Application", ..];
+
     private static IEnumerable<NamespaceDependency> ReadApplicationNamespaceDependencies(string path) =>
-        ReadNamespaceDependencies(path, "FoodDiary.Application.");
+        ReadApplicationNamespaceDependencies(CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
+
+    private static IEnumerable<NamespaceDependency> ReadApplicationNamespaceDependencies(SyntaxTree tree) =>
+        ReadNamespaceDependencies(tree, "FoodDiary.Application.")
+            .Concat(ReadNamespaceDependencies(tree, "FoodDiary.Modules.")
+                .Where(dependency => IsModuleApplicationNamespace(dependency.Namespace)));
 
     private static IEnumerable<NamespaceDependency> ReadApplicationAbstractionsNamespaceDependencies(string path) =>
-        ReadNamespaceDependencies(path, "FoodDiary.Application.Abstractions.");
+        ReadNamespaceDependencies(path, "FoodDiary.Application.Abstractions.")
+            .Concat(ReadNamespaceDependencies(path, "FoodDiary.Modules.")
+                .Where(dependency => dependency.Namespace.Split('.') is ["FoodDiary", "Modules", _, "Application", "Abstractions", ..]));
 
-    private static IEnumerable<NamespaceDependency> ReadNamespaceDependencies(string path, string prefix) {
-        SyntaxTree tree = CSharpSyntaxTree.ParseText(File.ReadAllText(path));
+    private static IEnumerable<NamespaceDependency> ReadNamespaceDependencies(string path, string prefix) =>
+        ReadNamespaceDependencies(CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path), prefix);
+
+    private static IEnumerable<NamespaceDependency> ReadNamespaceDependencies(SyntaxTree tree, string prefix) {
         CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
         return root.DescendantNodes()
             .OfType<NameSyntax>()
             .Where(name => name.Parent is not NameSyntax)
             .Select(name => new {
-                Namespace = name.ToString(),
+                Namespace = name.ToString().Replace("global::", string.Empty, StringComparison.Ordinal),
                 Line = tree.GetLineSpan(name.Span).StartLinePosition.Line + 1,
             })
             .Where(entry => entry.Namespace.StartsWith(prefix, StringComparison.Ordinal))
             .DistinctBy(entry => (entry.Namespace, entry.Line))
-            .Select(entry => new NamespaceDependency(path, entry.Line, entry.Namespace));
+            .Select(entry => new NamespaceDependency(tree.FilePath, entry.Line, entry.Namespace));
     }
 
     [ExcludeFromCodeCoverage]

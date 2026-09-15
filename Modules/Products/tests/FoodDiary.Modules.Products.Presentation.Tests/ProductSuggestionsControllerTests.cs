@@ -1,13 +1,14 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Modules.Products.Application.Queries.SearchProductSuggestions;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Products;
-using FoodDiary.Presentation.Api.Features.Products.Responses;
+using FoodDiary.Modules.Products.Presentation.Controllers;
+using FoodDiary.Modules.Products.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Products.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProductSuggestionsControllerTests {

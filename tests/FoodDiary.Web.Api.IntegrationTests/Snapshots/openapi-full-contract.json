@@ -14247,6 +14247,7 @@
           "ResponseCodes": [
             "200",
             "401",
+            "404",
             "500"
           ],
           "SuccessResponses": [

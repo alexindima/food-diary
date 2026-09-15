@@ -1,7 +1,9 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Recipes;
+namespace FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 
 public sealed class RecipeComment : AggregateRoot<RecipeCommentId> {
     private const int TextMaxLength = 2000;

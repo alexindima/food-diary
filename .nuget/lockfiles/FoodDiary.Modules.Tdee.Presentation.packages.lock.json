@@ -44,7 +44,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.Tdee": {
+      "FoodDiary.Modules.Tdee.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",

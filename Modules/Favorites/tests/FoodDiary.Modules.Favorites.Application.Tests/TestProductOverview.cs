@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Favorites.Application.Tests;

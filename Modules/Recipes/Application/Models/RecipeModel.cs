@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Application.Recipes.Models;
+namespace FoodDiary.Modules.Recipes.Application.Models;
 
 [ExcludeFromCodeCoverage]
 public sealed record RecipeModel(

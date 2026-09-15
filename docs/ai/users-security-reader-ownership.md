@@ -84,7 +84,7 @@ from the generated repository catalog (1039 passed/1 failed). Native Wiki update
 corrected that catalog. A second complete run found a distinct stale canonical
 entry: `applicationAbstractionOwnership.RecentItems = Shared`, while no central
 RecentItems path is tracked at the exact baseline. The contracts moved to
-`Modules/RecentItems/Application/Abstractions` in
+`Modules/RecentItems/Application.Abstractions` in
 `c0afb0edb14b6bfb81a45525711ec4ace67e3214`. Remove only that legacy central-area
 entry; the actual RecentItems module mapping and unchanged guard remain. The
 first run did not expose this filesystem-sensitive mismatch; the cause of the

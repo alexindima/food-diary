@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Entities;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Modules.Products.Application.Common;
 
 internal static class ProductCommandValidation {
     public static bool BeValidUnit(string? unit) =>

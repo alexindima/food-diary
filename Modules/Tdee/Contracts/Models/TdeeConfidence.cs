@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Tdee.Models;
+namespace FoodDiary.Modules.Tdee.Contracts.Models;
 
 public enum TdeeConfidence {
     None = 0,

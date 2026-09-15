@@ -1,15 +1,16 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
+using FoodDiary.Modules.Recipes.Application.Services;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.DuplicateProduct;
 
 public sealed class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand> {
     public DuplicateProductCommandValidator() {

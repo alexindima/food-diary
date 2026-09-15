@@ -1,5 +1,6 @@
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

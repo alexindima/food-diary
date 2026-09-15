@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Products.Models;
+namespace FoodDiary.Modules.Products.Application.Models;
 
 public sealed record ProductSearchSuggestionModel(
     string Source,

@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Modules.Products.Application.Common;
 
 internal static class ProductCommandParsers {
     public static Result<MeasurementUnit> ParseRequiredBaseUnit(string value, string propertyName) =>

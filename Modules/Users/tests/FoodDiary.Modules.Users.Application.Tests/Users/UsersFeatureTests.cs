@@ -806,7 +806,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([subscription])),
+                new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([subscription])),
                 new FixedDietologistInvitationRepository(invitation)),
             new SingleUserRepository(user));
 
@@ -830,7 +830,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+                new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([])),
                 new FixedDietologistInvitationRepository(invitation: null)),
             new SingleUserRepository(user));
 
@@ -847,7 +847,7 @@ public partial class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new ProfileOverviewReadService(
                 new SingleUserRepository(user),
-                new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+                new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([])),
                 new FixedDietologistInvitationRepository(invitation: null)),
             new SingleUserRepository(user));
 
@@ -866,7 +866,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
-            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+            new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([])),
             new FixedDietologistInvitationRepository(invitation: null));
 
         Result<ProfileOverviewModel> result = await service.GetAsync(userId, CancellationToken.None);
@@ -887,7 +887,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Failure<UserNotificationPreferencesModel>(AuthenticationErrors.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
-            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+            new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([])),
             new FixedDietologistInvitationRepository(invitation: null));
 
         Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);
@@ -906,7 +906,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Failure<ProfileDietologistRelationshipModel?>(DietologistErrors.AccessDenied)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
-            new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
+            new ProfileNotificationReadService(new FixedWebPushSubscriptionRepository([])),
             dietologistReadService);
 
         Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);

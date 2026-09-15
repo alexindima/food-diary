@@ -18,13 +18,13 @@ public sealed class RecipeCommunityModuleExtractionTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.RecipeCommunity", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.RecipeCommunity.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedRecipeCommunityAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj");
+            "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj");
         string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.RecipeCommunity.Domain", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);

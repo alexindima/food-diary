@@ -12,7 +12,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.Images.Application",
             "FoodDiary.Modules.MealPlanning.Application",
             "FoodDiary.Modules.Notifications.Application",
-            "FoodDiary.Application.RecipeCommunity",
+            "FoodDiary.Modules.RecipeCommunity.Application",
             "FoodDiary.Application.Runtime",
             "FoodDiary.Application.Usda",
             "FoodDiary.Authentication.Infrastructure",

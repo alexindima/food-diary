@@ -1,12 +1,12 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Common.Validators;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Common.Validators;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 
 public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
     public CreateRecipeCommandValidator() {

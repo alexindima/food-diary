@@ -1,6 +1,6 @@
 # RecipeCommunity module
 
-Own RecipeComments and RecipeLikes as separate feature groups. Application keeps its legacy assembly and CLR namespaces. Ports and errors live in Application/Abstractions; entities and IDs in Domain; repositories in Infrastructure/Persistence; EF configurations in Infrastructure/Model.
+Own RecipeComments and RecipeLikes as separate feature groups. Application uses canonical assembly and folder namespaces. Ports and errors live in Application.Abstractions; entities and IDs in Domain; repositories in Infrastructure/Persistence; EF configurations in PersistenceModel.
 
 Domain references Users and Recipes Domain.Contracts for scalar IDs. Preserve the foreign keys with typed HasOne<T>().WithMany() mappings, cascade behavior and the unique user/recipe like index; no foreign aggregate CLR navigation remains. Recipes remains a separate Domain owner; do not transfer its ownership into RecipeCommunity or introduce provider behavior changes.
 
@@ -25,3 +25,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Current module convention: all projects use `FoodDiary.Modules.RecipeCommunity.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

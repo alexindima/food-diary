@@ -7,3 +7,5 @@ Products repository PostgreSQL cases live in FoodDiary.Modules.Products.Infrastr
 ProductInvariantTests belongs to FoodDiary.Modules.Products.Domain.Tests and references Products Domain. Its 55 Fact/Theory methods and local helper remain unchanged; shared navigation does not require retaining this focused test file centrally. Mixed domain tests remain central.
 
 FoodQualityScoreTests and NutritionContractTests own all 43 former Nutrition test cases here. Preserve every case and keep mixed Products/USDA invariant coverage central.
+
+Current module convention: all projects use `FoodDiary.Modules.Products.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

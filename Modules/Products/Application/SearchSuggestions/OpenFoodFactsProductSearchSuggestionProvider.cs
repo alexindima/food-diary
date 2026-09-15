@@ -1,10 +1,10 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Application.Models;
 
-namespace FoodDiary.Application.Products.SearchSuggestions;
+namespace FoodDiary.Modules.Products.Application.SearchSuggestions;
 
 public sealed class OpenFoodFactsProductSearchSuggestionProvider(ISender cachedProductSearch) : IProductSearchSuggestionProvider {
     public string Source => "openFoodFacts";

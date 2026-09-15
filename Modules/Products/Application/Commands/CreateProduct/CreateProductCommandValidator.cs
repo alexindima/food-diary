@@ -1,8 +1,8 @@
 using FluentValidation;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.CreateProduct;
 
 public sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
     public CreateProductCommandValidator() {

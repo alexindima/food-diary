@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using System.Globalization;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
@@ -198,7 +199,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     }
 
     private static void EnsureProductId(ProductId? productId) {
-        if (productId == global::FoodDiary.Domain.ValueObjects.Ids.ProductId.Empty) {
+        if (productId == global::FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId.Empty) {
             throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
         }
     }

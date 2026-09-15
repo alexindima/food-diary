@@ -746,7 +746,7 @@
           "Modules/Products/Application"
         ],
         "abstractionAreas": [
-          "Modules/Products/Application/Abstractions",
+          "Modules/Products/Application.Abstractions",
           "Modules/Products/Contracts"
         ],
         "domainAreas": [
@@ -757,12 +757,15 @@
           "Modules/Products/Infrastructure"
         ],
         "adapterAreas": [
-          "Modules/Products/Presentation/Features/Products"
+          "Modules/Products/Presentation"
         ],
         "testAreas": [
           "Modules/Products/tests",
           "tests/FoodDiary.Application.Tests/Products",
           "tests/FoodDiary.Web.Api.IntegrationTests/ProductPostgresApiFlowTests.cs"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Products/PersistenceModel"
         ]
       }
     },
@@ -779,13 +782,19 @@
           "Modules/RecentItems/Application"
         ],
         "abstractionAreas": [
-          "Modules/RecentItems/Application/Abstractions"
+          "Modules/RecentItems/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/RecentItems/Domain"
         ],
         "persistenceAreas": [
           "Modules/RecentItems/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/RecentItems/PersistenceModel"
+        ],
+        "contractProjects": [
+          "Modules/RecentItems/Contracts"
         ]
       }
     },
@@ -800,17 +809,17 @@
       "sourceMappings": {
         "logicalRoot": "Modules/RecipeCommunity",
         "persistenceModelProjects": [
-          "Modules/RecipeCommunity/Infrastructure/Model"
+          "Modules/RecipeCommunity/PersistenceModel"
         ],
         "adapterAreas": [
-          "Modules/RecipeCommunity/Presentation/Features/RecipeComments",
-          "Modules/RecipeCommunity/Presentation/Features/RecipeLikes"
+          "Modules/RecipeCommunity/Presentation/RecipeComments",
+          "Modules/RecipeCommunity/Presentation/RecipeLikes"
         ],
         "applicationProjects": [
           "Modules/RecipeCommunity/Application"
         ],
         "abstractionAreas": [
-          "Modules/RecipeCommunity/Application/Abstractions"
+          "Modules/RecipeCommunity/Application.Abstractions"
         ],
         "domainProjects": [
           "Modules/RecipeCommunity/Domain"
@@ -835,23 +844,27 @@
           "Modules/Recipes/Application"
         ],
         "abstractionAreas": [
-          "Modules/Recipes/Application/Abstractions",
+          "Modules/Recipes/Application.Abstractions",
           "Modules/Recipes/Contracts"
         ],
         "domainAreas": [
-          "Modules/Recipes/Domain/Entities/Recipes"
+          "Modules/Recipes/Domain",
+          "Modules/Recipes/Domain.Contracts"
         ],
         "infrastructureAreas": [
           "Modules/Recipes/Infrastructure"
         ],
         "adapterAreas": [
-          "Modules/Recipes/Presentation/Features/Recipes"
+          "Modules/Recipes/Presentation"
         ],
         "testAreas": [
           "Modules/Recipes/tests",
           "tests/FoodDiary.Application.Tests/Recipes",
           "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
           "tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Recipes/PersistenceModel"
         ]
       }
     },

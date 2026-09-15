@@ -1,11 +1,11 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Requests;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Services;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +16,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Products.Requests;
-using FoodDiary.Presentation.Api.Features.Recipes.Requests;
+using FoodDiary.Modules.Products.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;

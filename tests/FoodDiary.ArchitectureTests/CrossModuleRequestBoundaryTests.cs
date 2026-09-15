@@ -27,6 +27,14 @@ public sealed class CrossModuleRequestBoundaryTests {
     }
 
     [Fact]
+    public void RecentItemsContracts_ExportOnlyPostCommitRecorderPort() {
+        var contracts = Assembly.Load("FoodDiary.Modules.RecentItems.Contracts");
+        string[] interfaces = [.. contracts.GetExportedTypes().Where(type => type.IsInterface)
+            .Select(type => type.Name).Order(StringComparer.Ordinal)];
+        Assert.Equal(["IRecentItemUsageRecorder"], interfaces);
+    }
+
+    [Fact]
     public void FavoritesContracts_ExportOnlyOutboundSourcePorts() {
         var contracts = Assembly.Load("FoodDiary.Modules.Favorites.Contracts");
         string[] interfaces = [.. contracts.GetExportedTypes().Where(type => type.IsInterface)
@@ -35,6 +43,8 @@ public sealed class CrossModuleRequestBoundaryTests {
     }
 
     [Theory]
+    [InlineData("FoodDiary.Modules.RecentItems.Contracts.Queries.ReadRecentProducts.ReadRecentProductsQuery, FoodDiary.Modules.RecentItems.Contracts", "FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentProducts.ReadRecentProductsQueryHandler, FoodDiary.Modules.RecentItems.Application")]
+    [InlineData("FoodDiary.Modules.RecentItems.Contracts.Queries.ReadRecentRecipes.ReadRecentRecipesQuery, FoodDiary.Modules.RecentItems.Contracts", "FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentRecipes.ReadRecentRecipesQueryHandler, FoodDiary.Modules.RecentItems.Application")]
     [InlineData("FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationEntries.ReadHydrationEntriesQuery, FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries.ReadHydrationEntriesQueryHandler, FoodDiary.Modules.Hydration.Application")]
     [InlineData("FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotal.ReadHydrationDailyTotalQuery, FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal.ReadHydrationDailyTotalQueryHandler, FoodDiary.Modules.Hydration.Application")]
     [InlineData("FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQuery, FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQueryHandler, FoodDiary.Modules.Hydration.Application")]

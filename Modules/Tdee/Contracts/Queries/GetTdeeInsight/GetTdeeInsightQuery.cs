@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Modules.Tdee.Contracts.Models;
 
-namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
+namespace FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 
 public record GetTdeeInsightQuery(
     Guid? UserId) : IQuery<Result<TdeeInsightModel>>, IUserRequest;

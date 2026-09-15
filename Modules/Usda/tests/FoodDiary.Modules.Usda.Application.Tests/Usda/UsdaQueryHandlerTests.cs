@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
@@ -8,9 +10,8 @@ using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Modules.Meals.Application.Services;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Usda;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

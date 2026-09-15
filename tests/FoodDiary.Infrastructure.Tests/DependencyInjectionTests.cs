@@ -1,3 +1,7 @@
+using FoodDiary.Modules.RecentItems.Infrastructure;
+using FoodDiary.Modules.RecipeCommunity.Infrastructure;
+using FoodDiary.Modules.Products.Infrastructure;
+using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Meals.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
@@ -43,7 +47,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
@@ -485,12 +489,12 @@ public sealed class DependencyInjectionTests {
         })).AddOutboxProcessing(CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
         })).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddProductsPersistence();
-        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(FoodDiary.Application.Abstractions.Products.Common.IProductOverviewReadService));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(FoodDiary.Modules.Products.Contracts.Common.IProductOverviewReadService));
         services.AddReadModelComposition();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         Assert.IsType<FoodDiary.ReadModel.Composition.Products.ProductOverviewReadService>(
-            scope.ServiceProvider.GetRequiredService<FoodDiary.Application.Abstractions.Products.Common.IProductOverviewReadService>());
+            scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Products.Contracts.Common.IProductOverviewReadService>());
     }
 
     [Fact]
@@ -844,25 +848,25 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Products.Common.IProductRepository",
+            "FoodDiary.Modules.Products.Application.Abstractions.Common.IProductRepository",
             [
-                "FoodDiary.Application.Abstractions.Products.Common.IProductReadRepository",
-                "FoodDiary.Application.Abstractions.Products.Common.IProductWriteRepository",
+                "FoodDiary.Modules.Products.Application.Abstractions.Common.IProductReadRepository",
+                "FoodDiary.Modules.Products.Application.Abstractions.Common.IProductWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeRepository",
+            "FoodDiary.Modules.Recipes.Application.Abstractions.Common.IRecipeRepository",
             [
-                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeReadRepository",
-                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeWriteRepository",
-                "FoodDiary.Application.Abstractions.Recipes.Common.IRecipeNutritionWriter",
+                "FoodDiary.Modules.Recipes.Application.Abstractions.Common.IRecipeReadRepository",
+                "FoodDiary.Modules.Recipes.Application.Abstractions.Common.IRecipeWriteRepository",
+                "FoodDiary.Modules.Recipes.Application.Abstractions.Common.IRecipeNutritionWriter",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemRepository",
+            "FoodDiary.Modules.RecentItems.Application.Abstractions.Common.IRecentItemRepository",
             [
-                "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemReadRepository",
-                "FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemWriteRepository",
+                "FoodDiary.Modules.RecentItems.Application.Abstractions.Common.IRecentItemReadRepository",
+                "FoodDiary.Modules.RecentItems.Application.Abstractions.Common.IRecentItemWriteRepository",
             ]
         },
         {
@@ -914,18 +918,18 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentRepository",
+            "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.IRecipeCommentRepository",
             [
-                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadRepository",
-                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadModelRepository",
-                "FoodDiary.Application.Abstractions.RecipeComments.Common.IRecipeCommentWriteRepository",
+                "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadRepository",
+                "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.IRecipeCommentReadModelRepository",
+                "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.IRecipeCommentWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeRepository",
+            "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common.IRecipeLikeRepository",
             [
-                "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeReadRepository",
-                "FoodDiary.Application.Abstractions.RecipeLikes.Common.IRecipeLikeWriteRepository",
+                "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common.IRecipeLikeReadRepository",
+                "FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common.IRecipeLikeWriteRepository",
             ]
         },
         {

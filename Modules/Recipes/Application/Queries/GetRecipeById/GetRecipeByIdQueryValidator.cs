@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
+namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipeById;
 
 public sealed class GetRecipeByIdQueryValidator : AbstractValidator<GetRecipeByIdQuery> {
     public GetRecipeByIdQueryValidator() {

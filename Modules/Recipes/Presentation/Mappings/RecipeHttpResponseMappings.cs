@@ -1,0 +1,107 @@
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Favorites.Presentation.Mappings.Features.FavoriteRecipes.Mappings;
+using FoodDiary.Modules.Recipes.Presentation.Responses;
+using FoodDiary.Presentation.Api.Responses;
+
+namespace FoodDiary.Modules.Recipes.Presentation.Mappings;
+
+public static class RecipeHttpResponseMappings {
+    extension(RecipeModel model) {
+        public RecipeHttpResponse ToHttpResponse() {
+            return new RecipeHttpResponse(
+                model.Id,
+                model.Name,
+                model.Description,
+                model.Comment,
+                model.Category,
+                model.ImageUrl,
+                model.ImageAssetId,
+                model.PrepTime,
+                model.CookTime,
+                model.Servings,
+                model.TotalCalories,
+                model.TotalProteins,
+                model.TotalFats,
+                model.TotalCarbs,
+                model.TotalFiber,
+                model.TotalAlcohol,
+                model.IsNutritionAutoCalculated,
+                model.ManualCalories,
+                model.ManualProteins,
+                model.ManualFats,
+                model.ManualCarbs,
+                model.ManualFiber,
+                model.ManualAlcohol,
+                model.Visibility,
+                model.UsageCount,
+                model.CreatedAt,
+                model.IsOwnedByCurrentUser,
+                model.QualityScore,
+                model.QualityGrade,
+                model.Steps.ToHttpResponseList(ToHttpResponse),
+                model.IsFavorite,
+                model.FavoriteRecipeId
+            );
+        }
+    }
+
+    extension(RecipeOverviewModel model) {
+        public RecipeOverviewHttpResponse ToHttpResponse() {
+            return new RecipeOverviewHttpResponse(
+                model.RecentItems.ToHttpResponseList(ToHttpResponse),
+                model.AllRecipes.ToHttpResponse(),
+                model.FavoriteItems.Select(FavoriteRecipeHttpResponseMappings.ToHttpResponse).ToList(),
+                model.FavoriteTotalCount
+            );
+        }
+    }
+
+    extension(PagedResponse<RecipeModel> response) {
+        public PagedHttpResponse<RecipeHttpResponse> ToHttpResponse() {
+            return response.ToPagedHttpResponse(ToHttpResponse);
+        }
+    }
+
+    extension(RecipeStepModel model) {
+        private RecipeStepHttpResponse ToHttpResponse() {
+            return new RecipeStepHttpResponse(
+                model.Id,
+                model.StepNumber,
+                model.Title,
+                model.Instruction,
+                model.ImageUrl,
+                model.ImageAssetId,
+                model.Ingredients.ToHttpResponseList(ToHttpResponse)
+            );
+        }
+    }
+
+    extension(RecipeIngredientModel model) {
+        private RecipeIngredientHttpResponse ToHttpResponse() {
+            return new RecipeIngredientHttpResponse(
+                model.Id,
+                model.Amount,
+                model.ProductId,
+                model.ProductName,
+                model.ProductBaseUnit,
+                model.ProductBaseAmount,
+                model.ProductCaloriesPerBase,
+                model.ProductProteinsPerBase,
+                model.ProductFatsPerBase,
+                model.ProductCarbsPerBase,
+                model.ProductFiberPerBase,
+                model.ProductAlcoholPerBase,
+                model.NestedRecipeId,
+                model.NestedRecipeName,
+                model.NestedRecipeServings,
+                model.NestedRecipeTotalCalories,
+                model.NestedRecipeTotalProteins,
+                model.NestedRecipeTotalFats,
+                model.NestedRecipeTotalCarbs,
+                model.NestedRecipeTotalFiber,
+                model.NestedRecipeTotalAlcohol
+            );
+        }
+    }
+}

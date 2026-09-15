@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
+namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 
 public sealed record GetStatisticsSummaryQuery(
     Guid? UserId,

@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class TestProductOverview {

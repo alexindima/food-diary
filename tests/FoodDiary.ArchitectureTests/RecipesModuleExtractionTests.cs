@@ -4,12 +4,12 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class RecipesModuleExtractionTests {
     [Theory]
     [InlineData("Application/FoodDiary.Modules.Recipes.Application.csproj")]
-    [InlineData("Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj")]
+    [InlineData("Application.Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj")]
     [InlineData("Contracts/FoodDiary.Modules.Recipes.Contracts.csproj")]
     [InlineData("Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj")]
     [InlineData("Domain/FoodDiary.Modules.Recipes.Domain.csproj")]
     [InlineData("Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj")]
-    [InlineData("Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj")]
+    [InlineData("PersistenceModel/FoodDiary.Modules.Recipes.PersistenceModel.csproj")]
     [InlineData("tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj")]
     [InlineData("tests/FoodDiary.Modules.Recipes.Domain.Tests/FoodDiary.Modules.Recipes.Domain.Tests.csproj")]
     public void OwnedLayer_HasPhysicalProject(string relativePath) {
@@ -17,7 +17,7 @@ public sealed class RecipesModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Application.Recipes")]
+    [InlineData("FoodDiary.Modules.Recipes.Application")]
     [InlineData("FoodDiary.Application.Abstractions/Recipes")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Recipes")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Configurations/Recipes")]
@@ -31,7 +31,7 @@ public sealed class RecipesModuleExtractionTests {
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/User.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/MealItem.cs"));
-        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
+        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Product.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
         Assert.DoesNotContain("Recipe? Recipe", mealItem, StringComparison.Ordinal);

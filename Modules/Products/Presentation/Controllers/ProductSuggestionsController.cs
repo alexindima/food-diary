@@ -1,0 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Mediator;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Products.Presentation.Mappings;
+using FoodDiary.Modules.Products.Presentation.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+
+namespace FoodDiary.Modules.Products.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/products/suggestions")]
+[EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
+public sealed class ProductSuggestionsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet]
+    [ProducesResponseType<IReadOnlyList<ProductSearchSuggestionHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> SearchSuggestions(
+        [FromQuery, MaxLength(ProductSuggestionRequestLimits.MaximumSearchLength)] string search,
+        [FromQuery, Range(ProductSuggestionRequestLimits.MinimumLimit, ProductSuggestionRequestLimits.MaximumLimit)] int limit = 5) =>
+        HandleOk(ProductHttpMappings.ToSuggestionsQuery(search, limit), static value => value.ToHttpResponse());
+}

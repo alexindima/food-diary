@@ -1,6 +1,6 @@
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.RecipeCommunity.PersistenceModel;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence;

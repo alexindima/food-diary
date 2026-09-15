@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.RecentItems.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecentItemsIdConversionTests {

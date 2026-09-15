@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentRecipes;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
@@ -6,34 +11,35 @@ using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipe
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Commands.CreateRecipe;
-using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
-using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
+using FoodDiary.Modules.Recipes.Application.Commands.DeleteRecipe;
+using FoodDiary.Modules.Recipes.Application.Commands.DuplicateRecipe;
+using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecentRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
+using FoodDiary.Modules.Recipes.Application.Services;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Application.Models;
+
+namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 [ExcludeFromCodeCoverage]
 public partial class RecipesFeatureTests {
@@ -107,14 +113,14 @@ public partial class RecipesFeatureTests {
         ICurrentUserAccessService currentUserAccessService) =>
         new(
             overviewReadService,
-            new RecentRecipeReadService(recentRepository, overviewReadService),
+            new RecentRecipeLoader(RequestTestSender.Create(new ReadRecentRecipesQueryHandler(recentRepository)), overviewReadService),
             RequestTestSender.Create(new ReadFavoriteRecipesQueryHandler(favoriteRepository), new ReadRecipeFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(
         StubRecentItemRepository recentRepository,
         IRecipeOverviewReadService overviewReadService) =>
-        new(new RecentRecipeReadService(recentRepository, overviewReadService), Substitute.For<ICurrentUserAccessService>());
+        new(new RecentRecipeLoader(RequestTestSender.Create(new ReadRecentRecipesQueryHandler(recentRepository)), overviewReadService), Substitute.For<ICurrentUserAccessService>());
 
     private static CreateRecipeCommand CreateRecipeCommand(
         Guid? userId,

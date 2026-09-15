@@ -11,3 +11,5 @@ after commit/rollback. Keep SQL conflict handling, timestamp monotonicity,
 saturating counters and 100-per-type retention unchanged. The InMemory fallback
 tracks only owned rows and uses the shared UnitOfWork in post-commit callbacks.
 User purge uses RecentItemsDbContext, binding the live coordinator transaction on every invocation. Keep the immediate delete and order 70; it never saves or commits. This adapter no longer references central Infrastructure.
+
+Current module convention: all projects use `FoodDiary.Modules.RecentItems.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

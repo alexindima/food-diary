@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 
 public sealed record RecipeCommentModel(
     Guid Id,

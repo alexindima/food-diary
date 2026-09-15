@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Recents;
+namespace FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 
 public sealed class RecentItem : Entity<RecentItemId> {
     public UserId UserId { get; private set; }

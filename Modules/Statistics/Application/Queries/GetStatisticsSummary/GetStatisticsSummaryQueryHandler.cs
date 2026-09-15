@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Statistics.Application.Mappings;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
@@ -7,14 +8,14 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Statistics.Common;
-using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Modules.Statistics.Application.Common;
+using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
+namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 
 public sealed class GetStatisticsSummaryQueryHandler(
     ISender sender, ICurrentUserAccessService currentUserAccessService)
@@ -69,28 +70,9 @@ public sealed class GetStatisticsSummaryQueryHandler(
         IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyFrom, DateTo: bodyTo, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new StatisticsSummaryModel(
-            [.. statisticsResult.Value.Select(ToModel)],
+            [.. statisticsResult.Value.Select(StatisticsMappings.ToModel)],
             weight,
             waist));
     }
 
-    private static AggregatedStatisticsModel ToModel(DashboardStatisticsBucketReadModel model) =>
-        new(
-            model.DateFrom,
-            model.DateTo,
-            model.TotalCalories,
-            model.AverageProteins,
-            model.AverageFats,
-            model.AverageCarbs,
-            model.AverageFiber,
-            model.TotalProteins,
-            model.TotalFats,
-            model.TotalCarbs,
-            model.TotalFiber,
-            model.BreakfastCalories,
-            model.LunchCalories,
-            model.DinnerCalories,
-            model.SnackCalories,
-            model.MealCount,
-            model.TrackedDayCount);
 }

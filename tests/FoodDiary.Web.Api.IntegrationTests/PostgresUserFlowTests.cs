@@ -6,8 +6,8 @@ using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Hydration.Presentation.Requests;
-using FoodDiary.Presentation.Api.Features.Products.Requests;
-using FoodDiary.Presentation.Api.Features.Recipes.Requests;
+using FoodDiary.Modules.Products.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

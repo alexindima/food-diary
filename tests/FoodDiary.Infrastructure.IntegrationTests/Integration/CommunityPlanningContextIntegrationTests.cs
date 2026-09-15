@@ -1,3 +1,5 @@
+using FoodDiary.Modules.RecipeCommunity.Infrastructure;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
@@ -11,14 +13,14 @@ using FoodDiary.ReadModel.Composition;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 

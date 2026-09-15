@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 
-namespace FoodDiary.Domain.Tests.ValueObjects;
+namespace FoodDiary.Modules.Products.Domain.Tests.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public sealed class NutritionContractTests {

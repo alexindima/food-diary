@@ -1,11 +1,11 @@
-using FoodDiary.Modules.Products.Infrastructure.Persistence;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Products;
+namespace FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 
 public sealed class ProductRepository(ProductsDbContext context, IProductUsageQuery usageQuery, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IProductRepository {
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {

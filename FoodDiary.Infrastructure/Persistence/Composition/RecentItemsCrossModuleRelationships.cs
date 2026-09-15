@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Recents;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

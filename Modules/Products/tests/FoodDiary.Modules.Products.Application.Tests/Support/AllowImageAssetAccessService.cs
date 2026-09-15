@@ -5,7 +5,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests.Support;
+namespace FoodDiary.Modules.Products.Application.Tests.Support;
 
 [ExcludeFromCodeCoverage]
 public sealed class AllowImageAssetAccessService : IImageAssetAccessService {

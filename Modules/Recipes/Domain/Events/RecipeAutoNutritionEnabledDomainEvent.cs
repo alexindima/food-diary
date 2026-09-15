@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Events;
+namespace FoodDiary.Modules.Recipes.Domain.Events;
 
 public sealed record RecipeAutoNutritionEnabledDomainEvent : IDomainEvent {
     public RecipeAutoNutritionEnabledDomainEvent(RecipeId recipeId, DateTime? occurredOnUtcOverride = null) {

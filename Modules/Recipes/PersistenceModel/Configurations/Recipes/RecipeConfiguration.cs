@@ -1,0 +1,48 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Domain.ValueObjects.Ids;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Recipes.PersistenceModel.Configurations.Recipes;
+
+internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
+    public void Configure(EntityTypeBuilder<Recipe> builder) {
+        builder.Property<uint>("xmin").IsRowVersion();
+
+        builder.Property(e => e.Id).HasConversion(
+            id => id.Value,
+            value => new RecipeId(value));
+
+        builder.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        builder.Property(e => e.ImageAssetId).HasConversion(
+            id => id.HasValue ? id.Value.Value : (Guid?)null,
+            value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
+        builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
+        builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
+        builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
+        builder.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
+        builder.HasIndex(e => e.Name)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
+        builder.HasIndex(e => e.Category)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
+        builder.HasIndex(e => e.Description)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
+
+        builder.Metadata.FindNavigation(nameof(Recipe.Steps))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata.FindNavigation(nameof(Recipe.NestedRecipeUsages))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+    }
+}

@@ -1,0 +1,96 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Results;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Application.Services;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Products.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class ProductUsdaLinkServiceTests {
+    [Fact]
+    public async Task LinkAsync_WhenProductIsAccessible_MutatesAndPersistsOwnedAggregate() {
+        Product product = CreateProduct();
+        IProductWriteRepository repository = CreateRepository(product);
+        var service = new ProductUsdaLinkService(repository);
+
+        Result linked = await service.LinkAsync(product.Id, product.UserId, 171077, CancellationToken.None);
+
+        Assert.True(linked.IsSuccess);
+        Assert.Equal(171077, product.UsdaFdcId);
+        await repository.Received(1).UpdateAsync(product, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task UnlinkAsync_WhenProductIsMissing_DoesNotPersist() {
+        IProductWriteRepository repository = CreateRepository(product: null);
+        var service = new ProductUsdaLinkService(repository);
+
+        Result unlinked = await service.UnlinkAsync(ProductId.New(), UserId.New(), CancellationToken.None);
+
+        Assert.Equal("Product.NotAccessible", unlinked.Error.Code);
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task IsAccessibleForUpdateAsync_ReturnsWhetherOwnedProductExists() {
+        Product product = CreateProduct();
+
+        Result accessible = await new ProductUsdaLinkService(CreateRepository(product))
+            .IsAccessibleForUpdateAsync(product.Id, product.UserId, CancellationToken.None);
+        Result missing = await new ProductUsdaLinkService(CreateRepository(product: null))
+            .IsAccessibleForUpdateAsync(ProductId.New(), UserId.New(), CancellationToken.None);
+
+        Assert.True(accessible.IsSuccess);
+        Assert.Equal("Product.NotAccessible", missing.Error.Code);
+    }
+
+    [Fact]
+    public async Task LinkAsync_WhenProductIsMissing_DoesNotPersist() {
+        IProductWriteRepository repository = CreateRepository(product: null);
+        var service = new ProductUsdaLinkService(repository);
+
+        Result linked = await service.LinkAsync(ProductId.New(), UserId.New(), 171077, CancellationToken.None);
+
+        Assert.Equal("Product.NotAccessible", linked.Error.Code);
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UnlinkAsync_WhenProductIsAccessible_RemovesLinkAndPersists() {
+        Product product = CreateProduct();
+        product.LinkToUsdaFood(171077);
+        IProductWriteRepository repository = CreateRepository(product);
+        var service = new ProductUsdaLinkService(repository);
+
+        Result unlinked = await service.UnlinkAsync(product.Id, product.UserId, CancellationToken.None);
+
+        Assert.True(unlinked.IsSuccess);
+        Assert.Null(product.UsdaFdcId);
+        await repository.Received(1).UpdateAsync(product, CancellationToken.None);
+    }
+
+    private static IProductWriteRepository CreateRepository(Product? product) {
+        IProductWriteRepository repository = Substitute.For<IProductWriteRepository>();
+        repository
+            .GetByIdForUpdateAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), includePublic: false, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(product));
+        return repository;
+    }
+
+    private static Product CreateProduct() =>
+        Product.Create(
+            UserId.New(),
+            "USDA linked product",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 80,
+            proteinsPerBase: 5,
+            fatsPerBase: 2,
+            carbsPerBase: 10,
+            fiberPerBase: 1,
+            alcoholPerBase: 0);
+}

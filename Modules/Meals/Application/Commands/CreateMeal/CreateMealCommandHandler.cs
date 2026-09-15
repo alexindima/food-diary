@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 
 using FoodDiary.Modules.Meals.Service.Contracts.Models;

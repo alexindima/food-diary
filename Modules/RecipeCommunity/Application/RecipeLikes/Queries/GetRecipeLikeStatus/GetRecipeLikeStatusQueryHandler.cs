@@ -1,14 +1,17 @@
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
-using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
+namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 
 public sealed class GetRecipeLikeStatusQueryHandler(
-    IRecipeLikeReadService likeReadService,
+    IRecipeLikeReadRepository likeRepository,
+    IRecipeAccessService recipeAccessService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeLikeStatusQuery, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(
@@ -23,9 +26,24 @@ public sealed class GetRecipeLikeStatusQueryHandler(
         }
 
         var recipeId = (RecipeId)query.RecipeId;
-        RecipeLikeStatusModel status = await likeReadService
-            .GetStatusAsync(userIdResult.Value, recipeId, cancellationToken)
+        if (await recipeAccessService.GetAccessibleByIdAsync(
+            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false) is null) {
+            return Result.Failure<RecipeLikeStatusModel>(RecipeErrors.NotFound(query.RecipeId));
+        }
+
+        RecipeLikeStatusModel status = await GetStatusAsync(userIdResult.Value, recipeId, cancellationToken)
             .ConfigureAwait(false);
         return Result.Success(status);
+    }
+    private async Task<RecipeLikeStatusModel> GetStatusAsync(
+        UserId userId,
+        RecipeId recipeId,
+        CancellationToken cancellationToken) {
+        bool isLiked = await likeRepository
+            .ExistsByUserAndRecipeAsync(userId, recipeId, cancellationToken)
+            .ConfigureAwait(false);
+        int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
+
+        return new RecipeLikeStatusModel(isLiked, totalLikes);
     }
 }

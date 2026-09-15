@@ -7,11 +7,10 @@ using FoodDiary.Application.Runtime.Common.Services;
 using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Modules.Dashboard.Application;
 using FoodDiary.Modules.Notifications.Application;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products;
-using FoodDiary.Application.Recipes;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Application;
+using FoodDiary.Modules.Recipes.Application;
+using FoodDiary.Modules.Recipes.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application.Tests.Common;
@@ -31,7 +30,7 @@ public sealed class ApplicationDependencyInjectionTests {
             descriptor.Lifetime == ServiceLifetime.Singleton &&
             ReferenceEquals(descriptor.ImplementationInstance, TimeProvider.System));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IProductSearchSuggestionProvider));
-        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRecentRecipeReadService));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(RecentRecipeLoader));
         Assert.DoesNotContain(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ModuleTelemetryBehavior<,>));
@@ -54,7 +53,7 @@ public sealed class ApplicationDependencyInjectionTests {
 
         services.AddRecipesApplication();
 
-        Assert.Contains(services, ServiceDescriptorMatches<IRecentRecipeReadService, RecentRecipeReadService>(ServiceLifetime.Scoped));
+        Assert.Contains(services, ServiceDescriptorMatches<RecentRecipeLoader, RecentRecipeLoader>(ServiceLifetime.Scoped));
     }
 
     [Fact]

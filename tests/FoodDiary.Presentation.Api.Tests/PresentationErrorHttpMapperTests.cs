@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;

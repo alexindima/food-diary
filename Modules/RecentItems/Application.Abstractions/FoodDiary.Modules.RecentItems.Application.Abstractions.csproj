@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.RecentItems.Contracts.csproj" />
+  </ItemGroup>
+</Project>

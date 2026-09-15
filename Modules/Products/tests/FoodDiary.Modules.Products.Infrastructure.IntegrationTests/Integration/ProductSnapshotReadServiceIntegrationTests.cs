@@ -1,12 +1,13 @@
-using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Products;
+using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Products.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

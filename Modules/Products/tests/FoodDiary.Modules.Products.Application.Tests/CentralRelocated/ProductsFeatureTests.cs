@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Products.Application.Mappings;
+using FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentProducts;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
@@ -9,24 +14,25 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Commands.CreateProduct;
-using FoodDiary.Application.Products.Commands.UpdateProduct;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Products.Services;
-using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
+using FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
+using FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
+using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
+using FoodDiary.Modules.Products.Application.Services;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Application.Models;
+
+namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;
 
 [ExcludeFromCodeCoverage]
 public partial class ProductsFeatureTests {
@@ -41,14 +47,14 @@ public partial class ProductsFeatureTests {
         ICurrentUserAccessService currentUserAccessService) =>
         new(
             overviewReadService,
-            new RecentProductReadService(recentRepository, overviewReadService),
+            new RecentProductLoader(RequestTestSender.Create(new ReadRecentProductsQueryHandler(recentRepository)), overviewReadService),
             RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(favoriteRepository), new ReadProductFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentProductsQueryHandler CreateRecentProductsHandler(
         StubRecentItemRepository recentRepository,
         IProductOverviewReadService overviewReadService) =>
-        new(new RecentProductReadService(recentRepository, overviewReadService), Substitute.For<ICurrentUserAccessService>());
+        new(new RecentProductLoader(RequestTestSender.Create(new ReadRecentProductsQueryHandler(recentRepository)), overviewReadService), Substitute.For<ICurrentUserAccessService>());
 
     [ExcludeFromCodeCoverage]
     private sealed class ImmediateProductMutationTransactionRunner : IProductMutationTransactionRunner {

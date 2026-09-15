@@ -1,11 +1,12 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Products.Infrastructure;
 
 internal sealed class FavoriteProductSourceReadService(IProductLookupService source) : IFavoriteProductSourceReadService {
     public async Task<Result<FavoriteProductSourceModel>> GetAccessibleAsync(ProductId id, UserId userId, CancellationToken cancellationToken = default) {

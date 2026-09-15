@@ -1,14 +1,14 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeCommunity;
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
-using FoodDiary.Application.Abstractions.RecipeLikes.Common;
-using FoodDiary.Infrastructure.Persistence.RecipeComments;
-using FoodDiary.Infrastructure.Persistence.RecipeLikes;
+using FoodDiary.Modules.RecipeCommunity.Application;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence.RecipeComments;
+using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence.RecipeLikes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.RecipeCommunity.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddRecipeCommunityModule(this IServiceCollection services) {

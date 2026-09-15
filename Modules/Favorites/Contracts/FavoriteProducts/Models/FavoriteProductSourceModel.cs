@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 

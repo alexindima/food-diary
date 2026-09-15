@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using Microsoft.Extensions.Caching.Memory;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence.Products;
+namespace FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 
 public sealed class CachedProductRepository(
     ProductRepository inner,

@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Modules.Meals.Contracts.Models;
 

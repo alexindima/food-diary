@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Statistics.Common;
+namespace FoodDiary.Modules.Statistics.Application.Common;
 
 internal static class LocalStatisticsCalendar {
     internal static IReadOnlyList<LocalStatisticsDay> GetDays(DateTime utcNow, string timeZoneId, int days) =>

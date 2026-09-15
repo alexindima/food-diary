@@ -18,9 +18,7 @@ public static class DependencyInjection {
         services.AddScoped<INotificationClientRefreshService, NotificationClientRefreshService>();
         services.AddScoped<INotificationDeduplicationService>(serviceProvider =>
             serviceProvider.GetRequiredService<INotificationLookupRepository>());
-        services.AddScoped<IWebPushSubscriptionReadService, WebPushSubscriptionReadService>();
-        services.AddScoped<IProfileNotificationReadService>(static provider =>
-            (IProfileNotificationReadService)provider.GetRequiredService<IWebPushSubscriptionReadService>());
+        services.AddScoped<IProfileNotificationReadService, ProfileNotificationReadService>();
         services.AddScoped<IWebPushDeliveryAudienceService, WebPushDeliveryAudienceService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();

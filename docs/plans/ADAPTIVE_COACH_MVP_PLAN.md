@@ -217,7 +217,7 @@ Update:
 - `FoodDiary.Application/Tdee/Services/TdeeCalculator.cs`
 - `FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs`
 - `Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs`
-- `Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs`
+- `Modules/Tdee/Presentation/Mappings/TdeeHttpMappings.cs`
 
 Add:
 
@@ -367,7 +367,7 @@ Preferred short-term approach:
 
 Existing path:
 
-- `Modules/Tdee/Presentation/Features/Tdee/TdeeController.cs`
+- `Modules/Tdee/Presentation/Controllers/TdeeController.cs`
 
 Why:
 

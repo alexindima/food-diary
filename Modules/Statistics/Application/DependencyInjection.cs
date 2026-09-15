@@ -2,7 +2,7 @@ using FluentValidation;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Statistics;
+namespace FoodDiary.Modules.Statistics.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddStatisticsModule(this IServiceCollection services) {

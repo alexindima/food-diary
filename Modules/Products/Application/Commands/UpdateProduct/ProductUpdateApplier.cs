@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Products.Domain.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Entities;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
 internal static class ProductUpdateApplier {
     public static void Apply(Product product, UpdateProductCommand command, ProductUpdateValues values) {

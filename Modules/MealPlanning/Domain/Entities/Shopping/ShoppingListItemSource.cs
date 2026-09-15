@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
@@ -115,7 +115,7 @@ public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
     }
 
     private static void EnsureRecipeId(RecipeId recipeId) {
-        if (recipeId == global::FoodDiary.Domain.ValueObjects.Ids.RecipeId.Empty) {
+        if (recipeId == global::FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId.Empty) {
             throw new ArgumentException("RecipeId is required.", nameof(recipeId));
         }
     }

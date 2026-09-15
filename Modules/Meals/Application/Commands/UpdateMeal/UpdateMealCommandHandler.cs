@@ -5,7 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
 
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Services;

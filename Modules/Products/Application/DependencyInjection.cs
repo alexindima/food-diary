@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FluentValidation;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.SearchSuggestions;
-using FoodDiary.Application.Products.Services;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Application.SearchSuggestions;
+using FoodDiary.Modules.Products.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Products;
+namespace FoodDiary.Modules.Products.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddProductsApplication(this IServiceCollection services) {
@@ -15,7 +15,7 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
-        services.AddScoped<IRecentProductReadService, RecentProductReadService>();
+        services.AddScoped<RecentProductLoader>();
         services.AddScoped<IUsdaProductLinkService, ProductUsdaLinkService>();
         return services;
     }

@@ -4,7 +4,6 @@ using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
@@ -17,7 +16,7 @@ namespace FoodDiary.Modules.Notifications.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationReadServiceCoverageTests {
     [Fact]
-    public async Task WebPushSubscriptionReadService_GetSubscriptionsAsync_MapsEveryReadModel() {
+    public async Task ProfileNotificationReadService_GetWebPushSubscriptionsAsync_MapsEveryReadModel() {
         var userId = UserId.New();
         var createdAtUtc = new DateTime(2026, 7, 13, 8, 0, 0, DateTimeKind.Utc);
         IReadOnlyList<WebPushSubscriptionReadModel> readModels = [
@@ -31,11 +30,11 @@ public sealed class NotificationReadServiceCoverageTests {
         ];
         IWebPushSubscriptionReadModelRepository repository = Substitute.For<IWebPushSubscriptionReadModelRepository>();
         repository.GetByUserReadModelsAsync(userId, Arg.Any<CancellationToken>()).Returns(readModels);
-        var service = new WebPushSubscriptionReadService(repository);
+        var service = new ProfileNotificationReadService(repository);
 
-        IReadOnlyList<WebPushSubscriptionModel> result = await service.GetSubscriptionsAsync(userId, CancellationToken.None);
+        IReadOnlyList<ProfileWebPushSubscriptionModel> result = await service.GetWebPushSubscriptionsAsync(userId, CancellationToken.None);
 
-        WebPushSubscriptionModel subscription = Assert.Single(result);
+        ProfileWebPushSubscriptionModel subscription = Assert.Single(result);
         Assert.Multiple(
             () => Assert.Equal("push.example.com", subscription.EndpointHost),
             () => Assert.Equal("ru", subscription.Locale),

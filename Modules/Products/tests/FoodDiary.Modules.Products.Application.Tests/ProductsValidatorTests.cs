@@ -1,0 +1,558 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Domain.Primitives;
+using FluentValidation.TestHelper;
+using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
+using FoodDiary.Modules.Products.Application.Commands.DeleteProduct;
+using FoodDiary.Modules.Products.Application.Commands.DuplicateProduct;
+using FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
+using FoodDiary.Modules.Products.Application.Queries.GetProductById;
+using FoodDiary.Modules.Products.Application.Queries.GetProducts;
+using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
+using FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Products.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class ProductsValidatorTests {
+    private static CreateProductCommand ValidCreateProduct(Guid? userId = null) =>
+        new(userId ?? Guid.NewGuid(), Barcode: null, "Chicken", Brand: null, "Other", Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null,
+            "g", 100, 100, 165, 31, 3.6, 0, 0, 0, "Private");
+
+    private static UpdateProductCommand ValidUpdateProduct(Guid? userId = null, Guid? productId = null) =>
+        new(
+            userId ?? Guid.NewGuid(),
+            productId ?? Guid.NewGuid(),
+            Barcode: null,
+            ClearBarcode: false,
+            Name: "Chicken",
+            Brand: null,
+            ClearBrand: false,
+            ProductType: "Other",
+            Category: null,
+            ClearCategory: false,
+            Description: null,
+            ClearDescription: false,
+            Comment: null,
+            ClearComment: false,
+            ImageUrl: null,
+            ClearImageUrl: false,
+            ImageAssetId: null,
+            ClearImageAssetId: false,
+            BaseUnit: "g",
+            BaseAmount: 100,
+            DefaultPortionAmount: 100,
+            CaloriesPerBase: 165,
+            ProteinsPerBase: 31,
+            FatsPerBase: 3.6,
+            CarbsPerBase: 0,
+            FiberPerBase: 0,
+            AlcoholPerBase: 0,
+            Visibility: "Private");
+
+    // â”€â”€ CreateProduct â”€â”€
+
+    [Fact]
+    public async Task CreateProduct_WithNullUserId_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct(userId: null) with { UserId = null });
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithEmptyName_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { Name = "" });
+        result.ShouldHaveValidationErrorFor(c => c.Name);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithTextBeyondDomainLimits_HasErrors() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                Name = new string('n', Product.NameMaxLength + 1),
+                Barcode = new string('b', Product.BarcodeMaxLength + 1),
+                Brand = new string('r', Product.BrandMaxLength + 1),
+                Category = new string('c', Product.CategoryMaxLength + 1),
+                Description = new string('d', Product.DescriptionMaxLength + 1),
+                Comment = new string('m', Product.CommentMaxLength + 1),
+                ImageUrl = new string('i', Product.ImageUrlMaxLength + 1),
+            });
+
+        result.ShouldHaveValidationErrorFor(command => command.Name);
+        result.ShouldHaveValidationErrorFor(command => command.Barcode);
+        result.ShouldHaveValidationErrorFor(command => command.Description);
+        result.ShouldHaveValidationErrorFor(command => command.ImageUrl);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithInvalidUnit_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { BaseUnit = "invalid" });
+        result.ShouldHaveValidationErrorFor(c => c.BaseUnit);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithInvalidProductType_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { ProductType = "invalid" });
+        result.ShouldHaveValidationErrorFor(c => c.ProductType);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithNegativeCalories_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { CaloriesPerBase = -1 });
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithZeroBaseAmount_HasError() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { BaseAmount = 0 });
+        result.ShouldHaveValidationErrorFor(c => c.BaseAmount);
+    }
+
+    [Theory]
+    [InlineData("g", 50)]
+    [InlineData("ml", 1)]
+    [InlineData("pcs", 100)]
+    public async Task CreateProduct_WithNonCanonicalBaseAmount_HasError(string baseUnit, double baseAmount) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { BaseUnit = baseUnit, BaseAmount = baseAmount });
+
+        result.ShouldHaveValidationErrorFor(c => c.BaseAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("pcs", Product.MaxPieceDefaultPortionAmount + 1)]
+    public async Task CreateProduct_WithDefaultPortionAmountAboveUnitLimit_HasError(string baseUnit, double defaultPortionAmount) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                DefaultPortionAmount = defaultPortionAmount,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceCaloriesPerBase + 1)]
+    public async Task CreateProduct_WithCaloriesAboveUnitLimit_HasError(string baseUnit, double caloriesPerBase) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                CaloriesPerBase = caloriesPerBase,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceNutrientPerBase + 1)]
+    public async Task CreateProduct_WithNutrientAboveUnitLimit_HasError(string baseUnit, double nutrientPerBase) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                ProteinsPerBase = nutrientPerBase,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.ProteinsPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithValidData_NoErrors() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(ValidCreateProduct());
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    // â”€â”€ DuplicateProduct â”€â”€
+
+    [Fact]
+    public async Task DuplicateProduct_WithNullUserId_HasError() {
+        TestValidationResult<DuplicateProductCommand> result = await new DuplicateProductCommandValidator().TestValidateAsync(
+            new DuplicateProductCommand(UserId: null, Guid.NewGuid()));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task DuplicateProduct_WithEmptyProductId_HasError() {
+        TestValidationResult<DuplicateProductCommand> result = await new DuplicateProductCommandValidator().TestValidateAsync(
+            new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty));
+        result.ShouldHaveValidationErrorFor(c => c.ProductId);
+    }
+
+    // â”€â”€ GetProductById â”€â”€
+
+    [Fact]
+    public async Task GetProductById_WithNullUserId_HasError() {
+        TestValidationResult<GetProductByIdQuery> result = await new GetProductByIdQueryValidator().TestValidateAsync(
+            new GetProductByIdQuery(UserId: null, Guid.NewGuid()));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetProductById_WithEmptyProductId_HasError() {
+        TestValidationResult<GetProductByIdQuery> result = await new GetProductByIdQueryValidator().TestValidateAsync(
+            new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty));
+        result.ShouldHaveValidationErrorFor(c => c.ProductId);
+    }
+
+    // â”€â”€ GetProducts â”€â”€
+
+    [Fact]
+    public async Task GetProducts_WithZeroPage_HasError() {
+        TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
+            new GetProductsQuery(Guid.NewGuid(), 0, 10, Search: null, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.Page);
+    }
+
+    [Fact]
+    public async Task GetProducts_WithZeroLimit_HasError() {
+        TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
+            new GetProductsQuery(Guid.NewGuid(), 1, 0, Search: null, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
+    }
+
+    [Fact]
+    public async Task GetProducts_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
+            new GetProductsQuery(Guid.NewGuid(), 10_001, 101, Search: null, IncludePublic: false));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit));
+    }
+
+    // â”€â”€ GetProductsWithRecent â”€â”€
+
+    [Fact]
+    public async Task GetProductsOverview_WithNullUserId_HasError() {
+        TestValidationResult<GetProductsOverviewQuery> result = await new GetProductsOverviewQueryValidator().TestValidateAsync(
+            new GetProductsOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetProductsOverview_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetProductsOverviewQuery> result = await new GetProductsOverviewQueryValidator().TestValidateAsync(
+            new GetProductsOverviewQuery(
+                Guid.NewGuid(),
+                10_001,
+                101,
+                Search: null,
+                IncludePublic: false,
+                RecentLimit: 51,
+                FavoriteLimit: 51));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit),
+            () => result.ShouldHaveValidationErrorFor(c => c.RecentLimit),
+            () => result.ShouldHaveValidationErrorFor(c => c.FavoriteLimit));
+    }
+
+    // â”€â”€ GetRecentProducts â”€â”€
+
+    [Fact]
+    public async Task GetRecentProducts_WithNullUserId_HasError() {
+        TestValidationResult<GetRecentProductsQuery> result = await new GetRecentProductsQueryValidator().TestValidateAsync(
+            new GetRecentProductsQuery(UserId: null, 10, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetRecentProducts_WithLimitAboveSupportedBound_HasError() {
+        TestValidationResult<GetRecentProductsQuery> result = await new GetRecentProductsQueryValidator().TestValidateAsync(
+            new GetRecentProductsQuery(Guid.NewGuid(), 51, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
+    }
+
+    // UpdateProduct
+
+    [Fact]
+    public async Task UpdateProduct_WithNullUserId_HasInvalidTokenError() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct(userId: null) with { UserId = null });
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithEmptyProductId_HasRequiredError() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct(productId: Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProductId)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithWhitespaceName_HasRequiredError() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with { Name = "   " });
+
+        result.ShouldHaveValidationErrorFor(c => c.Name)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Theory]
+    [InlineData("g", 50)]
+    [InlineData("ml", 1)]
+    [InlineData("pcs", 100)]
+    public async Task UpdateProduct_WithNonCanonicalBaseAmount_HasError(string baseUnit, double baseAmount) {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with { BaseUnit = baseUnit, BaseAmount = baseAmount });
+
+        result.ShouldHaveValidationErrorFor(c => c.BaseAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithTextBeyondDomainLimits_HasErrors() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with {
+                Name = new string('n', Product.NameMaxLength + 1),
+                Barcode = new string('b', Product.BarcodeMaxLength + 1),
+                Brand = new string('r', Product.BrandMaxLength + 1),
+                Category = new string('c', Product.CategoryMaxLength + 1),
+                Description = new string('d', Product.DescriptionMaxLength + 1),
+                Comment = new string('m', Product.CommentMaxLength + 1),
+                ImageUrl = new string('i', Product.ImageUrlMaxLength + 1),
+            });
+
+        result.ShouldHaveValidationErrorFor(command => command.Name);
+        result.ShouldHaveValidationErrorFor(command => command.Barcode);
+        result.ShouldHaveValidationErrorFor(command => command.Description);
+        result.ShouldHaveValidationErrorFor(command => command.ImageUrl);
+    }
+
+    [Theory]
+    [InlineData("invalid", "Other", "Private", "BaseUnit")]
+    [InlineData("g", "invalid", "Private", "ProductType")]
+    [InlineData("g", "Other", "invalid", "Visibility")]
+    public async Task UpdateProduct_WithInvalidEnumValue_HasValidationError(
+        string baseUnit,
+        string productType,
+        string visibility,
+        string propertyName) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            ProductType = productType,
+            Visibility = visibility,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        Assert.Contains(result.Errors, error =>
+            string.Equals(error.PropertyName, propertyName, StringComparison.Ordinal) &&
+            string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData(0, 100, 165, 31, 3.6, 0, 0, 0, "BaseAmount")]
+    [InlineData(100, 0, 165, 31, 3.6, 0, 0, 0, "DefaultPortionAmount")]
+    [InlineData(100, 100, -1, 31, 3.6, 0, 0, 0, "CaloriesPerBase")]
+    [InlineData(100, 100, 165, -1, 3.6, 0, 0, 0, "ProteinsPerBase")]
+    [InlineData(100, 100, 165, 31, -1, 0, 0, 0, "FatsPerBase")]
+    [InlineData(100, 100, 165, 31, 3.6, -1, 0, 0, "CarbsPerBase")]
+    [InlineData(100, 100, 165, 31, 3.6, 0, -1, 0, "FiberPerBase")]
+    [InlineData(100, 100, 165, 31, 3.6, 0, 0, -1, "AlcoholPerBase")]
+    public async Task UpdateProduct_WithInvalidNutritionValue_HasValidationError(
+        double baseAmount,
+        double defaultPortionAmount,
+        double calories,
+        double proteins,
+        double fats,
+        double carbs,
+        double fiber,
+        double alcohol,
+        string propertyName) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseAmount = baseAmount,
+            DefaultPortionAmount = defaultPortionAmount,
+            CaloriesPerBase = calories,
+            ProteinsPerBase = proteins,
+            FatsPerBase = fats,
+            CarbsPerBase = carbs,
+            FiberPerBase = fiber,
+            AlcoholPerBase = alcohol,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        Assert.Contains(result.Errors, error =>
+            string.Equals(error.PropertyName, propertyName, StringComparison.Ordinal) &&
+            string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("pcs", Product.MaxPieceDefaultPortionAmount + 1)]
+    public async Task UpdateProduct_WithDefaultPortionAmountAboveUnitLimit_HasValidationError(string baseUnit, double defaultPortionAmount) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            DefaultPortionAmount = defaultPortionAmount,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceCaloriesPerBase + 1)]
+    public async Task UpdateProduct_WithCaloriesAboveUnitLimit_HasValidationError(string baseUnit, double caloriesPerBase) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            CaloriesPerBase = caloriesPerBase,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceNutrientPerBase + 1)]
+    public async Task UpdateProduct_WithNutrientAboveUnitLimit_HasValidationError(string baseUnit, double nutrientPerBase) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            ProteinsPerBase = nutrientPerBase,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.ProteinsPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithClearFlagsAndValues_HasValidationErrors() {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            Barcode = "123",
+            ClearBarcode = true,
+            Brand = "Brand",
+            ClearBrand = true,
+            Category = "Category",
+            ClearCategory = true,
+            Description = "Description",
+            ClearDescription = true,
+            Comment = "Comment",
+            ClearComment = true,
+            ImageUrl = "https://cdn.test/image.png",
+            ClearImageUrl = true,
+            ImageAssetId = Guid.NewGuid(),
+            ClearImageAssetId = true,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(command);
+
+        Assert.Equal(7, result.Errors.Count(error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WhenProductIsAlreadyUsed_HasNoValidationErrors() {
+        Product product = CreateProduct();
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct(product.UserId.Value, product.Id.Value));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithEditableProduct_HasNoValidationErrors() {
+        Product product = CreateProduct();
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct(product.UserId.Value, product.Id.Value));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithNullUserId_HasInvalidTokenError() {
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
+            new DeleteProductCommand(UserId: null, Guid.NewGuid()));
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithEmptyProductId_HasRequiredError() {
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
+            new DeleteProductCommand(Guid.NewGuid(), Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(c => c.ProductId)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WhenProductIsUsed_HasNoValidationErrors() {
+        Product product = CreateProduct();
+
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
+            new DeleteProductCommand(product.UserId.Value, product.Id.Value));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WithUnusedProduct_HasNoValidationErrors() {
+        Product product = CreateProduct();
+
+        TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator().TestValidateAsync(
+            new DeleteProductCommand(product.UserId.Value, product.Id.Value));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    private static Product CreateProduct() =>
+        Product.Create(
+            UserId.New(),
+            name: "Chicken",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 165,
+            proteinsPerBase: 31,
+            fatsPerBase: 3.6,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+
+}

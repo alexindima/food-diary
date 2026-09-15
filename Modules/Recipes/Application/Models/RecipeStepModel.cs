@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Recipes.Models;
+namespace FoodDiary.Modules.Recipes.Application.Models;
 
 public sealed record RecipeStepModel(
     Guid Id,

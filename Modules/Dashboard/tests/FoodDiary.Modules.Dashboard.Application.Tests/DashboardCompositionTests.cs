@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Statistics;
-using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Modules.Statistics.Application;
+using FoodDiary.Modules.Statistics.Application.Models;
+using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Results;

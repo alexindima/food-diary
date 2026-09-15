@@ -11,3 +11,5 @@ ProductOverviewReadService lives in host read-model composition and is registere
 ProductRepository delegates usage counting to IProductUsageQuery. Host composition executes that scalar query using the same scoped shared context and the caller mutation transaction. Keep serializable isolation and row-lock order; do not replace this query with a cache or an independent connection.
 
 ProductsDbContext owns the Product runtime entity. ProductRepository uses the owner context; ProductSnapshotReadService receives its narrow DbSet. Synchronize owner reads with the current shared transaction, including after intermediate saves. Shared IUnitOfWork coordinates commits; the serializable mutation runner uses the coordinator contract and the ordered purge participant uses its owner context. Central migrations and schema remain unchanged.
+
+Current module convention: all projects use `FoodDiary.Modules.Products.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

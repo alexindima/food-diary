@@ -1,6 +1,7 @@
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Statistics.Presentation.Extensions;
 
 public static class StatisticsPresentationServiceCollectionExtensions {
     public static IServiceCollection AddStatisticsPresentation(this IServiceCollection services) {

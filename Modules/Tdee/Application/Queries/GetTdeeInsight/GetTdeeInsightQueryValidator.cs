@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FluentValidation;
 
-namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
+namespace FoodDiary.Modules.Tdee.Application.Queries.GetTdeeInsight;
 
 public sealed class GetTdeeInsightQueryValidator : AbstractValidator<GetTdeeInsightQuery> {
     public GetTdeeInsightQueryValidator() {

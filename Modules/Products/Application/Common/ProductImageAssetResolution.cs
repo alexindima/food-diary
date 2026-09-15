@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Modules.Products.Application.Common;
 
 internal sealed record ProductImageAssetResolution(
     ImageAssetId? ImageAssetId,

@@ -3,8 +3,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Products.Requests;
-using FoodDiary.Presentation.Api.Features.Recipes.Requests;
+using FoodDiary.Modules.Products.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;

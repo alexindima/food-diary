@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Statistics.Models;
+namespace FoodDiary.Modules.Statistics.Application.Models;
 
 public sealed record DiaryStatisticsSummaryModel(string TimeZoneId, IReadOnlyList<DiaryStatisticsDayModel> Days, double? DailyWaterGoalMl) {
     public int CalendarDays => Days.Count;

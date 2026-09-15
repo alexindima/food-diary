@@ -6,12 +6,12 @@ using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.SearchSuggestions;
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Modules.Products.Application.SearchSuggestions;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Domain.Entities.Usda;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProductSearchSuggestionTests {

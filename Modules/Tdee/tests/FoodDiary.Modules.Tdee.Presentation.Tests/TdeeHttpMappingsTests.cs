@@ -1,9 +1,11 @@
-using FoodDiary.Application.Tdee.Models;
-using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
-using FoodDiary.Presentation.Api.Features.Tdee.Mappings;
-using FoodDiary.Presentation.Api.Features.Tdee.Responses;
+using FoodDiary.Modules.Tdee.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Tdee.Presentation.Mappings;
+using FoodDiary.Modules.Tdee.Contracts.Models;
+using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Tdee.Presentation.Contracts.Responses;
+
+namespace FoodDiary.Modules.Tdee.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TdeeHttpMappingsTests {

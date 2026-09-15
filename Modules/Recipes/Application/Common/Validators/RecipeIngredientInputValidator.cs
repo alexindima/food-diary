@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Common.Validators;
+namespace FoodDiary.Modules.Recipes.Application.Common.Validators;
 
 internal sealed class RecipeIngredientInputValidator : AbstractValidator<RecipeIngredientInput> {
     public RecipeIngredientInputValidator() {

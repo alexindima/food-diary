@@ -1,13 +1,15 @@
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
-using FoodDiary.Application.Abstractions.RecipeComments.Models;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.RecipeComments;
+namespace FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence.RecipeComments;
 
 internal sealed class RecipeCommentRepository(DbSet<RecipeComment> entries, IUserCommentAuthorReadService users) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {

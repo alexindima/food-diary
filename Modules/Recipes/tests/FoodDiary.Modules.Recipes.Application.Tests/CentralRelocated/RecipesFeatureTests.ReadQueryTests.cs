@@ -1,20 +1,21 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Queries.GetRecipeById;
-using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
-using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipeById;
+using FoodDiary.Modules.Recipes.Application.Queries.ExploreRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecentRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipes;
+using FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Tests.CentralRelocated;
+namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
 

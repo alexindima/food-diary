@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Recipes.Common.Validators;
+namespace FoodDiary.Modules.Recipes.Application.Common.Validators;
 
 internal sealed class RecipeStepInputValidator : AbstractValidator<RecipeStepInput> {
     public RecipeStepInputValidator() {

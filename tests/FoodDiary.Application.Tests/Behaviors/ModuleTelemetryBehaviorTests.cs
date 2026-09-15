@@ -30,7 +30,7 @@ public sealed class ModuleTelemetryBehaviorTests {
     [Fact]
     public void ResolveModule_RecognizesAnActualModuleRequestAssembly() =>
         Assert.Equal("Products", ModuleOperationTelemetry.ResolveModule(
-            typeof(FoodDiary.Application.Products.Queries.GetProducts.GetProductsQuery).Assembly.GetName().Name));
+            typeof(FoodDiary.Modules.Products.Application.Queries.GetProducts.GetProductsQuery).Assembly.GetName().Name));
 
     [Fact]
     public void ResolveModule_RecognizesAnOwnerContractsRequestAssembly() =>

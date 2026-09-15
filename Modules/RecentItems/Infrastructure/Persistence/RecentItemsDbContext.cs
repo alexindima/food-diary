@@ -1,5 +1,5 @@
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Domain.Entities.Recents;
+using FoodDiary.Modules.RecentItems.PersistenceModel;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.RecentItems.Infrastructure.Persistence;

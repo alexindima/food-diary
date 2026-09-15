@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Modules.Recipes.Application.Services;
 
 public static class RecipeNutritionCalculator {
     public static RecipeNutritionSummary Calculate(Recipe recipe) {

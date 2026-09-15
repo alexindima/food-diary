@@ -1,15 +1,16 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.RecentItems.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
-using FoodDiary.Domain.Entities.Recents;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.RecentItems;
+using FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

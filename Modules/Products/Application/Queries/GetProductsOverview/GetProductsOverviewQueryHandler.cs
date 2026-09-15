@@ -1,3 +1,12 @@
+using FoodDiary.Modules.Products.Application.Mappings;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Products.Application.Common;
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Application.Services;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProducts;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -5,20 +14,13 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
+namespace FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
 
 public sealed class GetProductsOverviewQueryHandler(
     IProductOverviewReadService productOverviewReadService,
-    IRecentProductReadService recentProductReadService,
+    RecentProductLoader recentProductLoader,
     ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsOverviewQuery, Result<ProductOverviewModel>> {
@@ -65,7 +67,7 @@ public sealed class GetProductsOverviewQueryHandler(
             .ToList();
         var favoriteLookup = allFavorites.ToDictionary(ToFavoriteProductId);
 
-        IReadOnlyList<ProductOverviewReadItem> recentItems = await recentProductReadService.GetRecentOverviewItemsAsync(
+        IReadOnlyList<ProductOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
             options.UserId,
             options.RecentLimit,
             query.IncludePublic,
@@ -130,4 +132,31 @@ public sealed class GetProductsOverviewQueryHandler(
         FavoriteProductModel? favorite = favoritesByProductId.GetValueOrDefault(product.Id);
         return product.ToModel(favorite is not null, favorite?.Id);
     }
+    private async Task<IReadOnlyList<ProductOverviewReadItem>> GetRecentOverviewItemsAsync(
+        UserId userId,
+        int limit,
+        bool includePublic,
+        ProductQueryFilters filters,
+        CancellationToken cancellationToken = default) {
+        if (!string.IsNullOrWhiteSpace(filters.Search)) {
+            return [];
+        }
+
+        IReadOnlyList<ProductOverviewReadItem> items = await recentProductLoader.LoadAsync(
+            userId,
+            limit,
+            includePublic,
+            cancellationToken).ConfigureAwait(false);
+
+        return [.. items.Where(item => MatchesFilters(item, filters))];
+    }
+    private static bool MatchesFilters(ProductOverviewReadItem product, ProductQueryFilters filters) =>
+        (filters.ProductTypes?.Contains(product.ProductType) != false) &&
+        (!filters.CaloriesFrom.HasValue || product.CaloriesPerBase >= filters.CaloriesFrom.Value) &&
+        (!filters.CaloriesTo.HasValue || product.CaloriesPerBase <= filters.CaloriesTo.Value) &&
+        (!filters.HasImage.HasValue || HasImage(product) == filters.HasImage.Value);
+
+    private static bool HasImage(ProductOverviewReadItem product) =>
+        product.ImageUrl is not null || product.ImageAssetId is not null;
+
 }

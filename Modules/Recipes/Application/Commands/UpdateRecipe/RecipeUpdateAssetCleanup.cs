@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 
 internal static class RecipeUpdateAssetCleanup {
     public static async Task DeleteUnusedAsync(

@@ -1,12 +1,14 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Modules.Recipes.Application.Services;
 
 internal static class RecipeStepAppender {
     public static Task<Result> AddAsync(

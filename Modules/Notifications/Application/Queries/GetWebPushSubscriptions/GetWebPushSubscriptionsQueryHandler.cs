@@ -1,6 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Application.Mappings;
 using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -8,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Notifications.Application.Queries.GetWebPushSubscriptions;
 
 public sealed class GetWebPushSubscriptionsQueryHandler(
-    IWebPushSubscriptionReadService webPushSubscriptionReadService,
+    IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {
@@ -25,9 +27,13 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
 
         UserId userId = userIdResult.Value;
         DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
-        IReadOnlyList<WebPushSubscriptionModel> activeSubscriptions = await webPushSubscriptionReadService
-            .GetActiveSubscriptionsAsync(userId, utcNow, cancellationToken)
+        IReadOnlyList<WebPushSubscriptionReadModel> subscriptions = await webPushSubscriptionRepository
+            .GetByUserReadModelsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
+
+        IReadOnlyList<WebPushSubscriptionModel> activeSubscriptions = [.. subscriptions
+            .Where(subscription => subscription.ExpirationTimeUtc > utcNow)
+            .Select(subscription => subscription.ToModel())];
 
         return Result.Success(activeSubscriptions);
     }

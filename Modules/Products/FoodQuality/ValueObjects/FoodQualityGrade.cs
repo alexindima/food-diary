@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 
 public enum FoodQualityGrade {
     Red = 0,

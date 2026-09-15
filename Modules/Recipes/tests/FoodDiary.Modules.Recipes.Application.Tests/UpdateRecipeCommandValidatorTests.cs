@@ -1,0 +1,231 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
+using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FluentValidation.Results;
+
+namespace FoodDiary.Modules.Recipes.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class UpdateRecipeCommandValidatorTests {
+    [Fact]
+    public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+
+        UpdateRecipeCommand command = CreateCommand(
+            userId.Value,
+            recipeId,
+            [
+                CreateStep(order: 1, "Step 1"),
+                CreateStep(order: 1, "Step 2 duplicate"),
+            ]);
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps"
+, StringComparison.Ordinal) && string.Equals(e.ErrorCode, "Validation.Invalid"
+, StringComparison.Ordinal) && string.Equals(e.ErrorMessage, "Step order values must be unique", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithDistinctEffectiveStepOrder_Passes() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+
+        UpdateRecipeCommand command = CreateCommand(
+            userId.Value,
+            recipeId,
+            [
+                CreateStep(order: 0, "Step uses index fallback to 1"),
+                CreateStep(order: 2, "Explicit step 2"),
+            ]);
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithManualNutritionAboveMaximum_ReturnsValidationError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step")]) with {
+            CalculateNutritionAutomatically = false,
+            ManualCalories = ManualNutritionLimits.MaxCalories + 1,
+            ManualProteins = 10,
+            ManualFats = ManualNutritionLimits.MaxNutrient + 1,
+            ManualCarbs = 20,
+            ManualFiber = 3,
+            ManualAlcohol = 0,
+        };
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualCalories), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualFats), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithValuesBeyondDomainLimits_ReturnsValidationErrors() {
+        UpdateRecipeCommand command = CreateCommand(
+            Guid.NewGuid(),
+            RecipeId.New(),
+            [CreateStep(order: 1, "Step")]) with {
+            Name = new string('n', Recipe.NameMaxLength + 1),
+            Description = new string('d', Recipe.DescriptionMaxLength + 1),
+            Comment = new string('c', Recipe.CommentMaxLength + 1),
+            Category = new string('g', Recipe.CategoryMaxLength + 1),
+            ImageUrl = new string('i', Recipe.ImageUrlMaxLength + 1),
+        };
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Name), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Description), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.ImageUrl), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithWhitespaceName_ReturnsValidationError() {
+        UpdateRecipeCommand command = CreateCommand(
+            Guid.NewGuid(),
+            RecipeId.New(),
+            [CreateStep(order: 1, "Step")]) with {
+            Name = "   ",
+        };
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error =>
+            string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Name), StringComparison.Ordinal) &&
+            string.Equals(error.ErrorCode, "Validation.Required", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithNullStep_ReturnsValidationErrorWithoutThrowing() {
+        UpdateRecipeCommand command = CreateCommand(Guid.NewGuid(), RecipeId.New(), [null!]);
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Steps[0]", StringComparison.Ordinal));
+    }
+
+    private static UpdateRecipeCommand CreateCommand(
+        Guid userId,
+        RecipeId recipeId,
+        IReadOnlyList<RecipeStepInput> steps) {
+        return new UpdateRecipeCommand(
+            userId,
+            recipeId.Value,
+            Name: "Updated",
+            Description: "Desc",
+            ClearDescription: false,
+            Comment: "Comment",
+            ClearComment: false,
+            Category: "Category",
+            ClearCategory: false,
+            ImageUrl: null,
+            ClearImageUrl: false,
+            ImageAssetId: null,
+            ClearImageAssetId: false,
+            PrepTime: 10,
+            CookTime: 20,
+            Servings: 2,
+            Visibility: Visibility.Public.ToString(),
+            CalculateNutritionAutomatically: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            Steps: steps);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithClearDescriptionAndValue_ReturnsValidationError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
+            ClearDescription = true,
+        };
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Description cannot be provided when ClearDescription is true", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithRemainingClearConflicts_ReturnsValidationErrors() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
+            ClearComment = true,
+            ClearCategory = true,
+            ClearImageUrl = true,
+            ImageUrl = "https://cdn.test/soup.png",
+            ClearImageAssetId = true,
+            ImageAssetId = ImageAssetId.New().Value,
+        };
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Comment cannot be provided when ClearComment is true", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Category cannot be provided when ClearCategory is true", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "ImageUrl cannot be provided when ClearImageUrl is true", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "ImageAssetId cannot be provided when ClearImageAssetId is true", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithEmptySteps_ReturnsValidationErrorWithoutDuplicateOrderError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var validator = new UpdateRecipeCommandValidator();
+
+        ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, []));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Recipe must contain at least one step", StringComparison.Ordinal));
+        Assert.DoesNotContain(result.Errors, e => string.Equals(e.ErrorMessage, "Step order values must be unique", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithInvalidUserId_ReturnsInvalidToken() {
+        var validator = new UpdateRecipeCommandValidator();
+
+        ValidationResult result = await validator.ValidateAsync(CreateCommand(Guid.Empty, RecipeId.New(), [CreateStep(order: 1, "Step 1")]));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
+    }
+
+    private static RecipeStepInput CreateStep(int order, string description) {
+        return new RecipeStepInput(
+            Order: order,
+            Description: description,
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)]);
+    }
+
+}
