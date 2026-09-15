@@ -11,7 +11,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
@@ -231,6 +231,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddUsersPersistence();
         services.AddSingleton(central);
+        services.AddSingleton<SharedPersistenceDbContext>(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddHydrationModule().AddBodyMetricsModule().AddCyclesModule();
         services.AddAdminPersistence().AddDietologistModule().AddMealsPersistence().AddMealPlanningModule()

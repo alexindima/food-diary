@@ -2,16 +2,16 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Mappings;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Mappings;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 
-namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendation;
 
 public sealed class CreateRecommendationCommandHandler(
     IDietologistInvitationReadRepository invitationRepository,

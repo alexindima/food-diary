@@ -95,6 +95,7 @@ public sealed class SharedAdminContextCompositionIntegrationTests(PostgresDataba
         }).Build();
         services.AddInfrastructure(configuration);
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddAdminPersistence();
         services.AddReadModelComposition();

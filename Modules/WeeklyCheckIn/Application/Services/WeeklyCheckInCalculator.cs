@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;

@@ -1,12 +1,13 @@
 using System.Diagnostics;
-using FoodDiary.Application.Dietologist.Services;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Dietologist.Contracts.Commands.SendClientTaskReminders;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class ClientTaskReminderJob(
-    ClientTaskDueReminderProcessor processor,
+    ISender sender,
     IOptions<ClientTaskReminderOptions> options,
     JobExecutionObserver observer,
     ILogger<ClientTaskReminderJob> logger) {
@@ -22,7 +23,7 @@ public sealed class ClientTaskReminderJob(
                 return;
             }
 
-            int processed = await processor.ProcessAsync(cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendClientTaskRemindersCommand(), cancellationToken).ConfigureAwait(false);
             observer.RecordSuccess(JobName, processed: processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Client task reminder job was canceled.");

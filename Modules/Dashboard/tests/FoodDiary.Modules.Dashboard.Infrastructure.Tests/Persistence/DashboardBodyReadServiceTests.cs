@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardBodyReadServiceTests {

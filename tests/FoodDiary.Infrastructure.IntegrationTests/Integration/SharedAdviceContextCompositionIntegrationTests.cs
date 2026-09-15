@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.DailyAdvices.Common;
-using FoodDiary.Application.Abstractions.DailyAdvices.Models;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
+using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;
+using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
@@ -33,6 +33,7 @@ public sealed class SharedAdviceContextCompositionIntegrationTests(PostgresDatab
         central.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(central);
+        services.AddSingleton<SharedPersistenceDbContext>(central);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(central);
         services.AddDailyAdvicesModule();
         await using ServiceProvider provider = services.BuildServiceProvider();

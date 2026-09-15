@@ -1,12 +1,12 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Dashboard.Common;
-using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Application.Common;
+using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.Application.Dashboard;
+namespace FoodDiary.Modules.Dashboard.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddDashboardModule(this IServiceCollection services) {

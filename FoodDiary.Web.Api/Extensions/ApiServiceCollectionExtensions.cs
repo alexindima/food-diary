@@ -1,4 +1,6 @@
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Dashboard.Presentation.Extensions;
+using FoodDiary.Modules.Dietologist.Presentation.Extensions;
 using FoodDiary.Modules.Cycles.Presentation.Extensions;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.ContentReports.Presentation.Extensions;
@@ -18,7 +20,7 @@ using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
-using FoodDiary.Application.Dashboard;
+using FoodDiary.Modules.Dashboard.Application;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure;

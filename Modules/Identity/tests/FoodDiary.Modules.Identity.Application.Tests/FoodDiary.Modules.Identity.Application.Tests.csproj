@@ -27,7 +27,7 @@
     <ProjectReference Include="../../Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />
-    <ProjectReference Include="../../../Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />

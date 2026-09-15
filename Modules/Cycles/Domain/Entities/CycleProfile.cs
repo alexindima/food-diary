@@ -115,8 +115,8 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         string? normalizedNotes = NormalizeNotes(settings.Notes);
         EnsureClearConflict(settings.ClearNotes, normalizedNotes, nameof(settings.ClearNotes), nameof(settings.Notes));
 
-        CycleTrackingGoal goal = settings.Goal ?? Goal;
-        CycleReproductiveState reproductiveState = settings.ReproductiveState ?? ReproductiveState;
+        CycleTrackingGoal goal = settings.Goal ?? GoalFromLegacyMode(settings.Mode);
+        CycleReproductiveState reproductiveState = settings.ReproductiveState ?? StateFromLegacyMode(settings.Mode);
         CycleTrackingMode mode = settings.Goal.HasValue || settings.ReproductiveState.HasValue
             ? ModeFromGoalAndState(goal, reproductiveState)
             : settings.Mode;
@@ -463,22 +463,27 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             .Select(entry => (DateOnly?)entry.Date)
             .FirstOrDefault();
 
-    private CycleConfidence CalculateConfidence() {
-        if (Mode is CycleTrackingMode.Pregnancy or CycleTrackingMode.PostpartumLactation || HasActiveHormonalFactor()) {
+    public CycleConfidence CalculateConfidence(DateOnly? currentDate = null) {
+        DateOnly today = currentDate ?? DateOnly.FromDateTime(DomainTime.UtcNow);
+        bool hasActiveHormonalFactor = _factors.Exists(factor =>
+            factor.Type == CycleFactorType.HormonalContraception &&
+            factor.StartDate <= today && (factor.EndDate is null || factor.EndDate >= today));
+        return CalculateConfidence(Mode, IsRegular,
+            _bleedingEntries.Count(entry => entry.Type == BleedingType.Bleeding), hasActiveHormonalFactor);
+    }
+
+    public static CycleConfidence CalculateConfidence(
+        CycleTrackingMode mode, bool isRegular, int bleedingDays, bool hasActiveHormonalFactor) {
+        if (mode is CycleTrackingMode.Pregnancy or CycleTrackingMode.PostpartumLactation || hasActiveHormonalFactor) {
             return CycleConfidence.Low;
         }
-
-        int bleedingDays = _bleedingEntries.Count(entry => entry.Type == BleedingType.Bleeding);
         return bleedingDays switch {
-            >= 9 when IsRegular => CycleConfidence.High,
+            >= 9 when isRegular => CycleConfidence.High,
             >= 6 => CycleConfidence.Medium,
             >= 3 => CycleConfidence.Low,
             _ => CycleConfidence.Learning,
         };
     }
-
-    private bool HasActiveHormonalFactor() =>
-        _factors.Exists(factor => factor is { Type: CycleFactorType.HormonalContraception, EndDate: null });
 
     private static CycleTrackingGoal GoalFromLegacyMode(CycleTrackingMode mode) =>
         mode == CycleTrackingMode.TryingToConceive

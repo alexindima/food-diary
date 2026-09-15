@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.BulkCreateRecommendations;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
 
 public sealed class BulkCreateRecommendationsCommandHandler(
     IRecommendationWriteRepository recommendationRepository,

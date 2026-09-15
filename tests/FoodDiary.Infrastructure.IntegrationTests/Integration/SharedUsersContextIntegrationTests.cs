@@ -67,7 +67,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         var user = User.Create("users-role-rollback@example.com", "hash");
-        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             await provider.GetRequiredService<IUserWriteRepository>().AddAsync(user);
             await provider.GetRequiredService<IUserRoleCatalogService>().EnsureRolesByNamesAsync(["context-test-role"]);
             await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();

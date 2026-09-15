@@ -1,9 +1,9 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dashboard.Common;
+namespace FoodDiary.Modules.Dashboard.Application.Common;
 
 public interface IDashboardUserContextService : ICurrentUserAccessService {
     Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(

@@ -1,24 +1,24 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Dashboard.Internal;
+using FoodDiary.Modules.Dashboard.Application.Internal;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
-using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
+using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
-using FoodDiary.Application.Dashboard.Common;
+using FoodDiary.Modules.Dashboard.Application.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed class DashboardSectionDataLoader(
     ISender sender,

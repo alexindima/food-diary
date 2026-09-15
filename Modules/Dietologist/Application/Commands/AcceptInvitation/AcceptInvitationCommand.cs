@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
 
 public record AcceptInvitationCommand(
     Guid InvitationId,

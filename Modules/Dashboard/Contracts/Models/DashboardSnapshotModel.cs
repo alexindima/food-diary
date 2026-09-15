@@ -1,4 +1,4 @@
-using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Hydration.Models;
@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
-namespace FoodDiary.Application.Dashboard.Models;
+namespace FoodDiary.Modules.Dashboard.Contracts.Models;
 
 public sealed record DashboardSnapshotModel(
     DateTime Date,

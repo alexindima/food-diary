@@ -1,14 +1,16 @@
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Queries.SearchRecommendationTemplates;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.SearchRecommendationTemplates;
 
 public sealed class SearchRecommendationTemplatesQueryHandler(
-    IRecommendationTemplateReadService readService,
+    IRecommendationTemplateReadModelRepository repository,
     ICurrentUserAccessService userContextService)
     : IQueryHandler<SearchRecommendationTemplatesQuery, Result<IReadOnlyList<RecommendationTemplateModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationTemplateModel>>> Handle(
@@ -20,11 +22,11 @@ public sealed class SearchRecommendationTemplatesQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationTemplateModel>>(userIdResult);
         }
 
-        IReadOnlyList<RecommendationTemplateModel> templates = await readService.SearchAsync(
+        IReadOnlyList<RecommendationTemplateReadModel> templates = await repository.SearchAsync(
             userIdResult.Value,
             query.Search,
             query.IncludeArchived,
             cancellationToken).ConfigureAwait(false);
-        return Result.Success(templates);
+        return Result.Success<IReadOnlyList<RecommendationTemplateModel>>([.. templates.Select(template => template.ToModel())]);
     }
 }

@@ -3,13 +3,13 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState;
 
 public sealed class SetAttentionSignalStateCommandHandler(
     IDietologistInvitationReadModelRepository invitationRepository,

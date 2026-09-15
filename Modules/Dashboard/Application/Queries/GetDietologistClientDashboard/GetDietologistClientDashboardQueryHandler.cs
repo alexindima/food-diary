@@ -1,17 +1,18 @@
+using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboard;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Contracts.Common;
+using FoodDiary.Modules.Dietologist.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
+namespace FoodDiary.Modules.Dashboard.Application.Queries.GetDietologistClientDashboard;
 
 public sealed class GetDietologistClientDashboardQueryHandler(
     IDietologistDashboardAccessService accessService,

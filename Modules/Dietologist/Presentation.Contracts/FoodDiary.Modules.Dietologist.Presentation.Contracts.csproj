@@ -1,7 +1,3 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Presentation.Api.Features.Dietologist</RootNamespace>
-  </PropertyGroup>
-
 </Project>

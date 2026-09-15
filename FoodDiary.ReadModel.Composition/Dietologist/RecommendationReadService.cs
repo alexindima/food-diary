@@ -1,6 +1,6 @@
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

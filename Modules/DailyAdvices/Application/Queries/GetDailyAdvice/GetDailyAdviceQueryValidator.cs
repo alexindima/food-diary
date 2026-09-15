@@ -1,6 +1,7 @@
+using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
 using FluentValidation;
 
-namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+namespace FoodDiary.Modules.DailyAdvices.Application.Queries.GetDailyAdvice;
 
 public sealed class GetDailyAdviceQueryValidator : AbstractValidator<GetDailyAdviceQuery> {
     public GetDailyAdviceQueryValidator() {

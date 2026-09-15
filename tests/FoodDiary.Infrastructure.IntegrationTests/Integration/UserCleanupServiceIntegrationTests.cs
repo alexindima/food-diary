@@ -18,7 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
@@ -279,6 +279,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
             new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context,

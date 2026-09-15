@@ -1,5 +1,5 @@
+using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
 using FoodDiary.Modules.Cycles.Domain.Entities;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.WeeklyGoals;

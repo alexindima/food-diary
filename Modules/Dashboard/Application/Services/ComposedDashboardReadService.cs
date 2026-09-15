@@ -1,11 +1,12 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed class ComposedDashboardReadService(
     IDashboardStatisticsReadService statisticsReadService,

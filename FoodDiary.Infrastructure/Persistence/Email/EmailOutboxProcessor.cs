@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure.Persistence.Email;
 
 internal sealed class EmailOutboxProcessor(
-    FoodDiaryDbContext context,
+    SharedPersistenceDbContext context,
     IEmailTransport emailTransport,
     IOptions<OutboxProcessingOptions> options,
     TimeProvider timeProvider,

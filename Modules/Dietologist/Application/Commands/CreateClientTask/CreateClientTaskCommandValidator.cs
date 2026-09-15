@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.CreateClientTask;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.CreateClientTask;
 
 public sealed class CreateClientTaskCommandValidator : AbstractValidator<CreateClientTaskCommand> {
     public CreateClientTaskCommandValidator() {

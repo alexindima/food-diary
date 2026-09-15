@@ -1,7 +1,7 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 public interface IDashboardSnapshotBuilder {
     Task<Result<DashboardSnapshotModel>> BuildAsync(

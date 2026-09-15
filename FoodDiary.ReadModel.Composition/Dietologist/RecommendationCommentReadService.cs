@@ -1,12 +1,19 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
 internal sealed class RecommendationCommentReadService(FoodDiaryDbContext context) : IRecommendationCommentReadModelRepository {
+    public Task<bool> IsParticipantAsync(RecommendationId recommendationId, UserId userId, CancellationToken cancellationToken = default) =>
+        context.Recommendations.AsNoTracking().AnyAsync(
+            recommendation => recommendation.Id == recommendationId &&
+                (recommendation.ClientUserId == userId || recommendation.DietologistUserId == userId),
+            cancellationToken);
+
     public async Task<IReadOnlyList<RecommendationCommentReadModel>> GetByRecommendationAsync(
         RecommendationId recommendationId,
         CancellationToken cancellationToken = default) {

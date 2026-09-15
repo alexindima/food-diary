@@ -69,7 +69,7 @@ public sealed class DietologistModuleBoundaryTests {
         string root = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
         string[] allowedPrefixes = [
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Dietologist",
+            "FoodDiary.Modules.Dietologist.Application",
         ];
 
         string[] violations = [.. SourceScanner.SourceFiles(root)

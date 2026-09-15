@@ -350,7 +350,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Users",
         "FoodDiary.Application.Common",
-        "FoodDiary.Application.Dietologist",
+        "FoodDiary.Modules.Dietologist.Application",
         "FoodDiary.Application.Images.Common",
         "FoodDiary.Application.Notifications",
         "FoodDiary.Application.Users",
@@ -940,15 +940,15 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("DietologistInvitationConfiguration.cs", "Configurations/Dietologist")]
-    [InlineData("RecommendationConfiguration.cs", "Configurations/Dietologist")]
+    [InlineData("DietologistInvitationConfiguration.cs", "Configurations")]
+    [InlineData("RecommendationConfiguration.cs", "Configurations")]
     [InlineData("RecipeCommentConfiguration.cs", "Configurations/RecipeSocial")]
     [InlineData("RecipeLikeConfiguration.cs", "Configurations/RecipeSocial")]
     public void DietologistAndRecipeSocialConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = string.Equals(expectedRelativeDirectory, "Configurations/Dietologist", StringComparison.Ordinal)
-            ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Dietologist", "Infrastructure", "Model", "Configurations", "Dietologist", fileName)
+        string expectedPath = string.Equals(expectedRelativeDirectory, "Configurations", StringComparison.Ordinal)
+            ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Dietologist", "PersistenceModel", "Configurations", fileName)
             : Path.Combine(
                 ArchitectureTestPaths.RepositoryRoot,
                 "Modules", "RecipeCommunity", "Infrastructure", "Model",
@@ -1068,7 +1068,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void DailyAdviceConfiguration_LivesInOwnedPersistenceModel() {
         string path = ArchitectureTestPaths.FromRoot(
-            "Modules", "DailyAdvices", "Infrastructure", "Model", "Configurations", "DailyAdviceConfiguration.cs");
+            "Modules", "DailyAdvices", "PersistenceModel", "Configurations", "DailyAdviceConfiguration.cs");
         Assert.True(File.Exists(path));
     }
 

@@ -1,12 +1,12 @@
 using System.Text.Json;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.Dashboard.Common;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Common;
 using FoodDiary.Modules.Fasting.Contracts.Read;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Hydration.Models;
@@ -18,7 +18,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     private readonly IDashboardSectionDataLoader _dataLoader;

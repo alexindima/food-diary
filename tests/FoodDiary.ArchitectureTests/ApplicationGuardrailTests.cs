@@ -570,7 +570,7 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Modules/Ai/Application.Abstractions/Common/AiErrors.cs", "AiErrors", "Ai")]
     [InlineData("Modules/Billing/Application.Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
     [InlineData("Modules/Cycles/Contracts/Common/CycleErrors.cs", "CycleErrors", "Cycle")]
-    [InlineData("Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs", "DietologistErrors", "Dietologist")]
+    [InlineData("Modules/Dietologist/Application.Abstractions/Common/DietologistErrors.cs", "DietologistErrors", "Dietologist")]
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs", "FavoriteMealErrors", "FavoriteMeal")]
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs", "FavoriteProductErrors", "FavoriteProduct")]
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs", "FavoriteRecipeErrors", "FavoriteRecipe")]
@@ -1404,7 +1404,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
             Path.Combine(root, "Modules", "Ai", "Application.Abstractions", "Common", "IAiPromptTemplateReadModelRepository.cs"),
-            Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
+            Path.Combine(root, "Modules", "DailyAdvices", "Application.Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
             Path.Combine(root, "Modules", "Cycles", "Application.Abstractions", "Common", "ICycleReadModelRepository.cs"),
         ];
 
@@ -1798,7 +1798,7 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Users"),
             .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Notifications"),
-            .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, userQueryFiles, "FoodDiary.Modules.Dietologist.Domain.Entities"),
             .. FindReferencesInFiles(root, userQueryFiles, "IWebPushSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, userQueryFiles, "IDietologistInvitationReadRepository"),
             .. FindReferencesInFiles(root, userQueryFiles, "GetAccessibleUserAsync"),
@@ -1820,7 +1820,7 @@ public sealed class ApplicationGuardrailTests {
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Modules.Dietologist.Domain.Entities"),
             .. FindReferencesInFiles(root, serviceFiles, "GetActiveByClientAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByClientAndStatusAsync"),
         ];
@@ -1851,7 +1851,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DietologistQueries_UseReadServicesInsteadOfRepositories() {
+    public void DietologistQueries_UseReadModelsInsteadOfAggregates() {
         string root = GetRepositoryRoot();
         string dietologistQueriesRoot = Path.Combine(root, "Modules", "Dietologist", "Application", "Queries");
         string[] dietologistQueryFiles = [.. SourceScanner.SourceFiles(dietologistQueriesRoot)];
@@ -1859,7 +1859,7 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, dietologistQueryFiles, "IDietologistInvitationReadRepository"),
             .. FindReferencesInFiles(root, dietologistQueryFiles, "IRecommendationReadRepository"),
-            .. FindReferencesInFiles(root, dietologistQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "FoodDiary.Modules.Dietologist.Domain.Entities"),
         ];
 
         Assert.Empty(violations);
@@ -1872,13 +1872,13 @@ public sealed class ApplicationGuardrailTests {
         string userServicesRoot = Path.Combine(root, "Modules", "Users", "Application", "Services");
         string[] readServiceFiles = [
             Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
-            Path.Combine(dietologistServicesRoot, "DietologistClientReadService.cs"),
-            Path.Combine(dietologistServicesRoot, "DietologistRecommendationReadService.cs"),
+            Path.Combine(root, "Modules", "Dietologist", "Application", "Queries", "GetClientGoals", "GetClientGoalsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Dietologist", "Application", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
             Path.Combine(userServicesRoot, "ProfileOverviewReadService.cs"),
         ];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, readServiceFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, readServiceFiles, "FoodDiary.Modules.Dietologist.Domain.Entities"),
             .. FindReferencesInFiles(root, readServiceFiles, "IDietologistInvitationReadRepository"),
             .. FindReferencesInFiles(root, readServiceFiles, "IRecommendationReadRepository"),
             .. FindReferencesInFiles(root, readServiceFiles, "GetByIdAsync"),
@@ -2395,15 +2395,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DailyAdviceReadService_UsesReadModelsInsteadOfContentAggregates() {
+    public void DailyAdviceHandler_UsesReadModelsInsteadOfContentAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
             "Modules",
             "DailyAdvices",
             "Application",
-            "Services",
-            "DailyAdviceReadService.cs");
+            "Queries",
+            "GetDailyAdvice",
+            "GetDailyAdviceQueryHandler.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
@@ -2873,7 +2874,7 @@ public sealed class ApplicationGuardrailTests {
 
         Assert.Contains("IUserDietologistProfileReadService", source, StringComparison.Ordinal);
         Assert.Contains("ICurrentUserAccessService", source, StringComparison.Ordinal);
-        Assert.Contains("IDietologistUserLookupService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IDietologistUserLookupService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserContextService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
@@ -2978,6 +2979,9 @@ public sealed class ApplicationGuardrailTests {
             "EfUnitOfWork.cs",
             "FoodDiaryDbContext.cs",
             "FoodDiaryDbContextFactory.cs",
+            "SharedPersistenceDbContext.cs",
+            "SharedPersistenceDbContext.Session.cs",
+            "SharedRuntimeDbContext.cs",
         ];
 
         string?[] actualFiles = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)

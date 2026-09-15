@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+namespace FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
 
 public sealed record DietologistRelationshipHttpResponse(
     Guid InvitationId,

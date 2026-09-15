@@ -165,7 +165,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.DailyAdvices": {
+      "FoodDiary.Modules.DailyAdvices.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -211,7 +211,7 @@
       "fooddiary.modules.dailyadvices.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
+          "FoodDiary.Modules.DailyAdvices.Application": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.PersistenceModel": "[1.0.0, )",

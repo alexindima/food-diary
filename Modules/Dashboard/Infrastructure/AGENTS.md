@@ -1,6 +1,6 @@
 # Dashboard optimized read adapters
 
-Own Persistence/Dashboard projection readers and loaders. Use module Infrastructure namespaces; preserve
+Own Persistence projection readers and loaders. Use module Infrastructure namespaces; preserve
 internal visibility, scoped aliases, query shape/count, ordering, paging, tenant
 filters and cancellation. No write repository, aggregate or EF mapping ownership.
 Do not reference central Infrastructure or EF Core. Body and meal SQL readers live in

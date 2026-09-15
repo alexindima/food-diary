@@ -7,7 +7,7 @@ Rules for `Modules/Dietologist/`.
 ## Boundaries
 
 - Own Dietologist commands, queries, services, policies, module ports, aggregates, persistence adapters, and EF configurations.
-- Preserve legacy `FoodDiary.Application.Dietologist.*`, `FoodDiary.Application.Abstractions.Dietologist.*`, `FoodDiary.Domain.*`, and persistence CLR namespaces and the application assembly identity.
+- Use canonical `FoodDiary.Modules.Dietologist.<Project>` identities and folder-aligned namespaces, including tests. Projects occupy sibling directories.
 - Keep client health data behind relationship authorization and explicit `DietologistPermissions`; no consumer may bypass `IDietologistDashboardAccessService` or the attention-signal projection.
 - Register application behavior through `AddDietologistApplication`; composition roots use Infrastructure's `AddDietologistModule` facade.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
@@ -19,7 +19,7 @@ Rules for `Modules/Dietologist/`.
   grants internal storage access without making a public audit entity API.
 - Focused audit rule/composition tests live in the existing module Infrastructure
   tests. Central PostgreSQL tests retain the shared dispatch/transaction boundary.
-- Keep the Dashboard access service and permission projection in Contracts; Dashboard references it directly. Internal repositories and adapter-facing ports stay in Application/Abstractions.
+- Keep the Dashboard access service and permission projection in Contracts; Dashboard references it directly. Internal repositories and adapter-facing ports stay in Application.Abstractions.
 
 ## Verification
 
@@ -56,3 +56,9 @@ Preserve order 40 and both client/dietologist predicates. The audit interceptor 
 IModuleChangeTrackerSource is implemented by the save context, not resolved through DI; this avoids creating a context/interceptor dependency cycle. Inspect only DietologistDbContext entries, preserve registration order and DetectChanges behavior, and keep the existing synchronous/asynchronous central save timing and pending-event deduplication.
 
 Dietologist Infrastructure references Audit.PersistenceModel directly and has no central Infrastructure project reference or friend grant. Its infrastructure tests explicitly reference central Infrastructure and persistence abstractions for coordinated-save fixtures. The shared audit model retains its exact existing Dietologist friend grant.
+
+## Refactoring guardrails
+
+- Keep all projects as siblings; namespace and physical layout are checked by MigratedModuleNamespaceTests and PhysicalProjectLayoutTests.
+- Put single-use query orchestration directly in its handler; retain only genuinely shared operations, independent algorithms, authorization capabilities and technical ports.
+- SendClientTaskRemindersCommand is a transactional owner command; its handler stages notifications and reminder marks, and the shared command pipeline commits them together. Jobs dispatch through ISender. Keep DietologistDashboardAccessService as the reviewed relationship/permission capability. InvitationReadService retains only reused client-list and relationship operations.

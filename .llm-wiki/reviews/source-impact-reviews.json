@@ -23,13 +23,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
+          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff1a6a08603ce77af7e88be9fb1244028e6c65aaa2c63f3297c4d62013d8536f"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "3d9e02b9ea73aed3d362d964b10a3cff0d5853f898d3299aaa15baecda719c53"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:34.2222244Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:23.6235667Z"
     },
     {
       "pageId": "module.frontend",
@@ -52,14 +60,18 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff1a6a08603ce77af7e88be9fb1244028e6c65aaa2c63f3297c4d62013d8536f"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
+          "sha256": "3d9e02b9ea73aed3d362d964b10a3cff0d5853f898d3299aaa15baecda719c53"
         }
       ],
-      "reason": "ADR 0040 documents Admin context shared receipt save and retained transactional purge",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T10:17:27.9906377Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:25.0776623Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -140,13 +152,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
+          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "84aea8115cf69fdb777d1a8e23fb6d12605af3733ae301a14eef0a2dd3f94d07"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:35.4135685Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:26.4646480Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -155,13 +171,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+          "sha256": "dd026a00407902348f88bd25fb2b920939196b0c1c3897546b71a298d3901a69"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "1290104708e85690a6d85c90fc976abae818844da29291f701687d4fc9726ac9"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:35.8218499Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:27.7662734Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -204,13 +224,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "3d0f67e9ee7a7eaaad6940590b065c2cca62c0b4982501124da0c2ffd062c35c"
+          "sha256": "3cdfe55576b1bf0d9259e2c855ffccc3a317bbc88a7f5763846a34652e1355dc"
         }
       ],
-      "reason": "81 HTTP and Swagger tests passed including full contract snapshot; controller namespace discovery changed without wire-contract changes.",
+      "reason": "Reviewed workflow guidance against current sources: ADR 0042 changes internal runtime context ownership only; routes, payloads and client packages remain unchanged by this task. Six HTTP scenarios passed. Concurrent module source relocation does not change these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:07.479646Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:28.8324918Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -218,18 +238,22 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "c3e4060c07a01a9acdafe3feaec752b27e84a5fb4350f4006c5cb6586f86a634"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+          "sha256": "dd026a00407902348f88bd25fb2b920939196b0c1c3897546b71a298d3901a69"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "69f77e38d381ddd84c88da9e93a2003d2da2d9deafe3ed3c3ff2d84b3650e013"
+          "sha256": "4c619f05b6cacd2a373ac7c96c6d18b2876d4adc5c99dd79104274de5624eca6"
         }
       ],
-      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
+      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:36.2131037Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:29.9884868Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -237,14 +261,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "891eb74ef39019c72af0b35d998de969db1b840f6a134398966d06d18a1cbb90"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "74a79937288cdc13b36aeb3f302f4dd6de6c1effdce603dc6d67348f5e5d381c"
         }
       ],
-      "reason": "Identity internal namespace and shared JWT options relocation preserves controller DTOs and token format; offline token and API host unit tests passed.",
+      "reason": "Reviewed workflow guidance against current sources: ADR 0042 changes internal runtime context ownership only; routes, payloads and client packages remain unchanged by this task. Six HTTP scenarios passed. Concurrent module source relocation does not change these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:36.6649680Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:31.4555582Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -456,13 +480,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "995ead1cd535f9242447551e1ad8d3a1a4ac76766732617e6e1f9186de1ed99f"
+          "sha256": "84aea8115cf69fdb777d1a8e23fb6d12605af3733ae301a14eef0a2dd3f94d07"
         }
       ],
-      "reason": "Reviewed ADR 0041 against the documented triggers. Owner request boundaries and caller-owned commits are durable decisions; the workflow and command contract remain unchanged.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c98fcf1d639319252ca959b488d9200304b61dd2",
-      "reviewedAtUtc": "2026-09-14T22:14:19.4080277Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:33.5232033Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -500,14 +524,18 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "9e6ac93a5f75f104e44f47ca35d4fa6ce52b06167307ba434592ae2c94e09765"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "720e162ee94fe105b0730e327159f9841e2503d59c330bb9bfece993a65838df"
+          "sha256": "b4528153c7ea6d58982bc654d9fbfda5d5b520dedcd2a9a4fafa81de70b6e5a2"
         }
       ],
-      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
+      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:37.6799816Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:34.5554055Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -715,13 +743,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
+          "sha256": "1290104708e85690a6d85c90fc976abae818844da29291f701687d4fc9726ac9"
         }
       ],
-      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
-      "reviewedAtUtc": "2026-09-15T02:37:32.7958521Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:35.8726132Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -775,13 +803,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "be53d2682009955204df0191b45eee0a0520a13b34c28480530308f4752d7e10"
+          "sha256": "2b12200ce0464da719ac5d46eed72b7ccfde16d47aff3b9a58257adf7696f075"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed privacy and runtime workflow pages: the shared audit/email/replay mappings move unchanged, with no new data sharing, retention, credentials or logging. Provider rollback and replay cases pass; generated inventories remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:28.1148943Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:37.0140616Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb5e243e2ca004faf145ecf2ed1e224c2e83737e561bdab2271e4150fd462e80"
+          "sha256": "cd340a63da963ffd0aafa2e8b41bcff8c6fe6f47029bffa2e6feab7dfc6a312e"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:28.7507196Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:38.3735788Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +923,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "94733de9e57c525a2e5ed76ad9a8c23e27fc8b91c4ffc17106e1a3bc282032b7"
+          "sha256": "8f7005bc7b473f9e3b5207c7a5ad664953e317abdb1d051a05f8c20928dfbc69"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:29.8263147Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:42.1506258Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,21 +938,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb5e243e2ca004faf145ecf2ed1e224c2e83737e561bdab2271e4150fd462e80"
+          "sha256": "cd340a63da963ffd0aafa2e8b41bcff8c6fe6f47029bffa2e6feab7dfc6a312e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "94733de9e57c525a2e5ed76ad9a8c23e27fc8b91c4ffc17106e1a3bc282032b7"
+          "sha256": "8f7005bc7b473f9e3b5207c7a5ad664953e317abdb1d051a05f8c20928dfbc69"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "be53d2682009955204df0191b45eee0a0520a13b34c28480530308f4752d7e10"
+          "sha256": "2b12200ce0464da719ac5d46eed72b7ccfde16d47aff3b9a58257adf7696f075"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed privacy and runtime workflow pages: the shared audit/email/replay mappings move unchanged, with no new data sharing, retention, credentials or logging. Provider rollback and replay cases pass; generated inventories remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:30.5764797Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:43.5933012Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1102,13 +1130,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
+          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:37.1137116Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:32.1875492Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1161,14 +1189,18 @@
       "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
       "sources": [
         {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "0ddbd2de4b4fa4249fb75de5818706e771ba9a96246db8b97fa1007106e3ef6a"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
+          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:38.3409509Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:39.7473357Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1177,13 +1209,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
+          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
         }
       ],
-      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
+      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:38.9149604Z"
+      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
+      "reviewedAtUtc": "2026-09-15T08:25:40.9075238Z"
     }
   ]
 }

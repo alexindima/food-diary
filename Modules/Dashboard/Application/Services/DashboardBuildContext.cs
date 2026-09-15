@@ -1,7 +1,7 @@
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed record DashboardBuildContext(
     UserId UserId,

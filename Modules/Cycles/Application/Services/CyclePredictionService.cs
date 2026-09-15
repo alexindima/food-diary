@@ -21,11 +21,11 @@ public static class CyclePredictionService {
         DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
         if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
-            return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
+            return Limited(CalculateConfidence(profile, today), "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
         return CalculatePredictions(
-            profile.Confidence,
+            CalculateConfidence(profile, today),
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
             today);
@@ -36,15 +36,21 @@ public static class CyclePredictionService {
         DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
         if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
-            return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
+            return Limited(profile.CalculateConfidence(today), "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
         return CalculatePredictions(
-            profile.Confidence,
+            profile.CalculateConfidence(today),
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile),
             today);
     }
+
+    public static CycleConfidence CalculateConfidence(CycleProfileReadModel profile, DateOnly currentDate) =>
+        CycleProfile.CalculateConfidence(profile.Mode, profile.IsRegular,
+            profile.BleedingEntries.Count(entry => entry.Type == BleedingType.Bleeding),
+            profile.Factors.Any(factor => factor.Type == CycleFactorType.HormonalContraception &&
+                factor.StartDate <= currentDate && (factor.EndDate is null || factor.EndDate >= currentDate)));
 
     private static CyclePredictionsModel CalculatePredictions(
         CycleConfidence legacyConfidence,

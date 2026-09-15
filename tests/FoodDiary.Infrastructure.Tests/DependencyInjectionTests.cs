@@ -28,11 +28,11 @@ using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -41,7 +41,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
@@ -577,7 +577,7 @@ public sealed class DependencyInjectionTests {
         FoodDiary.Persistence.Abstractions.IModuleContextFactory factory = scope.ServiceProvider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleContextFactory>();
         FoodDiaryDbContext central = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext hydration = scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>();
-        Assert.Same(central, factory);
+        Assert.Same(central.Session, factory);
         Assert.Contains(hydration, central.ModuleContexts);
         Assert.Same(central.Database.GetDbConnection(), hydration.Database.GetDbConnection());
         Assert.Same(hydration, scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
@@ -883,17 +883,17 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationRepository",
+            "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IDietologistInvitationRepository",
             [
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationReadRepository",
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationWriteRepository",
+                "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IDietologistInvitationReadRepository",
+                "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IDietologistInvitationWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationRepository",
+            "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IRecommendationRepository",
             [
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationReadRepository",
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationWriteRepository",
+                "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IRecommendationReadRepository",
+                "FoodDiary.Modules.Dietologist.Application.Abstractions.Common.IRecommendationWriteRepository",
             ]
         },
         {

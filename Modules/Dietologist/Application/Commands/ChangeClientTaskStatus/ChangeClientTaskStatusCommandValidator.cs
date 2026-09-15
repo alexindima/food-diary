@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.ChangeClientTaskStatus;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.ChangeClientTaskStatus;
 
 public sealed class ChangeClientTaskStatusCommandValidator : AbstractValidator<ChangeClientTaskStatusCommand> {
     public ChangeClientTaskStatusCommandValidator() {

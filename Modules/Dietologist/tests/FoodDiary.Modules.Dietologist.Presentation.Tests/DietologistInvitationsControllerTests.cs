@@ -1,19 +1,20 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
-using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
-using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
-using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
-using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
+using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitation;
+using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationByToken;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationForCurrentUser;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Dietologist;
-using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dietologist.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistInvitationsControllerTests {

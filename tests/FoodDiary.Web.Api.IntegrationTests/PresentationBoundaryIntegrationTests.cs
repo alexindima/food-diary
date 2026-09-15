@@ -10,7 +10,7 @@ using FoodDiary.Modules.Ai.Presentation.Models;
 using FoodDiary.Modules.Ai.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Modules.Billing.Presentation;
-using FoodDiary.Presentation.Api.Features.Dietologist;
+using FoodDiary.Modules.Dietologist.Presentation;
 using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts;

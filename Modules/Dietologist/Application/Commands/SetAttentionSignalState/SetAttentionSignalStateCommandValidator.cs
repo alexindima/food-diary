@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState;
 
 public sealed class SetAttentionSignalStateCommandValidator : AbstractValidator<SetAttentionSignalStateCommand> {
     public const int MaximumSignalIdLength = 200;

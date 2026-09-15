@@ -1,7 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Modules.Dietologist.Application.Common.Validation;
 
 public static class DietologistEnumValueParser {
     public static bool TryParse<TEnum>(string? value, out TEnum parsed)

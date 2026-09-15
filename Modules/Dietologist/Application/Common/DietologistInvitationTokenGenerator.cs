@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 internal static class DietologistInvitationTokenGenerator {
     public static string GenerateUrlSafeToken(int byteLength = 32) {

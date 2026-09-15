@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;

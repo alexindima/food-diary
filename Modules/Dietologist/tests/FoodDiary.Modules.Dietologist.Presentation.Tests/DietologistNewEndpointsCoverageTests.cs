@@ -1,32 +1,33 @@
-using FoodDiary.Application.Dietologist.Commands.ArchiveRecommendationTemplate;
-using FoodDiary.Application.Dietologist.Commands.BulkCreateRecommendations;
-using FoodDiary.Application.Dietologist.Commands.CancelClientTask;
-using FoodDiary.Application.Dietologist.Commands.ChangeClientTaskStatus;
-using FoodDiary.Application.Dietologist.Commands.CreateClientTask;
-using FoodDiary.Application.Dietologist.Commands.CreateRecommendationComment;
-using FoodDiary.Application.Dietologist.Commands.CreateRecommendationTemplate;
-using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
-using FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
-using FoodDiary.Application.Dietologist.Commands.UpdateRecommendationTemplate;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetAttentionSignals;
-using FoodDiary.Application.Dietologist.Queries.GetClientTasksForDietologist;
-using FoodDiary.Application.Dietologist.Queries.GetMyClientTasks;
-using FoodDiary.Application.Dietologist.Queries.GetRecommendationComments;
-using FoodDiary.Application.Dietologist.Queries.SearchRecommendationTemplates;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Application.Commands.ArchiveRecommendationTemplate;
+using FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
+using FoodDiary.Modules.Dietologist.Application.Commands.CancelClientTask;
+using FoodDiary.Modules.Dietologist.Application.Commands.ChangeClientTaskStatus;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateClientTask;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationComment;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationTemplate;
+using FoodDiary.Modules.Dietologist.Application.Commands.MarkRecommendationRead;
+using FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState;
+using FoodDiary.Modules.Dietologist.Application.Commands.UpdateRecommendationTemplate;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetAttentionSignals;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetClientTasksForDietologist;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetMyClientTasks;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationComments;
+using FoodDiary.Modules.Dietologist.Application.Queries.SearchRecommendationTemplates;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Dietologist;
-using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
-using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Mappings;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 #pragma warning disable MA0003
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dietologist.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistNewEndpointsCoverageTests {

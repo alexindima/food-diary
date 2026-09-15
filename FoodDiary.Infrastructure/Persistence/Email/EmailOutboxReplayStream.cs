@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Email;
 
-internal sealed class EmailOutboxReplayStream(FoodDiaryDbContext context) : IOutboxReplayStream {
+internal sealed class EmailOutboxReplayStream(SharedPersistenceDbContext context) : IOutboxReplayStream {
     public string Name => "email";
     public int Order => 0;
     public string? ReplayRejectionReason => "Dead-lettered emails cannot be replayed because their sensitive payloads are removed. Regenerate the email through its originating workflow.";

@@ -1,15 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.DailyAdvices</AssemblyName>
-    <RootNamespace>FoodDiary.Application.DailyAdvices</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Abstractions/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

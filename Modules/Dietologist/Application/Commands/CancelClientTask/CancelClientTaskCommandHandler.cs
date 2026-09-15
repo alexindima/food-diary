@@ -1,15 +1,16 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.CancelClientTask;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.CancelClientTask;
 
 public sealed class CancelClientTaskCommandHandler(
     IClientTaskWriteRepository taskRepository,
@@ -51,7 +52,7 @@ public sealed class CancelClientTaskCommandHandler(
             return Result.Failure<ClientTaskModel>(accessResult.Error);
         }
 
-        bool wasCancelled = task.Status == FoodDiary.Domain.Enums.ClientTaskStatus.Cancelled;
+        bool wasCancelled = task.Status == FoodDiary.Modules.Dietologist.Domain.Enums.ClientTaskStatus.Cancelled;
         task.Cancel();
         if (!wasCancelled) {
             await notificationWriter.AddAsync(

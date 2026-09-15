@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

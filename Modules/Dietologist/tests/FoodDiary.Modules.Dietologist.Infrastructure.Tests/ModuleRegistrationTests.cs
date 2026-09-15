@@ -1,9 +1,8 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Infrastructure.Persistence.Dietologist;
-using FoodDiary.Modules.Dietologist.Infrastructure;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModuleRegistrationTests {

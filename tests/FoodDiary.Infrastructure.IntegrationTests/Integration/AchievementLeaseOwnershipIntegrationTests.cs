@@ -97,6 +97,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
             services.AddSingleton<IModuleContextFactory>(context);
             services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
                 new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));

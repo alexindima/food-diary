@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 internal static class DietologistInvitationClientNotifier {
     public static Task NotifyAcceptedAsync(

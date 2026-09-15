@@ -66,3 +66,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0040: Hydration runtime context pilot](0040-hydration-runtime-context-pilot.md)
 
 - [0041: Owner requests for cross-module use cases](0041-owner-requests-for-module-use-cases.md)
+
+- [0042: Shared runtime persistence session](0042-shared-runtime-persistence-session.md)

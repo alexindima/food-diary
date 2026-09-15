@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Statistics.Common;
@@ -17,7 +17,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
 
 public sealed class GetStatisticsSummaryQueryHandler(
-    IDashboardStatisticsReadService statisticsReadService, ISender sender, ICurrentUserAccessService currentUserAccessService)
+    ISender sender, ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetStatisticsSummaryQuery, Result<StatisticsSummaryModel>> {
     public async Task<Result<StatisticsSummaryModel>> Handle(
         GetStatisticsSummaryQuery request,
@@ -55,11 +55,11 @@ public sealed class GetStatisticsSummaryQueryHandler(
         DateTime bodyFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateFrom);
         DateTime bodyTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo);
 
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statisticsResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statisticsResult = await sender.Send(new ReadDashboardStatisticsQuery(
             userId,
             statisticsFrom,
             statisticsTo,
-            request.QuantizationDays,
+            request.QuantizationDays),
             cancellationToken).ConfigureAwait(false);
         if (statisticsResult.IsFailure) {
             return Result.Failure<StatisticsSummaryModel>(statisticsResult.Error);

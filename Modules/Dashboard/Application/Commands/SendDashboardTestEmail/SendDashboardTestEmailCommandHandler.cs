@@ -4,12 +4,12 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Dashboard.Common;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Common;
+using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
+namespace FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
 
 public sealed class SendDashboardTestEmailCommandHandler(
     IDashboardUserContextService dashboardUserContextService,

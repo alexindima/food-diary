@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 
-namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+namespace FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
 
 public record GetDailyAdviceQuery(
     Guid? UserId,

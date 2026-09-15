@@ -1,11 +1,10 @@
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Dietologist;
-using FoodDiary.Infrastructure.Persistence.Dietologist;
-using FoodDiary.Infrastructure.Persistence.Interceptors;
-using FoodDiary.Infrastructure.Persistence.Recommendations;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application;
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

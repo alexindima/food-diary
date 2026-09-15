@@ -1,16 +1,17 @@
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Dietologist.Domain.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Events;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Dietologist.EventHandlers;
+namespace FoodDiary.Modules.Dietologist.Application.EventHandlers;
 
 public sealed class RecommendationCreatedEventHandler(
     INotificationClientRefreshService notificationClientRefreshService,
     INotificationWriter notificationWriter,
-    IDietologistUserLookupService userLookupService,
+    IUserDietologistProfileReadService userLookupService,
     IPostCommitActionQueue postCommitActionQueue)
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
     public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> notification, CancellationToken cancellationToken) {

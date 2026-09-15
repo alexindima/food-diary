@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Events;
+namespace FoodDiary.Modules.Dietologist.Domain.Events;
 
 public sealed record DietologistInvitationDeclinedDomainEvent : IDomainEvent {
     public DietologistInvitationDeclinedDomainEvent(

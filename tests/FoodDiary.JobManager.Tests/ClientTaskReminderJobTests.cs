@@ -1,9 +1,11 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Dietologist.Application.Commands.SendClientTaskReminders;
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Dietologist.Services;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -63,12 +65,12 @@ public sealed class ClientTaskReminderJobTests {
         IClientTaskRepository repository,
         JobExecutionStateTracker tracker,
         bool enabled) {
-        var processor = new ClientTaskDueReminderProcessor(
+        var processor = new SendClientTaskRemindersCommandHandler(
             repository,
             new NullNotificationWriter(),
             TimeProvider.System);
         return new ClientTaskReminderJob(
-            processor,
+            RequestTestSender.Create(processor),
             Options.Create(new ClientTaskReminderOptions { Enabled = enabled }),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<ClientTaskReminderJob>.Instance);

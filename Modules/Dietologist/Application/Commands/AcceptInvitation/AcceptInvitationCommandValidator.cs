@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
 
 public sealed class AcceptInvitationCommandValidator : AbstractValidator<AcceptInvitationCommand> {
     public AcceptInvitationCommandValidator() {

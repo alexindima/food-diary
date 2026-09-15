@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Dietologist.Services;
 
 namespace FoodDiary.JobManager.Services;
 
@@ -115,7 +114,6 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<FastingTelemetryCleanupJob>();
             services.AddTransient<ClientTaskReminderJob>();
             services.AddTransient<WeeklyGoalReminderJob>();
-            services.AddScoped<ClientTaskDueReminderProcessor>();
 
         }
 

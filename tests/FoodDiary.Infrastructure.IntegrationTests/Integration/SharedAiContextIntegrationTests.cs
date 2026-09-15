@@ -42,7 +42,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         Assert.Empty(shared.ChangeTracker.Entries<AiPromptTemplate>());
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await unitOfWork.SaveChangesAsync();
-        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("ai-rollback@example.com", "hash"));
             await unitOfWork.SaveChangesAsync();
             AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("context-test", "en");
@@ -76,7 +76,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         Assert.Same(shared.Database.GetDbConnection(), scoped.Database.GetDbConnection());
         DateTime now = DateTime.UtcNow;
         var request = new AiQuotaReservationRequest(new string('a', 64), user.Id, new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc), "nutrition", 10, 20, 100, 100, now.AddMinutes(15));
-        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("ai-discarded@example.com", "hash"));
             await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
             AiQuotaReservationStatus result = await provider.GetRequiredService<IAiQuotaRepository>().ReserveAsync(request);
@@ -105,13 +105,13 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         DateTime now = DateTime.UtcNow;
         var job = new FoodRecognitionJobModel(Guid.NewGuid(), user.Id.Value, image.Id.Value, image.Url,
             "Independent admission", "Queued", now, now);
-        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("ai-job-discarded@example.com", "hash"));
             await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
             store ??= provider.GetRequiredService<IFoodRecognitionJobStore>();
             Assert.Same(store, provider.GetRequiredService<IFoodRecognitionJobReader>());
             Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
-            Assert.Same(transaction, shared.Database.CurrentTransaction);
+            Assert.Same(transaction, provider.GetRequiredService<SharedPersistenceDbContext>().Database.CurrentTransaction);
             await transaction.RollbackAsync();
         }
 

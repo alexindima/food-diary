@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
@@ -9,11 +9,11 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardMealsReadServiceTests {

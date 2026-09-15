@@ -40,10 +40,10 @@ COPY Modules/Users/Domain.Contracts/*.csproj Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/*.csproj Modules/Users/Infrastructure/
 COPY Modules/Users/Infrastructure/Model/*.csproj Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/*.csproj Modules/Dietologist/Application/
-COPY Modules/Dietologist/Application/Abstractions/*.csproj Modules/Dietologist/Application/Abstractions/
+COPY Modules/Dietologist/Application.Abstractions/*.csproj Modules/Dietologist/Application.Abstractions/
 COPY Modules/Dietologist/Domain/*.csproj Modules/Dietologist/Domain/
 COPY Modules/Dietologist/Infrastructure/*.csproj Modules/Dietologist/Infrastructure/
-COPY Modules/Dietologist/Infrastructure/Model/*.csproj Modules/Dietologist/Infrastructure/Model/
+COPY Modules/Dietologist/PersistenceModel/*.csproj Modules/Dietologist/PersistenceModel/
 COPY Modules/Fasting/Application/*.csproj Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/*.csproj Modules/Fasting/Application/Abstractions/
 COPY Modules/Fasting/Contracts/*.csproj Modules/Fasting/Contracts/
@@ -113,7 +113,7 @@ COPY Shared/FoodDiary.Outbox.Abstractions/*.csproj Shared/FoodDiary.Outbox.Abstr
 COPY Shared/FoodDiary.Email.PersistenceModel/*.csproj Shared/FoodDiary.Email.PersistenceModel/
 COPY Shared/FoodDiary.Outbox.PersistenceModel/*.csproj Shared/FoodDiary.Outbox.PersistenceModel/
 COPY Modules/Dashboard/Application/*.csproj Modules/Dashboard/Application/
-COPY Modules/Dashboard/Application/Abstractions/*.csproj Modules/Dashboard/Application/Abstractions/
+COPY Modules/Dashboard/Application.Abstractions/*.csproj Modules/Dashboard/Application.Abstractions/
 COPY Modules/Dashboard/Contracts/*.csproj Modules/Dashboard/Contracts/
 COPY Modules/Dashboard/Infrastructure/*.csproj Modules/Dashboard/Infrastructure/
 COPY Modules/Exercises/Application/Abstractions/*.csproj Modules/Exercises/Application/Abstractions/
@@ -188,9 +188,9 @@ COPY Modules/Usda/Infrastructure/*.csproj Modules/Usda/Infrastructure/
 COPY Modules/Usda/Infrastructure/Model/*.csproj Modules/Usda/Infrastructure/Model/
 COPY Modules/DailyAdvices/Application/*.csproj Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Contracts/*.csproj Modules/DailyAdvices/Contracts/
-COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices/Application/Abstractions/
+COPY Modules/DailyAdvices/Application.Abstractions/*.csproj Modules/DailyAdvices/Application.Abstractions/
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
-COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
+COPY Modules/DailyAdvices/PersistenceModel/*.csproj Modules/DailyAdvices/PersistenceModel/
 COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/*.csproj Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application.Abstractions/*.csproj Modules/Cycles/Application.Abstractions/
@@ -262,10 +262,10 @@ COPY Modules/Users/Domain.Contracts/ Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/ Modules/Users/Infrastructure/
 COPY Modules/Users/Infrastructure/Model/ Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/ Modules/Dietologist/Application/
-COPY Modules/Dietologist/Application/Abstractions/ Modules/Dietologist/Application/Abstractions/
+COPY Modules/Dietologist/Application.Abstractions/ Modules/Dietologist/Application.Abstractions/
 COPY Modules/Dietologist/Domain/ Modules/Dietologist/Domain/
 COPY Modules/Dietologist/Infrastructure/ Modules/Dietologist/Infrastructure/
-COPY Modules/Dietologist/Infrastructure/Model/ Modules/Dietologist/Infrastructure/Model/
+COPY Modules/Dietologist/PersistenceModel/ Modules/Dietologist/PersistenceModel/
 COPY Modules/Fasting/ Modules/Fasting/
 COPY Modules/Fasting/Application/ Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/ Modules/Fasting/Application/Abstractions/
@@ -338,7 +338,7 @@ COPY Shared/FoodDiary.Outbox.Abstractions/ Shared/FoodDiary.Outbox.Abstractions/
 COPY Shared/FoodDiary.Email.PersistenceModel/ Shared/FoodDiary.Email.PersistenceModel/
 COPY Shared/FoodDiary.Outbox.PersistenceModel/ Shared/FoodDiary.Outbox.PersistenceModel/
 COPY Modules/Dashboard/Application/ Modules/Dashboard/Application/
-COPY Modules/Dashboard/Application/Abstractions/ Modules/Dashboard/Application/Abstractions/
+COPY Modules/Dashboard/Application.Abstractions/ Modules/Dashboard/Application.Abstractions/
 COPY Modules/Dashboard/Contracts/ Modules/Dashboard/Contracts/
 COPY Modules/Dashboard/Infrastructure/ Modules/Dashboard/Infrastructure/
 COPY Modules/Exercises/Application/Abstractions/ Modules/Exercises/Application/Abstractions/
@@ -414,9 +414,9 @@ COPY Modules/Usda/Infrastructure/ Modules/Usda/Infrastructure/
 COPY Modules/Usda/Infrastructure/Model/ Modules/Usda/Infrastructure/Model/
 COPY Modules/DailyAdvices/Application/ Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Contracts/ Modules/DailyAdvices/Contracts/
-COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Application/Abstractions/
+COPY Modules/DailyAdvices/Application.Abstractions/ Modules/DailyAdvices/Application.Abstractions/
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
-COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
+COPY Modules/DailyAdvices/PersistenceModel/ Modules/DailyAdvices/PersistenceModel/
 COPY Modules/Cycles/Application/ Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/ Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application.Abstractions/ Modules/Cycles/Application.Abstractions/

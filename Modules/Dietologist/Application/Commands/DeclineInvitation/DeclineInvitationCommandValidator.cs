@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitation;
 
 public sealed class DeclineInvitationCommandValidator : AbstractValidator<DeclineInvitationCommand> {
     public DeclineInvitationCommandValidator() {

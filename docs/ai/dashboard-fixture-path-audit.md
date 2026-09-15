@@ -4,21 +4,21 @@ Parent authorized path-only fixture maintenance. Queries, IDs, cohorts, expected
 
 | Fixture | Old target | New target | Evidence |
 | --- | --- | --- | --- |
-| `.llm-wiki/evals/context-search-generalization.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs` | `Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs` | same C# after namespace/import relocation only |
+| `.llm-wiki/evals/context-search-generalization.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs` | `Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs` | same C# after namespace/import relocation only |
 | `.llm-wiki/evals/context-search-holdout.json` | `FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs` | `Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs` | same C# content |
-| `.llm-wiki/evals/context-search-holdout.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs` | `Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs` | same C# after namespace/import relocation only |
+| `.llm-wiki/evals/context-search-holdout.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs` | `Modules/Dashboard/Infrastructure/Persistence/DashboardMealsReadService.cs` | same C# after namespace/import relocation only |
 | `.llm-wiki/evals/context-search-probe-3.json` | `FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs` | `Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs` | same C# content |
 | `.llm-wiki/evals/context-search-probe-4.json` | `FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs` | `Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs` | same C# content |
 | `.llm-wiki/evals/context-search-probe-6.json` | `FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs` | `Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs` | same C# content |
 | `.llm-wiki/evals/context-search-probe-7.json` | `FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs` | `Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs` | same C# content |
 | `.llm-wiki/evals/context-search-unseen-20260826.json` | `FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs` | `Modules/Dashboard/Application/Services/DashboardBodyMapper.cs` | same C# content |
-| `.llm-wiki/evals/context-search-unseen-20260826.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | `Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | same C# after namespace/import relocation only |
+| `.llm-wiki/evals/context-search-unseen-20260826.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | `Modules/Dashboard/Infrastructure/Persistence/DashboardMealProjection.cs` | same C# after namespace/import relocation only |
 | `.llm-wiki/evals/context-search.json` | `FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs` | `Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs` | same C# content |
-| `.llm-wiki/evals/development-context-bundles.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | `Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | same C# after namespace/import relocation only |
+| `.llm-wiki/evals/development-context-bundles.json` | `FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs` | `Modules/Dashboard/Infrastructure/Persistence/DashboardMealProjection.cs` | same C# after namespace/import relocation only |
 | `.llm-wiki/tools/Test-LlmWikiCodeGraph.ps1` | `FoodDiary.Application.Dashboard/` | `Modules/Dashboard/Application/` | existing physical project/root; legacy Application AssemblyName preserved |
 | `.llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1` | `FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj` | `Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj` | existing physical project/root; legacy Application AssemblyName preserved |
 | `.llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1` | `FoodDiary.Application.Dashboard` | `Modules/Dashboard/Application` | existing physical project/root; legacy Application AssemblyName preserved |
-| `.llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1` | `FoodDiary.Application.Abstractions/Dashboard` | `Modules/Dashboard/Application/Abstractions` | existing physical project/root; legacy Application AssemblyName preserved |
+| `.llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1` | `FoodDiary.Application.Abstractions/Dashboard` | `Modules/Dashboard/Application.Abstractions` | existing physical project/root; legacy Application AssemblyName preserved |
 
 ## Complete source audit
 

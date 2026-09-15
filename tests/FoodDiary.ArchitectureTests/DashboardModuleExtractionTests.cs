@@ -8,15 +8,15 @@ public sealed class DashboardModuleExtractionTests {
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dashboard")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Modules.Dashboard.Application")));
     }
 
     [Fact]
     public void DashboardReadAdaptersAndPorts_HavePhysicalOwnersWithoutAggregateOwnership() {
-        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Persistence/Dashboard")));
-        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application/Abstractions")));
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Persistence")));
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application.Abstractions")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Domain")));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Model")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/PersistenceModel")));
         Assert.DoesNotContain("FoodDiary.Modules.Dashboard.Infrastructure",
             ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"), StringComparer.Ordinal);
         Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Modules.BodyMetrics.Contracts", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.DailyAdvices.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Tdee.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], ProjectReferenceReader.ReadProjectReferences(

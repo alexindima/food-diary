@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Dashboard.Models;
+namespace FoodDiary.Modules.Dashboard.Contracts.Models;
 
 public sealed record DashboardStatisticsBucketReadModel(
     DateTime DateFrom,

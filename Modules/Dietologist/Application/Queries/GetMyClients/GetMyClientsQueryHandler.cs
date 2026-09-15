@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetMyClients;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
 
 public sealed class GetMyClientsQueryHandler(
     IDietologistInvitationReadService readService,

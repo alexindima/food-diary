@@ -1,18 +1,20 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
-using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
-using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
-using FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
+using FoodDiary.Modules.Dietologist.Application.Commands.InviteDietologist;
+using FoodDiary.Modules.Dietologist.Application.Commands.RevokeInvitation;
+using FoodDiary.Modules.Dietologist.Application.Commands.UpdateDietologistPermissions;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetMyDietologist;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetMyDietologistRelationship;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Dietologist;
-using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dietologist.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistControllerTests {

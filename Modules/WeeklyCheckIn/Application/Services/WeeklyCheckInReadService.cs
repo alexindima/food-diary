@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
@@ -15,18 +15,18 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInReadService(
-    IMealActivityReadService mealActivityReadService, IDashboardStatisticsReadService statisticsReadService, ISender sender, IHydrationEntryReadService hydrationEntryReadService)
+    IMealActivityReadService mealActivityReadService, ISender sender, IHydrationEntryReadService hydrationEntryReadService)
     : IWeeklyCheckInReadService {
     public async Task<Result<WeekSummaryModel>> LoadWeekSummaryAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) {
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> nutritionResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> nutritionResult = await sender.Send(new ReadDashboardStatisticsQuery(
             userId,
             dateFrom,
             dateTo,
-            quantizationDays: 1,
+            QuantizationDays: 1),
             cancellationToken).ConfigureAwait(false);
         if (nutritionResult.IsFailure) {
             return Result.Failure<WeekSummaryModel>(nutritionResult.Error);

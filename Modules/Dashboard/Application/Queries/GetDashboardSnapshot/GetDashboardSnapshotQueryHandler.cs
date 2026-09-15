@@ -1,12 +1,13 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Dashboard.Common;
-using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Modules.Dashboard.Application.Common;
+using FoodDiary.Modules.Dashboard.Application.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+namespace FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 
 public sealed class GetDashboardSnapshotQueryHandler(
     IDashboardSnapshotBuilder snapshotBuilder,

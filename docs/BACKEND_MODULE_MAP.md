@@ -2,6 +2,10 @@
 
 ## Hydration runtime persistence pilot
 
+The pilot's factory ownership is superseded by [ADR 0042](adr/0042-shared-runtime-persistence-session.md):
+PersistenceSession creates owner contexts from the narrow shared runtime root.
+FoodDiaryDbContext remains the complete model for migrations and composed reads.
+
 Hydration Infrastructure owns HydrationDbContext and its two-entity runtime model.
 Repositories receive owned sets from this context. Central IUnitOfWork coordinates
 atomic saves with the shared context; central migrations, composed reads and purge
@@ -100,9 +104,9 @@ Use this file when deciding where backend code belongs.
 | Lessons persistence model | `Modules/Lessons/Infrastructure/Model` | Lesson EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Lessons infrastructure | `Modules/Lessons/Infrastructure` | Lesson repository implementation and complete module registration | HTTP transport and central migrations |
 | Daily Advices domain | `Modules/DailyAdvices/Domain` | Aggregate, identifier, invariants, stable CLR/EF identity | Application orchestration, EF mappings, transport |
-| Daily Advices application ports | `Modules/DailyAdvices/Application/Abstractions` | Repository port and persistence projection | EF implementation or cross-module aggregate exposure |
+| Daily Advices application ports | `Modules/DailyAdvices/Application.Abstractions` | Repository port and persistence projection | EF implementation or cross-module aggregate exposure |
 | Daily Advices use cases | `Modules/DailyAdvices/Application` | Query, model, selection, application registration | Persistence implementation and HTTP transport |
-| Daily Advices persistence model | `Modules/DailyAdvices/Infrastructure/Model` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
+| Daily Advices persistence model | `Modules/DailyAdvices/PersistenceModel` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
 | Content Reports module | `Modules/ContentReports` | Creation, moderation contracts, aggregate, persistence model/adapter, and module tests | Central `DbContext`, migrations, HTTP transport, Admin orchestration |
 | OpenFoodFacts module | `Modules/OpenFoodFacts` | Public catalog queries, cached-search contract and lifecycle, provider/cache ports, durable cache entity, persistence/provider adapters, model, and focused tests | Central `DbContext`, migrations, snapshot, and HTTP presentation |
@@ -114,9 +118,9 @@ Use this file when deciding where backend code belongs.
 | Images persistence model | `Modules/Images/Infrastructure/Model` | `ImageAsset` EF configuration and model-builder seam | Shared DbContext, migrations, outbox engine |
 | Images infrastructure | `Modules/Images/Infrastructure` | Image repository/outbox adapters, S3 storage/options and explicit persistence/provider registration | Shared HTTP/URI/telemetry mechanisms, HTTP transport, migrations |
 | Dietologist domain | `Modules/Dietologist/Domain` | Invitations, permissions, recommendations, client tasks, identifiers, enums, and events | Application orchestration, EF, transport |
-| Dietologist application ports | `Modules/Dietologist/Application/Abstractions` | Repository ports, persistence projections, attention and dashboard-access capabilities | EF implementations and HTTP transport |
+| Dietologist application ports | `Modules/Dietologist/Application.Abstractions` | Repository ports, persistence projections, attention and dashboard-access capabilities | EF implementations and HTTP transport |
 | Dietologist use cases | `Modules/Dietologist/Application` | Commands, queries, policies, models, services, and application registration | Persistence implementations and HTTP transport |
-| Dietologist persistence model | `Modules/Dietologist/Infrastructure/Model` | EF configurations and model-builder seam | Shared `DbContext`, migrations, repository behavior |
+| Dietologist persistence model | `Modules/Dietologist/PersistenceModel` | EF configurations and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Dietologist infrastructure | `Modules/Dietologist/Infrastructure` | Repositories, attention projection, collaboration audit rules/interceptor, and complete module registration | Generic audit storage, HTTP transport and central migrations |
 | Billing domain | `Modules/Billing/Domain` | Subscriptions, payments, webhook inbox events, provider names and payment kinds with preserved CLR/EF identity | Application orchestration, EF mappings, provider SDKs, transport |
 | Billing application ports | `Modules/Billing/Application.Abstractions` | Repository, checkout lock, transaction runner, provider gateway and provider-facing models | Billing's Marketing conversion port, EF/provider implementations, HTTP transport |

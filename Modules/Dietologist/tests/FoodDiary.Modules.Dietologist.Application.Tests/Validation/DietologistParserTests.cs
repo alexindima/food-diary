@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Validation;
+namespace FoodDiary.Modules.Dietologist.Application.Tests.Validation;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistParserTests {

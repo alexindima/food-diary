@@ -1,9 +1,11 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Contracts.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Services;
+namespace FoodDiary.Modules.Dietologist.Application.Services;
 
 public sealed class DietologistDashboardAccessService(
     IDietologistInvitationReadModelRepository invitationRepository) : IDietologistDashboardAccessService {

@@ -20,14 +20,14 @@ public sealed class ModuleContextFactoryRegistrationTests {
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         RegisterModules(services);
         Type[] ownerTypes = [.. services.Select(service => service.ServiceType)
-            .Where(type => typeof(DbContext).IsAssignableFrom(type) && type != typeof(FoodDiaryDbContext)).Distinct()];
+            .Where(type => typeof(DbContext).IsAssignableFrom(type) && type != typeof(FoodDiaryDbContext) && type != typeof(SharedPersistenceDbContext)).Distinct()];
         Assert.Equal(29, ownerTypes.Length);
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         using IServiceScope otherScope = provider.CreateScope();
-        FoodDiaryDbContext coordinator = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        Assert.Same(coordinator, scope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
-        Assert.NotSame(coordinator, otherScope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
+        SharedPersistenceDbContext coordinator = scope.ServiceProvider.GetRequiredService<SharedPersistenceDbContext>();
+        Assert.Same(coordinator.Session, scope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
+        Assert.NotSame(coordinator.Session, otherScope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
         IModuleTransactionCoordinator transactions = scope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>();
         Assert.Same(transactions, scope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>());
         Assert.NotSame(transactions, otherScope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>());

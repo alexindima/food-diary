@@ -1,7 +1,8 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Modules.DailyAdvices.Application.Queries.GetDailyAdvice;
+using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
 
-namespace FoodDiary.Application.Tests.Queries;
+namespace FoodDiary.Modules.DailyAdvices.Application.Tests.Queries;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetDailyAdviceQueryValidatorTests {

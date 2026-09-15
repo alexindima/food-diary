@@ -2,7 +2,7 @@
   "sourceComparisons": [
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Common/IDashboardBodyReadService.cs",
       "baseNormalizedSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
       "targetNormalizedSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
       "alignedTargetSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
@@ -11,7 +11,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Common/IDashboardMealsReadService.cs",
       "baseNormalizedSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
       "targetNormalizedSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
       "alignedTargetSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
@@ -20,7 +20,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs",
       "baseNormalizedSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
       "targetNormalizedSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
       "alignedTargetSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
@@ -38,7 +38,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardBodyReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "baseNormalizedSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
       "targetNormalizedSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
       "alignedTargetSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
@@ -47,7 +47,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiItemReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiItemReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiItemReadModel.cs",
       "baseNormalizedSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
       "targetNormalizedSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
       "alignedTargetSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
@@ -56,7 +56,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiSessionReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiSessionReadModel.cs",
       "baseNormalizedSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
       "targetNormalizedSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
       "alignedTargetSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
@@ -65,7 +65,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealItemReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealItemReadModel.cs",
       "baseNormalizedSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
       "targetNormalizedSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
       "alignedTargetSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
@@ -74,7 +74,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "baseNormalizedSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
       "targetNormalizedSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
       "alignedTargetSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
@@ -83,7 +83,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealsReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealsReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealsReadModel.cs",
       "baseNormalizedSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
       "targetNormalizedSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
       "alignedTargetSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
@@ -92,7 +92,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardReadModel.cs",
       "baseNormalizedSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
       "targetNormalizedSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
       "alignedTargetSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
@@ -101,7 +101,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadSections.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardReadSections.cs",
       "baseNormalizedSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
       "targetNormalizedSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
       "alignedTargetSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
@@ -119,7 +119,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistPointReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistPointReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardWaistPointReadModel.cs",
       "baseNormalizedSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
       "targetNormalizedSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
       "alignedTargetSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
@@ -128,7 +128,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistSummaryReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistSummaryReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardWaistSummaryReadModel.cs",
       "baseNormalizedSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
       "targetNormalizedSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
       "alignedTargetSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
@@ -137,7 +137,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightPointReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightPointReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardWeightPointReadModel.cs",
       "baseNormalizedSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
       "targetNormalizedSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
       "alignedTargetSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
@@ -146,7 +146,7 @@
     },
     {
       "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightSummaryReadModel.cs",
-      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightSummaryReadModel.cs",
+      "target": "Modules/Dashboard/Application.Abstractions/Models/DashboardWeightSummaryReadModel.cs",
       "baseNormalizedSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
       "targetNormalizedSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
       "alignedTargetSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
@@ -488,7 +488,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardBodyReadService.cs",
       "baseNormalizedSha256": "2521e499fa5fb9c37cc3bd3beab259edd436c324e236d2d76197b199c044eb39",
       "targetNormalizedSha256": "3dcc2583fa13e0db4e47ed729f9acf5e3e05e4913701e26e20d028ad59857341",
       "alignedTargetSha256": "2521e499fa5fb9c37cc3bd3beab259edd436c324e236d2d76197b199c044eb39",
@@ -497,7 +497,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardFavoriteMealProjection.cs",
       "baseNormalizedSha256": "e0c0da64703a6ccd769df6321a832fdc9eadd4592c5ddd57f95f8bc70d207fba",
       "targetNormalizedSha256": "991b4b25f2b972fd69c09a19d6be0ca34074fcf5c333bb48874f3eaf32d78d77",
       "alignedTargetSha256": "e0c0da64703a6ccd769df6321a832fdc9eadd4592c5ddd57f95f8bc70d207fba",
@@ -506,7 +506,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealAiSessionProjection.cs",
       "baseNormalizedSha256": "df91b8108cae2bc36b82db9ed507973d005f5dca4fd9a4a7bac03e063749c230",
       "targetNormalizedSha256": "5cc961ec376d7863a1ae5f956c5ccf03a3b867142e305d22b10c2ec3b35072e0",
       "alignedTargetSha256": "df91b8108cae2bc36b82db9ed507973d005f5dca4fd9a4a7bac03e063749c230",
@@ -515,7 +515,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealAiSessionsLoader.cs",
       "baseNormalizedSha256": "c165eed8654fb7ff682e815bad32d20a9f918c817b97077bfd7fa53a17b205ab",
       "targetNormalizedSha256": "b4fcca6031a29a7aa877d5f5c105cb0077cb565d4324574174e369f77360e390",
       "alignedTargetSha256": "c165eed8654fb7ff682e815bad32d20a9f918c817b97077bfd7fa53a17b205ab",
@@ -524,7 +524,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealFavoritesLoader.cs",
       "baseNormalizedSha256": "da0cebd985080566e97329192e938bb17be4825556cf8ae17ce64702e8558f35",
       "targetNormalizedSha256": "4d9d2ff896550b2c8ac004dbed98fccfcd0a3cde28140de8889d78242b00e6ae",
       "alignedTargetSha256": "da0cebd985080566e97329192e938bb17be4825556cf8ae17ce64702e8558f35",
@@ -533,7 +533,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealItemProjection.cs",
       "baseNormalizedSha256": "4c5440825426822858b54c38b72094e9309ace52d088df38be4eb8aafeed6d3b",
       "targetNormalizedSha256": "268662da89b834bf2ea4f6472b6beaa86d9d94d50c81b39f01e1e1c300a1ce34",
       "alignedTargetSha256": "4c5440825426822858b54c38b72094e9309ace52d088df38be4eb8aafeed6d3b",
@@ -542,7 +542,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealItemsLoader.cs",
       "baseNormalizedSha256": "4c1bc9c904e4a121d1a157e177f0dd910830d6b6b0e3bd1a54e164ab6d02b834",
       "targetNormalizedSha256": "ff89f450f8c51075d8f9df96881fe4b4f4f1d3dae3e50885a53bc7d42859bf54",
       "alignedTargetSha256": "4c1bc9c904e4a121d1a157e177f0dd910830d6b6b0e3bd1a54e164ab6d02b834",
@@ -551,7 +551,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealProjection.cs",
       "baseNormalizedSha256": "910e2f7b853f8058f11c8fbd6df77b772e5fb6de20a8e9c9c97e6d72167e1d4a",
       "targetNormalizedSha256": "38b06ab7172b0a5f7cd333fd7e3c3fa3b2bf14271b897c3f8b95bc052081d9ef",
       "alignedTargetSha256": "910e2f7b853f8058f11c8fbd6df77b772e5fb6de20a8e9c9c97e6d72167e1d4a",
@@ -560,7 +560,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealsReadService.cs",
       "baseNormalizedSha256": "e42fa1364a3d5ee964d482af65b771ace16ff0cb9a77d1e9f748c43b1baf90cd",
       "targetNormalizedSha256": "0bc1b36e4560445c25dddd128e1a08bfe2251ca7eb0641153eb0504652353491",
       "alignedTargetSha256": "e42fa1364a3d5ee964d482af65b771ace16ff0cb9a77d1e9f748c43b1baf90cd",
@@ -569,7 +569,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
       "baseNormalizedSha256": "a8fa74a8b7a833b0576267d5976ee3e1fe55960053ed9fcc73ee39393dc51d1c",
       "targetNormalizedSha256": "b2dbead25ec27627814f2e35c06945d0715c902df1b252b7f7027708e85e830b",
       "alignedTargetSha256": "a8fa74a8b7a833b0576267d5976ee3e1fe55960053ed9fcc73ee39393dc51d1c",
@@ -578,7 +578,7 @@
     },
     {
       "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
       "baseNormalizedSha256": "8bd720aba905fb9e3cb55410a79a567c1d1010b6b49d1d21f5b343b14dba75c3",
       "targetNormalizedSha256": "8db85f95cced03a18bf081648a55918a30514213c7944a3c90281c1b69ae6419",
       "alignedTargetSha256": "8bd720aba905fb9e3cb55410a79a567c1d1010b6b49d1d21f5b343b14dba75c3",

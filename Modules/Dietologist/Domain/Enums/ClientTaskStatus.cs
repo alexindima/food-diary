@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Dietologist.Domain.Enums;
 
 public enum ClientTaskStatus {
     Open = 0,

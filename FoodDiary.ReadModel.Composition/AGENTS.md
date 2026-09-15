@@ -5,6 +5,12 @@ JobManager and Initializer explicitly register AddReadModelComposition. Modules
 must never reference this assembly. Existing implementation namespaces are retained
 as a deliberate compatibility exception; physical and assembly ownership is here.
 
+ADR 0042 separates the shared runtime root from FoodDiaryDbContext. Readers still
+receive the same scoped complete-model context, resolved lazily on the session's
+connection. The shared coordinator enlists it in caller transactions, including
+late resolution and reads after intermediate saves. Do not create independent
+connections or change reader SQL to compensate for the runtime split.
+
 Only no-tracking scalar/immutable DTO reads are permitted. No aggregate-returning
 API, writes, tracked queries, SaveChanges, transactions, raw SQL or external clients.
 Preserve SQL-side joins, predicates, ordering and limits. Keep persistence access

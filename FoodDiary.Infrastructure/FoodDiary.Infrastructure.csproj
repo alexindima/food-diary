@@ -20,9 +20,9 @@
     <ProjectReference Include="../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="../Modules/Cycles/PersistenceModel/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
-    <ProjectReference Include="../Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/DailyAdvices/PersistenceModel/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
-    <ProjectReference Include="../Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Dietologist/PersistenceModel/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj" />
     <ProjectReference Include="../Modules/Exercises/Infrastructure/Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />

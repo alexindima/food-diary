@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.DisconnectDietologist;
 
 public record DisconnectDietologistCommand(
     Guid? UserId,

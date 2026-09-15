@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.ArchiveRecommendationTemplate;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.ArchiveRecommendationTemplate;
 
 public sealed class ArchiveRecommendationTemplateCommandHandler(
     IRecommendationTemplateWriteRepository repository,

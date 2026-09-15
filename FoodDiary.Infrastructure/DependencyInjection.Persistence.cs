@@ -28,8 +28,10 @@ public static partial class DependencyInjection {
         services.AddScoped<IModuleSessionCoordinator, EfModuleSessionCoordinator>();
         services.AddScoped<IModuleSessionLock, EfModuleSessionLock>();
         services.AddScoped<IModuleScopeGuard, EfModuleScopeGuard>();
-        services.AddScoped<IIndependentModuleContextOptionsFactory, EfIndependentModuleContextOptionsFactory>();
-        services.AddScoped<IModuleContextFactory>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddScoped<IIndependentModuleContextOptionsFactory>(static provider =>
+            new EfIndependentModuleContextOptionsFactory(provider.GetRequiredService<DbContextOptions<SharedPersistenceDbContext>>()));
+        services.AddScoped<PersistenceSession>(static provider => provider.GetRequiredService<SharedPersistenceDbContext>().Session);
+        services.AddScoped<IModuleContextFactory>(static provider => provider.GetRequiredService<PersistenceSession>());
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, EmailOutboxReplayStream>());
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
@@ -52,6 +54,14 @@ public static partial class DependencyInjection {
                     sp.GetRequiredService<DomainEventDispatchInterceptor>())
                 .AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
         });
+
+        services.AddScoped<DbContextOptions<SharedPersistenceDbContext>>(static provider =>
+            new DbContextOptions<SharedPersistenceDbContext>(provider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>()
+                .Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
+        services.AddScoped<SharedPersistenceDbContext, SharedRuntimeDbContext>();
+        services.RemoveAll<FoodDiaryDbContext>();
+        services.AddScoped<FoodDiaryDbContext>(static provider => provider.GetRequiredService<PersistenceSession>()
+            .CreateModuleContext<FoodDiaryDbContext>(static options => new FoodDiaryDbContext(options), saveOrder: 1));
 
     }
 }

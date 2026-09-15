@@ -475,7 +475,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("BillingWebhookEvents", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Content.DailyAdvice", b =>
+            modelBuilder.Entity("FoodDiary.Modules.DailyAdvices.Domain.Entities.Content.DailyAdvice", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -643,7 +643,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("UserLessonProgress");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.ClientTask", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.ClientTask", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -694,7 +694,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("ClientTasks");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.DietologistInvitation", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -778,7 +778,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("DietologistInvitations");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.Recommendation", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -821,7 +821,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("Recommendations");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationBulkDispatch", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationBulkDispatch", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -858,7 +858,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("RecommendationBulkDispatches");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationComment", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationComment", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -889,7 +889,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("RecommendationComments");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationTemplate", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -4098,7 +4098,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.ClientTask", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.ClientTask", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                         .WithMany()
@@ -4113,7 +4113,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.DietologistInvitation", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
                         .WithMany()
@@ -4131,7 +4131,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("DietologistUser");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.Recommendation", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
                         .WithMany()
@@ -4150,7 +4150,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("DietologistUser");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationBulkDispatch", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationBulkDispatch", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                         .WithMany()
@@ -4164,14 +4164,14 @@ namespace FoodDiary.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodDiary.Domain.Entities.Dietologist.Recommendation", null)
+                    b.HasOne("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", null)
                         .WithMany()
                         .HasForeignKey("RecommendationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationComment", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationComment", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "AuthorUser")
                         .WithMany()
@@ -4179,7 +4179,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodDiary.Domain.Entities.Dietologist.Recommendation", "Recommendation")
+                    b.HasOne("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", "Recommendation")
                         .WithMany()
                         .HasForeignKey("RecommendationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4190,7 +4190,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Recommendation");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationTemplate", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.RecommendationTemplate", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                         .WithMany()

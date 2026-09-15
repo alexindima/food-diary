@@ -50,7 +50,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Cycles persistence model: `Modules/Cycles/PersistenceModel/AGENTS.md`
 - Dietologist logical module: `Modules/Dietologist/AGENTS.md`
 - Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
-- Dietologist application abstractions: `Modules/Dietologist/Application/Abstractions/AGENTS.md`
+- Dietologist application abstractions: `Modules/Dietologist/Application.Abstractions/AGENTS.md`
 - Exercises logical module: `Modules/Exercises/AGENTS.md`
 - Exercises application: `Modules/Exercises/Application/AGENTS.md`
 - Exercises application abstractions: `Modules/Exercises/Application/Abstractions/AGENTS.md`
@@ -211,13 +211,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Weekly check-in logical module: `Modules/WeeklyCheckIn/AGENTS.md`
 - Weekly check-in application tests: `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/AGENTS.md`
 - Daily advices logical module: `Modules/DailyAdvices/AGENTS.md`
-- Daily advices application abstractions: `Modules/DailyAdvices/Application/Abstractions/AGENTS.md`
+- Daily advices application abstractions: `Modules/DailyAdvices/Application.Abstractions/AGENTS.md`
 - Daily advices domain: `Modules/DailyAdvices/Domain/AGENTS.md`
 - Daily advices infrastructure: `Modules/DailyAdvices/Infrastructure/AGENTS.md`
-- Daily advices persistence model: `Modules/DailyAdvices/Infrastructure/Model/AGENTS.md`
+- Daily advices persistence model: `Modules/DailyAdvices/PersistenceModel/AGENTS.md`
 - Dashboard logical module: `Modules/Dashboard/AGENTS.md`
 - Dashboard application: `Modules/Dashboard/Application/AGENTS.md`
-- Dashboard application ports: `Modules/Dashboard/Application/Abstractions/AGENTS.md`
+- Dashboard application ports: `Modules/Dashboard/Application.Abstractions/AGENTS.md`
 - Dashboard contracts: `Modules/Dashboard/Contracts/AGENTS.md`
 - Dashboard infrastructure: `Modules/Dashboard/Infrastructure/AGENTS.md`
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`

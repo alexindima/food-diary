@@ -20,9 +20,9 @@ public sealed class DailyAdvicesModuleExtractionTests {
     [Fact]
     public void DailyAdvicesOwnedLayers_ArePhysicalModuleProjects() {
         string[] projects = [
-            "Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
+            "Application.Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
             "Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj",
-            "Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj",
+            "PersistenceModel/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj",
             "Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj",
         ];
         Assert.All(projects, project => Assert.True(File.Exists(Path.Combine(

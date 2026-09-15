@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetAttentionSignals;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetAttentionSignals;
 
 public sealed record GetAttentionSignalsQuery(
     Guid? UserId,

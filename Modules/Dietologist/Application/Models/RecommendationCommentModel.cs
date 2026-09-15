@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Dietologist.Models;
+namespace FoodDiary.Modules.Dietologist.Application.Models;
 
 public sealed record RecommendationCommentModel(
     Guid Id,

@@ -952,11 +952,11 @@
     },
     {
       "old": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
-      "current": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+      "current": "Modules/Dietologist/PersistenceModel/Configurations/RecommendationBulkDispatchConfiguration.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
-          "new": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+          "new": "Modules/Dietologist/PersistenceModel/Configurations/RecommendationBulkDispatchConfiguration.cs",
           "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
           "score": "R100"
         }

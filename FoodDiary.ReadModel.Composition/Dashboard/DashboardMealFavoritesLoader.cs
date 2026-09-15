@@ -2,7 +2,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
 internal sealed class DashboardMealFavoritesLoader(FoodDiaryDbContext context) {
     public async Task<IReadOnlyDictionary<MealId, Guid>> LoadAsync(

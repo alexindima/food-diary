@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+namespace FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 
 public sealed class GetDashboardSnapshotQueryValidator : AbstractValidator<GetDashboardSnapshotQuery> {
     public GetDashboardSnapshotQueryValidator() {

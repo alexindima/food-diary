@@ -20,6 +20,7 @@ public sealed class UpdateCycleSettingsCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateCycleSettingsCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpdateCycleSettingsCommand command, CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -62,8 +63,8 @@ public sealed class UpdateCycleSettingsCommandHandler(
             HideFromDashboard: command.HideFromDashboard));
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
-        return Result.Success(profile.ToModel(predictions));
+        return Result.Success(profile.ToModel(predictions, currentDate));
     }
 }

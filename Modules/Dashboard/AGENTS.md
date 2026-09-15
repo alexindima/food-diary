@@ -5,8 +5,8 @@ It owns no contributing aggregate, Domain, DbSet, EF configuration or Persistenc
 Keep all SQL/LINQ batching, tenant predicates, UTC/date semantics, snapshot sections,
 fallback paths and cancellation unchanged during extraction.
 
-Application preserves FoodDiary.Application.Dashboard assembly and CLR namespaces.
-Contracts contains the stable statistics service, bucket model, public snapshot/result models and client-dashboard query;
+Projects use canonical FoodDiary.Modules.Dashboard identities and folder-aligned namespaces, including tests. Application.Abstractions is a sibling project.
+Contracts contains ReadDashboardStatisticsQuery, its bucket model, public snapshot/result models and client-dashboard query;
 Statistics and WeeklyCheckIn reference it directly; nutrition calculations use Meals contracts.
 Central Application.Abstractions does not re-export this project. Never reference Dashboard
 Application from Statistics; use its stable Contracts seam.
@@ -18,3 +18,9 @@ preserves concrete/interface scoped aliases and replaces fallback read registrat
 HTTP transport lives in `Modules/Dashboard/Presentation`; shared PostgreSQL fixtures, migrations, snapshot and the Presentation kernel remain central.
 
 See docs/ai/dashboard-ownership-inventory.md for retained seams and tests.
+
+## Refactoring guardrails
+
+- Keep all projects as siblings; namespace and physical layout are checked by MigratedModuleNamespaceTests and PhysicalProjectLayoutTests.
+- Put single-use query orchestration directly in its handler; retain only genuinely shared operations, independent algorithms, authorization capabilities and technical ports.
+- External statistics consumers dispatch ReadDashboardStatisticsQuery; IDashboardStatisticsReadService is an internal Application.Abstractions projection port. Never route that adapter back through Statistics queries. Authorization remains with the caller. DashboardSnapshotBuilder is shared by the ordinary and dietologist snapshots.

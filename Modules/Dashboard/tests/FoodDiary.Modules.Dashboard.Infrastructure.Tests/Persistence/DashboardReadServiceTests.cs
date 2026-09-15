@@ -1,11 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardReadServiceTests {

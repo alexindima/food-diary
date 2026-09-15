@@ -30,7 +30,7 @@ public sealed class IndependentModuleContextOptionsFactoryTests {
         Assert.All(configured.Extensions, extension => Assert.Contains(options.Extensions, candidate => ReferenceEquals(candidate, extension)));
         using var first = new AiDbContext(options);
         using var second = new AiDbContext(factory.CreateOptions<AiDbContext>());
-        FoodDiaryDbContext shared = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        SharedPersistenceDbContext shared = scope.ServiceProvider.GetRequiredService<SharedPersistenceDbContext>();
         Assert.Empty(shared.ModuleContexts);
         AiDbContext coordinated = scope.ServiceProvider.GetRequiredService<AiDbContext>();
         Assert.Multiple(

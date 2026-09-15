@@ -1,11 +1,11 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Tdee.Models;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal interface IDashboardSectionDataLoader {
     Task<Result<DashboardBuildContext>> CreateBuildContextAsync(

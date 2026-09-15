@@ -1,0 +1,52 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Dietologist.Domain.Entities;
+
+public sealed class RecommendationBulkDispatch : Entity<RecommendationBulkDispatchId> {
+    public UserId DietologistUserId { get; private set; }
+    public UserId ClientUserId { get; private set; }
+    public RecommendationId RecommendationId { get; private set; }
+    public string IdempotencyKey { get; private set; } = string.Empty;
+
+    private RecommendationBulkDispatch() {
+    }
+
+    public static RecommendationBulkDispatch Create(
+        UserId dietologistUserId,
+        UserId clientUserId,
+        RecommendationId recommendationId,
+        string idempotencyKey) {
+        if (dietologistUserId == UserId.Empty) {
+            throw new ArgumentException("Dietologist user id is required.", nameof(dietologistUserId));
+        }
+
+        if (clientUserId == UserId.Empty) {
+            throw new ArgumentException("Client user id is required.", nameof(clientUserId));
+        }
+
+        if (recommendationId == RecommendationId.Empty) {
+            throw new ArgumentException("Recommendation id is required.", nameof(recommendationId));
+        }
+
+        if (string.IsNullOrWhiteSpace(idempotencyKey)) {
+            throw new ArgumentException("Idempotency key is required.", nameof(idempotencyKey));
+        }
+
+        string normalizedKey = idempotencyKey.Trim();
+        if (normalizedKey.Length > 100) {
+            throw new ArgumentOutOfRangeException(nameof(idempotencyKey), normalizedKey.Length, "Idempotency key is too long.");
+        }
+
+        var dispatch = new RecommendationBulkDispatch {
+            Id = RecommendationBulkDispatchId.New(),
+            DietologistUserId = dietologistUserId,
+            ClientUserId = clientUserId,
+            RecommendationId = recommendationId,
+            IdempotencyKey = normalizedKey,
+        };
+        dispatch.SetCreated();
+        return dispatch;
+    }
+}

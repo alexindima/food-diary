@@ -1,24 +1,25 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
-using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
-using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
-using FoodDiary.Application.Dietologist.Queries.GetMyClients;
-using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendation;
+using FoodDiary.Modules.Dietologist.Application.Commands.DisconnectDietologist;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboard;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsForClient;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
-using FoodDiary.Presentation.Api.Features.Dietologist;
-using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dietologist.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistClientsControllerTests {

@@ -8,7 +8,7 @@ using FoodDiary.Infrastructure.Persistence.Shared;
 namespace FoodDiary.Infrastructure.Persistence;
 
 internal sealed class EfUnitOfWork(
-    FoodDiaryDbContext context,
+    SharedPersistenceDbContext context,
     IDomainEventPublisher domainEventPublisher,
     ILogger<EfUnitOfWork> logger) : IUnitOfWork {
     public bool HasPendingChanges => context.ChangeTracker.HasChanges()
@@ -25,7 +25,7 @@ internal sealed class EfUnitOfWork(
             await DomainEventDispatcher.DispatchAsync(module, domainEventPublisher, logger, cancellationToken).ConfigureAwait(false);
         }
         if (context.ModuleContexts.Any(module => module.ChangeTracker.HasChanges())) {
-            await ModuleContextSaveCoordinator.SaveAsync(context, logger, cancellationToken).ConfigureAwait(false);
+            await ModuleContextSaveCoordinator.SaveAsync(context.Session, logger, cancellationToken).ConfigureAwait(false);
             return;
         }
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

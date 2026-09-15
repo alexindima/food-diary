@@ -7,7 +7,7 @@ namespace FoodDiary.Infrastructure.Persistence.Shared;
 /// <summary>Top-level transaction runners own a clean unit of work, including any owner capabilities they invoke.</summary>
 internal static class SharedTransactionBoundary {
     public static async Task<T> ExecuteAttemptAsync<T>(
-        FoodDiaryDbContext context,
+        SharedPersistenceDbContext context,
         IPostCommitActionQueue? postCommitActionQueue,
         Func<Task<T>> operation,
         CancellationToken cancellationToken = default) {
@@ -25,7 +25,7 @@ internal static class SharedTransactionBoundary {
         }
     }
 
-    private static void Reset(FoodDiaryDbContext context, IPostCommitActionQueue? postCommitActionQueue) {
+    private static void Reset(SharedPersistenceDbContext context, IPostCommitActionQueue? postCommitActionQueue) {
         DomainEventDispatcher.ClearDomainEvents(context);
         context.ChangeTracker.Clear();
         foreach (DbContext module in context.ModuleContexts) {
@@ -36,11 +36,14 @@ internal static class SharedTransactionBoundary {
     }
 
     public static void EnsureCleanEntry(DbContext context, IPostCommitActionQueue? postCommitActionQueue = null) {
+        if (context is SharedPersistenceDbContext participant) {
+            context = participant.Session.RootContext;
+        }
         if (postCommitActionQueue?.HasActions == true) {
             throw new InvalidOperationException("A top-level transaction cannot inherit pending post-commit actions.");
         }
         if (context.ChangeTracker.HasChanges() ||
-            (context is FoodDiaryDbContext shared && shared.ModuleContexts.Any(module => module.ChangeTracker.HasChanges()))) {
+            (context is SharedPersistenceDbContext shared && shared.ModuleContexts.Any(module => module.ChangeTracker.HasChanges()))) {
             throw new InvalidOperationException("A top-level transaction cannot save pending changes from its caller. Enter the transaction before mutating tracked entities.");
         }
 

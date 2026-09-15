@@ -24,6 +24,10 @@ Other deployable adapters are kept separate:
 - `FoodDiary.Web.Client`
 
 ## Runtime Shape
+
+Shared persistence separates its three-record runtime model from the complete
+migration and composed-read model. PersistenceSession coordinates owner contexts
+on one connection and transaction; see [ADR 0042](adr/0042-shared-runtime-persistence-session.md).
 The Docker compose setup defines these major runtime units:
 - `api` - primary ASP.NET Core API host.
 - `client` - Angular web client static host.

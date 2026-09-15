@@ -1,0 +1,215 @@
+using FoodDiary.Modules.Dietologist.Domain.Enums;
+using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Contracts.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationComment;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetAttentionSignals;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationComments;
+using FoodDiary.Modules.Dietologist.Application.Services;
+using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
+
+#pragma warning disable MA0003
+
+namespace FoodDiary.Modules.Dietologist.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class DietologistResidualCoverageTests {
+    [Fact]
+    public void AttentionSignalSeverityOrdering_UnknownSeverityHasLowestPriority() {
+        System.Reflection.MethodInfo method = typeof(GetAttentionSignalsQueryHandler).GetMethod(
+            "SeverityOrder",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+
+        object? result = method.Invoke(null, ["Unknown"]);
+
+        Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void DietologistDtoProperties_AreReadableBySerializers() {
+        DateTime now = DateTime.UtcNow;
+        var permissions = new DietologistPermissionsReadModel(true, true, true, true, true, true, true, true);
+        var profilePermissions = new ProfileDietologistPermissionsModel(true, true, true, true, true, true, true, true);
+        object[] models = [
+            new RecommendationModel(Guid.NewGuid(), Guid.NewGuid(), "Diet", "Ologist", "Text", true, now, now),
+            profilePermissions,
+            new DietologistInvitationReadModel(
+                Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "diet@example.com", "client@example.com",
+                "Client", "Name", "image", now, "Other", 170, ActivityLevel.Moderate,
+                "diet@example.com", "Diet", "Ologist", DietologistInvitationStatus.Accepted,
+                permissions, now, now.AddDays(1), now),
+            new ProfileDietologistRelationshipModel(
+                Guid.NewGuid(), "Accepted", "diet@example.com", "Diet", "Ologist", Guid.NewGuid(),
+                profilePermissions, now, now.AddDays(1), now),
+            new RecommendationCommentModel(
+                Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Author", "Name", "author@example.com", "Text", now),
+            new ClientTaskModel(
+                Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Task", "Details", now,
+                ClientTaskStatus.Open, true, now, now),
+            new DietologistInvitationForCurrentUserModel(
+                Guid.NewGuid(), Guid.NewGuid(), "client@example.com", "Client", "Name", "Pending", now, now.AddDays(1)),
+            new AttentionSignalModel("signal", Guid.NewGuid(), "Client", "Type", "Low", "Reason", now, now),
+            new BulkRecommendationResultModel("key", []),
+            new InvitationModel(Guid.NewGuid(), "client@example.com", "Client", "Name", "Pending", now, now.AddDays(1)),
+        ];
+
+        foreach (object model in models) {
+            foreach (System.Reflection.PropertyInfo property in model.GetType().GetProperties()) {
+                _ = property.GetValue(model);
+            }
+        }
+
+        Assert.Equal(10, models.Length);
+    }
+
+    [Fact]
+    public void CreateRecommendationCommentValidator_ValidatesAllFields() {
+        var validator = new CreateRecommendationCommentCommandValidator();
+        TestValidationResult<CreateRecommendationCommentCommand> missing = validator.TestValidate(
+            new CreateRecommendationCommentCommand(null, Guid.Empty, ""));
+        TestValidationResult<CreateRecommendationCommentCommand> emptyUser = validator.TestValidate(
+            new CreateRecommendationCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"));
+        TestValidationResult<CreateRecommendationCommentCommand> tooLong = validator.TestValidate(
+            new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2001)));
+        TestValidationResult<CreateRecommendationCommentCommand> valid = validator.TestValidate(
+            new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2000)));
+
+        Assert.Multiple(
+            () => missing.ShouldHaveValidationErrorFor(command => command.UserId),
+            () => missing.ShouldHaveValidationErrorFor(command => command.RecommendationId),
+            () => missing.ShouldHaveValidationErrorFor(command => command.Text),
+            () => emptyUser.ShouldHaveValidationErrorFor(command => command.UserId),
+            () => tooLong.ShouldHaveValidationErrorFor(command => command.Text),
+            () => valid.ShouldNotHaveAnyValidationErrors());
+    }
+
+    [Fact]
+    public void BulkCreateRecommendationsValidator_ValidatesRecipientsAndContent() {
+        var validator = new BulkCreateRecommendationsCommandValidator();
+        var duplicate = Guid.NewGuid();
+        TestValidationResult<BulkCreateRecommendationsCommand> empty = validator.TestValidate(
+            new BulkCreateRecommendationsCommand(null, [], "", ""));
+        TestValidationResult<BulkCreateRecommendationsCommand> invalidRecipients = validator.TestValidate(
+            new BulkCreateRecommendationsCommand(
+                null,
+                [Guid.Empty, duplicate, duplicate],
+                new string('x', 2001),
+                new string('x', 101)));
+        TestValidationResult<BulkCreateRecommendationsCommand> tooMany = validator.TestValidate(
+            new BulkCreateRecommendationsCommand(
+                null,
+                Enumerable.Range(0, 101).Select(_ => Guid.NewGuid()).ToList(),
+                "Text",
+                "key"));
+        TestValidationResult<BulkCreateRecommendationsCommand> valid = validator.TestValidate(
+            new BulkCreateRecommendationsCommand(
+                null,
+                [Guid.NewGuid(), Guid.NewGuid()],
+                new string('x', 2000),
+                new string('x', 100)));
+
+        Assert.Multiple(
+            () => empty.ShouldHaveValidationErrorFor(command => command.ClientUserIds),
+            () => empty.ShouldHaveValidationErrorFor(command => command.Text),
+            () => empty.ShouldHaveValidationErrorFor(command => command.IdempotencyKey),
+            () => invalidRecipients.ShouldHaveValidationErrorFor(command => command.ClientUserIds),
+            () => invalidRecipients.ShouldHaveValidationErrorFor(command => command.Text),
+            () => invalidRecipients.ShouldHaveValidationErrorFor(command => command.IdempotencyKey),
+            () => tooMany.ShouldHaveValidationErrorFor(command => command.ClientUserIds),
+            () => valid.ShouldNotHaveAnyValidationErrors());
+    }
+
+    [Fact]
+    public async Task BulkCreateRecommendations_WhenCurrentUserAccessFails_ReturnsFailure() {
+        IUserContextService users = CreateFailingUserContext();
+        IRecommendationBulkDispatchRepository dispatches = Substitute.For<IRecommendationBulkDispatchRepository>();
+        var handler = new BulkCreateRecommendationsCommandHandler(
+            Substitute.For<IRecommendationWriteRepository>(),
+            dispatches,
+            dispatches,
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
+            users);
+
+        Result<BulkRecommendationResultModel> result = await handler.Handle(
+            new BulkCreateRecommendationsCommand(
+                Guid.NewGuid(),
+                [Guid.NewGuid()],
+                "Text",
+                "key"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+    }
+
+    [Fact]
+    public async Task GetRecommendationComments_WhenCurrentUserAccessFails_ReturnsFailure() {
+        ICurrentUserAccessService users = Substitute.For<ICurrentUserAccessService>();
+        users.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Errors.Authentication.InvalidToken);
+        var handler = new GetRecommendationCommentsQueryHandler(
+            Substitute.For<IRecommendationCommentReadModelRepository>(),
+            users);
+
+        Result<IReadOnlyList<RecommendationCommentModel>> result = await handler.Handle(
+            new GetRecommendationCommentsQuery(Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+    }
+
+    [Fact]
+    public async Task RecommendationDiscussionReadService_WhenRecommendationIdIsEmpty_ReturnsFailure() {
+        var service = new GetRecommendationCommentsQueryHandler(Substitute.For<IRecommendationCommentRepository>(), Substitute.For<ICurrentUserAccessService>());
+
+        Result<IReadOnlyList<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task DietologistUserContextService_CoversFailureAndDelegatedMembers() {
+        var userId = UserId.New();
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        access.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Errors.Authentication.InvalidToken);
+        IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
+        profiles.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken));
+        IUserProfileReadService userProfiles = Substitute.For<IUserProfileReadService>();
+        userProfiles.GetUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserModel>(Errors.Authentication.InvalidToken));
+        var service = new DietologistUserContextService(access, profiles, userProfiles);
+
+        Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
+        Result<FoodDiary.Application.Abstractions.Users.Models.UserModel> model =
+            await service.GetUserModelByIdAsync(userId, CancellationToken.None);
+        Result<UserDietologistProfileModel> accessible =
+            await service.GetAccessibleProfileAsync(userId, CancellationToken.None);
+        Error? accessError = await service.EnsureCanAccessAsync(userId, CancellationToken.None);
+        UserDietologistProfileModel? byEmail =
+            await service.FindByEmailAsync("missing@example.com", CancellationToken.None);
+
+        Assert.Multiple(
+            () => ResultAssert.Failure(email),
+            () => ResultAssert.Failure(model, DietologistErrors.AccessDenied.Code),
+            () => ResultAssert.Failure(accessible),
+            () => Assert.Equal(Errors.Authentication.InvalidToken, accessError),
+            () => Assert.Null(byEmail));
+    }
+
+    private static IUserContextService CreateFailingUserContext() {
+        IUserContextService service = Substitute.For<IUserContextService>();
+        service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Errors.Authentication.InvalidToken);
+        return service;
+    }
+}

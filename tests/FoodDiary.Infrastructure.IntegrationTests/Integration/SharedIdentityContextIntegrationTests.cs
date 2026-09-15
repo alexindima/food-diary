@@ -50,7 +50,7 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         (User user, UserRefreshTokenSession session) = await SeedAsync(provider);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         IdentityDbContext owned = provider.GetRequiredService<IdentityDbContext>();
-        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("identity-rollback@example.com", "hash"));
             await provider.GetRequiredService<IEmailTemplateRepository>().UpsertAsync("context-test", "en", "Rolled back", "<p>rollback</p>", "rollback", isActive: true);
             await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();

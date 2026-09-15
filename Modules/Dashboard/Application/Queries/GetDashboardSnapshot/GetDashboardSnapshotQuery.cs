@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 
-namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+namespace FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 
 public record GetDashboardSnapshotQuery(
     Guid? UserId,

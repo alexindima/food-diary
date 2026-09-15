@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
-using FoodDiary.Application.Dashboard;
+using FoodDiary.Modules.Dashboard.Application;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure;

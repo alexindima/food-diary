@@ -8,6 +8,8 @@ Rules for `FoodDiary.Infrastructure/`.
 - Implement abstractions declared in upper layers.
 
 ## Data Access
+
+- ADR 0042 supersedes the pilot's central-context runtime ownership below. SharedRuntimeDbContext maps only shared audit/email/replay records; FoodDiaryDbContext retains the complete migration/read/initializer model. Both remain in this assembly. PersistenceSession owns scoped participant creation and save order. Runtime services must not depend on FoodDiaryDbContext. Preserve existing transaction enlistment across intermediate saves and detach participants when the top-level operation ends. Modules keep IModuleContextFactory; DI owns context disposal.
 - Hydration is the runtime-context pilot (ADR 0040). Central migration mappings remain unchanged. ModuleContextSaveCoordinator owns multi-context saves, common connection/transaction, savepoints and execution-strategy retries; repositories never commit independently. Direct central SaveChanges rejects pending module changes. Include registered module trackers in transaction-entry guards and reset; preserve command telemetry and post-commit ordering.
 - Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context. Shared audit, email-outbox, and replay-audit records/configurations live in their narrow Shared PersistenceModel projects; the central context applies them explicitly while the generic processing engines remain here.
 - Use Fluent API for mapping and constraints.
@@ -194,7 +196,7 @@ Coordinated module saves invoke central SaveChanges even when its tracker starts
 
 UsersDbContext saves at priority -100, before central priority 0 and other module contexts at default 100. Preserve stable ordering among peers and resolution-order domain-event discovery. Bind and release transactions for every non-central participant by identity; never assume central is array element zero. Users explicitly installs its Telegram conflict interceptor on the owner context. Central migrations, FK composition and technical purge bridges remain.
 
-IModuleContextFactory is scoped to the same FoodDiaryDbContext instance by AddInfrastructure. Its implementation remains the existing CreateModuleContext method; preserve provider options, common connection, command interceptors and participant save order.
+IModuleContextFactory is the scoped PersistenceSession owned by SharedRuntimeDbContext. Its implementation preserves provider options, common connection, command interceptors and participant save order. FoodDiaryDbContext joins that session lazily when composed reads or initialization request it.
 
 Billing uses the coordinator command overload to preserve unconditional unit-of-work save and owner exception translation before shared tracker reset. Never move Billing constraint names or entities into the shared coordinator.
 

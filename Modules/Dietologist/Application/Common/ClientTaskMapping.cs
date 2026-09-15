@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 internal static class ClientTaskMapping {
     public static ClientTaskModel ToModel(this ClientTask task, DateTime utcNow) =>

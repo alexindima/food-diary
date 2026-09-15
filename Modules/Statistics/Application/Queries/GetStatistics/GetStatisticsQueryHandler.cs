@@ -1,9 +1,10 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Statistics.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -12,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
 public sealed class GetStatisticsQueryHandler(
-    IDashboardStatisticsReadService statisticsReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsModel>>> {
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
@@ -49,11 +50,11 @@ public sealed class GetStatisticsQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
 
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statisticsResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statisticsResult = await sender.Send(new ReadDashboardStatisticsQuery(
             userId,
             normalizedFrom,
             normalizedTo,
-            request.QuantizationDays,
+            request.QuantizationDays),
             cancellationToken).ConfigureAwait(false);
 
         if (statisticsResult.IsFailure) {

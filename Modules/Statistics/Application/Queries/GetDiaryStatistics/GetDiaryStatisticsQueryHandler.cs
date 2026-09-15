@@ -1,6 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Hydration.Common;
@@ -12,7 +13,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Statistics.Queries.GetDiaryStatistics;
 
 public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService accessService, IUserDashboardProfileReadService profiles,
-    IDashboardStatisticsReadService statistics, IHydrationIntervalReadService hydration, TimeProvider timeProvider)
+    ISender sender, IHydrationIntervalReadService hydration, TimeProvider timeProvider)
     : IQueryHandler<GetDiaryStatisticsQuery, Result<DiaryStatisticsSummaryModel>> {
     public Task<Result<DiaryStatisticsSummaryModel>> Handle(GetDiaryStatisticsQuery query, CancellationToken cancellationToken) =>
         HandleAsync(query, TimeZoneInfo.FindSystemTimeZoneById, cancellationToken);
@@ -49,8 +50,8 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
             long waterMl = 0;
             if (day.StartUtc < day.EndExclusiveUtc) {
                 // Two-day quantization keeps even a 25-hour local day in one existing owner bucket.
-                Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await statistics.GetStatisticsAsync(owner.Value,
-                    day.StartUtc, day.EndExclusiveUtc.AddTicks(-10), quantizationDays: 2, cancellationToken).ConfigureAwait(false);
+                Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await sender.Send(new ReadDashboardStatisticsQuery(owner.Value,
+                    day.StartUtc, day.EndExclusiveUtc.AddTicks(-10), QuantizationDays: 2), cancellationToken).ConfigureAwait(false);
                 if (result.IsFailure) {
                     return Result.Failure<DiaryStatisticsSummaryModel>(result.Error);
                 }

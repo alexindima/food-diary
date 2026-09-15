@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 public interface IDietologistUserContextService : ICurrentUserAccessService {
     Task<Result<string>> GetAccessibleUserEmailAsync(UserId userId, CancellationToken cancellationToken);

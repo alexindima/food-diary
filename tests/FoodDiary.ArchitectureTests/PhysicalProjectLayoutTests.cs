@@ -4,11 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj -> Modules/DailyAdvices/Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
-        "Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj -> Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj",
-        "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj -> Modules/Dashboard/Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj",
-        "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj -> Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj",
-        "Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj -> Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj",
         "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj -> Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj",
         "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj -> Modules/Exercises/Infrastructure/Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj",
         "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj -> Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",

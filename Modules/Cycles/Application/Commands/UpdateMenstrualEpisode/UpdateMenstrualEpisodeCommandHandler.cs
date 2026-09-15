@@ -20,6 +20,7 @@ public sealed class UpdateMenstrualEpisodeCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateMenstrualEpisodeCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpdateMenstrualEpisodeCommand command, CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -75,8 +76,8 @@ public sealed class UpdateMenstrualEpisodeCommandHandler(
         }
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
-        return Result.Success(profile.ToModel(predictions));
+        return Result.Success(profile.ToModel(predictions, currentDate));
     }
 }

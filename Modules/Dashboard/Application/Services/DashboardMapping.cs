@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 public static class DashboardMapping {
     public static DashboardStatisticsModel ToStatisticsModel(DashboardStatisticsBucketReadModel? response, DashboardUserContextModel? user) =>

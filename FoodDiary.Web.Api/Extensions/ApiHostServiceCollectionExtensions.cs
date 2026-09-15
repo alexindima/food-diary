@@ -59,7 +59,7 @@ public static class ApiHostServiceCollectionExtensions {
         internal IServiceCollection AddApiHealthChecks() {
             services
                 .AddHealthChecks()
-                .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
+                .AddDbContextCheck<SharedPersistenceDbContext>("postgresql", tags: ["ready"])
                 .AddCheck<DistributedCacheHealthCheck>("distributed-cache", tags: ["ready"])
                 .AddCheck<S3HealthCheck>("s3", tags: ["ready"]);
 

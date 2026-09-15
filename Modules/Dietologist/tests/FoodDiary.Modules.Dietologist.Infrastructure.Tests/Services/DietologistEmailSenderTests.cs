@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Services;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Services;
 using FoodDiary.Application.Abstractions.Email.Common;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistEmailSenderTests {

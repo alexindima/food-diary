@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Users.Responses;

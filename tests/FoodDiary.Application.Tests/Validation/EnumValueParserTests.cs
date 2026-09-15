@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using MealsEnumValueParser = FoodDiary.Application.Meals.Common.Validation.EnumValueParser;

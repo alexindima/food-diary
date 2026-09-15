@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendationTemplate;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationTemplate;
 
 public sealed class CreateRecommendationTemplateCommandValidator : AbstractValidator<CreateRecommendationTemplateCommand> {
     public CreateRecommendationTemplateCommandValidator() {

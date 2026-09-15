@@ -40,7 +40,7 @@
         {
           "id": "dashboard-statistics-reader",
           "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
           "rank": 1,
           "top1": true,
           "top10": true
@@ -93,7 +93,7 @@
         {
           "id": "dashboard-meals-persistence-read",
           "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealsReadService.cs",
           "rank": 1,
           "top1": true,
           "top10": true
@@ -333,7 +333,7 @@
         {
           "id": "unseen-v2-011",
           "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
-          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/DashboardMealProjection.cs",
           "rank": 3,
           "top1": false,
           "top10": true

@@ -1,9 +1,9 @@
+using FoodDiary.Modules.DailyAdvices.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Content;
+namespace FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
 
 public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     private const int ValueMaxLength = 512;

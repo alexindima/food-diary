@@ -1,15 +1,16 @@
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Services;
-using FoodDiary.Modules.Dietologist.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Infrastructure;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class CollaborationAuditRegistrationTests {

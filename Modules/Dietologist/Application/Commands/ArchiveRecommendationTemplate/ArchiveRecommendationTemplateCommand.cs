@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.ArchiveRecommendationTemplate;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.ArchiveRecommendationTemplate;
 
 public sealed record ArchiveRecommendationTemplateCommand(
     Guid? UserId,

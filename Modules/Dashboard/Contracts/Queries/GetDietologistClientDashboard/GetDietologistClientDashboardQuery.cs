@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
+namespace FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboard;
 
 public sealed record GetDietologistClientDashboardQuery(
     Guid? UserId,

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.ChangeClientTaskStatus;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.ChangeClientTaskStatus;
 
 public sealed record ChangeClientTaskStatusCommand(
     Guid? UserId,

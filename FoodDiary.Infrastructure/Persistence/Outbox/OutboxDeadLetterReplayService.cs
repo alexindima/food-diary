@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 internal sealed class OutboxDeadLetterReplayService(
-    FoodDiaryDbContext context,
+    SharedPersistenceDbContext context,
     TimeProvider timeProvider,
     IEnumerable<IOutboxReplayStream> streams,
     IUnitOfWork unitOfWork) : IOutboxDeadLetterReplayService {

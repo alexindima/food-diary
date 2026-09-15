@@ -1,22 +1,23 @@
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
-using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
-using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
-using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
-using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
-using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
-using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
-using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Modules.Dashboard.Presentation.Mappings;
+using FoodDiary.Modules.Dashboard.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Dashboard.Presentation.Requests;
+using FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
+using FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
+using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
+using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dashboard.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardHttpMappingsTests {

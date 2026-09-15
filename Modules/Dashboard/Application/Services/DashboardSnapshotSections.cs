@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 public sealed record DashboardSnapshotSections(
     bool IncludeStatistics,

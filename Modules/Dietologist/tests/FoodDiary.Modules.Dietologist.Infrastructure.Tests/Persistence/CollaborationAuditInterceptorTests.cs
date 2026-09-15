@@ -1,16 +1,16 @@
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class CollaborationAuditInterceptorTests {
@@ -131,7 +131,7 @@ public sealed class CollaborationAuditInterceptorTests {
         await using DietologistDbContext owned = context.CreateModuleContext<DietologistDbContext>(static options => new DietologistDbContext(options));
         owned.Recommendations.Add(Recommendation.Create(UserId.New(), UserId.New(), "Advice"));
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => ModuleContextSaveCoordinator.SaveAsync(context, NullLogger.Instance));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => ModuleContextSaveCoordinator.SaveAsync(context.Session, NullLogger.Instance));
 
         Assert.Empty(await context.AuditEntries.AsNoTracking().ToListAsync());
         Assert.Empty(await owned.Recommendations.AsNoTracking().ToListAsync());

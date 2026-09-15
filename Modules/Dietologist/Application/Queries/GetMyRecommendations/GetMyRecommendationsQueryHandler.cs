@@ -1,14 +1,17 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Dietologist.Application.Mappings;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyRecommendations;
 
 public sealed class GetMyRecommendationsQueryHandler(
-    IDietologistRecommendationReadService readService,
+    IRecommendationReadModelRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMyRecommendationsQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(
@@ -22,6 +25,10 @@ public sealed class GetMyRecommendationsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetForCurrentUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var models = recommendations.Select(recommendation => recommendation.ToModel()).ToList();
+        return Result.Success<IReadOnlyList<RecommendationModel>>(models);
+
     }
+
 }

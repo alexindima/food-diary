@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Domain.Events;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 

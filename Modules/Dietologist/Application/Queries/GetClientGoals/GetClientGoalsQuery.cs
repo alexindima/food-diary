@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Models;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetClientGoals;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
 
 public record GetClientGoalsQuery(
     Guid? UserId,

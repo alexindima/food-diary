@@ -1,23 +1,24 @@
-using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
-using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
-using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
-using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
-using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
-using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
-using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
-using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
-using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Dashboard.Queries.GetDietologistClientDashboard;
-using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
-using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
-using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
-using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
-using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
-using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
+using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendation;
+using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitation;
+using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Commands.DisconnectDietologist;
+using FoodDiary.Modules.Dietologist.Application.Commands.InviteDietologist;
+using FoodDiary.Modules.Dietologist.Application.Commands.MarkRecommendationRead;
+using FoodDiary.Modules.Dietologist.Application.Commands.UpdateDietologistPermissions;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboard;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationByToken;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationForCurrentUser;
+using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsForClient;
+using FoodDiary.Modules.Dietologist.Presentation.Mappings;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dietologist.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistHttpMappingsTests {

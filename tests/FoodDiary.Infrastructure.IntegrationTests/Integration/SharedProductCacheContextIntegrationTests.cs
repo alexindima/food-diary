@@ -31,6 +31,7 @@ public sealed class SharedProductCacheContextIntegrationTests(PostgresDatabaseFi
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddSingleton(central);
+        services.AddSingleton<SharedPersistenceDbContext>(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddOpenFoodFactsModule();
         await using ServiceProvider provider = services.BuildServiceProvider();

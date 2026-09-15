@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 
 public sealed record DietologistPermissions(
     bool ShareMeals = true,

@@ -1,14 +1,14 @@
-using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.DailyAdvices.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DailyAdviceErrorContractTests {
     [Fact]
     public void Factory_IsOwnedByModule() {
         Assert.Equal("FoodDiary.Modules.DailyAdvices.Application.Abstractions", typeof(DailyAdviceErrors).Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Application.Abstractions.DailyAdvices.Common", typeof(DailyAdviceErrors).Namespace);
+        Assert.Equal("FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common", typeof(DailyAdviceErrors).Namespace);
     }
 
     [Theory]

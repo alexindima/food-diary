@@ -9,6 +9,38 @@ namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 public partial class CyclesFeatureTests {
     [Fact]
+    public async Task UpdateCycleSettingsCommandHandler_LegacyModeTransition_PausesAndResumesPrediction() {
+        var user = User.Create("cycle-mode-transition@example.com", "hash");
+        DateOnly start = new(2026, 1, 1);
+        var profile = CycleProfile.Create(user.Id, start);
+        foreach (int offset in (int[])[0, 28, 56, 84]) {
+            profile.ConfirmPeriodStart(start.AddDays(offset));
+        }
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
+        var handler = new UpdateCycleSettingsCommandHandler(
+            new InMemoryCycleRepository(profile), CreateCurrentUserAccessService(user), clock);
+        var command = new UpdateCycleSettingsCommand(user.Id.Value, profile.Id.Value,
+            (int)CycleTrackingMode.Pregnancy, AverageCycleLength: 28, AveragePeriodLength: 5,
+            LutealLength: 14, IsRegular: true, ShowFertilityEstimates: false, DiscreetNotifications: true);
+
+        CycleModel pregnant = ResultAssert.Success(await handler.Handle(command, CancellationToken.None));
+        CyclePredictionsModel paused = Assert.IsType<CyclePredictionsModel>(pregnant.Predictions);
+        Assert.Multiple(
+            () => Assert.Equal(CycleReproductiveState.Pregnancy, pregnant.ReproductiveState),
+            () => Assert.Null(paused.NextPeriodStartFrom),
+            () => Assert.Contains("prediction_paused_by_state", paused.ReasonCodes, StringComparer.Ordinal));
+
+        CycleModel cycling = ResultAssert.Success(await handler.Handle(
+            command with { Mode = (int)CycleTrackingMode.PeriodTracking }, CancellationToken.None));
+        CyclePredictionsModel resumed = Assert.IsType<CyclePredictionsModel>(cycling.Predictions);
+        Assert.Multiple(
+            () => Assert.Equal(CycleReproductiveState.Cycling, cycling.ReproductiveState),
+            () => Assert.Equal(new DateOnly(2026, 4, 21), resumed.NextPeriodStartFrom),
+            () => Assert.DoesNotContain("prediction_paused_by_state", resumed.ReasonCodes, StringComparer.Ordinal));
+    }
+
+    [Fact]
     public async Task UpdateCycleSettingsCommandValidator_WithInvalidLengths_Fails() {
         var command = new UpdateCycleSettingsCommand(
             Guid.NewGuid(),

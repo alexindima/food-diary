@@ -220,10 +220,10 @@
   <Folder Name="/Modules/DailyAdvices/">
     <Project Path="Modules/DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
-    <Project Path="Modules/DailyAdvices/Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
+    <Project Path="Modules/DailyAdvices/Application.Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
     <Project Path="Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <Project Path="Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
-    <Project Path="Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
+    <Project Path="Modules/DailyAdvices/PersistenceModel/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/DailyAdvices/tests/">
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/FoodDiary.Modules.DailyAdvices.Application.Tests.csproj" />
@@ -250,10 +250,10 @@
   <Folder Name="/Modules/Dietologist/">
     <Project Path="Modules/Dietologist/Contracts/FoodDiary.Modules.Dietologist.Contracts.csproj" />
     <Project Path="Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />
-    <Project Path="Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <Project Path="Modules/Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <Project Path="Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <Project Path="Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
-    <Project Path="Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
+    <Project Path="Modules/Dietologist/PersistenceModel/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
     <Project Path="Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj" />
     <Project Path="Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
   </Folder>
@@ -538,7 +538,7 @@
   </Folder>
   <Folder Name="/Modules/Dashboard/">
     <Project Path="Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
-    <Project Path="Modules/Dashboard/Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
+    <Project Path="Modules/Dashboard/Application.Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
     <Project Path="Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <Project Path="Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
     <Project Path="Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />

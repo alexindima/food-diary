@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Audit;
 
-internal sealed class AuditEntryService(FoodDiaryDbContext context, TimeProvider timeProvider)
+internal sealed class AuditEntryService(SharedPersistenceDbContext context, TimeProvider timeProvider)
     : IAuditEntryReadService, IAuditEntryWriter, IAuditEntryJournal {
     public async Task<AuditEntryPage> GetPageAsync(AuditEntryFilter filter, CancellationToken cancellationToken) {
         IQueryable<AuditEntry> query = context.AuditEntries.AsNoTracking();

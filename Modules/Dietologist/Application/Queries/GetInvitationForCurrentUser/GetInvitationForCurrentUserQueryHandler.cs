@@ -1,14 +1,21 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
+using FoodDiary.Modules.Dietologist.Application.Mappings;
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Common;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationForCurrentUser;
 
 public sealed class GetInvitationForCurrentUserQueryHandler(
-    IDietologistInvitationReadService readService,
+    IDietologistInvitationReadModelRepository invitationRepository,
+    IDietologistUserContextService dietologistUserContextService,
+    TimeProvider timeProvider,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetInvitationForCurrentUserQuery, Result<DietologistInvitationForCurrentUserModel>> {
     public async Task<Result<DietologistInvitationForCurrentUserModel>> Handle(
@@ -23,6 +30,39 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetForCurrentUserAsync(userId, query.InvitationId, cancellationToken).ConfigureAwait(false);
+        Guid invitationId = query.InvitationId;
+        Result<string> userEmailResult = await dietologistUserContextService
+            .GetAccessibleUserEmailAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (userEmailResult.IsFailure) {
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(userEmailResult.Error);
+        }
+
+        Result<DietologistInvitationId> invitationIdResult = ParseInvitationId(invitationId);
+        if (invitationIdResult.IsFailure) {
+            return DietologistRequiredIdParser.ToFailure<DietologistInvitationForCurrentUserModel, DietologistInvitationId>(invitationIdResult);
+        }
+
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(
+            invitationIdResult.Value,
+            cancellationToken).ConfigureAwait(false);
+        if (invitation is null) {
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.InvitationNotFound);
+        }
+
+        if (!string.Equals(invitation.DietologistEmail, userEmailResult.Value, StringComparison.OrdinalIgnoreCase)) {
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.AccessDenied);
+        }
+
+        return Result.Success(invitation.ToCurrentUserInvitationModel(timeProvider));
+
     }
+
+    private static Result<DietologistInvitationId> ParseInvitationId(Guid invitationId) =>
+        DietologistRequiredIdParser.Parse(
+            invitationId,
+            nameof(invitationId),
+            "Invitation id must not be empty.",
+            value => new DietologistInvitationId(value));
+
 }

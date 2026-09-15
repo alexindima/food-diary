@@ -1,14 +1,16 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Application.Mappings;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
+namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyDietologist;
 
 public sealed class GetMyDietologistQueryHandler(
-    IDietologistInvitationReadService readService,
+    IDietologistInvitationReadModelRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMyDietologistQuery, Result<DietologistInfoModel?>> {
     public async Task<Result<DietologistInfoModel?>> Handle(GetMyDietologistQuery query, CancellationToken cancellationToken) {
@@ -21,6 +23,9 @@ public sealed class GetMyDietologistQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetMyDietologistAsync(userId, cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(invitation is null ? null : invitation.ToDietologistInfoModel());
+
     }
+
 }

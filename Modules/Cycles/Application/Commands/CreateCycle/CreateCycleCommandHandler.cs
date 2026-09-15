@@ -26,6 +26,7 @@ public sealed class CreateCycleCommandHandler(
     public async Task<Result<CycleModel>> Handle(
         CreateCycleCommand command,
         CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
         if (command.CycleTrackingConsentGranted is not true) {
             return Result.Failure<CycleModel>(Errors.Validation.Invalid(
                 nameof(command.CycleTrackingConsentGranted),
@@ -68,9 +69,9 @@ public sealed class CreateCycleCommandHandler(
             await cycleRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
             CyclePredictionsModel existingPredictions = CyclePredictionService.CalculatePredictions(
                 existing,
-                timeProvider: timeProvider);
+                currentDate: currentDate, timeProvider: timeProvider);
             CyclePredictionRevisionService.Record(existing, existingPredictions, timeProvider);
-            return Result.Success(existing.ToModel(existingPredictions));
+            return Result.Success(existing.ToModel(existingPredictions, currentDate));
         }
 
         DateTime createdAtUtc = timeProvider.GetUtcNow().UtcDateTime;
@@ -97,9 +98,9 @@ public sealed class CreateCycleCommandHandler(
 
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(
             profile,
-            timeProvider: timeProvider);
+            currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
-        return Result.Success(profile.ToModel(predictions));
+        return Result.Success(profile.ToModel(predictions, currentDate));
     }
 
     private static void ApplyOptionalConsents(CycleProfile profile, CreateCycleCommand command, DateTime nowUtc) {

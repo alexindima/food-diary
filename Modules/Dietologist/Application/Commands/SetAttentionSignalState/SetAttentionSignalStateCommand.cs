@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState;
 
 public sealed record SetAttentionSignalStateCommand(
     Guid? UserId,

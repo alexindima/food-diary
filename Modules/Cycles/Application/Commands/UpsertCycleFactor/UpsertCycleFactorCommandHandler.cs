@@ -21,6 +21,7 @@ public sealed class UpsertCycleFactorCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<UpsertCycleFactorCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpsertCycleFactorCommand command, CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -58,8 +59,8 @@ public sealed class UpsertCycleFactorCommandHandler(
         profile.UpsertFactor((CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
-        return Result.Success(profile.ToModel(predictions));
+        return Result.Success(profile.ToModel(predictions, currentDate));
     }
 }

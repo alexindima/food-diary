@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.InviteDietologist;
 
 public sealed class InviteDietologistCommandValidator : AbstractValidator<InviteDietologistCommand> {
     public InviteDietologistCommandValidator() {

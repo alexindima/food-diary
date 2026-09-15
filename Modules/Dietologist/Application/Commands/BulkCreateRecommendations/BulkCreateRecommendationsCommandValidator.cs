@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dietologist.Commands.BulkCreateRecommendations;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
 
 public sealed class BulkCreateRecommendationsCommandValidator : AbstractValidator<BulkCreateRecommendationsCommand> {
     private const int MaxRecipients = 100;

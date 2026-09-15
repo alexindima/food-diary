@@ -300,7 +300,7 @@
           "Modules/Dashboard/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Dashboard/Application/Abstractions"
+          "Modules/Dashboard/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Dashboard/Contracts"
@@ -309,7 +309,7 @@
           "Modules/Dashboard/Infrastructure"
         ],
         "abstractionAreas": [
-          "Modules/Dashboard/Application/Abstractions",
+          "Modules/Dashboard/Application.Abstractions",
           "Modules/Dashboard/Contracts"
         ]
       }
@@ -327,7 +327,7 @@
           "Modules/DailyAdvices/Application"
         ],
         "abstractionAreas": [
-          "Modules/DailyAdvices/Application/Abstractions"
+          "Modules/DailyAdvices/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/DailyAdvices/Domain"
@@ -358,7 +358,7 @@
           "Modules/Dietologist/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Dietologist/Application/Abstractions"
+          "Modules/Dietologist/Application.Abstractions"
         ],
         "domainProjects": [
           "Modules/Dietologist/Domain"
@@ -367,7 +367,7 @@
           "Modules/Dietologist/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Dietologist/Infrastructure/Model"
+          "Modules/Dietologist/PersistenceModel"
         ]
       }
     },

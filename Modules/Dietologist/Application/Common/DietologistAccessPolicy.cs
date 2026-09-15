@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Contracts.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 public static class DietologistAccessPolicy {
     public static async Task<Result<DietologistPermissionsModel>> EnsureCanAccessClientAsync(

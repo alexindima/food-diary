@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Models;
 
-namespace FoodDiary.Application.Dietologist.Common;
+namespace FoodDiary.Modules.Dietologist.Application.Common;
 
 internal static class DietologistProfileDisplayName {
     public static string Resolve(UserDietologistProfileModel user) {

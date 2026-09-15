@@ -1,9 +1,9 @@
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
 internal sealed class DashboardMealAiSessionsLoader(FoodDiaryDbContext context) {
     public async Task<ILookup<MealId, DashboardMealAiSessionReadModel>> LoadAsync(

@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Models;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal static class DashboardStatisticsMapper {
     public static DashboardStatisticsModel ToModel(DashboardStatisticsBucketReadModel? response, DashboardUserContextModel? user) {

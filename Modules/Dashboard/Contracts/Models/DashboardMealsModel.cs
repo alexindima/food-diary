@@ -1,6 +1,6 @@
 using FoodDiary.Application.Meals.Models;
 
-namespace FoodDiary.Application.Dashboard.Models;
+namespace FoodDiary.Modules.Dashboard.Contracts.Models;
 
 public sealed record DashboardMealsModel(
     IReadOnlyList<MealModel> Items,

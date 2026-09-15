@@ -1,8 +1,10 @@
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Testing;
+using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
@@ -118,9 +120,9 @@ public class StatisticsFeatureTests {
         var user = User.Create("statistics-read-failure@example.com", "hash");
         DateTime from = new(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime to = new(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc);
-        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
-            .GetStatisticsAsync(user.Id, from, to, 1, Arg.Any<CancellationToken>())
+            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == user.Id && query.DateFrom == from && query.DateTo == to && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
                 Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
         var handler = new GetStatisticsQueryHandler(statisticsReadService, CreateCurrentUserAccessService(user));
@@ -208,14 +210,9 @@ public class StatisticsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StaticStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) : IDashboardStatisticsReadService {
-        public Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
-            UserId userId,
-            DateTime dateFrom,
-            DateTime dateTo,
-            int quantizationDays,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Success(buckets));
+    private sealed class StaticStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) : RequestTestSender {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            Task.FromResult((TResponse)(object)Result.Success(buckets));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {

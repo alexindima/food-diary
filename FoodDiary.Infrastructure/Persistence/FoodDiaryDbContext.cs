@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Identity.PersistenceModel;
+using FoodDiary.Modules.Dietologist.PersistenceModel;
 using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.BodyMetrics.PersistenceModel;
@@ -13,7 +14,7 @@ using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
-using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
+using FoodDiary.Modules.DailyAdvices.PersistenceModel;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
@@ -25,8 +26,7 @@ using FoodDiary.Modules.Notifications.Infrastructure.Model;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : DbContext(options) {
-    internal DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
+public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : SharedPersistenceDbContext(options) {
     internal DbSet<TelegramLoginTicket> TelegramLoginTickets => Set<TelegramLoginTicket>();
     internal DbSet<TelegramOperation> TelegramOperations => Set<TelegramOperation>();
 

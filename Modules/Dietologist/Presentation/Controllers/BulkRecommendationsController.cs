@@ -1,0 +1,31 @@
+using FoodDiary.Mediator;
+using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Modules.Dietologist.Presentation.Mappings;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Dietologist.Presentation.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Dietologist.Presentation.Controllers;
+
+[ApiController]
+[Authorize(Roles = PresentationRoleNames.Dietologist)]
+[Route("api/v{version:apiVersion}/dietologist/recommendations/bulk")]
+public sealed class BulkRecommendationsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpPost]
+    [RequestSizeLimit(PresentationRequestLimits.BulkRecommendationsPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.BulkRecommendationsPayloadBytes)]
+    [ProducesResponseType<BulkRecommendationResultHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    [EnableIdempotency]
+    public Task<IActionResult> Create(
+        [FromCurrentUser] Guid userId,
+        [FromBody] BulkCreateRecommendationsHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+}

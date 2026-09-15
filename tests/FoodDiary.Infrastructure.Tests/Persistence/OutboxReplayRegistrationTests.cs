@@ -27,6 +27,7 @@ public sealed class OutboxReplayRegistrationTests {
         }
         services.AddScoped(_ => new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options));
+        services.AddScoped<SharedPersistenceDbContext>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         using IServiceScope first = provider.CreateScope();
         using IServiceScope second = provider.CreateScope();

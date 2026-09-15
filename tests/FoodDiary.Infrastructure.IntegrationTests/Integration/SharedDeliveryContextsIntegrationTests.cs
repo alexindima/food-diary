@@ -187,6 +187,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddUsersPersistence();
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddNotificationsPersistence();
         services.AddImagesInfrastructure();

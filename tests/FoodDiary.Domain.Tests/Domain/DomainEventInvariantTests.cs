@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Events;
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;

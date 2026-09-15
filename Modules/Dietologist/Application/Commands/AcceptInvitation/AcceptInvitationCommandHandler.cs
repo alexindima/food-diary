@@ -1,18 +1,20 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Application.Abstractions.Users.Models;
 
-namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
 
 public sealed class AcceptInvitationCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,

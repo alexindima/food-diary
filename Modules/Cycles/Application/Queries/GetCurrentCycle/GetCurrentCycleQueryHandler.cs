@@ -19,6 +19,7 @@ public sealed class GetCurrentCycleQueryHandler(
     public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
@@ -29,6 +30,6 @@ public sealed class GetCurrentCycleQueryHandler(
 
         UserId userId = userIdResult.Value;
         CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
-        return Result.Success(profile?.ToModel(CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider)));
+        return Result.Success(profile?.ToModel(CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider), currentDate));
     }
 }

@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Hydration.Common;
@@ -18,7 +19,7 @@ public sealed class DiaryStatisticsQueryTests {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
         profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
-        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
+        ISender statistics = Substitute.For<ISender>();
         IHydrationIntervalReadService hydration = Substitute.For<IHydrationIntervalReadService>();
         var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, statistics, hydration, new Clock());
 
@@ -49,7 +50,7 @@ public sealed class DiaryStatisticsQueryTests {
         };
         profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(string.Equals(scenario, "profile", StringComparison.Ordinal)
             ? Result.Failure<UserDashboardProfileModel>(new Error("Profile.Unavailable", "Unavailable")) : Result.Success(profile));
-        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
+        ISender statistics = Substitute.For<ISender>();
         IHydrationIntervalReadService hydration = Substitute.For<IHydrationIntervalReadService>();
         var handler = new GetDiaryStatisticsQueryHandler(access, profiles, statistics, hydration, new Clock());
         var query = new GetDiaryStatisticsQuery(owner.Value,
@@ -65,10 +66,11 @@ public sealed class DiaryStatisticsQueryTests {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
         profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
-        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
-        statistics.GetStatisticsAsync(owner, Arg.Any<DateTime>(), Arg.Any<DateTime>(), 2, Arg.Any<CancellationToken>()).Returns(call => {
-            DateTime from = call.ArgAt<DateTime>(1);
-            DateTime to = call.ArgAt<DateTime>(2);
+        ISender statistics = Substitute.For<ISender>();
+        statistics.Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == owner && query.QuantizationDays == 2), Arg.Any<CancellationToken>()).Returns(call => {
+            ReadDashboardStatisticsQuery request = call.Arg<ReadDashboardStatisticsQuery>();
+            DateTime from = request.DateFrom;
+            DateTime to = request.DateTo;
             bool recorded = from.Day == 4;
             return Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
                 new(from, to, recorded ? 700 : 0, 0, 0, 0, 0, TotalProteins: recorded ? 70 : 0, MealCount: recorded ? 2 : 0),
@@ -87,8 +89,7 @@ public sealed class DiaryStatisticsQueryTests {
         Assert.Equal(70, result.Value.TotalProteins);
         Assert.Equal(1750, result.Value.TotalWaterMl);
         Assert.Equal(2500, result.Value.Days[4].CalorieGoal);
-        await statistics.Received(1).GetStatisticsAsync(owner, new DateTime(2026, 3, 8, 5, 0, 0, DateTimeKind.Utc),
-            new DateTime(2026, 3, 9, 4, 0, 0, DateTimeKind.Utc).AddTicks(-10), 2, Arg.Any<CancellationToken>());
+        await statistics.Received(1).Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == owner && query.DateFrom == new DateTime(2026, 3, 8, 5, 0, 0, DateTimeKind.Utc) && query.DateTo == new DateTime(2026, 3, 9, 4, 0, 0, DateTimeKind.Utc).AddTicks(-10) && query.QuantizationDays == 2), Arg.Any<CancellationToken>());
         await hydration.Received(1).GetTotalAsync(owner, new DateTime(2026, 3, 8, 5, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 3, 9, 4, 0, 0, DateTimeKind.Utc), Arg.Any<CancellationToken>());
     }
@@ -98,8 +99,8 @@ public sealed class DiaryStatisticsQueryTests {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
         profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
-        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
-        statistics.GetStatisticsAsync(owner, Arg.Any<DateTime>(), Arg.Any<DateTime>(), 2, Arg.Any<CancellationToken>())
+        ISender statistics = Substitute.For<ISender>();
+        statistics.Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == owner && query.QuantizationDays == 2), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(new Error("Statistics.Unavailable", "Unavailable.", ErrorKind.Internal)));
         IHydrationIntervalReadService hydration = Substitute.For<IHydrationIntervalReadService>();
         var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, statistics, hydration, new Clock());

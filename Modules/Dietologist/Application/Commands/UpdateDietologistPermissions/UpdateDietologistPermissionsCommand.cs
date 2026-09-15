@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
 
-namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.UpdateDietologistPermissions;
 
 public record UpdateDietologistPermissionsCommand(
     Guid? UserId,

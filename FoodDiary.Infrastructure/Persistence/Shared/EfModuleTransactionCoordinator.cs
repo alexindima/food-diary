@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 namespace FoodDiary.Infrastructure.Persistence.Shared;
 
 internal sealed class EfModuleTransactionCoordinator(
-    FoodDiaryDbContext context,
+    SharedPersistenceDbContext context,
     IUnitOfWork unitOfWork,
     IPostCommitActionQueue? postCommitActionQueue = null) : IModuleTransactionCoordinator {
     public DbTransaction? CurrentTransaction => context.Database.CurrentTransaction?.GetDbTransaction();
@@ -22,12 +22,14 @@ internal sealed class EfModuleTransactionCoordinator(
         return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
-                bool processed = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
-                if (processed) {
-                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                }
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                return processed;
+                return await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), async () => {
+                    bool processed = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                    if (processed) {
+                        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    }
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    return processed;
+                }, cancellationToken).ConfigureAwait(false);
             }
         }, cancellationToken)).ConfigureAwait(false);
     }
@@ -83,15 +85,17 @@ internal sealed class EfModuleTransactionCoordinator(
                     ? await context.Database.BeginTransactionAsync(isolationLevel.Value, cancellationToken).ConfigureAwait(false)
                     : await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 await using (transaction.ConfigureAwait(false)) {
-                    T result = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
-                    if (result is not FoodDiary.Results.Result { IsFailure: true } && (alwaysSave || unitOfWork.HasPendingChanges)) {
-                        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                    }
+                    return await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), async () => {
+                        T result = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                        if (result is not FoodDiary.Results.Result { IsFailure: true } && (alwaysSave || unitOfWork.HasPendingChanges)) {
+                            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                        }
 
-                    if (result is not FoodDiary.Results.Result { IsFailure: true }) {
-                        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                    }
-                    return result;
+                        if (result is not FoodDiary.Results.Result { IsFailure: true }) {
+                            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                        }
+                        return result;
+                    }, cancellationToken).ConfigureAwait(false);
                 }
             } catch (Exception exception) when (translateException is not null) {
                 Exception translated = translateException(exception);

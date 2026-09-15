@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.DailyAdvices.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 internal static class ResultAssert {

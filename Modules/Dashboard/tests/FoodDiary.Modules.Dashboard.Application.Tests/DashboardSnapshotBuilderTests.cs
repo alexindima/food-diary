@@ -1,0 +1,1030 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
+using FoodDiary.Modules.Dashboard.Application.Common;
+using FoodDiary.Modules.Dashboard.Application.Services;
+using FoodDiary.Application.Exercises.Services;
+using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Hydration.Services;
+using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Exercises.Models;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Hydration.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Meals.Models;
+using FoodDiary.Application.Meals.Queries.GetMeals;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
+using FoodDiary.Mediator;
+using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Modules.Dashboard.Application.Models;
+using System.Reflection;
+
+namespace FoodDiary.Modules.Dashboard.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class DashboardSnapshotBuilderTests {
+    [Fact]
+    public async Task CreateBuildContextAsync_RejectsPreloadedContextForAnotherUser() {
+        var user = User.Create("dashboard-context@example.com", "hash");
+        IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), userContextService,
+            Substitute.For<IFastingReadService>(), Substitute.For<IExerciseEntryReadService>(), Substitute.For<IDashboardReadService>());
+        DashboardSnapshotRequest request = CreateRequest(Guid.NewGuid(), Sections()) with { UserContext = CreateDashboardUserContext(user) };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Contains("must match", result.Error.Message, StringComparison.Ordinal);
+        await userContextService.DidNotReceiveWithAnyArgs().GetAccessibleDashboardUserAsync(default, default);
+    }
+
+    [Fact]
+    public async Task CreateBuildContextAsync_WithPreloadedUser_DoesNotReloadProfile() {
+        var user = User.Create("dashboard-preloaded@example.com", "hash");
+        DashboardUserContextModel userContext = CreateDashboardUserContext(user);
+        IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(
+            Substitute.For<ISender>(),
+            userContextService,
+            Substitute.For<IFastingReadService>(),
+            Substitute.For<IExerciseEntryReadService>(),
+            Substitute.For<IDashboardReadService>());
+        DashboardSnapshotRequest request = CreateRequest(user.Id.Value, Sections()) with {
+            UserContext = userContext,
+        };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+
+        DashboardBuildContext context = ResultAssert.Success(result);
+        Assert.Same(userContext, context.CurrentUser);
+        await userContextService.DidNotReceive().GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithEmptyUserId_ReturnsValidationFailure() {
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new MissingUserContextService(),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                Guid.Empty,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithDateToBeforeDate_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-date-range@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc),
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("DateTo", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithPeriodLongerThanOneYear_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-long-range@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+        var dateFrom = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                dateFrom,
+                dateFrom.AddDays(366),
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("366", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithMaximumDate_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-maximum-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MaxValue.Date,
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithMinimumDateAndSingleDayTrend_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-minimum-weekly-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new ConfigurableDashboardSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MinValue,
+                DateTo: null,
+                "en",
+                TrendDays: 1,
+                Page: 1,
+                PageSize: 10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("weekly range", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenTimeZoneOffsetUnderflows_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-minimum-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MinValue,
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                TimeZoneOffsetMinutes: 60),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithOutOfRangeTimeZoneOffset_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-invalid-time-zone-offset@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 8, 2, 0, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                TimeZoneOffsetMinutes: int.MaxValue),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("TimeZoneOffsetMinutes", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithPositiveTimeZoneOffset_UsesLocalCalendarDayUtcBoundaries() {
+        var user = User.Create("dashboard-local-day@example.com", "hash");
+        var sender = new ConfigurableDashboardSender();
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 8, 2, 0, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                Sections: Sections(includeStatistics: true),
+                TimeZoneOffsetMinutes: 240),
+            CancellationToken.None);
+
+        DashboardSnapshotModel snapshot = ResultAssert.Success(result);
+        GetStatisticsQuery dailyStatisticsQuery = sender.StatisticsQueries[0];
+        Assert.Multiple(
+            () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), snapshot.Date),
+            () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), dailyStatisticsQuery.DateFrom),
+            () => Assert.Equal(new DateTime(2026, 8, 2, 19, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), dailyStatisticsQuery.DateTo));
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenUserIsMissing_ReturnsAccessFailure() {
+        var existingUser = User.Create("dashboard-existing@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserContextService(existingUser),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                Guid.NewGuid(),
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithInvalidDashboardLayoutJson_ReturnsSnapshotWithoutLayout() {
+        var user = User.Create("dashboard-invalid-layout@example.com", "hash");
+        typeof(User).GetProperty(nameof(User.DashboardLayoutJson))!.SetValue(user, "{");
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "",
+                TrendDays: 0,
+                Page: 0,
+                PageSize: 0,
+                Sections: new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: false,
+                    IncludeWeight: false,
+                    IncludeWaist: false,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: true,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(result.Value.DashboardLayout);
+        Assert.Equal(0, result.Value.CaloriesBurned);
+    }
+
+    [Fact]
+    public async Task BuildAsync_ForPastDate_UsesMeasurementEntriesAvailableBySelectedDate() {
+        var user = User.Create("dashboard-measurements@example.com", "hash");
+        UserId userId = user.Id;
+        var selectedDate = new DateTime(2026, 3, 20, 12, 0, 0, DateTimeKind.Utc);
+        DateTime futureDate = selectedDate.AddDays(1);
+        DateTime previousDate = selectedDate.AddDays(-1);
+        var weightRepository = new FilteringWeightEntryRepository([
+            WeightEntry.Create(userId, futureDate, 90),
+            WeightEntry.Create(userId, selectedDate, 82),
+            WeightEntry.Create(userId, previousDate, 83),
+        ]);
+        var waistRepository = new FilteringWaistEntryRepository([
+            WaistEntry.Create(userId, futureDate, 96),
+            WaistEntry.Create(userId, selectedDate, 91),
+            WaistEntry.Create(userId, previousDate, 92),
+        ]);
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new EmptyTrendSender(),
+            new AccessibleUserContextService(user),
+            weightRepository,
+            waistRepository,
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                userId.Value,
+                selectedDate,
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: false,
+                    IncludeWeight: true,
+                    IncludeWaist: true,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: false,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(selectedDate.Date, weightRepository.LastDateTo?.Date);
+        Assert.Equal(selectedDate.Date, waistRepository.LastDateTo?.Date);
+        Assert.Equal(82, result.Value.Weight.Latest?.WeightKg);
+        Assert.Equal(83, result.Value.Weight.Previous?.WeightKg);
+        Assert.Equal(91, result.Value.Waist.Latest?.CircumferenceCm);
+        Assert.Equal(92, result.Value.Waist.Previous?.CircumferenceCm);
+    }
+
+    [Fact]
+    public async Task BuildAsync_NormalizesMealPagingBeforeLoadingMeals() {
+        var user = User.Create("dashboard-paging@example.com", "hash");
+        var sender = new RecordingMealsSender();
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            sender,
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                Page: 0,
+                PageSize: 500,
+                Sections: new DashboardSnapshotSections(
+                    IncludeStatistics: false,
+                    IncludeMeals: true,
+                    IncludeWeight: false,
+                    IncludeWaist: false,
+                    IncludeHydration: false,
+                    IncludeFasting: false,
+                    IncludeAdvice: false,
+                    IncludeLayout: false,
+                    IncludeExercise: false,
+                    IncludeTdee: false,
+                    IncludeCycle: false)),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(sender.LastMealsQuery);
+        Assert.Equal(1, sender.LastMealsQuery.Page);
+        Assert.Equal(100, sender.LastMealsQuery.Limit);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenStatisticsQueryFails_ReturnsFailure() {
+        var user = User.Create("dashboard-statistics-failure@example.com", "hash");
+        var sender = new ConfigurableDashboardSender {
+            FirstStatisticsError = Errors.Validation.Invalid("statistics", "Statistics failed."),
+        };
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Single(sender.StatisticsQueries);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenWeeklyStatisticsQueryFails_ReturnsFailure() {
+        var user = User.Create("dashboard-weekly-statistics-failure@example.com", "hash");
+        var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var sender = new ConfigurableDashboardSender {
+            SecondStatisticsError = Errors.Validation.Invalid("weeklyStatistics", "Weekly statistics failed."),
+        };
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true), date),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal(2, sender.StatisticsQueries.Count);
+        Assert.Equal(date.Date.AddDays(-6), sender.StatisticsQueries[1].DateFrom);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenMealsSectionFails_ReturnsFailure() {
+        var user = User.Create("dashboard-meals-failure@example.com", "hash");
+        var sender = new ConfigurableDashboardSender {
+            MealsError = Errors.Validation.Invalid("meals", "Meals failed."),
+        };
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true, includeMeals: true)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.NotNull(sender.LastMealsQuery);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithHydrationTotals_ReturnsSummedHydration() {
+        var user = User.Create("dashboard-hydration@example.com", "hash");
+        user.UpdateGoals(waterGoal: 1800);
+        var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        DashboardSnapshotBuilder builder = CreateBuilder(
+            user,
+            new ConfigurableDashboardSender(),
+            new StubHydrationEntryRepository([
+                (date.Date, 500),
+                (date.Date.AddDays(1), 700),
+            ]));
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeHydration: true), date, date.AddDays(1)),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(result.Value.Hydration);
+        Assert.Equal(1200, result.Value.Hydration!.TotalMl);
+        Assert.Equal(3600, result.Value.Hydration.GoalMl);
+    }
+
+    [Fact]
+    public void BuildStatistics_WithReadModel_UsesFirstStatisticsBucket() {
+        var user = User.Create("dashboard-read-model-statistics@example.com", "hash");
+        user.UpdateGoals(proteinTarget: 110);
+        DateTime date = new(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc);
+        DashboardReadModel readModel = new(
+            [
+                new DashboardStatisticsBucketReadModel(date, date, 1900, 100, 60, 210, 25),
+            ],
+            [],
+            new DashboardBodyReadModel([], [], [], [], HydrationTotalMl: 0),
+            new DashboardMealsReadModel([], Page: 1, Limit: 10, TotalPages: 0, TotalItems: 0));
+        DashboardBuildContext context = new(
+            user.Id,
+            date,
+            date,
+            date,
+            PeriodDays: 1,
+            Locale: "en",
+            Page: 1,
+            PageSize: 10,
+            TrendDays: 7,
+            TrendStart: date.AddDays(-6),
+            Sections(includeStatistics: true),
+            CreateDashboardUserContext(user));
+        MethodInfo method = typeof(DashboardSnapshotBuilder).GetMethod(
+            name: "BuildStatistics",
+            BindingFlags.NonPublic | BindingFlags.Static,
+            binder: null,
+            [typeof(DashboardReadModel), typeof(DashboardBuildContext)],
+            modifiers: null)!;
+
+        var result = (DashboardStatisticsModel)method.Invoke(obj: null, parameters: [readModel, context])!;
+
+        Assert.Multiple(
+            () => Assert.Equal(1900, result.TotalCalories),
+            () => Assert.Equal(100, result.AverageProteins),
+            () => Assert.Equal(110, result.ProteinGoal));
+    }
+
+    private static DashboardSnapshotBuilder CreateBuilder(
+        User user,
+        ISender sender,
+        IHydrationEntryReadModelRepository? hydrationEntryRepository = null) =>
+        CreateDashboardSnapshotBuilder(
+            sender,
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            hydrationEntryRepository ?? new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+
+    private static DashboardSnapshotBuilder CreateDashboardSnapshotBuilder(
+        ISender sender,
+        IDashboardUserContextService dashboardUserContextService,
+        IWeightEntryReadModelRepository weightEntryRepository,
+        IWaistEntryReadModelRepository waistEntryRepository,
+        IHydrationEntryReadModelRepository hydrationEntryRepository,
+        IFastingReadService fastingReadService,
+        IExerciseEntryRepository exerciseEntryRepository,
+        Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder> logger) =>
+        new(
+            sender,
+            dashboardUserContextService,
+            fastingReadService,
+            new ExerciseEntryReadService(exerciseEntryRepository, exerciseEntryRepository),
+            new ComposedDashboardReadService(
+                new SenderStatisticsFixture(sender),
+                new RepositoryDashboardBodyReadService(
+RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), new HydrationEntryReadService(hydrationEntryRepository)),
+                new MediatorDashboardMealsReadService(sender)),
+            logger);
+
+    private static DashboardSnapshotRequest CreateRequest(
+        Guid userId,
+        DashboardSnapshotSections sections,
+        DateTime? date = null,
+        DateTime? dateTo = null) =>
+        new(
+            userId,
+            date ?? new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
+            dateTo,
+            "en",
+            TrendDays: 7,
+            Page: 1,
+            PageSize: 10,
+            Sections: sections);
+
+    private static DashboardSnapshotSections Sections(
+        bool includeStatistics = false,
+        bool includeMeals = false,
+        bool includeHydration = false) =>
+        new(
+            IncludeStatistics: includeStatistics,
+            IncludeMeals: includeMeals,
+            IncludeWeight: false,
+            IncludeWaist: false,
+            IncludeHydration: includeHydration,
+            IncludeFasting: false,
+            IncludeAdvice: false,
+            IncludeLayout: false,
+            IncludeExercise: false,
+            IncludeTdee: false,
+            IncludeCycle: false);
+
+    private static DashboardUserContextModel CreateDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ConfigurableDashboardSender : ISender {
+        public Error? FirstStatisticsError { get; init; }
+        public Error? SecondStatisticsError { get; init; }
+        public Error? MealsError { get; init; }
+        public List<GetStatisticsQuery> StatisticsQueries { get; } = [];
+        public GetMealsQuery? LastMealsQuery { get; private set; }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetStatisticsQuery statisticsQuery) {
+                StatisticsQueries.Add(statisticsQuery);
+                Error? error = StatisticsQueries.Count == 1 ? FirstStatisticsError : SecondStatisticsError;
+                return error is not null
+                    ? Task.FromResult((TResponse)(object)Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(error))
+                    : Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<AggregatedStatisticsModel>>([
+                        new AggregatedStatisticsModel(
+                            statisticsQuery.DateFrom,
+                            statisticsQuery.DateTo,
+                            TotalCalories: 1800,
+                            AverageProteins: 100,
+                            AverageFats: 60,
+                            AverageCarbs: 200,
+                            AverageFiber: 25),
+                    ]));
+            }
+
+            if (request is GetMealsQuery mealsQuery) {
+                LastMealsQuery = mealsQuery;
+                if (MealsError is not null) {
+                    return Task.FromResult((TResponse)(object)Result.Failure<PagedResponse<MealModel>>(MealsError));
+                }
+
+                var response = new PagedResponse<MealModel>([], mealsQuery.Page, mealsQuery.Limit, 0, 0);
+                return Task.FromResult((TResponse)(object)Result.Success(response));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class EmptyTrendSender : ISender {
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetWeightSummariesQuery) {
+                return Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<WeightEntrySummaryModel>>([]));
+            }
+
+            if (request is GetWaistSummariesQuery) {
+                return Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<WaistEntrySummaryModel>>([]));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingMealsSender : ISender {
+        public GetMealsQuery? LastMealsQuery { get; private set; }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is GetMealsQuery query) {
+                LastMealsQuery = query;
+                var response = new PagedResponse<MealModel>([], query.Page, query.Limit, 0, 0);
+                return Task.FromResult((TResponse)(object)Result.Success(response));
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class AccessibleUserContextService(User user) : IDashboardUserContextService {
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult(user.Id == userId
+                ? Result.Success(ToDashboardUserContext(user))
+                : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Error?>(user.Id == userId ? null : Errors.Authentication.InvalidToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FilteringWeightEntryRepository(IReadOnlyList<WeightEntry> entries) : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
+        public DateTime? LastDateTo { get; private set; }
+
+        public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByIdAsync(WeightEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            LastDateTo = dateTo;
+            IEnumerable<WeightEntry> filtered = entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
+                .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);
+            filtered = descending ? filtered.OrderByDescending(entry => entry.Date) : filtered.OrderBy(entry => entry.Date);
+            if (limit.HasValue) {
+                filtered = filtered.Take(limit.Value);
+            }
+
+            return Task.FromResult<IReadOnlyList<WeightEntry>>(filtered.ToList());
+        }
+
+        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WeightEntry>>([.. entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
+                .OrderBy(entry => entry.Date)]);
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
+        }
+
+        public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WeightEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FilteringWaistEntryRepository(IReadOnlyList<WaistEntry> entries) : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
+        public DateTime? LastDateTo { get; private set; }
+
+        public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByIdAsync(WaistEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            LastDateTo = dateTo;
+            IEnumerable<WaistEntry> filtered = entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
+                .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);
+            filtered = descending ? filtered.OrderByDescending(entry => entry.Date) : filtered.OrderBy(entry => entry.Date);
+            if (limit.HasValue) {
+                filtered = filtered.Take(limit.Value);
+            }
+
+            return Task.FromResult<IReadOnlyList<WaistEntry>>(filtered.ToList());
+        }
+
+        public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WaistEntry>>([.. entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
+                .OrderBy(entry => entry.Date)]);
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(
+            UserId userId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int? limit,
+            bool descending,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
+        }
+
+        public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<WaistEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubSender : ISender {
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MissingUserContextService : IDashboardUserContextService {
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+    }
+
+    private static DashboardUserContextModel ToDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubWeightEntryRepository : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
+        public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByIdAsync(WeightEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
+        public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubHydrationEntryRepository(IReadOnlyList<(DateTime Date, int TotalMl)>? totals = null)
+        : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
+        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(totals ?? []);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubFastingReadService : IFastingReadService {
+        public Task<FastingSessionModel?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult<FastingSessionModel?>(null);
+
+        public Task<FastingInsightsModel> GetInsightsAsync(UserId userId, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<FastingOverviewModel> GetOverviewAsync(UserId userId, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubWaistEntryRepository : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
+        public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByIdAsync(WaistEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WaistEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+}

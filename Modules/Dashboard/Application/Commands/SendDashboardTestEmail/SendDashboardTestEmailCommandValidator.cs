@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
+namespace FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
 
 public sealed class SendDashboardTestEmailCommandValidator : AbstractValidator<SendDashboardTestEmailCommand> {
     public SendDashboardTestEmailCommandValidator() {

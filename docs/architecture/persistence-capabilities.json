@@ -128,7 +128,7 @@
         "tracked:DailyAdvice"
       ],
       "reason": "Registers the owned advice set on the existing shared connection; repository remains read-only and no-tracking.",
-      "technicalSourceSha256": "7654a13830e6725ca18a866da6094678aa85e5a01ca047a5a7728169d971d6b6"
+      "technicalSourceSha256": "ad6a9dd90645302b0374631e1f04b00b5bb98dba2018350fec842bef934e59c6"
     },
     "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs": {
       "module": "ReadModelComposition",
@@ -514,7 +514,7 @@
       ],
       "reason": "Dashboard composes Hydration and BodyMetrics into a no-tracking body summary."
     },
-    "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs": {
+    "Modules/Dietologist/Infrastructure/Persistence/DietologistInvitationRepository.cs": {
       "module": "Dietologist",
       "capabilities": [
         "context:Entry",
@@ -523,7 +523,7 @@
         "write:DietologistInvitation"
       ],
       "reason": "Owner repository retains writes and delegates joined DTO reads to composition.",
-      "technicalSourceSha256": "166e49d3fb1e7b13a969981db8266cfd9665d2f2f9205a851c4af7ede42f3b6a"
+      "technicalSourceSha256": "8280ca27daafd6b330b7a68561597bf44129919ab5b917df4af1e40ae5dc943b"
     },
     "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
       "module": "Dietologist",
@@ -548,7 +548,7 @@
         "write:AuditEntry"
       ],
       "reason": "Dietologist audits central and typed owner entries through IModuleChangeTrackerSource, without concrete shared context access. Central audit storage, relational guard, timing and pending event deduplication remain unchanged.",
-      "technicalSourceSha256": "adf9f4b0d42c873fe25b2e20b599a7eab75d5cef8b1a476099baffa71b2155aa"
+      "technicalSourceSha256": "f64ebf313da42072dfa4ea7bf501fb6496138ac7a49d1cd8871170c8d6cecd56"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs": {
       "module": "Dietologist",
@@ -1530,6 +1530,7 @@
     "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs": {
       "module": "ReadModelComposition",
       "capabilities": [
+        "entity:Recommendation",
         "entity:RecommendationComment",
         "entity:User"
       ],
@@ -1551,7 +1552,7 @@
         "tracked:RecommendationTemplate"
       ],
       "reason": "Creates the owner runtime context and supplies only Dietologist sets to repositories.",
-      "technicalSourceSha256": "566aef1d90730738b886b86eff2aba21c336e36a5a25c8b547f57a4257cda97b"
+      "technicalSourceSha256": "60f49c8906a17175c52b2082909b5c19abddcece2976447ca7393e593e8d6453"
     },
     "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs": {
       "module": "ReadModelComposition",

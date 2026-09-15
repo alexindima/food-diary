@@ -1,3 +1,0 @@
-namespace FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-
-public sealed record UpdateDietologistPermissionsHttpRequest(DietologistPermissionsHttpRequest Permissions);

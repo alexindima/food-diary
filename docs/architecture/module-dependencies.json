@@ -2,18 +2,30 @@
   "schemaVersion": 1,
   "description": "Executable acyclic Application API and direct service-contract graphs. Domain IDs/values are separate project dependencies; Images.Contracts is verified ID-only.",
   "modules": {
-    "Admin": ["Ai", "Billing", "ContentReports", "Gamification", "Lessons"],
+    "Admin": [
+      "Ai",
+      "Billing",
+      "ContentReports",
+      "Gamification",
+      "Lessons"
+    ],
     "Ai": [],
     "Identity": [],
-    "Billing": ["Marketing"],
+    "Billing": [
+      "Marketing"
+    ],
     "BodyMetrics": [],
-    "Meals": ["Ai", "Images"],
+    "Meals": [
+      "Ai",
+      "Images"
+    ],
     "ContentReports": [],
     "Cycles": [],
     "Dashboard": [
       "BodyMetrics",
       "Cycles",
       "DailyAdvices",
+      "Dietologist",
       "Exercises",
       "Fasting",
       "Hydration",
@@ -48,6 +60,7 @@
     ],
     "Statistics": [
       "BodyMetrics",
+      "Dashboard",
       "Hydration"
     ],
     "Tdee": [
@@ -59,6 +72,7 @@
     "Wearables": [],
     "WeeklyCheckIn": [
       "BodyMetrics",
+      "Dashboard",
       "Hydration"
     ],
     "WeeklyGoals": []

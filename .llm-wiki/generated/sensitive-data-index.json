@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1460,
+    "candidateFields": 1461,
     "credential": 156,
     "identity": 174,
     "health": 685,
-    "financial": 125,
+    "financial": 126,
     "privateContent": 320,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
@@ -266,7 +266,7 @@
       "category": "credential",
       "name": "Token",
       "type": "string",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistInvitationMessage.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Common/DietologistInvitationMessage.cs",
       "line": 6
     },
     {
@@ -287,28 +287,28 @@
       "category": "credential",
       "name": "TokenHash",
       "type": "string",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 16
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 17
     },
     {
       "category": "credential",
       "name": "TokenHashMaxLength",
       "type": "tokenHash,",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 44
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 45
     },
     {
       "category": "credential",
       "name": "Token",
       "type": "string",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/AcceptInvitationHttpRequest.cs",
       "line": 8
     },
     {
       "category": "credential",
       "name": "Token",
       "type": "string",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/DeclineInvitationHttpRequest.cs",
       "line": 8
     },
     {
@@ -1108,6 +1108,13 @@
       "type": "string",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
       "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "ActiveTransaction",
+      "type": "DbTransaction?",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/PersistenceSession.cs",
+      "line": 18
     },
     {
       "category": "financial",
@@ -3073,7 +3080,7 @@
       "category": "health",
       "name": "Weight",
       "type": "int",
-      "path": "Modules/DailyAdvices/Application/Abstractions/Models/DailyAdviceReadModel.cs",
+      "path": "Modules/DailyAdvices/Application.Abstractions/Models/DailyAdviceReadModel.cs",
       "line": 3
     },
     {
@@ -3094,126 +3101,126 @@
       "category": "health",
       "name": "LatestWeightEntries",
       "type": "IReadOnlyList<DashboardWeightPointReadModel>",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "LatestWaistEntries",
       "type": "IReadOnlyList<DashboardWaistPointReadModel>",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "WeightTrend",
       "type": "IReadOnlyList<DashboardWeightSummaryReadModel>",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "WaistTrend",
       "type": "IReadOnlyList<DashboardWaistSummaryReadModel>",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "HydrationTotalMl",
       "type": "int",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiItemReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiItemReadModel.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealItemReadModel.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealItemReadModel.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 17
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 23
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "IncludeWeight",
       "type": "bool",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardReadSections.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "IncludeWaist",
       "type": "bool",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardReadSections.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "IncludeHydration",
       "type": "bool",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardReadSections.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightPointReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardWeightPointReadModel.cs",
       "line": 3
     },
     {
       "category": "health",
       "name": "AverageWeightKg",
       "type": "double",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightSummaryReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardWeightSummaryReadModel.cs",
       "line": 3
     },
     {
@@ -3360,120 +3367,120 @@
       "category": "health",
       "name": "Weight",
       "type": "int",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DailyAdviceHttpResponse.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DailyCaloriesHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "WeeklyCalories",
       "type": "IReadOnlyList<DailyCaloriesHttpResponse>",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardSnapshotHttpResponse.cs",
       "line": 17
     },
     {
       "category": "health",
       "name": "Weight",
       "type": "DashboardWeightHttpResponse",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardSnapshotHttpResponse.cs",
       "line": 18
     },
     {
       "category": "health",
       "name": "Waist",
       "type": "DashboardWaistHttpResponse",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardSnapshotHttpResponse.cs",
       "line": 19
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardStatisticsHttpResponse.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardWaistHttpResponse.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardWeightHttpResponse.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/WeightPointHttpResponse.cs",
       "line": 3
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalDailyCaloriesReadModel.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/AttentionSignalDailyCaloriesReadModel.cs",
       "line": 3
     },
     {
       "category": "health",
       "name": "DailyCalories",
       "type": "IReadOnlyList<AttentionSignalDailyCaloriesReadModel>",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalMetricsReadModel.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/AttentionSignalMetricsReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "WeightPoints",
       "type": "IReadOnlyList<AttentionSignalWeightPointReadModel>",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalMetricsReadModel.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/AttentionSignalMetricsReadModel.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalWeightPointReadModel.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/AttentionSignalWeightPointReadModel.cs",
       "line": 3
     },
     {
       "category": "health",
       "name": "ClientBirthDate",
       "type": "DateTime?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 14
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 16
     },
     {
       "category": "health",
       "name": "ClientGender",
       "type": "string?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 15
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 17
     },
     {
       "category": "health",
       "name": "ClientHeightCm",
       "type": "double?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 16
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 18
     },
     {
       "category": "health",
       "name": "ClientActivityLevel",
       "type": "ActivityLevel",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 17
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 19
     },
     {
       "category": "health",
@@ -3542,78 +3549,78 @@
       "category": "health",
       "name": "ShareWeight",
       "type": "bool",
-      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "path": "Modules/Dietologist/Contracts/Models/DietologistPermissionsReadModel.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "bool",
-      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "path": "Modules/Dietologist/Contracts/Models/DietologistPermissionsReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "bool",
-      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "path": "Modules/Dietologist/Contracts/Models/DietologistPermissionsReadModel.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "ShareFasting",
       "type": "bool",
-      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "path": "Modules/Dietologist/Contracts/Models/DietologistPermissionsReadModel.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "ShareWeight",
       "type": "bool",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 22
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 23
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "bool",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 23
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 24
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "bool",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "ShareFasting",
-      "type": "bool",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
       "line": 26
     },
     {
       "category": "health",
       "name": "ShareFasting",
+      "type": "bool",
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "ShareFasting",
       "type": "ShareProfile,",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 99
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 100
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "ShareGoals,",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 99
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 100
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "ShareWeight,",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 99
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 100
     },
     {
       "category": "health",
@@ -3647,29 +3654,29 @@
       "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
-      "line": 9
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
+      "line": 10
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
-      "line": 10
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
+      "line": 11
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "double?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
-      "line": 11
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
+      "line": 12
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
-      "line": 12
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
+      "line": 13
     },
     {
       "category": "health",
@@ -7112,35 +7119,35 @@
       "category": "identity",
       "name": "ToEmail",
       "type": "string",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistInvitationMessage.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Common/DietologistInvitationMessage.cs",
       "line": 4
     },
     {
       "category": "identity",
       "name": "DietologistEmail",
       "type": "string",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 9
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 11
     },
     {
       "category": "identity",
       "name": "ClientEmail",
       "type": "string?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 10
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 12
     },
     {
       "category": "identity",
       "name": "DietologistUserEmail",
       "type": "string?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "line": 18
+      "path": "Modules/Dietologist/Application.Abstractions/Models/DietologistInvitationReadModel.cs",
+      "line": 20
     },
     {
       "category": "identity",
       "name": "AuthorEmail",
       "type": "string?",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationCommentReadModel.cs",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/RecommendationCommentReadModel.cs",
       "line": 9
     },
     {
@@ -7196,22 +7203,22 @@
       "category": "identity",
       "name": "DietologistEmail",
       "type": "string",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 15
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 16
     },
     {
       "category": "identity",
       "name": "EmailMaxLength",
       "type": "dietologistEmail,",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 42
+      "path": "Modules/Dietologist/Domain/Entities/DietologistInvitation.cs",
+      "line": 43
     },
     {
       "category": "identity",
       "name": "DietologistEmail",
       "type": "string",
       "path": "Modules/Dietologist/Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "identity",
@@ -7224,42 +7231,42 @@
       "category": "identity",
       "name": "DietologistEmail",
       "type": "string",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/InviteDietologistHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/InviteDietologistHttpRequest.cs",
       "line": 4
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
-      "line": 5
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInfoHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/DietologistInfoHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "ClientEmail",
+      "type": "string?",
+      "path": "Modules/Dietologist/Presentation/Responses/DietologistInvitationForCurrentUserHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ClientEmail",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInvitationForCurrentUserHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "ClientEmail",
-      "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/InvitationHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/InvitationHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "AuthorEmail",
       "type": "string?",
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/RecommendationCommentHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/RecommendationCommentHttpResponse.cs",
       "line": 9
     },
     {
@@ -8498,56 +8505,56 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiSessionReadModel.cs",
       "line": 6
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiSessionReadModel.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealAiSessionReadModel.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealItemReadModel.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "RecipeImageUrl",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealItemReadModel.cs",
       "line": 22
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardMealReadModel.cs",
       "line": 9
     },
     {
@@ -10646,49 +10653,49 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DailyAdviceHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DailyCaloriesHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardSnapshotHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardStatisticsHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardWaistHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardWeightHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/WeightPointHttpResponse.cs",
       "categories": [
         "health"
       ],
@@ -10709,28 +10716,28 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/AcceptInvitationHttpRequest.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/DeclineInvitationHttpRequest.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Requests/InviteDietologistHttpRequest.cs",
+      "path": "Modules/Dietologist/Presentation/Requests/InviteDietologistHttpRequest.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",
       "categories": [
         "health",
         "identity"
@@ -10738,28 +10745,28 @@
       "fieldCount": 5
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInfoHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/DietologistInfoHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInvitationForCurrentUserHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/DietologistInvitationForCurrentUserHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/InvitationHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/InvitationHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/RecommendationCommentHttpResponse.cs",
+      "path": "Modules/Dietologist/Presentation/Responses/RecommendationCommentHttpResponse.cs",
       "categories": [
         "identity"
       ],

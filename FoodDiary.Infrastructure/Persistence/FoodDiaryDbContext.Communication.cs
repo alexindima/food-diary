@@ -1,11 +1,9 @@
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
@@ -20,9 +18,7 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<RecommendationBulkDispatch> RecommendationBulkDispatches => Set<RecommendationBulkDispatch>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<BugAcknowledgementReceipt> BugAcknowledgementReceipts => Set<BugAcknowledgementReceipt>();
-    public DbSet<EmailOutboxMessage> EmailOutbox => Set<EmailOutboxMessage>();
     public DbSet<NotificationWebPushOutboxMessage> NotificationWebPushOutbox => Set<NotificationWebPushOutboxMessage>();
-    internal DbSet<OutboxReplayAudit> OutboxReplayAudits => Set<OutboxReplayAudit>();
     public DbSet<WebPushSubscription> WebPushSubscriptions => Set<WebPushSubscription>();
     public DbSet<ContentReport> ContentReports => Set<ContentReport>();
 }

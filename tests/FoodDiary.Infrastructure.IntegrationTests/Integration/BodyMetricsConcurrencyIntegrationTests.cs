@@ -118,6 +118,7 @@ public sealed class BodyMetricsConcurrencyIntegrationTests(PostgresDatabaseFixtu
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddBodyMetricsModule();
         return services.BuildServiceProvider();

@@ -1,17 +1,18 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
-using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
-using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Modules.DailyAdvices.Contracts.Models;
+using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
+using FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Dashboard;
-using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
-using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Modules.Dashboard.Presentation.Controllers;
+using FoodDiary.Modules.Dashboard.Presentation.Requests;
+using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Dashboard.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardControllerTests {

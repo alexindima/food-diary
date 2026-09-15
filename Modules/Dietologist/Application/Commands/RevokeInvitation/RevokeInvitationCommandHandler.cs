@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 
-namespace FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
+namespace FoodDiary.Modules.Dietologist.Application.Commands.RevokeInvitation;
 
 public sealed class RevokeInvitationCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,

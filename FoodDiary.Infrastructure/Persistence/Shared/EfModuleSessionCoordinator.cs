@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Shared;
 
-internal sealed class EfModuleSessionCoordinator(FoodDiaryDbContext context, IUnitOfWork unitOfWork) : IModuleSessionCoordinator {
+internal sealed class EfModuleSessionCoordinator(SharedPersistenceDbContext context, IUnitOfWork unitOfWork) : IModuleSessionCoordinator {
     public async Task<T> ExecuteSerializedAsync<T>(
         string serializationKey,
         Func<CancellationToken, Task<T>> operation,

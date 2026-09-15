@@ -9,6 +9,7 @@ sources:
   - docs/BACKEND_MODULE_MAP.md
   - docs/adr/0038-read-model-composition.md
   - docs/adr/0040-hydration-runtime-context-pilot.md
+  - docs/adr/0042-shared-runtime-persistence-session.md
   - docs/architecture/module-dependencies.json
   - docs/architecture/backend-modules.json
   - tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
@@ -72,6 +73,12 @@ transactions to this contract while retaining its intermediate receipt flush and
 owner-context purge. Products and Recipes delegate Serializable mutations and live
 transaction access to the same coordinator, using owner contexts for their purge participants. This preserves shared transactions and
 migrations; it does not introduce independent databases. See ADR 0040.
+
+ADR 0042 separates the scoped participant registry (PersistenceSession) and
+shared audit/email/replay runtime model (SharedRuntimeDbContext) from the lazy
+complete migration/read model (FoodDiaryDbContext) inside Infrastructure.
+Owner contexts and composed reads retain one managed transaction; no schema or
+migration assembly change is introduced.
 
 ## Placement Rule
 

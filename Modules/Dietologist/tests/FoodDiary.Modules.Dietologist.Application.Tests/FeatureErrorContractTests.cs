@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Dietologist.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {
@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void DietologistErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Dietologist.Application.Abstractions", typeof(DietologistErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Dietologist.Common", typeof(DietologistErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Dietologist.Application.Abstractions.Common", typeof(DietologistErrors).Namespace));
     }
 
     [Fact]

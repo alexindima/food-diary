@@ -32,7 +32,7 @@ public sealed class InitializerTests {
         Assert.NotEmpty(context.Database.GetMigrations());
         Assert.Null(scope.ServiceProvider.GetService<IInitialAdminBootstrapService>());
         Assert.DoesNotContain(services, descriptor => descriptor.ImplementationType?.Namespace?.StartsWith(
-            "FoodDiary.Application.Dashboard", StringComparison.Ordinal) == true);
+            "FoodDiary.Modules.Dashboard.Application", StringComparison.Ordinal) == true);
     }
 
     [Fact]

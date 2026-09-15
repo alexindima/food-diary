@@ -16,6 +16,7 @@ sources:
   - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
   - docs/adr/0040-hydration-runtime-context-pilot.md
+  - docs/adr/0042-shared-runtime-persistence-session.md
   - FoodDiary.ReadModel.Composition/AGENTS.md
   - docs/adr/0038-read-model-composition.md
   - Shared/FoodDiary.Integrations.Http/AGENTS.md
@@ -76,7 +77,7 @@ All 29 owner contexts participate in the shared scoped unit of work through
 `IModuleContextFactory`. WeeklyGoals and Meals use `IModuleTransactionCoordinator`
 for top-level transactions while retaining their owner locks. Products and Recipes use its
 Serializable operation with whole-attempt retries; their purge participants now use owner contexts. Central migration composition
-and foreign-write restrictions remain. See ADR 0040. BCL-only transport helpers live in
+and foreign-write restrictions remain. ADR 0042 gives PersistenceSession the scoped participant registry and separates the shared audit/email/replay runtime context from the lazy complete migration/read context inside the same assembly. See ADRs 0040 and 0042. BCL-only transport helpers live in
 `Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
 and ADR 0029 for the remaining isolation limits.
 

@@ -23,6 +23,7 @@ public sealed class UpsertCycleDayCommandHandler(
     public async Task<Result<CycleLogDayModel>> Handle(
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -63,7 +64,7 @@ public sealed class UpsertCycleDayCommandHandler(
 
         ApplyLog(profile, command);
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);

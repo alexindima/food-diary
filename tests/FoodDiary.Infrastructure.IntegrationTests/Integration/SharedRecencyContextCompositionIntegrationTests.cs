@@ -74,6 +74,7 @@ public sealed class SharedRecencyContextCompositionIntegrationTests(PostgresData
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddApplicationRuntime();
         services.AddRecentItemsModule();

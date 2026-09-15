@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/DailyAdvices/Application`
-- `Modules/DailyAdvices/Application/Abstractions`
+- `Modules/DailyAdvices/Application.Abstractions`
 - `Modules/DailyAdvices/Contracts`
 
 ## HTTP Surface
@@ -60,11 +60,11 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceErrorContractTests.cs`
-- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/Domain/DailyAdviceIdContractTests.cs`
-- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/Domain/DailyAdviceInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/DailyAdviceIdContractTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/DailyAdviceInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DailyAdvicesModuleExtractionTests.cs`
 

@@ -1,0 +1,820 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FluentValidation.Results;
+using System.Globalization;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Meals.Models;
+using FoodDiary.Application.Meals.Queries.GetMeals;
+using FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
+using FoodDiary.Modules.Dashboard.Application.Common;
+using FoodDiary.Modules.Dashboard.Application.Models;
+using FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
+using FoodDiary.Modules.Dashboard.Application.Services;
+using FoodDiary.Application.Hydration.Services;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Mediator;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace FoodDiary.Modules.Dashboard.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class DashboardFeatureTests {
+    [Fact]
+    public async Task GetDashboardSnapshot_WhenProfileLookupFails_DoesNotBuildSnapshot() {
+        var userId = UserId.New();
+        IDashboardUserContextService access = Substitute.For<IDashboardUserContextService>();
+        Error error = Errors.Authentication.InvalidToken;
+        access.GetAccessibleDashboardUserAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<DashboardUserContextModel>(error));
+        IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
+        var handler = new GetDashboardSnapshotQueryHandler(builder, access);
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(new GetDashboardSnapshotQuery(userId.Value,
+            DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7), CancellationToken.None);
+
+        ResultAssert.Failure(result, error.Code);
+        await builder.DidNotReceiveWithAnyArgs().BuildAsync(default!, default);
+    }
+
+    [Fact]
+    public async Task GetDashboardSnapshotQueryValidator_WithEmptyUserId_Fails() {
+        var validator = new GetDashboardSnapshotQueryValidator();
+        var query = new GetDashboardSnapshotQuery(
+            UserId.Empty,
+            DateTime.UtcNow,
+            Page: 1,
+            PageSize: 10,
+            Locale: "en",
+            TrendDays: 7);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public async Task GetDashboardSnapshotQueryValidator_WithValidInput_Passes() {
+        var validator = new GetDashboardSnapshotQueryValidator();
+        var query = new GetDashboardSnapshotQuery(
+            UserId.New(),
+            DateTime.UtcNow,
+            Page: 1,
+            PageSize: 10,
+            Locale: "en",
+            TrendDays: 7);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmailCommandValidator_WithEmptyUserId_Fails() {
+        var validator = new SendDashboardTestEmailCommandValidator();
+
+        ValidationResult result = await validator.ValidateAsync(new SendDashboardTestEmailCommand(Guid.Empty));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Errors,
+            error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void DashboardMapping_ToStatisticsModel_WhenReadModelResponseIsNull_ReturnsEmptyModel() {
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel((DashboardStatisticsBucketReadModel?)null, user: null);
+
+        Assert.Multiple(
+            () => Assert.Equal(0, dto.TotalCalories),
+            () => Assert.Equal(0, dto.AverageProteins),
+            () => Assert.Null(dto.ProteinGoal),
+            () => Assert.Null(dto.FiberGoal));
+    }
+
+    [Fact]
+    public void DashboardMapping_ToStatisticsModel_MapsMacroTargetsFromUser() {
+        var user = User.Create("dashboard-stats@example.com", "hash");
+        user.UpdateGoals(proteinTarget: 120, fatTarget: 70, carbTarget: 210, fiberTarget: 30);
+        var response = new DashboardStatisticsBucketReadModel(
+            DateTime.UtcNow.Date,
+            DateTime.UtcNow.Date,
+            1900,
+            110,
+            65,
+            200,
+            28);
+
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response, CreateDashboardUserContext(user));
+
+        Assert.Equal(1900, dto.TotalCalories);
+        Assert.Equal(110, dto.AverageProteins);
+        Assert.Equal(120, dto.ProteinGoal);
+        Assert.Equal(70, dto.FatGoal);
+        Assert.Equal(210, dto.CarbGoal);
+        Assert.Equal(30, dto.FiberGoal);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
+        var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime day2 = day1.AddDays(1);
+        var responses = new List<DashboardStatisticsBucketReadModel> {
+            new(day2, day2, 2000, 100, 70, 250, 30, TotalProteins: 100, TotalFats: 70, TotalCarbs: 250, TotalFiber: 30),
+            new(day1, day1, 1800, 90, 60, 220, 25, TotalProteins: 90, TotalFats: 60, TotalCarbs: 220, TotalFiber: 25),
+        };
+
+        IReadOnlyList<DailyCaloriesModel> calories = DashboardMapping.ToWeeklyCalories(responses);
+
+        Assert.Collection(
+            calories,
+            c => Assert.Multiple(
+                () => Assert.Equal(day1, c.Date),
+                () => Assert.Equal(90, c.Proteins),
+                () => Assert.Equal(60, c.Fats),
+                () => Assert.Equal(220, c.Carbs),
+                () => Assert.Equal(25, c.Fiber)),
+            c => Assert.Multiple(
+                () => Assert.Equal(day2, c.Date),
+                () => Assert.Equal(100, c.Proteins),
+                () => Assert.Equal(70, c.Fats),
+                () => Assert.Equal(250, c.Carbs),
+                () => Assert.Equal(30, c.Fiber)));
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWeightModel_MapsLatestAndPreviousEntries() {
+        var userId = UserId.New();
+        var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
+        DateTime previousDate = latestDate.AddDays(-1);
+        var entries = new List<DashboardWeightPointReadModel> {
+            new(latestDate, 82.5),
+            new(previousDate, 83),
+        };
+
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel(entries, desired: 80);
+
+        Assert.NotNull(dto.Latest);
+        Assert.NotNull(dto.Previous);
+        Assert.Equal(82.5, dto.Latest!.WeightKg);
+        Assert.Equal(83, dto.Previous!.WeightKg);
+        Assert.Equal(80, dto.DesiredWeightKg);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWeightModel_WithNoEntries_ReturnsEmptyPoints() {
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel(Array.Empty<DashboardWeightPointReadModel>(), desired: null);
+
+        Assert.Null(dto.Latest);
+        Assert.Null(dto.Previous);
+        Assert.Null(dto.DesiredWeightKg);
+    }
+
+    [Fact]
+    public async Task RepositoryDashboardBodyReadService_WithPartialFinalBucket_ClampsBucketEndToRangeEnd() {
+        var userId = UserId.New();
+        DateTime dayStart = new(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc);
+        DateTime trendStart = dayStart.AddDays(-4);
+        IWeightEntryReadModelRepository weightRepository = Substitute.For<IWeightEntryReadModelRepository>();
+        weightRepository.GetEntryReadModelsAsync(
+                userId,
+                Arg.Any<DateTime?>(),
+                dayStart,
+                limit: 2,
+                descending: true,
+                cancellationToken: Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryReadModel>>([]));
+        weightRepository.GetByPeriodReadModelsAsync(userId, trendStart, dayStart, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryReadModel>>([
+                new(Guid.NewGuid(), userId.Value, trendStart, 80),
+                new(Guid.NewGuid(), userId.Value, dayStart, 82),
+            ]));
+        RepositoryDashboardBodyReadService service = new(global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightRepository), new ReadLatestWeightEntryQueryHandler(weightRepository), new ReadWeightSummariesQueryHandler(weightRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry.ReadLatestWeightEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadLatestWaistEntryQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadWaistSummariesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>())), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadLatestWaistEntry.ReadLatestWaistEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), new HydrationEntryReadService(Substitute.For<IHydrationEntryReadModelRepository>()));
+
+        DashboardBodyReadModel result = await service.GetBodyAsync(
+            userId,
+            dayStart,
+            dayStart,
+            trendStart,
+            trendQuantizationDays: 3,
+            includeWeight: true,
+            includeWaist: false,
+            includeHydration: false,
+            CancellationToken.None);
+
+        Assert.Equal(2, result.WeightTrend.Count);
+        Assert.Equal(dayStart, result.WeightTrend[1].DateTo);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWaistModel_MapsLatestAndPreviousEntries() {
+        var userId = UserId.New();
+        var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
+        DateTime previousDate = latestDate.AddDays(-1);
+        var entries = new List<DashboardWaistPointReadModel> {
+            new(latestDate, 92.1),
+            new(previousDate, 92.8),
+        };
+
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel(entries, desired: 90);
+
+        Assert.NotNull(dto.Latest);
+        Assert.NotNull(dto.Previous);
+        Assert.Equal(92.1, dto.Latest!.CircumferenceCm);
+        Assert.Equal(92.8, dto.Previous!.CircumferenceCm);
+        Assert.Equal(90, dto.DesiredWaistCm);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToWaistModel_WithNoEntries_ReturnsEmptyPoints() {
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel(Array.Empty<DashboardWaistPointReadModel>(), desired: null);
+
+        Assert.Null(dto.Latest);
+        Assert.Null(dto.Previous);
+        Assert.Null(dto.DesiredWaistCm);
+    }
+
+    [Fact]
+    public void DashboardMapping_ToMealsModel_MapsNestedMealsAndOrdersChildren() {
+        var mealId = Guid.Parse("10000000-0000-0000-0000-000000000001");
+        var itemA = Guid.Parse("10000000-0000-0000-0000-000000000002");
+        var itemB = Guid.Parse("10000000-0000-0000-0000-000000000003");
+        var sessionA = Guid.Parse("10000000-0000-0000-0000-000000000004");
+        var sessionB = Guid.Parse("10000000-0000-0000-0000-000000000005");
+        var aiItemA = Guid.Parse("10000000-0000-0000-0000-000000000006");
+        var aiItemB = Guid.Parse("10000000-0000-0000-0000-000000000007");
+        DashboardMealReadModel meal = CreateDashboardMealReadModel(mealId, [
+            CreateDashboardMealItemReadModel(itemB, mealId, amount: 2),
+            CreateDashboardMealItemReadModel(itemA, mealId, amount: 1),
+        ], [
+            CreateDashboardMealAiSessionReadModel(sessionB, mealId, new DateTime(2026, 3, 2, 10, 0, 0, DateTimeKind.Utc), [
+                CreateDashboardMealAiItemReadModel(aiItemB, sessionB, "later"),
+            ]),
+            CreateDashboardMealAiSessionReadModel(sessionA, mealId, new DateTime(2026, 3, 1, 10, 0, 0, DateTimeKind.Utc), [
+                CreateDashboardMealAiItemReadModel(aiItemB, sessionA, "second"),
+                CreateDashboardMealAiItemReadModel(aiItemA, sessionA, "first"),
+            ]),
+        ]);
+
+        DashboardMealsModel model = DashboardMapping.ToMealsModel(new DashboardMealsReadModel([meal], Page: 1, Limit: 10, TotalPages: 1, TotalItems: 1));
+
+        MealModel mappedMeal = Assert.Single(model.Items);
+        Assert.Equal(1, model.Total);
+        Assert.Equal(mealId, mappedMeal.Id);
+        Assert.Equal(["manual", "ai"], mappedMeal.Items.Select(item => item.Origin), StringComparer.Ordinal);
+        Assert.Equal([itemA, itemB], mappedMeal.Items.Select(item => item.Id));
+        Assert.Equal([sessionA, sessionB], mappedMeal.AiSessions.Select(session => session.Id));
+        Assert.Equal([aiItemA, aiItemB], mappedMeal.AiSessions[0].Items.Select(item => item.Id));
+        Assert.Equal("first", mappedMeal.AiSessions[0].Items[0].NameEn);
+    }
+
+    [Fact]
+    public async Task MediatorDashboardMealsReadService_WhenQuerySucceeds_MapsPagedMeals() {
+        var userId = Guid.NewGuid();
+        var mealId = Guid.NewGuid();
+        MealModel meal = CreateMealModel(mealId, [
+            CreateMealItemModel(Guid.NewGuid(), mealId, amount: 150, origin: "Manual"),
+        ], [
+            CreateMealAiSessionModel(Guid.NewGuid(), mealId, [
+                CreateMealAiItemModel(Guid.NewGuid(), Guid.NewGuid(), "toast"),
+            ]),
+        ]);
+        ISender sender = CreateMealSender(
+            Result.Success(new PagedResponse<MealModel>([meal], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 11)),
+            out Func<GetMealsQuery?> getLastQuery,
+            out Func<CancellationToken> getLastCancellationToken);
+        var service = new MediatorDashboardMealsReadService(sender);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var dateFrom = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var dateTo = new DateTime(2026, 4, 7, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<DashboardMealsReadModel> result = await service.GetMealsAsync(
+            new UserId(userId),
+            page: 2,
+            limit: 5,
+            dateFrom,
+            dateTo,
+            cancellationTokenSource.Token);
+
+        DashboardMealsReadModel model = ResultAssert.Success(result);
+        Assert.Equal(2, model.Page);
+        Assert.Equal(5, model.Limit);
+        Assert.Equal(3, model.TotalPages);
+        Assert.Equal(11, model.TotalItems);
+        DashboardMealReadModel mappedMeal = Assert.Single(model.Items);
+        Assert.Equal(meal.Id, mappedMeal.Id);
+        Assert.Equal(meal.Items[0].ProductName, mappedMeal.Items[0].ProductName);
+        Assert.Equal(meal.AiSessions[0].Items[0].NameEn, mappedMeal.AiSessions[0].Items[0].NameEn);
+        GetMealsQuery query = Assert.IsType<GetMealsQuery>(getLastQuery());
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(2, query.Page);
+        Assert.Equal(5, query.Limit);
+        Assert.Equal(dateFrom, query.DateFrom);
+        Assert.Equal(dateTo, query.DateTo);
+        Assert.Equal(cancellationTokenSource.Token, getLastCancellationToken());
+    }
+
+    [Fact]
+    public async Task MediatorDashboardMealsReadService_WhenQueryFails_ReturnsFailure() {
+        Error error = Errors.Validation.Invalid("dashboard", "Could not read meals.");
+        ISender sender = CreateMealSender(
+            Result.Failure<PagedResponse<MealModel>>(error),
+            out _,
+            out _);
+        var service = new MediatorDashboardMealsReadService(sender);
+
+        Result<DashboardMealsReadModel> result = await service.GetMealsAsync(
+            UserId.New(),
+            page: 1,
+            limit: 10,
+            DateTime.UtcNow.Date,
+            DateTime.UtcNow.Date,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+    }
+
+    [Fact]
+    public async Task GetDashboardSnapshotQueryHandler_ForwardsRequestToBuilder() {
+        var dashboardUser = User.Create("dashboard-forward@example.com", "hash");
+        UserId userId = dashboardUser.Id;
+        var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
+        IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            out Func<DashboardSnapshotRequest?> getLastRequest,
+            out Func<CancellationToken> getLastCancellationToken);
+        IDashboardUserContextService userContextService = CreateUserRepository(dashboardUser);
+        GetDashboardSnapshotQueryHandler handler = new(builder, userContextService);
+        using var cts = new CancellationTokenSource();
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDashboardSnapshotQuery(userId.Value, date, Page: 2, PageSize: 25, Locale: "ru", TrendDays: 14),
+            cts.Token);
+
+        ResultAssert.Success(result);
+        DashboardSnapshotRequest request = Assert.IsType<DashboardSnapshotRequest>(getLastRequest());
+        Assert.Equal(userId.Value, request.UserId);
+        Assert.Equal(date, request.Date);
+        Assert.Equal("ru", request.Locale);
+        Assert.Equal(14, request.TrendDays);
+        Assert.Equal(2, request.Page);
+        Assert.Equal(25, request.PageSize);
+        Assert.Equal(userId.Value, Assert.IsType<DashboardUserContextModel>(request.UserContext).Id);
+        Assert.Equal(cts.Token, getLastCancellationToken());
+        await userContextService.Received(1).GetAccessibleDashboardUserAsync(userId, cts.Token);
+        await userContextService.Received(1).EnsureCanAccessAsync(userId, cts.Token);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("00000000-0000-0000-0000-000000000000")]
+    public async Task GetDashboardSnapshotQueryHandler_WithMissingUserId_ReturnsInvalidToken(string? userIdText) {
+        IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(out Func<DashboardSnapshotRequest?> getLastRequest, out _);
+        GetDashboardSnapshotQueryHandler handler = new(builder, CreateUserRepository(User.Create("dashboard-missing@example.com", "hash")));
+        Guid? userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDashboardSnapshotQuery(userId, DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(getLastRequest());
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_WhenEmailSenderFails_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-email@example.com", "hash");
+        var handler = new SendDashboardTestEmailCommandHandler(
+            CreateUserRepository(user),
+            CreateThrowingEmailSender(),
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("TestEmail", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_WithEmptyUserId_ReturnsValidationFailure() {
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(
+            CreateUserRepository(User.Create("dashboard-empty-email@example.com", "hash")),
+            emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(getLastMessage());
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_WithAccessibleUser_SendsToUserEmailAndLanguage() {
+        var user = User.Create("dashboard-email-ok@example.com", "hash");
+        user.SetLanguage("ru");
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(
+            CreateUserRepository(user),
+            emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        TestEmailMessage message = Assert.IsType<TestEmailMessage>(getLastMessage());
+        Assert.Equal("dashboard-email-ok@example.com", message.ToEmail);
+        Assert.Equal("ru", message.Language);
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_TelegramOnlyAccountRequiresAddressWithoutSending() {
+        var user = User.CreateTelegram(123, "hash");
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(CreateUserRepository(user), emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+        Assert.Equal("User.EmailRequired", result.Error.Code);
+        Assert.Null(getLastMessage());
+    }
+
+    [Fact]
+    public async Task SendDashboardTestEmail_WhenUserMissing_ReturnsInvalidToken() {
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(
+            CreateUserRepository(user: null),
+            emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(getLastMessage());
+    }
+
+    [Fact]
+    public async Task DashboardUserContextService_ProjectsAccessibleDashboardProfile() {
+        var user = User.Create("dashboard-context@example.com", "hash");
+        ICurrentUserAccessService accessService = Substitute.For<ICurrentUserAccessService>();
+        IUserDashboardProfileReadService profileReadService = Substitute.For<IUserDashboardProfileReadService>();
+        using var cts = new CancellationTokenSource();
+        UserId? capturedUserId = null;
+        CancellationToken capturedCancellationToken = default;
+        profileReadService
+            .GetDashboardProfileAsync(
+                Arg.Do<UserId>(userId => capturedUserId = userId),
+                Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(Result.Success(new UserDashboardProfileModel(
+                user.Id.Value, user.Email, user.Language, user.DashboardLayoutJson,
+                user.DesiredWeightKg, user.DesiredWaistCm, user.HydrationGoal, user.WaterGoal,
+                user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
+                new UserCalorieSchedule(
+                    DailyCalorieTarget: user.DailyCalorieTarget,
+                    CalorieCyclingEnabled: false,
+                    MondayCalories: null,
+                    TuesdayCalories: null,
+                    WednesdayCalories: null,
+                    ThursdayCalories: null,
+                    FridayCalories: null,
+                    SaturdayCalories: null,
+                    SundayCalories: null)))));
+        var service = new DashboardUserContextService(accessService, profileReadService);
+
+        Result<DashboardUserContextModel> result = await service.GetAccessibleDashboardUserAsync(user.Id, cts.Token);
+
+        ResultAssert.Success(result);
+        Assert.Equal(user.Email, result.Value.Email);
+        Assert.Equal(user.Id, capturedUserId);
+        Assert.Equal(cts.Token, capturedCancellationToken);
+    }
+
+    private static IDashboardSnapshotBuilder CreateDashboardSnapshotBuilder(
+        out Func<DashboardSnapshotRequest?> getLastRequest,
+        out Func<CancellationToken> getLastCancellationToken) {
+        IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
+        DashboardSnapshotRequest? lastRequest = null;
+        CancellationToken lastCancellationToken = default;
+        builder
+            .BuildAsync(
+                Arg.Do<DashboardSnapshotRequest>(request => lastRequest = request),
+                Arg.Do<CancellationToken>(cancellationToken => lastCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(Result.Success<DashboardSnapshotModel>(null!)));
+        getLastRequest = () => lastRequest;
+        getLastCancellationToken = () => lastCancellationToken;
+        return builder;
+    }
+
+    private static IEmailSender CreateEmailSender(out Func<TestEmailMessage?> getLastMessage) {
+        IEmailSender emailSender = Substitute.For<IEmailSender>();
+        TestEmailMessage? lastMessage = null;
+        emailSender
+            .SendTestEmailAsync(Arg.Do<TestEmailMessage>(message => lastMessage = message), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getLastMessage = () => lastMessage;
+        return emailSender;
+    }
+
+    private static IEmailSender CreateThrowingEmailSender() {
+        IEmailSender emailSender = Substitute.For<IEmailSender>();
+        emailSender
+            .SendTestEmailAsync(Arg.Any<TestEmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("send failed")));
+        return emailSender;
+    }
+
+    private static IDashboardUserContextService CreateUserRepository(User? user) {
+        IDashboardUserContextService repository = Substitute.For<IDashboardUserContextService>();
+        repository
+            .GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id
+                    ? Result.Success(new DashboardUserContextModel(
+                        user.Id.Value,
+                        user.Email,
+                        user.Language,
+                        user.DashboardLayoutJson,
+                        user.DesiredWeightKg,
+                        user.DesiredWaistCm,
+                        user.HydrationGoal,
+                        user.WaterGoal,
+                        user.ProteinTarget,
+                        user.FatTarget,
+                        user.CarbTarget,
+                        user.FiberTarget,
+                        new UserCalorieSchedule(
+                            user.DailyCalorieTarget,
+                            user.CalorieCyclingEnabled,
+                            user.MondayCalories,
+                            user.TuesdayCalories,
+                            user.WednesdayCalories,
+                            user.ThursdayCalories,
+                            user.FridayCalories,
+                            user.SaturdayCalories,
+                            user.SundayCalories)))
+                    : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+            });
+        repository
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                Error? error = user is not null
+                    ? null
+                    : Errors.Authentication.InvalidToken;
+                return Task.FromResult(error);
+            });
+        return repository;
+    }
+
+    private static ISender CreateMealSender(
+        Result<PagedResponse<MealModel>> result,
+        out Func<GetMealsQuery?> getLastQuery,
+        out Func<CancellationToken> getLastCancellationToken) {
+        ISender sender = Substitute.For<ISender>();
+        GetMealsQuery? lastQuery = null;
+        CancellationToken lastCancellationToken = default;
+        sender
+            .Send(
+                Arg.Do<IRequest<Result<PagedResponse<MealModel>>>>(request => lastQuery = Assert.IsType<GetMealsQuery>(request)),
+                Arg.Do<CancellationToken>(cancellationToken => lastCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(result));
+        getLastQuery = () => lastQuery;
+        getLastCancellationToken = () => lastCancellationToken;
+        return sender;
+    }
+
+    private static MealModel CreateMealModel(
+        Guid mealId,
+        IReadOnlyList<MealItemModel> items,
+        IReadOnlyList<MealAiSessionModel> sessions) =>
+        new(
+            mealId,
+            new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc),
+            "Breakfast",
+            "Comment",
+            "https://example.test/meal.webp",
+            Guid.NewGuid(),
+            500,
+            30,
+            20,
+            40,
+            8,
+            0,
+            IsNutritionAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0,
+            PreMealSatietyLevel: 3,
+            PostMealSatietyLevel: 8,
+            QualityScore: 90,
+            QualityGrade: "excellent",
+            IsFavorite: true,
+            FavoriteMealId: Guid.NewGuid(),
+            items,
+            sessions);
+
+    private static MealItemModel CreateMealItemModel(Guid itemId, Guid mealId, double amount, string origin) =>
+        new(
+            itemId,
+            mealId,
+            amount,
+            ProductId: Guid.NewGuid(),
+            ProductName: $"Product {amount.ToString(CultureInfo.InvariantCulture)}",
+            ProductImageUrl: "https://example.test/product.webp",
+            ProductBaseUnit: "g",
+            ProductBaseAmount: 100,
+            ProductCaloriesPerBase: 200,
+            ProductProteinsPerBase: 10,
+            ProductFatsPerBase: 5,
+            ProductCarbsPerBase: 25,
+            ProductFiberPerBase: 3,
+            ProductAlcoholPerBase: 0,
+            RecipeId: Guid.NewGuid(),
+            RecipeName: "Recipe",
+            RecipeImageUrl: "https://example.test/recipe.webp",
+            RecipeServings: 2,
+            RecipeTotalCalories: 400,
+            RecipeTotalProteins: 20,
+            RecipeTotalFats: 10,
+            RecipeTotalCarbs: 50,
+            RecipeTotalFiber: 6,
+            RecipeTotalAlcohol: 0,
+            ProductQualityScore: 80,
+            ProductQualityGrade: "good",
+            SourceAiItemId: Guid.NewGuid(),
+            origin);
+
+    private static MealAiSessionModel CreateMealAiSessionModel(
+        Guid sessionId,
+        Guid mealId,
+        IReadOnlyList<MealAiItemModel> items) =>
+        new(
+            sessionId,
+            mealId,
+            ImageAssetId: Guid.NewGuid(),
+            ImageUrl: "https://example.test/ai.webp",
+            Source: "Vision",
+            Status: "Reviewed",
+            RecognizedAtUtc: new DateTime(2026, 3, 3, 12, 5, 0, DateTimeKind.Utc),
+            Notes: "looks right",
+            items);
+
+    private static MealAiItemModel CreateMealAiItemModel(Guid itemId, Guid sessionId, string name) =>
+        new(
+            itemId,
+            sessionId,
+            name,
+            NameLocal: "local",
+            Amount: 1,
+            Unit: "portion",
+            Calories: 120,
+            Proteins: 4,
+            Fats: 3,
+            Carbs: 20,
+            Fiber: 2,
+            Alcohol: 0,
+            Confidence: 0.8,
+            Resolution: "Accepted");
+
+    private static DashboardUserContextModel CreateDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
+
+    private static DashboardMealReadModel CreateDashboardMealReadModel(
+        Guid mealId,
+        IReadOnlyList<DashboardMealItemReadModel> items,
+        IReadOnlyList<DashboardMealAiSessionReadModel> sessions) =>
+        new(
+            mealId,
+            new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc),
+            "Lunch",
+            "Read comment",
+            "https://example.test/read-meal.webp",
+            Guid.NewGuid(),
+            600,
+            35,
+            25,
+            55,
+            10,
+            0,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            PreMealSatietyLevel: 2,
+            PostMealSatietyLevel: 7,
+            IsFavorite: false,
+            FavoriteMealId: null,
+            items,
+            sessions);
+
+    private static DashboardMealItemReadModel CreateDashboardMealItemReadModel(Guid itemId, Guid mealId, double amount) =>
+        new(
+            itemId,
+            mealId,
+            amount,
+            ProductId: Guid.NewGuid(),
+            ProductName: $"Read product {amount.ToString(CultureInfo.InvariantCulture)}",
+            ProductImageUrl: "https://example.test/read-product.webp",
+            ProductBaseUnit: "g",
+            ProductBaseAmount: 100,
+            ProductCaloriesPerBase: 200,
+            ProductProteinsPerBase: 10,
+            ProductFatsPerBase: 5,
+            ProductCarbsPerBase: 25,
+            ProductFiberPerBase: 3,
+            ProductAlcoholPerBase: 0,
+            ProductQualityScore: 82,
+            ProductQualityGrade: "good",
+            RecipeId: Guid.NewGuid(),
+            RecipeName: "Read recipe",
+            RecipeImageUrl: "https://example.test/read-recipe.webp",
+            RecipeServings: 2,
+            RecipeTotalCalories: 400,
+            RecipeTotalProteins: 20,
+            RecipeTotalFats: 10,
+            RecipeTotalCarbs: 50,
+            RecipeTotalFiber: 6,
+            RecipeTotalAlcohol: 0,
+            SourceAiItemId: Guid.NewGuid(),
+            Origin: amount == 1 ? "manual" : "ai");
+
+    private static DashboardMealAiSessionReadModel CreateDashboardMealAiSessionReadModel(
+        Guid sessionId,
+        Guid mealId,
+        DateTime recognizedAtUtc,
+        IReadOnlyList<DashboardMealAiItemReadModel> items) =>
+        new(
+            sessionId,
+            mealId,
+            ImageAssetId: Guid.NewGuid(),
+            ImageUrl: "https://example.test/read-ai.webp",
+            Source: "Vision",
+            Status: "Reviewed",
+            recognizedAtUtc,
+            Notes: "read notes",
+            items);
+
+    private static DashboardMealAiItemReadModel CreateDashboardMealAiItemReadModel(Guid itemId, Guid sessionId, string name) =>
+        new(
+            itemId,
+            sessionId,
+            name,
+            NameLocal: "local",
+            Amount: 1,
+            Unit: "portion",
+            Calories: 120,
+            Proteins: 4,
+            Fats: 3,
+            Carbs: 20,
+            Fiber: 2,
+            Alcohol: 0,
+            Confidence: 0.9,
+            Resolution: "Accepted");
+}

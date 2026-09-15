@@ -1,7 +1,7 @@
 using System.Reflection;
 using FoodDiary.Modules.Billing.Presentation.Controllers;
 using FoodDiary.Modules.Cycles.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Dietologist;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Http;

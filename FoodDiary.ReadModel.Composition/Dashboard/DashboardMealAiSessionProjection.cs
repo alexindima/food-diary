@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
 internal sealed record DashboardMealAiSessionProjection(
     MealId MealId,

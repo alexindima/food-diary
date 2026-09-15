@@ -30,7 +30,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Infrastructure", "Persistence", "ContentReportsDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
-            Path.Combine(persistenceRoot, "FoodDiaryDbContext.Modules.cs"),
+            Path.Combine(persistenceRoot, "SharedPersistenceDbContext.Session.cs"),
             Path.Combine(persistenceRoot, "Shared", "ModuleContextSaveCoordinator.cs"),
             Path.Combine(persistenceRoot, "Shared", "EfModuleSessionCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "Meals", "EfMealRecognitionTransactionRunner.cs"),

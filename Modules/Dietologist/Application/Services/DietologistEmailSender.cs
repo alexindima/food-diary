@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 
-namespace FoodDiary.Application.Dietologist.Services;
+namespace FoodDiary.Modules.Dietologist.Application.Services;
 
 public sealed class DietologistEmailSender(
     EmailOptions options,

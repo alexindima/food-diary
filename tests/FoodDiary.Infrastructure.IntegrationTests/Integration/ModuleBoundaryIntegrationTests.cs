@@ -70,6 +70,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         context.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
             new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));

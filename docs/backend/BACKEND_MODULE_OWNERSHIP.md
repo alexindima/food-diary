@@ -324,7 +324,7 @@ Its owned Domain, Application, Application Abstractions, EF configuration model,
 
 RecipeCommunity is the physical application module for the separate RecipeComments and RecipeLikes logical feature areas. Both may use `IRecipeAccessService` to validate the target recipe, but neither owns or loads the Recipe repository directly. Other modules consume their read services and commands rather than comment/like repositories.
 
-Dietologist invitation/recommendation configurations live in `Modules/Dietologist/Infrastructure/Model/Configurations`. Recipe comment/like configurations live in `Configurations/RecipeSocial`; repository ownership remains separated in the corresponding persistence folders.
+Dietologist invitation/recommendation configurations live in `Modules/Dietologist/PersistenceModel/Configurations`. Recipe comment/like configurations live in `Configurations/RecipeSocial`; repository ownership remains separated in the corresponding persistence folders.
 
 ## Health Tracking boundaries
 

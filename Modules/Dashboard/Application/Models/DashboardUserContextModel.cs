@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Dashboard.Models;
+namespace FoodDiary.Modules.Dashboard.Application.Models;
 
 public sealed record DashboardUserContextModel(
     Guid Id,

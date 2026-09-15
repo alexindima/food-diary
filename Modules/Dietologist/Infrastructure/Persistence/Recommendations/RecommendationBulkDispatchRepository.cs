@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Recommendations;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;
 
 internal sealed class RecommendationBulkDispatchRepository(DbSet<RecommendationBulkDispatch> records)
     : IRecommendationBulkDispatchRepository {

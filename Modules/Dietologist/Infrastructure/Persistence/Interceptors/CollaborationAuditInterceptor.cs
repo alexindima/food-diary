@@ -1,13 +1,12 @@
-using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence.Audit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace FoodDiary.Infrastructure.Persistence.Interceptors;
+namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 
 internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) : SaveChangesInterceptor {
     private readonly Dictionary<object, AuditEntry> _pendingEntries = new(ReferenceEqualityComparer.Instance);

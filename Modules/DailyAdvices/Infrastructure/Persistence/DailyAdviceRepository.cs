@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.DailyAdvices.Common;
-using FoodDiary.Application.Abstractions.DailyAdvices.Models;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
+using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;
+using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;

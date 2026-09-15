@@ -1,17 +1,16 @@
-using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Dietologist.Services;
+namespace FoodDiary.Modules.Dietologist.Application.Services;
 
 internal sealed class DietologistUserContextService(
     ICurrentUserAccessService currentUserAccessService,
     IUserDietologistProfileReadService profileReadService,
-    IUserProfileReadService userProfileReadService,
-    IDietologistUserLookupService userLookupService) : IDietologistUserContextService {
+    IUserProfileReadService userProfileReadService) : IDietologistUserContextService {
     public async Task<Result<string>> GetAccessibleUserEmailAsync(
         UserId userId,
         CancellationToken cancellationToken) {
@@ -25,7 +24,7 @@ internal sealed class DietologistUserContextService(
     }
 
     public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
-        UserDietologistProfileModel? profile = await userLookupService.FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? profile = await profileReadService.FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         return profile?.Email;
     }
 
@@ -43,8 +42,8 @@ internal sealed class DietologistUserContextService(
         currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken);
 
     public Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) =>
-        userLookupService.FindByEmailAsync(email, cancellationToken);
+        profileReadService.FindByEmailAsync(email, cancellationToken);
 
     public Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) =>
-        userLookupService.FindByIdAsync(userId, cancellationToken);
+        profileReadService.FindByIdAsync(userId, cancellationToken);
 }

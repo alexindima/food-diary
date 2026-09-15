@@ -20,6 +20,7 @@ public sealed class ConfirmPeriodStartCommandHandler(
     TimeProvider? timeProvider = null)
     : ICommandHandler<ConfirmPeriodStartCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(ConfirmPeriodStartCommand command, CancellationToken cancellationToken) {
+        var currentDate = DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -52,9 +53,9 @@ public sealed class ConfirmPeriodStartCommandHandler(
         } catch (ArgumentException exception) {
             return Result.Failure<CycleModel>(Errors.Validation.Invalid(nameof(command.Date), exception.Message));
         }
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        return Result.Success(profile.ToModel(predictions));
+        return Result.Success(profile.ToModel(predictions, currentDate));
     }
 }

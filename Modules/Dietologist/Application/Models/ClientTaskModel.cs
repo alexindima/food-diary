@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 
-namespace FoodDiary.Application.Dietologist.Models;
+namespace FoodDiary.Modules.Dietologist.Application.Models;
 
 public sealed record ClientTaskModel(
     Guid Id,

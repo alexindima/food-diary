@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Dashboard.Models;
+namespace FoodDiary.Modules.Dashboard.Contracts.Models;
 
 public sealed record DashboardStatisticsModel(
     double TotalCalories,

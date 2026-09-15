@@ -133,7 +133,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.ToTable("ImageAssets");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Content.DailyAdvice", b => {
+            modelBuilder.Entity("FoodDiary.Modules.DailyAdvices.Domain.Entities.Content.DailyAdvice", b => {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
@@ -297,7 +297,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.ToTable("UserLessonProgress");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.DietologistInvitation", b => {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
@@ -374,7 +374,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.ToTable("DietologistInvitations");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.Recommendation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", b => {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
@@ -1994,7 +1994,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.DietologistInvitation", b => {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
                         .WithMany()
                         .HasForeignKey("ClientUserId")
@@ -2011,7 +2011,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.Navigation("DietologistUser");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.Recommendation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Dietologist.Domain.Entities.Recommendation", b => {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
                         .WithMany()
                         .HasForeignKey("ClientUserId")

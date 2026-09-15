@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.DailyAdvices.Models;
+namespace FoodDiary.Modules.DailyAdvices.Contracts.Models;
 
 public sealed record DailyAdviceModel(
     Guid Id,

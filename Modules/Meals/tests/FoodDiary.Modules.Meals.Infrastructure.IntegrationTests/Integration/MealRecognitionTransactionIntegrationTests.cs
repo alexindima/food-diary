@@ -322,6 +322,7 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
             ["Database:MaxRetryDelaySeconds"] = "1",
         }).Build());
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddMealsPersistence();
         services.AddProductsPersistence();

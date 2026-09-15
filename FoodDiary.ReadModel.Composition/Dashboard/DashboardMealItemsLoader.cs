@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
 internal sealed class DashboardMealItemsLoader(IMealItemDisplayReadService reader) {
     public async Task<ILookup<MealId, DashboardMealItemReadModel>> LoadAsync(

@@ -1,0 +1,27 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
+using FoodDiary.Domain.ValueObjects.Ids;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Dietologist.PersistenceModel.Configurations;
+
+internal sealed class ClientTaskConfiguration : IEntityTypeConfiguration<ClientTask> {
+    public void Configure(EntityTypeBuilder<ClientTask> builder) {
+        builder.Property(task => task.Id)
+            .HasConversion(id => id.Value, value => new ClientTaskId(value))
+            .ValueGeneratedNever();
+
+        builder.Property(task => task.DietologistUserId)
+            .HasConversion(id => id.Value, value => new UserId(value));
+        builder.Property(task => task.ClientUserId)
+            .HasConversion(id => id.Value, value => new UserId(value));
+        builder.Property(task => task.Title).IsRequired().HasMaxLength(200);
+        builder.Property(task => task.Details).HasMaxLength(2000);
+        builder.Property(task => task.Status).HasConversion<string>().HasMaxLength(32);
+
+        builder.HasIndex(task => new { task.ClientUserId, task.CreatedOnUtc });
+        builder.HasIndex(task => new { task.DietologistUserId, task.ClientUserId });
+        builder.HasIndex(task => new { task.Status, task.DueAtUtc, task.DueReminderSentAtUtc });
+    }
+}

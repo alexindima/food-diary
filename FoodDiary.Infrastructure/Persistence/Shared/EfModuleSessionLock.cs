@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Shared;
 
-internal sealed class EfModuleSessionLock(FoodDiaryDbContext context) : IModuleSessionLock {
+internal sealed class EfModuleSessionLock(SharedPersistenceDbContext context) : IModuleSessionLock {
     public async Task<IAsyncDisposable> AcquireAsync(long lockKey, CancellationToken cancellationToken = default) {
         string connectionString = context.Database.GetConnectionString()
             ?? throw new InvalidOperationException("The session lock requires a relational connection string.");

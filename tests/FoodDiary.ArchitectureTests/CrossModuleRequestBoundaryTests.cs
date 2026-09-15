@@ -13,6 +13,8 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("BodyMetrics")]
     [InlineData("Cycles")]
     [InlineData("ContentReports")]
+    [InlineData("DailyAdvices")]
+    [InlineData("Dashboard")]
     public void MigratedContracts_DoNotExportServiceInterfaces(string module) {
         var contracts = Assembly.Load($"FoodDiary.Modules.{module}.Contracts");
         Assert.DoesNotContain(contracts.GetExportedTypes(), type => type.IsInterface);

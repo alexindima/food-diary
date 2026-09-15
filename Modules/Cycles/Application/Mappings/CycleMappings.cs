@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Application.Services;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
@@ -5,12 +6,12 @@ using FoodDiary.Modules.Cycles.Contracts.Models;
 namespace FoodDiary.Modules.Cycles.Application.Mappings;
 
 public static class CycleMappings {
-    public static CycleModel ToModel(this CycleProfileReadModel profile, CyclePredictionsModel? predictions = null) =>
+    public static CycleModel ToModel(this CycleProfileReadModel profile, CyclePredictionsModel? predictions = null, DateOnly? currentDate = null) =>
         new(
             profile.Id,
             profile.UserId,
             profile.Mode,
-            profile.Confidence,
+            CyclePredictionService.CalculateConfidence(profile, currentDate ?? DateOnly.FromDateTime(TimeProvider.System.GetUtcNow().UtcDateTime)),
             profile.TrackingStartDate,
             profile.AverageCycleLength,
             profile.AveragePeriodLength,
@@ -38,12 +39,12 @@ public static class CycleMappings {
                 consent.RevokedAtUtc)).ToList(),
             (profile.PredictionRevisions ?? []).Select(ToModel).ToList());
 
-    public static CycleModel ToModel(this CycleProfile profile, CyclePredictionsModel? predictions = null) =>
+    public static CycleModel ToModel(this CycleProfile profile, CyclePredictionsModel? predictions = null, DateOnly? currentDate = null) =>
         new(
             profile.Id.Value,
             profile.UserId.Value,
             profile.Mode,
-            profile.Confidence,
+            profile.CalculateConfidence(currentDate),
             profile.TrackingStartDate,
             profile.AverageCycleLength,
             profile.AveragePeriodLength,
