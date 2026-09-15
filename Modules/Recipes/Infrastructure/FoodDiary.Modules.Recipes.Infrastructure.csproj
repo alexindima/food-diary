@@ -5,10 +5,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
     <ProjectReference Include="../../Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj" />
     <ProjectReference Include="../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />

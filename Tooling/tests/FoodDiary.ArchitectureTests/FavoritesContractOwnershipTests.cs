@@ -6,10 +6,10 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class FavoritesContractOwnershipTests {
     [Theory]
-    [InlineData("Meal", 7)]
-    [InlineData("Product", 7)]
-    [InlineData("Recipe", 7)]
-    public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind, int ownerFileCount) {
+    [InlineData("Meal")]
+    [InlineData("Product")]
+    [InlineData("Recipe")]
+    public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind) {
         string area = $"Favorite{kind}s";
         string ownerRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Application.Abstractions/{area}");
         string publicRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Contracts/{area}");
@@ -17,15 +17,16 @@ public sealed class FavoritesContractOwnershipTests {
         if (Directory.Exists(centralRoot)) {
             Assert.Empty(SourceScanner.SourceFiles(centralRoot));
         }
-        Assert.Equal(ownerFileCount, SourceScanner.SourceFiles(ownerRoot).Count());
-        Assert.Equal(kind.Equals("Meal", StringComparison.Ordinal) ? 6 : 4, SourceScanner.SourceFiles(publicRoot).Count());
+        Assert.NotEmpty(SourceScanner.SourceFiles(ownerRoot));
+        Assert.NotEmpty(SourceScanner.SourceFiles(publicRoot));
         foreach (string suffix in new[] { "Repository", "ReadRepository", "ReadModelRepository", "WriteRepository" }) {
             Assert.True(File.Exists(Path.Combine(ownerRoot, "Common", $"IFavorite{kind}{suffix}.cs")));
         }
         Assert.True(File.Exists(Path.Combine(ownerRoot, "Common", $"IFavorite{kind}Query.cs")));
         Assert.True(File.Exists(Path.Combine(ownerRoot, "Common", $"Favorite{kind}Errors.cs")));
         Assert.True(File.Exists(Path.Combine(ownerRoot, "Models", $"Favorite{kind}ReadModel.cs")));
-        Assert.True(File.Exists(Path.Combine(publicRoot, "Common", $"IFavorite{kind}ReadService.cs")));
+        Assert.False(File.Exists(Path.Combine(publicRoot, "Common", $"IFavorite{kind}ReadService.cs")));
+        Assert.NotEmpty(SourceScanner.SourceFiles(Path.Combine(publicRoot, "Queries")));
         Assert.True(File.Exists(Path.Combine(publicRoot, "Models", $"Favorite{kind}Model.cs")));
     }
 

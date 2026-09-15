@@ -61,6 +61,7 @@ public class PresentationConventionsTests {
         string root = GetRepositoryRoot();
         string[] featurePaths = GetFeatureRoots(root);
         var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
+            "Controllers",
             "Mappings",
             "Models",
             "Requests",

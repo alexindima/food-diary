@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Nutrition;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -203,7 +204,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                 .ToList()));
 
     private static RecipeOverviewReadItem ToReadItem(RecipeOverviewReadRow row, UserId currentUserId) {
-        NutritionSummary nutrition = GetEffectiveNutrition(row);
+        RecipeNutritionValues nutrition = GetEffectiveNutrition(row);
         var quality = FoodQualityScore.Calculate(
             nutrition.TotalCalories ?? 0,
             nutrition.TotalProteins ?? 0,
@@ -276,73 +277,23 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             NestedRecipeTotalAlcohol = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalAlcohol : null,
         };
 
-    private static NutritionSummary GetEffectiveNutrition(RecipeOverviewReadRow row) {
+    private static RecipeNutritionValues GetEffectiveNutrition(RecipeOverviewReadRow row) {
+        var stored = new RecipeNutritionValues(row.TotalCalories, row.TotalProteins, row.TotalFats,
+            row.TotalCarbs, row.TotalFiber, row.TotalAlcohol);
         if (!row.IsNutritionAutoCalculated) {
-            return new NutritionSummary(
-                row.ManualCalories ?? row.TotalCalories,
-                row.ManualProteins ?? row.TotalProteins,
-                row.ManualFats ?? row.TotalFats,
-                row.ManualCarbs ?? row.TotalCarbs,
-                row.ManualFiber ?? row.TotalFiber,
-                row.ManualAlcohol ?? row.TotalAlcohol);
+            return RecipeNutritionPolicy.SelectManual(
+                new RecipeNutritionValues(row.ManualCalories, row.ManualProteins, row.ManualFats,
+                    row.ManualCarbs, row.ManualFiber, row.ManualAlcohol), stored);
         }
-
-        NutritionSummary calculated = CalculateAutoNutrition(row.Steps);
-        return calculated.HasValues
-            ? calculated
-            : new NutritionSummary(
-                row.TotalCalories,
-                row.TotalProteins,
-                row.TotalFats,
-                row.TotalCarbs,
-                row.TotalFiber,
-                row.TotalAlcohol);
+        return RecipeNutritionPolicy.Calculate(
+            row.Steps.SelectMany(step => step.Ingredients).Select(ingredient => new RecipeNutritionIngredient(
+                ingredient.Amount, ingredient.ProductBaseAmount,
+                new RecipeNutritionValues(ingredient.ProductCaloriesPerBase, ingredient.ProductProteinsPerBase, ingredient.ProductFatsPerBase,
+                    ingredient.ProductCarbsPerBase, ingredient.ProductFiberPerBase, ingredient.ProductAlcoholPerBase),
+                ingredient.NestedRecipeServings,
+                new RecipeNutritionValues(ingredient.NestedRecipeTotalCalories, ingredient.NestedRecipeTotalProteins, ingredient.NestedRecipeTotalFats,
+                    ingredient.NestedRecipeTotalCarbs, ingredient.NestedRecipeTotalFiber, ingredient.NestedRecipeTotalAlcohol))), stored);
     }
-
-    private static NutritionSummary CalculateAutoNutrition(IReadOnlyList<RecipeOverviewStepReadItem> steps) {
-        double totalCalories = 0;
-        double totalProteins = 0;
-        double totalFats = 0;
-        double totalCarbs = 0;
-        double totalFiber = 0;
-        double totalAlcohol = 0;
-        bool hasComputedValues = false;
-
-        foreach (RecipeOverviewIngredientReadItem ingredient in steps.SelectMany(step => step.Ingredients)) {
-            if (ingredient.ProductBaseAmount is > 0) {
-                double factor = ingredient.Amount / ingredient.ProductBaseAmount.Value;
-                totalCalories += (ingredient.ProductCaloriesPerBase ?? 0) * factor;
-                totalProteins += (ingredient.ProductProteinsPerBase ?? 0) * factor;
-                totalFats += (ingredient.ProductFatsPerBase ?? 0) * factor;
-                totalCarbs += (ingredient.ProductCarbsPerBase ?? 0) * factor;
-                totalFiber += (ingredient.ProductFiberPerBase ?? 0) * factor;
-                totalAlcohol += (ingredient.ProductAlcoholPerBase ?? 0) * factor;
-                hasComputedValues = true;
-            } else if (ingredient.NestedRecipeServings is > 0) {
-                double factor = ingredient.Amount / ingredient.NestedRecipeServings.Value;
-                totalCalories += (ingredient.NestedRecipeTotalCalories ?? 0) * factor;
-                totalProteins += (ingredient.NestedRecipeTotalProteins ?? 0) * factor;
-                totalFats += (ingredient.NestedRecipeTotalFats ?? 0) * factor;
-                totalCarbs += (ingredient.NestedRecipeTotalCarbs ?? 0) * factor;
-                totalFiber += (ingredient.NestedRecipeTotalFiber ?? 0) * factor;
-                totalAlcohol += (ingredient.NestedRecipeTotalAlcohol ?? 0) * factor;
-                hasComputedValues = true;
-            }
-        }
-
-        if (!hasComputedValues) {
-            return NutritionSummary.Empty;
-        }
-
-        return new NutritionSummary(
-            Math.Round(totalCalories, 2, MidpointRounding.ToEven),
-            Math.Round(totalProteins, 2, MidpointRounding.ToEven),
-            Math.Round(totalFats, 2, MidpointRounding.ToEven),
-            Math.Round(totalCarbs, 2, MidpointRounding.ToEven),
-            Math.Round(totalFiber, 2, MidpointRounding.ToEven),
-            Math.Round(totalAlcohol, 2, MidpointRounding.ToEven));
-    }
-
     private static string EscapeLikePattern(string value) {
         return value
             .Replace("\\", "\\\\", StringComparison.Ordinal)
@@ -380,27 +331,4 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         DateTime CreatedOnUtc,
         IReadOnlyList<RecipeOverviewStepReadItem> Steps);
 
-    private sealed record NutritionSummary(
-        double? TotalCalories,
-        double? TotalProteins,
-        double? TotalFats,
-        double? TotalCarbs,
-        double? TotalFiber,
-        double? TotalAlcohol) {
-        public static NutritionSummary Empty { get; } = new(
-            TotalCalories: null,
-            TotalProteins: null,
-            TotalFats: null,
-            TotalCarbs: null,
-            TotalFiber: null,
-            TotalAlcohol: null);
-
-        public bool HasValues =>
-            TotalCalories.HasValue ||
-            TotalProteins.HasValue ||
-            TotalFats.HasValue ||
-            TotalCarbs.HasValue ||
-            TotalFiber.HasValue ||
-            TotalAlcohol.HasValue;
-    }
 }

@@ -145,6 +145,7 @@ COPY Modules/Products/Infrastructure/*.csproj Modules/Products/Infrastructure/
 COPY Modules/Recipes/PersistenceModel/*.csproj Modules/Recipes/PersistenceModel/
 COPY Modules/Products/PersistenceModel/*.csproj Modules/Products/PersistenceModel/
 COPY Modules/RecentItems/Application.Abstractions/*.csproj Modules/RecentItems/Application.Abstractions/
+COPY Modules/RecentItems/Application/*.csproj Modules/RecentItems/Application/
 COPY Modules/RecentItems/Domain/*.csproj Modules/RecentItems/Domain/
 COPY Modules/RecentItems/Infrastructure/*.csproj Modules/RecentItems/Infrastructure/
 COPY Modules/RecentItems/PersistenceModel/*.csproj Modules/RecentItems/PersistenceModel/
@@ -435,6 +436,7 @@ COPY Modules/Products/Infrastructure/ Modules/Products/Infrastructure/
 COPY Modules/Recipes/PersistenceModel/ Modules/Recipes/PersistenceModel/
 COPY Modules/Products/PersistenceModel/ Modules/Products/PersistenceModel/
 COPY Modules/RecentItems/Application.Abstractions/ Modules/RecentItems/Application.Abstractions/
+COPY Modules/RecentItems/Application/ Modules/RecentItems/Application/
 COPY Modules/RecentItems/Domain/ Modules/RecentItems/Domain/
 COPY Modules/RecentItems/Infrastructure/ Modules/RecentItems/Infrastructure/
 COPY Modules/RecentItems/PersistenceModel/ Modules/RecentItems/PersistenceModel/

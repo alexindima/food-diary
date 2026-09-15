@@ -8,19 +8,19 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4109,
-    "symbols": 4039,
+    "sourceFiles": 4117,
+    "symbols": 4047,
     "interfaceImplementationLinks": 188,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2138,
+      "class": 2141,
       "enum": 64,
-      "interface": 396,
-      "record": 1321,
+      "interface": 398,
+      "record": 1324,
       "record struct": 120
     },
     "roles": {
-      "Command": 210,
+      "Command": 211,
       "CommandHandler": 206,
       "Configuration": 95,
       "Controller": 104,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1675,
+      "Other": 1682,
       "Query": 261,
       "QueryHandler": 189,
       "ReadModelRepository": 33,
@@ -88,6 +88,13 @@
       "role": "Other",
       "path": "FoodDiary.Analyzers/ProjectConventionAnalyzer.cs",
       "line": 13
+    },
+    {
+      "name": "ReadModelWriteBoundaryAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/ReadModelWriteBoundaryAnalyzer.cs",
+      "line": 10
     },
     {
       "name": "RedundantEmptyRecordParameterListAnalyzer",
@@ -1662,7 +1669,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RecipeUsageQuery",
@@ -20772,7 +20779,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RecipeLikeHttpMappings",
@@ -21024,7 +21031,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Mappings/RecipeMappings.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeOverviewReadMappings",
@@ -21199,7 +21206,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Services/RecipeNutritionCalculator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RecipeNutritionSummary",
@@ -21340,6 +21347,27 @@
       "role": "Event",
       "path": "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
       "line": 5
+    },
+    {
+      "name": "RecipeNutritionIngredient",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionIngredient.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeNutritionPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeNutritionValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionValues.cs",
+      "line": 2
     },
     {
       "name": "RecipeDetailsState",
@@ -24818,7 +24846,7 @@
       "kind": "interface",
       "role": "Repository",
       "path": "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalRepository.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IWeeklyGoalTransactionRunner",
@@ -24826,6 +24854,13 @@
       "role": "Other",
       "path": "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalTransactionRunner.cs",
       "line": 4
+    },
+    {
+      "name": "WeeklyGoalReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application.Abstractions/Models/WeeklyGoalReadModel.cs",
+      "line": 5
     },
     {
       "name": "SendWeeklyGoalRemindersCommandHandler",
@@ -24860,14 +24895,14 @@
       "kind": "class",
       "role": "Mapping",
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalMapping.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WeeklyGoalProgressReader",
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WeeklyGoalWeekPolicy",
@@ -24958,7 +24993,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "WeeklyGoalsDbContext",
@@ -27271,6 +27306,13 @@
       "line": 10
     },
     {
+      "name": "IAtomicCommand",
+      "kind": "interface",
+      "role": "Command",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IAtomicCommand.cs",
+      "line": 5
+    },
+    {
       "name": "ICommand",
       "kind": "interface",
       "role": "Command",
@@ -27311,6 +27353,13 @@
       "role": "Request",
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs",
       "line": 2
+    },
+    {
+      "name": "IAtomicCommandExecutor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandExecutor.cs",
+      "line": 4
     },
     {
       "name": "IPostCommitActionQueue",
@@ -28144,6 +28193,13 @@
       "role": "Service",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
       "line": 11
+    },
+    {
+      "name": "EfAtomicCommandExecutor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfAtomicCommandExecutor.cs",
+      "line": 5
     },
     {
       "name": "EfIndependentModuleContextOptionsFactory",

@@ -1319,7 +1319,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 string testProject = testParts[0][prefix.Length..];
                 if (testProject is "application.tests" or "domain.tests" or "infrastructure.tests" or
                     "infrastructure.integration.tests" or "infrastructure.integrationtests") {
-                    return [path, $"tests/fooddiary.{testProject}/{testParts[1]}"];
+                    return testProject is "infrastructure.integration.tests" or "infrastructure.integrationtests"
+                        ? [path, $"tests/fooddiary.{testProject}/{testParts[1]}",
+                            $"platform/tests/fooddiary.infrastructure.integrationtests/{testParts[1]}"]
+                        : [path, $"tests/fooddiary.{testProject}/{testParts[1]}"];
                 }
             }
         }

@@ -1,6 +1,7 @@
 using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -18,6 +19,7 @@ internal static class WearableTestComposition {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddWearablesModule();
         return services.BuildServiceProvider();

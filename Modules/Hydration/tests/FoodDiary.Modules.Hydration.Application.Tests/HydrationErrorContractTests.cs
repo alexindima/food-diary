@@ -8,7 +8,7 @@ public sealed class HydrationErrorContractTests {
     [Fact]
     public void Factory_IsOwnedByModule() {
         Assert.Equal("FoodDiary.Modules.Hydration.Application.Abstractions", typeof(HydrationEntryErrors).Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Application.Abstractions.Hydration.Common", typeof(HydrationEntryErrors).Namespace);
+        Assert.Equal("FoodDiary.Modules.Hydration.Application.Abstractions.Common", typeof(HydrationEntryErrors).Namespace);
     }
 
     [Fact]

@@ -7,7 +7,7 @@ public class ApplicationModuleStructureTests {
         string[] violations = [.. ApplicationModuleDirectories()
             .Select(projectDirectory => new {
                 ProjectDirectory = projectDirectory,
-                ModuleName = Path.GetFileName(projectDirectory)["FoodDiary.Application.".Length..],
+                ModuleName = Path.GetFileName(Path.GetDirectoryName(projectDirectory)!),
             })
             .Select(module => Path.Combine(module.ProjectDirectory, module.ModuleName))
             .Where(Directory.Exists)
@@ -34,7 +34,7 @@ public class ApplicationModuleStructureTests {
     }
 
     private static IEnumerable<string> NamespaceViolations(string projectDirectory) {
-        string namespaceRoot = Path.GetFileName(projectDirectory);
+        string namespaceRoot = Path.GetFileNameWithoutExtension(Assert.Single(Directory.GetFiles(projectDirectory, "*.csproj")));
 
         foreach (string sourceFile in SourceScanner.SourceFiles(projectDirectory)) {
             string? actualNamespace = CSharpSyntaxReader.ReadNamespace(sourceFile);
@@ -61,10 +61,9 @@ public class ApplicationModuleStructureTests {
     private static bool IsNamespaceOptional(string sourceFile) =>
         Path.GetFileName(sourceFile) is "AssemblyInfo.cs" or "GlobalUsings.cs" or "Program.cs";
 
-    private static string[] ApplicationModuleDirectories() =>
-        [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*")
-            .Where(projectDirectory => File.Exists(Path.Combine(
-                projectDirectory,
-                $"{Path.GetFileName(projectDirectory)}.csproj")))
-            .Order(StringComparer.Ordinal)];
+    private static string[] ApplicationModuleDirectories() {
+        string[] directories = [.. ModuleSourceCatalog.ApplicationRoots.Values.Order(StringComparer.Ordinal)];
+        Assert.NotEmpty(directories);
+        return directories;
+    }
 }

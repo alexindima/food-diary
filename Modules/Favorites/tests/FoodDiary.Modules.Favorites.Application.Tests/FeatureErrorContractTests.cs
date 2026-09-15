@@ -11,7 +11,7 @@ public sealed class FeatureErrorContractTests {
     public void FavoriteMealErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions", typeof(FavoriteMealErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.FavoriteMeals.Common", typeof(FavoriteMealErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common", typeof(FavoriteMealErrors).Namespace));
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public sealed class FeatureErrorContractTests {
     public void FavoriteProductErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions", typeof(FavoriteProductErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.FavoriteProducts.Common", typeof(FavoriteProductErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common", typeof(FavoriteProductErrors).Namespace));
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public sealed class FeatureErrorContractTests {
     public void FavoriteRecipeErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions", typeof(FavoriteRecipeErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.FavoriteRecipes.Common", typeof(FavoriteRecipeErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common", typeof(FavoriteRecipeErrors).Namespace));
     }
 
     [Fact]

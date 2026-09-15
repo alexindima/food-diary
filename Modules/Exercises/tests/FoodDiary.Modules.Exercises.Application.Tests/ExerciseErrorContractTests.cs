@@ -9,7 +9,7 @@ public sealed class ExerciseErrorContractTests {
     public void Factory_IsOwnedByExercises() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Exercises.Application.Abstractions", typeof(ExerciseErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Exercises.Common", typeof(ExerciseErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Exercises.Application.Abstractions.Common", typeof(ExerciseErrors).Namespace));
     }
 
     [Fact]

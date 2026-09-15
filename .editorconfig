@@ -579,3 +579,7 @@ dotnet_diagnostic.IDE0130.severity = error
 [Modules/Identity/{Infrastructure,PersistenceModel,Application.Abstractions}/**/*.cs]
 dotnet_style_namespace_match_folder = true
 dotnet_diagnostic.IDE0130.severity = error
+
+# Composed SQL projections must not acquire write/tracking capabilities.
+[FoodDiary.ReadModel.Composition/**/*.cs]
+dotnet_diagnostic.FD0018.severity = error

@@ -118,6 +118,8 @@ public sealed class PersistenceCapabilityTests {
     [InlineData("var users = db.Set<User>();", "tracked:User")]
     [InlineData("await db.SaveChangesAsync();", "context:SaveChangesAsync")]
     [InlineData("await db.Users.Where(u => db.Users.AsNoTracking().Any()).ToListAsync();", "tracked:User")]
+    [InlineData("var users = db.Users.AsNoTracking(); users = users.AsTracking(); await users.ToListAsync();", "tracked:User")]
+    [InlineData("var users = db.Users.AsNoTracking(); if (DateTime.UtcNow.Ticks > 0) { users = db.Users; } await users.ToListAsync();", "tracked:User")]
     public void Scanner_DetectsCapabilityEscalationIncludingQueryAliases(string body, string expected) {
         string source = "using FoodDiary.Infrastructure.Persistence; using FoodDiary.Modules.Users.Domain.Entities; using Microsoft.EntityFrameworkCore; using System.Threading.Tasks; class Probe(FoodDiaryDbContext db) { public async Task RunAsync() { " + body + " } }";
         IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan([("probe.cs", source)]);
@@ -134,6 +136,16 @@ public sealed class PersistenceCapabilityTests {
     [Fact]
     public void NoTrackingRead_DoesNotReceiveWriteOrTrackedCapabilities() {
         const string source = "using FoodDiary.Infrastructure.Persistence; using Microsoft.EntityFrameworkCore; class Probe(FoodDiaryDbContext db) { public object Read() => db.Users.AsNoTracking(); }";
+        IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan([("probe.cs", source)]);
+        Assert.Equal(["entity:User"], actual["probe.cs"], StringComparer.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("var users = db.Users.AsNoTracking(); await users.ToListAsync();")]
+    [InlineData("var users = db.Users.AsNoTracking(); if (DateTime.UtcNow.Ticks > 0) { users = users.Where(user => user.IsActive); } await users.ToListAsync();")]
+    [InlineData("var users = db.Users.AsNoTracking(); var filtered = users.Where(user => user.IsActive); await filtered.ToListAsync();")]
+    public void NoTrackingAliases_PreserveReadOnlyCapabilities(string body) {
+        string source = "using FoodDiary.Infrastructure.Persistence; using Microsoft.EntityFrameworkCore; class Probe(FoodDiaryDbContext db) { public async Task ReadAsync() { " + body + " } }";
         IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan([("probe.cs", source)]);
         Assert.Equal(["entity:User"], actual["probe.cs"], StringComparer.Ordinal);
     }

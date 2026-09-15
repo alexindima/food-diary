@@ -54,6 +54,7 @@ public sealed class ModuleAggregateIsolationTests {
         Assembly assembly = typeof(FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel).Assembly;
         Assert.Equal(
             new[] {
+                typeof(FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages.CleanupOrphanImagesCommand),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.DeleteImageAssetResult),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetAccessService),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetCleanupService),

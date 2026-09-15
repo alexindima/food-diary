@@ -267,7 +267,6 @@
       "capabilities": [
         "context:Database",
         "entity:TelegramLoginTicket",
-        "tracked:TelegramLoginTicket",
         "write:TelegramLoginTicket"
       ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
@@ -1313,7 +1312,7 @@
         "write:WeeklyGoal"
       ],
       "reason": "Reads and stages only WeeklyGoal records through the owner context; joins the current shared transaction before reads without committing.",
-      "technicalSourceSha256": "803388a2a5c85562f118d09316b16c135fd1cdad359b9d51a3a61d0f28e2048a"
+      "technicalSourceSha256": "fdbf9899a810817dd918a2d7f8edf51cd67a90477410f6b8cbb3b41283763b8e"
     },
     "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs": {
       "module": "Admin",

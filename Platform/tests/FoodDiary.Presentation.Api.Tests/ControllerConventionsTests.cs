@@ -20,7 +20,7 @@ public sealed class ControllerConventionsTests {
             .Where(type => type.GetCustomAttribute<ApiControllerAttribute>() is null)
             .Select(type => type.FullName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public sealed class ControllerConventionsTests {
             .Where(method => method.ReturnType != typeof(Task<IActionResult>))
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class ControllerConventionsTests {
             .Where(static entry => entry.ActionCount > 8)
             .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.Type.FullName} ({entry.ActionCount} actions)"))];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public sealed class ControllerConventionsTests {
             .Where(method => !method.GetCustomAttributes<ProducesResponseTypeAttribute>().Any())
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public sealed class ControllerConventionsTests {
                 .Select(_ => FormatMethodName(method)))
             .Distinct(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public sealed class ControllerConventionsTests {
         };
 
         Type[] authControllers = [.. GetFeatureControllerTypes()
-            .Where(type => string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(type => string.Equals(type.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
             .OrderBy(type => type.Name, StringComparer.Ordinal)];
 
         Dictionary<string, string> actualRoutes = authControllers.ToDictionary(
@@ -106,7 +106,7 @@ public sealed class ControllerConventionsTests {
                 .Where(parameter => !IsPresentationHttpRequestType(parameter.ParameterType))
                 .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public sealed class ControllerConventionsTests {
                 .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is null)
                 .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -131,30 +131,30 @@ public sealed class ControllerConventionsTests {
                 .Where(parameter => !IsPresentationHttpQueryType(parameter.ParameterType))
                 .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
         string?[] violations = [.. GetFeatureControllerTypes()
-            .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(type => !string.Equals(type.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
             .Where(type => !type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)))
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
             .Select(type => type.FullName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
     public void NonAuthFeatureActions_DoNotDocumentUnauthorizedOrForbiddenResponses_Manually() {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
-            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
             .Where(DeclaresProtectedResponses)
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -163,10 +163,10 @@ public sealed class ControllerConventionsTests {
             .SelectMany(GetActionMethods)
             .Where(method => !IsAnonymousInfrastructureController(method.DeclaringType))
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
-            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public sealed class ControllerConventionsTests {
             .Select(static tree => Path.GetFileName(tree.FilePath))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public sealed class ControllerConventionsTests {
             .Select(static method => method.Identifier.ValueText)
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -246,7 +246,7 @@ public sealed class ControllerConventionsTests {
             .Where(type => type.GetCustomAttribute<RouteAttribute>()?.Template?.Contains("[controller]", StringComparison.OrdinalIgnoreCase) is true)
             .Select(type => type.FullName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -258,7 +258,7 @@ public sealed class ControllerConventionsTests {
                 .Any(attribute => attribute.StatusCode == StatusCodes.Status201Created))
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -282,7 +282,7 @@ public sealed class ControllerConventionsTests {
             })
             .Select(tuple => $"{Path.GetFileNameWithoutExtension(tuple.tree.FilePath)}.{tuple.methodName}")];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -293,7 +293,7 @@ public sealed class ControllerConventionsTests {
                 .Any(attribute => attribute.StatusCode == StatusCodes.Status500InternalServerError))
             .Select(FormatMethodName)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -304,7 +304,7 @@ public sealed class ControllerConventionsTests {
             .Select(static tree => Path.GetFileName(tree.FilePath))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Theory]
@@ -321,7 +321,7 @@ public sealed class ControllerConventionsTests {
             .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -341,11 +341,9 @@ public sealed class ControllerConventionsTests {
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
-                && !path.StartsWith(PresentationTestDiscovery.AdminPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
-                && !path.StartsWith(PresentationTestDiscovery.AiPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
-                && !path.StartsWith(PresentationTestDiscovery.BillingPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
-                && !path.StartsWith(PresentationTestDiscovery.ContentReportsPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
-                && !path.StartsWith(PresentationTestDiscovery.CyclesPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                && !PresentationTestDiscovery.GetPresentationRoots()
+                    .Any(root => !File.Exists(Path.Combine(root, "FoodDiary.Presentation.Api.csproj"))
+                        && path.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)))
             .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
@@ -353,7 +351,7 @@ public sealed class ControllerConventionsTests {
             .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     private static IEnumerable<SyntaxTree> GetControllerSyntaxTrees() {
@@ -418,12 +416,7 @@ public sealed class ControllerConventionsTests {
     private static Type[] GetFeatureControllerTypes() =>
         [.. PresentationTestDiscovery.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
-            .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Admin.Presentation.Controllers", StringComparison.Ordinal)
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Ai.Presentation.Controllers", StringComparison.Ordinal)
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Billing.Presentation.Controllers", StringComparison.Ordinal)
-                || string.Equals(type.Namespace, "FoodDiary.Modules.ContentReports.Presentation.Controllers", StringComparison.Ordinal)
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Cycles.Presentation.Controllers", StringComparison.Ordinal))
+            .Where(type => type.IsAssignableTo(typeof(ControllerBase)))
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>

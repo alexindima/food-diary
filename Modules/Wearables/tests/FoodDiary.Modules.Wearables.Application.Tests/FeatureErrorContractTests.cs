@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void WearableErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Wearables.Application.Abstractions", typeof(WearableErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Wearables.Common", typeof(WearableErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Wearables.Application.Abstractions.Common", typeof(WearableErrors).Namespace));
     }
 
     [Fact]

@@ -325,3 +325,16 @@ ContentReports owns a single-entity runtime context and report writes. The host
 composition implements its existing read-model and target-read ports, preserving
 visibility predicates, SQL paging and bounded title/comment excerpts. No module
 references the composition implementation; central migrations remain (ADR 0040).
+
+## Explicit atomic command execution
+
+ITransactionalCommand retains save-after-handler semantics. IAtomicCommand opts a
+top-level retry-safe handler into one transaction with its coordinated save through
+IAtomicCommandExecutor. Meals Create/Repeat use this mode; recognition creation
+retains its own serialized transaction and local handler call. Post-commit actions
+flush only after commit. See ADR 0048.
+
+Recipes Domain owns the scalar RecipeNutritionPolicy used by application and read
+composition. FD0018 rejects write/tracking/SQL capabilities in composed readers;
+FD0016 also reviews shared context factories, tracker access and direct ADO methods
+in module adapters. These are engineering guardrails, not a database security sandbox.

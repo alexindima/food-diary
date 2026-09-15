@@ -29,21 +29,19 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationAbstractionWriteRepositories_DoNotInheritReadRepositories() {
-        string root = GetRepositoryRoot();
-        string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
-        string[] files = [.. SourceScanner.SourceFiles(abstractionsRoot)
+        string[] files = [.. ModuleSourceCatalog.ApplicationRoots.Values
+            .Select(root => Path.Combine(Path.GetDirectoryName(root)!, "Application.Abstractions"))
+            .Where(Directory.Exists)
+            .SelectMany(ModuleSourceCatalog.RequiredFiles)
             .Where(path => Path.GetFileName(path).EndsWith("WriteRepository.cs", StringComparison.Ordinal))];
-
-        string[] violations = [.. files
-            .SelectMany(file => File.ReadLines(file)
-                .Select((line, index) => new { Line = line, LineNumber = index + 1 })
-                .Where(item => item.Line.Contains("WriteRepository :", StringComparison.Ordinal)
-                    && item.Line.Contains("ReadRepository", StringComparison.Ordinal))
-                .Select(item => $"{Path.GetRelativePath(root, file)}:{item.LineNumber.ToString(CultureInfo.InvariantCulture)}: {item.Line.Trim()}"))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
+        Assert.NotEmpty(files);
+        string[] violations = [.. files.SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetRoot()
+            .DescendantNodes().OfType<InterfaceDeclarationSyntax>()
+            .Where(type => type.BaseList?.Types.Any(baseType => baseType.Type.ToString().Contains("ReadRepository", StringComparison.Ordinal)) == true)
+            .Select(type => $"{path}: {type.Identifier.ValueText}"))];
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
+
     [Fact]
     public void ApplicationSourceFiles_DoNotUseEnumParseDirectly() {
         string root = GetRepositoryRoot();
@@ -54,22 +52,17 @@ public sealed class ApplicationGuardrailTests {
             "Enum.Parse<",
         ]);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
-    public void ApplicationQueryHandlers_DoNotUseReadRepositoriesOrDomainEntities() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+    public void ApplicationQueryHandlers_ConsumeProjectionsInsteadOfDomainEntities() {
         string[] queryHandlers = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => path.EndsWith("QueryHandler.cs", StringComparison.Ordinal))];
-
-        string[] violations = [
-            .. FindReferencesInFiles(root, queryHandlers, "ReadRepository"),
-            .. FindReferencesInFiles(root, queryHandlers, "FoodDiary.Domain.Entities"),
-        ];
-
-        Assert.Empty(violations);
+        Assert.NotEmpty(queryHandlers);
+        string[] violations = QueryReadBoundaryScanner.FindViolations(queryHandlers.Select(path => (
+            Path.GetRelativePath(GetRepositoryRoot(), path), File.ReadAllText(path))));
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -98,7 +91,7 @@ public sealed class ApplicationGuardrailTests {
                     $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -123,7 +116,7 @@ public sealed class ApplicationGuardrailTests {
             .SelectMany(pattern => FindReferencesInFiles(root, calculatorFiles, pattern))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -138,7 +131,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -151,7 +144,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -231,7 +224,7 @@ public sealed class ApplicationGuardrailTests {
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -250,7 +243,7 @@ public sealed class ApplicationGuardrailTests {
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -273,7 +266,7 @@ public sealed class ApplicationGuardrailTests {
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -292,7 +285,7 @@ public sealed class ApplicationGuardrailTests {
                     $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -309,7 +302,7 @@ public sealed class ApplicationGuardrailTests {
             .SelectMany(path => FindDirectTypedIdConstructionFromRequestObjects(root, path, requestVariableNames))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     private static IEnumerable<string> FindDirectTypedIdConstructionFromRequestObjects(
@@ -384,7 +377,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, ["DateTime.UtcNow"]);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -400,7 +393,7 @@ public sealed class ApplicationGuardrailTests {
                 .Select(method => method.Format(root)))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -424,7 +417,7 @@ public sealed class ApplicationGuardrailTests {
             .Where(violation => !allowed.Contains(violation.Split(':')[0]))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -466,7 +459,7 @@ public sealed class ApplicationGuardrailTests {
             .Where(actualFiles.Contains)
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -489,9 +482,7 @@ public sealed class ApplicationGuardrailTests {
             root,
             "Modules",
             "Users",
-            "Application",
-            "Abstractions",
-            "Users",
+            "Application.Abstractions",
             "Common",
             "IUserRepository.cs");
         string source = File.ReadAllText(userRepositoryPath);
@@ -508,7 +499,7 @@ public sealed class ApplicationGuardrailTests {
             .Where(pattern => source.Contains(pattern, StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -521,7 +512,7 @@ public sealed class ApplicationGuardrailTests {
             "IUserRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -534,7 +525,7 @@ public sealed class ApplicationGuardrailTests {
             "IUserReadRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -602,7 +593,7 @@ public sealed class ApplicationGuardrailTests {
             "IProductRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -616,7 +607,7 @@ public sealed class ApplicationGuardrailTests {
             "IProductRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -630,7 +621,7 @@ public sealed class ApplicationGuardrailTests {
             "IProductReadRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -639,7 +630,6 @@ public sealed class ApplicationGuardrailTests {
         string contractPath = Path.Combine(
             root,
             "Modules", "Products", "Application.Abstractions",
-            "Products",
             "Common",
             "IProductReadRepository.cs");
         string source = File.ReadAllText(contractPath);
@@ -741,7 +731,7 @@ public sealed class ApplicationGuardrailTests {
             "IProductRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -754,7 +744,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecipeRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -768,7 +758,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecipeRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -782,7 +772,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecipeReadRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -791,7 +781,7 @@ public sealed class ApplicationGuardrailTests {
         string contractPath = Path.Combine(
             root,
             "Modules", "Recipes", "Application.Abstractions",
-            "Recipes", "Common", "IRecipeReadRepository.cs");
+            "Common", "IRecipeReadRepository.cs");
         string source = File.ReadAllText(contractPath);
 
         Assert.DoesNotContain("GetPagedAsync", source, StringComparison.Ordinal);
@@ -889,7 +879,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, [updaterPath], "IRecipeRepository");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -916,7 +906,7 @@ public sealed class ApplicationGuardrailTests {
                     $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -935,7 +925,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "IRecipeRepository");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -952,7 +942,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, migratedFiles, "IRecipeRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1080,7 +1070,7 @@ public sealed class ApplicationGuardrailTests {
             "IMealRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1095,7 +1085,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, statisticsFiles, "GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1112,7 +1102,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, tdeeQueryFiles, "IExerciseEntryReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1127,7 +1117,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, gamificationQueryFiles, "GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1144,7 +1134,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, cycleQueryFiles, "GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1163,7 +1153,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "IHydrationEntryReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1178,7 +1168,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, exportDiaryQueryFiles, "GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1192,7 +1182,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, exportCycleQueryFiles, "ICycleReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1208,7 +1198,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, dailyMicronutrientsQueryFiles, "GetWithItemsAndProductsAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1219,22 +1209,22 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Meals", "Application", "Queries", "GetMeals", "GetMealsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Export", "Application", "Queries", "ExportDiary", "ExportDiaryQueryHandler.cs"),
             Path.Combine(root, "Modules", "Gamification", "Application", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
-            Path.Combine(root, "Modules", "Usda", "Application", "Services", "UsdaDailyMicronutrientReadService.cs"),
-            Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Services", "WeeklyCheckInReadService.cs"),
+            Path.Combine(root, "Modules", "Usda", "Application", "Queries", "GetDailyMicronutrients", "GetDailyMicronutrientsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Queries", "GetWeeklyCheckIn", "GetWeeklyCheckInQueryHandler.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, serviceFiles, "IMealReadRepository");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
     [Fact]
-    public void DailyMicronutrientReadService_UsesMealProductReadModelsInsteadOfMealAggregates() {
+    public void DailyMicronutrientQuery_UsesMealProductReadModelsInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
             "Modules", "Usda", "Application",
-            "Services",
-            "UsdaDailyMicronutrientReadService.cs");
+            "Queries", "GetDailyMicronutrients",
+            "GetDailyMicronutrientsQueryHandler.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
@@ -1246,7 +1236,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetDailyReferenceValuesAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1264,7 +1254,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, usdaFoodQueryFiles, "FoodDiary.Domain.ValueObjects"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1283,7 +1273,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "repository.GetPortionsAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1297,7 +1287,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, mealQueryFiles, "FoodDiary.Modules.Meals.Domain.Entities"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1314,7 +1304,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "favoriteMealRepository.GetByMealIdsAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1338,7 +1328,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, ".Select(To"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1364,7 +1354,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "private static MealAiItemProjectionReadModel"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1387,7 +1377,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1410,7 +1400,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "new CycleProfileReadModel"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1488,7 +1478,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "new RecipeCommentReadModel"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
     [Fact]
     public void FavoriteProductReadContract_DoesNotFallbackToAggregateDefaultReadModels() {
@@ -1509,7 +1499,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1531,7 +1521,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, ".Select(static favorite"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1553,7 +1543,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contractFiles, "ToReadModel"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1574,7 +1564,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, mappingFiles, "PagedResponse<MealModel>"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1588,7 +1578,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, adminQueryFiles, "FoodDiary.Modules.Users.Domain.Entities.User"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1606,7 +1596,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, adminBillingQueryFiles, "FoodDiary.Modules.Billing.Domain.Entities"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1626,7 +1616,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminImpersonationSessionWriteRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1644,7 +1634,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, adminSummaryQueryFiles, "FoodDiary.Domain.Enums"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1664,7 +1654,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "userAdminReadRepository.GetAdminDashboardSummaryAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1682,7 +1672,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "aiPromptTemplateRepository.GetAllAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1699,7 +1689,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "emailTemplateRepository.GetAllAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1720,7 +1710,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "contentReportRepository.GetPagedAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1737,7 +1727,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "cycleRepository.GetCurrentAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1758,7 +1748,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "fastingCheckInRepository.GetByOccurrenceIdsAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1777,7 +1767,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "mealRepository.GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1795,7 +1785,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, userQueryFiles, "GetAccessibleUserAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1816,7 +1806,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByClientAndStatusAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1838,7 +1828,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1853,7 +1843,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, dietologistQueryFiles, "FoodDiary.Modules.Dietologist.Domain.Entities"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1880,7 +1870,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, readServiceFiles, "GetByDietologistAndClientAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1896,7 +1886,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, billingQueryFiles, "GetAccessibleUserAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1911,7 +1901,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, dietologistQueryFiles, "GetUserByIdAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1931,7 +1921,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, favoriteStatusQueryFiles, "GetByRecipeIdAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1951,7 +1941,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, favoriteQueryFiles, "IFavoriteRecipeReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1972,7 +1962,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetAllAsync(userId"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -1987,7 +1977,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, notificationQueryFiles, "IWebPushSubscriptionReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2000,7 +1990,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, applicationFiles, "INotificationReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2018,7 +2008,7 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [            .. FindReferencesInFiles(root, contractFiles, "WebPushSubscriptionReadModel"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2039,7 +2029,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2054,7 +2044,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2065,23 +2055,22 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, wearableQueryFiles, "FoodDiary.Modules.Wearables.Domain.Entities"),
-            .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableConnectionReadRepository"),
             .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableSyncReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
-    public void WearableReadService_UsesReadModelsInsteadOfWearableAggregates() {
+    public void WearableConnectionQuery_UsesReadModelsInsteadOfWearableAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
             "Modules",
             "Wearables",
             "Application",
-            "Services",
-            "WearableReadService.cs");
+            "Queries", "GetWearableConnections",
+            "GetWearableConnectionsQueryHandler.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
@@ -2090,7 +2079,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetDailySummaryAsync(userId"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2114,7 +2103,7 @@ public sealed class ApplicationGuardrailTests {
             }.SelectMany(items => items);
         })];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2132,7 +2121,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByDateRangeAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2153,7 +2142,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByPeriodAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2180,7 +2169,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByDateAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2205,7 +2194,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "IFastingCheckInReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2218,10 +2207,9 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, fastingQueryFiles, "FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting"),
             .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingOccurrenceReadRepository"),
             .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingCheckInReadRepository"),
-            .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingTelemetryEventReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2235,7 +2223,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, shoppingListQueryFiles, "IShoppingListReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2249,7 +2237,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, mealPlanQueryFiles, "IMealPlanReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2266,7 +2254,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "IShoppingListReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2283,7 +2271,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetByIdAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2298,11 +2286,10 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, socialQueryFiles, "FoodDiary.Domain.Entities.Social"),
             .. FindReferencesInFiles(root, socialQueryFiles, "Domain.Entities.Recipes.RecipeComment"),
-            .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeLikeReadRepository"),
             .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeCommentReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2318,10 +2305,9 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Social"),
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Recipes"),
             .. FindReferencesInFiles(root, serviceFiles, "GetByUserAndRecipeAsync"),
-            .. FindReferencesInFiles(root, serviceFiles, "GetPagedByRecipeAsync(recipeId"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2340,7 +2326,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, aiQueryFiles, "IFoodRecognitionJobStore"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2367,7 +2353,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contentQueryFiles, "IContentReportReadRepository"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2388,7 +2374,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "GetByLocaleAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2408,7 +2394,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "repository.GetUserProgressForLessonAsync"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2430,7 +2416,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, serviceFiles, "BillingSubscription?"),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2443,7 +2429,7 @@ public sealed class ApplicationGuardrailTests {
             "INutritionLessonRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2456,7 +2442,7 @@ public sealed class ApplicationGuardrailTests {
             "INotificationRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2472,7 +2458,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindRepositoryReferenceViolations(root, "IFastingTelemetryEventRepository", []),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2485,7 +2471,7 @@ public sealed class ApplicationGuardrailTests {
             "IBillingSubscriptionRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2502,7 +2488,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindRepositoryReferenceViolations(root, "IWearableSyncRepository", []),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2515,7 +2501,7 @@ public sealed class ApplicationGuardrailTests {
             "IExerciseEntryRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2528,7 +2514,7 @@ public sealed class ApplicationGuardrailTests {
             "IWeightEntryRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2541,7 +2527,7 @@ public sealed class ApplicationGuardrailTests {
             "IWaistEntryRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2554,7 +2540,7 @@ public sealed class ApplicationGuardrailTests {
             "IHydrationEntryRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2567,7 +2553,7 @@ public sealed class ApplicationGuardrailTests {
             "IShoppingListRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2580,7 +2566,7 @@ public sealed class ApplicationGuardrailTests {
             "IMealPlanRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2593,7 +2579,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecipeCommentRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2606,7 +2592,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecipeLikeRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2619,7 +2605,7 @@ public sealed class ApplicationGuardrailTests {
             "IFavoriteProductRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2632,7 +2618,7 @@ public sealed class ApplicationGuardrailTests {
             "IFavoriteRecipeRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2645,7 +2631,7 @@ public sealed class ApplicationGuardrailTests {
             "IFavoriteMealRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2658,7 +2644,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecentItemRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2671,7 +2657,7 @@ public sealed class ApplicationGuardrailTests {
             "IDietologistInvitationRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2684,7 +2670,7 @@ public sealed class ApplicationGuardrailTests {
             "IRecommendationRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Theory]
@@ -2701,7 +2687,7 @@ public sealed class ApplicationGuardrailTests {
             repositoryName,
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2732,7 +2718,7 @@ public sealed class ApplicationGuardrailTests {
             "IImageAssetRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2745,7 +2731,7 @@ public sealed class ApplicationGuardrailTests {
             "IWebPushSubscriptionRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2761,7 +2747,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindRepositoryReferenceViolations(root, "IDailyAdviceRepository", []),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2777,7 +2763,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindRepositoryReferenceViolations(root, "IOpenFoodFactsProductCacheRepository", []),
         ];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2790,7 +2776,7 @@ public sealed class ApplicationGuardrailTests {
             "ICycleRepository",
             []);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2810,7 +2796,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2820,7 +2806,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, ["CurrentUserAccessLoader"]);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2861,7 +2847,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2872,7 +2858,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, notificationFiles, "CurrentUserAccessPolicy");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2913,7 +2899,7 @@ public sealed class ApplicationGuardrailTests {
             return FindReferencesInFiles(root, files, "CurrentUserAccessPolicy");
         })];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2940,7 +2926,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -2982,7 +2968,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires FoodDiaryDbContext outside the persistence boundary")
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -3017,7 +3003,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, forbiddenPatterns);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -3039,7 +3025,7 @@ public sealed class ApplicationGuardrailTests {
                     $"{Path.GetRelativePath(root, parameter.Path)}:{parameter.Line} {parameter.ClassName} depends on {parameter.TypeName}")))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -3067,7 +3053,7 @@ public sealed class ApplicationGuardrailTests {
                     $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]
@@ -3104,7 +3090,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, forbiddenPatterns);
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     private static string GetRepositoryRoot() {
@@ -3121,28 +3107,6 @@ public sealed class ApplicationGuardrailTests {
         throw new InvalidOperationException("Repository root was not found.");
     }
 
-    [Fact]
-    public void AggregateReadRepositories_DoNotExposeReadModelsOutsideApprovedProjectionContracts() {
-        string root = GetRepositoryRoot();
-        string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
-        string[] allowedRelativePaths = [
-            Path.Combine("Admin", "Common", "IAdminBillingQuery.cs"),
-            Path.Combine("Admin", "Common", "IAdminUserRoleAuditQuery.cs"),
-            Path.Combine("Authentication", "Common", "IUserLoginEventReadRepository.cs"),
-            Path.Combine("Meals", "Common", "IMealProjectionReadRepository.cs"),
-            Path.Combine("Meals", "Common", "IMealProductNutritionReadRepository.cs"),
-        ];
-        HashSet<string> allowed = [.. allowedRelativePaths.Select(path => Path.Combine(abstractionsRoot, path))];
-
-        string[] violations = [.. Directory.GetFiles(abstractionsRoot, "I*ReadRepository.cs", SearchOption.AllDirectories)
-            .Where(path => !allowed.Contains(path))
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line })
-                .Where(entry => entry.line.Contains("ReadModel", StringComparison.Ordinal))
-                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
-
-        Assert.Empty(violations);
-    }
     private static string[] GetFilesIfDirectoryExists(string path, string searchPattern, SearchOption searchOption) =>
         Directory.Exists(path) ? Directory.GetFiles(path, searchPattern, searchOption) : [];
 

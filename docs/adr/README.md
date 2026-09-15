@@ -77,3 +77,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 
 - [0046: Authentication contract ownership and explicit outbox settings](0046-shared-authentication-contract-ownership.md)
 - [0047: Test project ownership and shared configuration](0047-test-project-ownership.md)
+
+- [0048: Explicit atomic commands and owner nutrition policy](0048-atomic-command-and-nutrition-boundaries.md)

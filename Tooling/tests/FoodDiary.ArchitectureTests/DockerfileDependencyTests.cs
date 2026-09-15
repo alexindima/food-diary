@@ -21,7 +21,7 @@ public sealed class DockerfileDependencyTests {
             .SelectMany(dockerfile => FindMissingCopies(root, dockerfile))
             .Order(StringComparer.Ordinal)];
 
-        Assert.Empty(violations);
+        Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));
     }
 
     [Fact]

@@ -69,7 +69,8 @@ public sealed class EventGovernanceTests {
 
     internal static string[] FindIntegrationEventViolations(string root) =>
         [.. SourceScanner.SourceFiles(root)
-            .Where(path => !path.StartsWith(Path.Combine(root, "tests"), StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetRelativePath(root, path).Split(Path.DirectorySeparatorChar)
+                .Contains("tests", StringComparer.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))

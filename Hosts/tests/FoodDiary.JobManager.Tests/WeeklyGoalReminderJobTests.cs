@@ -1,6 +1,7 @@
 using FoodDiary.Testing;
 using FoodDiary.Modules.WeeklyGoals.Application.Commands.SendWeeklyGoalReminders;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.JobManager.Services;
@@ -93,6 +94,9 @@ public sealed class WeeklyGoalReminderJobTests {
 
         public Task<WeeklyGoal?> GetAsync(UserId userId, DateTime weekStartUtc, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<WeeklyGoal?>(null);
+
+        public Task<WeeklyGoalReadModel?> GetReadModelAsync(UserId userId, DateTime weekStartUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<WeeklyGoalReadModel?>(null);
 
         public Task AddAsync(WeeklyGoal goal, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }

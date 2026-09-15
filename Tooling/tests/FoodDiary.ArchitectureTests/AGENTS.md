@@ -1,5 +1,26 @@
 # Architecture Test Guidelines
 
+Architecture guards must discover current project roots and assert non-empty coverage
+when the rule expects production sources. Do not freeze source-file counts or duplicate
+exact project-reference lists from ProjectDependencyMatrixTests in extraction tests.
+Retain unique ownership, public API, transaction and runtime registration constraints.
+
+QueryReadBoundaryScanner checks aggregate types in query handlers using Roslyn; scalar
+and projection reads are legal regardless of repository naming. Keep all module
+Application assemblies available to this test project for metadata resolution. Test
+the scanner with aggregate, collection, tuple and scalar/projection examples.
+PersistenceCapabilityScanner follows local no-tracking query aliases conservatively;
+AsTracking and bulk writes remain capabilities even when aliases are involved.
+
+The source dependency graph recognizes canonical Application/Contracts namespaces.
+Domain IDs and enums, including legacy ID-only Images.Contracts, are excluded from
+use-case edges. Reconcile source edges against the approved acyclic contract graph.
+
+Initializer bootstrap adapters may dispatch owner requests; composition files may
+register ISender but must not dispatch use cases themselves. Initializer stays free
+of HTTP presentation. CrossModuleRequestBoundaryTests uses typeof references so moved
+requests or handlers fail at compile time instead of relying on stale assembly strings.
+
 ADR 0043 adds FoodDiary.Persistence.Runtime to technical source discovery and
 the explicit dependency matrix. Its transitive closure excludes full-model and
 module implementation assemblies. Composed readers consume ICompositionReadContext;

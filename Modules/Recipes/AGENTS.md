@@ -16,3 +16,5 @@ kinds and parameter formatting. Reference the owner explicitly; this grants no f
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Current module convention: all projects use `FoodDiary.Modules.Recipes.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.
+
+Domain/Nutrition/RecipeNutritionPolicy owns scalar ingredient scaling, source precedence, rounding, stored-value fallback and manual-value selection. Application and composed-read adapters map their inputs into that policy; do not reimplement the calculation in the shared SQL composition project.

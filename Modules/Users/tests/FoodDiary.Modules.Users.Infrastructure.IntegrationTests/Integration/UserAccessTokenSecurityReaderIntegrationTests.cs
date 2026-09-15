@@ -2,6 +2,7 @@ using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
@@ -74,6 +75,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         services.AddUsersPersistence();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.Replace(ServiceDescriptor.Scoped(_ => databaseFixture.CreateDbContext(connectionString)));
+        services.AddScoped<SharedPersistenceDbContext>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();

@@ -15,33 +15,20 @@ internal static class PresentationTestDiscovery {
         string repositoryRoot = GetRepositoryRoot();
         return [
             Path.Combine(repositoryRoot, "FoodDiary.Presentation.Api"),
-            .. Directory.GetDirectories(Path.Combine(repositoryRoot, "Modules"), "Presentation", SearchOption.AllDirectories)
-                .Where(static path => Directory.GetFiles(path, "*.Presentation.csproj", SearchOption.TopDirectoryOnly).Length == 1)
+            .. Directory.GetDirectories(Path.Combine(repositoryRoot, "Modules"))
+                .SelectMany(static moduleRoot => Directory.GetDirectories(moduleRoot, "Presentation*", SearchOption.TopDirectoryOnly))
+                .Where(static path => Directory.GetFiles(path, "*.Presentation*.csproj", SearchOption.TopDirectoryOnly).Length == 1)
                 .Order(StringComparer.Ordinal),
         ];
     }
 
     internal static string GetFeatureSourceRoot(string presentationRoot) =>
-        (File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Admin.Presentation.csproj"))
-            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Ai.Presentation.csproj"))
-            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Billing.Presentation.csproj"))
-            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.ContentReports.Presentation.csproj"))
-            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Cycles.Presentation.csproj")))
-            ? presentationRoot : Path.Combine(presentationRoot, "Features");
-
-    internal static string AdminPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Admin", "Presentation");
-
-    internal static string AiPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Ai", "Presentation");
-
-    internal static string BillingPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Billing", "Presentation");
-
-    internal static string ContentReportsPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "ContentReports", "Presentation");
-
-    internal static string CyclesPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Cycles", "Presentation");
+        File.Exists(Path.Combine(presentationRoot, "FoodDiary.Presentation.Api.csproj"))
+            ? Path.Combine(presentationRoot, "Features") : presentationRoot;
 
     private static Assembly[] DiscoverAssemblies() => [
         typeof(BaseApiController).Assembly,
-        .. Directory.GetFiles(AppContext.BaseDirectory, "FoodDiary.Modules.*.Presentation.dll")
+        .. Directory.GetFiles(AppContext.BaseDirectory, "FoodDiary.Modules.*.Presentation*.dll")
             .Order(StringComparer.Ordinal)
             .Select(Assembly.LoadFrom),
     ];

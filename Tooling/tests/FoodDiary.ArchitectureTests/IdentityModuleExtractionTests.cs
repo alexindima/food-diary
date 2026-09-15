@@ -20,8 +20,9 @@ public sealed class IdentityModuleExtractionTests {
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Modules.Identity.Application",
             "FoodDiary.Modules.Identity.Application.csproj")));
-        Assert.Contains("<AssemblyName>FoodDiary.Application.Identity</AssemblyName>", source, StringComparison.Ordinal);
-        Assert.Contains("<RootNamespace>FoodDiary.Application.Identity</RootNamespace>", source, StringComparison.Ordinal);
+        var project = System.Xml.Linq.XDocument.Parse(source);
+        Assert.Empty(project.Descendants("AssemblyName"));
+        Assert.Empty(project.Descendants("RootNamespace"));
         Assert.DoesNotContain("..\\FoodDiary.Application\\FoodDiary.Application.csproj", source, StringComparison.OrdinalIgnoreCase);
     }
 

@@ -52,7 +52,7 @@ internal static class PersistenceCapabilityScanner {
                 string? entity = QueryEntity(model.GetTypeInfo(access).Type);
                 if (entity is not null) {
                     capabilities.Add($"entity:{entity}");
-                    if (!HasNoTracking(QueryChain(access))) {
+                    if (!HasNoTracking(QueryChain(access), model)) {
                         capabilities.Add($"tracked:{entity}");
                     }
                 } else if (model.GetSymbolInfo(access).Symbol is IPropertySymbol) {
@@ -74,7 +74,7 @@ internal static class PersistenceCapabilityScanner {
                             capabilities.Add("unresolved:Set");
                         } else {
                             capabilities.Add($"entity:{entity}");
-                            if (!HasNoTracking(QueryChain(invocation))) {
+                            if (!HasNoTracking(QueryChain(invocation), model)) {
                                 capabilities.Add($"tracked:{entity}");
                             }
                         }
@@ -89,7 +89,7 @@ internal static class PersistenceCapabilityScanner {
                 }
                 if (queryEntity is not null) {
                     capabilities.Add($"entity:{queryEntity}");
-                    if (!HasNoTracking(QueryChain(invocation))) {
+                    if (!HasNoTracking(QueryChain(invocation), model)) {
                         capabilities.Add($"tracked:{queryEntity}");
                     }
                 }
@@ -140,16 +140,32 @@ internal static class PersistenceCapabilityScanner {
         || type.Name.EndsWith("OutboxMessage", StringComparison.Ordinal)
         || type.Name.Equals("AuditEntry", StringComparison.Ordinal);
 
-    private static bool HasNoTracking(SyntaxNode node) {
+    private static bool HasNoTracking(SyntaxNode node, SemanticModel model) {
         while (true) {
             switch (node) {
                 case InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "AsNoTracking" or "AsNoTrackingWithIdentityResolution" } }:
                     return true;
+                case InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "AsTracking" } }:
+                    return false;
                 case InvocationExpressionSyntax invocation:
                     node = invocation.Expression;
                     break;
                 case MemberAccessExpressionSyntax access:
                     node = access.Expression;
+                    break;
+                case IdentifierNameSyntax identifier when model.GetSymbolInfo(identifier).Symbol is ILocalSymbol local:
+                    VariableDeclaratorSyntax? declaration = local.DeclaringSyntaxReferences
+                        .Select(reference => reference.GetSyntax()).OfType<VariableDeclaratorSyntax>().SingleOrDefault();
+                    if (declaration?.Initializer is not { Value: var initializer } || initializer.Span.End >= identifier.SpanStart) {
+                        return false;
+                    }
+                    AssignmentExpressionSyntax[] assignments = [.. identifier.SyntaxTree.GetRoot().DescendantNodes()
+                        .OfType<AssignmentExpressionSyntax>()
+                        .Where(assignment => assignment.Span.End < identifier.SpanStart &&
+                            SymbolEqualityComparer.Default.Equals(model.GetSymbolInfo(assignment.Left).Symbol, local))];
+                    return HasNoTracking(initializer, model) && assignments.All(assignment => HasNoTracking(assignment.Right, model));
+                case ParenthesizedExpressionSyntax parenthesized:
+                    node = parenthesized.Expression;
                     break;
                 default:
                     return false;

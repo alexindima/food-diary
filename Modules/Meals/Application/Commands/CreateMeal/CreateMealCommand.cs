@@ -22,4 +22,4 @@ public record CreateMealCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     int PreMealSatietyLevel,
-    int PostMealSatietyLevel) : ICommand<Result<MealModel>>, IUserRequest;
+    int PostMealSatietyLevel) : ICommand<Result<MealModel>>, IUserRequest, IAtomicCommand;

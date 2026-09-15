@@ -42,3 +42,7 @@ security behavior and EF/HTTP contracts are unchanged. See
 All module projects and tests use `FoodDiary.Modules.WeeklyGoals.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
 
 The reminder job dispatches SendWeeklyGoalRemindersCommand through ISender. Its handler retains batching, explicit saves and post-commit notifications. GetWeeklyGoal owns read orchestration and reuses WeeklyGoalProgressReader.
+
+GetWeeklyGoal reads WeeklyGoalReadModel through GetReadModelAsync without materializing
+the aggregate. Progress calculation accepts the owner user ID and week start. Commands
+and reminders retain aggregate reads and their existing transaction behavior.

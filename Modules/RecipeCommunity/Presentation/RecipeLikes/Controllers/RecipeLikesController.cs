@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Mappings;
 using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Requests;
 using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Responses;
@@ -23,7 +24,7 @@ public sealed class RecipeLikesController(ISender mediator) : AuthorizedControll
             static value => value.ToHttpResponse());
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<RecipeLikeStatusHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetStatus(
         [FromCurrentUser] Guid userId,

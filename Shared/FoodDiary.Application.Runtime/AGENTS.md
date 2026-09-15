@@ -28,3 +28,5 @@ Rules for `Shared/FoodDiary.Application.Runtime/`.
 - Architecture guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 IPostCommitActionQueue.Discard removes actions and resets capacity for failed transaction attempts. Never deliver callbacks belonging to a rolled-back attempt.
+
+CommandTransactionBehavior routes IAtomicCommand through IAtomicCommandExecutor; the executor owns saving and commit. Flush post-commit actions only after it returns successfully, never inside its retriable callback. Fail closed if the executor is missing. Ordinary commands retain the existing conditional-save behavior.

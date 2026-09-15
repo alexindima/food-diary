@@ -7,20 +7,25 @@ namespace FoodDiary.Application.Runtime.Common.Behaviors;
 
 internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
     IUnitOfWork unitOfWork,
-    IPostCommitActionQueue postCommitActionQueue)
+    IPostCommitActionQueue postCommitActionQueue,
+    IAtomicCommandExecutor? atomicCommandExecutor = null)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ITransactionalCommand {
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        TResponse response = await next(cancellationToken).ConfigureAwait(false);
+        bool atomic = request is IAtomicCommand;
+        TResponse response = atomic
+            ? await (atomicCommandExecutor ?? throw new InvalidOperationException("Atomic commands require a persistence executor."))
+                .ExecuteAsync(token => next(token), cancellationToken).ConfigureAwait(false)
+            : await next(cancellationToken).ConfigureAwait(false);
 
         if (response is Result { IsFailure: true }) {
             return response;
         }
 
-        if (unitOfWork.HasPendingChanges) {
+        if (!atomic && unitOfWork.HasPendingChanges) {
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 

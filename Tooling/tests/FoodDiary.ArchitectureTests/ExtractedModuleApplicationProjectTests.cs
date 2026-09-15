@@ -33,10 +33,10 @@ public sealed class ExtractedModuleApplicationProjectTests {
             .Cast<string>()];
 
         Assert.False(string.Equals("false", defaultCompileItems, StringComparison.OrdinalIgnoreCase));
-        Assert.Equal(["Abstractions/**/*.cs"], compileRemoves);
+        Assert.Empty(compileRemoves);
 
-        string[] ordinaryApplicationSources = [.. Directory
-            .EnumerateFiles(Path.Combine(moduleRoot, "Application"), "*.cs", SearchOption.AllDirectories)
+        string[] ordinaryApplicationSources = [.. SourceScanner
+            .SourceFiles(Path.Combine(moduleRoot, "Application"))
             .Where(path => !path.StartsWith(
                 Path.Combine(moduleRoot, "Application", "Abstractions") + Path.DirectorySeparatorChar,
                 StringComparison.OrdinalIgnoreCase))];

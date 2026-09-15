@@ -27,7 +27,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         HttpResponseMessage invalid = await client.PostAsJsonAsync("/api/v1/cycles", request);
         Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
         using var error = JsonDocument.Parse(await invalid.Content.ReadAsStringAsync());
-        Assert.Equal("Validation.Invalid", error.RootElement.GetProperty("code").GetString());
+        Assert.Equal("Validation.Invalid", error.RootElement.GetProperty("error").GetString());
 
         HttpResponseMessage valid = await client.PostAsJsonAsync("/api/v1/cycles",
             request with { Notes = "  " + new string('x', 1024) + "  " });

@@ -43,7 +43,9 @@ public sealed class RuntimeModuleBoundaryTests {
                 entry.GetProperty("provider").GetString(), entry.GetProperty("implementation").GetString(), entry.GetProperty("source").GetString(),
                 string.Join(',', entry.GetProperty("consumers").EnumerateArray().Select(value => value.GetString()).Order(StringComparer.Ordinal)));
         }).Order(StringComparer.Ordinal)];
-        Assert.Equal(expected, actual);
+        Assert.True(expected.SequenceEqual(actual, StringComparer.Ordinal),
+            "Missing: " + string.Join(Environment.NewLine, expected.Except(actual, StringComparer.Ordinal)) + Environment.NewLine +
+            "Unexpected: " + string.Join(Environment.NewLine, actual.Except(expected, StringComparer.Ordinal)));
     }
 
     [Fact]

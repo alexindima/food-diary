@@ -19,8 +19,8 @@ public class FeatureStructureTests {
         Assert.NotEmpty(featureDirectories);
 
         foreach (string featurePath in featureDirectories) {
-            string[] controllers = Directory.GetFiles(featurePath, "*Controller.cs");
-            Assert.NotEmpty(controllers);
+            string[] controllers = [.. SourceScanner.SourceFiles(featurePath).Where(path => path.EndsWith("Controller.cs", StringComparison.Ordinal))];
+            Assert.True(controllers.Length > 0, $"Presentation feature has no controllers: {featurePath}");
         }
     }
 

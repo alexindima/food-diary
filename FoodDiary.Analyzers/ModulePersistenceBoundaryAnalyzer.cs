@@ -49,15 +49,18 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
         });
     }
 
-    private static bool IsTransactionCoordinator(ITypeSymbol type) =>
+    private static bool IsReviewedPersistenceCapability(ITypeSymbol type) =>
         string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator", StringComparison.Ordinal) ||
-        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleSessionCoordinator", StringComparison.Ordinal);
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleSessionCoordinator", StringComparison.Ordinal) ||
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleChangeTrackerSource", StringComparison.Ordinal) ||
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleContextFactory", StringComparison.Ordinal) ||
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IIndependentModuleContextOptionsFactory", StringComparison.Ordinal);
 
     private static void AnalyzeMethodReference(OperationAnalysisContext context, string module,
         ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {
         var reference = (IMethodReferenceOperation)context.Operation;
         IMethodSymbol method = reference.Method;
-        if (IsTransactionCoordinator(method.ContainingType)) {
+        if (IsReviewedPersistenceCapability(method.ContainingType) || ReadModelWriteBoundaryAnalyzer.IsAdoCapability(method.ContainingType)) {
             ReportTechnicalUnlessReviewed(context, method.Name, reviewed, verified);
             return;
         }
@@ -82,7 +85,7 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
     private static void AnalyzeInvocation(OperationAnalysisContext context, string module, ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {
         var invocation = (IInvocationOperation)context.Operation;
         IMethodSymbol method = invocation.TargetMethod;
-        if (IsTransactionCoordinator(method.ContainingType)) {
+        if (IsReviewedPersistenceCapability(method.ContainingType) || ReadModelWriteBoundaryAnalyzer.IsAdoCapability(method.ContainingType)) {
             ReportTechnicalUnlessReviewed(context, method.Name, reviewed, verified);
             return;
         }
@@ -117,7 +120,7 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
 
     private static void AnalyzeReference(OperationAnalysisContext context, string module, ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {
         IOperation operation = context.Operation;
-        if (operation is IPropertyReferenceOperation coordinatorProperty && IsTransactionCoordinator(coordinatorProperty.Property.ContainingType)) {
+        if (operation is IPropertyReferenceOperation coordinatorProperty && IsReviewedPersistenceCapability(coordinatorProperty.Property.ContainingType)) {
             ReportTechnicalUnlessReviewed(context, coordinatorProperty.Property.Name, reviewed, verified);
             return;
         }

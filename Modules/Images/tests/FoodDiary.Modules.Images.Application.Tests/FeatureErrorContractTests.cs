@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void ImageErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Images.Application.Abstractions", typeof(ImageErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Images.Common", typeof(ImageErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Images.Application.Abstractions.Common", typeof(ImageErrors).Namespace));
     }
 
     [Fact]

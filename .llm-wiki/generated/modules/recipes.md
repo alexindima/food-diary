@@ -99,7 +99,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeDirectCycleTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeInvariantAndEventsTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionEventPayloadTests.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionValidationTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionPolicyTests.cs`
 
 ## Working Rule
 

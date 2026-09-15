@@ -10,7 +10,7 @@ public sealed class FeatureErrorContractTests {
     public void MealPlanErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.MealPlanning.Application.Abstractions", typeof(MealPlanErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.MealPlans.Common", typeof(MealPlanErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common", typeof(MealPlanErrors).Namespace));
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public sealed class FeatureErrorContractTests {
     public void ShoppingListErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.MealPlanning.Application.Abstractions", typeof(ShoppingListErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.ShoppingLists.Common", typeof(ShoppingListErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common", typeof(ShoppingListErrors).Namespace));
     }
 
     [Fact]

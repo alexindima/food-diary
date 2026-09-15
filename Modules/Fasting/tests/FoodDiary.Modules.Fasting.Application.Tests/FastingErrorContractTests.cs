@@ -8,7 +8,7 @@ public sealed class FastingErrorContractTests {
     [Fact]
     public void Factory_IsOwnedByModule() {
         Assert.Equal("FoodDiary.Modules.Fasting.Application.Abstractions", typeof(FastingErrors).Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Application.Abstractions.Fasting.Common", typeof(FastingErrors).Namespace);
+        Assert.Equal("FoodDiary.Modules.Fasting.Application.Abstractions.Common", typeof(FastingErrors).Namespace);
     }
 
     [Fact]

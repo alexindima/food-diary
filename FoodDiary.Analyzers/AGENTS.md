@@ -46,3 +46,9 @@ persistence writes require that same exact file fingerprint. This is a build-tim
 architecture guard, not a database authorization boundary.
 
 FD0015/FD0016 inspect method references as well as invocations: delegates must not acquire untyped/foreign EF writes or unreviewed technical save capabilities.
+
+FD0018 protects FoodDiary.ReadModel.Composition from EF writes/tracking, raw SQL, explicit DbContext casts and ADO command/transaction methods, including delegates. FD0016 also reviews direct ADO methods in module adapters; a raw connection must not bypass the source fingerprint guard.
+
+FD0016 also fingerprints IModuleContextFactory, IIndependentModuleContextOptionsFactory
+and IModuleChangeTrackerSource calls and method groups. Narrow interfaces that return
+mutable EF capabilities do not exempt their consumers from persistence review.

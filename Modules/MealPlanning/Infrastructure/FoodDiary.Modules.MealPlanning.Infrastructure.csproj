@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" />
     <ProjectReference Include="../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj" />

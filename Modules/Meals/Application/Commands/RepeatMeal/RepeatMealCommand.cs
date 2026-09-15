@@ -8,4 +8,4 @@ public record RepeatMealCommand(
     Guid? UserId,
     Guid MealId,
     DateTime TargetDate,
-    string? MealType) : ICommand<Result<MealModel>>, IUserRequest;
+    string? MealType) : ICommand<Result<MealModel>>, IUserRequest, IAtomicCommand;

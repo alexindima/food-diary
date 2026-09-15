@@ -6,13 +6,21 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
-    [InlineData("Modules/Users/Contracts", 82)]
-    [InlineData("Modules/Users/Application.Abstractions", 8)]
-    [InlineData("Modules/Identity/Application.Abstractions", 41)]
-    [InlineData("Modules/Identity/Contracts", 20)]
-    [InlineData("Modules/BodyMetrics/Contracts", 10)]
-    public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
-        Assert.Equal(count, SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(relativeRoot)).Count());
+    [InlineData("Modules/Users/Contracts")]
+    [InlineData("Modules/Users/Application.Abstractions")]
+    [InlineData("Modules/Identity/Application.Abstractions")]
+    [InlineData("Modules/Identity/Contracts")]
+    [InlineData("Modules/BodyMetrics/Contracts")]
+    public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot) {
+        string root = ArchitectureTestPaths.FromRoot(relativeRoot);
+        string project = Assert.Single(Directory.GetFiles(root, "*.csproj"));
+        string namespaceRoot = Path.GetFileNameWithoutExtension(project);
+        string[] sources = [.. SourceScanner.SourceFiles(root)];
+        Assert.NotEmpty(sources);
+        foreach (string source in sources.Where(path => Path.GetFileName(path) is not "AssemblyInfo.cs" and not "GlobalUsings.cs")) {
+            string suffix = Path.GetDirectoryName(Path.GetRelativePath(root, source))!.Replace(Path.DirectorySeparatorChar, '.');
+            Assert.Equal(string.IsNullOrEmpty(suffix) ? namespaceRoot : $"{namespaceRoot}.{suffix}", CSharpSyntaxReader.ReadNamespace(source));
+        }
     }
 
     [Theory]

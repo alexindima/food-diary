@@ -26,3 +26,5 @@ Replay remains here to use internal transaction reset mechanics without exposing
 
 OutboxProcessing option binding/validation belongs to Outbox.Infrastructure and
 must be composed explicitly through AddOutboxProcessing(configuration).
+
+EfAtomicCommandExecutor adapts the existing coordinated transaction runner to the database-free application execution port. Preserve clean entry, whole-attempt retries, rollback/reset and coordinated saving; never expose transaction handles.

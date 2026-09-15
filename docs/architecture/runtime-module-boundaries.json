@@ -16,8 +16,8 @@
       "contract": "IFavoriteMealSourceReadService",
       "contractOwner": "Favorites",
       "provider": "Meals",
-      "implementation": "MealReadService",
-      "source": "Modules/Meals/Application/Services/MealReadService.cs",
+      "implementation": "FavoriteMealSourceReadService",
+      "source": "Modules/Meals/Application/Services/FavoriteMealSourceReadService.cs",
       "consumers": [
         "Favorites"
       ],
@@ -58,7 +58,7 @@
         "Meals"
       ],
       "transaction": "ambient-transaction-or-autocommit",
-      "reason": "Gamification relational enqueue executes SQL immediately in an ambient transaction or autocommits when absent; InMemory stages tracked state. Shared context does not imply atomicity with later caller SaveChanges."
+      "reason": "Gamification relational enqueue executes SQL immediately. Meals Create/Repeat opt into IAtomicCommand so handler and save share a transaction; recognition creation already owns its serialized transaction. Other direct enqueue consumers may autocommit. InMemory staging is not evidence of SQL atomicity."
     },
     {
       "contract": "IProfileDietologistReadService",
@@ -76,8 +76,8 @@
       "contract": "IProfileNotificationReadService",
       "contractOwner": "Users",
       "provider": "Notifications",
-      "implementation": "WebPushSubscriptionReadService",
-      "source": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
+      "implementation": "ProfileNotificationReadService",
+      "source": "Modules/Notifications/Application/Services/ProfileNotificationReadService.cs",
       "consumers": [
         "Users"
       ],

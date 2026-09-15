@@ -38,20 +38,21 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: WeeklyGoal
-- Public contract files: 2
+- Public contract files: 3
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 2
+- Public contract types: 3
 - Interfaces: 2
-- DTO/read-model/projection types: 0
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 1
 - Contracts referencing domain entities: 0
 - `interface IWeeklyGoalRepository`
 - `interface IWeeklyGoalTransactionRunner`
+- `record WeeklyGoalReadModel`
 
 ## Focused Tests
 

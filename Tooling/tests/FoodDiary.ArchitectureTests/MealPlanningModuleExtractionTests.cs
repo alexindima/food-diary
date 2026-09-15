@@ -6,7 +6,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void DietType_IsOwnedOnlyByMealPlanningDomain() {
         Type enumType = typeof(FoodDiary.Modules.MealPlanning.Domain.Enums.DietType);
         Assert.Equal("FoodDiary.Modules.MealPlanning.Domain", enumType.Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.Equal("FoodDiary.Modules.MealPlanning.Domain.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Enums", "DietType.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "DietType.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));

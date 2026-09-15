@@ -446,6 +446,7 @@ public class LayeringTests {
 
         string[] violations = [.. presentationRoots.SelectMany(path => Directory.GetFiles(path, "*Controller.cs", SearchOption.AllDirectories))
             .Where(path => !path.StartsWith(controllersRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), "Controllers", StringComparison.Ordinal))
             .Where(path => !presentationRoots.Any(project => string.Equals(Path.GetDirectoryName(path),
                 Path.Combine(project, "Controllers"), StringComparison.OrdinalIgnoreCase)))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))

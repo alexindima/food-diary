@@ -51,3 +51,7 @@ isolated cross-platform snapshot.
 Credential-bearing account-link commands need an additional security pass:
 confirm current-user scoping, provider-identity uniqueness, email ownership,
 idempotent retries, and refusal to replace a different existing identity.
+
+Command marker changes also affect transaction timing: IAtomicCommand wraps handler
+and save, whereas ITransactionalCommand saves after the handler. Verify retry safety,
+DI registration, rollback and post-commit ordering with the persistence provider.

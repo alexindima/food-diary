@@ -22,22 +22,14 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
-        },
-        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "ff1a6a08603ce77af7e88be9fb1244028e6c65aaa2c63f3297c4d62013d8536f"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3d9e02b9ea73aed3d362d964b10a3cff0d5853f898d3299aaa15baecda719c53"
+          "sha256": "b7b83f812d2d707b796e4720f595e013efc8a2603c09707e8a6120c0aac878ee"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "Reviewed docs/ARCHITECTURE.md atomic-command addition; repository remains a modular monolith with independent supporting services and existing navigation links.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:23.6235667Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:25.8514597Z"
     },
     {
       "pageId": "module.frontend",
@@ -61,17 +53,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "ff1a6a08603ce77af7e88be9fb1244028e6c65aaa2c63f3297c4d62013d8536f"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3d9e02b9ea73aed3d362d964b10a3cff0d5853f898d3299aaa15baecda719c53"
+          "sha256": "b7b83f812d2d707b796e4720f595e013efc8a2603c09707e8a6120c0aac878ee"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "Reviewed architecture delta: atomic Meals commands and Recipes nutrition ownership do not alter MailRelay/MailInbox hosts, client-package boundary, or BugTriage ownership.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:25.0776623Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:29.7579122Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -151,18 +139,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
-        },
-        {
           "path": "docs/adr/README.md",
-          "sha256": "84aea8115cf69fdb777d1a8e23fb6d12605af3733ae301a14eef0a2dd3f94d07"
+          "sha256": "c6c0b5e48fcb89cc41cfaf05dd828d1ade90d97f2f0d9b082123094787fbbc3a"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "ADR 0048 adds a decision without changing source authority or the ADR lifecycle; reviewed docs/adr/README.md and current policy.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:26.4646480Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:19:15.6857381Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -170,18 +154,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "dd026a00407902348f88bd25fb2b920939196b0c1c3897546b71a298d3901a69"
-        },
-        {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1290104708e85690a6d85c90fc976abae818844da29291f701687d4fc9726ac9"
+          "sha256": "70f9c2433400c3ae138eddd2355059182de6dc766e85fa094cc12f10709114ec"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "The module graph was reconciled with canonical namespaces; catalog generation and all 2090 architecture tests passed. Inventory fields and limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:27.7662734Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:19:08.2603915Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -220,40 +200,36 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "45f240d45bcf663e9be82c91096f8f6328b896356cc41475ef898b25b39ca7e8",
+      "pageSha256": "eb7098f5c5a1c836f9c847d2327794f11a3cb71d9e6d9dccafe12b395cb2d03f",
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "3cdfe55576b1bf0d9259e2c855ffccc3a317bbc88a7f5763846a34652e1355dc"
+          "sha256": "57a4b97ea6b373f1e7e4b52ab95928539bb61b446e8b661bd32d8595b7529549"
         }
       ],
-      "reason": "Reviewed workflow guidance against current sources: ADR 0042 changes internal runtime context ownership only; routes, payloads and client packages remain unchanged by this task. Six HTTP scenarios passed. Concurrent module source relocation does not change these workflow instructions.",
+      "reason": "Full OpenAPI snapshot still passes; added focused RecipeLikes 404 schema snapshot for ApiErrorHttpResponse. Existing workflow correctly describes success-response coverage and separate error-shape review.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:28.8324918Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:28.2282801Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
+      "pageSha256": "f1377bfc80eadd0ff4d6265843c3eb2747177063ec40db6befaa9a8cfc37dabf",
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c3e4060c07a01a9acdafe3feaec752b27e84a5fb4350f4006c5cb6586f86a634"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "dd026a00407902348f88bd25fb2b920939196b0c1c3897546b71a298d3901a69"
+          "sha256": "7a61137d51125c8564a8e74a6fe55612813bd47aa4a84d30c7b8bc64d6af3334"
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4c619f05b6cacd2a373ac7c96c6d18b2876d4adc5c99dd79104274de5624eca6"
+          "sha256": "0ddc609af610f6feff5877b5dbc388fb403b718b17fdd91038d75903e9c2a8f3"
         }
       ],
-      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
+      "reason": "The exact dependency matrix remains enforced; the passing architecture suite confirms the documented no-drift workflow without a new production project.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:29.9884868Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:19:20.8221299Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -310,14 +286,18 @@
       "pageSha256": "302053473c79245b3486eebd10e393115d8e635c0206910a2901e3ea03c9d655",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "5b9ea206e1ece9d170c5926c9b1734e1754172ee3811dc00e8effe67e9520945"
+          "path": ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
+          "sha256": "0a9626c94824e58028e0897c9319e244f244c12f3bb9eecbf4fe883287696986"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "9dc903f477f3dc9e90f1cb9adf9edb0701742c31fc27014c9fe7a3bcbac1f4c8"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Verified module integration-test path aliases preserve current output paths; SQL/JSON backend-contract parity passes all seven views. Removing accidental zero-ambiguity counts preserves exact shape, source-hash and fail-closed guarantees.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:26.9558009Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:28.7063787Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -480,13 +460,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "84aea8115cf69fdb777d1a8e23fb6d12605af3733ae301a14eef0a2dd3f94d07"
+          "sha256": "c6c0b5e48fcb89cc41cfaf05dd828d1ade90d97f2f0d9b082123094787fbbc3a"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "ADR 0048 records the atomic execution and formula ownership decisions. Trigger and decision workflow remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:33.5232033Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:19:11.7761211Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -525,17 +505,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "9e6ac93a5f75f104e44f47ca35d4fa6ce52b06167307ba434592ae2c94e09765"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "b4528153c7ea6d58982bc654d9fbfda5d5b520dedcd2a9a4fafa81de70b6e5a2"
+          "sha256": "4d8fd46bd84178bc355ab1367c0b0520477710d4fb5fef8db92ca22871a66f0d"
         }
       ],
-      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
+      "reason": "Regenerated domain index; WeeklyGoals read projection preserves user/week predicates and no tracking, verified by PostgreSQL tests. No migration or aggregate ownership change in this fix.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:34.5554055Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:26.4363843Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -743,13 +719,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1290104708e85690a6d85c90fc976abae818844da29291f701687d4fc9726ac9"
+          "sha256": "70f9c2433400c3ae138eddd2355059182de6dc766e85fa094cc12f10709114ec"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "The reconciled module dependency manifest remains the input for downstream review; no ownership-tool behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:35.8726132Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:19:18.5123353Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -803,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2b12200ce0464da719ac5d46eed72b7ccfde16d47aff3b9a58257adf7696f075"
+          "sha256": "3ff1d71eb24aeb3b75121837c66676bc33d25c113337ea2e9defde59ff65359c"
         }
       ],
-      "reason": "Reviewed privacy and runtime workflow pages: the shared audit/email/replay mappings move unchanged, with no new data sharing, retention, credentials or logging. Provider rollback and replay cases pass; generated inventories remain navigation evidence.",
+      "reason": "Regenerated sensitive-data inventory after source/test updates. Query scoping, freshness, classification and advisory-only interpretation remain unchanged; no provider sharing or new credential storage introduced.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:37.0140616Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:30.6653631Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -848,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cd340a63da963ffd0aafa2e8b41bcff8c6fe6f47029bffa2e6feab7dfc6a312e"
+          "sha256": "6911338f68da050e7810208ef73f9e5b5b7fe003f87a33e641624bdaf9b897ac"
         }
       ],
-      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
+      "reason": "Regenerated quality inventory and audited test reference limitations. Restored discovery and negative scanner cases demonstrate why symbol references are navigation rather than execution coverage; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:38.3735788Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:27.751863Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -923,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8f7005bc7b473f9e3b5207c7a5ad664953e317abdb1d051a05f8c20928dfbc69"
+          "sha256": "83a32472a22c778a9d0ebd3312665befea3105dfaff7d040e3d31a20a1b8d1cb"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "Runtime inventory regenerated. Container COPY fixes restore RecentItems compilation; shared-context DI fixture fixes preserve actual rollback and outbox assertions. Topology query and retry guidance remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:42.1506258Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:30.2240558Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -938,21 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cd340a63da963ffd0aafa2e8b41bcff8c6fe6f47029bffa2e6feab7dfc6a312e"
+          "sha256": "6911338f68da050e7810208ef73f9e5b5b7fe003f87a33e641624bdaf9b897ac"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8f7005bc7b473f9e3b5207c7a5ad664953e317abdb1d051a05f8c20928dfbc69"
+          "sha256": "83a32472a22c778a9d0ebd3312665befea3105dfaff7d040e3d31a20a1b8d1cb"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2b12200ce0464da719ac5d46eed72b7ccfde16d47aff3b9a58257adf7696f075"
+          "sha256": "3ff1d71eb24aeb3b75121837c66676bc33d25c113337ea2e9defde59ff65359c"
         }
       ],
-      "reason": "Reviewed privacy and runtime workflow pages: the shared audit/email/replay mappings move unchanged, with no new data sharing, retention, credentials or logging. Provider rollback and replay cases pass; generated inventories remain navigation evidence.",
+      "reason": "Quality/runtime/privacy indexes refreshed; controller security discovery now covers canonical module assemblies. Workflow still correctly distinguishes navigation leads from proven security findings; no scanner verdict is inferred.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:43.5933012Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:29.3531865Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1190,17 +1166,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0ddbd2de4b4fa4249fb75de5818706e771ba9a96246db8b97fa1007106e3ef6a"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
+          "sha256": "638d92b1e079a049eabfcda6fa763b7847b69daaea3262de7fae59fd1090c7b3"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "Catalog regenerated for current project paths; MCP integration-test selector aliases now include Platform path while preserving module owner matching and actual returned path. Existing relocation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:39.7473357Z"
+      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
+      "reviewedAtUtc": "2026-09-15T23:43:27.06641Z"
     },
     {
       "pageId": "workflow.review-diff",

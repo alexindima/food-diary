@@ -7,9 +7,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
+    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 

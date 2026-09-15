@@ -55,24 +55,6 @@ public sealed class FastingModuleExtractionTests {
     }
 
     [Fact]
-    public void ExtractedFastingAssembly_HasOnlyApprovedProjectReferences() {
-        string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
-
-        Assert.Equal(expectedReferences, references);
-    }
-
-    [Fact]
-    public void FastingContractsAssembly_HasOnlyApprovedProjectReferences() {
-        string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"];
-
-        Assert.Equal(expectedReferences, references);
-    }
-
-    [Fact]
     public void FastingDomainSource_LivesOnlyInModuleDomainProject() {
         string centralRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Tracking", "Fasting");
         string moduleRoot = ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Domain");

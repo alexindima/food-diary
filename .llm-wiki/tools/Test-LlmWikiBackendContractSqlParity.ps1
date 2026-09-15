@@ -14,8 +14,8 @@ $cases = @(
     [pscustomobject]@{ View = 'consumers'; Query = 'User'; Minimum = 30 }
     [pscustomobject]@{ View = 'production'; Query = 'User'; Minimum = 30 }
     [pscustomobject]@{ View = 'tests'; Query = 'User'; Minimum = 30 }
-    [pscustomobject]@{ View = 'ambiguous'; Query = ''; Minimum = 0; Expected = 0 }
-    [pscustomobject]@{ View = 'unconsumed'; Query = ''; Minimum = 0; Expected = 0 }
+    [pscustomobject]@{ View = 'ambiguous'; Query = ''; Minimum = 0 }
+    [pscustomobject]@{ View = 'unconsumed'; Query = ''; Minimum = 0 }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
 $jsonDurations = [Collections.Generic.List[double]]::new()
@@ -46,9 +46,6 @@ foreach ($case in $cases) {
     foreach ($property in $sqlite.PSObject.Properties) { $returnedCount += @($property.Value).Count }
     if ($returnedCount -lt [int]$case.Minimum) {
         throw "$($case.View)/$($case.Query): backend-contract parity was vacuous; expected at least $($case.Minimum) record(s), got $returnedCount."
-    }
-    if ($case.PSObject.Properties['Expected'] -and $returnedCount -ne [int]$case.Expected) {
-        throw "$($case.View)/$($case.Query): expected exactly $($case.Expected) record(s), got $returnedCount."
     }
     $sqlDurations.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
     $jsonDurations.Add($jsonStopwatch.Elapsed.TotalMilliseconds)

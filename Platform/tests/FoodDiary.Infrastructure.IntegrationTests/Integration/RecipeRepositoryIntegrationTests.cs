@@ -20,7 +20,6 @@ using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Results;
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -63,51 +62,30 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.Equal(800, (await context.Recipes.SingleAsync(value => value.Id == recipe.Id)).TotalCalories);
     }
 
-    [Fact]
-    public void CalculateAutoNutrition_WithNestedRecipeIngredient_UsesNestedRecipeNutritionPerServing() {
-        var ingredient = new RecipeOverviewIngredientReadItem(
-            Guid.NewGuid(),
-            Amount: 2,
-            ProductId: null,
-            ProductName: null,
-            ProductBaseUnit: null,
-            ProductBaseAmount: null,
-            ProductCaloriesPerBase: null,
-            ProductProteinsPerBase: null,
-            ProductFatsPerBase: null,
-            ProductCarbsPerBase: null,
-            ProductFiberPerBase: null,
-            ProductAlcoholPerBase: null,
-            NestedRecipeId: Guid.NewGuid(),
-            NestedRecipeName: "Sauce",
-            NestedRecipeServings: 4,
-            NestedRecipeTotalCalories: 320,
-            NestedRecipeTotalProteins: 12,
-            NestedRecipeTotalFats: 20,
-            NestedRecipeTotalCarbs: 24,
-            NestedRecipeTotalFiber: 6,
-            NestedRecipeTotalAlcohol: 2);
-        var step = new RecipeOverviewStepReadItem(
-            Guid.NewGuid(),
-            StepNumber: 1,
-            Title: null,
-            "Mix nested recipe",
-            ImageUrl: null,
-            ImageAssetId: null,
-            [ingredient]);
+    [RequiresDockerFact]
+    public async Task GetPagedAsync_WithNestedRecipeIngredient_UsesOwnerNutritionPolicyAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"nested-overview-{Guid.NewGuid():N}@example.com", "hash");
+        var nested = Recipe.Create(user.Id, "Sauce", servings: 4);
+        nested.SetManualNutrition(320, 12, 20, 24, 6, 2);
+        var parent = Recipe.Create(user.Id, "Parent recipe", servings: 1);
+        parent.AddStep(1, "Mix nested recipe").AddNestedRecipeIngredient(nested.Id, 2);
+        context.Users.Add(user);
+        context.Recipes.AddRange(nested, parent);
+        await context.SaveChangesAsync();
+        var readService = new RecipeOverviewReadService(context);
 
-        IReadOnlyList<RecipeOverviewStepReadItem> steps = [step];
-        object summary = InvokeRecipeOverviewStatic<object>("CalculateAutoNutrition", steps);
-
+        (IReadOnlyList<RecipeOverviewReadItem> items, _) = await readService.GetPagedAsync(
+            user.Id, includePublic: false, page: 1, limit: 10, filters: new RecipeQueryFilters("Parent recipe"));
+        RecipeOverviewReadItem item = Assert.Single(items);
         Assert.Multiple(
-            () => Assert.Equal(160d, GetPrivateProperty<double?>(summary, "TotalCalories")),
-            () => Assert.Equal(6d, GetPrivateProperty<double?>(summary, "TotalProteins")),
-            () => Assert.Equal(10d, GetPrivateProperty<double?>(summary, "TotalFats")),
-            () => Assert.Equal(12d, GetPrivateProperty<double?>(summary, "TotalCarbs")),
-            () => Assert.Equal(3d, GetPrivateProperty<double?>(summary, "TotalFiber")),
-            () => Assert.Equal(1d, GetPrivateProperty<double?>(summary, "TotalAlcohol")));
+            () => Assert.Equal(160d, item.TotalCalories),
+            () => Assert.Equal(6d, item.TotalProteins),
+            () => Assert.Equal(10d, item.TotalFats),
+            () => Assert.Equal(12d, item.TotalCarbs),
+            () => Assert.Equal(3d, item.TotalFiber),
+            () => Assert.Equal(1d, item.TotalAlcohol));
     }
-
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactRecipeMatch() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -388,19 +366,4 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             [.. expected.Select(id => id.Value).Order()],
             [.. actual.Select(id => id.Value).Order()]);
 
-    private static T InvokeRecipeOverviewStatic<T>(string methodName, params object?[] arguments) {
-        MethodInfo method = typeof(RecipeOverviewReadService)
-            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
-            .Single(candidate =>
-                string.Equals(candidate.Name, methodName, StringComparison.Ordinal) &&
-                candidate.GetParameters().Length == arguments.Length);
-        return (T)method.Invoke(null, arguments)!;
-    }
-
-    private static T GetPrivateProperty<T>(object instance, string propertyName) {
-        PropertyInfo property = instance.GetType().GetProperty(
-            propertyName,
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!;
-        return (T)property.GetValue(instance)!;
-    }
 }

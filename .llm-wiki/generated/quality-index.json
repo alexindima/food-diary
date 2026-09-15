@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5397,
+    "productionFiles": 5405,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 927,
@@ -24,11 +24,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1528,
+      "nonBlankLines": 1531,
       "decisionPoints": 381,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 602.06
+      "structuralRiskScore": 602.12
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
@@ -439,12 +439,12 @@
       "structuralRiskScore": 108
     },
     {
-      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 365,
-      "decisionPoints": 67,
+      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
+      "nonBlankLines": 195,
+      "decisionPoints": 69,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 107.8
+      "structuralRiskScore": 107.4
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
@@ -533,14 +533,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 99.98
-    },
-    {
-      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 192,
-      "decisionPoints": 64,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 99.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -813,6 +805,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 77.68
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
+      "nonBlankLines": 229,
+      "decisionPoints": 47,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 77.08
     }
   ],
   "files": [
@@ -2466,11 +2466,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 192,
-      "decisionPoints": 64,
+      "nonBlankLines": 195,
+      "decisionPoints": 69,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 99.84
+      "structuralRiskScore": 107.4
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
@@ -2503,6 +2503,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 69.02
+    },
+    {
+      "path": "FoodDiary.Analyzers/ReadModelWriteBoundaryAnalyzer.cs",
+      "nonBlankLines": 67,
+      "decisionPoints": 20,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.34
     },
     {
       "path": "FoodDiary.Analyzers/RedundantEmptyRecordParameterListAnalyzer.cs",
@@ -2794,11 +2802,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1528,
+      "nonBlankLines": 1531,
       "decisionPoints": 381,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 602.06
+      "structuralRiskScore": 602.12
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -4338,11 +4346,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 365,
-      "decisionPoints": 67,
+      "nonBlankLines": 300,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 107.8
+      "structuralRiskScore": 66
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
@@ -35170,11 +35178,11 @@
     },
     {
       "path": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.6
+      "structuralRiskScore": 2.62
     },
     {
       "path": "Modules/RecipeCommunity/Presentation/RecipeLikes/Mappings/RecipeLikeHttpMappings.cs",
@@ -35466,11 +35474,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Mappings/RecipeMappings.cs",
-      "nonBlankLines": 105,
-      "decisionPoints": 13,
+      "nonBlankLines": 106,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.6
+      "structuralRiskScore": 12.62
     },
     {
       "path": "Modules/Recipes/Application/Mappings/RecipeOverviewReadMappings.cs",
@@ -35666,11 +35674,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Services/RecipeNutritionCalculator.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 13,
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.64
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Recipes/Application/Services/RecipeNutritionSummary.cs",
@@ -35839,6 +35847,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.72
+    },
+    {
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionIngredient.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionPolicy.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.24
+    },
+    {
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionValues.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
@@ -39906,11 +39938,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalRepository.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalTransactionRunner.cs",
@@ -39919,6 +39951,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/WeeklyGoals/Application.Abstractions/Models/WeeklyGoalReadModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/WeeklyGoals/Application/AssemblyInfo.cs",
@@ -39962,19 +40002,19 @@
     },
     {
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalMapping.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.48
     },
     {
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalWeekPolicy.cs",
@@ -40074,11 +40114,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 5,
+      "nonBlankLines": 61,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.48
+      "structuralRiskScore": 10.22
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalsDbContext.cs",
@@ -42729,6 +42769,14 @@
       "structuralRiskScore": 1.72
     },
     {
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IAtomicCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -42775,6 +42823,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandExecutor.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
@@ -42858,11 +42914,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 3,
+      "nonBlankLines": 32,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.04
+      "structuralRiskScore": 8.14
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
@@ -43793,6 +43849,14 @@
       "structuralRiskScore": 30.92
     },
     {
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfAtomicCommandExecutor.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -43898,11 +43962,11 @@
     },
     {
       "path": "Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 56,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.6
+      "structuralRiskScore": 2.62
     },
     {
       "path": "Shared/FoodDiary.Persistence.Runtime/Properties/AssemblyInfo.cs",
@@ -47730,7 +47794,7 @@
       "name": "RecipeLikesController",
       "role": "Controller",
       "path": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs",

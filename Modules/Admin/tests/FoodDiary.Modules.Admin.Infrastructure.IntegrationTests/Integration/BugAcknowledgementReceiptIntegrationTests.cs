@@ -1,6 +1,9 @@
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Persistence;
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +28,7 @@ public sealed class BugAcknowledgementReceiptIntegrationTests(PostgresDatabaseFi
         await using FoodDiaryDbContext other = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = Provider(other);
         await otherProvider.GetRequiredService<IBugAcknowledgementReceipts>().RecordAsync(id, CancellationToken.None);
-        Assert.Empty(other.ChangeTracker.Entries<BugAcknowledgementReceipt>());
+        Assert.Empty(otherProvider.GetRequiredService<AdminDbContext>().ChangeTracker.Entries<BugAcknowledgementReceipt>());
         Assert.Equal(1, await other.BugAcknowledgementReceipts.CountAsync(x => x.InboxId == id));
     }
 
@@ -43,7 +46,7 @@ public sealed class BugAcknowledgementReceiptIntegrationTests(PostgresDatabaseFi
         Assert.Same(failure.Error, error);
         Assert.NotNull(error.StackTrace);
         Assert.Contains(nameof(FailingSaveInterceptor.SavingChangesAsync), error.StackTrace, StringComparison.Ordinal);
-        Assert.Empty(context.ChangeTracker.Entries<BugAcknowledgementReceipt>());
+        Assert.Empty(provider.GetRequiredService<AdminDbContext>().ChangeTracker.Entries<BugAcknowledgementReceipt>());
         Assert.False(await receipts.ContainsAsync(id, CancellationToken.None));
     }
 
@@ -52,7 +55,9 @@ public sealed class BugAcknowledgementReceiptIntegrationTests(PostgresDatabaseFi
             ["MailInboxClient:BaseUrl"] = "https://inbox.example.com",
         }).Build();
         var services = new ServiceCollection();
-        services.AddSingleton(context);
+        services.AddPersistenceRuntime(configuration);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
+        services.AddAdminPersistence();
         services.AddAdminMailInboxIntegration(configuration);
         return services.BuildServiceProvider();
     }

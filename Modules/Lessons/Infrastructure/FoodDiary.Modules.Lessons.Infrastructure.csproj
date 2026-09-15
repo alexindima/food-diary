@@ -7,12 +7,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>

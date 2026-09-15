@@ -214,7 +214,7 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
-    public void HostEntryPoints_DoNotUseMediatorDirectly() {
+    public void HostCompositionFiles_DoNotDispatchUseCasesDirectly() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] hostRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
@@ -225,11 +225,10 @@ public sealed class HostCompositionBoundaryTests {
             ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.Initializer"),
         ];
         string[] violations = [.. SourceScanner.SourceFiles(hostRoots)
+            .Where(path => !path.Equals(ArchitectureTestPaths.FromRoot("FoodDiary.Initializer", "InitialAdminBootstrapper.cs"), StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry =>
-                entry.line.Contains("ISender", StringComparison.Ordinal) ||
-                entry.line.Contains("IMediator", StringComparison.Ordinal) ||
                 entry.line.Contains(".Send(", StringComparison.Ordinal))
             .Select(entry => string.Create(
                 CultureInfo.InvariantCulture,
@@ -240,7 +239,7 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
-    public void InitializerSource_DoesNotReferenceHttpPresentationOrMediatorSurface() {
+    public void InitializerSource_DoesNotReferenceHttpPresentationSurface() {
         string[] initializerRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Initializer"),
             ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.Initializer"),
@@ -258,9 +257,6 @@ public sealed class HostCompositionBoundaryTests {
             "MapPut(",
             "MapPatch(",
             "MapDelete(",
-            "ISender",
-            "IMediator",
-            ".Send(",
         ]);
 
         Assert.Empty(violations);

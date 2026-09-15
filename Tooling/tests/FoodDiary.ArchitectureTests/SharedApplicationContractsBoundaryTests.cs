@@ -13,7 +13,7 @@ public sealed class SharedApplicationContractsBoundaryTests {
 
     [Theory]
     [InlineData("FoodDiary.Audit.Contracts", "FoodDiary.Modules.Users.Domain.Contracts")]
-    [InlineData("FoodDiary.Authentication.Contracts")]
+    [InlineData("FoodDiary.Authentication.Contracts", "FoodDiary.Results")]
     [InlineData("FoodDiary.Email.Contracts")]
     [InlineData("FoodDiary.Nutrition.Contracts")]
     [InlineData("FoodDiary.Outbox.Management.Contracts")]

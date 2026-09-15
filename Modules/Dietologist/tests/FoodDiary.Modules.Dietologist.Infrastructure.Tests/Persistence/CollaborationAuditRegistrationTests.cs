@@ -1,5 +1,6 @@
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
@@ -41,7 +42,7 @@ public sealed class CollaborationAuditRegistrationTests {
         Assert.Same(audit, Assert.Single(first.ServiceProvider.GetServices<ISaveChangesInterceptor>()));
         Assert.NotSame(audit, Assert.Single(second.ServiceProvider.GetServices<ISaveChangesInterceptor>()));
 
-        DbContextOptions<FoodDiaryDbContext> options = first.ServiceProvider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>();
+        DbContextOptions<SharedPersistenceDbContext> options = first.ServiceProvider.GetRequiredService<DbContextOptions<SharedPersistenceDbContext>>();
         CoreOptionsExtension core = Assert.IsType<CoreOptionsExtension>(options.FindExtension<CoreOptionsExtension>());
         Assert.Collection(core.Interceptors ?? [],
             interceptor => Assert.IsType<DatabaseCommandTelemetryInterceptor>(interceptor),
@@ -58,7 +59,7 @@ public sealed class CollaborationAuditRegistrationTests {
         using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
         using IServiceScope scope = provider.CreateScope();
         Assert.Empty(scope.ServiceProvider.GetServices<ISaveChangesInterceptor>());
-        DbContextOptions<FoodDiaryDbContext> options = scope.ServiceProvider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>();
+        DbContextOptions<SharedPersistenceDbContext> options = scope.ServiceProvider.GetRequiredService<DbContextOptions<SharedPersistenceDbContext>>();
         CoreOptionsExtension core = Assert.IsType<CoreOptionsExtension>(options.FindExtension<CoreOptionsExtension>());
         Assert.Collection(core.Interceptors ?? [],
             interceptor => Assert.IsType<DatabaseCommandTelemetryInterceptor>(interceptor),

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Nutrition;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Recipes.Application.Services;
@@ -99,13 +100,13 @@ public static class RecipeMappings {
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {
         if (!recipe.IsNutritionAutoCalculated) {
-            return new RecipeNutritionSummary(
-                recipe.ManualCalories ?? recipe.TotalCalories,
-                recipe.ManualProteins ?? recipe.TotalProteins,
-                recipe.ManualFats ?? recipe.TotalFats,
-                recipe.ManualCarbs ?? recipe.TotalCarbs,
-                recipe.ManualFiber ?? recipe.TotalFiber,
-                recipe.ManualAlcohol ?? recipe.TotalAlcohol);
+            RecipeNutritionValues values = RecipeNutritionPolicy.SelectManual(
+                new RecipeNutritionValues(recipe.ManualCalories, recipe.ManualProteins, recipe.ManualFats,
+                    recipe.ManualCarbs, recipe.ManualFiber, recipe.ManualAlcohol),
+                new RecipeNutritionValues(recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats,
+                    recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol));
+            return new RecipeNutritionSummary(values.TotalCalories, values.TotalProteins, values.TotalFats,
+                values.TotalCarbs, values.TotalFiber, values.TotalAlcohol);
         }
 
         return RecipeNutritionCalculator.Calculate(recipe);

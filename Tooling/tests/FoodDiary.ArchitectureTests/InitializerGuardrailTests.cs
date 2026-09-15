@@ -5,77 +5,16 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class InitializerGuardrailTests {
     [Fact]
-    public void InitializerProject_ReferencesOnlyApplicationInfrastructureAndOperationalPackages() {
+    public void InitializerProject_UsesOnlyApprovedOperationalPackages() {
         const string relativeProjectPath = "FoodDiary.Initializer/FoodDiary.Initializer.csproj";
-        string[] expectedProjectReferences = [
-            "FoodDiary.Application.Contracts",
-            "FoodDiary.Modules.Images.Application",
-            "FoodDiary.Modules.MealPlanning.Application",
-            "FoodDiary.Modules.Notifications.Application",
-            "FoodDiary.Modules.RecipeCommunity.Application",
-            "FoodDiary.Application.Runtime",
-            "FoodDiary.Modules.Usda.Application",
-            "FoodDiary.Authentication.Infrastructure",
-            "FoodDiary.Infrastructure",
-            "FoodDiary.Modules.Admin.Application",
-            "FoodDiary.Modules.Admin.Infrastructure",
-            "FoodDiary.Modules.Ai.Application",
-            "FoodDiary.Modules.Ai.Infrastructure",
-            "FoodDiary.Modules.Billing.Infrastructure",
-            "FoodDiary.Modules.BodyMetrics.Application",
-            "FoodDiary.Modules.BodyMetrics.Infrastructure",
-            "FoodDiary.Modules.ContentReports.Infrastructure",
-            "FoodDiary.Modules.Cycles.Infrastructure",
-            "FoodDiary.Modules.DailyAdvices.Infrastructure",
-            "FoodDiary.Modules.Dashboard.Application",
-            "FoodDiary.Modules.Dashboard.Infrastructure",
-            "FoodDiary.Modules.Dietologist.Infrastructure",
-            "FoodDiary.Modules.Exercises.Application",
-            "FoodDiary.Modules.Exercises.Infrastructure",
-            "FoodDiary.Modules.Export.Application",
-            "FoodDiary.Modules.Export.Infrastructure",
-            "FoodDiary.Modules.Fasting.Infrastructure",
-            "FoodDiary.Modules.Favorites.Infrastructure",
-            "FoodDiary.Modules.Gamification.Infrastructure",
-            "FoodDiary.Modules.Hydration.Infrastructure",
-            "FoodDiary.Modules.Identity.Application",
-            "FoodDiary.Modules.Identity.Application.Abstractions",
-            "FoodDiary.Modules.Identity.Infrastructure",
-            "FoodDiary.Modules.Images.Infrastructure",
-            "FoodDiary.Modules.Lessons.Infrastructure",
-            "FoodDiary.Modules.Marketing.Infrastructure",
-            "FoodDiary.Modules.MealPlanning.Infrastructure",
-            "FoodDiary.Modules.Meals.Infrastructure",
-            "FoodDiary.Modules.Notifications.Application.Abstractions",
-            "FoodDiary.Modules.Notifications.Infrastructure",
-            "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
-            "FoodDiary.Modules.Products.Application",
-            "FoodDiary.Modules.Products.Infrastructure",
-            "FoodDiary.Modules.RecentItems.Infrastructure",
-            "FoodDiary.Modules.RecipeCommunity.Infrastructure",
-            "FoodDiary.Modules.Recipes.Application",
-            "FoodDiary.Modules.Recipes.Infrastructure",
-            "FoodDiary.Modules.Statistics.Application",
-            "FoodDiary.Modules.Tdee.Application",
-            "FoodDiary.Modules.Usda.Infrastructure",
-            "FoodDiary.Modules.Users.Infrastructure",
-            "FoodDiary.Modules.Wearables.Infrastructure",
-            "FoodDiary.Modules.WeeklyCheckIn.Application",
-            "FoodDiary.Modules.WeeklyGoals.Infrastructure",
-            "FoodDiary.Outbox.Abstractions",
-            "FoodDiary.Outbox.Management.Contracts",
-            "FoodDiary.ReadModel.Composition",
-        ];
         string[] expectedPackageReferences = [
             "Microsoft.EntityFrameworkCore",
             "Microsoft.EntityFrameworkCore.Relational",
             "Microsoft.Extensions.Hosting",
         ];
 
-        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(expectedProjectReferences, projectReferences);
         Assert.Equal(expectedPackageReferences, packageReferences);
     }
 

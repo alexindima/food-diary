@@ -1,7 +1,7 @@
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Common;
 using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
-using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -32,14 +32,14 @@ public sealed class GetWeeklyGoalQueryHandler(
         UserId userId,
         DateTime weekStartUtc,
         CancellationToken cancellationToken) {
-        WeeklyGoal? goal = await goalRepository
-            .GetAsync(userId, weekStartUtc, cancellationToken: cancellationToken)
+        WeeklyGoalReadModel? goal = await goalRepository
+            .GetReadModelAsync(userId, weekStartUtc, cancellationToken)
             .ConfigureAwait(false);
         if (goal is null) {
             return null;
         }
 
-        int progressDays = await progressReader.GetProgressDaysAsync(goal, cancellationToken).ConfigureAwait(false);
+        int progressDays = await progressReader.GetProgressDaysAsync(userId, goal.WeekStartUtc, cancellationToken).ConfigureAwait(false);
         return goal.ToModel(progressDays);
     }
 }

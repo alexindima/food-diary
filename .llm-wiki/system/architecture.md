@@ -3,6 +3,7 @@ id: system.architecture
 kind: system
 status: current
 sources:
+  - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/adr/0041-owner-requests-for-module-use-cases.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
   - docs/ARCHITECTURE.md
@@ -109,3 +110,16 @@ owner Application handlers implement the operations. Technical ports remain
 explicit exceptions. Nested mutations preserve caller-owned commits, and Billing
 references Marketing.Contracts for conversion recording. Request-boundary and
 transaction tests complement the project-reference matrix.
+
+## Explicit atomic command execution
+
+ITransactionalCommand retains save-after-handler semantics. IAtomicCommand opts a
+top-level retry-safe handler into one transaction with its coordinated save through
+IAtomicCommandExecutor. Meals Create/Repeat use this mode; recognition creation
+retains its own serialized transaction and local handler call. Post-commit actions
+flush only after commit. See ADR 0048.
+
+Recipes Domain owns the scalar RecipeNutritionPolicy used by application and read
+composition. FD0018 rejects write/tracking/SQL capabilities in composed readers;
+FD0016 also reviews shared context factories, tracker access and direct ADO methods
+in module adapters. These are engineering guardrails, not a database security sandbox.

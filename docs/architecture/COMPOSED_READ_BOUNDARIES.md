@@ -48,3 +48,9 @@ of transaction or SQL behavior.
 See ADRs 0038, 0042, 0043 and 0044. Further changes should address an observed leak,
 query limitation or operational requirement, rather than eliminate intentional
 composition dependencies indiscriminately.
+
+FD0018 now enforces the read-only execution surface at compile time, including
+EF bulk writes, tracking, raw SQL, explicit context casts and ADO method groups.
+The no-tracking facade and compiler checks complement each other; neither is a
+database permission boundary. Recipe scalar nutrition is computed by the owner
+Domain/Nutrition/RecipeNutritionPolicy, shared by command and projection adapters.

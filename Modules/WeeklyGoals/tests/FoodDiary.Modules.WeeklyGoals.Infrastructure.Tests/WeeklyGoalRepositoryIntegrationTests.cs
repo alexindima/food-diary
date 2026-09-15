@@ -6,6 +6,7 @@ using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Domain.Primitives;
 
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
@@ -45,6 +46,12 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
         await repository.AddAsync(goal, CancellationToken.None);
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         owned.ChangeTracker.Clear();
+
+        WeeklyGoalReadModel? projection = await repository.GetReadModelAsync(user.Id, weekStartUtc);
+        Assert.Equal(new WeeklyGoalReadModel(goal.Id, weekStartUtc, goal.Type, 5, ReminderEnabled: true, 570, 240), projection);
+        Assert.Empty(owned.ChangeTracker.Entries());
+        Assert.Null(await repository.GetReadModelAsync(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), weekStartUtc));
+        Assert.Null(await repository.GetReadModelAsync(user.Id, weekStartUtc.AddDays(7)));
 
         WeeklyGoal? untracked = await repository.GetAsync(user.Id, weekStartUtc, cancellationToken: CancellationToken.None);
         Assert.NotNull(untracked);

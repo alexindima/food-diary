@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 224,
+    "domainTypes": 226,
     "entities": 86,
     "valueObjects": 92,
     "invariants": 514,
@@ -65,6 +65,20 @@
       "role": "domain-type",
       "path": "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
       "line": 5
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipeNutritionIngredient",
+      "role": "domain-type",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionIngredient.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipeNutritionValues",
+      "role": "domain-type",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionValues.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",

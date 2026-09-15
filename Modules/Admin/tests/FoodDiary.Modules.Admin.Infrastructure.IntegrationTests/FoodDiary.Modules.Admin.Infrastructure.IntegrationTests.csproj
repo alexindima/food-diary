@@ -12,6 +12,7 @@
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../../../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
     <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>

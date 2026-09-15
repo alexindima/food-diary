@@ -1356,6 +1356,12 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = BuildFullOpenApiSnapshot(json.RootElement);
         await AssertSnapshotAsync("openapi-full-contract.json", actual);
+        JsonElement likeNotFoundSchema = json.RootElement.GetProperty("paths")
+            .GetProperty("/api/v{version}/recipes/{recipeId}/likes").GetProperty("get")
+            .GetProperty("responses").GetProperty("404").GetProperty("content")
+            .GetProperty("application/json").GetProperty("schema");
+        await AssertSnapshotAsync("openapi-recipe-like-not-found-schema.json",
+            JsonSerializer.Serialize(likeNotFoundSchema, IndentedJsonOptions));
     }
 
     [RequiresDockerFact]

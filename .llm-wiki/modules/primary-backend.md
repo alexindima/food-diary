@@ -3,6 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
+  - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/ai/remaining-consumer-boundaries.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
   - Shared/FoodDiary.Application.Runtime/AGENTS.md
@@ -51,7 +52,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 
 | Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; the narrow Products FoodQuality assembly owns the reusable formula. Products/Recipes mutation uses Serializable transactions with whole-attempt retries under ADR 0035. |
 | Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items and meal-only value types; scalar IDs/enums use Domain.Contracts, external EF relationships use central composition, and shared context/migrations remain central |
-| EF Core persistence | Owner module Infrastructure contains runtime contexts and adapters; `FoodDiary.Infrastructure` retains coordinated transactions, the shared unit of work and migration composition |
+| EF Core persistence | Owner module Infrastructure contains runtime contexts and adapters; `Shared/FoodDiary.Persistence.Runtime` owns coordinated transactions and unit of work; `FoodDiary.Infrastructure` retains migration composition |
 | Cross-module SQL read projections | `FoodDiary.ReadModel.Composition`, registered by API, JobManager and Initializer through module read ports; no module references this assembly |
 | External providers and service clients | Owner module Infrastructure; MailRelay transport in `Shared/FoodDiary.Email.MailRelay`; provider-neutral HTTP primitives in `Shared/FoodDiary.Integrations.Http` |
 | HTTP and SignalR transport | Owning module Presentation projects; reusable transport primitives in `FoodDiary.Presentation.Api` |
@@ -77,7 +78,7 @@ All 29 owner contexts participate in the shared scoped unit of work through
 `IModuleContextFactory`. WeeklyGoals and Meals use `IModuleTransactionCoordinator`
 for top-level transactions while retaining their owner locks. Products and Recipes use its
 Serializable operation with whole-attempt retries; their purge participants now use owner contexts. Central migration composition
-and foreign-write restrictions remain. ADR 0042 gives PersistenceSession the scoped participant registry and separates the shared audit/email/replay runtime context from the lazy complete migration/read context inside the same assembly. See ADRs 0040 and 0042. BCL-only transport helpers live in
+and foreign-write restrictions remain. ADR 0042 gives PersistenceSession the scoped participant registry and separates the shared audit/email/replay runtime context from the lazy complete migration/read context in separate runtime and migration assemblies. See ADRs 0040 and 0042. BCL-only transport helpers live in
 `Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
 and ADR 0029 for the remaining isolation limits.
 
@@ -127,3 +128,16 @@ Ai telemetry, Identity JWT configuration and Dietologist audit retain existing c
 Users still owns final deletion and transaction completion.
 
 Products, Recipes and Images purge now also use owner contexts. Products and Recipes lose their central Infrastructure reference; Images retains the generic outbox engine. Images cleanup follows Ai jobs to respect restrictive image FKs. Users resets every registered module tracker after failed attempts so pending deletion messages cannot leak into the next account.
+
+## Explicit atomic command execution
+
+ITransactionalCommand retains save-after-handler semantics. IAtomicCommand opts a
+top-level retry-safe handler into one transaction with its coordinated save through
+IAtomicCommandExecutor. Meals Create/Repeat use this mode; recognition creation
+retains its own serialized transaction and local handler call. Post-commit actions
+flush only after commit. See ADR 0048.
+
+Recipes Domain owns the scalar RecipeNutritionPolicy used by application and read
+composition. FD0018 rejects write/tracking/SQL capabilities in composed readers;
+FD0016 also reviews shared context factories, tracker access and direct ADO methods
+in module adapters. These are engineering guardrails, not a database security sandbox.

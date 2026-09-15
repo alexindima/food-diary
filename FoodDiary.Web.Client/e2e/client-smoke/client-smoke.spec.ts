@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page, type Route, test } from '@playwright/test';
+import { expect, type Page, type Request, type Route, test } from '@playwright/test';
 
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
@@ -8,6 +8,12 @@ const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
 const NETWORK_AUDIT_TEST_TIMEOUT_MS = 180_000;
 const API_ERROR_STATUS_MIN = 400;
 const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
+const NETWORK_AUDIT_QUIET_MS = 500;
+// These views compose independent sections in addition to the four shared shell requests.
+const NETWORK_AUDIT_REQUEST_BUDGETS: Readonly<Record<string, number>> = {
+    '/profile': 9,
+    '/dietologist/clients/client-1': 10,
+};
 const ACCESSIBILITY_STABILITY_CSS = `
     *,
     *::before,
@@ -60,6 +66,14 @@ const TEST_IMAGE_URLS = [
 ] as const;
 const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/users/info'), createResponse: createUser },
+    { matches: pathname => pathname.endsWith('/users/overview'), createResponse: createUserOverview },
+    { matches: pathname => pathname.endsWith('/auth/sessions'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/billing/overview'), createResponse: createBillingOverview },
+    { matches: pathname => pathname.endsWith('/recipes/explore'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/shopping-lists'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/lessons'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/statistics/summary'), createResponse: () => ({ nutrition: [], weight: [], waist: [] }) },
     { matches: pathname => pathname.endsWith('/weight-entries/page-summary'), createResponse: createWeightHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/waist-entries/page-summary'), createResponse: createWaistHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
@@ -81,11 +95,21 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/products/overview'), createResponse: createProductsOverview },
     { matches: pathname => pathname.endsWith('/products/search'), createResponse: createProductsPage },
     { matches: pathname => pathname.endsWith('/products'), createResponse: createProductsPage },
+    { matches: pathname => pathname.endsWith('/products/p1'), createResponse: createOwnedProduct },
+    { matches: pathname => pathname.endsWith('/meals/meal-1'), createResponse: () => createMeal('meal-1', '2026-04-19T18:00:00Z', []) },
     { matches: pathname => pathname.endsWith('/meal-plans/plan-1'), createResponse: createMealPlanDetail },
     { matches: pathname => pathname.endsWith('/lessons/lesson-1'), createResponse: createLessonDetail },
     { matches: pathname => pathname.endsWith('/recipes/recipe-1'), createResponse: createOwnedRecipe },
     { matches: pathname => pathname.endsWith('/dietologist/clients/attention'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/dietologist/clients'), createResponse: createDietologistClients },
+    { matches: pathname => pathname.endsWith('/dietologist/recommendation-templates'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/dashboard'), createResponse: createDashboardSnapshot },
+    {
+        matches: pathname => pathname.endsWith('/dietologist/clients/client-1/goals'),
+        createResponse: () => ({ id: 'client-1', email: 'client@example.test' }),
+    },
+    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/recommendations'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/tasks'), createResponse: () => [] },
 ];
 
 test.describe('client smoke', () => {
@@ -213,26 +237,35 @@ test.describe('authenticated accessibility', () => {
     ] as const) {
         test(`has no detectable WCAG A/AA violations on ${viewport.name} routes`, async ({ page }) => {
             test.setTimeout(ACCESSIBILITY_TEST_TIMEOUT_MS);
+            const runtimeErrors: string[] = [];
+            page.on('pageerror', error => runtimeErrors.push(error.message));
+            page.on('console', message => {
+                if (message.type() === 'error' && message.text().startsWith('ERROR')) {
+                    runtimeErrors.push(message.text());
+                }
+            });
             await page.setViewportSize(viewport);
-            await page.addInitScript((token: string) => {
-                window.localStorage.setItem('authToken', token);
-                window.localStorage.setItem('refreshToken', 'refresh-token');
-                window.localStorage.setItem('userId', 'u1');
-                window.localStorage.setItem('emailConfirmed', 'true');
-            }, createAuthenticatedUserJwt());
+            await page.addInitScript(
+                (tokens: { user: string; dietologist: string }) => {
+                    const token = window.location.pathname === '/dietologist' ? tokens.dietologist : tokens.user;
+                    window.localStorage.setItem('authToken', token);
+                    window.localStorage.setItem('refreshToken', 'refresh-token');
+                    window.localStorage.setItem('userId', 'u1');
+                    window.localStorage.setItem('emailConfirmed', 'true');
+                },
+                { user: createAuthenticatedUserJwt(), dietologist: createAuthenticatedUserJwt('Dietologist') },
+            );
             await mockAuthenticatedClientApiAsync(page);
 
             for (const route of ACCESSIBILITY_ROUTES) {
-                if (route === '/dietologist') {
-                    await replaceAuthenticatedRoleAsync(page, 'Dietologist');
-                } else if (route === '/recommendations') {
-                    await replaceAuthenticatedRoleAsync(page, 'User');
-                }
                 await page.goto(route);
                 await stabilizeAccessibilityPageAsync(page, route);
+                await expect(page).toHaveURL(url => url.pathname === route);
                 const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
 
                 expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);
+                expect.soft(runtimeErrors, `Runtime errors on ${route} (${viewport.name})`).toEqual([]);
+                runtimeErrors.length = 0;
             }
         });
     }
@@ -245,30 +278,20 @@ test.describe('authenticated network audit', () => {
 
         for (const routePath of NETWORK_AUDIT_ROUTES) {
             const page = await browser.newPage();
-            const requests: NetworkAuditRequest[] = [];
-            page.on('response', response => {
-                const request = response.request();
-                const url = new URL(request.url());
-                if (!url.pathname.startsWith('/api/v1/')) {
-                    return;
-                }
-
-                requests.push({
-                    method: request.method(),
-                    resource: normalizeAuditResource(url),
-                    status: response.status(),
-                });
-            });
+            const { requests, runtimeErrors, isSettled } = observeNetworkAudit(page);
 
             await authenticateUserAsync(page, routePath.startsWith('/dietologist') ? 'Dietologist' : 'User');
             await mockAuthenticatedClientApiAsync(page);
             await page.goto(routePath);
             await expect(page.locator('body')).toBeVisible();
             await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
-            await waitForNetworkAuditSettleAsync(page);
+            await expect(page.locator('main router-outlet + *').last()).toBeVisible();
+            await expect(page).toHaveURL(url => url.pathname === routePath);
+            await expect.poll(isSettled).toBe(true);
+            expect.soft(runtimeErrors, `Runtime errors on ${routePath}`).toEqual([]);
 
             const duplicateGets = findDuplicateGetRequests(requests);
-            const failedRequests = requests.filter(request => request.status >= API_ERROR_STATUS_MIN);
+            const failedRequests = requests.filter(request => request.status === 0 || request.status >= API_ERROR_STATUS_MIN);
             report.push({
                 route: routePath,
                 requestCount: requests.length,
@@ -294,7 +317,9 @@ test.describe('authenticated network audit', () => {
 
         const routesWithDuplicateGets = report.filter(result => result.duplicateGets.length > 0);
         const routesWithFailedRequests = report.filter(result => result.failedRequests.length > 0);
-        const routesOverRequestBudget = report.filter(result => result.requestCount > NETWORK_AUDIT_DEFAULT_MAX_REQUESTS);
+        const routesOverRequestBudget = report.filter(
+            result => result.requestCount > (NETWORK_AUDIT_REQUEST_BUDGETS[result.route] ?? NETWORK_AUDIT_DEFAULT_MAX_REQUESTS),
+        );
         expect.soft(routesWithDuplicateGets, formatNetworkAuditFailures('Duplicate GET requests', routesWithDuplicateGets)).toEqual([]);
         expect.soft(routesWithFailedRequests, formatNetworkAuditFailures('Failed API requests', routesWithFailedRequests)).toEqual([]);
         expect
@@ -302,6 +327,58 @@ test.describe('authenticated network audit', () => {
             .toEqual([]);
     });
 });
+
+function observeNetworkAudit(page: Page): {
+    requests: NetworkAuditRequest[];
+    runtimeErrors: string[];
+    isSettled: () => boolean;
+} {
+    const requests: NetworkAuditRequest[] = [];
+    const runtimeErrors: string[] = [];
+    page.on('pageerror', error => runtimeErrors.push(error.message));
+    page.on('console', message => {
+        if (message.type() === 'error' && message.text().startsWith('ERROR')) {
+            runtimeErrors.push(message.text());
+        }
+    });
+    const pendingRequests = new Set<Request>();
+    let lastApiActivity = Date.now();
+    page.on('request', request => {
+        if (new URL(request.url()).pathname.startsWith('/api/v1/')) {
+            pendingRequests.add(request);
+            lastApiActivity = Date.now();
+        }
+    });
+    page.on('requestfinished', request => {
+        if (pendingRequests.delete(request)) {
+            lastApiActivity = Date.now();
+        }
+    });
+    page.on('requestfailed', request => {
+        if (pendingRequests.delete(request)) {
+            lastApiActivity = Date.now();
+            requests.push({ method: request.method(), resource: normalizeAuditResource(new URL(request.url())), status: 0 });
+        }
+    });
+    page.on('response', response => {
+        const request = response.request();
+        const url = new URL(request.url());
+        if (!url.pathname.startsWith('/api/v1/')) {
+            return;
+        }
+
+        requests.push({
+            method: request.method(),
+            resource: normalizeAuditResource(url),
+            status: response.status(),
+        });
+    });
+    return {
+        requests,
+        runtimeErrors,
+        isSettled: () => pendingRequests.size === 0 && Date.now() - lastApiActivity >= NETWORK_AUDIT_QUIET_MS,
+    };
+}
 
 async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESSIBILITY_ROUTES)[number]): Promise<void> {
     await expect(page.locator('body')).toBeVisible();
@@ -315,17 +392,6 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
     }
 
     await page.addStyleTag({ content: ACCESSIBILITY_STABILITY_CSS });
-    await page.evaluate(async () => {
-        await new Promise<void>(resolve => {
-            requestAnimationFrame(resolve);
-        });
-        await new Promise<void>(resolve => {
-            requestAnimationFrame(resolve);
-        });
-    });
-}
-
-async function waitForNetworkAuditSettleAsync(page: Page): Promise<void> {
     await page.evaluate(async () => {
         await new Promise<void>(resolve => {
             requestAnimationFrame(resolve);
@@ -368,7 +434,7 @@ function formatNetworkAuditFailures(title: string, results: readonly NetworkAudi
         } else if (title.startsWith('Failed')) {
             issues = result.failedRequests.map(request => `${request.method} ${request.resource} (${request.status})`).join(', ');
         } else {
-            issues = `${result.requestCount} requests (budget ${NETWORK_AUDIT_DEFAULT_MAX_REQUESTS})`;
+            issues = `${result.requestCount} requests (budget ${NETWORK_AUDIT_REQUEST_BUDGETS[result.route] ?? NETWORK_AUDIT_DEFAULT_MAX_REQUESTS})`;
         }
         return `${result.route}: ${issues}`;
     });
@@ -559,12 +625,6 @@ async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
     }, createAuthenticatedUserJwt(role));
 }
 
-async function replaceAuthenticatedRoleAsync(page: Page, role: 'Dietologist' | 'User'): Promise<void> {
-    await page.evaluate((token: string) => {
-        window.localStorage.setItem('authToken', token);
-    }, createAuthenticatedUserJwt(role));
-}
-
 async function expectCollageFitsMediaSlotAsync(collage: ReturnType<Page['locator']>): Promise<void> {
     await expect(collage).toBeVisible();
 
@@ -714,6 +774,44 @@ function createUser(): Record<string, unknown> {
         isActive: true,
         isEmailConfirmed: true,
         aiConsentAcceptedAt: null,
+    };
+}
+
+function createUserOverview(): Record<string, unknown> {
+    return {
+        user: createUser(),
+        notificationPreferences: {
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: true,
+            socialPushNotificationsEnabled: false,
+            fastingCheckInReminderHours: 4,
+            fastingCheckInFollowUpReminderHours: 2,
+        },
+        webPushSubscriptions: [],
+        dietologistRelationship: null,
+    };
+}
+
+function createBillingOverview(): Record<string, unknown> {
+    return {
+        isPremium: false,
+        subscriptionStatus: null,
+        plan: null,
+        subscriptionProvider: null,
+        currentPeriodStartUtc: null,
+        currentPeriodEndUtc: null,
+        nextBillingAttemptUtc: null,
+        cancelAtPeriodEnd: false,
+        renewalEnabled: false,
+        manageBillingAvailable: false,
+        premiumTrialStartUtc: null,
+        premiumTrialEndUtc: null,
+        premiumTrialActive: false,
+        premiumTrialUsed: false,
+        canStartPremiumTrial: true,
+        provider: 'Paddle',
+        paddleClientToken: null,
+        availableProviders: [],
     };
 }
 
@@ -881,6 +979,29 @@ function createEmptyProductsPage(): Record<string, unknown> {
         limit: 20,
         totalPages: 0,
         totalItems: 0,
+    };
+}
+
+function createOwnedProduct(): Record<string, unknown> {
+    return {
+        id: 'p1',
+        name: 'Greek yogurt',
+        brand: 'Food Diary',
+        baseUnit: 'G',
+        baseAmount: 100,
+        defaultPortionAmount: 100,
+        caloriesPerBase: 95,
+        proteinsPerBase: 10,
+        fatsPerBase: 4,
+        carbsPerBase: 5,
+        fiberPerBase: 0,
+        alcoholPerBase: 0,
+        usageCount: 0,
+        visibility: 'Private',
+        createdAt: '2026-04-19T00:00:00Z',
+        isOwnedByCurrentUser: true,
+        qualityScore: 80,
+        qualityGrade: 'green',
     };
 }
 

@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Application.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Application;
 using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
@@ -193,7 +194,8 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseNpgsql(seed.Database.GetConnectionString())
             .AddInterceptors(new RejectImageDeleteInterceptor(first.Id)));
-        services.AddImagesInfrastructure();
+        services.AddScoped<SharedPersistenceDbContext>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddImagesModule().AddImagesInfrastructure();
         services.AddReadModelComposition();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();

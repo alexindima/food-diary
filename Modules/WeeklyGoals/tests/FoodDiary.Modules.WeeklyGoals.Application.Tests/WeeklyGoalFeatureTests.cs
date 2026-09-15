@@ -3,6 +3,7 @@ using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
 using FoodDiary.Modules.WeeklyGoals.Application.Common;
@@ -91,7 +92,7 @@ public sealed class WeeklyGoalFeatureTests {
             new GetWeeklyGoalQuery(Guid.NewGuid(), WeekStart), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
-        await readService.DidNotReceiveWithAnyArgs().GetAsync(default, default, false, default);
+        await readService.DidNotReceiveWithAnyArgs().GetReadModelAsync(default, default, default);
     }
 
     [Fact]
@@ -99,7 +100,9 @@ public sealed class WeeklyGoalFeatureTests {
         var userId = UserId.New();
         IWeeklyGoalRepository readService = Substitute.For<IWeeklyGoalRepository>();
         WeeklyGoal expected = CreateGoal(userId, reminderEnabled: false);
-        readService.GetAsync(userId, WeekStartUtc, false, Arg.Any<CancellationToken>()).Returns(expected);
+        readService.GetReadModelAsync(userId, WeekStartUtc, Arg.Any<CancellationToken>()).Returns(
+            new WeeklyGoalReadModel(expected.Id, expected.WeekStartUtc, expected.Type, expected.TargetDays,
+                expected.ReminderEnabled, expected.ReminderTimeMinutes, expected.TimeZoneOffsetMinutes));
         var handler = new GetWeeklyGoalQueryHandler(readService, new WeeklyGoalProgressReader(Substitute.For<ISender>()), CreateAccessibleUserContext());
 
         WeeklyGoalModel? model = ResultAssert.Success(
@@ -139,7 +142,9 @@ public sealed class WeeklyGoalFeatureTests {
         WeeklyGoal goal = CreateGoal(userId, reminderEnabled: false);
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
         ISender meals = Substitute.For<ISender>();
-        repository.GetAsync(userId, WeekStartUtc, false, Arg.Any<CancellationToken>()).Returns(goal);
+        repository.GetReadModelAsync(userId, WeekStartUtc, Arg.Any<CancellationToken>()).Returns(
+            new WeeklyGoalReadModel(goal.Id, goal.WeekStartUtc, goal.Type, goal.TargetDays,
+                goal.ReminderEnabled, goal.ReminderTimeMinutes, goal.TimeZoneOffsetMinutes));
         meals.Send(Arg.Is<ReadDistinctMealDatesQuery>(q => q.UserId == userId && q.DateFrom == WeekStartUtc && q.DateTo == WeekStartUtc.AddDays(6)), Arg.Any<CancellationToken>())
             .Returns([WeekStartUtc, WeekStartUtc.AddDays(2)]);
         var service = new GetWeeklyGoalQueryHandler(repository, new WeeklyGoalProgressReader(meals), CreateAccessibleUserContext());

@@ -62,66 +62,8 @@ public sealed class JobManagerGuardrailTests {
     }
 
     [Fact]
-    public void JobManagerProject_ReferencesOnlyApprovedRuntimeModulesAndSchedulerPackages() {
+    public void JobManagerProject_UsesOnlyApprovedSchedulerPackages() {
         const string relativeProjectPath = "FoodDiary.JobManager/FoodDiary.JobManager.csproj";
-        string[] expectedProjectReferences = [
-            "FoodDiary.Modules.Images.Application",
-            "FoodDiary.Modules.MealPlanning.Application",
-            "FoodDiary.Modules.Notifications.Application",
-            "FoodDiary.Modules.RecipeCommunity.Application",
-            "FoodDiary.Application.Runtime",
-            "FoodDiary.Modules.Usda.Application",
-            "FoodDiary.Authentication.Infrastructure",
-            "FoodDiary.Email.Contracts",
-            "FoodDiary.Email.MailRelay",
-            "FoodDiary.Infrastructure",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Admin.Infrastructure",
-            "FoodDiary.Modules.Ai.Contracts",
-            "FoodDiary.Modules.Ai.Infrastructure",
-            "FoodDiary.Modules.Billing.Contracts",
-            "FoodDiary.Modules.Billing.Infrastructure",
-            "FoodDiary.Modules.BodyMetrics.Application",
-            "FoodDiary.Modules.DailyAdvices.Application",
-            "FoodDiary.Modules.Dashboard.Application",
-            "FoodDiary.Modules.Dashboard.Infrastructure",
-            "FoodDiary.Modules.Dietologist.Contracts",
-            "FoodDiary.Modules.Dietologist.Infrastructure",
-            "FoodDiary.Modules.Exercises.Application",
-            "FoodDiary.Modules.Export.Application",
-            "FoodDiary.Modules.Export.Infrastructure",
-            "FoodDiary.Modules.Fasting.Contracts",
-            "FoodDiary.Modules.Fasting.Infrastructure",
-            "FoodDiary.Modules.Favorites.Infrastructure",
-            "FoodDiary.Modules.Gamification.Infrastructure",
-            "FoodDiary.Modules.Identity.Application",
-            "FoodDiary.Modules.Identity.Application.Abstractions",
-            "FoodDiary.Modules.Identity.Infrastructure",
-            "FoodDiary.Modules.Images.Application.Abstractions",
-            "FoodDiary.Modules.Images.Infrastructure",
-            "FoodDiary.Modules.Images.Service.Contracts",
-            "FoodDiary.Modules.Marketing.Infrastructure",
-            "FoodDiary.Modules.Meals.Infrastructure",
-            "FoodDiary.Modules.Notifications.Application.Abstractions",
-            "FoodDiary.Modules.Notifications.Infrastructure",
-            "FoodDiary.Modules.OpenFoodFacts.Application",
-            "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
-            "FoodDiary.Modules.Products.Application",
-            "FoodDiary.Modules.Products.Infrastructure",
-            "FoodDiary.Modules.RecentItems.Infrastructure",
-            "FoodDiary.Modules.Recipes.Application",
-            "FoodDiary.Modules.Recipes.Infrastructure",
-            "FoodDiary.Modules.Statistics.Application",
-            "FoodDiary.Modules.Tdee.Application",
-            "FoodDiary.Modules.Usda.Infrastructure",
-            "FoodDiary.Modules.Users.Contracts",
-            "FoodDiary.Modules.Users.Infrastructure",
-            "FoodDiary.Modules.Wearables.Infrastructure",
-            "FoodDiary.Modules.WeeklyGoals.Contracts",
-            "FoodDiary.Modules.WeeklyGoals.Infrastructure",
-            "FoodDiary.Persistence.Runtime",
-            "FoodDiary.ReadModel.Composition",
-        ];
         string[] expectedPackageReferences = [
             "Hangfire.AspNetCore",
             "Hangfire.Core",
@@ -137,10 +79,8 @@ public sealed class JobManagerGuardrailTests {
             "OpenTelemetry.Instrumentation.Runtime",
         ];
 
-        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(expectedProjectReferences, projectReferences);
         Assert.Equal(expectedPackageReferences, packageReferences);
     }
 

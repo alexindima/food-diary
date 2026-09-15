@@ -112,8 +112,11 @@ public sealed class ModuleDependencyGraphTests {
             StringComparer.Ordinal);
     }
 
-    private static IEnumerable<string> ReadReferencedApplicationModules(string path) {
-        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetCompilationUnitRoot();
+    private static IEnumerable<string> ReadReferencedApplicationModules(string path) =>
+        ReadReferencedApplicationModulesFromSource(File.ReadAllText(path));
+
+    internal static IEnumerable<string> ReadReferencedApplicationModulesFromSource(string source) {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(source).GetCompilationUnitRoot();
         IEnumerable<string?> names = root.Usings
             .Select(usingDirective => usingDirective.Name?.ToString())
             .Concat(root.DescendantNodes()
@@ -121,9 +124,20 @@ public sealed class ModuleDependencyGraphTests {
                 .Select(name => name.ToString()));
 
         foreach (string name in names.OfType<string>()) {
-            string prefix = name.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)
-                ? "FoodDiary.Modules."
-                : "FoodDiary.Application.";
+            if (name.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)) {
+                if (name.Equals("FoodDiary.Modules.Images.Contracts", StringComparison.Ordinal) ||
+                    name.StartsWith("FoodDiary.Modules.Images.Contracts.", StringComparison.Ordinal)) {
+                    continue;
+                }
+                Match match = Regex.Match(name,
+                    @"^FoodDiary\.Modules\.(?<owner>[^.]+)\.(?:Application(?:\.Abstractions)?|Contracts|Service\.Contracts)(?:\.|$)",
+                    RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                if (match.Success) {
+                    yield return match.Groups["owner"].Value;
+                }
+                continue;
+            }
+            const string prefix = "FoodDiary.Application.";
             if (!name.StartsWith(prefix, StringComparison.Ordinal) ||
                 name.StartsWith("FoodDiary.Application.Abstractions.", StringComparison.Ordinal)) {
                 continue;

@@ -31,7 +31,7 @@ public sealed class InitializerTests {
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
         Assert.NotEmpty(context.Database.GetMigrations());
-        Assert.Null(scope.ServiceProvider.GetService<ISender>());
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRequestHandler<BootstrapInitialAdminCommand, Result<BootstrapInitialAdminModel>>));
         Assert.DoesNotContain(services, descriptor => descriptor.ImplementationType?.Namespace?.StartsWith(
             "FoodDiary.Modules.Dashboard.Application", StringComparison.Ordinal) == true);
     }
@@ -48,7 +48,7 @@ public sealed class InitializerTests {
         Assert.NotNull(scope.ServiceProvider.GetRequiredService<IOutboxDeadLetterReplayService>());
         Assert.Equal(["achievement_evaluation", "email", "image_object_deletion", "notification_web_push"],
             scope.ServiceProvider.GetServices<IOutboxReplayStream>().Select(stream => stream.Name).Order(StringComparer.Ordinal), StringComparer.Ordinal);
-        Assert.Null(scope.ServiceProvider.GetService<ISender>());
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRequestHandler<BootstrapInitialAdminCommand, Result<BootstrapInitialAdminModel>>));
     }
 
     [Theory]
@@ -62,7 +62,7 @@ public sealed class InitializerTests {
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
-        Assert.Equal(expectsBootstrap, scope.ServiceProvider.GetService<ISender>() is not null);
+        Assert.Equal(expectsBootstrap, services.Any(descriptor => descriptor.ServiceType == typeof(IRequestHandler<BootstrapInitialAdminCommand, Result<BootstrapInitialAdminModel>>)));
         Assert.NotEmpty(scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>().Database.GetMigrations());
     }
 

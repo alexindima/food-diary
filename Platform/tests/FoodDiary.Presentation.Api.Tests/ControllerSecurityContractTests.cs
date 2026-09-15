@@ -214,7 +214,6 @@ public sealed class ControllerSecurityContractTests {
     public void PresentationQueryStrings_HaveExplicitTransportLengthConstraints() {
         var nullability = new NullabilityInfoContext();
         Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
-            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
             .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
 
         ParameterInfo[] stringParameters = [.. queryTypes
@@ -234,7 +233,6 @@ public sealed class ControllerSecurityContractTests {
     public void PresentationQueryNumbers_HaveExplicitOpenApiRanges() {
         Type[] numericTypes = [typeof(byte), typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)];
         Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
-            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
             .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
         ParameterInfo[] numericParameters = [.. queryTypes
             .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())

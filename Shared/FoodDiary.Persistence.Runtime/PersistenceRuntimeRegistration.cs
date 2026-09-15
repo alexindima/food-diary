@@ -24,6 +24,7 @@ public static partial class PersistenceRuntimeRegistration {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IModuleTransactionCoordinator, EfModuleTransactionCoordinator>();
+        services.AddScoped<IAtomicCommandExecutor, EfAtomicCommandExecutor>();
         services.AddScoped<IModuleSessionCoordinator, EfModuleSessionCoordinator>();
         services.AddScoped<IModuleSessionLock, EfModuleSessionLock>();
         services.AddScoped<IModuleScopeGuard, EfModuleScopeGuard>();

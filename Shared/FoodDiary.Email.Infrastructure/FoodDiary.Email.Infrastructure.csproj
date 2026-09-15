@@ -8,11 +8,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <ProjectReference Include="../FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
   </ItemGroup>
 
 </Project>

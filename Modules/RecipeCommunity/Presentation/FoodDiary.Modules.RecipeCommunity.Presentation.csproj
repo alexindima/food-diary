@@ -8,8 +8,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/FoodDiary.Modules.RecipeCommunity.Application.csproj" />
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.RecipeCommunity.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>

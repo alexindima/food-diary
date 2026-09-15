@@ -1,5 +1,6 @@
 using System.Data.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,18 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 
 public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTransaction?> currentTransaction) : IWeeklyGoalRepository {
+    public async Task<WeeklyGoalReadModel?> GetReadModelAsync(
+        UserId userId,
+        DateTime weekStartUtc,
+        CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await context.WeeklyGoals.AsNoTracking()
+            .Where(goal => goal.UserId == userId && goal.WeekStartUtc == weekStartUtc)
+            .Select(goal => new WeeklyGoalReadModel(goal.Id, goal.WeekStartUtc, goal.Type, goal.TargetDays,
+                goal.ReminderEnabled, goal.ReminderTimeMinutes, goal.TimeZoneOffsetMinutes))
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<WeeklyGoal?> GetAsync(
         UserId userId,
         DateTime weekStartUtc,

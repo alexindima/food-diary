@@ -36,6 +36,30 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     private const string SourcePath = "C:/FD/Modules/Products/Infrastructure/Probe.cs";
 
     [Theory]
+    [InlineData("IModuleChangeTrackerSource", "GetModuleEntries")]
+    [InlineData("IModuleContextFactory", "CreateModuleContext")]
+    [InlineData("IIndependentModuleContextOptionsFactory", "CreateOptions")]
+    public async Task SharedFactoryAndTrackerCapabilitiesRequireReviewAsync(string contract, string method) {
+        string body = $"FoodDiary.Persistence.Abstractions.{contract} capability = null!; capability.{method}();";
+        Assert.Contains(await AnalyzeAsync(body), diagnostic => string.Equals(diagnostic.Id,
+            ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, reviewedBody: body));
+        string methodGroup = $"FoodDiary.Persistence.Abstractions.{contract} capability = null!; Action access = capability.{method};";
+        Assert.Contains(await AnalyzeAsync(methodGroup), diagnostic => string.Equals(diagnostic.Id,
+            ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("System.Data.Common.DbCommand command = null!; command.ExecuteNonQuery();")]
+    [InlineData("System.Data.Common.DbCommand command = null!; Func<int> execute = command.ExecuteNonQuery;")]
+    [InlineData("System.Data.Common.DbTransaction transaction = null!; transaction.Commit();")]
+    public async Task DirectAdoCapabilityRequiresExactReviewAsync(string body) {
+        Assert.Contains(await AnalyzeAsync(body), diagnostic => string.Equals(diagnostic.Id,
+            ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, reviewedBody: body));
+    }
+
+    [Theory]
     [InlineData("db.Users.Add(new User());")]
     [InlineData("Action<User> add = db.Users.Add;")]
     [InlineData("db.AddRange(new User[] { new User() });")]
@@ -176,6 +200,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
             public DbSet<Product> Products => new();
         }
         namespace FoodDiary.Persistence.Abstractions {
+            public interface IModuleChangeTrackerSource { void GetModuleEntries(); }
+            public interface IModuleContextFactory { void CreateModuleContext(); }
+            public interface IIndependentModuleContextOptionsFactory { void CreateOptions(); }
             public interface IModuleSessionCoordinator {
                 void ExecuteSerializedAsync();
             }
