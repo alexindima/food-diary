@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Fasting.Domain.Enums;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;

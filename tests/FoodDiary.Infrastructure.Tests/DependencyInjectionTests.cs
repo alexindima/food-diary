@@ -1,3 +1,5 @@
+using FoodDiary.Persistence.Runtime.Services;
+using FoodDiary.Persistence.Runtime.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
@@ -29,7 +31,7 @@ using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
@@ -39,13 +41,11 @@ using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Services;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
@@ -819,7 +819,7 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Infrastructure.Persistence.Audit.AuditEntryService",
+            "FoodDiary.Persistence.Runtime.Persistence.Audit.AuditEntryService",
             [
                 "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryReadService",
                 "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryWriter",
@@ -859,27 +859,27 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealRepository",
+            "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealRepository",
             [
-                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadRepository",
-                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadModelRepository",
-                "FoodDiary.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealWriteRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealReadModelRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.IFavoriteMealWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductRepository",
+            "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductRepository",
             [
-                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadRepository",
-                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadModelRepository",
-                "FoodDiary.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductWriteRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductReadModelRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.IFavoriteProductWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeRepository",
+            "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeRepository",
             [
-                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadRepository",
-                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadModelRepository",
-                "FoodDiary.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeWriteRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeReadModelRepository",
+                "FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.IFavoriteRecipeWriteRepository",
             ]
         },
         {
@@ -963,24 +963,24 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanRepository",
+            "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingPlanRepository",
             [
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanReadRepository",
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingPlanWriteRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingPlanReadRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingPlanWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionRepository",
+            "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingSessionRepository",
             [
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionReadRepository",
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingSessionWriteRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingSessionReadRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingSessionWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventRepository",
+            "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingTelemetryEventRepository",
             [
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventReadRepository",
-                "FoodDiary.Application.Abstractions.Fasting.Common.IFastingTelemetryEventWriteRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingTelemetryEventReadRepository",
+                "FoodDiary.Modules.Fasting.Application.Abstractions.Common.IFastingTelemetryEventWriteRepository",
             ]
         },
         {

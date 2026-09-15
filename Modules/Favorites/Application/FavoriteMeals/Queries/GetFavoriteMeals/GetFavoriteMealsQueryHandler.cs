@@ -1,14 +1,15 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadFavoriteMeals;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Favorites.FavoriteMeals.Queries.GetFavoriteMeals;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMeals;
 
 public sealed class GetFavoriteMealsQueryHandler(
-    IFavoriteMealReadService favoriteMealReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetFavoriteMealsQuery, Result<IReadOnlyList<FavoriteMealModel>>> {
     public async Task<Result<IReadOnlyList<FavoriteMealModel>>> Handle(
@@ -23,7 +24,7 @@ public sealed class GetFavoriteMealsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        IReadOnlyList<FavoriteMealModel> favorites = await favoriteMealReadService.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteMealModel> favorites = await sender.Send(new ReadFavoriteMealsQuery(userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(favorites);
     }
 }

@@ -1,0 +1,248 @@
+using FluentValidation.TestHelper;
+using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.PostponeCyclicDay;
+using FoodDiary.Modules.Fasting.Application.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Modules.Fasting.Application.Commands.SkipCyclicDay;
+using FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.UpdateCurrentFastingCheckIn;
+using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingHistory;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingInsights;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingOverview;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingStats;
+
+namespace FoodDiary.Modules.Fasting.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class FastingValidatorTests {
+    private readonly StartFastingCommandValidator _validator = new();
+
+    [Fact]
+    public async Task StartFasting_WithNullUserId_HasError() {
+        var command = new StartFastingCommand(UserId: null, "Fast16Eat8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithEmptyUserId_HasError() {
+        var command = new StartFastingCommand(Guid.Empty, "Fast16Eat8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithEmptyProtocol_HasError() {
+        var command = new StartFastingCommand(Guid.NewGuid(), "", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.Protocol);
+    }
+
+    [Fact]
+    public async Task StartFasting_WithValidCommand_NoErrors() {
+        var command = new StartFastingCommand(Guid.NewGuid(), "Fast16Eat8", PlanType: null, 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task StartFasting_WithCyclicPlanType_WithoutProtocol_NoErrors() {
+        var command = new StartFastingCommand(Guid.NewGuid(), Protocol: null, "Cyclic", PlannedDurationHours: null, 1, 3, 16, 8, Notes: null);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldNotHaveValidationErrorFor(c => c.Protocol);
+    }
+
+    [Fact]
+    public async Task EndFasting_WithEmptyUserId_HasError() {
+        var validator = new EndFastingCommandValidator();
+        TestValidationResult<EndFastingCommand> result = await validator.TestValidateAsync(new EndFastingCommand(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task SkipCyclicDay_WithNullUserId_HasError() {
+        var validator = new SkipCyclicDayCommandValidator();
+        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(UserId: null));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task SkipCyclicDay_WithEmptyUserId_HasError() {
+        var validator = new SkipCyclicDayCommandValidator();
+        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task PostponeCyclicDay_WithEmptyUserId_HasError() {
+        var validator = new PostponeCyclicDayCommandValidator();
+        TestValidationResult<PostponeCyclicDayCommand> result = await validator.TestValidateAsync(new PostponeCyclicDayCommand(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task ReduceActiveFastingTarget_WithInvalidHours_HasError() {
+        var validator = new ReduceActiveFastingTargetCommandValidator();
+        TestValidationResult<ReduceActiveFastingTargetCommand> result = await validator.TestValidateAsync(new ReduceActiveFastingTargetCommand(Guid.NewGuid(), 0));
+
+        result.ShouldHaveValidationErrorFor(x => x.ReducedHours);
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithNullUserId_HasInvalidTokenError() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(UserId: null, 4));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithInvalidHours_HasError() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 0));
+
+        result.ShouldHaveValidationErrorFor(x => x.AdditionalHours)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WithValidCommand_HasNoErrors() {
+        var validator = new ExtendActiveFastingCommandValidator();
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 4));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task GetCurrentFasting_WithNullUserId_HasError() {
+        var validator = new GetCurrentFastingQueryValidator();
+        TestValidationResult<GetCurrentFastingQuery> result = await validator.TestValidateAsync(new GetCurrentFastingQuery(UserId: null));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task GetFastingOverview_WithEmptyUserId_HasError() {
+        var validator = new GetFastingOverviewQueryValidator();
+        TestValidationResult<GetFastingOverviewQuery> result = await validator.TestValidateAsync(new GetFastingOverviewQuery(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task GetFastingStats_WithEmptyUserId_HasError() {
+        var validator = new GetFastingStatsQueryValidator();
+        TestValidationResult<GetFastingStatsQuery> result = await validator.TestValidateAsync(new GetFastingStatsQuery(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task GetFastingInsights_WithEmptyUserId_HasError() {
+        var validator = new GetFastingInsightsQueryValidator();
+        TestValidationResult<GetFastingInsightsQuery> result = await validator.TestValidateAsync(new GetFastingInsightsQuery(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(x => x.UserId);
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_WithInvalidPagingAndRange_HasErrors() {
+        var validator = new GetFastingHistoryQueryValidator();
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(new GetFastingHistoryQuery(
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            DateTime.UtcNow.AddDays(-1),
+            0,
+            99));
+
+        result.ShouldHaveValidationErrorFor(x => x.Page);
+        result.ShouldHaveValidationErrorFor(x => x.Limit);
+        result.ShouldHaveValidationErrorFor(x => x);
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_WithValidQuery_HasNoErrors() {
+        var validator = new GetFastingHistoryQueryValidator();
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 1, 10));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_WithPageAboveSupportedBound_HasError() {
+        var validator = new GetFastingHistoryQueryValidator();
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(
+            new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 10_001, 10));
+
+        result.ShouldHaveValidationErrorFor(x => x.Page);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithNullUserId_HasInvalidTokenError() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(UserId: null, 3, 3, 3, Symptoms: null, CheckInNotes: null));
+
+        result.ShouldHaveValidationErrorFor(command => command.UserId)
+            .WithErrorCode("Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_HasErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(Guid.NewGuid(), 0, 6, 0, Symptoms: null, CheckInNotes: null));
+
+        result.ShouldHaveValidationErrorFor(command => command.HungerLevel);
+        result.ShouldHaveValidationErrorFor(command => command.EnergyLevel);
+        result.ShouldHaveValidationErrorFor(command => command.MoodLevel);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithInvalidSymptomsAndLongNotes_HasErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(
+                Guid.NewGuid(),
+                3,
+                3,
+                3,
+                ["good", "unknown", " ", "headache", "weakness", "dizziness", "cravings", "irritability", "extra"],
+                new string('n', 501)));
+
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Symptoms[1]", StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Symptoms[2]", StringComparison.Ordinal));
+        result.ShouldHaveValidationErrorFor(command => command.Symptoms);
+        result.ShouldHaveValidationErrorFor(command => command.CheckInNotes);
+    }
+
+    [Fact]
+    public async Task UpdateCurrentFastingCheckIn_WithValidCommand_HasNoErrors() {
+        var validator = new UpdateCurrentFastingCheckInCommandValidator();
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
+            new UpdateCurrentFastingCheckInCommand(
+                Guid.NewGuid(),
+                3,
+                4,
+                5,
+                [" good ", "Headache"],
+                "steady"));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+}

@@ -1,10 +1,14 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
@@ -13,7 +17,6 @@ using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Services;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
@@ -21,7 +24,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
@@ -104,7 +107,7 @@ public partial class RecipesFeatureTests {
         new(
             overviewReadService,
             new RecentRecipeReadService(recentRepository, overviewReadService),
-            new FavoriteRecipeReadService(favoriteRepository),
+            RequestTestSender.Create(new ReadFavoriteRecipesQueryHandler(favoriteRepository), new ReadRecipeFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(

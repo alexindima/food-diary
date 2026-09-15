@@ -1,5 +1,5 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
@@ -20,13 +20,13 @@ public sealed class IndependentModuleContextOptionsFactoryTests {
                 ["Database:EnableRetries"] = "true",
             }).Build());
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
-        services.AddDbContext<FoodDiaryDbContext>(builder => builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+        services.AddDbContext<SharedPersistenceDbContext>(builder => builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         services.AddAiPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         IIndependentModuleContextOptionsFactory factory = scope.ServiceProvider.GetRequiredService<IIndependentModuleContextOptionsFactory>();
         DbContextOptions<AiDbContext> options = scope.ServiceProvider.GetRequiredService<DbContextOptions<AiDbContext>>();
-        DbContextOptions<FoodDiaryDbContext> configured = scope.ServiceProvider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>();
+        DbContextOptions<SharedPersistenceDbContext> configured = scope.ServiceProvider.GetRequiredService<DbContextOptions<SharedPersistenceDbContext>>();
         Assert.All(configured.Extensions, extension => Assert.Contains(options.Extensions, candidate => ReferenceEquals(candidate, extension)));
         using var first = new AiDbContext(options);
         using var second = new AiDbContext(factory.CreateOptions<AiDbContext>());

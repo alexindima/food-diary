@@ -1,13 +1,14 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Favorites.FavoriteRecipes.Queries.IsRecipeFavorite;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 
 public sealed class IsRecipeFavoriteQueryHandler(
-    IFavoriteRecipeReadService favoriteRecipeReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsRecipeFavoriteQuery, Result<bool>> {
     public async Task<Result<bool>> Handle(
@@ -32,7 +33,7 @@ public sealed class IsRecipeFavoriteQueryHandler(
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        bool isFavorite = await favoriteRecipeReadService.ExistsByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+        bool isFavorite = await sender.Send(new ReadRecipeFavoriteStatusQuery(recipeId, userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }
 }

@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

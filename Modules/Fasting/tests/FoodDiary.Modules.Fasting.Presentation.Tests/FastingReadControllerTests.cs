@@ -1,12 +1,13 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Fasting;
+using FoodDiary.Modules.Fasting.Presentation.Controllers;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FastingReadControllerTests {

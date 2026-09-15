@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Shopping;

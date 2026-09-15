@@ -1026,7 +1026,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("RecommendationTemplates");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1061,7 +1061,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FavoriteMeals");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteProducts.FavoriteProduct", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts.FavoriteProduct", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1099,7 +1099,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FavoriteProducts");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteRecipes.FavoriteRecipe", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes.FavoriteRecipe", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2620,7 +2620,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("CycleSymptomEntries", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Exercises.Domain.Entities.Tracking.ExerciseEntry", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2662,7 +2662,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ExerciseEntries");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingCheckIn", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingCheckIn", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2707,7 +2707,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FastingCheckIns", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingOccurrence", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingOccurrence", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2795,7 +2795,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FastingOccurrences", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingPlan", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingPlan", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2868,7 +2868,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FastingPlans", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingSession", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2920,7 +2920,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FastingSessions");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingTelemetryEvent", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingTelemetryEvent", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -4947,7 +4947,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", null)
                     .WithMany()
                     .HasForeignKey("MealId")
@@ -4961,7 +4961,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteProducts.FavoriteProduct", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts.FavoriteProduct", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
                     .WithMany()
                     .HasForeignKey("ProductId")
@@ -4975,7 +4975,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteRecipes.FavoriteRecipe", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes.FavoriteRecipe", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", null)
                     .WithMany()
                     .HasForeignKey("RecipeId")
@@ -5298,7 +5298,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("CycleProfile");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Exercises.Domain.Entities.Tracking.ExerciseEntry", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5306,8 +5306,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingCheckIn", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Tracking.Fasting.FastingOccurrence", "Occurrence")
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingCheckIn", b => {
+                b.HasOne("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingOccurrence", "Occurrence")
                     .WithMany()
                     .HasForeignKey("OccurrenceId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5322,8 +5322,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Occurrence");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingOccurrence", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Tracking.Fasting.FastingPlan", "Plan")
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingOccurrence", b => {
+                b.HasOne("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingPlan", "Plan")
                     .WithMany()
                     .HasForeignKey("PlanId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5338,7 +5338,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Plan");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingPlan", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingPlan", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5346,7 +5346,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting.FastingSession", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")

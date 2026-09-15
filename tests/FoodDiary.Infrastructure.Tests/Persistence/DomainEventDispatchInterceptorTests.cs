@@ -1,9 +1,9 @@
+using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging.Abstractions;

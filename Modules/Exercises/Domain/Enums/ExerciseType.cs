@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Exercises.Domain.Enums;
 
 public enum ExerciseType {
     Walking = 0,

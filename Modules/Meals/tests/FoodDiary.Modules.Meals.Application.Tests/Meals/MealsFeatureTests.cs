@@ -1,3 +1,9 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoritesOverview;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteIds;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -16,11 +22,10 @@ using FoodDiary.Application.Meals.Commands.CreateMeal;
 using FoodDiary.Application.Meals.Commands.RepeatMeal;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Services;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.Favorites.FavoriteMeals.Services;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -749,7 +754,7 @@ public partial class MealsFeatureTests {
         IMealProjectionReadRepository mealRepository,
         IFavoriteMealRepository? favoriteMealRepository = null) {
         IFavoriteMealRepository repository = favoriteMealRepository ?? new StubFavoriteMealRepository();
-        return new MealReadService(mealRepository, new FavoriteMealReadService(repository));
+        return new MealReadService(mealRepository, RequestTestSender.Create(new ReadFavoriteMealsQueryHandler(repository), new ReadMealFavoriteStatusQueryHandler(repository), new ReadMealFavoriteIdsQueryHandler(repository), new ReadMealFavoritesOverviewQueryHandler(repository)));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) =>

@@ -1,6 +1,6 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 

@@ -14,9 +14,9 @@
     <ProjectReference Include="../../Application/FoodDiary.Modules.Products.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Application.Favorites.csproj" />
+    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj" />
     <ProjectReference Include="../../../Usda/Application/FoodDiary.Application.Usda.csproj" />
-    <ProjectReference Include="../../../Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Favorites/Application.Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
@@ -39,5 +39,8 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 </Project>

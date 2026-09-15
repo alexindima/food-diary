@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Mappings;
+using FoodDiary.Modules.Favorites.Presentation.Mappings.Features.FavoriteRecipes.Mappings;
 using FoodDiary.Presentation.Api.Features.Recipes.Responses;
 using FoodDiary.Presentation.Api.Responses;
 

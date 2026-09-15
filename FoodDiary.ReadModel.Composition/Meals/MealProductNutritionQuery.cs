@@ -1,13 +1,12 @@
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealProductNutritionQuery(FoodDiaryDbContext context) : IMealProductNutritionQuery {
+public sealed class MealProductNutritionQuery(ICompositionReadContext context) : IMealProductNutritionQuery {
     private static DateTime StartOfUtcDay(DateTime value) => DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
     private static DateTime EndOfUtcDay(DateTime value) => DateTime.SpecifyKind(TemporalRangePolicy.GetInclusiveDayEnd(value), DateTimeKind.Utc);
     public async Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
@@ -19,7 +18,7 @@ public sealed class MealProductNutritionQuery(FoodDiaryDbContext context) : IMea
         DateTime from = StartOfUtcDay(date);
         DateTime toInclusive = EndOfUtcDay(date);
 
-        return await context.Set<MealItem>()
+        return await context.MealItems
             .AsNoTracking()
             .Where(item =>
                 item.Meal.UserId == userId &&

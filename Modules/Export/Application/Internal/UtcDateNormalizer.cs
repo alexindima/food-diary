@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Export.Internal;
+namespace FoodDiary.Modules.Export.Application.Internal;
 
 internal static class UtcDateNormalizer {
     public static DateTime NormalizeInstantPreservingUnspecifiedAsUtc(DateTime value) =>

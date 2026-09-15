@@ -1,21 +1,24 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProductFavoriteStatus;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Services;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Products.Services;
-using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -38,7 +41,7 @@ public partial class ProductsFeatureTests {
         new(
             overviewReadService,
             new RecentProductReadService(recentRepository, overviewReadService),
-            new FavoriteProductReadService(favoriteRepository),
+            RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(favoriteRepository), new ReadProductFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentProductsQueryHandler CreateRecentProductsHandler(

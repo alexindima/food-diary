@@ -1,16 +1,16 @@
+using FoodDiary.Modules.Exercises.Domain.Enums;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Exercises.Internal;
-using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Internal;
+using FoodDiary.Modules.Exercises.Application.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Exercises.Mappings;
-using FoodDiary.Application.Exercises.Models;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Exercises.Application.Mappings;
+using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
+namespace FoodDiary.Modules.Exercises.Application.Commands.CreateExerciseEntry;
 
 public sealed class CreateExerciseEntryCommandHandler(
     IExerciseEntryWriteRepository repository,

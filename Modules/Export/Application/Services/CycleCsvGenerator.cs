@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Models;
 
-namespace FoodDiary.Application.Export.Services;
+namespace FoodDiary.Modules.Export.Application.Services;
 
 public static class CycleCsvGenerator {
     public static byte[] Generate(

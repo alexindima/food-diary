@@ -1,5 +1,6 @@
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.Runtime.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.ReadModel.Composition;
@@ -91,7 +92,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
                 await new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
             case "WeeklyGoals":
-                await new EfWeeklyGoalTransactionRunner(new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, weekStartUtc, MutateAsync);
+                await new EfWeeklyGoalTransactionRunner(new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, weekStartUtc, MutateAsync);
                 break;
             case "Billing":
                 await new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), queue)).ExecuteAsync(async token => await MutateAsync(token));

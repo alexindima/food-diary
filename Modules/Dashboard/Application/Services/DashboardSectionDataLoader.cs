@@ -1,16 +1,16 @@
+using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseCalories;
+using FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Modules.Dashboard.Application.Internal;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
 using FoodDiary.Modules.Dashboard.Application.Models;
-using FoodDiary.Modules.Fasting.Contracts.Read;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
@@ -23,8 +23,7 @@ namespace FoodDiary.Modules.Dashboard.Application.Services;
 internal sealed class DashboardSectionDataLoader(
     ISender sender,
     IDashboardUserContextService dashboardUserContextService,
-    IFastingReadService fastingReadService,
-    IExerciseEntryReadService exerciseEntryReadService,
+
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
     internal const int MaxPeriodDays = TemporalRangePolicy.MaxPeriodDays;
     private const int DefaultPageSize = 10;
@@ -147,14 +146,14 @@ internal sealed class DashboardSectionDataLoader(
         DashboardBuildContext context,
         CancellationToken cancellationToken) =>
         context.Sections.IncludeFasting
-            ? fastingReadService.GetCurrentAsync(context.UserId, cancellationToken)
+            ? sender.Send(new ReadCurrentFastingQuery(context.UserId), cancellationToken)
             : Task.FromResult<FastingSessionModel?>(null);
 
     public Task<double> LoadCaloriesBurnedAsync(
         DashboardBuildContext context,
         CancellationToken cancellationToken) =>
         context.Sections.IncludeExercise
-            ? exerciseEntryReadService.GetTotalCaloriesBurnedAsync(context.UserId, context.DayStart, cancellationToken)
+            ? sender.Send(new ReadExerciseCaloriesQuery(context.UserId, context.DayStart), cancellationToken)
             : Task.FromResult(0d);
 
     public async Task<Result<TdeeInsightModel>?> LoadTdeeAsync(

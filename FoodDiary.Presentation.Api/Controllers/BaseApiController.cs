@@ -1,6 +1,6 @@
 using Asp.Versioning;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;

@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Responses;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteRecipes.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Recipes.Responses;

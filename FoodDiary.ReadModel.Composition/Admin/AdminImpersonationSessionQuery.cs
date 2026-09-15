@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class AdminImpersonationSessionQuery(FoodDiaryDbContext context) : IAdminImpersonationSessionQuery {
+public sealed class AdminImpersonationSessionQuery(ICompositionReadContext context) : IAdminImpersonationSessionQuery {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems)> GetPagedAsync(

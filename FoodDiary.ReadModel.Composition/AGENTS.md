@@ -1,5 +1,11 @@
 # Read model composition
 
+ADR 0043 supersedes the concrete constructor contracts below. Readers request
+ICompositionReadContext, whose explicit IQueryable properties use AsNoTracking on
+the same scoped full context. Only ReadModelCompositionRegistration may name
+FoodDiaryDbContext to supply the DI alias for explicit-context fixtures. Do not
+cast the facade to DbContext or use EF bulk-write/tracking extensions.
+
 Implements cross-module read ports with SQL projections, per ADR 0038. API,
 JobManager and Initializer explicitly register AddReadModelComposition. Modules
 must never reference this assembly. Existing implementation namespaces are retained

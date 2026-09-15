@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Enums;
 

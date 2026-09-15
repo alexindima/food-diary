@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
-namespace FoodDiary.Presentation.Api.Features.Logs.Requests;
+namespace FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 
 public sealed record ClientTelemetryLogHttpRequest(
     string Category,

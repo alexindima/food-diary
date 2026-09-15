@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Domain.Entities.Tracking.Fasting;
+namespace FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     private const int NotesMaxLength = 500;

@@ -177,8 +177,8 @@
     "removed": []
   },
   {
-    "path": "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
-    "project": "FoodDiary.Application.Favorites",
+    "path": "Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj",
+    "project": "FoodDiary.Modules.Favorites.Application",
     "added": [
       "FoodDiary.Modules.Products.Contracts",
       "FoodDiary.Modules.Recipes.Contracts"
@@ -194,7 +194,7 @@
     "removed": []
   },
   {
-    "path": "Modules/Favorites/Infrastructure/Model/FoodDiary.Modules.Favorites.PersistenceModel.csproj",
+    "path": "Modules/Favorites/PersistenceModel/FoodDiary.Modules.Favorites.PersistenceModel.csproj",
     "project": "FoodDiary.Modules.Favorites.PersistenceModel",
     "added": [
       "FoodDiary.Modules.Products.Domain.Contracts"

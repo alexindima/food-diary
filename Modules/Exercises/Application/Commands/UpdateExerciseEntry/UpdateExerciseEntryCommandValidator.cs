@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Common;
 
-namespace FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
+namespace FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
 
 public sealed class UpdateExerciseEntryCommandValidator : AbstractValidator<UpdateExerciseEntryCommand> {
     public UpdateExerciseEntryCommandValidator() {

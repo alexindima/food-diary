@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class AdminUserRoleAuditRepository(FoodDiaryDbContext context) : IAdminUserRoleAuditRepository {
+public sealed class AdminUserRoleAuditRepository(ICompositionReadContext context) : IAdminUserRoleAuditRepository {
     public async Task<IReadOnlyList<AdminUserRoleAuditEventReadModel>> GetRecentForUserAsync(
         Guid userId,
         int limit,

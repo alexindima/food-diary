@@ -1,18 +1,20 @@
+using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Application.Abstractions.Export.Models;
-using FoodDiary.Application.Export.Models;
-using FoodDiary.Application.Export.Services;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Models;
+using FoodDiary.Modules.Export.Application.Models;
+using FoodDiary.Modules.Export.Application.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Export.Queries.ExportDiary;
+namespace FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 
 public sealed class ExportDiaryQueryHandler(
-    IExportDiaryReadService diaryReadService,
+    IMealExportReadService mealExportReadService,
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)
     : IQueryHandler<ExportDiaryQuery, Result<FileExportResult>> {
@@ -54,7 +56,7 @@ public sealed class ExportDiaryQueryHandler(
         }
 
         int mealLimit = query.Format == ExportFormat.Pdf ? MaxPdfMealCount : MaxCsvMealCount;
-        ExportDiaryMealsReadModel diary = await diaryReadService.GetMealsAsync(
+        ExportDiaryMealsReadModel diary = await GetMealsAsync(
             userId,
             normalizedFrom,
             normalizedTo,
@@ -100,4 +102,24 @@ public sealed class ExportDiaryQueryHandler(
             : null;
     }
 
+    private async Task<ExportDiaryMealsReadModel> GetMealsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        int limit,
+        CancellationToken cancellationToken) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
+        IReadOnlyList<MealProjectionReadModel> meals = await mealExportReadService.GetByPeriodAsync(
+            userId,
+            dateFrom,
+            dateTo,
+            checked(limit + 1),
+            cancellationToken).ConfigureAwait(false);
+
+        List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)];
+
+        return new ExportDiaryMealsReadModel(
+            [.. matchingMeals.Take(limit)],
+            matchingMeals.Count > limit);
+    }
 }

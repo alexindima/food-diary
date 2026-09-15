@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Infrastructure.Resources;
 using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -119,7 +120,7 @@ public sealed class SharedDietologistContextIntegrationTests(PostgresDatabaseFix
         services.AddDietologistModule();
         services.AddReadModelComposition();
         if (fault is not null) {
-            services.AddDbContext<FoodDiaryDbContext>(options => options.AddInterceptors(fault));
+            services.AddDbContext<SharedPersistenceDbContext>(options => options.AddInterceptors(fault));
         }
         return services.BuildServiceProvider();
     }

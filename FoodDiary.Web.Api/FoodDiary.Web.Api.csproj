@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
@@ -31,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="../Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj" />
     <ProjectReference Include="../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />

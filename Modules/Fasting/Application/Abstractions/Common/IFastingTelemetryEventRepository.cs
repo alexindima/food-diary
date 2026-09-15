@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Fasting.Common;
-
-public interface IFastingTelemetryEventRepository : IFastingTelemetryEventReadRepository, IFastingTelemetryEventWriteRepository;

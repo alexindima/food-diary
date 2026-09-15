@@ -1,8 +1,8 @@
+using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
+using FoodDiary.Persistence.Runtime.Services;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Interceptors;
-using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;

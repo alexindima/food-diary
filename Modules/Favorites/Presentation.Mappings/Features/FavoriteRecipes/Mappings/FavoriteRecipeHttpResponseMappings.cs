@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Responses;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteRecipes.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.FavoriteRecipes.Mappings;
+namespace FoodDiary.Modules.Favorites.Presentation.Mappings.Features.FavoriteRecipes.Mappings;
 
 public static class FavoriteRecipeHttpResponseMappings {
     extension(FavoriteRecipeModel model) {

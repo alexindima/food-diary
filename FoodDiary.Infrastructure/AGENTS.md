@@ -9,6 +9,12 @@ Rules for `FoodDiary.Infrastructure/`.
 
 ## Data Access
 
+- ADR 0043 supersedes the same-assembly runtime ownership below. Generic runtime,
+  shared context, session, coordinated saves and audit/email/replay engines now
+  belong to FoodDiary.Persistence.Runtime. This project retains the complete model,
+  migration identity and cross-module mappings. Register the full context through
+  IModuleContextFactory and expose ICompositionReadContext for composed reads.
+
 - ADR 0042 supersedes the pilot's central-context runtime ownership below. SharedRuntimeDbContext maps only shared audit/email/replay records; FoodDiaryDbContext retains the complete migration/read/initializer model. Both remain in this assembly. PersistenceSession owns scoped participant creation and save order. Runtime services must not depend on FoodDiaryDbContext. Preserve existing transaction enlistment across intermediate saves and detach participants when the top-level operation ends. Modules keep IModuleContextFactory; DI owns context disposal.
 - Hydration is the runtime-context pilot (ADR 0040). Central migration mappings remain unchanged. ModuleContextSaveCoordinator owns multi-context saves, common connection/transaction, savepoints and execution-strategy retries; repositories never commit independently. Direct central SaveChanges rejects pending module changes. Include registered module trackers in transaction-entry guards and reset; preserve command telemetry and post-commit ordering.
 - Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context. Shared audit, email-outbox, and replay-audit records/configurations live in their narrow Shared PersistenceModel projects; the central context applies them explicitly while the generic processing engines remain here.

@@ -24,8 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="../../Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj" />
+    <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj" />
     <ProjectReference Include="../../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
@@ -62,7 +62,7 @@
     <ProjectReference Include="../../Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="../../Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj" />
-    <ProjectReference Include="../../Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Fasting/Application.Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj" />

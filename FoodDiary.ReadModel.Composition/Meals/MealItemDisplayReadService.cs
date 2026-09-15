@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealItemDisplayReadService(FoodDiaryDbContext context) : IMealItemDisplayReadService {
+public sealed class MealItemDisplayReadService(ICompositionReadContext context) : IMealItemDisplayReadService {
     public async Task<IReadOnlyList<MealItemDisplayReadModel>> GetByMealIdsAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,

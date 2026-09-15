@@ -15,9 +15,9 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj`
+- Extracted project: `Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Users
+- Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,12 +25,12 @@ sources:
 ## Source Areas
 
 - `Modules/Favorites/Application`
-- `Modules/Favorites/Application/Abstractions`
+- `Modules/Favorites/Application.Abstractions`
 - `Modules/Favorites/Contracts`
 - `Modules/Favorites/Domain`
 - `Modules/Favorites/Domain.Contracts`
 - `Modules/Favorites/Infrastructure`
-- `Modules/Favorites/Infrastructure/Model`
+- `Modules/Favorites/PersistenceModel`
 - `Modules/Favorites/Presentation`
 
 ## HTTP Surface
@@ -42,67 +42,67 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
-- Public contract files: 35
+- Public contract files: 39
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 35
-- Interfaces: 22
+- Public contract types: 39
+- Interfaces: 18
 - DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 12
-- Contracts referencing domain entities: 6
+- Contracts referencing domain entities: 0
 - `class FavoriteMealErrors`
 - `class FavoriteProductErrors`
 - `class FavoriteRecipeErrors`
 - `interface IFavoriteMealQuery`
 - `interface IFavoriteMealReadModelRepository`
 - `interface IFavoriteMealReadRepository`
-- `interface IFavoriteMealReadService`
 - `interface IFavoriteMealRepository`
 - `interface IFavoriteMealSourceReadService`
 - `interface IFavoriteMealWriteRepository`
 - `interface IFavoriteProductQuery`
 - `interface IFavoriteProductReadModelRepository`
 - `interface IFavoriteProductReadRepository`
-- `interface IFavoriteProductReadService`
 - `interface IFavoriteProductRepository`
 - `interface IFavoriteProductSourceReadService`
 - `interface IFavoriteProductWriteRepository`
 - `interface IFavoriteRecipeQuery`
 - `interface IFavoriteRecipeReadModelRepository`
 - `interface IFavoriteRecipeReadRepository`
-- `interface IFavoriteRecipeReadService`
 - `interface IFavoriteRecipeRepository`
 - `interface IFavoriteRecipeSourceReadService`
 - `interface IFavoriteRecipeWriteRepository`
-- `interface IMealFavoriteReadService`
 - `record FavoriteMealModel`
 - `record FavoriteMealReadModel`
 - `record FavoriteMealSourceModel`
 - `record FavoriteProductModel`
 - `record FavoriteProductReadModel`
-- ... 5 more type(s)
+- `record FavoriteProductSourceModel`
+- `record FavoriteRecipeModel`
+- `record FavoriteRecipeReadModel`
+- `record FavoriteRecipeSourceModel`
+- ... 9 more type(s)
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealReadServiceCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteWriteContractTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteWriteContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestProductOverview.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestRecipeOverview.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/ContentInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/Domain/FavoriteIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductHttpMappingsTests.cs`

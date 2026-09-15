@@ -1,12 +1,13 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Fasting.Contracts.Commands.CleanupFastingTelemetry;
 using System.Diagnostics;
-using FoodDiary.Modules.Fasting.Contracts.Jobs;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class FastingTelemetryCleanupJob(
-    IFastingTelemetryCleanupService cleanupService,
+    ISender sender,
     IOptions<FastingTelemetryCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<FastingTelemetryCleanupJob> logger) {
@@ -28,8 +29,7 @@ public sealed class FastingTelemetryCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await cleanupService
-                .CleanupAsync(cutoffUtc, settings.BatchSize, cancellationToken)
+            totalDeletedCount = await sender.Send(new CleanupFastingTelemetryCommand(cutoffUtc, settings.BatchSize), cancellationToken)
                 .ConfigureAwait(false);
 
             if (totalDeletedCount > 0) {

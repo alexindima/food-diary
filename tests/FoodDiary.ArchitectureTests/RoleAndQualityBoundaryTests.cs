@@ -7,7 +7,7 @@ public sealed class RoleAndQualityBoundaryTests {
     [InlineData("Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Users.Domain")]
     [InlineData("Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Users.Domain")]
     [InlineData("Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Products.Domain")]
-    [InlineData("Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Products.Domain")]
+    [InlineData("Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Products.Domain")]
     [InlineData("Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Products.Domain")]
     [InlineData("Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Products.Domain")]
     public void Consumers_UseNarrowOwnerWithoutForeignDomain(string path, string owner, string foreignDomain) {

@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+
+public interface IFastingCheckInRepository : IFastingCheckInReadRepository, IFastingCheckInReadModelRepository, IFastingCheckInWriteRepository;

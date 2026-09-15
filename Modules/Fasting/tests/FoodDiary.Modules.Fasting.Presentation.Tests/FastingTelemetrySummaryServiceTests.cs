@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingTelemetrySummary;
-using FoodDiary.Modules.Fasting.Application.Services;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
+using FoodDiary.Modules.Fasting.Contracts.Telemetry.Queries.GetFastingTelemetrySummary;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FastingTelemetrySummaryServiceTests {
@@ -231,7 +231,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
     private static GetFastingTelemetrySummaryQueryHandler CreateHandler(
         IFastingTelemetryEventRepository repository,
         TimeProvider? timeProvider = null) =>
-        new(new FastingTelemetrySummaryReadService(repository, timeProvider ?? TimeProvider.System));
+        new(repository, timeProvider ?? TimeProvider.System);
 
     private static async Task RecordAsync(
         IFastingTelemetryEventRepository repository,

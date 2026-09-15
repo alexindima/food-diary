@@ -15,9 +15,19 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("ContentReports")]
     [InlineData("DailyAdvices")]
     [InlineData("Dashboard")]
+    [InlineData("Exercises")]
+    [InlineData("Fasting")]
     public void MigratedContracts_DoNotExportServiceInterfaces(string module) {
         var contracts = Assembly.Load($"FoodDiary.Modules.{module}.Contracts");
         Assert.DoesNotContain(contracts.GetExportedTypes(), type => type.IsInterface);
+    }
+
+    [Fact]
+    public void FavoritesContracts_ExportOnlyOutboundSourcePorts() {
+        var contracts = Assembly.Load("FoodDiary.Modules.Favorites.Contracts");
+        string[] interfaces = [.. contracts.GetExportedTypes().Where(type => type.IsInterface)
+            .Select(type => type.Name).Order(StringComparer.Ordinal)];
+        Assert.Equal(["IFavoriteMealSourceReadService", "IFavoriteProductSourceReadService", "IFavoriteRecipeSourceReadService"], interfaces);
     }
 
     [Theory]
@@ -65,6 +75,21 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginEvents.GetLoginEventsQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Application.Identity.Authentication.Queries.GetLoginEvents.GetLoginEventsQueryHandler, FoodDiary.Application.Identity")]
     [InlineData("FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Application.Identity.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQueryHandler, FoodDiary.Application.Identity")]
     [InlineData("FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle.GetCurrentCycleQuery, FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle.GetCurrentCycleQueryHandler, FoodDiary.Modules.Cycles.Application")]
+    [InlineData("FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseCalories.ReadExerciseCaloriesQuery, FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories.ReadExerciseCaloriesQueryHandler, FoodDiary.Modules.Exercises.Application")]
+    [InlineData("FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries.ReadExerciseEntriesQuery, FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseEntries.ReadExerciseEntriesQueryHandler, FoodDiary.Modules.Exercises.Application")]
+    [InlineData("FoodDiary.Modules.Fasting.Contracts.Commands.CleanupFastingTelemetry.CleanupFastingTelemetryCommand, FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Application.Commands.CleanupFastingTelemetry.CleanupFastingTelemetryCommandHandler, FoodDiary.Modules.Fasting.Application")]
+    [InlineData("FoodDiary.Modules.Fasting.Contracts.Commands.SendFastingNotifications.SendFastingNotificationsCommand, FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Application.Commands.SendFastingNotifications.SendFastingNotificationsCommandHandler, FoodDiary.Modules.Fasting.Application")]
+    [InlineData("FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting.ReadCurrentFastingQuery, FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Application.Queries.ReadCurrentFasting.ReadCurrentFastingQueryHandler, FoodDiary.Modules.Fasting.Application")]
+    [InlineData("FoodDiary.Modules.Fasting.Contracts.Queries.ReadFastingInsights.ReadFastingInsightsQuery, FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Application.Queries.ReadFastingInsights.ReadFastingInsightsQueryHandler, FoodDiary.Modules.Fasting.Application")]
+    [InlineData("FoodDiary.Modules.Fasting.Contracts.Queries.ReadFastingOverview.ReadFastingOverviewQuery, FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Application.Queries.ReadFastingOverview.ReadFastingOverviewQueryHandler, FoodDiary.Modules.Fasting.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadFavoriteMeals.ReadFavoriteMealsQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavoriteMeals.ReadFavoriteMealsQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProducts.ReadFavoriteProductsQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts.ReadFavoriteProductsQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipes.ReadFavoriteRecipesQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes.ReadFavoriteRecipesQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteIds.ReadMealFavoriteIdsQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteIds.ReadMealFavoriteIdsQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteStatus.ReadMealFavoriteStatusQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus.ReadMealFavoriteStatusQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoritesOverview.ReadMealFavoritesOverviewQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoritesOverview.ReadMealFavoritesOverviewQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadProductFavoriteStatus.ReadProductFavoriteStatusQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProductFavoriteStatus.ReadProductFavoriteStatusQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus.ReadRecipeFavoriteStatusQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus.ReadRecipeFavoriteStatusQueryHandler, FoodDiary.Modules.Favorites.Application")]
     public void OwnerRequest_HasMatchingHandlerAndPreservesCallerCommit(string requestName, string handlerName) {
         Type request = Type.GetType(requestName, throwOnError: true)!;
         Type handler = Type.GetType(handlerName, throwOnError: true)!;

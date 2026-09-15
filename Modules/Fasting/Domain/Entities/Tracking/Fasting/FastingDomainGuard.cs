@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Entities.Tracking.Fasting;
+namespace FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 internal static class FastingDomainGuard {
     public static TEnum Defined<TEnum>(TEnum value, string paramName)

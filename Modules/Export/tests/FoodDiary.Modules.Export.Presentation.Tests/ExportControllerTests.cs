@@ -1,13 +1,14 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Models;
-using FoodDiary.Application.Export.Queries.ExportCycle;
-using FoodDiary.Application.Export.Queries.ExportDiary;
+using FoodDiary.Modules.Export.Application.Models;
+using FoodDiary.Modules.Export.Application.Queries.ExportCycle;
+using FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Export;
+using FoodDiary.Modules.Export.Presentation.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Export.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExportControllerTests {

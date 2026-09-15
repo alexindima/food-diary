@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
-internal sealed class DashboardMealFavoritesLoader(FoodDiaryDbContext context) {
+internal sealed class DashboardMealFavoritesLoader(ICompositionReadContext context) {
     public async Task<IReadOnlyDictionary<MealId, Guid>> LoadAsync(
         UserId userId,
         IReadOnlyCollection<MealId> mealIds,

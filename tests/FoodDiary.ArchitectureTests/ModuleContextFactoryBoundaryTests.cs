@@ -50,6 +50,8 @@ public sealed class ModuleContextFactoryBoundaryTests {
             foreach (string dependency in graph[current]) {
                 Assert.False(string.Equals(dependency, "FoodDiary.Infrastructure", StringComparison.Ordinal),
                     $"{project} depends on central Infrastructure through {current} -> {dependency}");
+                Assert.False(string.Equals(dependency, "FoodDiary.Persistence.Runtime", StringComparison.Ordinal),
+                    $"{project} must use persistence contracts instead of runtime implementations through {current} -> {dependency}");
                 pending.Enqueue(dependency);
             }
         }

@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.Presentation.Api.Features.Exercises.Requests;
+using FoodDiary.Modules.Exercises.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

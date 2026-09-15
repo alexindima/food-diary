@@ -308,7 +308,7 @@ FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature s
 
 Favorites consumes source readers implemented by Meals, Products and Recipes through `Modules/Favorites/Contracts`. Meals also consumes `IMealFavoriteReadService` from that same project. Public read projections and source DTOs belong to Contracts; repositories, persistence projections and errors stay in Application/Abstractions. Foreign modules must not reference these internal ports. Scalar IDs belong to their Domain.Contracts owners; central Errors facades are retired. See `docs/ai/favorites-contracts-extraction.md`.
 
-Images EF/outbox configuration belongs to `Modules/Images/Infrastructure/Model`. Favorite relationship configurations live in `Modules/Favorites/Infrastructure/Model/Configurations`, with repositories separated by slice under module Infrastructure. Shared context/migrations remain central.
+Images EF/outbox configuration belongs to `Modules/Images/Infrastructure/Model`. Favorite relationship configurations live in `Modules/Favorites/PersistenceModel/Configurations`, with repositories separated by slice under module Infrastructure. Shared context/migrations remain central.
 
 ## Dietologist relationships and recipe social boundaries
 

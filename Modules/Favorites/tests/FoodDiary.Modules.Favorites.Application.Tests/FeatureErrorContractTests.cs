@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Favorites.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {

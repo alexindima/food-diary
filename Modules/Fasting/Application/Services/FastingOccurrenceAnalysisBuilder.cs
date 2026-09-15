@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 

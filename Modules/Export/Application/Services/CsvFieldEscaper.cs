@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Export.Services;
+namespace FoodDiary.Modules.Export.Application.Services;
 
 internal static class CsvFieldEscaper {
     public static string Escape(string? value) {

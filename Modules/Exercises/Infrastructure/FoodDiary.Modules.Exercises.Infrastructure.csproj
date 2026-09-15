@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Exercises.Application.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Exercises.Domain.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />

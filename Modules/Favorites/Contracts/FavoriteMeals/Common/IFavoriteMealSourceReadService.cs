@@ -1,8 +1,8 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+namespace FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
 
 public interface IFavoriteMealSourceReadService {
     Task<Result<FavoriteMealSourceModel>> GetAccessibleAsync(

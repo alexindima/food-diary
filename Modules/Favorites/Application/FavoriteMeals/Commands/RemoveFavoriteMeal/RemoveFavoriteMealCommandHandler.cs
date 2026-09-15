@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 
-namespace FoodDiary.Application.Favorites.FavoriteMeals.Commands.RemoveFavoriteMeal;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 
 public sealed class RemoveFavoriteMealCommandHandler(
     IFavoriteMealWriteRepository favoriteMealRepository,

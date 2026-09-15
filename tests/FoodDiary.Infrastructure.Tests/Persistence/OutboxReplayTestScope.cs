@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime.Persistence.Outbox;
+using FoodDiary.Persistence.Runtime.Persistence.Email;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -5,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;

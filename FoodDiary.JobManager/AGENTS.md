@@ -32,3 +32,5 @@ Rules for `FoodDiary.JobManager/`.
 Billing renewal and AI recognition workers dispatch Contracts requests through ISender. Keep loops, scopes, schedules, cancellation and job telemetry in the host; handlers own use-case orchestration. These workflow requests do not opt into automatic unit-of-work saves.
 
 Dietologist client-task reminders dispatch SendClientTaskRemindersCommand through ISender. Its owner handler stages one batch and the common transactional command pipeline saves it. Keep scheduler options, retry/concurrency attributes and telemetry in the job.
+
+Fasting notification scheduling and telemetry cleanup dispatch Contracts requests through ISender. The notification handler retains its explicit save and post-commit queue ordering; telemetry cleanup retains independently committed delete batches. Neither request acquires the automatic transactional-command marker.

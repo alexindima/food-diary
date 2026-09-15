@@ -1,4 +1,3 @@
-
 namespace FoodDiary.Modules.Fasting.Application.Services;
 
 internal sealed record FastingOccurrenceAnalysis(

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
-internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IRecipeOverviewReadService {
+internal sealed class RecipeOverviewReadService(ICompositionReadContext context) : IRecipeOverviewReadService {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetPagedAsync(

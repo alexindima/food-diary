@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;

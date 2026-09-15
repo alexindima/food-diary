@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -42,10 +43,15 @@ public sealed class SharedRuntimeSessionIntegrationTests(PostgresDatabaseFixture
                 new EmailMessage("from@example.com", "Test", ["to@example.com"], "Atomic delivery", "Body", TextBody: null), DateTime.UtcNow));
             await unitOfWork.SaveChangesAsync(token);
             read ??= provider.GetRequiredService<FoodDiaryDbContext>();
+            ICompositionReadContext queries = provider.GetRequiredService<ICompositionReadContext>();
+            Assert.Same(read, queries);
             Assert.Same(runtime.Database.GetDbConnection(), read.Database.GetDbConnection());
             Assert.NotNull(read.Database.CurrentTransaction);
-            Assert.Equal(250, await read.HydrationEntries.AsNoTracking().Join(read.Users.AsNoTracking(),
+            Assert.Equal(250, await queries.HydrationEntries.Join(queries.Users,
                 entry => entry.UserId, item => item.Id, (entry, item) => entry.AmountMl).SingleAsync(token));
+            Assert.Equal(1, await queries.Users.Where(item => item.Id == user.Id)
+                .Select(item => queries.HydrationEntries.Count(entry => entry.UserId == item.Id)).SingleAsync(token));
+            Assert.Empty(read.ChangeTracker.Entries<HydrationEntry>());
             Assert.Single(await read.EmailOutbox.AsNoTracking().ToListAsync(token));
             throw failure;
         }));

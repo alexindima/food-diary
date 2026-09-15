@@ -1,6 +1,7 @@
-using FoodDiary.Domain.Entities.FavoriteRecipes;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Favorites;
 
-public sealed class FavoriteRecipeQuery(FoodDiaryDbContext context) : IFavoriteRecipeQuery {
+public sealed class FavoriteRecipeQuery(ICompositionReadContext context) : IFavoriteRecipeQuery {
     public async Task<IReadOnlyList<FavoriteRecipeId>> GetAccessibleIdsAsync(
         UserId userId, FavoriteRecipeId? favoriteId = null,
         IReadOnlyCollection<RecipeId>? sourceIds = null, CancellationToken cancellationToken = default) {

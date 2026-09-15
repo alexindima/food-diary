@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Exercises.PersistenceModel;
 using FoodDiary.Modules.Dietologist.PersistenceModel;
 using FoodDiary.Modules.Identity.PersistenceModel;
 using FoodDiary.Modules.Cycles.PersistenceModel;
 using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.Billing.PersistenceModel;
-using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
+using FoodDiary.Modules.Fasting.PersistenceModel;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Model;
 using FoodDiary.Modules.BodyMetrics.PersistenceModel;
@@ -21,7 +22,7 @@ public sealed class ScalarPersistenceBoundaryTests {
     [InlineData(typeof(RecipesPersistenceModelRegistration), "Recipes")]
     [InlineData(typeof(MealsPersistenceModelRegistration), "Meals")]
     [InlineData(typeof(ProductsPersistenceModelRegistration), "Products")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoritesPersistenceModelRegistration), "Favorites")]
+    [InlineData(typeof(FoodDiary.Modules.Favorites.PersistenceModel.FavoritesPersistenceModelRegistration), "Favorites")]
     [InlineData(typeof(FoodDiary.Modules.MealPlanning.Infrastructure.Model.MealPlanningPersistenceModelRegistration), "MealPlanning")]
     [InlineData(typeof(FoodDiary.Infrastructure.UsersPersistenceModelRegistration), "Users")]
     [InlineData(typeof(DietologistPersistenceModelRegistration), "Dietologist")]

@@ -1,5 +1,9 @@
 # Backend Module Map
 
+Shared persistence runtime is now physically separate from the full migration
+model. Composed readers consume an IQueryable-only facade on the same scoped
+context. See [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md).
+
 ## Hydration runtime persistence pilot
 
 The pilot's factory ownership is superseded by [ADR 0042](adr/0042-shared-runtime-persistence-session.md):
@@ -63,9 +67,9 @@ Use this file when deciding where backend code belongs.
 | BodyMetrics infrastructure | `Modules/BodyMetrics/Infrastructure` | Entry repositories and complete module registration | HTTP transport, shared database lifecycle, provider adapters |
 | Fasting contracts | `Modules/Fasting/Contracts` | Stable cross-module read DTOs/read service and operational job contracts | Repositories, aggregates, handlers, EF, HTTP transport |
 | Fasting domain | `Modules/Fasting/Domain` | Fasting aggregates, enums, identifiers, and invariants | Application orchestration, EF mappings, transport |
-| Fasting application ports | `Modules/Fasting/Application/Abstractions` | Repository ports and internal persistence projections | Stable cross-module contracts, EF implementations |
+| Fasting application ports | `Modules/Fasting/Application.Abstractions` | Repository ports and internal persistence projections | Stable cross-module contracts, EF implementations |
 | Fasting use cases | `Modules/Fasting/Application` | Fasting commands, queries, handlers, validators, application services and registration | Persistence implementations, HTTP transport, foreign module internals |
-| Fasting persistence model | `Modules/Fasting/Infrastructure/Model` | Fasting EF configurations and the model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
+| Fasting persistence model | `Modules/Fasting/PersistenceModel` | Fasting EF configurations and the model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Fasting infrastructure | `Modules/Fasting/Infrastructure` | Fasting repository implementations and full module registration | HTTP transport, jobs, central migrations |
 | Hydration contracts | `Modules/Hydration/Contracts` | Stable hydration read service and projection models used by Dashboard and Weekly Check-In | Repositories, handlers, EF, HTTP transport |
 | Hydration domain | `Modules/Hydration/Domain` | `HydrationEntry`, its identifier and invariants with legacy CLR namespaces and a scalar `UserId` dependency on Users Domain.Contracts | Reverse User navigation, application orchestration, EF mappings, transport |
@@ -75,9 +79,9 @@ Use this file when deciding where backend code belongs.
 | Hydration infrastructure | `Modules/Hydration/Infrastructure` | Hydration repository implementation and complete module registration | HTTP transport and central migrations |
 | Favorites domain | `Modules/Favorites/Domain` | Favorite meal, product, and recipe aggregates and identifiers with preserved CLR namespaces | Application orchestration, EF mappings, transport |
 | Favorites use cases | `Modules/Favorites/Application` | Favorite commands, queries, validators, mappings, read services, and application registration with preserved assembly identity | Persistence implementations and HTTP transport |
-| Favorites owner ports | `Modules/Favorites/Application/Abstractions` | Repository ports, persistence projections, errors and consumed source-meal reader | Public consumer read API, application implementations |
+| Favorites owner ports | `Modules/Favorites/Application.Abstractions` | Repository ports, persistence projections, errors and consumed source-meal reader | Public consumer read API, application implementations |
 | Favorites consumer contracts | `Modules/Favorites/Contracts` | Three semantic read services and their projection models | Aggregate repositories, mutations, EF and HTTP transport |
-| Favorites persistence model | `Modules/Favorites/Infrastructure/Model` | Favorites EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
+| Favorites persistence model | `Modules/Favorites/PersistenceModel` | Favorites EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Favorites infrastructure | `Modules/Favorites/Infrastructure` | Favorites repositories and complete module registration | HTTP transport and central migrations |
 | WeeklyGoals contracts | `Modules/WeeklyGoals/Contracts` | Stable weekly-goal read model and read-service contract | Repositories, handlers, EF, HTTP transport |
 | WeeklyGoals domain | `Modules/WeeklyGoals/Domain` | Weekly-goal aggregate, enum, identifier, invariants, and stable CLR namespace/EF identity | Application orchestration, EF mappings, transport, shared `User` ownership |
@@ -92,7 +96,7 @@ Use this file when deciding where backend code belongs.
 | Wearables infrastructure | `Modules/Wearables/Infrastructure` | Repositories, token/OAuth protection, transaction runner, and complete module registration | Provider HTTP adapters, HTTP presentation, central migrations |
 | WeeklyCheckIn use cases | `Modules/WeeklyCheckIn/Application` | Weekly check-in query, summaries, trends, suggestions, user-profile composition, and module registration | Domain entities, persistence, adapters, HTTP transport, or empty wrapper layers |
 | TDEE use cases | `Modules/Tdee/Application` | TDEE calculation, insight query/model, user-profile composition, validation, and module registration | Domain entities, persistence, provider adapters, HTTP transport, or empty wrapper layers |
-| Export application contracts | `Modules/Export/Application/Abstractions` | Export-specific input limits, diary projection, PDF generator, and report-text provider contracts consumed by adapters and presentation | Export handlers, PDF rendering, HTTP transport, provider networking |
+| Export application contracts | `Modules/Export/Application.Abstractions` | Export-specific input limits, diary projection, PDF generator, and report-text provider contracts consumed by adapters and presentation | Export handlers, PDF rendering, HTTP transport, provider networking |
 | Export use cases | `Modules/Export/Application` | Diary/cycle export queries, access validation, bounded CSV/file generation, and legacy application assembly identity | Owned domain/persistence, retained files, HTTP transport, PDF/network implementations, background jobs |
 | Export PDF adapter | `Modules/Export/Infrastructure` | PDF rendering, localized report text, chart/image composition and bounded SSRF-protected image HTTP client; hosts explicitly compose infrastructure and resources | Shared DbContext/migrations, HTTP controllers, retained files, background jobs |
 | Statistics use cases | `Modules/Statistics/Application` | Nutrition statistics queries, summary composition, response models, date normalization, and legacy application assembly identity | Domain entities, persistence, provider adapters, HTTP transport, contracts, or empty wrapper layers |
@@ -416,3 +420,5 @@ visibility predicates, SQL paging and bounded title/comment excerpts. No module
 references the composition implementation; central migrations remain (ADR 0040).
 
 Admin runtime persistence uses AdminDbContext for sessions and acknowledgement receipts; composed reads and transactional user purge retain the shared context (ADR 0040).
+
+Exercises, Export, Fasting and Favorites use canonical `FoodDiary.Modules.<Module>.<Layer>` project identities and folder namespaces. Their application ports and persistence models are sibling projects. Exercises/Fasting/Favorites inbound read operations use owner Contracts requests; Fasting jobs do likewise while preserving independent persistence boundaries. Favorites retains outbound source ports. Export diary composition and Fasting telemetry summary live in their existing query handlers.

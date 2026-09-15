@@ -11,7 +11,7 @@ public sealed class FavoritesContractOwnershipTests {
     [InlineData("Recipe", 7)]
     public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind, int ownerFileCount) {
         string area = $"Favorite{kind}s";
-        string ownerRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Application/Abstractions/{area}");
+        string ownerRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Application.Abstractions/{area}");
         string publicRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Contracts/{area}");
         string centralRoot = ArchitectureTestPaths.FromRoot($"FoodDiary.Application.Abstractions/{area}");
         if (Directory.Exists(centralRoot)) {
@@ -49,6 +49,6 @@ public sealed class FavoritesContractOwnershipTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences("Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj");
         Assert.DoesNotContain("FoodDiary.Modules.Favorites.Application.Abstractions", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Modules.Favorites.Contracts", references, StringComparer.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Application.Favorites", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Favorites.Application", references, StringComparer.Ordinal);
     }
 }

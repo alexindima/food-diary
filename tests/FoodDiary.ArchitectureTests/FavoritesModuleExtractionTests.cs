@@ -19,13 +19,13 @@ public sealed class FavoritesModuleExtractionTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.Favorites", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Favorites.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedFavoritesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj");
+            "Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj");
         string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);

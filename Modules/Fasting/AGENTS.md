@@ -19,9 +19,8 @@ Rules for `Modules/Fasting/`.
 - Align implementation namespaces with `FoodDiary.Modules.Fasting.Application.*` and paths under `Application/`.
 - Do not place repository ports or domain aggregates in `Contracts/`.
 - Consumers outside composition roots must reference `FoodDiary.Modules.Fasting.Contracts`, not implementation services.
-- Repository ports and internal persistence read models belong in `Application/Abstractions`; repository implementations belong in `Infrastructure/Persistence`; EF mappings belong in `Infrastructure/Model`.
-- Preserve existing Fasting domain CLR namespaces until a separately planned EF migration changes snapshot identity safely.
-- The application project's legacy assembly name `FoodDiary.Application.Fasting` is a temporary binary-compatibility detail; its semantic MSBuild project name is `FoodDiary.Modules.Fasting.Application`. Use `Fasting` as the module identity and `FoodDiary.Modules.Fasting.*` for new implementation namespaces.
+- Repository ports and internal persistence read models belong in `Application.Abstractions`; repository implementations belong in `Infrastructure/Persistence`; EF mappings belong in `PersistenceModel`.
+- Domain namespaces match the project and folders. Keep the current EF snapshot aligned with runtime CLR identity; preserve historical migration metadata and relational schema.
 
 ## Tests
 
@@ -31,3 +30,7 @@ Rules for `Modules/Fasting/`.
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.
+
+Notification and telemetry cleanup jobs dispatch owner requests without the transactional-command marker. Notification persistence and post-commit ordering remain in SendFastingNotificationsCommandHandler; cleanup keeps independently committed bulk-delete batches.

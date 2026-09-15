@@ -116,6 +116,7 @@ internal static class PersistenceCapabilityScanner {
     }
 
     private static bool IsContext(ITypeSymbol? type) {
+        if (type?.ToDisplayString().Equals("FoodDiary.Infrastructure.Persistence.ICompositionReadContext", StringComparison.Ordinal) == true) { return true; }
         for (var current = type as INamedTypeSymbol; current is not null; current = current.BaseType) {
             if (current.ToDisplayString().Equals("Microsoft.EntityFrameworkCore.DbContext", StringComparison.Ordinal)) { return true; }
         }

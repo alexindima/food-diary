@@ -88,25 +88,68 @@ public class DailyAdvicesFeatureTests {
     }
 
     [Fact]
-    public void DailyAdviceSelector_SelectReadModelForDate_WhenPreviousDaySelectsSameAdvice_UsesNextAdvice() {
-        IReadOnlyList<DailyAdviceReadModel> advices = [
-            new DailyAdviceReadModel(Guid.Parse("11111111-1111-1111-1111-111111111111"), "en", "Hydrate", "water", 1),
-            new DailyAdviceReadModel(Guid.Parse("22222222-2222-2222-2222-222222222222"), "en", "Walk", "movement", 1),
-            new DailyAdviceReadModel(Guid.Parse("33333333-3333-3333-3333-333333333333"), "en", "Sleep", "recovery", 1),
-        ];
-        DateTime date = Enumerable
-            .Range(0, 10_000)
-            .Select(offset => new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(offset))
-            .First(candidate =>
-                InvokeGetReadModelWeightedIndex(advices, candidate, "en") ==
-                InvokeGetReadModelWeightedIndex(advices, candidate.AddDays(-1), "en"));
-        int todayIndex = InvokeGetReadModelWeightedIndex(advices, date, "en");
+    public void DailyAdviceSelector_ConsecutiveCorrectedDays_DoNotRepeat() {
+        IReadOnlyList<DailyAdviceReadModel> advices = CreateSelectionAdvices(3, 1);
+        var date = new DateTime(2026, 1, 4);
 
-        DailyAdviceReadModel? selected = InvokeSelectReadModelForDate(advices, date, "en");
+        DailyAdviceReadModel? first = InvokeSelectReadModelForDate(advices, date, "en");
+        DailyAdviceReadModel? second = InvokeSelectReadModelForDate(advices, date.AddDays(1), "en");
 
-        Assert.NotNull(selected);
-        Assert.Equal(advices[(todayIndex + 1) % advices.Count].Id, selected!.Id);
+        Assert.NotNull(first);
+        Assert.NotNull(second);
+        Assert.NotEqual(first.Id, second.Id);
     }
+
+    [Theory]
+    [InlineData(2, 1)]
+    [InlineData(3, 1)]
+    [InlineData(7, 1)]
+    [InlineData(2, int.MaxValue)]
+    [InlineData(3, int.MaxValue)]
+    [InlineData(7, int.MaxValue)]
+    public void DailyAdviceSelector_StableCatalog_DoesNotRepeatAcrossCalendarDays(int count, int weight) {
+        IReadOnlyList<DailyAdviceReadModel> advices = CreateSelectionAdvices(count, weight);
+        var start = new DateTime(2025, 12, 1);
+        Guid? previous = null;
+        for (int day = 0; day < 400; day++) {
+            DailyAdviceReadModel? selected = InvokeSelectReadModelForDate(advices, start.AddDays(day), "en");
+            Assert.NotNull(selected);
+            Assert.Contains(selected, advices);
+            Assert.NotEqual(previous, selected.Id);
+            previous = selected.Id;
+        }
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(7)]
+    public void DailyAdviceSelector_CalendarBoundaries_DoNotOverflowOrRepeat(int count) {
+        IReadOnlyList<DailyAdviceReadModel> advices = CreateSelectionAdvices(count, int.MaxValue);
+        foreach (DateTime date in new[] { DateTime.MinValue, DateTime.MaxValue.Date.AddDays(-1) }) {
+            DailyAdviceReadModel? first = InvokeSelectReadModelForDate(advices, date, "en");
+            DailyAdviceReadModel? second = InvokeSelectReadModelForDate(advices, date.AddDays(1), "en");
+            Assert.NotNull(first);
+            Assert.NotNull(second);
+            Assert.NotEqual(first.Id, second.Id);
+        }
+    }
+
+    [Fact]
+    public void DailyAdviceSelector_SelectionIsIndependentOfInputAndRequestOrder() {
+        IReadOnlyList<DailyAdviceReadModel> advices = CreateSelectionAdvices(7, int.MaxValue);
+        var date = new DateTime(2026, 1, 5);
+        DailyAdviceReadModel? expected = InvokeSelectReadModelForDate(advices, date, "en");
+        _ = InvokeSelectReadModelForDate(advices, date.AddYears(10), "en");
+        DailyAdviceReadModel? actual = InvokeSelectReadModelForDate([.. advices.Reverse()], date.AddHours(12), "en-US");
+
+        Assert.NotNull(expected);
+        Assert.Equal(expected, actual);
+    }
+
+    private static IReadOnlyList<DailyAdviceReadModel> CreateSelectionAdvices(int count, int weight) =>
+        [.. Enumerable.Range(1, count).Select(index =>
+            new DailyAdviceReadModel(new Guid(index, 0, 0, new byte[8]), "en", "Advice", Tag: null, index % 2 == 0 ? 1 : weight))];
 
     [Fact]
     public void DailyAdviceSelector_SelectReadModelForDate_WithMinimumDateAndMultipleAdvices_ReturnsSelection() {
@@ -235,14 +278,6 @@ public class DailyAdvicesFeatureTests {
         Assert.NotNull(method);
 
         return (DailyAdviceReadModel?)method!.Invoke(null, [advices, date, locale]);
-    }
-
-    private static int InvokeGetReadModelWeightedIndex(IReadOnlyList<DailyAdviceReadModel> advices, DateTime date, string locale) {
-        Type selectorType = GetSelectorType();
-        MethodInfo? method = selectorType.GetMethod("GetReadModelWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
-        Assert.NotNull(method);
-
-        return (int)method!.Invoke(null, [advices, date, locale])!;
     }
 
     private static Type GetSelectorType() {

@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
+namespace FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteMeals.Responses;
 
 public sealed record FavoriteMealHttpResponse(
     Guid Id,

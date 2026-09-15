@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -5,9 +6,8 @@ using FoodDiary.Modules.Fasting.Application.Common;
 using FoodDiary.Modules.Fasting.Application.Mappings;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
 

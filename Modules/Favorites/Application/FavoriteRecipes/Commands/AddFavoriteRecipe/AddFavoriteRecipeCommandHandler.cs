@@ -1,14 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Mappings;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Mappings;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Favorites.FavoriteRecipes.Commands.AddFavoriteRecipe;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 
 public sealed class AddFavoriteRecipeCommandHandler(
     IFavoriteRecipeWriteRepository favoriteRecipeRepository,

@@ -1,14 +1,15 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
+namespace FoodDiary.Modules.Exercises.Application.Queries.GetExerciseEntries;
 
 public sealed class GetExerciseEntriesQueryHandler(
-    IExerciseEntryReadService exerciseEntryReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetExerciseEntriesQuery, Result<IReadOnlyList<ExerciseEntryModel>>> {
     public async Task<Result<IReadOnlyList<ExerciseEntryModel>>> Handle(
@@ -22,11 +23,7 @@ public sealed class GetExerciseEntriesQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ExerciseEntryModel>>(userIdResult);
         }
 
-        IReadOnlyList<ExerciseEntryModel> models = await exerciseEntryReadService.GetEntriesAsync(
-            userIdResult.Value,
-            query.DateFrom,
-            query.DateTo,
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ExerciseEntryModel> models = await sender.Send(new ReadExerciseEntriesQuery(userIdResult.Value, query.DateFrom, query.DateTo), cancellationToken).ConfigureAwait(false);
         return Result.Success<IReadOnlyList<ExerciseEntryModel>>(models);
     }
 }

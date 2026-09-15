@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking.Fasting;
+namespace FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
     private const int NameMaxLength = 64;

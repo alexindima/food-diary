@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.ContentReports;
 
-public sealed class ContentReportReadService(FoodDiaryDbContext context)
+public sealed class ContentReportReadService(ICompositionReadContext context)
     : IContentReportReadModelRepository, IContentReportTargetReadService {
 
     public Task<bool> IsReportableAsync(

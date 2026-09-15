@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
-using FoodDiary.Presentation.Api.Features.Logs;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class LogsControllerTests {

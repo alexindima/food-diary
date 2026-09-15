@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Swagger;

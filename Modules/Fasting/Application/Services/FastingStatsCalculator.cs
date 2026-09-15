@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 

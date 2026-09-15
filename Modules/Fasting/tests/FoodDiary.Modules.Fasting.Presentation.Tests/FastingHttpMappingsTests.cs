@@ -1,5 +1,6 @@
-using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
-using FoodDiary.Presentation.Api.Features.Fasting.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Fasting.Presentation.Mappings;
+using FoodDiary.Modules.Fasting.Presentation.Requests;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
 using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
@@ -10,9 +11,10 @@ using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingOverview;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingStats;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingInsights;
-using FoodDiary.Presentation.Api.Features.Fasting.Responses;
+using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Fasting.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FastingHttpMappingsTests {

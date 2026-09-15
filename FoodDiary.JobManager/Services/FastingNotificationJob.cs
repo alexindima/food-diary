@@ -1,12 +1,13 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Fasting.Contracts.Commands.SendFastingNotifications;
 using System.Diagnostics;
-using FoodDiary.Modules.Fasting.Contracts.Jobs;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class FastingNotificationJob(
-    IFastingNotificationScheduler scheduler,
+    ISender sender,
     IOptions<FastingNotificationOptions> options,
     JobExecutionObserver observer,
     ILogger<FastingNotificationJob> logger) {
@@ -26,7 +27,7 @@ public sealed class FastingNotificationJob(
                 return;
             }
 
-            int processed = await scheduler.ProcessDueNotificationsAsync(cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendFastingNotificationsCommand(), cancellationToken).ConfigureAwait(false);
             if (processed > 0) {
                 logger.LogInformation("Created {NotificationCount} fasting notifications.", processed);
             }

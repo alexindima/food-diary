@@ -1,5 +1,10 @@
 # Architecture Test Guidelines
 
+ADR 0043 adds FoodDiary.Persistence.Runtime to technical source discovery and
+the explicit dependency matrix. Its transitive closure excludes full-model and
+module implementation assemblies. Composed readers consume ICompositionReadContext;
+capability scanning must still detect AsTracking and bulk writes through that facade.
+
 Narrow consumer closure checks also cover Identity, BodyMetrics, Images service
 contracts and Products/Recipes/Cycles contracts. Foreign business modules cannot
 reference these owners' internal Abstractions. Keep exact exported type ownership

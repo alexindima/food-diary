@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
-internal sealed class RecommendationReadService(FoodDiaryDbContext context) : IRecommendationReadModelRepository {
+internal sealed class RecommendationReadService(ICompositionReadContext context) : IRecommendationReadModelRepository {
     public async Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
         UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Recommendations

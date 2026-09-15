@@ -1,0 +1,25 @@
+using FoodDiary.Results;
+
+namespace FoodDiary.Modules.Exercises.Application.Abstractions.Common;
+
+public static class ExerciseErrors {
+    public static Error NotFound(Guid id) => new(
+        "Exercise.NotFound",
+        $"Exercise entry with ID {id} was not found.",
+        Kind: ErrorKind.NotFound);
+
+    public static Error NotAccessible(Guid id) => new(
+        "Exercise.NotAccessible",
+        $"Exercise entry with ID {id} was not found or is not accessible.",
+        Kind: ErrorKind.NotFound);
+
+    public static Error InvalidDuration => new(
+        "Exercise.InvalidDuration",
+        "Exercise duration must be positive.",
+        Kind: ErrorKind.Validation);
+
+    public static Error InvalidCalories => new(
+        "Exercise.InvalidCalories",
+        "Calories burned must be non-negative.",
+        Kind: ErrorKind.Validation);
+}

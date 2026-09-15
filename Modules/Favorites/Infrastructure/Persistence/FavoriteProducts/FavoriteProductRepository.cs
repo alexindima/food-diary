@@ -1,6 +1,7 @@
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
-using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

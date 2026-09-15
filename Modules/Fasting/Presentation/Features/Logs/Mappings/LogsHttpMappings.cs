@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.Logs.Mappings;
+namespace FoodDiary.Modules.Fasting.Presentation.Features.Logs.Mappings;
 
 public static class LogsHttpMappings {
     extension(ClientTelemetryLogHttpRequest request) {

@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Favorites.Application;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.Favorites;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteProducts;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;

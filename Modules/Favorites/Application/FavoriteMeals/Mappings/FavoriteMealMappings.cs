@@ -1,7 +1,8 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 
-namespace FoodDiary.Application.Favorites.FavoriteMeals.Mappings;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Mappings;
 
 public static class FavoriteMealMappings {
     public static FavoriteMealModel ToModel(this FavoriteMeal favorite, FavoriteMealSourceModel source) =>

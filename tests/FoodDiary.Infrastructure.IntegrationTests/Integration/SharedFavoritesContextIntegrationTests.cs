@@ -1,9 +1,10 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;

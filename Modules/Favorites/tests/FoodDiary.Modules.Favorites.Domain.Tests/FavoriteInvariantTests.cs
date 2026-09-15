@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Favorites.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public class FavoriteInvariantTests {

@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Admin.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Fasting;
+using FoodDiary.Modules.Fasting.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;

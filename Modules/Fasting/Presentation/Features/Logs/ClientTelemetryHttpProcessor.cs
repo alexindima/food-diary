@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Fasting.Application.Common;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
-using FoodDiary.Presentation.Api.Features.Logs.Mappings;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Mappings;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Presentation.Api.Features.Logs;
+namespace FoodDiary.Modules.Fasting.Presentation.Features.Logs;
 
 public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsController> logger) {
     public async Task<Result> ProcessAsync(

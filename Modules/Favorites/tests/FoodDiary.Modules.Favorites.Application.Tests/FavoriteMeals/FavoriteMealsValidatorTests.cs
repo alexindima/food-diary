@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
-namespace FoodDiary.Application.Tests.FavoriteMeals;
+namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteMeals;
 
 [ExcludeFromCodeCoverage]
 public class FavoriteMealsValidatorTests {

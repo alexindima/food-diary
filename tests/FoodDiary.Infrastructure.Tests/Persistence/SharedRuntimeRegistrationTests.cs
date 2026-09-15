@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
@@ -12,6 +13,22 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class SharedRuntimeRegistrationTests {
+    [Fact]
+    public void CompositionFacadeUsesSameContextAndExposesOnlyQueryableProperties() {
+        using ServiceProvider provider = CreateProvider();
+        using IServiceScope scope = provider.CreateScope();
+        ICompositionReadContext reader = scope.ServiceProvider.GetRequiredService<ICompositionReadContext>();
+        FoodDiaryDbContext full = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        Assert.Same(full, reader);
+        Assert.All(typeof(ICompositionReadContext).GetProperties(), property => {
+            Assert.False(property.CanWrite);
+            Assert.Equal(typeof(IQueryable<>), property.PropertyType.GetGenericTypeDefinition());
+            var query = (IQueryable)property.GetValue(reader)!;
+            Assert.Contains("AsNoTracking", query.Expression.ToString(), StringComparison.Ordinal);
+        });
+        Assert.All(typeof(ICompositionReadContext).GetMethods(), method => Assert.True(method.IsSpecialName));
+    }
+
     [Fact]
     public void RuntimeModelContainsOnlySharedRecordsAndDoesNotResolveFullModel() {
         using ServiceProvider provider = CreateProvider();
@@ -37,6 +54,7 @@ public sealed class SharedRuntimeRegistrationTests {
         Assert.True(full.Model.GetEntityTypes().Count() > runtime.Model.GetEntityTypes().Count());
         Assert.NotEmpty(full.Database.GetMigrations());
         Assert.Empty(runtime.Database.GetMigrations());
+        Assert.False(full.Database.HasPendingModelChanges());
     }
 
     private static ServiceProvider CreateProvider() {

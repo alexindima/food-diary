@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Infrastructure.Resources;
 
 namespace FoodDiary.Modules.Export.Infrastructure.Tests.Resources;

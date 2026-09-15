@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 
-namespace FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 public record AddFavoriteMealCommand(
     Guid? UserId,

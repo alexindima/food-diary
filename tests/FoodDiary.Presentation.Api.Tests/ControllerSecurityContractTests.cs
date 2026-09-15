@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -17,9 +18,8 @@ using FoodDiary.Modules.Billing.Presentation.Controllers;
 using FoodDiary.Modules.Dashboard.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Images;
 using FoodDiary.Presentation.Api.Features.Hydration;
-using FoodDiary.Presentation.Api.Features.Export;
-using FoodDiary.Presentation.Api.Features.Export.Requests;
-using FoodDiary.Presentation.Api.Features.Logs;
+using FoodDiary.Modules.Export.Presentation.Controllers;
+using FoodDiary.Modules.Export.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Marketing;
 using FoodDiary.Presentation.Api.Features.MealPlans;
 using FoodDiary.Presentation.Api.Features.Notifications;

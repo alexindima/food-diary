@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Favorites.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public class ContentInvariantTests {

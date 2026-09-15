@@ -20,3 +20,5 @@ Rules for `Modules/Fasting/Infrastructure/` except the scoped `Model/` guide.
 Read reminder settings through Users.Contracts IUserFastingReminderReadService in
 one batch of distinct active-occurrence user IDs. Do not read Users sets or depend
 on Users.Domain. Preserve occurrence order, Plan loading and missing-user omission.
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.

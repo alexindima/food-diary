@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.Fasting.Contracts</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.Fasting.Contracts</RootNamespace>
     <NoWarn>$(NoWarn);IDE0130</NoWarn>
   </PropertyGroup>
 
@@ -12,4 +10,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+  </ItemGroup>
 </Project>

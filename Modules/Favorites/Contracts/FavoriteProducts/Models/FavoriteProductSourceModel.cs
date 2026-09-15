@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+namespace FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 
 public sealed record FavoriteProductSourceModel(
     string Name,

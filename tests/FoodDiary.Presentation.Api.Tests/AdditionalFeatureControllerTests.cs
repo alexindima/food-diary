@@ -50,9 +50,10 @@ using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightE
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Fasting;
-using FoodDiary.Presentation.Api.Features.Fasting.Requests;
-using FoodDiary.Presentation.Api.Features.Fasting.Responses;
+using FoodDiary.Modules.Fasting.Presentation.Controllers;
+using FoodDiary.Modules.Fasting.Presentation.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Fasting.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Hydration;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;

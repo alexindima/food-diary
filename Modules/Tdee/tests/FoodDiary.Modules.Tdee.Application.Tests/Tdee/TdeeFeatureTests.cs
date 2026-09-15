@@ -1,18 +1,19 @@
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories;
+using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseEntries;
+using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Testing;
-using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
-using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Exercises.Services;
-using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -117,9 +118,10 @@ public class TdeeFeatureTests {
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
-            RequestTestSender.Create(new ReadWeightEntriesQueryHandler(CreateWeightEntryRepository()), new ReadLatestWeightEntryQueryHandler(CreateWeightEntryRepository()), new ReadWeightSummariesQueryHandler(CreateWeightEntryRepository())),
+            RequestTestSender.Route(
+                (RequestTestSender.Create(new ReadWeightEntriesQueryHandler(CreateWeightEntryRepository())), [typeof(ReadWeightEntriesQuery)]),
+                (CreateExerciseEntryReadService(), [typeof(ReadExerciseEntriesQuery)])),
             statisticsReadService ?? CreateStatisticsReadService(),
-            CreateExerciseEntryReadService(),
             new StubDateTimeProvider(),
             currentUserAccessService ?? CreateCurrentUserAccessService(user: null));
 
@@ -202,9 +204,9 @@ public class TdeeFeatureTests {
         return repository;
     }
 
-    private static IExerciseEntryReadService CreateExerciseEntryReadService() {
+    private static ISender CreateExerciseEntryReadService() {
         IExerciseEntryRepository repository = CreateExerciseEntryRepository();
-        return new ExerciseEntryReadService(repository, repository);
+        return RequestTestSender.Create(new ReadExerciseEntriesQueryHandler(repository), new ReadExerciseCaloriesQueryHandler(repository));
     }
 
     [ExcludeFromCodeCoverage]

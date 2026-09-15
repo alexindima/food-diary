@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
-internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext context)
+internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext context)
     : IAttentionSignalMetricsReadService {
     public async Task<IReadOnlyList<AttentionSignalMetricsReadModel>> GetAsync(
         IReadOnlyCollection<UserId> clientUserIds,

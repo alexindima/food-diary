@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
@@ -282,7 +283,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
-            new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context,
+            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context,
                 new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddUsersPersistence();
         services.AddAdminPersistence();
@@ -305,7 +306,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.Equal(extra is null ? 13 : 14, participants.Length);
         service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
-            new FoodDiary.Infrastructure.Persistence.Shared.EfModuleScopeGuard(context));
+            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context));
         return provider;
     }
 

@@ -1,14 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.Fasting</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.Fasting.Application</RootNamespace>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Abstractions/**/*.cs" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
@@ -17,7 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />

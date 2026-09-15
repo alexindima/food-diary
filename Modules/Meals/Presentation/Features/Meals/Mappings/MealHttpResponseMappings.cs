@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
-using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteMeals.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Meals.Mappings;

@@ -1,11 +1,11 @@
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.RemoveFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.GetFavoriteProducts;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.IsProductFavorite;
-using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
+namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Mappings;
 
 public static class FavoriteProductHttpMappings {
     extension(AddFavoriteProductHttpRequest request) {

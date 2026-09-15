@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+namespace FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 
 public sealed record FavoriteRecipeSourceModel(
     string Name,

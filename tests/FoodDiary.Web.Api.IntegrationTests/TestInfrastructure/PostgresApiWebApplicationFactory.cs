@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using System.Net;
 using System.Security.Cryptography;
 using Docker.DotNet.Models;
@@ -6,8 +7,6 @@ using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -71,17 +70,13 @@ public class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, 
         builder.ConfigureAppConfiguration((_, configBuilder) => TestConfiguration.Add(configBuilder));
 
         builder.ConfigureServices(services => {
-            services.RemoveAll<DbContextOptions<FoodDiaryDbContext>>();
-            services.RemoveAll<FoodDiaryDbContext>();
-            services.RemoveAll<IDbContextOptionsConfiguration<FoodDiaryDbContext>>();
             services.RemoveAll<IImageStorageService>();
             services.RemoveAll<IEmailSender>();
             services.RemoveAll<TestEmailSender>();
             services.RemoveAll<IPasswordHasher>();
 
-            services.AddDbContext<FoodDiaryDbContext>((provider, options) =>
-                options.UseNpgsql(GetRequiredConnectionString())
-                    .AddInterceptors(provider.GetServices<ISaveChangesInterceptor>()));
+            services.AddDbContext<SharedPersistenceDbContext>((_, options) =>
+                options.UseNpgsql(GetRequiredConnectionString()));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
             services.AddSingleton(EmailSender);
             services.AddSingleton<IEmailSender>(EmailSender);

@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Fasting.Infrastructure.Tests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

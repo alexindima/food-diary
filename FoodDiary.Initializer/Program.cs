@@ -35,7 +35,7 @@ using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
-using FoodDiary.Application.Export;
+using FoodDiary.Modules.Export.Application;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;

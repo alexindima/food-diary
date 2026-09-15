@@ -1,3 +1,6 @@
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Fasting.Contracts.Commands.CleanupFastingTelemetry;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -73,11 +76,11 @@ public sealed class FastingTelemetryCleanupJobTests : IDisposable {
     }
 
     private FastingTelemetryCleanupJob CreateJob(
-        IFastingTelemetryCleanupService cleanupService,
+        IRequestHandler<CleanupFastingTelemetryCommand, int> cleanupService,
         FastingTelemetryCleanupOptions? options = null,
         TimeProvider? timeProvider = null) =>
         new(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(options ?? new FastingTelemetryCleanupOptions()),
             new JobExecutionObserver(
                 timeProvider ?? new FixedTimeProvider(new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc)),
@@ -94,15 +97,14 @@ public sealed class FastingTelemetryCleanupJobTests : IDisposable {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingFastingTelemetryCleanupService(
         int result = 0,
-        bool throwOnCleanup = false) : IFastingTelemetryCleanupService {
+        bool throwOnCleanup = false) : IRequestHandler<CleanupFastingTelemetryCommand, int> {
         public int CallCount { get; private set; }
         public DateTime? LastCutoffUtc { get; private set; }
         public int? LastBatchSize { get; private set; }
 
-        public Task<int> CleanupAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken) {
+        public Task<int> Handle(CleanupFastingTelemetryCommand request, CancellationToken cancellationToken) {
+            DateTime olderThanUtc = request.OlderThanUtc;
+            int batchSize = request.BatchSize;
             CallCount++;
             LastCutoffUtc = olderThanUtc;
             LastBatchSize = batchSize;

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -69,13 +70,13 @@
     <ProjectReference Include="../../Modules/Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Exercises/Application.Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Fasting/Application.Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Application.Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />

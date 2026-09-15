@@ -1,13 +1,14 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadProductFavoriteStatus;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Favorites.FavoriteProducts.Queries.IsProductFavorite;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
 
 public sealed class IsProductFavoriteQueryHandler(
-    IFavoriteProductReadService favoriteProductReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsProductFavoriteQuery, Result<bool>> {
     public async Task<Result<bool>> Handle(
@@ -32,7 +33,7 @@ public sealed class IsProductFavoriteQueryHandler(
 
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
-        bool isFavorite = await favoriteProductReadService.ExistsByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        bool isFavorite = await sender.Send(new ReadProductFavoriteStatusQuery(productId, userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(isFavorite);
     }
 }

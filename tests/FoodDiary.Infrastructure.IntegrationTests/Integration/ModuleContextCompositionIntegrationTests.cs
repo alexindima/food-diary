@@ -1,10 +1,12 @@
+using FoodDiary.Modules.Exercises.Domain.Enums;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;

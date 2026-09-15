@@ -1,3 +1,6 @@
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Fasting.Contracts.Commands.SendFastingNotifications;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,7 +19,7 @@ public sealed class FastingNotificationJobTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new FastingNotificationJob(
-            scheduler,
+            RequestTestSender.Create(scheduler),
             Options.Create(new FastingNotificationOptions { Enabled = false }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
@@ -47,7 +50,7 @@ public sealed class FastingNotificationJobTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new FastingNotificationJob(
-            scheduler,
+            RequestTestSender.Create(scheduler),
             Options.Create(new FastingNotificationOptions { Enabled = true }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
@@ -82,7 +85,7 @@ public sealed class FastingNotificationJobTests {
         var tracker = new JobExecutionStateTracker();
         var logger = new RecordingLogger<FastingNotificationJob>();
         var job = new FastingNotificationJob(
-            scheduler,
+            RequestTestSender.Create(scheduler),
             Options.Create(new FastingNotificationOptions { Enabled = true }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             logger);
@@ -115,7 +118,7 @@ public sealed class FastingNotificationJobTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new FastingNotificationJob(
-            scheduler,
+            RequestTestSender.Create(scheduler),
             Options.Create(new FastingNotificationOptions { Enabled = true }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<FastingNotificationJob>.Instance);
@@ -189,20 +192,20 @@ public sealed class FastingNotificationJobTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingFastingNotificationScheduler(int result) : IFastingNotificationScheduler {
+    private sealed class RecordingFastingNotificationScheduler(int result) : IRequestHandler<SendFastingNotificationsCommand, int> {
         public int CallCount { get; private set; }
 
-        public Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
+        public Task<int> Handle(SendFastingNotificationsCommand request, CancellationToken cancellationToken) {
             CallCount++;
             return Task.FromResult(result);
         }
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingFastingNotificationScheduler : IFastingNotificationScheduler {
+    private sealed class ThrowingFastingNotificationScheduler : IRequestHandler<SendFastingNotificationsCommand, int> {
         public int CallCount { get; private set; }
 
-        public Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
+        public Task<int> Handle(SendFastingNotificationsCommand request, CancellationToken cancellationToken) {
             CallCount++;
             throw new InvalidOperationException("scheduler failed");
         }

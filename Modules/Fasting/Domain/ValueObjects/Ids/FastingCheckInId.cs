@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 
 public readonly record struct FastingCheckInId(Guid Value) : IEntityId<Guid> {
     public static FastingCheckInId New() => new(Guid.NewGuid());

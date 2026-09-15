@@ -1,17 +1,18 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
-using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
-using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
-using FoodDiary.Application.Exercises.Models;
-using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
+using FoodDiary.Modules.Exercises.Application.Commands.CreateExerciseEntry;
+using FoodDiary.Modules.Exercises.Application.Commands.DeleteExerciseEntry;
+using FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
+using FoodDiary.Modules.Exercises.Contracts.Models;
+using FoodDiary.Modules.Exercises.Application.Queries.GetExerciseEntries;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Exercises;
-using FoodDiary.Presentation.Api.Features.Exercises.Requests;
-using FoodDiary.Presentation.Api.Features.Exercises.Responses;
+using FoodDiary.Modules.Exercises.Presentation.Controllers;
+using FoodDiary.Modules.Exercises.Presentation.Requests;
+using FoodDiary.Modules.Exercises.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Exercises.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExercisesControllerTests {

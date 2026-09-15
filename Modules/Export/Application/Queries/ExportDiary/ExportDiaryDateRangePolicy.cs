@@ -1,6 +1,6 @@
-using FoodDiary.Application.Export.Internal;
+using FoodDiary.Modules.Export.Application.Internal;
 
-namespace FoodDiary.Application.Export.Queries.ExportDiary;
+namespace FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 
 internal static class ExportDiaryDateRangePolicy {
     public static bool TryResolve(

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Export.Models;
+namespace FoodDiary.Modules.Export.Application.Models;
 
 public sealed record FileExportResult(
     byte[] Content,

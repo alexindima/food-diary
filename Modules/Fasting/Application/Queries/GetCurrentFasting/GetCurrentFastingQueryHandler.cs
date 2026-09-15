@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
@@ -7,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
 
 public sealed class GetCurrentFastingQueryHandler(
-    IFastingReadService fastingReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCurrentFastingQuery, Result<FastingSessionModel?>> {
     public async Task<Result<FastingSessionModel?>> Handle(
@@ -21,7 +23,7 @@ public sealed class GetCurrentFastingQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        FastingSessionModel? current = await fastingReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
+        FastingSessionModel? current = await sender.Send(new ReadCurrentFastingQuery(userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(current);
     }
 }

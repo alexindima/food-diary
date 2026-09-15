@@ -1,5 +1,5 @@
-using FoodDiary.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Fasting.Domain.Enums;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 

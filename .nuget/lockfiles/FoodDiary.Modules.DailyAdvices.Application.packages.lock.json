@@ -66,12 +66,6 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.dailyadvices.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.images.contracts": {
         "type": "Project",
         "dependencies": {

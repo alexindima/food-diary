@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
-internal sealed class DashboardMealsReadService(FoodDiaryDbContext context, IMealItemDisplayReadService mealItems) : IDashboardMealsReadService {
+internal sealed class DashboardMealsReadService(ICompositionReadContext context, IMealItemDisplayReadService mealItems) : IDashboardMealsReadService {
     private readonly DashboardMealFavoritesLoader _favoriteMealsLoader = new(context);
     private readonly DashboardMealItemsLoader _mealItemsLoader = new(mealItems);
     private readonly DashboardMealAiSessionsLoader _aiSessionsLoader = new(context);

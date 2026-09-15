@@ -68,3 +68,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0041: Owner requests for cross-module use cases](0041-owner-requests-for-module-use-cases.md)
 
 - [0042: Shared runtime persistence session](0042-shared-runtime-persistence-session.md)
+
+- [0043: Persistence runtime assembly and composed read facade](0043-persistence-runtime-assembly-and-read-facade.md)

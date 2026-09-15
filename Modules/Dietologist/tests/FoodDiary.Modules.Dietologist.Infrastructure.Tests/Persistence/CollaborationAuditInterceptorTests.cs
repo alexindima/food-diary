@@ -1,7 +1,7 @@
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 using FoodDiary.Modules.Dietologist.Domain.Entities;

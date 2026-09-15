@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Recipes;
 
-public sealed class RecipeUsageQuery(FoodDiaryDbContext context) : IRecipeUsageQuery {
+public sealed class RecipeUsageQuery(ICompositionReadContext context) : IRecipeUsageQuery {
     public async Task<int> GetUsageCountAsync(
         RecipeId id,
         UserId userId,

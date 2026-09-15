@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Products.Models;

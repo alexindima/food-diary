@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
-internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDashboardBodyReadService {
+internal sealed class DashboardBodyReadService(ICompositionReadContext context) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(
         UserId userId,
         DateTime dayStart,

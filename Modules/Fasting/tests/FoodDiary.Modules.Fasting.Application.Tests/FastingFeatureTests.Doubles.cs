@@ -1,0 +1,450 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Domain.Enums;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Modules.Fasting.Application.Services;
+using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Fasting.Application.Tests;
+
+public partial class FastingFeatureTests {
+    private static FastingOccurrenceReadModel ToReadModel(FastingOccurrence occurrence) =>
+        new(
+            occurrence.Id,
+            occurrence.PlanId,
+            Plan: null,
+            occurrence.UserId,
+            occurrence.Kind,
+            occurrence.Status,
+            occurrence.SequenceNumber,
+            occurrence.ScheduledForUtc,
+            occurrence.StartedAtUtc,
+            occurrence.EndedAtUtc,
+            occurrence.InitialTargetHours,
+            occurrence.AddedTargetHours,
+            occurrence.Notes,
+            occurrence.CheckInAtUtc,
+            occurrence.HungerLevel,
+            occurrence.EnergyLevel,
+            occurrence.MoodLevel,
+            occurrence.Symptoms,
+            occurrence.CheckInNotes);
+
+    private static FastingCheckInReadModel ToReadModel(FastingCheckIn checkIn) =>
+        new(
+            checkIn.Id,
+            checkIn.OccurrenceId,
+            checkIn.CheckedInAtUtc,
+            checkIn.HungerLevel,
+            checkIn.EnergyLevel,
+            checkIn.MoodLevel,
+            checkIn.Symptoms,
+            checkIn.Notes);
+
+    private static NotificationReadModel ToReadModel(Notification notification) =>
+        new(
+            notification.Id.Value,
+            notification.Type,
+            notification.ReferenceId,
+            notification.PayloadJson,
+            notification.IsRead,
+            notification.CreatedOnUtc);
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryFastingPlanRepository(FastingPlan? active = null) : IFastingPlanRepository {
+        public List<FastingPlan> StoredPlans { get; } = active is null ? [] : [active];
+        public Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(active);
+        public Task<FastingPlan?> GetByIdAsync(FastingPlanId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingPlan>> GetByUserAsync(UserId userId, FastingPlanType? type = null, FastingPlanStatus? status = null, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task AddAsync(FastingPlan plan, CancellationToken ct = default) {
+            StoredPlans.Add(plan);
+            return Task.CompletedTask;
+        }
+        public Task UpdateAsync(FastingPlan plan, CancellationToken ct = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryFastingOccurrenceRepository(FastingOccurrence? current = null) : IFastingOccurrenceRepository {
+        public List<FastingOccurrence> StoredOccurrences { get; } = current is null ? [] : [current];
+
+        public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) => Task.FromResult(StoredOccurrences.LastOrDefault(x => x.Status == FastingOccurrenceStatus.Active));
+        public async Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken ct = default) {
+            FastingOccurrence? occurrence = await GetCurrentAsync(userId, ct: ct).ConfigureAwait(false);
+            return occurrence is null ? null : ToReadModel(occurrence);
+        }
+
+        public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<FastingActiveOccurrenceModel>>(StoredOccurrences.Where(x => x.Status == FastingOccurrenceStatus.Active).Select(x => new FastingActiveOccurrenceModel(x, 12, 20)).ToList());
+        public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken ct = default) {
+            IReadOnlyList<FastingOccurrence> occurrences = StoredOccurrences
+                .Where(x => x.PlanId == planId)
+                .ToList();
+            return Task.FromResult(occurrences);
+        }
+        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(UserId userId, DateTime? from = null, DateTime? to = null, FastingOccurrenceStatus? status = null, CancellationToken ct = default) {
+            IEnumerable<FastingOccurrence> query = StoredOccurrences.Where(x => x.UserId == userId);
+
+            if (from.HasValue) {
+                query = query.Where(x => x.StartedAtUtc >= from.Value);
+            }
+
+            if (to.HasValue) {
+                query = query.Where(x => x.StartedAtUtc <= to.Value);
+            }
+
+            if (status.HasValue) {
+                query = query.Where(x => x.Status == status.Value);
+            }
+
+            IReadOnlyList<FastingOccurrence> occurrences = query
+                .OrderByDescending(x => x.StartedAtUtc)
+                .ToList();
+
+            return Task.FromResult(occurrences);
+        }
+        public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            IReadOnlyList<FastingOccurrence> occurrences = await GetByUserAsync(userId, from, to, status, ct).ConfigureAwait(false);
+            return [.. occurrences.Select(ToReadModel)];
+        }
+
+        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            IEnumerable<FastingOccurrence> query = StoredOccurrences.Where(x => x.UserId == userId);
+
+            if (from.HasValue) {
+                query = query.Where(x => x.StartedAtUtc >= from.Value);
+            }
+
+            if (to.HasValue) {
+                query = query.Where(x => x.StartedAtUtc <= to.Value);
+            }
+
+            if (status.HasValue) {
+                query = query.Where(x => x.Status == status.Value);
+            }
+
+            var ordered = query
+                .OrderByDescending(x => x.StartedAtUtc)
+                .ToList();
+
+            var items = ordered
+                .Skip(Math.Max(0, page - 1) * limit)
+                .Take(limit)
+                .ToList();
+
+            return Task.FromResult<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)>((items, ordered.Count));
+        }
+        public async Task<(IReadOnlyList<FastingOccurrenceReadModel> Items, int TotalItems)> GetPagedByUserReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            (IReadOnlyList<FastingOccurrence> items, int totalItems) = await GetPagedByUserAsync(userId, page, limit, from, to, status, ct).ConfigureAwait(false);
+            return ([.. items.Select(ToReadModel)], totalItems);
+        }
+
+        public Task AddAsync(FastingOccurrence occurrence, CancellationToken ct = default) {
+            StoredOccurrences.Add(occurrence);
+            return Task.CompletedTask;
+        }
+        public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken ct = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class PassthroughCurrentFastingOccurrenceRepository(FastingOccurrence current) : IFastingOccurrenceRepository {
+        public List<FastingOccurrence> StoredOccurrences { get; } = [current];
+
+        public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken ct = default) =>
+            Task.FromResult<FastingOccurrence?>(current);
+
+        public Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken ct = default) =>
+            Task.FromResult<FastingOccurrenceReadModel?>(ToReadModel(current));
+
+        public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<FastingActiveOccurrenceModel>>(StoredOccurrences.ConvertAll(x => new FastingActiveOccurrenceModel(x, 12, 20)));
+
+        public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) {
+            IReadOnlyList<FastingOccurrence> occurrences = await GetByUserAsync(userId, from, to, status, ct).ConfigureAwait(false);
+            return [.. occurrences.Select(ToReadModel)];
+        }
+
+        public Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<FastingOccurrenceReadModel> Items, int TotalItems)> GetPagedByUserReadModelsAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task AddAsync(FastingOccurrence occurrence, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken ct = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryFastingCheckInRepository(params FastingCheckIn[] seed) : IFastingCheckInRepository {
+        private readonly List<FastingCheckIn> _stored = [.. seed];
+        public IReadOnlyList<FastingCheckIn> Stored => _stored;
+
+        public Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default) {
+            _stored.Add(checkIn);
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<FastingCheckIn>> GetByOccurrenceIdsAsync(
+            IReadOnlyCollection<FastingOccurrenceId> occurrenceIds,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<FastingCheckIn> items = _stored
+                .Where(x => occurrenceIds.Contains(x.OccurrenceId))
+                .OrderByDescending(x => x.CheckedInAtUtc)
+                .ToList();
+
+            return Task.FromResult(items);
+        }
+
+        public async Task<IReadOnlyList<FastingCheckInReadModel>> GetByOccurrenceIdReadModelsAsync(
+            IReadOnlyCollection<FastingOccurrenceId> occurrenceIds,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<FastingCheckIn> checkIns = await GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken).ConfigureAwait(false);
+            return [.. checkIns.Select(ToReadModel)];
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingFastingAnalyticsService : IFastingAnalyticsService {
+        public DateTime FromUtc { get; private set; }
+        public DateTime ToUtc { get; private set; }
+
+        public (DateTime FromUtc, DateTime ToUtc) GetDefaultHistoryWindow(DateTime nowUtc) =>
+            (nowUtc.AddDays(-1), nowUtc);
+
+        public Task<FastingStatsModel> GetStatsAsync(UserId userId, DateTime nowUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<FastingInsightsModel> GetInsightsAsync(
+            UserId userId,
+            DateTime nowUtc,
+            FastingOccurrenceReadModel? current,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<PagedResponse<FastingSessionModel>> GetHistoryAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken) {
+            FromUtc = fromUtc;
+            ToUtc = toUtc;
+            return Task.FromResult(new PagedResponse<FastingSessionModel>([], page, limit, 0, 0));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemorySchedulerNotificationRepository : INotificationRepository {
+        public List<Notification> Stored { get; } = [];
+
+        public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Notification>>(Stored.Where(x => x.UserId == userId).Take(limit).ToList());
+
+        public Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(UserId userId, int limit = 50, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<NotificationReadModel>>([.. Stored.Where(x => x.UserId == userId).Take(limit).Select(ToReadModel)]);
+
+        public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<Notification?>(Stored.FirstOrDefault(x => x.Id == id));
+
+        public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
+            Stored.Add(notification);
+            return Task.FromResult(notification);
+        }
+
+        public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Any(x => x.UserId == userId && string.Equals(x.Type, type, StringComparison.Ordinal) && string.Equals(x.ReferenceId, referenceId, StringComparison.Ordinal)));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead));
+
+        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Stored.Count(x => x.UserId == userId && !x.IsRead && string.Equals(x.Type, type, StringComparison.Ordinal)));
+
+        public Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<int> DeleteExpiredBatchAsync(
+            IReadOnlyCollection<string> transientTypes,
+            DateTime transientReadOlderThanUtc,
+            DateTime transientUnreadOlderThanUtc,
+            DateTime standardReadOlderThanUtc,
+            DateTime standardUnreadOlderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemorySchedulerNotificationWriter(
+        InMemorySchedulerNotificationRepository notificationRepository,
+        RecordingWebPushNotificationSender webPushNotificationSender) : INotificationWriter {
+        public async Task AddAsync(
+            NotificationRequest request,
+            bool sendWebPush = false,
+            CancellationToken cancellationToken = default) {
+            var notification = Notification.Create(request.UserId, request.Type, request.PayloadJson, request.ReferenceId);
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+
+            if (sendWebPush) {
+                await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationPusher : INotificationPusher {
+        public List<Guid> UnreadCountUsers { get; } = [];
+        public List<Guid> ChangedUsers { get; } = [];
+
+        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) {
+            UnreadCountUsers.Add(userId);
+            return Task.CompletedTask;
+        }
+
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
+            ChangedUsers.Add(userId);
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationClientRefreshService(RecordingNotificationPusher notificationPusher)
+        : INotificationClientRefreshService {
+        public async Task RefreshAsync(
+            UserId userId,
+            bool pushChanged,
+            CancellationToken cancellationToken) {
+            await notificationPusher
+                .PushUnreadCountAsync(userId.Value, count: 0, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (pushChanged) {
+                await notificationPusher
+                    .PushNotificationsChangedAsync(userId.Value, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
+        public List<Notification> Sent { get; } = [];
+
+        public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
+            Sent.Add(notification);
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public void Discard() { }
+        public bool HasActions => false;
+
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingPostCommitActionQueue(bool hasActions) : IPostCommitActionQueue {
+        public void Discard() { }
+        public bool HasActions => hasActions;
+        public int FlushCallCount { get; private set; }
+
+        public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) {
+            FlushCallCount++;
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubCurrentUserAccessService(User? user) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Error? error = user switch {
+                null => Errors.Authentication.InvalidToken,
+                { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                _ => null,
+            };
+
+            return Task.FromResult(error);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedDateTimeProvider(DateTime? utcNow = null) : TimeProvider {
+        private readonly DateTimeOffset _utcNow = new(utcNow ?? FixedNow);
+
+        public override DateTimeOffset GetUtcNow() => _utcNow;
+    }
+}

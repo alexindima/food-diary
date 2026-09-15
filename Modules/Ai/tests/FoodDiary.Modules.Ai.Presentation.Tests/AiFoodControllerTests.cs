@@ -1,5 +1,5 @@
-using System.Reflection;
 using FoodDiary.Presentation.Api.Tests;
+using System.Reflection;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;

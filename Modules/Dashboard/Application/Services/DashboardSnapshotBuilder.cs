@@ -3,11 +3,9 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
-using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Application.Common;
-using FoodDiary.Modules.Fasting.Contracts.Read;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
@@ -34,12 +32,11 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     public DashboardSnapshotBuilder(
         ISender sender,
         IDashboardUserContextService dashboardUserContextService,
-        IFastingReadService fastingReadService,
-        IExerciseEntryReadService exerciseEntryReadService,
+
         IDashboardReadService dashboardReadService,
         ILogger<DashboardSnapshotBuilder> logger)
         : this(new DashboardSectionDataLoader(
-            sender, dashboardUserContextService, fastingReadService, exerciseEntryReadService, dashboardReadService), logger) {
+            sender, dashboardUserContextService, dashboardReadService), logger) {
     }
 
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(
@@ -86,9 +83,6 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
             tdeeInsightResult?.IsSuccess == true ? tdeeInsightResult.Value : null,
             currentCycleResult?.IsSuccess == true ? currentCycleResult.Value : null));
     }
-
-    private static DashboardStatisticsModel BuildStatistics(DashboardReadModel readModel, DashboardBuildContext context) =>
-        BuildStatistics(readModel.Statistics, context);
 
     private static DashboardStatisticsModel BuildStatistics(
         IReadOnlyList<DashboardStatisticsBucketReadModel> statistics,

@@ -7,11 +7,11 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Application.Export.Models;
-using FoodDiary.Application.Export.Services;
+using FoodDiary.Modules.Export.Application.Models;
+using FoodDiary.Modules.Export.Application.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Export.Queries.ExportCycle;
+namespace FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 
 public sealed class ExportCycleQueryHandler(
     ISender sender,

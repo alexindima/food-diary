@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Export/Application`
-- `Modules/Export/Application/Abstractions`
+- `Modules/Export/Application.Abstractions`
 - `Modules/Export/Infrastructure`
 - `Modules/Export/Presentation`
 
@@ -44,32 +44,27 @@ Source: `Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/Mai
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 6
+- Public contract files: 0
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 3
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `class ExportInputLimits`
-- `interface IDiaryPdfGenerator`
-- `interface IDiaryPdfReportTextProvider`
-- `interface IExportDiaryReadService`
-- `record DiaryPdfReportTexts`
-- `record ExportDiaryMealsReadModel`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/CsvFieldEscaperTests.cs`
-- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/CsvFieldEscaperTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/Resources/DiaryPdfReportResourceTextProviderTests.cs`

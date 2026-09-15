@@ -1,10 +1,10 @@
-using FoodDiary.Application.Favorites.FavoriteRecipes.Commands.AddFavoriteRecipe;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Queries.GetFavoriteRecipes;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Queries.IsRecipeFavorite;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Requests;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.FavoriteRecipes.Mappings;
+namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Mappings;
 
 public static class FavoriteRecipeHttpMappings {
     extension(AddFavoriteRecipeHttpRequest request) {

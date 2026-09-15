@@ -1,7 +1,7 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Modules.Ai.Presentation.Responses;
 using FoodDiary.Results;

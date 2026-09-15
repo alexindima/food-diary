@@ -3,9 +3,9 @@ using System.Reflection;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

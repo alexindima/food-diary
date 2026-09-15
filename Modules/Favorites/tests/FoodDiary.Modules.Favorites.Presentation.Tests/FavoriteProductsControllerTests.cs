@@ -1,18 +1,19 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.RemoveFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.GetFavoriteProducts;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.IsProductFavorite;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.FavoriteProducts;
-using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
-using FoodDiary.Presentation.Api.Features.FavoriteProducts.Responses;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Controllers;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Requests;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteProducts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Favorites.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteProductsControllerTests {

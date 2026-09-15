@@ -53,22 +53,22 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dietologist application abstractions: `Modules/Dietologist/Application.Abstractions/AGENTS.md`
 - Exercises logical module: `Modules/Exercises/AGENTS.md`
 - Exercises application: `Modules/Exercises/Application/AGENTS.md`
-- Exercises application abstractions: `Modules/Exercises/Application/Abstractions/AGENTS.md`
+- Exercises application abstractions: `Modules/Exercises/Application.Abstractions/AGENTS.md`
 - Exercises contracts: `Modules/Exercises/Contracts/AGENTS.md`
 - Exercises domain: `Modules/Exercises/Domain/AGENTS.md`
 - Exercises infrastructure: `Modules/Exercises/Infrastructure/AGENTS.md`
-- Exercises persistence model: `Modules/Exercises/Infrastructure/Model/AGENTS.md`
+- Exercises persistence model: `Modules/Exercises/PersistenceModel/AGENTS.md`
 - Exercises tests: `Modules/Exercises/tests/AGENTS.md`
 - Fasting logical module: `Modules/Fasting/AGENTS.md`
-- Fasting application abstractions: `Modules/Fasting/Application/Abstractions/AGENTS.md`
+- Fasting application abstractions: `Modules/Fasting/Application.Abstractions/AGENTS.md`
 - Fasting contracts: `Modules/Fasting/Contracts/AGENTS.md`
 - Fasting domain: `Modules/Fasting/Domain/AGENTS.md`
 - Fasting infrastructure: `Modules/Fasting/Infrastructure/AGENTS.md`
-- Fasting persistence model: `Modules/Fasting/Infrastructure/Model/AGENTS.md`
+- Fasting persistence model: `Modules/Fasting/PersistenceModel/AGENTS.md`
 - Favorites logical module: `Modules/Favorites/AGENTS.md`
 - Favorites Domain.Contracts: `Modules/Favorites/Domain.Contracts/AGENTS.md`
 - Favorites application: `Modules/Favorites/Application/AGENTS.md`
-- Favorites application ports: `Modules/Favorites/Application/Abstractions/AGENTS.md`
+- Favorites application ports: `Modules/Favorites/Application.Abstractions/AGENTS.md`
 - Favorites consumer contracts: `Modules/Favorites/Contracts/AGENTS.md`
 - Hydration logical module: `Modules/Hydration/AGENTS.md`
 - Hydration application abstractions: `Modules/Hydration/Application/Abstractions/AGENTS.md`
@@ -191,7 +191,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Gamification logical module: `Modules/Gamification/AGENTS.md`
 - Export logical module: `Modules/Export/AGENTS.md`
 - Export application: `Modules/Export/Application/AGENTS.md`
-- Export application abstractions: `Modules/Export/Application/Abstractions/AGENTS.md`
+- Export application abstractions: `Modules/Export/Application.Abstractions/AGENTS.md`
 - Export infrastructure: `Modules/Export/Infrastructure/AGENTS.md`
 - Export tests: `Modules/Export/tests/AGENTS.md`
 - Weekly goals logical module: `Modules/WeeklyGoals/AGENTS.md`
@@ -223,6 +223,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
 - Read model composition: `FoodDiary.ReadModel.Composition/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
+- Shared persistence runtime: `FoodDiary.Persistence.Runtime/AGENTS.md`
 - Initializer: `FoodDiary.Initializer/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
 - Development MCP: `FoodDiary.Development.Mcp/AGENTS.md`

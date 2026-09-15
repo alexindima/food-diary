@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Exercises.Application;
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
-using FoodDiary.Application.Exercises;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Exercises.Infrastructure;

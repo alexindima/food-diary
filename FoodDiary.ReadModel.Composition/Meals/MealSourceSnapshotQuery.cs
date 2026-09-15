@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Meals;
 
-public sealed class MealSourceSnapshotQuery(FoodDiaryDbContext context) : IMealSourceSnapshotQuery {
+public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : IMealSourceSnapshotQuery {
     public async Task<IReadOnlyDictionary<ImageAssetId, string>> GetImageUrlsAsync(
         IReadOnlyCollection<ImageAssetId> imageAssetIds,
         CancellationToken cancellationToken = default) {

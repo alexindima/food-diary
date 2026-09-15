@@ -1,17 +1,18 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Commands.AddFavoriteRecipe;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Queries.GetFavoriteRecipes;
-using FoodDiary.Application.Favorites.FavoriteRecipes.Queries.IsRecipeFavorite;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Requests;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Responses;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Controllers;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Requests;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteRecipes.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Favorites.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteRecipesControllerTests {

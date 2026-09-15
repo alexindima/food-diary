@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
@@ -24,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="../../Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
@@ -53,7 +54,7 @@
     <ProjectReference Include="../../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Exercises/Application.Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />

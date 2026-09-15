@@ -1,9 +1,10 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipes;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.Recipes.Models;
@@ -17,7 +18,7 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 public sealed class GetRecipesOverviewQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,
     IRecentRecipeReadService recentRecipeReadService,
-    IFavoriteRecipeReadService favoriteRecipeReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesOverviewQuery, Result<RecipeOverviewModel>> {
     private sealed record RecipeOverviewOptions(
@@ -51,7 +52,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             cancellationToken).ConfigureAwait(false);
 
         var allRecipes = items.ToList();
-        IReadOnlyList<FavoriteRecipeModel> allFavorites = await favoriteRecipeReadService.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteRecipeModel> allFavorites = await sender.Send(new ReadFavoriteRecipesQuery(options.UserId), cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
             .ToList();

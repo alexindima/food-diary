@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Favorites.Presentation.Extensions;
+using FoodDiary.Modules.Fasting.Presentation.Extensions;
+using FoodDiary.Modules.Export.Presentation.Extensions;
+using FoodDiary.Modules.Export.Application;
+using FoodDiary.Modules.Exercises.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Dashboard.Presentation.Extensions;
 using FoodDiary.Modules.Dietologist.Presentation.Extensions;
@@ -42,7 +47,6 @@ using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
-using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;

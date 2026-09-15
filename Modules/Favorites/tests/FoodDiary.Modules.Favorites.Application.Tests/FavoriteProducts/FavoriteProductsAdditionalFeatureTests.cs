@@ -1,24 +1,30 @@
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProductFavoriteStatus;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadProductFavoriteStatus;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.RemoveFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
-using FoodDiary.Application.Favorites.FavoriteProducts.Mappings;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.GetFavoriteProducts;
-using FoodDiary.Application.Favorites.FavoriteProducts.Queries.IsProductFavorite;
-using FoodDiary.Application.Favorites.FavoriteProducts.Services;
-using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests.FavoriteProducts;
+namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteProducts;
 
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteProductsAdditionalFeatureTests {
@@ -149,8 +155,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("get-favorite-products@example.com", "hash");
         Product product = CreateProduct(user.Id, "Chicken");
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Lunch");
-        var handler = new GetFavoriteProductsQueryHandler(
-            new InMemoryFavoriteProductRepository(product, [favorite]),
+        var handler = new GetFavoriteProductsQueryHandler(RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository(product, [favorite]))),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
@@ -163,8 +169,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
     [Fact]
     public async Task GetFavoriteProducts_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetFavoriteProductsQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new GetFavoriteProductsQueryHandler(RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(User.Create("invalid-get-favorite-products@example.com", "hash")));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.Empty), CancellationToken.None);
@@ -175,8 +181,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
     [Fact]
     public async Task GetFavoriteProducts_WhenUserMissing_ReturnsInvalidToken() {
-        var handler = new GetFavoriteProductsQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new GetFavoriteProductsQueryHandler(RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user: null));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.NewGuid()), CancellationToken.None);
@@ -189,8 +195,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task GetFavoriteProducts_WhenUserDeleted_ReturnsAccessFailure() {
         var user = User.Create("deleted-get-favorite-products@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetFavoriteProductsQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new GetFavoriteProductsQueryHandler(RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
@@ -202,8 +208,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     [Fact]
     public async Task IsProductFavorite_ReturnsFalseWhenFavoriteMissing() {
         var user = User.Create("is-favorite-product@example.com", "hash");
-        var handler = new IsProductFavoriteQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new IsProductFavoriteQueryHandler(RequestTestSender.Create(new ReadProductFavoriteStatusQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
@@ -218,8 +224,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task IsProductFavorite_WhenUserDeleted_ReturnsAccessFailure() {
         var user = User.Create("deleted-is-favorite-product@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new IsProductFavoriteQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new IsProductFavoriteQueryHandler(RequestTestSender.Create(new ReadProductFavoriteStatusQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
@@ -232,8 +238,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
     [Fact]
     public async Task IsProductFavorite_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new IsProductFavoriteQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new IsProductFavoriteQueryHandler(RequestTestSender.Create(new ReadProductFavoriteStatusQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(User.Create("invalid-is-favorite-product@example.com", "hash")));
 
         Result<bool> result = await handler.Handle(
@@ -246,8 +252,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
     [Fact]
     public async Task IsProductFavorite_WhenUserMissing_ReturnsInvalidToken() {
-        var handler = new IsProductFavoriteQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new IsProductFavoriteQueryHandler(RequestTestSender.Create(new ReadProductFavoriteStatusQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user: null));
 
         Result<bool> result = await handler.Handle(
@@ -261,8 +267,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     [Fact]
     public async Task IsProductFavorite_WithEmptyProductId_ReturnsValidationFailure() {
         var user = User.Create("is-empty-product-id@example.com", "hash");
-        var handler = new IsProductFavoriteQueryHandler(
-            new InMemoryFavoriteProductRepository(),
+        var handler = new IsProductFavoriteQueryHandler(RequestTestSender.Create(new ReadProductFavoriteStatusQueryHandler(
+            new InMemoryFavoriteProductRepository())),
             CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
@@ -447,9 +453,9 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         Product product = CreateProduct(userId, "Favorite Read Product");
         var favorite = FavoriteProduct.Create(userId, product.Id, "Snack", preferredPortionAmount: 80);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var service = new FavoriteProductReadService(repository);
+        ISender service = RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(repository), new ReadProductFavoriteStatusQueryHandler(repository));
 
-        bool exists = await service.ExistsByProductIdAsync(product.Id, userId, CancellationToken.None);
+        bool exists = await service.Send(new ReadProductFavoriteStatusQuery(product.Id, userId), CancellationToken.None);
 
         Assert.True(exists);
     }
@@ -472,7 +478,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteProductRepository(
         Product? product = null,
-        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository, IFavoriteProductReadService, IFavoriteProductReadModelRepository, IFavoriteProductSourceReadService {
+        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository, IFavoriteProductReadModelRepository, IFavoriteProductSourceReadService {
         private readonly List<FavoriteProduct> _favorites = favorites?.ToList() ?? [];
         public Task<Result<FavoriteProductSourceModel>> GetAccessibleAsync(ProductId id, UserId userId, CancellationToken cancellationToken = default) =>
             new SingleProductRepository(product).GetAccessibleAsync(id, userId, cancellationToken);
@@ -553,18 +559,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
                 favorite.PreferredPortionAmount,
                 product!.DefaultPortionAmount,
                 product!.UserId.Value);
-        async Task<IReadOnlyList<FavoriteProductModel>> IFavoriteProductReadService.GetAllAsync(
-            UserId userId,
-            CancellationToken cancellationToken) {
-            IReadOnlyList<FavoriteProduct> favoriteEntities = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-            return [.. favoriteEntities.Select(favorite => ToReadModel(favorite).ToModel())];
-        }
 
-        async Task<bool> IFavoriteProductReadService.ExistsByProductIdAsync(
-            ProductId productId,
-            UserId userId,
-            CancellationToken cancellationToken) =>
-            await GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false) is not null;
     }
 
     [ExcludeFromCodeCoverage]

@@ -2,6 +2,10 @@
 
 Status: Accepted
 
+Assembly placement and reader constructor contracts are superseded by
+[ADR 0043](0043-persistence-runtime-assembly-and-read-facade.md); transaction and
+migration compatibility invariants below remain in force.
+
 ## Decision
 
 Separate the shared runtime model from the complete database model inside the

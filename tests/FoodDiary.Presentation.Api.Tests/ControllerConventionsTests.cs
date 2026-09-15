@@ -457,7 +457,7 @@ public sealed class ControllerConventionsTests {
     private static bool IsAnonymousInfrastructureController(Type? type) =>
         type?.FullName is
             "FoodDiary.Modules.Billing.Presentation.Controllers.BillingWebhookController" or
-            "FoodDiary.Presentation.Api.Features.Logs.LogsController" or
+            "FoodDiary.Modules.Fasting.Presentation.Features.Logs.LogsController" or
             "FoodDiary.Presentation.Api.Features.Marketing.MarketingAttributionController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";
 

@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Models;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;

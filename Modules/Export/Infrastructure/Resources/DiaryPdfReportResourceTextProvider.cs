@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Resources;
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 
 namespace FoodDiary.Modules.Export.Infrastructure.Resources;
 

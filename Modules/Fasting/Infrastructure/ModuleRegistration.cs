@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Fasting.Application;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Modules.Fasting.Application;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 

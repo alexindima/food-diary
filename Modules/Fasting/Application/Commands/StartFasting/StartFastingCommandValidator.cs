@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Fasting.Domain.Enums;
 using FluentValidation;
 using FoodDiary.Modules.Fasting.Application.Common;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
 

@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Exercises.Application.Abstractions.Common;
+
+public interface IExerciseEntryRepository : IExerciseEntryReadRepository, IExerciseEntryReadModelRepository, IExerciseEntryWriteRepository;

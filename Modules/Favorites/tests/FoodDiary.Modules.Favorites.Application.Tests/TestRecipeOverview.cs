@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Favorites.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 internal static class TestRecipeOverview {

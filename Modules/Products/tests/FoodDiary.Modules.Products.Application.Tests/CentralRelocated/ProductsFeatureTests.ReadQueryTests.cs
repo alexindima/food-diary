@@ -2,7 +2,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

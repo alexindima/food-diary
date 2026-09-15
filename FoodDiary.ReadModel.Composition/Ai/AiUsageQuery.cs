@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Ai;
 
-public sealed class AiUsageQuery(FoodDiaryDbContext context) : IAiUsageQuery {
+public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuery {
     public Task<AiUsageSummary> GetSummaryForUserAsync(DateTime fromUtc, DateTime toUtc, UserId userId, CancellationToken cancellationToken) =>
         ReadSummaryAsync(CreateSummaryQuery(fromUtc, toUtc).AsNoTracking().Where(item => item.UserId == userId), cancellationToken);
 

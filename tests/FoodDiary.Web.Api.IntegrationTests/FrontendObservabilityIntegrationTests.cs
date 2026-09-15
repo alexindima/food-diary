@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using FoodDiary.Presentation.Api.Features.Logs;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

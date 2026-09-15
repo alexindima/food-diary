@@ -13,3 +13,5 @@ Russian resource keys, formatting placeholders, encoding and culture fallback.
 No database, retained file or background job ownership.
 
 Focused tests: Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests.
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.

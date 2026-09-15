@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Fasting.Domain.Enums;
 
 public enum FastingSessionStatus {
     Active = 0,

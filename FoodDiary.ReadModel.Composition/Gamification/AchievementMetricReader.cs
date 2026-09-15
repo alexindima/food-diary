@@ -1,16 +1,15 @@
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Gamification;
 
-public sealed class AchievementMetricReader(FoodDiaryDbContext context) : IAchievementMetricReader {
+public sealed class AchievementMetricReader(ICompositionReadContext context) : IAchievementMetricReader {
     public Task<int> GetCompletedAcademyArticleCountAsync(
         UserId userId,
         CancellationToken cancellationToken = default) =>
-        context.Set<UserLessonProgress>()
+        context.UserLessonProgress
             .AsNoTracking()
             .CountAsync(progress => progress.UserId == userId, cancellationToken);
 }

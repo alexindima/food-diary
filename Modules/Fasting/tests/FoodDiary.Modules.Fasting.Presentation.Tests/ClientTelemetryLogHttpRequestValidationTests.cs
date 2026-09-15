@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ClientTelemetryLogHttpRequestValidationTests {
@@ -158,7 +158,7 @@ public sealed class ClientTelemetryLogHttpRequestValidationTests {
     [Fact]
     public void DetailsNodeValidator_WithDefensiveUnknownKind_ReturnsFalse() {
         MethodInfo method = typeof(ClientTelemetryLogHttpRequest).Assembly
-            .GetType("FoodDiary.Presentation.Api.Features.Logs.Requests.ClientTelemetryLogHttpRequestValidation")!
+            .GetType("FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests.ClientTelemetryLogHttpRequestValidation")!
             .GetMethod("IsValidDetailsNode", BindingFlags.Static | BindingFlags.NonPublic)!;
         object?[] arguments = [default(JsonElement), 0, 0];
 

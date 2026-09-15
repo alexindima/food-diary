@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.PersistenceModel;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;

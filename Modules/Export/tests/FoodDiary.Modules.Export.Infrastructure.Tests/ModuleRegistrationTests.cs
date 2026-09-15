@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Export.Infrastructure.Tests;

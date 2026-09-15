@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-
-public interface IFavoriteProductRepository : IFavoriteProductReadRepository, IFavoriteProductReadModelRepository, IFavoriteProductWriteRepository;

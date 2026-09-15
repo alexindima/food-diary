@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Modules.Exercises.Contracts.Models;
 
-namespace FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
+namespace FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
 
 public record UpdateExerciseEntryCommand(
     Guid? UserId,

@@ -1,1 +1,1 @@
-global using FoodDiary.Application.Favorites.Common;
+global using FoodDiary.Modules.Favorites.Application.Common;

@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Shopping;
@@ -24,7 +25,7 @@ public sealed class EfUnitOfWorkTests {
         var unitOfWork = new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance);
 
         Assert.True(unitOfWork.HasPendingChanges);
-        Assert.Throws<InvalidOperationException>(() => FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context));
+        Assert.Throws<InvalidOperationException>(() => FoodDiary.Persistence.Runtime.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context));
         await unitOfWork.SaveChangesAsync();
 
         Assert.False(unitOfWork.HasPendingChanges);
@@ -38,7 +39,7 @@ public sealed class EfUnitOfWorkTests {
         module.HydrationEntries.Add(HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.ExecuteAttemptAsync<int>(context, postCommitActionQueue: null,
+            FoodDiary.Persistence.Runtime.Persistence.Shared.SharedTransactionBoundary.ExecuteAttemptAsync<int>(context, postCommitActionQueue: null,
                 () => Task.FromException<int>(new InvalidOperationException("Failed attempt."))));
 
         Assert.Empty(module.ChangeTracker.Entries());
@@ -51,7 +52,7 @@ public sealed class EfUnitOfWorkTests {
         queue.HasActions.Returns(returnThis: true);
 
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
-            FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context, queue));
+            FoodDiary.Persistence.Runtime.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context, queue));
 
         Assert.Contains("pending post-commit actions", error.Message, StringComparison.Ordinal);
         queue.DidNotReceive().Discard();

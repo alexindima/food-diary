@@ -1,4 +1,5 @@
-using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Recipes;

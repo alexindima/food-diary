@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Fasting.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FastingErrorContractTests {

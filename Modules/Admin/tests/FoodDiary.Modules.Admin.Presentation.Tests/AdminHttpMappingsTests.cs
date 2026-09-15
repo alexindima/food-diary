@@ -2,7 +2,7 @@ using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;

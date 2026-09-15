@@ -1,8 +1,12 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteIds;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoritesOverview;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Mappings;
@@ -13,7 +17,7 @@ namespace FoodDiary.Application.Meals.Services;
 
 public sealed class MealReadService(
     IMealProjectionReadRepository mealRepository,
-    IMealFavoriteReadService favoriteReadService) : IMealReadService, IFavoriteMealSourceReadService {
+    ISender sender) : IMealReadService, IFavoriteMealSourceReadService {
     public async Task<PagedResponse<MealModel>> GetPagedAsync(
         UserId userId,
         int page,
@@ -50,7 +54,7 @@ public sealed class MealReadService(
             cancellationToken).ConfigureAwait(false);
 
         (IReadOnlyList<MealFavoriteMealModel> favoriteItems, int favoriteCount) =
-            await favoriteReadService.GetOverviewAsync(userId, favoriteLimit, cancellationToken).ConfigureAwait(false);
+            await sender.Send(new ReadMealFavoritesOverviewQuery(userId, favoriteLimit), cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await GetFavoritesByMealIdAsync(
             userId,
             items,
@@ -109,7 +113,7 @@ public sealed class MealReadService(
             .Select(static meal => (MealId)meal.Id)
             .Distinct()];
 
-        return await favoriteReadService.GetFavoriteIdsByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        return await sender.Send(new ReadMealFavoriteIdsQuery(userId, mealIds), cancellationToken).ConfigureAwait(false);
     }
 
     private static PagedResponse<MealModel> ToPagedResponse(

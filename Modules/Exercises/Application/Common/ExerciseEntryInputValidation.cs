@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Exercises.Common;
+namespace FoodDiary.Modules.Exercises.Application.Common;
 
 internal static class ExerciseEntryInputValidation {
     internal const int MaxDurationMinutes = 1440;

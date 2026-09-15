@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Exercises.Internal;
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Internal;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
+namespace FoodDiary.Modules.Exercises.Application.Commands.DeleteExerciseEntry;
 
 public sealed class DeleteExerciseEntryCommandHandler(
     IExerciseEntryWriteRepository repository,

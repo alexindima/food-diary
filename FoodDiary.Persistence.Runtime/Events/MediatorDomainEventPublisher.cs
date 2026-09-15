@@ -1,0 +1,15 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Mediator;
+
+namespace FoodDiary.Persistence.Runtime.Events;
+
+internal sealed class MediatorDomainEventPublisher(IPublisher publisher) : IDomainEventPublisher {
+    public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) {
+        Type envelopeType = typeof(NotificationEnvelope<>).MakeGenericType(domainEvent.GetType());
+        object envelope = Activator.CreateInstance(envelopeType, domainEvent)
+            ?? throw new InvalidOperationException($"Could not create notification envelope for {domainEvent.GetType().Name}.");
+
+        return publisher.Publish(envelope, cancellationToken);
+    }
+}

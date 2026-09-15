@@ -900,7 +900,7 @@ public sealed class BusinessModuleBoundaryTests {
         string expectedRelativeDirectory) {
         string expectedPath;
         if (fileName.StartsWith("Favorite", StringComparison.Ordinal)) {
-            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Favorites", "Infrastructure", "Model", "Configurations", fileName);
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Favorites", "PersistenceModel", "Configurations", fileName);
         } else if (string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)) {
             expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName);
         } else {
@@ -976,7 +976,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
     [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
-    [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/Infrastructure/Model/Configurations/Exercises")]
+    [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/PersistenceModel/Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
     [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
     [InlineData("CycleSymptomEntryConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]

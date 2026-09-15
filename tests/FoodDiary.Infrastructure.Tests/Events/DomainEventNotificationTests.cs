@@ -1,6 +1,6 @@
+using FoodDiary.Persistence.Runtime.Events;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Events;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Infrastructure.Tests.Events;

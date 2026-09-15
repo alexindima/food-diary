@@ -381,13 +381,13 @@
       "sourceMappings": {
         "logicalRoot": "Modules/Exercises",
         "abstractionAreas": [
-          "Modules/Exercises/Application/Abstractions/Exercises"
+          "Modules/Exercises/Application.Abstractions"
         ],
         "applicationProjects": [
           "Modules/Exercises/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Exercises/Application/Abstractions"
+          "Modules/Exercises/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Exercises/Contracts"
@@ -399,7 +399,7 @@
           "Modules/Exercises/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Exercises/Infrastructure/Model"
+          "Modules/Exercises/PersistenceModel"
         ]
       }
     },
@@ -414,7 +414,7 @@
           "Modules/Export/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Export/Application/Abstractions"
+          "Modules/Export/Application.Abstractions"
         ],
         "infrastructureProjects": [
           "Modules/Export/Infrastructure"
@@ -438,7 +438,7 @@
           "Modules/Fasting/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Fasting/Application/Abstractions"
+          "Modules/Fasting/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Fasting/Contracts"
@@ -450,7 +450,7 @@
           "Modules/Fasting/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Fasting/Infrastructure/Model"
+          "Modules/Fasting/PersistenceModel"
         ],
         "abstractionAreas": [
           "Fasting"
@@ -472,13 +472,13 @@
           "Modules/Favorites/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Favorites/Application/Abstractions"
+          "Modules/Favorites/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Favorites/Contracts"
         ],
         "abstractionAreas": [
-          "Modules/Favorites/Application/Abstractions"
+          "Modules/Favorites/Application.Abstractions"
         ],
         "domainProjects": [
           "Modules/Favorites/Domain",
@@ -491,7 +491,7 @@
           "Modules/Favorites/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Favorites/Infrastructure/Model"
+          "Modules/Favorites/PersistenceModel"
         ],
         "persistenceAreas": [
           "Modules/Favorites/Infrastructure"

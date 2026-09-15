@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
 using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
-using FoodDiary.Presentation.Api.Features.Fasting.Responses;
+using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;

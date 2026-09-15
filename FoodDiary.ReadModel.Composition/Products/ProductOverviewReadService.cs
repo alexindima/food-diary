@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Products;
 
-public sealed class ProductOverviewReadService(FoodDiaryDbContext context) : IProductOverviewReadService {
+public sealed class ProductOverviewReadService(ICompositionReadContext context) : IProductOverviewReadService {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<ProductOverviewReadItem> Items, int TotalItems)> GetPagedAsync(

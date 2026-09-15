@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Exercises.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExerciseErrorContractTests {

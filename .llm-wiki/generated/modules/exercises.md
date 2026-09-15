@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj`
+- Extracted project: `Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
@@ -25,12 +25,11 @@ sources:
 ## Source Areas
 
 - `Modules/Exercises/Application`
-- `Modules/Exercises/Application/Abstractions`
-- `Modules/Exercises/Application/Abstractions/Exercises`
+- `Modules/Exercises/Application.Abstractions`
 - `Modules/Exercises/Contracts`
 - `Modules/Exercises/Domain`
 - `Modules/Exercises/Infrastructure`
-- `Modules/Exercises/Infrastructure/Model`
+- `Modules/Exercises/PersistenceModel`
 - `Modules/Exercises/Presentation`
 
 ## HTTP Surface
@@ -42,37 +41,38 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ExerciseEntry
-- Public contract files: 8
+- Public contract files: 9
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 8
-- Interfaces: 5
+- Public contract types: 9
+- Interfaces: 4
 - DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 4
-- Contracts referencing domain entities: 2
+- Contracts referencing domain entities: 0
 - `class ExerciseErrors`
 - `interface IExerciseEntryReadModelRepository`
 - `interface IExerciseEntryReadRepository`
-- `interface IExerciseEntryReadService`
 - `interface IExerciseEntryRepository`
 - `interface IExerciseEntryWriteRepository`
 - `record ExerciseEntryModel`
 - `record ExerciseEntryReadModel`
+- `record ReadExerciseCaloriesQuery`
+- `record ReadExerciseEntriesQuery`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/ExerciseEntryInputValidationCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/ExerciseErrorContractTests.cs`
-- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExerciseEntryInputValidationCoverageTests.cs`
-- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseEntryInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseTrackingInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/ExercisesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/ExercisesValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/ExerciseEntryInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/ExerciseTrackingInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/ExercisesIdConversionTests.cs`
 - [presentation] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExerciseHttpMappingsTests.cs`
 - [presentation] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExercisesControllerTests.cs`

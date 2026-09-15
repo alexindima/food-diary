@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 
-internal sealed class DashboardMealAiSessionsLoader(FoodDiaryDbContext context) {
+internal sealed class DashboardMealAiSessionsLoader(ICompositionReadContext context) {
     public async Task<ILookup<MealId, DashboardMealAiSessionReadModel>> LoadAsync(
         IReadOnlyCollection<MealId> mealIds,
         CancellationToken cancellationToken) {

@@ -1,9 +1,16 @@
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.Favorites.FavoriteMeals.Services;
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoritesOverview;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteIds;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoritesOverview;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests.FavoriteMeals;
+namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteMeals;
 
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteMealReadServiceCoverageTests {
@@ -16,10 +23,10 @@ public sealed class FavoriteMealReadServiceCoverageTests {
         ];
         IFavoriteMealReadModelRepository repository = Substitute.For<IFavoriteMealReadModelRepository>();
         repository.GetAllReadModelsAsync(userId, Arg.Any<CancellationToken>()).Returns(favorites);
-        var service = new FavoriteMealReadService(repository);
+        ISender service = RequestTestSender.Create(new ReadFavoriteMealsQueryHandler(repository), new ReadMealFavoriteStatusQueryHandler(repository), new ReadMealFavoriteIdsQueryHandler(repository), new ReadMealFavoritesOverviewQueryHandler(repository));
 
-        (IReadOnlyList<FavoriteMealModel> items, int totalItems) =
-            await service.GetOverviewAsync(userId, limit: 1, CancellationToken.None);
+        (IReadOnlyList<MealFavoriteMealModel> items, int totalItems) =
+            await service.Send(new ReadMealFavoritesOverviewQuery(userId, 1), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(2, totalItems),

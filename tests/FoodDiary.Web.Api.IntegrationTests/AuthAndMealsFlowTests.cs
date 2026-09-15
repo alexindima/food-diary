@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Meals.Requests;
-using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

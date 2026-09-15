@@ -1,7 +1,8 @@
+using FoodDiary.Persistence.Runtime.Persistence.Outbox;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -56,7 +57,7 @@ public sealed class OutboxReplayRegistrationTests {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(IOutboxReplayStream));
-        Assert.Equal("FoodDiary.Infrastructure.Persistence.Email.EmailOutboxReplayStream", descriptor.ImplementationType?.FullName);
+        Assert.Equal("FoodDiary.Persistence.Runtime.Persistence.Email.EmailOutboxReplayStream", descriptor.ImplementationType?.FullName);
     }
 
     private static void AddModules(IServiceCollection services) {

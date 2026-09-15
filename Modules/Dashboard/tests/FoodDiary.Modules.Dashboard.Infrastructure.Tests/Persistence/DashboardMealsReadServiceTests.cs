@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;

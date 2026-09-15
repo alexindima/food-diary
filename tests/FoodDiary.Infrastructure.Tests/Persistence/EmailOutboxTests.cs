@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence.Email;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;

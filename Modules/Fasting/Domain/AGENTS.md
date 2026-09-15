@@ -8,7 +8,6 @@ Rules for `Modules/Fasting/Domain/`.
 
 - Own Fasting aggregates, entities, enums, and strongly typed identifiers.
 - Keep domain behavior independent from application, persistence, transport, and host concerns.
-- Preserve existing CLR namespaces during the extraction tranche so EF model identity and serialized enum contracts remain stable.
 
 ## Boundaries
 
@@ -17,3 +16,5 @@ Rules for `Modules/Fasting/Domain/`.
 - Keep database mapping and repository behavior outside this project.
 
 User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.

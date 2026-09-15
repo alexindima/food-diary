@@ -1,8 +1,8 @@
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using Microsoft.EntityFrameworkCore.Storage;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.ReadModel.Composition.Favorites;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;

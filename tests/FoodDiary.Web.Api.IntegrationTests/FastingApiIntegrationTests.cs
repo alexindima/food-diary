@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Fasting.Domain.Enums;
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Presentation.Api.Features.Fasting.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 

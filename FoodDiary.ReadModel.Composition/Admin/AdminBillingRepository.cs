@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminBillingRepository {
+public sealed class AdminBillingRepository(ICompositionReadContext context) : IAdminBillingRepository {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems)> GetSubscriptionsAsync(

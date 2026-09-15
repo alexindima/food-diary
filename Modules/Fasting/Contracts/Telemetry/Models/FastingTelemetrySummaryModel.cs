@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Fasting.Models;
+namespace FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 
 public sealed record FastingTelemetrySummaryModel(
     int WindowHours,

@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.FavoriteProducts;
+namespace FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 
 public sealed class FavoriteProduct : Entity<FavoriteProductId> {
     private const int NameMaxLength = 2048;

@@ -92,7 +92,16 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.Fasting": {
+      "fooddiary.domain.primitives": {
+        "type": "Project"
+      },
+      "fooddiary.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.fasting.application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -109,15 +118,6 @@
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.domain.primitives": {
-        "type": "Project"
-      },
-      "fooddiary.mediator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "fooddiary.modules.fasting.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -131,6 +131,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }

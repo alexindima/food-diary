@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 
-namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 
 public record UpdateFavoriteProductCommand(
     Guid? UserId,

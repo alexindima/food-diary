@@ -1,0 +1,53 @@
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Admin.Domain.Entities;
+using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Billing.Domain.Entities;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace FoodDiary.Infrastructure.Persistence;
+
+public sealed partial class FoodDiaryDbContext : ICompositionReadContext {
+    IQueryable<AdminImpersonationSession> ICompositionReadContext.AdminImpersonationSessions => AdminImpersonationSessions.AsNoTracking();
+    IQueryable<AiUsage> ICompositionReadContext.AiUsages => AiUsages.AsNoTracking();
+    IQueryable<BillingPayment> ICompositionReadContext.BillingPayments => BillingPayments.AsNoTracking();
+    IQueryable<BillingSubscription> ICompositionReadContext.BillingSubscriptions => BillingSubscriptions.AsNoTracking();
+    IQueryable<BillingWebhookEvent> ICompositionReadContext.BillingWebhookEvents => BillingWebhookEvents.AsNoTracking();
+    IQueryable<ContentReport> ICompositionReadContext.ContentReports => ContentReports.AsNoTracking();
+    IQueryable<DietologistInvitation> ICompositionReadContext.DietologistInvitations => DietologistInvitations.AsNoTracking();
+    IQueryable<FavoriteMeal> ICompositionReadContext.FavoriteMeals => FavoriteMeals.AsNoTracking();
+    IQueryable<FavoriteProduct> ICompositionReadContext.FavoriteProducts => FavoriteProducts.AsNoTracking();
+    IQueryable<FavoriteRecipe> ICompositionReadContext.FavoriteRecipes => FavoriteRecipes.AsNoTracking();
+    IQueryable<HydrationEntry> ICompositionReadContext.HydrationEntries => HydrationEntries.AsNoTracking();
+    IQueryable<ImageAsset> ICompositionReadContext.ImageAssets => ImageAssets.AsNoTracking();
+    IQueryable<MealAiItem> ICompositionReadContext.MealAiItems => MealAiItems.AsNoTracking();
+    IQueryable<MealAiSession> ICompositionReadContext.MealAiSessions => MealAiSessions.AsNoTracking();
+    IQueryable<MealItem> ICompositionReadContext.MealItems => MealItems.AsNoTracking();
+    IQueryable<MealPlan> ICompositionReadContext.MealPlans => MealPlans.AsNoTracking();
+    IQueryable<Meal> ICompositionReadContext.Meals => Meals.AsNoTracking();
+    IQueryable<Product> ICompositionReadContext.Products => Products.AsNoTracking();
+    IQueryable<RecipeComment> ICompositionReadContext.RecipeComments => RecipeComments.AsNoTracking();
+    IQueryable<RecipeIngredient> ICompositionReadContext.RecipeIngredients => RecipeIngredients.AsNoTracking();
+    IQueryable<RecipeStep> ICompositionReadContext.RecipeSteps => RecipeSteps.AsNoTracking();
+    IQueryable<Recipe> ICompositionReadContext.Recipes => Recipes.AsNoTracking();
+    IQueryable<RecommendationComment> ICompositionReadContext.RecommendationComments => RecommendationComments.AsNoTracking();
+    IQueryable<Recommendation> ICompositionReadContext.Recommendations => Recommendations.AsNoTracking();
+    IQueryable<UserLessonProgress> ICompositionReadContext.UserLessonProgress => UserLessonProgress.AsNoTracking();
+    IQueryable<UserLoginEvent> ICompositionReadContext.UserLoginEvents => UserLoginEvents.AsNoTracking();
+    IQueryable<UserRoleAuditEvent> ICompositionReadContext.UserRoleAuditEvents => UserRoleAuditEvents.AsNoTracking();
+    IQueryable<User> ICompositionReadContext.Users => Users.AsNoTracking();
+    IQueryable<WaistEntry> ICompositionReadContext.WaistEntries => WaistEntries.AsNoTracking();
+    IQueryable<WeightEntry> ICompositionReadContext.WeightEntries => WeightEntries.AsNoTracking();
+}

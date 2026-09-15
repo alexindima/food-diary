@@ -1,7 +1,7 @@
 # Exercises Logical Module Guidelines
 
-- Own exercise entries, validation, read-service implementation, repository ports/errors, stable read contracts, domain aggregate/enum/ID, EF mapping and repository under this module.
-- Application preserves FoodDiary.Application.Exercises assembly identity and CLR namespaces. Contracts preserves the existing read-service/DTO CLR namespaces; Dashboard and TDEE reference Contracts only.
+- Own exercise entries, validation, read-query handlers, repository ports/errors, stable read contracts, domain aggregate/enum/ID, EF mapping and repository under this module.
+- Application and Contracts use canonical FoodDiary.Modules.Exercises identities and folder namespaces. Dashboard and TDEE dispatch owner requests from Contracts.
 - Domain depends one-way on Users Domain.Contracts for UserId and shared Primitives for public DomainGuard. User has no inverse Exercises navigation. Do not move User or make Domain depend on Exercises.
 - ExerciseErrors and its callers belong to this module. The central Errors.Exercise facade is retired; module Abstractions must not reference central Abstractions. Preserve error codes, messages and kinds; see docs/ai/measurement-error-facades.md.
 - Keep calories/rounding, validation, UTC/date normalization, cancellation and user access unchanged.
@@ -14,8 +14,9 @@ role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives i
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
 reference the exact owner; shared guards and generic values belong to
 `FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Authentication flows/providers, combined UserRepository,
-DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
-security behavior and EF/HTTP contracts are unchanged. See
+DbContext, migrations and snapshot retain their existing owners. Security behavior and EF/HTTP contracts remain unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
 ExercisesDbContext is the third owned runtime context (ADR 0040). It shares the scoped connection and coordinated unit of work; the central schema and purge/read bridges remain unchanged.
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.

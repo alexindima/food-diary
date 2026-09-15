@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4098,
-    "symbols": 4038,
-    "interfaceImplementationLinks": 232,
-    "dependencyInjectionRegistrations": 127,
+    "sourceFiles": 4114,
+    "symbols": 4053,
+    "interfaceImplementationLinks": 223,
+    "dependencyInjectionRegistrations": 108,
     "kinds": {
-      "class": 2129,
+      "class": 2138,
       "enum": 64,
-      "interface": 439,
-      "record": 1286,
+      "interface": 430,
+      "record": 1301,
       "record struct": 120
     },
     "roles": {
-      "Command": 201,
-      "CommandHandler": 197,
+      "Command": 203,
+      "CommandHandler": 199,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1650,
-      "Query": 238,
-      "QueryHandler": 166,
+      "Other": 1652,
+      "Query": 251,
+      "QueryHandler": 179,
       "ReadModelRepository": 32,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 150,
       "Response": 213,
-      "Service": 247,
+      "Service": 230,
       "Validator": 225,
       "ValueObject": 114,
       "WriteRepository": 45
@@ -485,13 +485,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Audit.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
       "line": 8
     },
@@ -506,50 +499,15 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 22
-    },
-    {
-      "name": "DomainEventNotification",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Events/DomainEventNotification.cs",
-      "line": 5
-    },
-    {
-      "name": "MediatorDomainEventPublisher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Events/MediatorDomainEventPublisher.cs",
-      "line": 6
-    },
-    {
-      "name": "DatabaseOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Infrastructure/Options/DatabaseOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "AuditEntryService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AdminCrossModuleRelationships",
@@ -727,34 +685,6 @@
       "line": 6
     },
     {
-      "name": "EfUnitOfWork",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
-      "line": 9
-    },
-    {
-      "name": "EmailOutbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutbox.cs",
-      "line": 4
-    },
-    {
-      "name": "EmailOutboxProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
-      "line": 8
-    },
-    {
-      "name": "EmailOutboxReplayStream",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxReplayStream.cs",
-      "line": 6
-    },
-    {
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
@@ -794,7 +724,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 28
+      "line": 30
     },
     {
       "name": "FoodDiaryDbContext",
@@ -821,6 +751,13 @@
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
+      "line": 21
+    },
+    {
+      "name": "FoodDiaryDbContext",
+      "kind": "class",
+      "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
       "line": 7
     },
@@ -829,7 +766,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "FoodDiaryDbContext",
@@ -853,123 +790,11 @@
       "line": 6
     },
     {
-      "name": "DomainEventDispatcher",
-      "kind": "class",
+      "name": "ICompositionReadContext",
+      "kind": "interface",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatcher.cs",
-      "line": 8
-    },
-    {
-      "name": "DomainEventDispatchInterceptor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
-      "line": 6
-    },
-    {
-      "name": "PostgresAdvisoryLockLease",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Locking/PostgresAdvisoryLockLease.cs",
-      "line": 4
-    },
-    {
-      "name": "OutboxDeadLetterReplayService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 10
-    },
-    {
-      "name": "EfIndependentModuleContextOptionsFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
-      "line": 5
-    },
-    {
-      "name": "EfModuleScopeGuard",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleScopeGuard.cs",
-      "line": 4
-    },
-    {
-      "name": "EfModuleSessionCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionCoordinator.cs",
-      "line": 7
-    },
-    {
-      "name": "EfModuleSessionLock",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionLock.cs",
-      "line": 6
-    },
-    {
-      "name": "EfModuleTransactionCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "line": 9
-    },
-    {
-      "name": "ModuleContextSaveCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
-      "line": 7
-    },
-    {
-      "name": "PersistenceSession",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/PersistenceSession.cs",
-      "line": 11
-    },
-    {
-      "name": "SharedTransactionBoundary",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
-      "line": 8
-    },
-    {
-      "name": "SharedPersistenceDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/SharedPersistenceDbContext.cs",
-      "line": 10
-    },
-    {
-      "name": "SharedPersistenceDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/SharedPersistenceDbContext.Session.cs",
-      "line": 7
-    },
-    {
-      "name": "SharedRuntimeDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/SharedRuntimeDbContext.cs",
-      "line": 4
-    },
-    {
-      "name": "DatabaseCommandTelemetryInterceptor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
-      "line": 5
-    },
-    {
-      "name": "InfrastructureTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
-      "line": 4
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 22
     },
     {
       "name": "StructuredAuditLogger",
@@ -1102,14 +927,14 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/EmailOutboxOptions.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "FastingNotificationJob",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/FastingNotificationJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingNotificationOptions",
@@ -1123,7 +948,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingTelemetryCleanupOptions",
@@ -1214,7 +1039,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "JobManagerTelemetry",
@@ -1305,14 +1130,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "RecurringJobsHostedService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "TelemetryPrivacyProcessor",
@@ -1369,6 +1194,209 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs",
       "line": 2
+    },
+    {
+      "name": "DomainEventNotification",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Events/DomainEventNotification.cs",
+      "line": 5
+    },
+    {
+      "name": "MediatorDomainEventPublisher",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Events/MediatorDomainEventPublisher.cs",
+      "line": 6
+    },
+    {
+      "name": "DatabaseOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Persistence.Runtime/Options/DatabaseOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditEntryService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Audit/AuditEntryService.cs",
+      "line": 8
+    },
+    {
+      "name": "EfUnitOfWork",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/EfUnitOfWork.cs",
+      "line": 9
+    },
+    {
+      "name": "EmailOutbox",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutbox.cs",
+      "line": 5
+    },
+    {
+      "name": "EmailOutboxProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxProcessor.cs",
+      "line": 8
+    },
+    {
+      "name": "EmailOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxReplayStream.cs",
+      "line": 7
+    },
+    {
+      "name": "DomainEventDispatcher",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatcher.cs",
+      "line": 8
+    },
+    {
+      "name": "DomainEventDispatchInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
+      "line": 6
+    },
+    {
+      "name": "PostgresAdvisoryLockLease",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Locking/PostgresAdvisoryLockLease.cs",
+      "line": 4
+    },
+    {
+      "name": "OutboxDeadLetterReplayService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
+      "line": 11
+    },
+    {
+      "name": "EfIndependentModuleContextOptionsFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
+      "line": 5
+    },
+    {
+      "name": "EfModuleScopeGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleScopeGuard.cs",
+      "line": 4
+    },
+    {
+      "name": "EfModuleSessionCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionCoordinator.cs",
+      "line": 7
+    },
+    {
+      "name": "EfModuleSessionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionLock.cs",
+      "line": 6
+    },
+    {
+      "name": "EfModuleTransactionCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "line": 9
+    },
+    {
+      "name": "ModuleContextSaveCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/ModuleContextSaveCoordinator.cs",
+      "line": 7
+    },
+    {
+      "name": "PersistenceSession",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
+      "line": 11
+    },
+    {
+      "name": "SharedTransactionBoundary",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
+      "line": 8
+    },
+    {
+      "name": "SharedPersistenceDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.cs",
+      "line": 10
+    },
+    {
+      "name": "SharedPersistenceDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.Session.cs",
+      "line": 7
+    },
+    {
+      "name": "SharedRuntimeDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedRuntimeDbContext.cs",
+      "line": 4
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Audit.cs",
+      "line": 6
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs",
+      "line": 22
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Email.cs",
+      "line": 6
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Options.cs",
+      "line": 7
+    },
+    {
+      "name": "DatabaseCommandTelemetryInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Services/DatabaseCommandTelemetryInterceptor.cs",
+      "line": 5
+    },
+    {
+      "name": "InfrastructureTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Persistence.Runtime/Services/InfrastructureTelemetry.cs",
+      "line": 4
     },
     {
       "name": "PresentationRoleNames",
@@ -1830,21 +1858,21 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "FavoriteRecipeQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AchievementMetricReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UserLoginEventQuery",
@@ -1886,7 +1914,7 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "MealSourceSnapshotQuery",
@@ -1914,7 +1942,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 38
+      "line": 39
     },
     {
       "name": "RecipeOverviewReadService",
@@ -2208,7 +2236,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ApiOptionsServiceCollectionExtensions",
@@ -2222,7 +2250,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 59
+      "line": 58
     },
     {
       "name": "ApiTelemetry",
@@ -8606,7 +8634,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
-      "line": 22
+      "line": 20
     },
     {
       "name": "DashboardSnapshotRequest",
@@ -10432,42 +10460,42 @@
       "name": "ExerciseErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/ExerciseErrors.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Common/ExerciseErrors.cs",
       "line": 4
     },
     {
       "name": "IExerciseEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryReadModelRepository.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Common/IExerciseEntryReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IExerciseEntryReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryReadRepository.cs",
-      "line": 5
+      "path": "Modules/Exercises/Application.Abstractions/Common/IExerciseEntryReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IExerciseEntryRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Common/IExerciseEntryRepository.cs",
       "line": 2
     },
     {
       "name": "IExerciseEntryWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Exercises/Application.Abstractions/Common/IExerciseEntryWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "ExerciseEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Models/ExerciseEntryReadModel.cs",
       "line": 2
     },
     {
@@ -10503,7 +10531,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "UpdateExerciseEntryCommand",
@@ -10517,7 +10545,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpdateExerciseEntryCommandValidator",
@@ -10538,7 +10566,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Exercises/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "EnumValueParser",
@@ -10573,7 +10601,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Exercises/Application/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetExerciseEntriesQueryValidator",
@@ -10583,18 +10611,18 @@
       "line": 5
     },
     {
-      "name": "ExerciseEntryReadService",
+      "name": "ReadExerciseCaloriesQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Exercises/Application/Services/ExerciseEntryReadService.cs",
-      "line": 9
+      "role": "QueryHandler",
+      "path": "Modules/Exercises/Application/Queries/ReadExerciseCalories/ReadExerciseCaloriesQueryHandler.cs",
+      "line": 7
     },
     {
-      "name": "IExerciseEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs",
-      "line": 5
+      "name": "ReadExerciseEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Exercises/Application/Queries/ReadExerciseEntries/ReadExerciseEntriesQueryHandler.cs",
+      "line": 10
     },
     {
       "name": "ExerciseEntryModel",
@@ -10604,11 +10632,25 @@
       "line": 2
     },
     {
+      "name": "ReadExerciseCaloriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Exercises/Contracts/Queries/ReadExerciseCalories/ReadExerciseCaloriesQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "ReadExerciseEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Exercises/Contracts/Queries/ReadExerciseEntries/ReadExerciseEntriesQuery.cs",
+      "line": 8
+    },
+    {
       "name": "ExerciseEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExerciseType",
@@ -10625,20 +10667,6 @@
       "line": 4
     },
     {
-      "name": "ExerciseEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ExercisesPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Exercises/Infrastructure/Model/ExercisesPersistenceModelRegistration.cs",
-      "line": 4
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -10650,7 +10678,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ExercisesDbContext",
@@ -10660,87 +10688,94 @@
       "line": 6
     },
     {
-      "name": "ExercisesPresentationServiceCollectionExtensions",
+      "name": "ExerciseEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Exercises/PersistenceModel/Configurations/Exercises/ExerciseEntryConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "ExercisesPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Exercises/Presentation/Extensions/ExercisesPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Exercises/PersistenceModel/ExercisesPersistenceModelRegistration.cs",
       "line": 4
     },
     {
       "name": "ExercisesController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/ExercisesController.cs",
+      "path": "Modules/Exercises/Presentation/Controllers/ExercisesController.cs",
       "line": 15
+    },
+    {
+      "name": "ExercisesPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Presentation/Extensions/ExercisesPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "ExerciseHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
+      "path": "Modules/Exercises/Presentation/Mappings/ExerciseHttpMappings.cs",
       "line": 10
     },
     {
       "name": "CreateExerciseEntryHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/CreateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/CreateExerciseEntryHttpRequest.cs",
       "line": 2
     },
     {
       "name": "UpdateExerciseEntryHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "line": 2
     },
     {
       "name": "ExerciseEntryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Responses/ExerciseEntryHttpResponse.cs",
+      "path": "Modules/Exercises/Presentation/Responses/ExerciseEntryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "DiaryPdfReportTexts",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 2
     },
     {
       "name": "ExportInputLimits",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Export/Application/Abstractions/Common/ExportInputLimits.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/ExportInputLimits.cs",
       "line": 2
     },
     {
       "name": "IDiaryPdfGenerator",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "line": 4
     },
     {
       "name": "IDiaryPdfReportTextProvider",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/IDiaryPdfReportTextProvider.cs",
       "line": 2
-    },
-    {
-      "name": "IExportDiaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Export/Application/Abstractions/Common/IExportDiaryReadService.cs",
-      "line": 5
     },
     {
       "name": "ExportDiaryMealsReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Export/Application/Abstractions/Models/ExportDiaryMealsReadModel.cs",
+      "path": "Modules/Export/Application.Abstractions/Models/ExportDiaryMealsReadModel.cs",
       "line": 4
     },
     {
@@ -10748,7 +10783,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "UtcDateNormalizer",
@@ -10818,7 +10853,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "ExportDiaryQueryValidator",
@@ -10847,13 +10882,6 @@
       "role": "Other",
       "path": "Modules/Export/Application/Services/DiaryCsvGenerator.cs",
       "line": 6
-    },
-    {
-      "name": "ExportDiaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
-      "line": 8
     },
     {
       "name": "ModuleRegistration",
@@ -10975,206 +11003,206 @@
       "line": 5
     },
     {
-      "name": "ExportPresentationServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Export/Presentation/Extensions/ExportPresentationServiceCollectionExtensions.cs",
-      "line": 4
-    },
-    {
       "name": "ExportController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Export/Presentation/Features/Export/ExportController.cs",
+      "path": "Modules/Export/Presentation/Controllers/ExportController.cs",
       "line": 17
     },
     {
       "name": "ExportRequestLimits",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Export/Presentation/Features/Export/ExportRequestLimits.cs",
+      "path": "Modules/Export/Presentation/ExportRequestLimits.cs",
       "line": 4
+    },
+    {
+      "name": "ExportPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Presentation/Extensions/ExportPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "ExportHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Export/Presentation/Features/Export/Mappings/ExportHttpMappings.cs",
+      "path": "Modules/Export/Presentation/Mappings/ExportHttpMappings.cs",
       "line": 6
     },
     {
       "name": "SensitiveCycleExportHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Export/Presentation/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "path": "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs",
       "line": 6
     },
     {
       "name": "FastingErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Common/FastingErrors.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/FastingErrors.cs",
       "line": 4
     },
     {
       "name": "FastingTelemetryEventRecord",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/FastingTelemetryEventRecord.cs",
       "line": 2
     },
     {
       "name": "IFastingCheckInReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingCheckInReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IFastingCheckInReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingCheckInReadRepository.cs",
       "line": 5
     },
     {
       "name": "IFastingCheckInRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingCheckInRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingCheckInWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingCheckInWriteRepository.cs",
       "line": 4
     },
     {
       "name": "IFastingOccurrenceReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingOccurrenceReadModelRepository.cs",
       "line": 6
     },
     {
       "name": "IFastingOccurrenceReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs",
-      "line": 7
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingOccurrenceReadRepository.cs",
+      "line": 8
     },
     {
       "name": "IFastingOccurrenceRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingOccurrenceRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingOccurrenceWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingOccurrenceWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "IFastingPlanReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs",
-      "line": 6
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingPlanReadRepository.cs",
+      "line": 7
     },
     {
       "name": "IFastingPlanRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingPlanRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingPlanWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingPlanWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "IFastingSessionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs",
-      "line": 5
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingSessionReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IFastingSessionRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingSessionRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingSessionWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingSessionWriteRepository.cs",
       "line": 5
     },
     {
       "name": "IFastingTelemetryEventReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingTelemetryEventReadRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingTelemetryEventRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingTelemetryEventRepository.cs",
       "line": 2
     },
     {
       "name": "IFastingTelemetryEventWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/IFastingTelemetryEventWriteRepository.cs",
       "line": 2
-    },
-    {
-      "name": "IFastingTelemetrySummaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
-      "line": 5
     },
     {
       "name": "FastingActiveOccurrenceModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingActiveOccurrenceModel.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingActiveOccurrenceModel.cs",
       "line": 4
     },
     {
       "name": "FastingCheckInReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingCheckInReadModel.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingCheckInReadModel.cs",
       "line": 4
     },
     {
       "name": "FastingOccurrenceReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
-      "line": 5
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 6
     },
     {
       "name": "FastingPlanReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingPlanReadModel.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingPlanReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "CleanupFastingTelemetryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/CleanupFastingTelemetry/CleanupFastingTelemetryCommandHandler.cs",
       "line": 5
     },
     {
@@ -11274,6 +11302,13 @@
       "role": "Validator",
       "path": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "SendFastingNotificationsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/SendFastingNotifications/SendFastingNotificationsCommandHandler.cs",
+      "line": 13
     },
     {
       "name": "SkipCyclicDayCommand",
@@ -11399,7 +11434,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "GetCurrentFastingQueryValidator",
@@ -11441,7 +11476,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "GetFastingInsightsQueryValidator",
@@ -11462,7 +11497,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "GetFastingOverviewQueryValidator",
@@ -11497,7 +11532,28 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-      "line": 5
+      "line": 7
+    },
+    {
+      "name": "ReadCurrentFastingQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/ReadCurrentFasting/ReadCurrentFastingQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadFastingInsightsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/ReadFastingInsights/ReadFastingInsightsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadFastingOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/ReadFastingOverview/ReadFastingOverviewQueryHandler.cs",
+      "line": 10
     },
     {
       "name": "FastingAlertBuilder",
@@ -11511,7 +11567,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FastingCheckInLookup",
@@ -11619,18 +11675,11 @@
       "line": 5
     },
     {
-      "name": "FastingNotificationScheduler",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
-      "line": 9
-    },
-    {
       "name": "FastingOccurrenceAnalysis",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Fasting/Application/Services/FastingOccurrenceAnalysis.cs",
-      "line": 3
+      "line": 2
     },
     {
       "name": "FastingOccurrenceAnalysisBuilder",
@@ -11638,13 +11687,6 @@
       "role": "Other",
       "path": "Modules/Fasting/Application/Services/FastingOccurrenceAnalysisBuilder.cs",
       "line": 4
-    },
-    {
-      "name": "FastingReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Fasting/Application/Services/FastingReadService.cs",
-      "line": 7
     },
     {
       "name": "FastingStatsCalculator",
@@ -11661,20 +11703,6 @@
       "line": 2
     },
     {
-      "name": "FastingTelemetryCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetrySummaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
-      "line": 4
-    },
-    {
       "name": "FastingWindowNotificationPlan",
       "kind": "record",
       "role": "Other",
@@ -11689,25 +11717,39 @@
       "line": 6
     },
     {
-      "name": "IFastingNotificationScheduler",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs",
-      "line": 2
+      "name": "CleanupFastingTelemetryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Contracts/Commands/CleanupFastingTelemetry/CleanupFastingTelemetryCommand.cs",
+      "line": 6
     },
     {
-      "name": "IFastingTelemetryCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs",
-      "line": 2
+      "name": "SendFastingNotificationsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Contracts/Commands/SendFastingNotifications/SendFastingNotificationsCommand.cs",
+      "line": 4
     },
     {
-      "name": "IFastingReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Fasting/Contracts/Read/IFastingReadService.cs",
-      "line": 5
+      "name": "ReadCurrentFastingQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Contracts/Queries/ReadCurrentFasting/ReadCurrentFastingQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadFastingInsightsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Contracts/Queries/ReadFastingInsights/ReadFastingInsightsQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadFastingOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Contracts/Queries/ReadFastingOverview/ReadFastingOverviewQuery.cs",
+      "line": 8
     },
     {
       "name": "FastingCheckInModel",
@@ -11777,7 +11819,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FastingDomainGuard",
@@ -11791,21 +11833,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FastingPlan",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FastingSession",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingTelemetryEvent",
@@ -11892,48 +11934,6 @@
       "line": 4
     },
     {
-      "name": "FastingCheckInConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingCheckInConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingOccurrenceConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingOccurrenceConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingPlanConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingTelemetryEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingTelemetryEventConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Fasting/Infrastructure/Model/FastingPersistenceModelRegistration.cs",
-      "line": 4
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -11952,28 +11952,28 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FastingOccurrenceRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "FastingPlanRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FastingSessionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingTelemetryEventRepository",
@@ -11983,130 +11983,95 @@
       "line": 7
     },
     {
+      "name": "FastingCheckInConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/PersistenceModel/Configurations/FastingCheckInConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingOccurrenceConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/PersistenceModel/Configurations/FastingOccurrenceConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingPlanConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/PersistenceModel/Configurations/FastingPlanConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/PersistenceModel/Configurations/FastingSessionConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingTelemetryEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/PersistenceModel/Configurations/FastingTelemetryEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/PersistenceModel/FastingPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
       "name": "FastingCheckInHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingCheckInHttpResponse.cs",
       "line": 2
     },
     {
       "name": "FastingSessionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingSessionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "FastingSessionHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Fasting/Presentation.Mappings/Features/Fasting/Mappings/FastingSessionHttpResponseMappings.cs",
+      "path": "Modules/Fasting/Presentation.Mappings/Mappings/FastingSessionHttpResponseMappings.cs",
       "line": 5
-    },
-    {
-      "name": "FastingPresentationServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Fasting/Presentation/Extensions/FastingPresentationServiceCollectionExtensions.cs",
-      "line": 4
     },
     {
       "name": "FastingController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/FastingController.cs",
-      "line": 14
+      "path": "Modules/Fasting/Presentation/Controllers/FastingController.cs",
+      "line": 15
     },
     {
       "name": "FastingInsightsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/FastingInsightsController.cs",
+      "path": "Modules/Fasting/Presentation/Controllers/FastingInsightsController.cs",
       "line": 12
     },
     {
       "name": "FastingReadController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/FastingReadController.cs",
-      "line": 14
-    },
-    {
-      "name": "FastingHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Mappings/FastingHttpMappings.cs",
+      "path": "Modules/Fasting/Presentation/Controllers/FastingReadController.cs",
       "line": 16
     },
     {
-      "name": "FastingHttpResponseMappings",
+      "name": "FastingPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Mappings/FastingHttpResponseMappings.cs",
-      "line": 7
-    },
-    {
-      "name": "ExtendActiveFastingHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/ExtendActiveFastingHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "GetFastingHistoryHttpQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/GetFastingHistoryHttpQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "ReduceActiveFastingTargetHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/ReduceActiveFastingTargetHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "StartFastingHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/StartFastingHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "UpdateFastingCheckInHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingInsightsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingInsightsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingMessageHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingMessageHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingOverviewHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingOverviewHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingStatsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingStatsHttpResponse.cs",
-      "line": 2
+      "path": "Modules/Fasting/Presentation/Extensions/FastingPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "ClientTelemetryHttpProcessor",
@@ -12144,150 +12109,227 @@
       "line": 7
     },
     {
+      "name": "FastingHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Presentation/Mappings/FastingHttpMappings.cs",
+      "line": 16
+    },
+    {
+      "name": "FastingHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Presentation/Mappings/FastingHttpResponseMappings.cs",
+      "line": 9
+    },
+    {
+      "name": "ExtendActiveFastingHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Fasting/Presentation/Requests/ExtendActiveFastingHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "GetFastingHistoryHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Presentation/Requests/GetFastingHistoryHttpQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "ReduceActiveFastingTargetHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Fasting/Presentation/Requests/ReduceActiveFastingTargetHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "StartFastingHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Fasting/Presentation/Requests/StartFastingHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "UpdateFastingCheckInHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Fasting/Presentation/Requests/UpdateFastingCheckInHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingInsightsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation/Responses/FastingInsightsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingMessageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation/Responses/FastingMessageHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingOverviewHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation/Responses/FastingOverviewHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingStatsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation/Responses/FastingStatsHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "FavoriteMealErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs",
       "line": 4
     },
     {
       "name": "IFavoriteMealQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
       "line": 5
     },
     {
       "name": "IFavoriteMealReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteMealReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteMealRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "line": 2
     },
     {
       "name": "IFavoriteMealWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "FavoriteMealReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
       "line": 2
     },
     {
       "name": "FavoriteProductErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs",
       "line": 4
     },
     {
       "name": "IFavoriteProductQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteProductReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IFavoriteProductReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteProductRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "line": 2
     },
     {
       "name": "IFavoriteProductWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "FavoriteProductReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
       "line": 4
     },
     {
       "name": "FavoriteRecipeErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
       "line": 4
     },
     {
       "name": "IFavoriteRecipeQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteRecipeReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IFavoriteRecipeReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IFavoriteRecipeRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "line": 2
     },
     {
       "name": "IFavoriteRecipeWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "FavoriteRecipeReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 2
     },
     {
@@ -12302,7 +12344,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 12
+      "line": 6
     },
     {
       "name": "AddFavoriteMealCommand",
@@ -12316,7 +12358,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AddFavoriteMealCommandValidator",
@@ -12337,14 +12379,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "FavoriteMealMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteMeals/Mappings/FavoriteMealMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetFavoriteMealsQuery",
@@ -12358,7 +12400,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "IsMealFavoriteQuery",
@@ -12372,13 +12414,34 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ReadFavoriteMealsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/ReadFavoriteMeals/ReadFavoriteMealsQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "ReadMealFavoriteIdsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/ReadMealFavoriteIds/ReadMealFavoriteIdsQueryHandler.cs",
       "line": 8
     },
     {
-      "name": "FavoriteMealReadService",
+      "name": "ReadMealFavoritesOverviewQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/ReadMealFavoritesOverview/ReadMealFavoritesOverviewQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ReadMealFavoriteStatusQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/ReadMealFavoriteStatus/ReadMealFavoriteStatusQueryHandler.cs",
       "line": 7
     },
     {
@@ -12393,7 +12456,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AddFavoriteProductCommandValidator",
@@ -12414,7 +12477,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UpdateFavoriteProductCommand",
@@ -12428,7 +12491,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "UpdateFavoriteProductCommandValidator",
@@ -12442,7 +12505,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetFavoriteProductsQuery",
@@ -12456,7 +12519,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "IsProductFavoriteQuery",
@@ -12470,13 +12533,20 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
-      "name": "FavoriteProductReadService",
+      "name": "ReadFavoriteProductsQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "ReadProductFavoriteStatusQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadProductFavoriteStatus/ReadProductFavoriteStatusQueryHandler.cs",
       "line": 7
     },
     {
@@ -12491,7 +12561,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AddFavoriteRecipeCommandValidator",
@@ -12512,14 +12582,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "FavoriteRecipeMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetFavoriteRecipesQuery",
@@ -12533,7 +12603,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "IsRecipeFavoriteQuery",
@@ -12547,21 +12617,21 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
-      "name": "FavoriteRecipeReadService",
+      "name": "ReadFavoriteRecipesQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
-      "line": 7
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQueryHandler.cs",
+      "line": 10
     },
     {
-      "name": "IFavoriteMealReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs",
-      "line": 5
+      "name": "ReadRecipeFavoriteStatusQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadRecipeFavoriteStatus/ReadRecipeFavoriteStatusQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "IFavoriteMealSourceReadService",
@@ -12569,13 +12639,6 @@
       "role": "Service",
       "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
       "line": 6
-    },
-    {
-      "name": "IMealFavoriteReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IMealFavoriteReadService.cs",
-      "line": 5
     },
     {
       "name": "FavoriteMealModel",
@@ -12599,11 +12662,32 @@
       "line": 2
     },
     {
-      "name": "IFavoriteProductReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs",
-      "line": 5
+      "name": "ReadFavoriteMealsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadFavoriteMeals/ReadFavoriteMealsQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadMealFavoriteIdsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadMealFavoriteIds/ReadMealFavoriteIdsQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadMealFavoritesOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadMealFavoritesOverview/ReadMealFavoritesOverviewQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadMealFavoriteStatusQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadMealFavoriteStatus/ReadMealFavoriteStatusQuery.cs",
+      "line": 7
     },
     {
       "name": "IFavoriteProductSourceReadService",
@@ -12627,11 +12711,18 @@
       "line": 4
     },
     {
-      "name": "IFavoriteRecipeReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
-      "line": 5
+      "name": "ReadFavoriteProductsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadProductFavoriteStatusQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadProductFavoriteStatus/ReadProductFavoriteStatusQuery.cs",
+      "line": 7
     },
     {
       "name": "IFavoriteRecipeSourceReadService",
@@ -12653,6 +12744,20 @@
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
       "line": 2
+    },
+    {
+      "name": "ReadFavoriteRecipesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadRecipeFavoriteStatusQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadRecipeFavoriteStatus/ReadRecipeFavoriteStatusQuery.cs",
+      "line": 7
     },
     {
       "name": "FavoriteMealId",
@@ -12680,49 +12785,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FavoriteProduct",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FavoriteRecipe",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 5
-    },
-    {
-      "name": "FavoriteMealConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteMealConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FavoriteProductConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteProductConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FavoriteRecipeConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteRecipeConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FavoritesPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Favorites/Infrastructure/Model/FavoritesPersistenceModelRegistration.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "ModuleRegistration",
@@ -12736,28 +12813,56 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FavoriteProductRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FavoriteRecipeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FavoritesDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoritesDbContext.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "FavoriteMealConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Favorites/PersistenceModel/Configurations/FavoriteMealConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FavoriteProductConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Favorites/PersistenceModel/Configurations/FavoriteProductConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FavoriteRecipeConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Favorites/PersistenceModel/Configurations/FavoriteRecipeConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FavoritesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/PersistenceModel/FavoritesPersistenceModelRegistration.cs",
+      "line": 4
     },
     {
       "name": "FavoriteMealHttpResponse",
@@ -12799,13 +12904,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Extensions/FavoritesPresentationServiceCollectionExtensions.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "FavoriteMealsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/FavoriteMealsController.cs",
+      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
       "line": 14
     },
     {
@@ -12826,8 +12931,8 @@
       "name": "FavoriteProductsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/FavoriteProductsController.cs",
-      "line": 14
+      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
+      "line": 15
     },
     {
       "name": "FavoriteProductHttpMappings",
@@ -12854,8 +12959,8 @@
       "name": "FavoriteRecipesController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/FavoriteRecipesController.cs",
-      "line": 14
+      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
+      "line": 15
     },
     {
       "name": "FavoriteRecipeHttpMappings",
@@ -18084,7 +18189,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Meals/Application/Services/MealReadService.cs",
-      "line": 13
+      "line": 17
     },
     {
       "name": "SatietyLevelValidator",
@@ -20156,7 +20261,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "GetProductsOverviewQueryValidator",
@@ -21388,7 +21493,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "GetRecipesOverviewQueryValidator",
@@ -28548,98 +28653,98 @@
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
       "confidence": "naming-convention"
@@ -28704,14 +28809,14 @@
       "interface": "IEmailOutbox",
       "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutbox.cs",
       "implementation": "EmailOutbox",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutbox.cs",
+      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailOutboxProcessor",
       "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutboxProcessor.cs",
       "implementation": "EmailOutboxProcessor",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
+      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28743,24 +28848,10 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IExerciseEntryReadService",
-      "interfacePath": "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs",
-      "implementation": "ExerciseEntryReadService",
-      "implementationPath": "Modules/Exercises/Application/Services/ExerciseEntryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IExerciseEntryRepository",
-      "interfacePath": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
+      "interfacePath": "Modules/Exercises/Application.Abstractions/Common/IExerciseEntryRepository.cs",
       "implementation": "ExerciseEntryRepository",
       "implementationPath": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IExportDiaryReadService",
-      "interfacePath": "Modules/Export/Application/Abstractions/Common/IExportDiaryReadService.cs",
-      "implementation": "ExportDiaryReadService",
-      "implementationPath": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28772,105 +28863,63 @@
     },
     {
       "interface": "IFastingCheckInRepository",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
+      "interfacePath": "Modules/Fasting/Application.Abstractions/Common/IFastingCheckInRepository.cs",
       "implementation": "FastingCheckInRepository",
       "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFastingNotificationScheduler",
-      "interfacePath": "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs",
-      "implementation": "FastingNotificationScheduler",
-      "implementationPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFastingOccurrenceRepository",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
+      "interfacePath": "Modules/Fasting/Application.Abstractions/Common/IFastingOccurrenceRepository.cs",
       "implementation": "FastingOccurrenceRepository",
       "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingPlanRepository",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
+      "interfacePath": "Modules/Fasting/Application.Abstractions/Common/IFastingPlanRepository.cs",
       "implementation": "FastingPlanRepository",
       "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFastingReadService",
-      "interfacePath": "Modules/Fasting/Contracts/Read/IFastingReadService.cs",
-      "implementation": "FastingReadService",
-      "implementationPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFastingSessionRepository",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
+      "interfacePath": "Modules/Fasting/Application.Abstractions/Common/IFastingSessionRepository.cs",
       "implementation": "FastingSessionRepository",
       "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFastingTelemetryCleanupService",
-      "interfacePath": "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs",
-      "implementation": "FastingTelemetryCleanupService",
-      "implementationPath": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFastingTelemetryEventRepository",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
+      "interfacePath": "Modules/Fasting/Application.Abstractions/Common/IFastingTelemetryEventRepository.cs",
       "implementation": "FastingTelemetryEventRepository",
       "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFastingTelemetrySummaryReadService",
-      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
-      "implementation": "FastingTelemetrySummaryReadService",
-      "implementationPath": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFavoriteMealQuery",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
       "implementation": "FavoriteMealQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFavoriteMealReadService",
-      "interfacePath": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs",
-      "implementation": "FavoriteMealReadService",
-      "implementationPath": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFavoriteMealRepository",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "implementation": "FavoriteMealRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteProductQuery",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
       "implementation": "FavoriteProductQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFavoriteProductReadService",
-      "interfacePath": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs",
-      "implementation": "FavoriteProductReadService",
-      "implementationPath": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFavoriteProductRepository",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "implementation": "FavoriteProductRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
       "confidence": "naming-convention"
@@ -28884,21 +28933,14 @@
     },
     {
       "interface": "IFavoriteRecipeQuery",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
       "implementation": "FavoriteRecipeQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFavoriteRecipeReadService",
-      "interfacePath": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
-      "implementation": "FavoriteRecipeReadService",
-      "implementationPath": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IFavoriteRecipeRepository",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "interfacePath": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "implementation": "FavoriteRecipeRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
       "confidence": "naming-convention"
@@ -29411,7 +29453,7 @@
       "interface": "IOutboxDeadLetterReplayService",
       "interfacePath": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
       "implementation": "OutboxDeadLetterReplayService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
+      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29991,76 +30033,6 @@
       "line": 12
     },
     {
-      "service": "IEmailOutbox",
-      "implementation": "EmailOutbox",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
-      "line": 9
-    },
-    {
-      "service": "IEmailOutboxProcessor",
-      "implementation": "EmailOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
-      "line": 10
-    },
-    {
-      "service": "IUnitOfWork",
-      "implementation": "EfUnitOfWork",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 26
-    },
-    {
-      "service": "IModuleTransactionCoordinator",
-      "implementation": "EfModuleTransactionCoordinator",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 27
-    },
-    {
-      "service": "IModuleSessionCoordinator",
-      "implementation": "EfModuleSessionCoordinator",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 28
-    },
-    {
-      "service": "IModuleSessionLock",
-      "implementation": "EfModuleSessionLock",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 29
-    },
-    {
-      "service": "IModuleScopeGuard",
-      "implementation": "EfModuleScopeGuard",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 30
-    },
-    {
-      "service": "IOutboxDeadLetterReplayService",
-      "implementation": "OutboxDeadLetterReplayService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 35
-    },
-    {
-      "service": "IDomainEventPublisher",
-      "implementation": "MediatorDomainEventPublisher",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 37
-    },
-    {
-      "service": "SharedPersistenceDbContext",
-      "implementation": "SharedRuntimeDbContext",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 61
-    },
-    {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
@@ -30086,28 +30058,28 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 98
+      "line": 99
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "UnavailableNotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 99
+      "line": 100
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 100
+      "line": 101
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 121
+      "line": 122
     },
     {
       "service": "IIdempotencyStore",
@@ -30135,7 +30107,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 190
+      "line": 189
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30243,74 +30215,11 @@
       "line": 23
     },
     {
-      "service": "IExerciseEntryReadService",
-      "implementation": "ExerciseEntryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Exercises/Application/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IExportDiaryReadService",
-      "implementation": "ExportDiaryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Export/Application/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IFastingAnalyticsService",
       "implementation": "FastingAnalyticsService",
       "lifetime": "Scoped",
       "path": "Modules/Fasting/Application/DependencyInjection.cs",
       "line": 14
-    },
-    {
-      "service": "IFastingReadService",
-      "implementation": "FastingReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Fasting/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IFastingTelemetrySummaryReadService",
-      "implementation": "FastingTelemetrySummaryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Fasting/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IFastingTelemetryCleanupService",
-      "implementation": "FastingTelemetryCleanupService",
-      "lifetime": "Scoped",
-      "path": "Modules/Fasting/Application/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IFastingNotificationScheduler",
-      "implementation": "FastingNotificationScheduler",
-      "lifetime": "Scoped",
-      "path": "Modules/Fasting/Application/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IFavoriteMealReadService",
-      "implementation": "FavoriteMealReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IFavoriteProductReadService",
-      "implementation": "FavoriteProductReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IFavoriteRecipeReadService",
-      "implementation": "FavoriteRecipeReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 23
     },
     {
       "service": "IGamificationReadService",

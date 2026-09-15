@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Models;
 
-namespace FoodDiary.Application.Export.Queries.ExportDiary;
+namespace FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 
 public record ExportDiaryQuery(
     Guid? UserId,

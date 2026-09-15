@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text;
 using FoodDiary.Application.Abstractions.Meals.Models;
 
-namespace FoodDiary.Application.Export.Services;
+namespace FoodDiary.Modules.Export.Application.Services;
 
 public static class DiaryCsvGenerator {
     public static byte[] Generate(IReadOnlyList<MealProjectionReadModel> meals, int? timeZoneOffsetMinutes = null) =>

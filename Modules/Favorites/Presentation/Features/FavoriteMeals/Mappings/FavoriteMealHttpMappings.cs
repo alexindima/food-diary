@@ -1,12 +1,12 @@
-using FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
-using FoodDiary.Application.Favorites.FavoriteMeals.Commands.RemoveFavoriteMeal;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.Favorites.FavoriteMeals.Queries.GetFavoriteMeals;
-using FoodDiary.Application.Favorites.FavoriteMeals.Queries.IsMealFavorite;
-using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
-using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.IsMealFavorite;
+using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Requests;
+using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteMeals.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.FavoriteMeals.Mappings;
+namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Mappings;
 
 public static class FavoriteMealHttpMappings {
     extension(AddFavoriteMealHttpRequest request) {

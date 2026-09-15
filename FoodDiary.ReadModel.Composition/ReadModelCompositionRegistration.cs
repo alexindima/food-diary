@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.ReadModel.Composition.Users;
@@ -11,8 +12,8 @@ using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.ReadModel.Composition.Favorites;
-using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.ReadModel.Composition.Images;
@@ -23,7 +24,7 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.ReadModel.Composition.MealPlanning;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Infrastructure.Persistence.Admin;
@@ -38,6 +39,7 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.TryAddScoped<ICompositionReadContext>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
         services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();
         services.AddScoped<IAiUsageQuery, AiUsageQuery>();

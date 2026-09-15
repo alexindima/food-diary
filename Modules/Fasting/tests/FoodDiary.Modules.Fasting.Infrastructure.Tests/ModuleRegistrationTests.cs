@@ -1,8 +1,7 @@
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Modules.Fasting.Infrastructure;
+using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Fasting.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModuleRegistrationTests {

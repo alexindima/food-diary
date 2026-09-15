@@ -1,6 +1,7 @@
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Favorites.Presentation.Extensions;
 
 public static class FavoritesPresentationServiceCollectionExtensions {
     public static IServiceCollection AddFavoritesPresentation(this IServiceCollection services) {

@@ -1,8 +1,8 @@
+using FoodDiary.Persistence.Runtime.Services;
 using FoodDiary.Outbox.Infrastructure.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Data.Common;
 using System.Reflection;
-using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
 

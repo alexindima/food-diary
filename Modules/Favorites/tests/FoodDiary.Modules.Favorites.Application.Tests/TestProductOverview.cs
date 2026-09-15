@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Favorites.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 internal static class TestProductOverview {

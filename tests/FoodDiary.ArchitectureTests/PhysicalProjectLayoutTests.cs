@@ -4,13 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj -> Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj",
-        "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj -> Modules/Exercises/Infrastructure/Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj",
-        "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj -> Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
-        "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj -> Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
-        "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj -> Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj",
-        "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj -> Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj",
-        "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj -> Modules/Favorites/Infrastructure/Model/FoodDiary.Modules.Favorites.PersistenceModel.csproj",
         "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj -> Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj",
         "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj -> Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj",
         "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj -> Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",

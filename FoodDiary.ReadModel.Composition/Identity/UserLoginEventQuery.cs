@@ -8,7 +8,7 @@ using FoodDiary.Infrastructure.Persistence;
 
 namespace FoodDiary.ReadModel.Composition.Identity;
 
-public sealed class UserLoginEventQuery(FoodDiaryDbContext context) : IUserLoginEventQuery {
+public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUserLoginEventQuery {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(

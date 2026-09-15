@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Fasting.Application.Common;
 
-namespace FoodDiary.Presentation.Api.Features.Logs.Requests;
+namespace FoodDiary.Modules.Fasting.Presentation.Features.Logs.Requests;
 
 internal static class ClientTelemetryLogHttpRequestValidation {
     private const int DetailsMaxLength = 4096;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

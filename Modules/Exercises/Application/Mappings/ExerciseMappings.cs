@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Exercises.Models;
-using FoodDiary.Application.Exercises.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
+using FoodDiary.Modules.Exercises.Contracts.Models;
 
-namespace FoodDiary.Application.Exercises.Mappings;
+namespace FoodDiary.Modules.Exercises.Application.Mappings;
 
 public static class ExerciseMappings {
     public static ExerciseEntryModel ToModel(this ExerciseEntry entry) {

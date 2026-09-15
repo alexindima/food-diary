@@ -1,5 +1,6 @@
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Achievements.Common;

@@ -26,7 +26,7 @@ public sealed class ApplicationDomainBoundaryTests {
     }
 
     [Theory]
-    [InlineData("Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj", "Meals")]
+    [InlineData("Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj", "Meals")]
     [InlineData("Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj", "Meals")]
     [InlineData("Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj", "Cycles")]
     [InlineData("Modules/Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj", "Cycles")]

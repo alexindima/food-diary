@@ -4,7 +4,7 @@ using FoodDiary.Application.Meals.Queries.GetMealById;
 using FoodDiary.Application.Meals.Queries.GetMeals;
 using FoodDiary.Application.Meals.Queries.GetMealsOverview;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;

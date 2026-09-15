@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Presentation.Api.Responses;
 

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;

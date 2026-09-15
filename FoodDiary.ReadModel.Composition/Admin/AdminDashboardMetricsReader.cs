@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class AdminDashboardMetricsReader(FoodDiaryDbContext context) : IAdminDashboardMetricsReader {
+public sealed class AdminDashboardMetricsReader(ICompositionReadContext context) : IAdminDashboardMetricsReader {
     public async Task<AdminDashboardMetrics> GetAsync(DateTime fromUtc, DateTime toUtc, bool monthly, CancellationToken cancellationToken) {
         IQueryable<User> users = context.Users.AsNoTracking().Where(user => user.CreatedOnUtc >= fromUtc && user.CreatedOnUtc < toUtc);
         IQueryable<BillingPayment> payments = context.BillingPayments.AsNoTracking().Where(payment =>

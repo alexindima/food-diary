@@ -2,7 +2,7 @@ using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;

@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseCalories;
+using FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting;
+using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories;
+using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Testing;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
@@ -12,11 +17,9 @@ using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Common;
 using FoodDiary.Modules.Dashboard.Application.Services;
-using FoodDiary.Application.Exercises.Services;
-using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Exercises.Models;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
+using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
@@ -28,7 +31,6 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Meals.Queries.GetMeals;
-using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
@@ -42,7 +44,6 @@ using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Modules.Dashboard.Application.Models;
-using System.Reflection;
 
 namespace FoodDiary.Modules.Dashboard.Application.Tests;
 
@@ -52,8 +53,9 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task CreateBuildContextAsync_RejectsPreloadedContextForAnotherUser() {
         var user = User.Create("dashboard-context@example.com", "hash");
         IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
-        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), userContextService,
-            Substitute.For<IFastingReadService>(), Substitute.For<IExerciseEntryReadService>(), Substitute.For<IDashboardReadService>());
+        var loader = new DashboardSectionDataLoader(new SectionRequestSender(Substitute.For<ISender>(), Substitute.For<ISender>(), Substitute.For<ISender>()),
+            userContextService,
+            Substitute.For<IDashboardReadService>());
         DashboardSnapshotRequest request = CreateRequest(Guid.NewGuid(), Sections()) with { UserContext = CreateDashboardUserContext(user) };
 
         Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
@@ -68,11 +70,8 @@ public sealed class DashboardSnapshotBuilderTests {
         var user = User.Create("dashboard-preloaded@example.com", "hash");
         DashboardUserContextModel userContext = CreateDashboardUserContext(user);
         IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
-        var loader = new DashboardSectionDataLoader(
-            Substitute.For<ISender>(),
+        var loader = new DashboardSectionDataLoader(new SectionRequestSender(Substitute.For<ISender>(), Substitute.For<ISender>(), Substitute.For<ISender>()),
             userContextService,
-            Substitute.For<IFastingReadService>(),
-            Substitute.For<IExerciseEntryReadService>(),
             Substitute.For<IDashboardReadService>());
         DashboardSnapshotRequest request = CreateRequest(user.Id.Value, Sections()) with {
             UserContext = userContext,
@@ -535,43 +534,36 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
-    public void BuildStatistics_WithReadModel_UsesFirstStatisticsBucket() {
+    public async Task BuildAsync_WithReadModel_UsesFirstStatisticsBucket() {
         var user = User.Create("dashboard-read-model-statistics@example.com", "hash");
         user.UpdateGoals(proteinTarget: 110);
         DateTime date = new(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc);
         DashboardReadModel readModel = new(
             [
                 new DashboardStatisticsBucketReadModel(date, date, 1900, 100, 60, 210, 25),
+                new DashboardStatisticsBucketReadModel(date.AddDays(1), date.AddDays(1), 2400, 150, 80, 260, 30),
             ],
             [],
             new DashboardBodyReadModel([], [], [], [], HydrationTotalMl: 0),
             new DashboardMealsReadModel([], Page: 1, Limit: 10, TotalPages: 0, TotalItems: 0));
-        DashboardBuildContext context = new(
-            user.Id,
-            date,
-            date,
-            date,
-            PeriodDays: 1,
-            Locale: "en",
-            Page: 1,
-            PageSize: 10,
-            TrendDays: 7,
-            TrendStart: date.AddDays(-6),
-            Sections(includeStatistics: true),
-            CreateDashboardUserContext(user));
-        MethodInfo method = typeof(DashboardSnapshotBuilder).GetMethod(
-            name: "BuildStatistics",
-            BindingFlags.NonPublic | BindingFlags.Static,
-            binder: null,
-            [typeof(DashboardReadModel), typeof(DashboardBuildContext)],
-            modifiers: null)!;
+        IDashboardReadService readService = Substitute.For<IDashboardReadService>();
+        readService.GetSnapshotDataAsync(
+                user.Id, Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(),
+                Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DashboardReadSections>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(readModel));
+        var builder = new DashboardSnapshotBuilder(new SectionRequestSender(Substitute.For<ISender>(), Substitute.For<ISender>(), Substitute.For<ISender>()),
+            new AccessibleUserContextService(user),
+            readService,
+            NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = (DashboardStatisticsModel)method.Invoke(obj: null, parameters: [readModel, context])!;
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true), date), CancellationToken.None);
 
+        ResultAssert.Success(result);
         Assert.Multiple(
-            () => Assert.Equal(1900, result.TotalCalories),
-            () => Assert.Equal(100, result.AverageProteins),
-            () => Assert.Equal(110, result.ProteinGoal));
+            () => Assert.Equal(1900, result.Value.Statistics.TotalCalories),
+            () => Assert.Equal(100, result.Value.Statistics.AverageProteins),
+            () => Assert.Equal(110, result.Value.Statistics.ProteinGoal));
     }
 
     private static DashboardSnapshotBuilder CreateBuilder(
@@ -594,14 +586,12 @@ public sealed class DashboardSnapshotBuilderTests {
         IWeightEntryReadModelRepository weightEntryRepository,
         IWaistEntryReadModelRepository waistEntryRepository,
         IHydrationEntryReadModelRepository hydrationEntryRepository,
-        IFastingReadService fastingReadService,
+        ISender fastingReadService,
         IExerciseEntryRepository exerciseEntryRepository,
         Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder> logger) =>
         new(
-            sender,
+            new SectionRequestSender(sender, fastingReadService, RequestTestSender.Create(new ReadExerciseCaloriesQueryHandler(exerciseEntryRepository))),
             dashboardUserContextService,
-            fastingReadService,
-            new ExerciseEntryReadService(exerciseEntryRepository, exerciseEntryRepository),
             new ComposedDashboardReadService(
                 new SenderStatisticsFixture(sender),
                 new RepositoryDashboardBodyReadService(
@@ -1004,15 +994,11 @@ RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHand
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFastingReadService : IFastingReadService {
-        public Task<FastingSessionModel?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken) =>
-            Task.FromResult<FastingSessionModel?>(null);
-
-        public Task<FastingInsightsModel> GetInsightsAsync(UserId userId, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task<FastingOverviewModel> GetOverviewAsync(UserId userId, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+    private sealed class StubFastingReadService : RequestTestSender {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            request is ReadCurrentFastingQuery
+                ? Task.FromResult(default(TResponse)!)
+                : throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
@@ -1026,5 +1012,14 @@ RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHand
         public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class SectionRequestSender(ISender fallback, ISender fasting, ISender exercises) : RequestTestSender {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+            (request switch {
+                ReadCurrentFastingQuery => fasting,
+                ReadExerciseCaloriesQuery => exercises,
+                _ => fallback,
+            }).Send(request, cancellationToken);
     }
 }

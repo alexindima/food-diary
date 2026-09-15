@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Images;
 
-public sealed class ImageAssetUsageQuery(FoodDiaryDbContext context) : IImageAssetUsageQuery {
+public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IImageAssetUsageQuery {
     public async Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         return await context.ImageAssets.AsNoTracking()
             .Where(a => a.Id == assetId)

@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.Enums;
 using System.Globalization;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 
 public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
     private const int NameMaxLength = 256;

@@ -1,7 +1,5 @@
 using FoodDiary.Application.Abstractions.Options;
-using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -10,14 +8,6 @@ namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
     private static void AddInfrastructureOptions(this IServiceCollection services, IConfiguration configuration) {
-        services.AddOptions<DatabaseOptions>()
-            .Bind(configuration.GetSection(DatabaseOptions.SectionName))
-            .Validate(static options => !options.EnableRetries || options.MaxRetryCount > 0,
-                "Database:MaxRetryCount must be greater than zero when retries are enabled.")
-            .Validate(static options => !options.EnableRetries || options.MaxRetryDelaySeconds > 0,
-                "Database:MaxRetryDelaySeconds must be greater than zero when retries are enabled.")
-            .ValidateOnStart();
-
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .Validate(JwtOptions.HasValidSecretKey,
@@ -46,12 +36,6 @@ public static partial class DependencyInjection {
                 "Email:PasswordResetPath is required.")
             .ValidateOnStart();
         services.AddSingleton(static sp => sp.GetRequiredService<IOptions<EmailOptions>>().Value);
-
-        services.AddOptions<OutboxProcessingOptions>()
-            .Bind(configuration.GetSection(OutboxProcessingOptions.SectionName))
-            .Validate(OutboxProcessingOptions.HasValidConfiguration,
-                "OutboxProcessing requires positive durations and LeaseDuration must cover DispatchTimeout, FinalizationTimeout, and the safety margin.")
-            .ValidateOnStart();
 
     }
 }

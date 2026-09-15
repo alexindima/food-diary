@@ -1,0 +1,64 @@
+using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Fasting.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Fasting.Presentation.Requests;
+using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Fasting.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/fasting")]
+public sealed class FastingController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpPost("start")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> Start([FromCurrentUser] Guid userId, [FromBody] StartFastingHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPut("end")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> End([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToEndCommand(), static value => value.ToHttpResponse());
+
+    [HttpPut("current/duration")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> ExtendDuration([FromCurrentUser] Guid userId, [FromBody] ExtendActiveFastingHttpRequest request) =>
+        HandleOk(request.ToExtendCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPut("current/duration/reduce")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> ReduceDuration([FromCurrentUser] Guid userId, [FromBody] ReduceActiveFastingTargetHttpRequest request) =>
+        HandleOk(request.ToReduceCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPut("current/check-in")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateCheckIn([FromCurrentUser] Guid userId, [FromBody] UpdateFastingCheckInHttpRequest request) =>
+        HandleOk(request.ToCheckInCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPut("current/skip-day")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> SkipCyclicDay([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToSkipCyclicDayCommand(), static value => value.ToHttpResponse());
+
+    [HttpPut("current/postpone-day")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> PostponeCyclicDay([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToPostponeCyclicDayCommand(), static value => value.ToHttpResponse());
+
+}

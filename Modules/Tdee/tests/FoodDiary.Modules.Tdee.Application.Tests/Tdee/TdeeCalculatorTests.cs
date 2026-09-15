@@ -1,4 +1,4 @@
-using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;

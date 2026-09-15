@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Exercises.Models;
+namespace FoodDiary.Modules.Exercises.Contracts.Models;
 
 public sealed record ExerciseEntryModel(
     Guid Id,

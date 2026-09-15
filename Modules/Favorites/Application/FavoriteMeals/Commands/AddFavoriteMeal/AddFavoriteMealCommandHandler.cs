@@ -1,14 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Favorites.FavoriteMeals.Mappings;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Mappings;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
+namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 public sealed class AddFavoriteMealCommandHandler(
     IFavoriteMealWriteRepository favoriteMealRepository,

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Users;
 
-public sealed class UserCurrentWaistProvider(FoodDiaryDbContext context) : IUserCurrentWaistProvider {
+public sealed class UserCurrentWaistProvider(ICompositionReadContext context) : IUserCurrentWaistProvider {
     public async Task<double?> GetCurrentWaistAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.WaistEntries
             .AsNoTracking()

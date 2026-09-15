@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class AdminRetentionReader(FoodDiaryDbContext context) : IAdminRetentionReader {
+public sealed class AdminRetentionReader(ICompositionReadContext context) : IAdminRetentionReader {
     public async Task<AdminRetentionReport> GetAsync(DateTime fromUtc, DateTime toUtc, DateTime asOfUtc, CancellationToken cancellationToken) {
         DateTime observedEnd = toUtc < asOfUtc ? toUtc : asOfUtc;
         IQueryable<User> users = context.Users.AsNoTracking().IgnoreQueryFilters()

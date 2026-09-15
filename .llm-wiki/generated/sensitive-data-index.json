@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1461,
+    "candidateFields": 1470,
     "credential": 156,
     "identity": 174,
-    "health": 685,
-    "financial": 126,
-    "privateContent": 320,
+    "health": 688,
+    "financial": 129,
+    "privateContent": 323,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -315,7 +315,7 @@
       "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
-      "path": "Modules/Export/Presentation/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "path": "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs",
       "line": 10
     },
     {
@@ -1111,17 +1111,38 @@
     },
     {
       "category": "financial",
-      "name": "ActiveTransaction",
-      "type": "DbTransaction?",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/PersistenceSession.cs",
-      "line": 18
+      "name": "BillingPayments",
+      "type": "IQueryable<BillingPayment>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 25
+    },
+    {
+      "category": "financial",
+      "name": "BillingSubscriptions",
+      "type": "IQueryable<BillingSubscription>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 26
+    },
+    {
+      "category": "financial",
+      "name": "BillingWebhookEvents",
+      "type": "IQueryable<BillingWebhookEvent>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 27
     },
     {
       "category": "financial",
       "name": "BillingRenewal",
       "type": "UsersCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 24
+      "line": 25
+    },
+    {
+      "category": "financial",
+      "name": "ActiveTransaction",
+      "type": "DbTransaction?",
+      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
+      "line": 18
     },
     {
       "category": "financial",
@@ -1993,10 +2014,31 @@
     },
     {
       "category": "health",
+      "name": "HydrationEntries",
+      "type": "IQueryable<HydrationEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 33
+    },
+    {
+      "category": "health",
+      "name": "WaistEntries",
+      "type": "IQueryable<WaistEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 51
+    },
+    {
+      "category": "health",
+      "name": "WeightEntries",
+      "type": "IQueryable<WeightEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 52
+    },
+    {
+      "category": "health",
       "name": "FastingTelemetryCleanup",
       "type": "MarketingAttributionCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 34
+      "line": 35
     },
     {
       "category": "health",
@@ -3682,14 +3724,14 @@
       "category": "health",
       "name": "ExerciseType",
       "type": "string",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Models/ExerciseEntryReadModel.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Models/ExerciseEntryReadModel.cs",
       "line": 9
     },
     {
@@ -3739,76 +3781,76 @@
       "name": "ExerciseType",
       "type": "ExerciseType",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "health",
       "name": "ExerciseType",
       "type": "string",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/CreateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/CreateExerciseEntryHttpRequest.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/CreateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/CreateExerciseEntryHttpRequest.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "ExerciseType",
       "type": "string?",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double?",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "ExerciseType",
       "type": "string",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Responses/ExerciseEntryHttpResponse.cs",
+      "path": "Modules/Exercises/Presentation/Responses/ExerciseEntryHttpResponse.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Responses/ExerciseEntryHttpResponse.cs",
+      "path": "Modules/Exercises/Presentation/Responses/ExerciseEntryHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "TotalCaloriesTitle",
       "type": "string",
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "CaloriesByDayTitle",
       "type": "string",
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 22
     },
     {
       "category": "health",
       "name": "SatietyColumn",
       "type": "string",
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 35
     },
     {
@@ -3899,21 +3941,21 @@
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 10
     },
     {
@@ -4656,21 +4698,21 @@
       "name": "CaloriesFrom",
       "type": "double?",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "health",
       "name": "CaloriesTo",
       "type": "double?",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 32
+      "line": 33
     },
     {
       "category": "health",
       "name": "CaloriesTo",
       "type": "CaloriesFrom,",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 35
+      "line": 36
     },
     {
       "category": "health",
@@ -8006,6 +8048,27 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssets",
+      "type": "IQueryable<ImageAsset>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 34
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeComments",
+      "type": "IQueryable<RecipeComment>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 41
+    },
+    {
+      "category": "privateContent",
+      "name": "RecommendationComments",
+      "type": "IQueryable<RecommendationComment>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 45
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
@@ -8561,7 +8624,7 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "path": "Modules/Exercises/Application.Abstractions/Models/ExerciseEntryReadModel.cs",
       "line": 10
     },
     {
@@ -8604,91 +8667,91 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 46
+      "line": 47
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 111
+      "line": 112
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 130
+      "line": 131
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/CreateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/CreateExerciseEntryHttpRequest.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "ClearNotes",
       "type": "bool",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Responses/ExerciseEntryHttpResponse.cs",
+      "path": "Modules/Exercises/Presentation/Responses/ExerciseEntryHttpResponse.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "CommentColumn",
       "type": "string",
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 36
     },
     {
       "category": "privateContent",
       "name": "HadNotes",
       "type": "bool?",
-      "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Common/FastingTelemetryEventRecord.cs",
       "line": 21
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingCheckInReadModel.cs",
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingCheckInReadModel.cs",
       "line": 13
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
-      "line": 19
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 20
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
-      "line": 25
+      "path": "Modules/Fasting/Application.Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 26
     },
     {
       "category": "privateContent",
@@ -8737,28 +8800,28 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 33
+      "line": 34
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "privateContent",
@@ -8771,49 +8834,49 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingCheckInHttpResponse.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingSessionHttpResponse.cs",
       "line": 21
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingSessionHttpResponse.cs",
       "line": 27
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
+      "path": "Modules/Fasting/Presentation/Requests/UpdateFastingCheckInHttpRequest.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
       "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
       "line": 15
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 9
     },
     {
@@ -10773,7 +10836,7 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/CreateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/CreateExerciseEntryHttpRequest.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10781,7 +10844,7 @@
       "fieldCount": 3
     },
     {
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Requests/UpdateExerciseEntryHttpRequest.cs",
+      "path": "Modules/Exercises/Presentation/Requests/UpdateExerciseEntryHttpRequest.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10789,7 +10852,7 @@
       "fieldCount": 4
     },
     {
-      "path": "Modules/Exercises/Presentation/Features/Exercises/Responses/ExerciseEntryHttpResponse.cs",
+      "path": "Modules/Exercises/Presentation/Responses/ExerciseEntryHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10797,7 +10860,7 @@
       "fieldCount": 3
     },
     {
-      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "path": "Modules/Export/Application.Abstractions/Common/DiaryPdfReportTexts.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10826,28 +10889,28 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Export/Presentation/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "path": "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingCheckInHttpResponse.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Responses/FastingSessionHttpResponse.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 2
     },
     {
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
+      "path": "Modules/Fasting/Presentation/Requests/UpdateFastingCheckInHttpRequest.cs",
       "categories": [
         "privateContent"
       ],

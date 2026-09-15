@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
-internal sealed class DietologistInvitationReadService(FoodDiaryDbContext context) : IDietologistInvitationReadModelRepository {
+internal sealed class DietologistInvitationReadService(ICompositionReadContext context) : IDietologistInvitationReadModelRepository {
     private IQueryable<DietologistInvitationReadModel> Project(IQueryable<DietologistInvitation> query) =>
         from invitation in query
         join client in context.Users.AsNoTracking() on invitation.ClientUserId equals client.Id

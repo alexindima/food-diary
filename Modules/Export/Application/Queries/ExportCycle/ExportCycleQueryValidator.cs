@@ -1,9 +1,9 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Application.Export.Models;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
+using FoodDiary.Modules.Export.Application.Models;
 
-namespace FoodDiary.Application.Export.Queries.ExportCycle;
+namespace FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 
 public sealed class ExportCycleQueryValidator : AbstractValidator<ExportCycleQuery> {
     public ExportCycleQueryValidator() {

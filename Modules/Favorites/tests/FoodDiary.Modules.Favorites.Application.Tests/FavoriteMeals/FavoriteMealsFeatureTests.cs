@@ -1,14 +1,20 @@
+using FoodDiary.Testing;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
-using FoodDiary.Application.Favorites.FavoriteMeals.Commands.RemoveFavoriteMeal;
-using FoodDiary.Application.Favorites.FavoriteMeals.Mappings;
-using FoodDiary.Application.Favorites.FavoriteMeals.Queries.GetFavoriteMeals;
-using FoodDiary.Application.Favorites.FavoriteMeals.Queries.IsMealFavorite;
-using FoodDiary.Application.Favorites.FavoriteMeals.Services;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Mappings;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -16,7 +22,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.FavoriteMeals;
+namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteMeals;
 
 [ExcludeFromCodeCoverage]
 public class FavoriteMealsFeatureTests {
@@ -342,8 +348,8 @@ public class FavoriteMealsFeatureTests {
         ResultAssert.Failure(result);
     }
 
-    private static FavoriteMealReadService CreateFavoriteMealReadService(IFavoriteMealRepository favoriteMealRepository) =>
-        new(favoriteMealRepository);
+    private static ISender CreateFavoriteMealReadService(IFavoriteMealRepository favoriteMealRepository) =>
+        RequestTestSender.Create(new ReadFavoriteMealsQueryHandler(favoriteMealRepository), new ReadMealFavoriteStatusQueryHandler(favoriteMealRepository));
     private static IFavoriteMealRepository CreateFavoriteMealRepository(
         FavoriteMeal? existingByMealId = null,
         FavoriteMeal? existingById = null,

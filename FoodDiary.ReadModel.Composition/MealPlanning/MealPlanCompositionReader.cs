@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.MealPlanning;
 
-public sealed class MealPlanCompositionReader(FoodDiaryDbContext context) : IMealPlanCompositionReader {
+public sealed class MealPlanCompositionReader(ICompositionReadContext context) : IMealPlanCompositionReader {
     public async Task<MealPlanReadModel?> GetReadModelByIdAsync(
         MealPlanId id,
         CancellationToken cancellationToken = default) {
-        return await context.Set<MealPlan>()
+        return await context.MealPlans
             .AsNoTracking()
             .Where(p => p.Id == id)
             .Select(p => new MealPlanReadModel(

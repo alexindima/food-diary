@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
-internal sealed class RecommendationCommentReadService(FoodDiaryDbContext context) : IRecommendationCommentReadModelRepository {
+internal sealed class RecommendationCommentReadService(ICompositionReadContext context) : IRecommendationCommentReadModelRepository {
     public Task<bool> IsParticipantAsync(RecommendationId recommendationId, UserId userId, CancellationToken cancellationToken = default) =>
         context.Recommendations.AsNoTracking().AnyAsync(
             recommendation => recommendation.Id == recommendationId &&

@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Events;
-using System.Reflection;
+using FoodDiary.Persistence.Runtime.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -16,7 +16,7 @@ public sealed class MediatorDomainEventPublisherTests {
         publisher
             .Publish(Arg.Do<object>(notification => publishedNotification = notification), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
-        IDomainEventPublisher sut = CreatePublisher(publisher);
+        IDomainEventPublisher sut = new MediatorDomainEventPublisher(publisher);
         var domainEvent = new RecommendationCreatedDomainEvent(
             RecommendationId.New(),
             UserId.New(),
@@ -29,16 +29,5 @@ public sealed class MediatorDomainEventPublisherTests {
         Assert.True(notificationType.IsGenericType);
         Assert.Equal(typeof(NotificationEnvelope<>), notificationType.GetGenericTypeDefinition());
         Assert.Equal(typeof(RecommendationCreatedDomainEvent), notificationType.GetGenericArguments()[0]);
-    }
-
-    private static IDomainEventPublisher CreatePublisher(
-        IPublisher publisher) {
-        Type type = Type.GetType("FoodDiary.Infrastructure.Events.MediatorDomainEventPublisher, FoodDiary.Infrastructure", throwOnError: true)!;
-        ConstructorInfo constructor = type.GetConstructors(
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic)
-            .Single();
-        return (IDomainEventPublisher)constructor.Invoke([publisher]);
     }
 }

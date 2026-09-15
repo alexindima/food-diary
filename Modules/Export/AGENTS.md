@@ -7,7 +7,6 @@ Rules for `Modules/Export/`.
 ## Boundary
 
 - Own diary and cycle export queries, validation, file-result models, CSV generation, and export-specific adapter contracts.
-- Preserve the legacy `FoodDiary.Application.Export` assembly name and CLR namespaces.
 - Consume Cycles and Meals only through their application-level read capabilities.
 - Own PDF rendering, localized report text and the bounded, SSRF-protected image retrieval adapter in Infrastructure. Keep HTTP controllers and executable composition outside this module.
 - Do not add Domain, persistence, storage, or background-processing projects without proven Export-owned state or adapters.
@@ -23,3 +22,5 @@ Rules for `Modules/Export/`.
 - Build: `dotnet build Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj`
 - Focused tests: `dotnet test Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj`
 - Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.

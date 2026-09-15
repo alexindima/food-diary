@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
-using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Infrastructure.Resources;
 using Microsoft.Extensions.DependencyInjection;
 

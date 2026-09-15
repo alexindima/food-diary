@@ -11,7 +11,7 @@ using FoodDiary.Modules.Ai.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Modules.Billing.Presentation;
 using FoodDiary.Modules.Dietologist.Presentation;
-using FoodDiary.Presentation.Api.Features.Export;
+using FoodDiary.Modules.Export.Presentation;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 using FoodDiary.Presentation.Api.Features.Products;
