@@ -1,4 +1,4 @@
-﻿using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;

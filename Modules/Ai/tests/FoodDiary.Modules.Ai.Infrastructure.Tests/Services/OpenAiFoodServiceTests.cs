@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Metrics;
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -1227,7 +1227,9 @@ public sealed class OpenAiFoodServiceTests {
             CreateOpenAiSuccessResponse(payload),
         ])));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
-            ApiKey = "test-key", VisionModel = "test-model", TextModel = "test-model",
+            ApiKey = "test-key",
+            VisionModel = "test-model",
+            TextModel = "test-model",
         });
         Result result = operation switch {
             "vision" => await client.AnalyzeFoodImageAsync("data:image/png;base64,AA==", "en", description: null, VisionPrompt, CancellationToken.None),
@@ -1247,7 +1249,9 @@ public sealed class OpenAiFoodServiceTests {
             CreateOpenAiSuccessResponse("""{"items":[]}"""),
         ])));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
-            ApiKey = "test-key", VisionModel = "test-model", TextModel = "test-model",
+            ApiKey = "test-key",
+            VisionModel = "test-model",
+            TextModel = "test-model",
         });
         Result<OpenAiFoodClientResponse<FoodVisionModel>> result = textParse
             ? await client.ParseFoodTextAsync("no food", "en", TextPrompt, CancellationToken.None)

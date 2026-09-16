@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;

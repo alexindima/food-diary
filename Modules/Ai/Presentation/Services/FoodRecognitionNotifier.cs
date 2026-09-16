@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Presentation.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;

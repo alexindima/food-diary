@@ -33,13 +33,15 @@ public sealed class TelegramOidcTokenValidatorTests {
     [InlineData(true)]
     public async Task MetadataFailure_RejectsProofButPropagatesCallerCancellation(bool callerCancelled) {
         using var cancellation = new CancellationTokenSource();
-        var configuration = new StaticConfiguration(signingKey: null) { OnFetch = async () => {
-            if (callerCancelled) {
-                await cancellation.CancelAsync();
-                throw new OperationCanceledException(cancellation.Token);
-            }
-            throw new HttpRequestException("Metadata unavailable");
-        }, };
+        var configuration = new StaticConfiguration(signingKey: null) {
+            OnFetch = async () => {
+                if (callerCancelled) {
+                    await cancellation.CancelAsync();
+                    throw new OperationCanceledException(cancellation.Token);
+                }
+                throw new HttpRequestException("Metadata unavailable");
+            },
+        };
         TelegramOidcTokenValidator validator = CreateValidator(configuration);
         if (callerCancelled) {
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => validator.ValidateAsync("token", "nonce", cancellation.Token));

@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Tests;

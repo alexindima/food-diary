@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FoodDiary.Integrations.Services;
 using System.Net;
 using System.Net.Http.Headers;

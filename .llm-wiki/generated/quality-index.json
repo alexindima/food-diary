@@ -4314,11 +4314,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 51,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.88
+      "structuralRiskScore": 4.02
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",

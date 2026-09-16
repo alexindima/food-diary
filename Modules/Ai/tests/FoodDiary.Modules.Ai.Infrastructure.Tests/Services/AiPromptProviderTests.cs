@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Globalization;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;

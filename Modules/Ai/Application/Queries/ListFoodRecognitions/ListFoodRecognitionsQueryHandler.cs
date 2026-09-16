@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;

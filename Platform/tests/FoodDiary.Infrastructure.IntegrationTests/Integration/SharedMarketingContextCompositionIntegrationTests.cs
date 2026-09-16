@@ -41,7 +41,8 @@ public sealed class SharedMarketingContextCompositionIntegrationTests(PostgresDa
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
         var user = User.Create($"marketing-{Guid.NewGuid():N}@example.com", "hash");
         MarketingAttributionEventRecord record = CreateRecord(DateTime.UtcNow) with {
-            EventType = "signup_completed", UserId = user.Id.Value,
+            EventType = "signup_completed",
+            UserId = user.Id.Value,
         };
         central.Users.Add(user);
         await repository.AddAsync(record);

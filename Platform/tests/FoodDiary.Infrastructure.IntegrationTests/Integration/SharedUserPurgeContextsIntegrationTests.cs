@@ -183,13 +183,23 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
             RecentItem.Create(user.Id, RecentItemType.Recipe, recipe.Id.Value, now),
             AiUsage.Create(user.Id, "food", "offline-test", 10, 5, 15),
             new FoodRecognitionJob {
-                Id = Guid.NewGuid(), UserId = user.Id, ImageAssetId = image.Id,
-                ImageUrl = image.Url, CreatedOnUtc = now, UpdatedOnUtc = now,
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                ImageAssetId = image.Id,
+                ImageUrl = image.Url,
+                CreatedOnUtc = now,
+                UpdatedOnUtc = now,
             },
             new TelegramOperation {
-                Id = Guid.NewGuid(), BotId = 1, UpdateId = now.Ticks + user.Id.Value.GetHashCode(),
-                UserId = user.Id.Value, PayloadHash = "test-hash", ProtectedPayload = "test-payload",
-                CreatedAtUtc = now, NextAttemptAtUtc = now, Completed = true,
+                Id = Guid.NewGuid(),
+                BotId = 1,
+                UpdateId = now.Ticks + user.Id.Value.GetHashCode(),
+                UserId = user.Id.Value,
+                PayloadHash = "test-hash",
+                ProtectedPayload = "test-payload",
+                CreatedAtUtc = now,
+                NextAttemptAtUtc = now,
+                Completed = true,
             },
             MealRecognitionReceipt.Create(Guid.NewGuid(), user.Id, Guid.NewGuid(), meal.Id, 1, now, now, TimeSpan.FromMinutes(5)));
         return new SeededUser(user, profile.Id, peer.Id, recipe.Id, meal.Id, session.Id, list.Id, ownedProduct.Id, ownedRecipe.Id, image.Id, image.ObjectKey);

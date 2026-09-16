@@ -198,7 +198,7 @@ public partial class MealsFeatureTests {
 
         var repository = new RecordingMealPageRepository([breakfast, dinner], totalItems: 2);
         var handler = new GetMealsOverviewQueryHandler(
-            repository, CreateFavoriteSender( new StubFavoriteMealRepository([favorite], dinner)),
+            repository, CreateFavoriteSender(new StubFavoriteMealRepository([favorite], dinner)),
             CreateCurrentUserAccessService(user));
 
         Result<MealOverviewModel> result = await handler.Handle(

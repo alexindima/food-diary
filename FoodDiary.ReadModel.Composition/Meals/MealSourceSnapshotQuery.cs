@@ -34,9 +34,16 @@ public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : I
             .AsNoTracking()
             .Where(recipe => ((IEnumerable<RecipeId>)ids).Contains(recipe.Id))
             .Select(recipe => new {
-                recipe.Id, recipe.Name, recipe.ImageUrl, recipe.Servings,
-                recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats,
-                recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol,
+                recipe.Id,
+                recipe.Name,
+                recipe.ImageUrl,
+                recipe.Servings,
+                recipe.TotalCalories,
+                recipe.TotalProteins,
+                recipe.TotalFats,
+                recipe.TotalCarbs,
+                recipe.TotalFiber,
+                recipe.TotalAlcohol,
             })
             .ToDictionaryAsync(recipe => recipe.Id, recipe => new MealRecipeSourceReadModel(
                 recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories,

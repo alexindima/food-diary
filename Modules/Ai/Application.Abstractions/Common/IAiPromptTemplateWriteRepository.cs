@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Ai.Domain.Entities;
 
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 

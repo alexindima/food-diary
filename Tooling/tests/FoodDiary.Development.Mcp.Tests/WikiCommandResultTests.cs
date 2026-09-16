@@ -8,8 +8,14 @@ public sealed class WikiCommandResultTests {
     public void CompactTrace_PreservesNestedEvidenceAndReportsTruncation() {
         string[] evidence = ["first.cs", "second.cs"];
         JsonElement output = JsonSerializer.SerializeToElement(new {
-            namespaceFilters = evidence, nestedDependencies = evidence, unresolvedDependencies = evidence,
-            dependencies = evidence, implementations = evidence, presentation = evidence, tests = evidence, directConsumers = evidence,
+            namespaceFilters = evidence,
+            nestedDependencies = evidence,
+            unresolvedDependencies = evidence,
+            dependencies = evidence,
+            implementations = evidence,
+            presentation = evidence,
+            tests = evidence,
+            directConsumers = evidence,
             impact = new { paths = evidence, consumers = evidence },
         });
         WikiCommandResult compact = CreateResult(output).ToCompactTrace(itemLimit: 1);

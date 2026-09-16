@@ -1,4 +1,4 @@
-﻿using FoodDiary.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 

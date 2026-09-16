@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;

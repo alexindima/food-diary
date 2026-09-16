@@ -1,4 +1,4 @@
-﻿using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
