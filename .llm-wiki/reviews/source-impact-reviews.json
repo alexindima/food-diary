@@ -97,7 +97,7 @@
       "reason": "Only test project references changed: ArchitectureTests and Development.Mcp.Tests reuse FoodDiary.Testing; Ai.Presentation.Tests consumes its own Application.Abstractions reader. Production edges and ownership are unchanged, and all 2090 architecture tests pass.",
       "baseRef": "HEAD",
       "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:56:22.9575790Z"
+      "reviewedAtUtc": "2026-09-16T09:56:22.957579Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -327,14 +327,14 @@
       "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
-          "sha256": "76b676cbc43db2124b28055dd7156544d879f5d0b888ad10e9dd8a0048506b5f"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "1533e6655aa0f2cb82cdada29a2b5da5340165fc1e05ddd72e31eff12647cb54"
         }
       ],
-      "reason": "Reviewed scheduler reuse: dispatch validation still verifies context provenance on every invocation; bundle construction, drift checks and security boundaries are unchanged.",
+      "reason": "The context facade now retrieves tests independently only when the bounded primary candidate window contains none. It reuses query/module/path scopes, leaves primary candidate ranks and confidence unchanged, and retains fail-closed SQLite behavior. Billing, Products and Recipes regression checks passed; bundle security and path authorization contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
-      "reviewedAtUtc": "2026-09-09T23:54:35.4251613Z"
+      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
+      "reviewedAtUtc": "2026-09-16T10:18:57.4574312Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fc38afa25a551fc44c9bec9f603245933797fd6c4bf7e77b55815a9d5db9ecae"
+          "sha256": "6d3a4ed130b1b623b2ecfbbfa8c97b732d18fe6814945ccc0e4c3a728c14d44b"
         }
       ],
-      "reason": "Quality index now includes direct references from added tests. Execution coverage is verified separately with dotCover; static references are not treated as a coverage metric.",
+      "reason": "Quality index changes reflect two extra decisions in the context facade for a bounded test-context query. No production access, permissions or security boundary changed; ranking preservation and module test discovery regression passed.",
       "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:53.0588786Z"
+      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
+      "reviewedAtUtc": "2026-09-16T10:18:58.3035971Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -897,7 +897,7 @@
       "reason": "Runtime topology changes are source-location metadata from test additions; no production host, worker, webhook, registration or provider implementation changed.",
       "baseRef": "HEAD",
       "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:55.4436780Z"
+      "reviewedAtUtc": "2026-09-16T09:57:55.443678Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,17 +906,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fc38afa25a551fc44c9bec9f603245933797fd6c4bf7e77b55815a9d5db9ecae"
+          "sha256": "6d3a4ed130b1b623b2ecfbbfa8c97b732d18fe6814945ccc0e4c3a728c14d44b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
           "sha256": "22d29cb362d6b6c6d9258f70b5eb655352be0f5517efcc8edf9126e2db63e7ba"
         }
       ],
-      "reason": "Regenerated quality and topology sources reflect new test references only; production security boundaries and the interpretation of advisory security evidence remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:56.7023413Z"
+      "reason": "Reviewed the complete push range including fd53dd659: runtime-topology changes are source fingerprint/count only, with no service or provider boundary changes. Quality-index differences reflect additional tests and the bounded test-context query. Full Core audit and all eight Wiki verify stages passed, including context search and retrieval regressions. Security-review guidance remains current.",
+      "baseRef": "origin/master",
+      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
+      "reviewedAtUtc": "2026-09-16T10:30:04.0201625Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

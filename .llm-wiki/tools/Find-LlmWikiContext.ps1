@@ -165,7 +165,6 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     if (-not [bool]$sqlResult.ready) {
         throw 'SQLite search index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
     }
-    $compiledIndexStopwatch.Stop()
     $records = @($sqlResult.records)
     $top = @($records | Select-Object -First 1)
     $ranking = $sqlResult.rankingSummary
@@ -183,6 +182,24 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     $selectionScopes += @($moduleImplementationRoots)
     $visibleRecords = @(Select-ContextRecordsWithScopeCoverage $records $selectionScopes $Limit)
     $testRecords = @($records | Where-Object { [bool]$_.isTest } | Select-Object -First $Limit)
+    # API/production ranking can fill the bounded candidate window before any
+    # tests appear. Retrieve test context independently without reranking code.
+    if ($testRecords.Count -eq 0 -and $records.Count -gt 0 -and $ChangeType -ne 'Tests') {
+        $testSearch = & $graphManager `
+            -Action search `
+            -Query $searchText `
+            -Module $Module `
+            -ChangedPath $scopePaths `
+            -ChangeType Tests `
+            -Limit $searchLimit `
+            -SkipRefresh `
+            -Format Json | ConvertFrom-Json
+        if (-not [bool]$testSearch.ready) {
+            throw 'SQLite test context index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
+        }
+        $testRecords = @($testSearch.records | Where-Object { [bool]$_.isTest } | Select-Object -First $Limit)
+    }
+    $compiledIndexStopwatch.Stop()
     $wikiRecords = @($records | Where-Object { $_.path -match '^(\.llm-wiki/|docs/).+\.md$' } | Select-Object -First $Limit)
     $guideRecords = @($records | Where-Object { $_.path -match '(^|/)AGENTS\.md$' } | Select-Object -First $Limit)
     $implementationRecordPool = @($records | Where-Object {

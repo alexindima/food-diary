@@ -188,6 +188,12 @@ reports both source hashes, scanned/candidate/returned counts, SQL duration, and
 full round-trip duration; its eight-case smoke requires exact output parity and a
 measurable average improvement.
 
+The context facade keeps focused tests available when production candidates fill
+its bounded search window. If the main search finds code but no tests, it runs
+one test-oriented SQLite query with the same query, module, and path scopes.
+Only the `tests` section uses these results; production candidates and their
+confidence remain unchanged. An unavailable test index fails closed.
+
 Context-search confidence is calculated from the full deduplicated candidate
 pool before the requested visible limit is applied, so asking for one or ten
 records cannot change the top result's confidence. Margin thresholds and the

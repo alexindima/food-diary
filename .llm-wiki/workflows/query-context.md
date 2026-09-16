@@ -38,6 +38,11 @@ as projects, routes, or dependency-injection registrations can be empty on the
 SQL route; use the ranked paths and their reasons as the primary navigation
 contract.
 
+If the ranked window contains no tests, the resolver makes one additional
+test-oriented SQLite query with the same module, query text, and path scopes.
+Its results populate only `tests`; production ranking and confidence are
+preserved. This prevents a large API surface from hiding focused module tests.
+
 The resolver reads repository-catalog, C# symbol, and frontend feature/symbol/
 route/localization candidates from the local SQLite compiled-index projection
 by default. The graph is refreshed by the resolver inside the
