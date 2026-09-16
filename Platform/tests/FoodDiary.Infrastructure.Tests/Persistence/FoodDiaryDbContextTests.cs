@@ -9,6 +9,15 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class FoodDiaryDbContextTests {
     [Fact]
+    public void CoordinationFlagSharesSessionState() {
+        using FoodDiaryDbContext context = CreateContext();
+        context.IsCoordinatingModuleSave = true;
+        Assert.True(context.Session.IsSaving);
+        context.IsCoordinatingModuleSave = false;
+        Assert.False(context.Session.IsSaving);
+    }
+
+    [Fact]
     public void DbSetProperties_ReturnEntitySets() {
         using FoodDiaryDbContext context = CreateContext();
 
@@ -23,6 +32,7 @@ public sealed class FoodDiaryDbContextTests {
         Assert.NotNull(context.MealPlans);
         Assert.NotNull(context.MealPlanDays);
         Assert.NotNull(context.MealPlanMeals);
+        Assert.Same(context.Set<FoodDiary.Modules.Ai.PersistenceModel.AiQuotaPeriod>(), context.AiQuotaPeriods);
     }
 
     [Fact]

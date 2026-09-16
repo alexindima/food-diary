@@ -69,6 +69,7 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
             Assert.NotNull(Assert.Single(step.Ingredients, item => item.NestedRecipeId.HasValue).NestedRecipe);
             Assert.NotNull(await writes.GetByIdForUpdateAsync(recipe.Id, user.Id, includePublic: false, cancellationToken: token));
             Assert.Equal(0, await provider.GetRequiredService<IRecipeReadRepository>().GetUsageCountAsync(recipe.Id, user.Id, includePublic: false, cancellationToken: token));
+            Assert.True((await provider.GetRequiredService<IRecipeReadRepository>().GetByIdsAsync([recipe.Id], user.Id, includePublic: false, cancellationToken: token)).ContainsKey(recipe.Id));
             return Result.Success();
         });
         Assert.Equal("Updated owner recipe", (await database.Recipes.AsNoTracking().SingleAsync(item => item.Id == recipe.Id)).Name);

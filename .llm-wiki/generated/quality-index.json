@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5405,
+    "productionFiles": 5407,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 927,
@@ -44033,6 +44033,14 @@
       "structuralRiskScore": 5.06
     },
     {
+      "path": "Tooling/FoodDiary.Testing/PowerShellFactAttribute.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.9
+    },
+    {
       "path": "Tooling/FoodDiary.Testing/RequestTestSender.cs",
       "nonBlankLines": 43,
       "decisionPoints": 1,
@@ -44047,6 +44055,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.72
+    },
+    {
+      "path": "Tooling/FoodDiary.Testing/RequiresDockerPerformanceFactAttribute.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.3
     },
     {
       "path": "Tooling/FoodDiary.Testing/RequiresDockerTheoryAttribute.cs",
@@ -44536,11 +44552,12 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "line": 17,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutWebhookConsistencyTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalConsistencyTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -48182,8 +48199,9 @@
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/CycleExportFailureTests.cs",
         "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -48639,10 +48657,11 @@
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistReadFailureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -49086,10 +49105,11 @@
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
       "line": 15,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistReadFailureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -49100,10 +49120,11 @@
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
       "line": 14,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistReadFailureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

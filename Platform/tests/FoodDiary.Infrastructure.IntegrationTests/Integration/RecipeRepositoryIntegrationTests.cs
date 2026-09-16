@@ -239,7 +239,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.True(secondEntered.Task.IsCompletedSuccessfully);
     }
 
-    [RequiresDockerFact]
+    [RequiresDockerPerformanceFact]
     public async Task GetPagedAsync_FirstOwnedPage_StaysWithinLatencyBudget() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipes-perf-{Guid.NewGuid():N}@example.com", "hash");

@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProjectFileConventionTests {
-    [Fact]
+    [PowerShellFact]
     public async Task ProjectFiles_MatchAutomaticFormatterAsync() {
         var startInfo = new System.Diagnostics.ProcessStartInfo("pwsh") {
             WorkingDirectory = ArchitectureTestPaths.RepositoryRoot,

@@ -1809,6 +1809,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj"
         ],
@@ -14808,7 +14809,8 @@
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj",
-          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
+          "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {
@@ -14852,7 +14854,8 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj"
+          "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj",
+          "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {

@@ -54,6 +54,9 @@ public sealed class SharedDietologistContextIntegrationTests(PostgresDatabaseFix
         Assert.Single(await provider.GetRequiredService<IRecommendationCommentReadModelRepository>().GetByRecommendationAsync(recommendation.Id));
         IRecommendationCommentReadModelRepository comments = provider.GetRequiredService<IRecommendationCommentReadModelRepository>();
         Assert.True(await comments.IsParticipantAsync(recommendation.Id, client.Id));
+        Assert.True(await provider.GetRequiredService<IRecommendationCommentRepository>().IsParticipantAsync(recommendation.Id, client.Id));
+        Assert.NotNull(await provider.GetRequiredService<IDietologistInvitationRepository>().GetByIdReadModelAsync(invitation.Id));
+        Assert.Null(await provider.GetRequiredService<IDietologistInvitationRepository>().GetActiveByClientReadModelAsync(client.Id));
         Assert.True(await comments.IsParticipantAsync(recommendation.Id, dietologist.Id));
         Assert.False(await comments.IsParticipantAsync(recommendation.Id, FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New()));
         Assert.False(await comments.IsParticipantAsync(FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids.RecommendationId.New(), client.Id));

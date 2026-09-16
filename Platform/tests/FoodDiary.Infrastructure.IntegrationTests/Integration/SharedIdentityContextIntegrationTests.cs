@@ -46,6 +46,9 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         await templates.UpsertAsync("context-test", "en", "Changed", "<p>changed</p>", "changed", isActive: true);
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         Assert.Single(await templates.GetRevisionsAsync("context-test", "en", CancellationToken.None));
+        Assert.Contains(await templates.GetAllAsync(), template => string.Equals(template.Key, "context-test", StringComparison.Ordinal));
+        Assert.Contains(await templates.GetAllReadModelsAsync(CancellationToken.None), template => string.Equals(template.Key, "context-test", StringComparison.Ordinal));
+        Assert.NotNull(await ((IEmailTemplateReadRepository)templates).GetByKeyAsync("context-test", "en"));
         Assert.Single((await provider.GetRequiredService<IUserLoginEventReadRepository>().GetPagedAsync(1, 10, user.Id.Value, search: null)).Items);
         Assert.False(database.Database.HasPendingModelChanges());
     }
@@ -68,6 +71,11 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
             Assert.Equal(43, ticket.Length);
             Assert.True(await provider.GetRequiredService<ITelegramAssertionReplayGuard>().TryConsumeAsync("synthetic assertion", DateTime.UtcNow.AddMinutes(5)));
             Assert.NotNull(await provider.GetRequiredService<ITelegramOperationStore>().RegisterAsync(123, 1, user.Id.Value, 0, "synthetic operation", CancellationToken.None));
+            ITelegramOperationStore operations = provider.GetRequiredService<ITelegramOperationStore>();
+            Guid operationId = Assert.Single(await operations.ListReadyAsync(123, CancellationToken.None));
+            TelegramOperationLease? lease = await operations.AcquireAsync(123, operationId, CancellationToken.None);
+            Assert.NotNull(lease);
+            Assert.True(await operations.CheckpointAsync(123, operationId, lease.LeaseId, "checkpoint", completed: true, DateTime.UtcNow, CancellationToken.None));
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
             Assert.Equal("rotated", (await owned.UserRefreshTokenSessions.AsNoTracking().SingleAsync()).RefreshTokenHash);
             await transaction.RollbackAsync();
@@ -96,6 +104,32 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         UserRefreshTokenSession stored = await database.UserRefreshTokenSessions.AsNoTracking().SingleAsync();
         Assert.Contains(stored.RefreshTokenHash, new[] { "left", "right" }, StringComparer.Ordinal);
         Assert.Null(stored.PreviousRefreshTokenValidUntilUtc);
+    }
+
+    [RequiresDockerFact]
+    public async Task SessionRevocationsAndRetentionRollBackWithSharedTransactionAsync() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
+        (User user, UserRefreshTokenSession current) = await SeedAsync(provider);
+        IRefreshTokenSessionReadRepository reads = provider.GetRequiredService<IRefreshTokenSessionReadRepository>();
+        IRefreshTokenSessionWriteRepository writes = provider.GetRequiredService<IRefreshTokenSessionWriteRepository>();
+        await using IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync();
+        Assert.Single(await reads.GetActiveByUserIdAsync(user.Id));
+        Assert.Single(await provider.GetRequiredService<IRefreshTokenSessionReadModelRepository>().GetActiveReadModelsAsync(user.Id));
+        await writes.UpdateAsync(current);
+        UserRefreshTokenSession[] others = [.. Enumerable.Range(0, 3).Select(_ =>
+            UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "other", rememberMe: true, "password", ipAddress: null, userAgent: null, DateTime.UtcNow))];
+        foreach (UserRefreshTokenSession session in others) { await writes.AddAsync(session); }
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        await writes.RevokeByIdAsync(others[0].Id, user.Id, DateTime.UtcNow);
+        await writes.RevokeOtherByIdAsync(others[1].Id, user.Id, current.Id, DateTime.UtcNow);
+        await writes.RevokeAllOtherAsync(user.Id, current.Id, DateTime.UtcNow);
+        Assert.Equal(current.Id, Assert.Single(await provider.GetRequiredService<IRefreshTokenSessionReadModelRepository>().GetActiveReadModelsAsync(user.Id)).Id);
+        Assert.Equal(1, await provider.GetRequiredService<IUserLoginEventWriteRepository>().DeleteOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
+        Assert.Same(transaction.GetDbTransaction(), provider.GetRequiredService<IdentityDbContext>().Database.CurrentTransaction!.GetDbTransaction());
+        await transaction.RollbackAsync();
+        Assert.Single(await database.UserRefreshTokenSessions.ToListAsync());
+        Assert.Single(await database.UserLoginEvents.ToListAsync());
     }
 
     private static async Task<(User User, UserRefreshTokenSession Session)> SeedAsync(ServiceProvider provider) {

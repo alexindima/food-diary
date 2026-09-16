@@ -16,6 +16,24 @@ namespace FoodDiary.Modules.Gamification.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class AchievementPersistenceTests {
+    [Fact]
+    public async Task Enqueue_InMemoryCoalescesRequestsAndStagesUntilSaveAsync() {
+        await using var context = new GamificationDbContext(new DbContextOptionsBuilder<GamificationDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options);
+        var userId = UserId.New();
+        var outbox = new AchievementEvaluationOutbox(context, context.AchievementEvaluationOutbox, TimeProvider.System);
+        await outbox.EnqueueAsync(userId);
+        Assert.Equal(EntityState.Added, Assert.Single(context.ChangeTracker.Entries<AchievementEvaluationOutboxMessage>()).State);
+        await context.SaveChangesAsync();
+        AchievementEvaluationOutboxMessage first = await context.AchievementEvaluationOutbox.SingleAsync();
+        await outbox.EnqueueAsync(userId);
+        await context.SaveChangesAsync();
+        AchievementEvaluationOutboxMessage updated = await context.AchievementEvaluationOutbox.SingleAsync();
+        Assert.Equal(first.Id, updated.Id);
+        Assert.Equal(2, updated.Revision);
+        Assert.Null(updated.ProcessedOnUtc);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

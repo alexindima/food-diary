@@ -107,6 +107,44 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         Assert.Single(await database.Users.ToListAsync());
     }
 
+    [RequiresDockerFact]
+    public async Task ReadsAndRoleRemovalObserveUncommittedOwnerChangesAsync() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
+        await using IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync();
+        var user = User.Create("transaction-read@example.com", "hash");
+        user.LinkTelegram(7654321);
+        user.LinkGoogleIdentity("test-issuer", "test-subject");
+        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRepository repository = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRepository>();
+        await repository.AddAsync(user);
+        await provider.GetRequiredService<IUserRoleCatalogService>().EnsureRolesByNamesAsync(["transaction-reader"]);
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        await provider.GetRequiredService<IUserRoleMembershipService>().EnsureRoleAsync(user.Id, "transaction-reader");
+
+        Assert.Equal(user.Id, (await repository.GetByEmailAsync(user.Email!))?.Id);
+        Assert.Equal(user.Id, (await repository.GetByGoogleIdentityIncludingDeletedAsync("test-issuer", "test-subject"))?.Id);
+        Assert.Equal(user.Id, (await repository.GetByTelegramUserIdAsync(7654321))?.Id);
+        await repository.UpdateAsync(user, Array.Empty<UserRoleAuditEvent>());
+        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserAdministrationReadRepository admin = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserAdministrationReadRepository>();
+        Assert.NotNull(await admin.GetByIdIncludingDeletedReadModelAsync(user.Id));
+        Assert.Single((await admin.GetPagedAsync(search: null, 1, 10, includeDeleted: true)).Items);
+        Assert.Single((await admin.GetFilteredPagedReadModelsAsync(search: null, 1, 10,
+            FoodDiary.Modules.Users.Contracts.Common.UserAccountStatusFilter.All,
+            new FoodDiary.Modules.Users.Contracts.Common.UserAdministrationFilter(), CancellationToken.None)).Items);
+        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserProfileProjectionService profile = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserProfileProjectionService>();
+        Assert.True((await profile.GetGamificationProfileAsync(user.Id)).IsSuccess);
+        Assert.True((await profile.GetWeeklyCheckInProfileAsync(user.Id)).IsSuccess);
+        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService related = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService>();
+        Assert.True((await related.GetAuthorsAsync([user.Id])).ContainsKey(user.Id));
+        Assert.True((await related.GetReminderSettingsAsync([user.Id])).ContainsKey(user.Id));
+        await provider.GetRequiredService<IUserRoleMembershipService>().RemoveRoleAsync(user.Id, "transaction-reader");
+        UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
+        Assert.False(await owned.UserRoles.AnyAsync(role => role.UserId == user.Id));
+        Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
+        await transaction.RollbackAsync();
+        Assert.Empty(await database.Users.ToListAsync());
+    }
+
     private static UserRefreshTokenSession CreateSession(UserId userId) =>
         UserRefreshTokenSession.Create(Guid.NewGuid(), userId, "synthetic", rememberMe: true, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: DateTime.UtcNow);
 

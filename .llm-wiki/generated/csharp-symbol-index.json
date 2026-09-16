@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4117,
-    "symbols": 4047,
+    "sourceFiles": 4119,
+    "symbols": 4049,
     "interfaceImplementationLinks": 188,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2141,
+      "class": 2143,
       "enum": 64,
       "interface": 398,
       "record": 1324,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1682,
+      "Other": 1684,
       "Query": 261,
       "QueryHandler": 189,
       "ReadModelRepository": 33,
@@ -28356,6 +28356,13 @@
       "line": 6
     },
     {
+      "name": "PowerShellFactAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Tooling/FoodDiary.Testing/PowerShellFactAttribute.cs",
+      "line": 9
+    },
+    {
       "name": "RequestTestSender",
       "kind": "class",
       "role": "Other",
@@ -28367,6 +28374,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Tooling/FoodDiary.Testing/RequiresDockerFactAttribute.cs",
+      "line": 7
+    },
+    {
+      "name": "RequiresDockerPerformanceFactAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Tooling/FoodDiary.Testing/RequiresDockerPerformanceFactAttribute.cs",
       "line": 7
     },
     {

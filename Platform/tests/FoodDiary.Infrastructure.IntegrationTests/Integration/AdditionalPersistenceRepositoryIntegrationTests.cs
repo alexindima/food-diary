@@ -426,6 +426,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var keto = MealPlan.CreateCurated("Keto curated", "Curated", DietType.Keto, durationDays: 7, targetCaloriesPerDay: 1800);
         var userPlan = MealPlan.CreateForUser(user.Id, "User plan", description: null, DietType.Balanced, durationDays: 3, targetCaloriesPerDay: null);
         var repository = new MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
+        var composition = new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context);
+        Assert.Empty(await composition.GetRecipeSnapshotsAsync([]));
+        Assert.Equal(recipe.Name, (await composition.GetRecipeSnapshotsAsync([recipe.Id]))[recipe.Id].Name);
 
         await repository.AddAsync(curated);
         await repository.AddAsync(keto);

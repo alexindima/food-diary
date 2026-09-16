@@ -39,6 +39,8 @@ public sealed class SharedFastingContextCompositionIntegrationTests(PostgresData
         await using ServiceProvider provider = CreateProvider(central);
         FastingDbContext fasting = provider.GetRequiredService<FastingDbContext>();
         IFastingSessionRepository repository = provider.GetRequiredService<IFastingSessionRepository>();
+        Assert.Same(provider.GetRequiredService<IFastingOccurrenceRepository>(), provider.GetRequiredService<IFastingOccurrenceReadRepository>());
+        Assert.Same(provider.GetRequiredService<IFastingCheckInRepository>(), provider.GetRequiredService<IFastingCheckInReadRepository>());
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
         var user = User.Create($"fasting-context-{Guid.NewGuid():N}@example.com", "hash");
         var session = FastingSession.Create(user.Id, FastingProtocol.Fast16Eat8, 16, DateTime.UtcNow);
@@ -81,6 +83,7 @@ public sealed class SharedFastingContextCompositionIntegrationTests(PostgresData
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddFastingModule();
+        FoodDiary.Modules.Users.Infrastructure.UsersModuleRegistration.AddUsersPersistence(services);
         return services.BuildServiceProvider();
     }
 

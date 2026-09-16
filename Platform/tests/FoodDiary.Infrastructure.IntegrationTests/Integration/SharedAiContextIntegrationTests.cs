@@ -53,6 +53,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("context-test", "en");
             Assert.NotNull(tracked);
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
+            Assert.Contains(await templateReads.GetAllReadModelsAsync(CancellationToken.None), template => string.Equals(template.Key, "context-test", StringComparison.Ordinal));
             FoodDiary.Results.Result<AiPromptTemplateReadModel> changed = await provider.GetRequiredService<ISender>()
                 .Send(new UpsertAiPromptCommand("context-test", "en", "Changed", IsActive: true));
             Assert.True(changed.IsSuccess);

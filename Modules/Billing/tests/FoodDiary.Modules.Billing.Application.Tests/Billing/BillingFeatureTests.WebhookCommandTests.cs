@@ -867,8 +867,10 @@ public partial class BillingFeatureTests {
         Assert.Empty(webhookEventRepository.Events);
     }
 
-    [Fact]
-    public async Task ProcessQueuedBillingWebhook_WhenPaymentInsertRaces_MarksInboxEventProcessed() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ProcessQueuedBillingWebhook_WhenPaymentInsertRaces_MarksInboxEventProcessed(bool alreadyProcessed) {
         var user = User.Create("queued-payment-race@example.com", "hash");
         var paymentRepository = new RecordingBillingPaymentRepository { ThrowAlreadyExistsOnAdd = true };
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
@@ -882,6 +884,7 @@ public partial class BillingFeatureTests {
             "{}",
             JsonSerializer.Serialize(webhookModel));
         await webhookEventRepository.AddAsync(inboxEvent);
+        if (alreadyProcessed) { inboxEvent.MarkProcessed(Now); }
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var userRepository = new FakeUserRepository(user);

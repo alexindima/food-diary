@@ -47,6 +47,13 @@ public sealed class ModuleContextFactoryRegistrationTests {
             Assert.Same(coordinator.Database.GetDbConnection(), owner.Database.GetDbConnection());
             Assert.NotSame(owner.Database.GetDbConnection(), otherOwner.Database.GetDbConnection());
             Assert.Contains(owner, coordinator.ModuleContexts);
+            foreach (System.Reflection.PropertyInfo property in type.GetProperties().Where(property =>
+                         property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))) {
+                object? set = property.GetValue(owner);
+                Assert.NotNull(set);
+                Assert.Same(set, property.GetValue(owner));
+                Assert.NotNull(owner.Model.FindEntityType(property.PropertyType.GenericTypeArguments[0]));
+            }
             Assert.Equal(type.Name.Equals("UsersDbContext", StringComparison.Ordinal) ? -100 : 100, coordinator.GetSaveOrder(owner));
         }
         Assert.Equal(29, coordinator.ModuleContexts.Count);

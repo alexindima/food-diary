@@ -324,6 +324,32 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         Assert.Equal(result, (await seed.Set<MealRecognitionReceipt>().SingleAsync(receipt => receipt.UserId == user.Id)).MealId);
     }
 
+    [RequiresDockerFact]
+    public async Task RepositoryReadsRejoinTransactionAfterFlushAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("meal-read-transaction@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        IMealRepository repository = provider.GetRequiredService<IMealRepository>();
+        await repository.AddAsync(meal);
+        await provider.GetRequiredService<FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IUnitOfWork>().SaveChangesAsync();
+        var filters = new FoodDiary.Modules.Meals.Contracts.Common.MealQueryFilters(DateFrom: null, DateTo: null);
+        Assert.Equal(meal.Id, Assert.Single(await repository.GetByPeriodAsync(user.Id, meal.Date, meal.Date)).Id);
+        Assert.Single(await repository.GetByPeriodMealProjectionsAsync(user.Id, meal.Date, meal.Date));
+        Assert.Single(await repository.GetByPeriodMealProjectionsAsync(user.Id, meal.Date.AddMinutes(-1), meal.Date.AddMinutes(1), 1));
+        Assert.Equal(1, await repository.GetCountAsync(user.Id, filters));
+        Assert.Single(await repository.GetDistinctMealDatesAsync(user.Id, meal.Date, meal.Date));
+        Assert.Single((await repository.GetPagedAsync(user.Id, 1, 10, filters)).Items);
+        Assert.Equal(1, await repository.GetTotalMealCountAsync(user.Id));
+        Assert.Single(await repository.GetWithItemsAndProductsAsync(user.Id, meal.Date));
+        await transaction.RollbackAsync();
+        context.ChangeTracker.Clear();
+        Assert.Empty(await context.Meals.ToListAsync());
+    }
+
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {

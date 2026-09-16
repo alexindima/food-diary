@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using Xunit;
 
-namespace FoodDiary.Development.Mcp.Tests;
+namespace FoodDiary.Testing;
 
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Method)]

@@ -1194,6 +1194,7 @@ public sealed class OpenAiFoodServiceTests {
                 : """{"items":[]}""")!.AsObject();
             valid["items"]!.AsArray().Add(JsonNode.Parse(item));
             cases.Add(operation, "{}");
+            cases.Add(operation, "null");
             cases.Add(operation, "[]");
             foreach (JsonNode? items in new JsonNode?[] { null, JsonValue.Create(7), new JsonArray((JsonNode?)null) }) {
                 JsonObject invalid = valid.DeepClone().AsObject();

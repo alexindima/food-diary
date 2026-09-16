@@ -87,21 +87,17 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "c247b430bbc9df2977a31d15bd2ccae1d483fc8e800dfab92db6fd031097f948",
+      "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
-        },
-        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "69f77e38d381ddd84c88da9e93a2003d2da2d9deafe3ed3c3ff2d84b3650e013"
+          "sha256": "54a5fff46f187be8b4588bf2e6ca24b397e926458e0d39e9cbcbf9be7b9ae12e"
         }
       ],
-      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
+      "reason": "Only test project references changed: ArchitectureTests and Development.Mcp.Tests reuse FoodDiary.Testing; Ai.Presentation.Tests consumes its own Application.Abstractions reader. Production edges and ownership are unchanged, and all 2090 architecture tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:35.0545159Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:56:22.9575790Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -218,14 +214,14 @@
       "pageSha256": "f1377bfc80eadd0ff4d6265843c3eb2747177063ec40db6befaa9a8cfc37dabf",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d04814111e916a694b6e6bb0596c097f3f97608841fa9bc7c1bdd92acb9a623d"
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "54a5fff46f187be8b4588bf2e6ca24b397e926458e0d39e9cbcbf9be7b9ae12e"
         }
       ],
-      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
+      "reason": "Reviewed the three intentional test-only reference allowances and regenerated the architecture health index. No production dependency, module cycle, or removal policy changed; dependency guards pass.",
       "baseRef": "HEAD",
-      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
-      "reviewedAtUtc": "2026-09-16T08:41:35.9673653Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:56:24.0689319Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -233,14 +229,14 @@
       "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "28d01fc8ef8603b6463bb4aecfc4c27096e7505469c76d1b7a06c6b807061455"
         }
       ],
-      "reason": "Reviewed code-graph changes: candidate recall, ownership aliases and ranking only; contract projections and contract-consumer validation remain unchanged.",
+      "reason": "Regenerated consumer index adds test-fixture references from coverage regressions; production contract declarations, serialization and HTTP snapshots are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:43:39.7757039Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:57:51.4472543Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b8dbd2d367902697a200cf0dcb0aeb77731abdcadee178ab3a58dd33c97f6b7d"
+          "sha256": "fc38afa25a551fc44c9bec9f603245933797fd6c4bf7e77b55815a9d5db9ecae"
         }
       ],
-      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
+      "reason": "Quality index now includes direct references from added tests. Execution coverage is verified separately with dotCover; static references are not treated as a coverage metric.",
       "baseRef": "HEAD",
-      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
-      "reviewedAtUtc": "2026-09-16T08:41:36.6442003Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:57:53.0588786Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a389725ee717e35ca9207cae28e42e90f1a17c5b5ec10a361050351e530b171b"
+          "sha256": "22d29cb362d6b6c6d9258f70b5eb655352be0f5517efcc8edf9126e2db63e7ba"
         }
       ],
-      "reason": "Reviewed regenerated topology: only source freshness fingerprint changed; services, workers, clients, recurring jobs and runtime behavior declarations are unchanged.",
+      "reason": "Runtime topology changes are source-location metadata from test additions; no production host, worker, webhook, registration or provider implementation changed.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T07:53:39.3416888Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:57:55.4436780Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,21 +906,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b8dbd2d367902697a200cf0dcb0aeb77731abdcadee178ab3a58dd33c97f6b7d"
+          "sha256": "fc38afa25a551fc44c9bec9f603245933797fd6c4bf7e77b55815a9d5db9ecae"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a389725ee717e35ca9207cae28e42e90f1a17c5b5ec10a361050351e530b171b"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "49449c99e9202cf7f106a87d4adf124b91833daa6ec491198f2438c6ec233255"
+          "sha256": "22d29cb362d6b6c6d9258f70b5eb655352be0f5517efcc8edf9126e2db63e7ba"
         }
       ],
-      "reason": "Reviewed complete push range: moved-module ranking and runtime topology follow current sources, without weaker search thresholds; 289 Node/.NET parity cases passed. Trace fixtures follow the actual controller paths. Angular model inputs, implicit Change outputs and two-way bindings retain public payloads and are now indexed. Frontend contract SQL parity and all Wiki verify stages passed; security and trace guidance remains current because runtime data access and access controls are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
-      "reviewedAtUtc": "2026-09-16T08:43:58.7981519Z"
+      "reason": "Regenerated quality and topology sources reflect new test references only; production security boundaries and the interpretation of advisory security evidence remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:57:56.7023413Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1166,21 +1158,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
+      "pageSha256": "ca394e5f353ac38b3b8205ad1604b00ef4ea59a106bb7ba147fd89f2a6982fe6",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "a83607dd54db9bd79333ad233f17494512a174ef3c5375b8f14f72862a893986"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "ed074a672f1ebf1cefdbeb209df60dae3d67a48c3c31db8c326aab8660880579"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "b4af3c9521ca541d55e9113914921f92229c7f1437eaf757d89d97a66b7b0e0c"
         }
       ],
-      "reason": "Verified corpus target migration and generic sibling PersistenceModel/Application.Abstractions aliases. Search pool limits and frozen thresholds unchanged; 100-case holdout reaches 100 top-10 after layer fix.",
+      "reason": "Catalog changes reflect the moved shared PowerShell attribute, added test sources and test-only project references; query selection and SQLite behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T05:24:20.5136593Z"
+      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
+      "reviewedAtUtc": "2026-09-16T09:57:54.3394239Z"
     },
     {
       "pageId": "workflow.review-diff",

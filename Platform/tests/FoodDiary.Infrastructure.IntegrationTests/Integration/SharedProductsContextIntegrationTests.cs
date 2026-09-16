@@ -62,6 +62,7 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
             Assert.Equal("Updated owner product", snapshots[product.Id].Name);
             Assert.NotNull(await writes.GetByIdForUpdateAsync(product.Id, user.Id, includePublic: false, token));
             Assert.Equal(0, await provider.GetRequiredService<IProductReadRepository>().GetUsageCountAsync(product.Id, user.Id, includePublic: false, token));
+            Assert.True((await provider.GetRequiredService<IProductReadRepository>().GetByIdsAsync([product.Id], user.Id, includePublic: false, token)).ContainsKey(product.Id));
             return Result.Success();
         });
         Assert.Equal("Updated owner product", (await database.Products.AsNoTracking().SingleAsync()).Name);

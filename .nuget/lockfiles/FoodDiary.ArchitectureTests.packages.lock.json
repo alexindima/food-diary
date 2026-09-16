@@ -2220,6 +2220,14 @@
       "fooddiary.results": {
         "type": "Project"
       },
+      "fooddiary.testing": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
+          "xunit": "[2.9.3, )"
+        }
+      },
       "FluentValidation": {
         "type": "CentralTransitive",
         "requested": "[12.1.1, )",

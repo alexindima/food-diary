@@ -19,9 +19,11 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="FoodDiary.Testing" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />

@@ -13,6 +13,25 @@ namespace FoodDiary.Modules.ContentReports.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContentReportModerationTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ReviewContentReport_WhenAlreadyResolved_DoesNotOverwriteDecisionAsync(bool dismissed) {
+        var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Incorrect content");
+        var originalReviewer = UserId.New();
+        if (dismissed) { report.MarkDismissed(originalReviewer, "original"); } else { report.MarkReviewed(originalReviewer, "original"); }
+        var repository = new CountingContentReportRepository(report);
+        var handler = new ReviewContentReportCommandHandler(repository);
+
+        Result result = await handler.Handle(new ReviewContentReportCommand(report.Id, UserId.New(), "replacement"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("ContentReport.AlreadyResolved", result.Error.Code);
+        Assert.Equal(originalReviewer, report.ReviewedByUserId);
+        Assert.Equal("original", report.AdminNote);
+        Assert.Equal(0, repository.UpdateCallCount);
+    }
+
     [Fact]
     public async Task ReviewContentReportHandler_WhenReportMissing_ReturnsNotFound() {
         var handler = new ReviewContentReportCommandHandler(

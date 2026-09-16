@@ -23,7 +23,7 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - Extracted-module tests: module-owned Application, Domain, Presentation, and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain shared HTTP-kernel, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
 - WeeklyGoals aggregate/id/enum invariants live in `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests`; the central donor project must not retain duplicate WeeklyGoals-only tests.
 - WeeklyCheckIn query, calculation, and application-service tests live in `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests`; central test projects retain HTTP, host, architecture, and cross-module coverage.
-- `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.
+- `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes. Architecture and Development MCP suites share `PowerShellFact` to skip local PowerShell-dependent checks when `pwsh` is unavailable; CI still requires PowerShell. `RequiresDockerPerformanceFact` additionally skips latency budgets under a CLR profiler; run those checks without coverage to assess timing.
 - `FoodDiary.Results.Tests`: shared result and error primitive behavior.
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 

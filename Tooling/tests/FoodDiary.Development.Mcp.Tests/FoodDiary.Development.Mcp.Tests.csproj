@@ -14,9 +14,11 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="FoodDiary.Testing" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </ItemGroup>
 

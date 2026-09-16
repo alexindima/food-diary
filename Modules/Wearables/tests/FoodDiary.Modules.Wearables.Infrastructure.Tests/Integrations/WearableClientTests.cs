@@ -193,6 +193,22 @@ public sealed class WearableClientTests {
         Assert.Equal(expectedCode, result.Error.Code);
     }
 
+    [Theory]
+    [InlineData("{}")]
+    [InlineData("[]")]
+    [InlineData("{\"errors\":null}")]
+    [InlineData("{\"errors\":[null,{}, {\"errorType\":17}]}")]
+    public async Task FitbitRefreshTokenAsync_MalformedErrorDoesNotRevokeConnectionAsync(string body) {
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => {
+            HttpResponseMessage response = JsonResponse(body);
+            response.StatusCode = HttpStatusCode.BadRequest;
+            return response;
+        }));
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
+    }
+
     [Fact]
     public async Task FitbitRefreshTokenAsync_WhenTransportFails_ReturnsExternalFailure() {
         FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("Unavailable")));
