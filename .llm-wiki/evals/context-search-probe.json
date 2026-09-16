@@ -48,7 +48,7 @@
       "id": "notification-feed-reader-probe",
       "query": "read the current user's paged notification feed",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationFeedReadService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Queries/GetNotifications/GetNotificationsQueryHandler.cs"]
     },
     {
       "id": "user-credential-verification-service-probe",

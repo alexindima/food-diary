@@ -163,7 +163,7 @@ $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
 $boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModuleCount -le 1 -and
     @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
-$requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension', 'test-only', 'repository-assessment') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
+$requiresWorkspace = $profile -notin @('visual-ui-change', 'ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension', 'test-only', 'repository-assessment') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
 $workflowLevel = if ($requiresWorkspace) { 'governed' } elseif ($profile -in @('feature', 'pattern-extension') -or $requiresDesign) { 'standard' } else { 'small' }
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json

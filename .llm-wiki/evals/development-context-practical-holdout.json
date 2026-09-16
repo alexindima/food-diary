@@ -23,7 +23,7 @@
       "query": "purge old authentication login events in batches with cancellation",
       "plannedPath": null,
       "expectedPaths": [
-        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"
       ],
       "expectedLayers": [],
       "maximumExpectedRank": 3,
@@ -39,7 +39,7 @@
       "query": "очистка событий входа пакетами с отменой операции",
       "plannedPath": null,
       "expectedPaths": [
-        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"
       ],
       "expectedLayers": [],
       "maximumExpectedRank": 3,

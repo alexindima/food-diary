@@ -41,32 +41,49 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 14
+- Public contract files: 37
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 14
-- Interfaces: 0
-- DTO/read-model/projection types: 8
+- Public contract types: 37
+- Interfaces: 17
+- DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 17
 - Contracts referencing domain entities: 0
+- `class FastingErrors`
+- `interface IFastingCheckInReadModelRepository`
+- `interface IFastingCheckInReadRepository`
+- `interface IFastingCheckInRepository`
+- `interface IFastingCheckInWriteRepository`
+- `interface IFastingOccurrenceReadModelRepository`
+- `interface IFastingOccurrenceReadRepository`
+- `interface IFastingOccurrenceRepository`
+- `interface IFastingOccurrenceWriteRepository`
+- `interface IFastingPlanReadRepository`
+- `interface IFastingPlanRepository`
+- `interface IFastingPlanWriteRepository`
+- `interface IFastingSessionReadRepository`
+- `interface IFastingSessionRepository`
+- `interface IFastingSessionWriteRepository`
+- `interface IFastingTelemetryEventReadRepository`
+- `interface IFastingTelemetryEventRepository`
+- `interface IFastingTelemetryEventWriteRepository`
 - `record CleanupFastingTelemetryCommand`
+- `record FastingActiveOccurrenceModel`
 - `record FastingCheckInModel`
+- `record FastingCheckInReadModel`
 - `record FastingInsightsModel`
 - `record FastingMessageModel`
+- `record FastingOccurrenceReadModel`
 - `record FastingOverviewModel`
+- `record FastingPlanReadModel`
 - `record FastingSessionModel`
 - `record FastingStatsModel`
-- `record FastingTelemetryPresetSummaryModel`
-- `record FastingTelemetrySummaryModel`
-- `record GetFastingTelemetrySummaryQuery`
-- `record ReadCurrentFastingQuery`
-- `record ReadFastingInsightsQuery`
-- `record ReadFastingOverviewQuery`
-- `record SendFastingNotificationsCommand`
+- `record FastingTelemetryEventRecord`
+- ... 7 more type(s)
 
 ## Focused Tests
 

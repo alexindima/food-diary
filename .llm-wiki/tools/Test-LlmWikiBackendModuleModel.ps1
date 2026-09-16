@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $manifestText = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/backend-modules.json') -Raw
 $manifestLines = @($manifestText -split '\r?\n')
@@ -50,7 +51,7 @@ foreach ($expectedExtractedProject in $expectedExtractedProjects.GetEnumerator()
     }
 }
 if ('Modules/Meals/Domain' -notin @($manifest.modules.Meals.sourceMappings.domainProjects) -or
-    'Modules/Meals/Infrastructure/Model' -notin @($manifest.modules.Meals.sourceMappings.persistenceModelProjects)) {
+    'Modules/Meals/PersistenceModel' -notin @($manifest.modules.Meals.sourceMappings.persistenceModelProjects)) {
     throw 'Meals does not map its extracted domain and persistence-model projects explicitly.'
 }
 $fastingMappings = $manifest.modules.Fasting.sourceMappings
@@ -100,7 +101,7 @@ $resolver = $generatorAst.Find({ param($node)
 if ($null -eq $resolver) { throw 'Module-page abstraction path resolver is missing.' }
 . ([scriptblock]::Create($resolver.Extent.Text))
 foreach ($case in @(
-    @{ area = 'Users'; expected = 'Modules/Users/Application/Abstractions' }
+    @{ area = 'Users'; expected = 'Modules/Users/Application.Abstractions' }
     @{ area = 'Authentication/Abstractions'; expected = 'Authentication/Abstractions' }
     @{ area = 'Modules/BodyMetrics/Application.Abstractions'; expected = 'Modules/BodyMetrics/Application.Abstractions' }
     @{ area = '.\Modules\Billing\Application.Abstractions\'; expected = 'Modules/Billing/Application.Abstractions' }
@@ -112,6 +113,20 @@ foreach ($case in @(
 
 # Independently count public source files at explicit manifest paths. This catches
 # accidental legacy prefixes in either source discovery or public-surface discovery.
+foreach ($functionName in @('Get-BoundaryMappingValues', 'Get-SourceAreaPaths')) {
+    $functionAst = $generatorAst.Find({ param($node)
+        $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
+    }, $true)
+    if ($null -eq $functionAst) { throw "Module-page function '$functionName' is missing." }
+    . ([scriptblock]::Create($functionAst.Extent.Text))
+}
+$repositoryAreas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+[void]$repositoryAreas.Add('Modules/Dietologist/Application')
+$sourceAreas = @(Get-SourceAreaPaths 'Dietologist' $manifest.modules.Dietologist)
+if ($sourceAreas.Count -ne 1 -or $sourceAreas[0] -ne 'Modules/Dietologist/Application') {
+    throw 'Module source areas must depend on repository inventory, not local directories left after project moves.'
+}
+
 foreach ($property in @($manifest.modules.PSObject.Properties)) {
     $mapping = $property.Value.sourceMappings
     $abstractionAreasProperty = $mapping.PSObject.Properties['abstractionAreas']

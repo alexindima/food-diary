@@ -10,10 +10,10 @@ $null = & $manager -Action build -Format Json
 
 $cases = @(
     [pscustomobject]@{ ChangedPath = @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'); MinimumSymbols = 1 }
-    [pscustomobject]@{ ChangedPath = @('Modules/Fasting/Presentation/Features/Fasting/FastingController.cs'); MinimumSymbols = 1 }
+    [pscustomobject]@{ ChangedPath = @('Modules/Fasting/Presentation/Controllers/FastingController.cs'); MinimumSymbols = 1 }
     [pscustomobject]@{ ChangedPath = @(
         'Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'
-        'Modules/Fasting/Presentation/Features/Fasting/FastingController.cs'
+        'Modules/Fasting/Presentation/Controllers/FastingController.cs'
         'FoodDiary.Web.Api/appsettings.Production.json'
     ); MinimumSymbols = 2 }
     [pscustomobject]@{ ChangedPath = @('Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'); MinimumSymbols = 0 }

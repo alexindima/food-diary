@@ -19,6 +19,7 @@ Rules for `FoodDiary.Development.Mcp/`.
 - Preserve cancellation, timeout, output-size, and process-tree termination safeguards for PowerShell subprocesses.
 - Keep structured MCP contracts backward compatible. When a contract changes, update protocol types, tool mappings, README documentation, and focused tests together.
 - Infer production layers from exact `Modules/<module>/Application`, `Domain`, and `Infrastructure` segments as well as legacy roots. Preserve nested Abstractions/Model ownership; do not infer a production layer from module tests, Contracts, or similar directory names.
+- Rank sibling `Application.Abstractions`, scalar `Domain.Contracts`, and `PersistenceModel` roots with their layer identities in both Node and .NET; exclude test paths and similarly named directories.
 - Use the in-process read-only SQLite path for interactive context selection. Recovery may refresh through the existing graph writer but must not silently fall back to stale JSON.
 
 ## Commands

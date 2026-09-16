@@ -42,13 +42,16 @@
       "id": "notification-preferences-service",
       "query": "load and update a user's notification delivery preferences",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationPreferencesService.cs"]
+      "expectedPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+        "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs"
+      ]
     },
     {
       "id": "profile-overview-reader-validation",
       "query": "assemble the current user's profile overview",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Users/Application/Services/ProfileOverviewReadService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs"]
     },
     {
       "id": "password-hasher",
@@ -108,7 +111,7 @@
       "id": "current-weight-provider",
       "query": "retrieve a user's latest recorded weight",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs"]
     },
     {
       "id": "recommendation-bulk-dispatch-repository",
@@ -132,7 +135,7 @@
       "id": "weekly-goals-controller-validation",
       "query": "HTTP endpoints get and update weekly goals",
       "changeType": "Api",
-      "expectedPaths": ["Modules/WeeklyGoals/Presentation/Features/WeeklyGoals/WeeklyGoalsController.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Presentation/Controllers/WeeklyGoalsController.cs"]
     },
     {
       "id": "weight-entries-controller-validation",

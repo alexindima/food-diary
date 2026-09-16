@@ -77,7 +77,7 @@
     "databaseIntentTerms": ["database", "persistence", "persist", "storage", "store"],
     "databaseScore": 220,
     "adminIntentTerms": ["admin"],
-    "adminPathFragments": ["/Admin/", "/admin-", "admin-", "/fooddiary-admin/"],
+    "adminPathFragments": ["/Admin/", "/admin-", "admin-", "/fooddiary-admin/", "ForAdministration/"],
     "adminScore": 140,
     "integrationIntentTerms": ["adapter", "client", "external", "gateway", "integration", "provider"],
     "integrationPathPrefixes": ["FoodDiary.Integrations/", "Services/MailInbox/FoodDiary.MailInbox.Client/", "Services/MailRelay/FoodDiary.MailRelay.Client/"],
@@ -98,18 +98,19 @@
     "wikiToolScore": 420
   },
   "queryTermExpansions": {
-    "reviews|identities|boundaries|calibrates|clients|receives|components|endpoints|exceptions|saves|definitions|initializes|loads|passwords|roles|tests|scenarios|sections|verified|retrying": ["@inflect"],
+    "administrator|administer|administration": ["admin"],
+    "collaborative": ["collaboration"],
+    "login": ["authentication", "auth"],
+    "reviews|identities|boundaries|calibrates|clients|receives|components|endpoints|exceptions|saves|definitions|initializes|loads|passwords|roles|tests|scenarios|sections|verified|retrying|suppressed|templates": ["@inflect"],
     "dirty": ["unsaved"],
     "create": ["factory"],
     "upstream|цепочку": ["trace"],
-    "strip|redact|scrub": ["sanitize", "privacy", "sensitive"],
     "identity|personal": ["privacy", "user"],
     "external": ["integration", "integrations", "httpclient"],
     "provider": ["integration", "integrations", "client"],
     "http": ["httpclient", "integrations"],
     "recalculate": ["calculate", "update", "updater"],
     "change|changes": ["mutation", "update"],
-    "manually": ["manual"],
     "utility": ["utils"],
     "helper": ["utils", "util"],
     "identifier|identifiers": ["id"],
@@ -130,7 +131,6 @@
     "bounded": ["controlled"],
     "retries": ["retry", "repair"],
     "failed": ["failure", "repair"],
-    "cached": ["cache"],
     "purge": ["cleanup", "delete"],
     "undelete": ["restore"],
     "orphaned|expired|retention": ["cleanup"],
@@ -142,12 +142,9 @@
     "reader": ["read", "readservice"],
     "load|summary": ["read"],
     "ingest": ["ingestion"],
-    "powershell": ["script", "tool"],
     "unauthenticated": ["auth", "guard"],
     "navigation": ["guard", "route"],
     "accepts": ["enqueue"],
-    "suppressed": ["suppress"],
-    "builder": ["build"],
     "еды": ["food"],
     "настройки|настройке|настроек": ["options", "settings"],
     "workers": ["runtime", "topology"],
@@ -167,16 +164,17 @@
     "ranked": ["context"],
     "agents": ["instruction", "guidance"]
     ,"autofill": ["form", "input", "login"]
-    ,"facade": ["service"]
     ,"storage": ["store", "persist"]
     ,"quota": ["usage", "limit"]
     ,"qa": ["visual", "evidence", "verify"]
-    ,"density": ["cost"]
     ,"estimate": ["cost", "forecast"]
     ,"isolate": ["invoke", "run"]
   },
   "queryContextExpansions": [{"requiredTerms": ["wiki", "background"], "terms": ["runtime", "topology"]}],
   "queryPrefixExpansions": {
+    "сообществ": ["community", "explore"],
+    "профил": ["profile"],
+    "проекц": ["projection"],
     "реализац": ["implementation"],
     "список|покуп": ["shopping", "list"],
     "энергозатрат": ["tdee"],
@@ -205,7 +203,7 @@
     "калори": ["calories", "nutrition"],
     "пояс": ["timezone", "offset"],
     "адаптер": ["adapter", "client", "integration"],
-    "вычищ": ["sanitize", "privacy", "sensitive"],
+    "вычищ|strip$|redact$|scrub$": ["sanitize", "privacy", "sensitive"],
     "идентификатор": ["identity", "user"],
     "пользоват": ["user"],
     "лог": ["log", "telemetry"],
@@ -254,7 +252,7 @@
     "запрос": ["request", "command"],
     "восстановлен": ["restore", "reset", "recovery"],
     "парол": ["password"],
-    "скрипт": ["script", "tool"],
+    "скрипт|powershell$": ["script", "tool"],
     "провер": ["check", "validate", "verification", "verifier"],
     "принадлеж": ["ownership"],
     "состоян": ["state"],
@@ -293,7 +291,7 @@
     "посчит": ["count", "calculate"],
     "прогресс": ["progress"],
     "генератор": ["build", "builder", "generate"],
-    "кэш": ["cache"],
+    "кэш|cached$": ["cache"],
     "пакет|массов": ["batch", "bulk"],
     "уникальн": ["unique"],
     "прием|приём": ["meal"],
@@ -330,7 +328,7 @@
     "икон": ["icon"],
     "цвет": ["color"],
     "единиц": ["unit"],
-    "постро": ["build"],
+    "постро|builder$": ["build"],
     "пункт": ["item"],
     "админ": ["admin"],
     "диетолог": ["dietologist"],
@@ -351,7 +349,7 @@
     ,"вопрос": ["question"]
     ,"исслед": ["research"]
     ,"приоритет": ["priority"]
-    ,"стоим": ["cost"]
+    ,"стоим|density$": ["cost"]
     ,"секунд": ["seconds", "duration"]
     ,"калибр": ["calibrate"]
     ,"фильтр": ["filter"]
@@ -360,7 +358,7 @@
     ,"столб": ["bar"]
     ,"масштаб": ["scale"]
     ,"позици": ["position"]
-    ,"синхрон": ["sync"]
+    ,"синхрон|synchronize$|synchronized$|synchronization$": ["sync"]
     ,"фасад": ["facade"]
     ,"методик": ["wiki", "workflow"]
     ,"критик": ["critique", "review"]
@@ -412,7 +410,7 @@
     ,"модел": ["model"]
     ,"метрик": ["metric", "metrics", "measure", "telemetry"]
     ,"сущност": ["entity"]
-    ,"сервис": ["service"]
+    ,"сервис|facade$": ["service"]
     ,"исполн|выполн": ["execution"]
     ,"помет": ["mark"]
     ,"конфигурац": ["configuration"]
@@ -438,7 +436,7 @@
     ,"решен": ["decision"]
     ,"индекс": ["index"]
     ,"потребител": ["consumer"]
-    ,"ручн": ["manual"]
+    ,"ручн|manually$": ["manual"]
     ,"записыв": ["write", "add"]
     ,"результат": ["result"]
     ,"резерв": ["reservation"]
@@ -468,6 +466,7 @@
     ,"смен": ["change"]
   },
   "pathBoosts": [
+    {"id": "wiki-helper-module", "queryTerms": ["wiki", "helper"], "minimumMatches": 2, "pathPrefixes": [".llm-wiki/tools/LlmWiki"], "score": 80},
     {
       "id": "mailgun-webhook-security",
       "queryTerms": ["mailgun", "webhook", "replay", "idempotency"],
@@ -557,7 +556,7 @@
       "queryTerms": ["email", "template", "administrator"],
       "minimumMatches": 2,
       "pathPrefixes": ["Modules/Identity/Application/Email/"],
-      "score": 150
+      "score": 250
     },
     {
       "id": "cache-first-open-food-facts",
@@ -754,7 +753,7 @@
     },
     {
       "id": "command-handler-intent",
-      "queryTerms": ["authenticate", "login", "rotate", "revoke", "assemble", "confirm", "start", "remove", "toggle", "request"],
+      "queryTerms": ["authenticate", "login", "rotate", "revoke", "assemble", "confirm", "start", "remove", "toggle", "request", "disconnect"],
       "minimumMatches": 1,
       "identityTerms": ["handler"],
       "score": 70
@@ -1210,13 +1209,6 @@
       "minimumMatches": 2,
       "identityTerms": ["cachedproductsearch"],
       "score": 120
-    },
-    {
-      "id": "administration-mutation-role",
-      "queryTerms": ["administrator", "administer", "change", "update"],
-      "minimumMatches": 2,
-      "identityTerms": ["administrationservice"],
-      "score": 500
     },
     {
       "id": "account-restoration-handler",
@@ -1911,10 +1903,11 @@
     },
     {
       "id": "notification-feed-reader-intent",
-      "queryTerms": ["notification", "feed", "read"],
+      "queryTerms": ["notification", "feed"],
       "minimumMatches": 2,
-      "identityTerms": ["notification", "feed", "readservice"],
-      "minimumIdentityMatches": 3,
+      "identityTerms": ["notification", "readservice"],
+      "minimumIdentityMatches": 2,
+      "excludedQueryTerms": ["domain", "entity"],
       "score": 350,
       "identityScope": "file"
     },
@@ -2081,9 +2074,11 @@
     }
   ],
   "structuralRoleBoosts": [
-    {"id": "auth-refresh-coordination", "queryTerms": ["token", "refresh", "401", "parallel", "concurrent"], "minimumMatches": 2, "candidateTerms": ["auth", "service", "interceptor"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 650, "pathPrefixes": ["FoodDiary.Web.Client/"], "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
+    {"id": "administration-mutation-role", "directOnly": true, "affinityDirectOnly": false, "excludedQueryTerms": ["read", "get", "list", "audit", "history"], "queryTerms": ["administrator", "administer", "change", "changes", "update"], "minimumMatches": 2, "candidateTerms": ["administrationservice", "commandhandler"], "minimumCandidateMatches": 1, "minimumQueryIdentityMatches": 2, "score": 500, "identityScope": "file", "changeTypes": ["Backend", "Any"], "excludeTests": true},
+    {"id": "application-collection-reader", "queryTerms": ["summaries", "feed", "paged", "collection"], "minimumMatches": 1, "candidateTerms": ["collection", "read"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 70, "identityScope": "file", "changeTypes": ["Backend", "Any"], "excludeTests": true},
+    {"id": "auth-refresh-coordination", "changeTypes": ["Frontend", "Any"], "queryTerms": ["token", "refresh", "401", "parallel", "concurrent"], "minimumMatches": 2, "candidateTerms": ["auth", "service", "interceptor"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 650, "pathPrefixes": ["FoodDiary.Web.Client/"], "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
     {"id": "image-deletion-delivery", "queryTerms": ["image", "photo", "delete", "deleted", "storage"], "minimumMatches": 3, "candidateTerms": ["image", "deletion", "outbox", "processor"], "minimumCandidateMatches": 3, "minimumQueryIdentityMatches": 1, "score": 500, "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
-    {"id": "local-day-loader", "queryTerms": ["local", "midnight", "day", "timezone", "utc", "offset"], "minimumMatches": 2, "candidateTerms": ["section", "data", "loader"], "minimumCandidateMatches": 3, "minimumQueryIdentityMatches": 1, "score": 450, "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
+    {"id": "local-day-loader", "queryTerms": ["local", "midnight", "day", "timezone", "utc", "offset"], "minimumMatches": 3, "candidateTerms": ["section", "data", "loader"], "minimumCandidateMatches": 3, "minimumQueryIdentityMatches": 1, "score": 450, "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
     {"id": "local-day-frontend-boundary", "queryTerms": ["local", "midnight", "day", "timezone", "utc", "offset"], "minimumMatches": 2, "candidateTerms": ["date", "utils"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 400, "pathPrefixes": ["FoodDiary.Web.Client/"], "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
     {"id": "payment-duplicate-processing", "queryTerms": ["webhook", "payment", "billing", "duplicate", "twice", "retry"], "minimumMatches": 3, "candidateTerms": ["billing", "webhook", "processor", "handler", "inbox"], "minimumCandidateMatches": 3, "minimumQueryIdentityMatches": 1, "score": 650, "pathPrefixes": ["Modules/Billing/Application/"], "excludedQueryTerms": ["repository", "migration", "configuration", "schema"], "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
     {"id": "meal-recipe-nutrition-snapshot", "queryTerms": ["recipe", "meal", "nutrition", "calories", "ingredient"], "minimumMatches": 3, "candidateTerms": ["meal", "nutrition", "service", "calculator"], "minimumCandidateMatches": 3, "minimumQueryIdentityMatches": 1, "score": 600, "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},
@@ -2345,6 +2340,7 @@
       "scorePerQueryIdentityMatch": 65,
       "maximumQueryIdentityScore": 325,
       "identityScope": "file",
+      "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "excludeTests": true,
       "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"]
@@ -2377,10 +2373,11 @@
       "identityScope": "file",
       "changeTypes": ["Backend"],
       "excludeTests": true,
-      "excludedQueryTerms": ["admin", "administrator", "administration", "review", "reviews", "job", "background", "factory", "validate", "validation", "validator"]
+      "excludedQueryTerms": ["admin", "administrator", "administration", "review", "reviews", "job", "background", "process", "processor", "send", "factory", "validate", "validation", "validator"]
     },
     {
       "id": "backend-cleanup-service-role",
+      "excludedQueryTerms": ["restore", "restoration", "job", "background", "hosted"],
       "queryTerms": ["cleanup", "purge", "retention"],
       "minimumMatches": 1,
       "candidateTerms": ["cleanup", "service"],
@@ -2390,6 +2387,7 @@
       "scorePerQueryIdentityMatch": 150,
       "maximumQueryIdentityScore": 450,
       "identityScope": "file",
+      "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "excludeTests": true
     },
@@ -2624,7 +2622,7 @@
     },
     {
       "id": "typescript-component-source-role",
-      "queryTerms": ["dialog", "component", "directive"],
+      "queryTerms": ["dialog", "component", "directive", "card"],
       "minimumMatches": 1,
       "minimumQueryIdentityMatches": 1,
       "score": 150,
@@ -2877,7 +2875,7 @@
     },
     {
       "id": "backend-outbox-processor-role",
-      "queryTerms": ["evaluate", "process", "processing", "outbox", "record", "records"],
+      "queryTerms": ["evaluate", "process", "processing", "outbox", "record", "records", "deliver"],
       "minimumMatches": 2,
       "candidateTerms": ["processor"],
       "minimumCandidateMatches": 1,
@@ -2894,7 +2892,7 @@
     },
     {
       "id": "backend-review-command-handler-role",
-      "queryTerms": ["review", "pending", "admin", "report"],
+      "queryTerms": ["review", "pending", "admin", "report", "status"],
       "minimumMatches": 3,
       "candidateTerms": ["review", "handler"],
       "minimumCandidateMatches": 2,
@@ -4006,8 +4004,8 @@
     },
     {
       "id": "command-validator-role",
-      "queryTerms": ["validator", "validation", "admin", "email", "template", "test"],
-      "minimumMatches": 3,
+      "queryTerms": ["validator", "validation"],
+      "minimumMatches": 1,
       "candidateTerms": ["validator"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 2,
@@ -4186,7 +4184,7 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Tests"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["tests/FoodDiary.Application.Tests/Cycles/"],
+      "pathPrefixes": ["Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/"],
       "pathSuffixes": [".cs"]
     },
     {

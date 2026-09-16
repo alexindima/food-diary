@@ -205,6 +205,81 @@ precision, abstention rate, and captured-error rate. The 100-case live gate
 therefore protects calibration as well as ranking accuracy.
 
 The committed retrieval suite has a 60-case regression corpus in
+its current owner-path layout. When projects move or service facades are replaced
+by commands and queries, update the expected source to the implementation that
+owns the same behavior. The fixture preflight rejects missing source files before
+ranking evaluation. Queries that name a retired API or exclude its replacement
+must describe the current behavioral owner too; this migration updates the weight
+entry consumer, cycle profile identity, admin locale validation, AI profile
+projection, and admin user/billing/audit read cases. These
+migrated cases are regression coverage, not untouched blind evidence. Historical
+score baselines remain historical; migration does not lower current thresholds
+or change the recorded scores.
+Node and in-process .NET ranking both recognize sibling module
+`Application.Abstractions`, scalar `Domain.Contracts`, and `PersistenceModel`
+roots as abstraction, domain, and persistence layers, retaining test and
+lookalike-path exclusions. Both readers also reward a completely named compound
+file identity using one existing file-name match weight and normalized query
+vocabulary in identifier order. Partial prefixes and single generic words do not
+receive that reward. Shared contracts, persistence adapters, and the MailRelay
+adapter retain their corresponding layer selectors after extraction. Application
+query handlers participate in reader/service role matching; command handlers
+participate in service role matching. These roles do not replace literal file
+identities or grant implementation affinity to contracts, validators, or tests.
+Lexical rank counts distinct physical paths, so extra index records for one file
+cannot penalize all following files. Contiguous multiword module names retain
+module ownership even when mentioned after a generic subject in the query.
+This compound-name rule applies to logical `Modules/` owners, not executable
+host names mentioned as callers. Prefix-expanded identity queries omit redundant
+longer prefixes so inflections cannot multiply one subject's weight during
+bounded candidate recall. Backend code and query-document projections receive
+the same frontend-intent penalty.
+
+Prefix expansion alternatives ending in `$` match a complete literal term;
+other alternatives retain prefix matching. This shares identical English/Russian
+expansion lists without widening the English match or raising the 700-rule
+budget. Administrative validator affinity requires validation intent, rather
+than merely the words admin/email/template. An HTTP interceptor question implies
+frontend transport intent even when it omits the word frontend.
+
+Facade-to-handler fixture migrations were checked against their pre-removal Git
+sources: `WeeklyCheckInUserProfileService` (`a05f743^`) delegated the profile read
+now owned by `GetWeeklyCheckInQueryHandler`; `BillingWebhookInboxService`
+(`df0bbf49^`) owned both batch and individual queued-event processing.
+`ShoppingListReadService` and `NotificationPreferencesService` (`8bc6f947^`)
+owned multiple reads or read/update operations, so their broad cases accept the
+corresponding current handlers. `AdminUserReadService` (`c26e4995^`) and
+`AdminBillingReadService` (`f5951c4^`) likewise split into query handlers.
+`AdminAuditReadService` (`f5951c4^`) specifically owned role-change audit and
+impersonation-session reads; its migrated question and targets retain those
+operations. `ContentReportAdministrationService` (`be74465^`) owned both review
+and dismissal status transitions, now represented by their command handlers.
+`AchievementDefinitionAdministrationService` (`be74465^`) owned listing,
+creation, and updating definitions; the broad administration case retains all
+three current handlers as valid owners.
+Frontend refresh coordination is restricted to frontend or unspecified change
+types. Local-day loader affinity requires three temporal terms, distinguishing
+timezone calculations from a request to assemble a snapshot for a local day.
+Background processing verbs exclude the generic semantic-service boost, and
+card intent selects TypeScript component sources alongside dialog and directive
+intent.
+Administrative mutation affinity applies to production administration services
+and command handlers only when at least two query identities match, with template
+plural normalization.
+Its administrative/mutation trigger uses direct query words and excludes read,
+audit, and history requests, so expanded update synonyms do not change intent.
+Both runtimes use normalized recall terms to recognize requests for contracts,
+interfaces, and abstractions, including their plural forms, when waiving the
+implementation-oriented abstraction penalty.
+Email-template application ownership outweighs the generic administration role;
+cleanup affinity accepts translated/synonymous intent but excludes restoration
+and explicit job/host requests. Outbox delivery is a processing intent.
+The retired locale parser (`be74465^`) wrapped `LanguageCode.TryParse`, now
+exercised by template validation. The AI context service (`78e4b522^`) projected
+language, token limits, and consent; its migrated question names those actual
+fields rather than the former fixture's unsupported subscription-tier claim.
+
+The primary corpus lives in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case
 challenge corpus in `.llm-wiki/evals/context-search-holdout.json`. The challenge
 set includes Russian queries and deliberately indirect implementation searches.

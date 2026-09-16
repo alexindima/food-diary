@@ -30,7 +30,7 @@
       "id": "ru-weekly-goal-reminder",
       "query": "кто отправляет напоминание если недельная цель отстает",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Application/Commands/SendWeeklyGoalReminders/SendWeeklyGoalRemindersCommandHandler.cs"]
     },
     {
       "id": "ru-billing-webhook-controller",
@@ -97,7 +97,7 @@
       "query": "purge old read notifications after their retention period",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
+        "Modules/Notifications/Application/Commands/CleanupExpiredNotifications/CleanupExpiredNotificationsCommandHandler.cs",
         "FoodDiary.JobManager/Services/NotificationCleanupJob.cs"
       ]
     },
@@ -105,7 +105,7 @@
       "id": "email-template-administration",
       "query": "administrator changes transactional email templates",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs"]
     },
     {
       "id": "user-agent-parsing",
@@ -141,7 +141,7 @@
       "id": "open-food-facts-cache-first-search",
       "query": "prefer cached Open Food Facts products before calling the provider",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs"]
     },
     {
       "id": "daily-advice-selection",
@@ -183,7 +183,7 @@
       "id": "structured-audit-logging",
       "query": "write a structured security audit entry",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Audit.Infrastructure/Persistence/StructuredAuditLogger.cs"]
     },
     {
       "id": "dashboard-meals-persistence-read",
@@ -195,13 +195,13 @@
       "id": "email-outbox-processing",
       "query": "deliver emails queued in the transactional outbox",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxProcessor.cs"]
     },
     {
       "id": "outbox-dead-letter-replay",
       "query": "replay poison messages from the outbox dead-letter queue",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs"]
     },
     {
       "id": "wearable-oauth-state",
@@ -231,7 +231,7 @@
       "id": "ai-prompt-provider",
       "query": "load the configured AI prompt template used for food recognition",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs"]
+      "expectedPaths": ["Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs"]
     },
     {
       "id": "russian-prerender-html-tool",

@@ -17,6 +17,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
+  - .llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
   - .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1
   - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
@@ -76,6 +78,11 @@ sources:
 ---
 
 # Run the Staged Index Pipeline
+
+Module source areas come from the Git-visible file inventory. Empty legacy
+directories and ignored build outputs must not change generated pages between
+a developer checkout and CI. Module abstraction roots resolve to the sibling
+`Application.Abstractions` directories after project extraction.
 
 The concurrent-index regression runs its two real pipeline writers in a private
 Git clone. Their lock and matching-result reuse are still tested together, while

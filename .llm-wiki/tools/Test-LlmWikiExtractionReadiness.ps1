@@ -70,6 +70,18 @@ try {
     $withLeak = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -DependencyFixturePath $relativeFixture -Format Json | ConvertFrom-Json
     if (@($withLeak.dependencyReadiness.actualModules) -notcontains 'Dashboard') { throw 'Universal dependency scan missed a Dashboard namespace/type reference.' }
     if ($withLeak.moduleReadiness.ready) { throw 'A cross-feature source dependency must block physical extraction readiness.' }
+    [IO.File]::WriteAllText($fixturePath, "using FoodDiary.Modules.Dashboard.Application.Models;`nnamespace FoodDiary.Modules.Dietologist.Application.Tests;`ninternal sealed class DashboardLeak;`n", [Text.UTF8Encoding]::new($false))
+    $withMovedLeak = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -DependencyFixturePath $relativeFixture -Format Json | ConvertFrom-Json
+    if (@($withMovedLeak.dependencyReadiness.actualModules) -notcontains 'Dashboard' -or $withMovedLeak.moduleReadiness.ready) {
+        throw 'A module-qualified implementation reference must still block extraction.'
+    }
+    foreach ($contractLayer in @('Contracts', 'Application.Abstractions', 'ApplicationExtra')) {
+        [IO.File]::WriteAllText($fixturePath, "using FoodDiary.Modules.Dashboard.$contractLayer.Models;`nnamespace FoodDiary.Modules.Dietologist.Application.Tests;`ninternal sealed class DashboardConsumer;`n", [Text.UTF8Encoding]::new($false))
+        $contractOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -DependencyFixturePath $relativeFixture -Format Json | ConvertFrom-Json
+        if (@($contractOnly.dependencyReadiness.actualModules) -contains 'Dashboard') {
+            throw "Contract or lookalike namespace must not become an application implementation dependency: $contractLayer."
+        }
+    }
 } finally {
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }

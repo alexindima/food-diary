@@ -126,7 +126,7 @@
       "id": "database-command-telemetry",
       "query": "measure and log slow Entity Framework database commands",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Persistence.Runtime/Services/DatabaseCommandTelemetryInterceptor.cs"]
     },
     {
       "id": "admin-sso-redis-code-store",
@@ -216,7 +216,7 @@
       "id": "product-overview-reader",
       "query": "database reader returns product overview information",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs"]
     },
     {
       "id": "open-food-facts-cache-repository",
@@ -228,7 +228,7 @@
       "id": "domain-event-dispatch-interceptor",
       "query": "dispatch domain events when Entity Framework saves changes",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatchInterceptor.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatchInterceptor.cs"]
     },
     {
       "id": "collaboration-audit-interceptor",
@@ -240,13 +240,13 @@
       "id": "outbox-processing-policy",
       "query": "policy controls retry and batch behavior for outbox processing",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingPolicy.cs"]
     },
     {
       "id": "wearables-controller",
       "query": "HTTP endpoints connect and synchronize wearable devices",
       "changeType": "Api",
-      "expectedPaths": ["Modules/Wearables/Presentation/Features/Wearables/WearablesController.cs"]
+      "expectedPaths": ["Modules/Wearables/Presentation/Controllers/WearablesController.cs"]
     },
     {
       "id": "version-controller",
@@ -258,13 +258,13 @@
       "id": "user-ai-consent-controller",
       "query": "HTTP API lets a user grant or withdraw AI processing consent",
       "changeType": "Api",
-      "expectedPaths": ["Modules/Users/Presentation/Features/Users/UserAiConsentController.cs"]
+      "expectedPaths": ["Modules/Users/Presentation/Controllers/UserAiConsentController.cs"]
     },
     {
       "id": "notifications-controller",
       "query": "HTTP endpoints list and mark user notifications",
       "changeType": "Api",
-      "expectedPaths": ["Modules/Notifications/Presentation/Features/Notifications/NotificationsController.cs"]
+      "expectedPaths": ["Modules/Notifications/Presentation/Controllers/NotificationsController.cs"]
     },
     {
       "id": "mail-inbox-messages-controller",

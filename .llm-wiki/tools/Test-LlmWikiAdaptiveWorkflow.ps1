@@ -57,10 +57,13 @@ $localInteraction = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -ProposedPath @(
         'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html',
         'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts',
-        'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts'
+        'FoodDiary.Web.Client/src/app/features/dashboard/components/nutrition-weekly-trend-card/nutrition-weekly-trend-card.spec.ts',
+        'FoodDiary.Web.Client/assets/i18n/en/app.json',
+        'FoodDiary.Web.Client/assets/i18n/ru/app.json'
     ) `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($localInteraction.profile -eq 'visual-ui-change') 'Local interaction inside an existing frontend component was elevated to feature.'
+Assert-Adaptive (-not $localInteraction.requiresWorkspace) 'Local UI interaction with paired translations incorrectly required a governed workspace.'
 Assert-Adaptive (@($localInteraction.stages | Where-Object { $_.id -eq 'journey-impact' -and $_.required }).Count -eq 0) 'Local component interaction retained required feature journey ceremony.'
 Assert-Adaptive (@(Get-AdaptiveIds $localInteraction.stages) -notcontains 'design') 'Local component interaction retained feature design ceremony.'
 Assert-Adaptive (@(Get-AdaptiveIds $localInteraction.stages) -contains 'focused-verification') 'Local component interaction omitted focused verification.'

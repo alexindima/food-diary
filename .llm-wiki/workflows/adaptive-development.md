@@ -52,6 +52,10 @@ for validation and replanning. It is not a packet-only fallback.
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 
+Bounded `visual-ui-change` work remains on the small workflow when it includes
+paired locale files. Localization alone does not require a governed workspace
+or a requirements stage for an existing component's local interaction.
+
 Read-oriented facade commands run under a shared index lock in a content-addressed,
 isolated snapshot. The guard detects any source mutation inside that snapshot,
 fails the command, and discards the poisoned snapshot; it never restores or
@@ -86,6 +90,10 @@ module dependency graph, and available extracted project references. Each
 uncached analysis reads each C# source once and reuses that invocation-local
 text for dependency, contract, and consumer scans. The text snapshot is rebuilt
 on the next call, including dependency fixtures; it adds no persistent cache.
+Namespace discovery supports both `FoodDiary.Application.<Owner>` and
+`FoodDiary.Modules.<Owner>.Application`. Module-qualified contracts and
+`Application.Abstractions` are distinct from implementation references; similarly
+named roots such as `ApplicationExtra` do not match the application layer.
 The
 physical source set is authoritative for ownership: multiple logical feature
 namespaces compiled into the same target project are reported as internal

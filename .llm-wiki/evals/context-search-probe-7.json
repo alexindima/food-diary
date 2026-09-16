@@ -111,19 +111,19 @@
     {
       "id": "admin-locale-parser-mixed-probe-7",
       "cohort": "mixed-ru-en",
-      "query": "admin parser для required language: trim locale, validate supported value и вернуть localized validation error",
+      "query": "admin email template validator проверяет required locale и supported language code",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Admin/Application/Common/AdminLocaleParser.cs"
+        "Modules/Admin/Application/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommandValidator.cs"
       ]
     },
     {
       "id": "ai-user-context-mixed-probe-7",
       "cohort": "mixed-ru-en",
-      "query": "AI user context service загружает профиль и решает active ли пользователь и какой у него subscription tier",
+      "query": "проекция профиля пользователя для AI: language, input/output token limits и accepted consent",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Ai/Application/Services/AiUserContextService.cs"
+        "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs"
       ]
     },
     {
@@ -177,7 +177,7 @@
       "query": "не сервис AI-провайдера: read service пользовательской квоты собирает usage за текущий UTC месяц и лимит тарифа",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs"
       ]
     },
     {
@@ -192,10 +192,11 @@
     {
       "id": "admin-user-reader-adjacent-probe-7",
       "cohort": "adjacent-role-disambiguation",
-      "query": "не mutation administration service: фасад чтения админ-пользователей отдает deleted user, paged list, dashboard summary и exists",
+      "query": "не mutation administration service: запросы чтения админ-пользователей отдают paged list и dashboard summary",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Admin/Application/Services/AdminUserReadService.cs"
+        "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
+        "Modules/Admin/Application/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQueryHandler.cs"
       ]
     },
     {
@@ -228,10 +229,13 @@
     {
       "id": "admin-billing-read-service-adjacent-probe-7",
       "cohort": "adjacent-role-disambiguation",
-      "query": "не repository и не query handler: admin billing read facade загружает payments subscriptions webhook events и revenue summary",
+      "query": "не repository: admin billing read queries загружают payments subscriptions webhook events и revenue summary",
       "changeType": "Backend",
       "expectedPaths": [
-        "Modules/Admin/Application/Services/AdminBillingReadService.cs"
+        "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
+        "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
+        "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
+        "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs"
       ]
     },
     {
@@ -294,7 +298,7 @@
       "query": "какие tests покрывают confirm period start и update cycle consent: owner, missing profile, invalid user и validator failures",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs"
       ]
     },
     {

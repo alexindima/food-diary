@@ -9,10 +9,11 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 # Frozen from the unsharded audit at 45e8de30e. Updating assertions requires an
 # intentional inventory refresh, never silently dropping coverage during moves.
 $expected = @{
-    # The AI trace now checks calculateNutrition, the remaining direct HTTP call in AiFoodService.
-    Core = @{ count = 333; hash = 'b0645935bcec1322271091b78a4a3806ada3f4ffb4b4c1f8214c0963b3324653' }
-    Governed = @{ count = 376; hash = '42bf7167f835ab9d6ca667002f60d80f6edcca9b2b93677f406cd84fd0594cc7' }
-    Workspace = @{ count = 279; hash = 'ea7979f9f97d186fb115138cb4ab4085dc228f5c58cfb4444367b0643958d005' }
+    # Compared with ca6ae5b5e: only BillingController and architecture-test paths
+    # changed inside assertions after their moves. Every assertion is preserved.
+    Core = @{ count = 333; hash = '3c8768a5fd7976a6c8a62d5148dabb55b75cc17d3578fdae534163ce869293fb' }
+    Governed = @{ count = 376; hash = '284b24a587071a8314562e9aacf9cc3dc37ad772806ce24cff28061fe3c6078d' }
+    Workspace = @{ count = 279; hash = 'ba880a6e89141db9d594badfdd783734b187785ad3281d1c4cf755ae336fffd4' }
     Orchestration = @{ count = 97; hash = '3aeed905ee4fd448d167168544359a407ba47b4af347add97351f53c411a35e7' }
     Common = @{ count = 1; hash = '43c752083d5bd294ccf4a8efb8bdf4cd9831a14bc33acdbaa06de6659838f6bd' }
 }

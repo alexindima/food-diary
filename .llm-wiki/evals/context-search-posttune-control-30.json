@@ -61,23 +61,23 @@
     "minimumMeanReciprocalRank": 0.0
   },
   "cases": [
-    { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["Modules/Billing/Presentation/Controllers/BillingController.cs"], "acceptedPaths": ["Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs"] },
+    { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["Modules/Billing/Presentation/Controllers/BillingController.cs"], "acceptedPaths": ["Modules/Admin/Presentation/Controllers/AdminBillingController.cs"] },
     { "id": "posttune-api-002", "cohort": "api-roles", "query": "SignalR hub подтверждения email", "changeType": "Api", "expectedPaths": ["Modules/Identity/Presentation/Hubs/EmailVerificationHub.cs"] },
-    { "id": "posttune-api-003", "cohort": "api-roles", "query": "API controller Web Push уведомлений", "changeType": "Api", "expectedPaths": ["Modules/Notifications/Presentation/Features/Notifications/NotificationPushController.cs"] },
+    { "id": "posttune-api-003", "cohort": "api-roles", "query": "API controller Web Push уведомлений", "changeType": "Api", "expectedPaths": ["Modules/Notifications/Presentation/Controllers/NotificationPushController.cs"] },
     { "id": "posttune-api-004", "cohort": "api-roles", "query": "options rate limiting для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"] },
     { "id": "posttune-api-005", "cohort": "api-roles", "query": "constant time сравнение secret в presentation security", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/SecretComparison.cs"] },
 
-    { "id": "posttune-back-001", "cohort": "backend-roles", "query": "read service текущего menstrual cycle", "changeType": "Backend", "expectedPaths": ["Modules/Cycles/Application/Services/CycleReadService.cs"] },
-    { "id": "posttune-back-002", "cohort": "backend-roles", "query": "admin read service уроков питания", "changeType": "Backend", "expectedPaths": ["Modules/Lessons/Application/Services/LessonAdministrationReadService.cs"] },
+    { "id": "posttune-back-001", "cohort": "backend-roles", "query": "read service текущего menstrual cycle", "changeType": "Backend", "expectedPaths": ["Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs"] },
+    { "id": "posttune-back-002", "cohort": "backend-roles", "query": "admin read service уроков питания", "changeType": "Backend", "expectedPaths": ["Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs"] },
     { "id": "posttune-back-003", "cohort": "backend-roles", "query": "planner intermittent fasting notifications", "changeType": "Backend", "expectedPaths": ["Modules/Fasting/Application/Services/FastingIntermittentNotificationPlanner.cs"] },
     { "id": "posttune-back-004", "cohort": "backend-roles", "query": "обязательный parser id упражнения", "changeType": "Backend", "expectedPaths": ["Modules/Exercises/Application/Internal/RequiredIdParser.cs"] },
     { "id": "posttune-back-005", "cohort": "backend-roles", "query": "options USDA API integration", "changeType": "Backend", "expectedPaths": ["Modules/Usda/Infrastructure/Providers/Options/UsdaApiOptions.cs"] },
 
     { "id": "posttune-data-001", "cohort": "domain-persistence", "query": "доменная session refresh token пользователя", "changeType": "Backend", "expectedPaths": ["Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs"] },
     { "id": "posttune-data-002", "cohort": "domain-persistence", "query": "value object оценки качества еды", "changeType": "Backend", "expectedPaths": ["Modules/Products/FoodQuality/ValueObjects/FoodQualityGrade.cs"] },
-    { "id": "posttune-data-003", "cohort": "domain-persistence", "query": "repository квоты AI", "changeType": "Database", "expectedPaths": ["Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs"] },
+    { "id": "posttune-data-003", "cohort": "domain-persistence", "query": "repository квоты AI", "changeType": "Database", "expectedPaths": ["Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs"] },
     { "id": "posttune-data-004", "cohort": "domain-persistence", "query": "outbox удаления image object", "changeType": "Database", "expectedPaths": ["Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs"] },
-    { "id": "posttune-data-005", "cohort": "domain-persistence", "query": "EF configuration шаблона email", "changeType": "Database", "expectedPaths": ["Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs"] },
+    { "id": "posttune-data-005", "cohort": "domain-persistence", "query": "EF configuration шаблона email", "changeType": "Database", "expectedPaths": ["Modules/Identity/PersistenceModel/Configurations/Email/EmailTemplateConfiguration.cs"] },
 
     { "id": "posttune-front-001", "cohort": "frontend", "query": "frontend facade внешнего продукта OpenFoodFacts USDA", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/products/lib/manage/product-external-food.facade.ts"] },
     { "id": "posttune-front-002", "cohort": "frontend", "query": "Angular dialog смены пароля профиля", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.ts"] },

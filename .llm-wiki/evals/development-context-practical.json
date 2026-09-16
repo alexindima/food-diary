@@ -23,7 +23,7 @@
       "query": "cleanup old authentication login events batch cancellation",
       "plannedPath": null,
       "expectedPaths": [
-        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"
       ],
       "expectedLayers": [],
       "maximumExpectedRank": 3,
@@ -39,7 +39,7 @@
       "query": "очистка старых событий входа зависает при пакетном удалении",
       "plannedPath": null,
       "expectedPaths": [
-        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"
       ],
       "expectedLayers": [],
       "maximumExpectedRank": 3,

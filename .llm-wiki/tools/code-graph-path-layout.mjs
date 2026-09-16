@@ -15,6 +15,17 @@ export function rankingPathIdentities(value) {
       ? `fooddiary.infrastructure/persistence/configurations/${owner}/${tail.slice('configurations/'.length)}`
       : `fooddiary.infrastructure/persistence/${owner}/${tail}`];
   }
+  const sharedContract = /^shared\/fooddiary\.([^.\/]+)\.contracts\/(.+)$/.exec(path);
+  if (sharedContract && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
+    return [path, `fooddiary.application.abstractions/${sharedContract[2]}`];
+  }
+  const sharedPersistence = /^shared\/fooddiary\.([^.\/]+)\.infrastructure\/persistence\/(.+)$/.exec(path);
+  if (sharedPersistence && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
+    return [path, `fooddiary.infrastructure/persistence/${sharedPersistence[1]}/${sharedPersistence[2]}`];
+  }
+  if (path.startsWith('shared/fooddiary.email.mailrelay/') && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
+    return [path, `fooddiary.integrations/email/${path.slice('shared/fooddiary.email.mailrelay/'.length)}`];
+  }
   if (path.startsWith('shared/fooddiary.integrations.http/') &&
     !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
     return [path, `fooddiary.integrations/${path.slice('shared/fooddiary.integrations.http/'.length)}`];
@@ -24,10 +35,16 @@ export function rankingPathIdentities(value) {
     return [path, `fooddiary.domain/${path.slice('shared/fooddiary.domain.primitives/'.length)}`];
   }
   const test = /^modules\/([^/]+)\/tests\/fooddiary\.modules\.([^/]+)\.((?:application|domain|infrastructure(?:\.integration)?)\.tests|infrastructure\.integrationtests)\/(.+)$/.exec(path);
-  if (test && test[1] === test[2]) return [path, `tests/fooddiary.${test[3]}/${test[4]}`];
-  const match = /^modules\/([^/]+)\/(application|domain|infrastructure|presentation|contracts)\/(.+)$/.exec(path);
+  if (test && test[1] === test[2]) return /infrastructure\.integration\.?tests/.test(test[3])
+    ? [path, `tests/fooddiary.${test[3]}/${test[4]}`, `platform/tests/fooddiary.infrastructure.integrationtests/${test[4]}`]
+    : [path, `tests/fooddiary.${test[3]}/${test[4]}`];
+  const match = /^modules\/([^/]+)\/(application|application\.abstractions|domain|domain\.contracts|infrastructure|persistencemodel|presentation|contracts)\/(.+)$/.exec(path);
   if (!match || /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) return [path];
   const [, module, layer, tail] = match;
+  if (layer === 'persistencemodel') return [path, `fooddiary.infrastructure/persistence/${tail}`];
+  if (layer === 'application.abstractions') return [path, `fooddiary.application.abstractions/${tail}`];
+  if (layer === 'domain.contracts') return /^(?:enums|valueobjects)\//.test(tail)
+    ? [path, `fooddiary.domain/${tail}`] : [path];
   if (layer === 'presentation') return [path, `fooddiary.presentation.api/${tail}`];
   // Consumer contracts keep abstraction selectors; they gain no implementation layer.
   if (layer === 'contracts') return [path, `fooddiary.application.abstractions/${tail}`];
@@ -66,9 +83,44 @@ export function implicitImplementationIntent(changeType, terms, affinities) {
   return strongIntent || infrastructureIntent;
 }
 
+export function compoundModuleMention(module, terms) {
+  for (let start = 0; start < terms.length; start++) {
+    let phrase = terms[start];
+    for (let end = start + 1; end < terms.length && end < start + 4; end++) {
+      phrase += terms[end];
+      if (phrase === module || (module.endsWith('s') && !module.endsWith('ss') && !module.endsWith('status') && phrase === module.slice(0, -1))) return true;
+    }
+  }
+  return false;
+}
+
 export function directIdentifierTermMatchesMinimum(term, minimum) {
   return term.length >= minimum || (term.length >= 2 &&
     /^[\p{L}\p{N}]+$/u.test(term) && /\p{L}/u.test(term) && /\p{N}/u.test(term));
+}
+
+// A fully named compound identifier is more specific than a longer helper or
+// event name sharing only its prefix. Do not boost single generic words.
+export function completeFileIdentityMatches(value, terms) {
+  const stem = String(value).replaceAll('\\', '/').split('/').at(-1).replace(/\.[^.]+$/, '');
+  const words = stem.replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, '$1 $2').toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+  let matched = 0;
+  for (const term of terms) if (matched < words.length && words[matched] === term) matched++;
+  return words.length >= 2 && matched === words.length;
+}
+
+// CQRS handlers now own use cases formerly implemented by application services.
+// These are role identities only; literal name matching still uses the real file.
+export function applicationRoleIdentity(value) {
+  const path = String(value ?? '').replaceAll('\\', '/').toLowerCase();
+  if (!/^modules\/[^/]+\/application\/.+/.test(path) || /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/.test(path)) return '';
+  if (path.endsWith('queryhandler.cs')) {
+    const stem = path.slice(0, -'queryhandler.cs'.length);
+    const collection = stem.endsWith('s') && !stem.endsWith('status') && !stem.endsWith('ss') && !stem.endsWith('ids');
+    return `read service reader readservice${collection ? ' collection' : ''}`;
+  }
+  if (path.endsWith('commandhandler.cs')) return 'service';
+  return '';
 }
 
 // Preserve a hyphenated identifier's compact spelling as well as its words,

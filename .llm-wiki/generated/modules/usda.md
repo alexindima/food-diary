@@ -41,18 +41,22 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
-- Public contract files: 16
+- Public contract files: 20
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 16
-- Interfaces: 3
+- Public contract types: 20
+- Interfaces: 6
 - DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
+- `class UsdaErrors`
+- `interface IUsdaFoodReadModelRepository`
+- `interface IUsdaFoodReadRepository`
+- `interface IUsdaFoodRepository`
 - `interface IUsdaFoodSearchService`
 - `interface IUsdaMealNutritionReadService`
 - `interface IUsdaProductLinkService`

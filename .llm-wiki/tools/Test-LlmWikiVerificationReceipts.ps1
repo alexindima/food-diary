@@ -38,7 +38,7 @@ try {
         -CoverageScope 'application-contract' `
         -Format Json | Out-Null
     $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
-        -ChangedPath 'Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs' `
+        -ChangedPath 'Modules/Users/Contracts/Common/ICurrentUserAccessService.cs' `
         -Format Json | ConvertFrom-Json
     $normalizedPlanCommand = Normalize-LlmWikiVerificationCommand $planCommand
     $applicationCheck = @($plan.commands | Where-Object {
@@ -66,7 +66,7 @@ try {
     $null = New-Item -ItemType Directory -Path $absoluteWorkspace -Force
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') init `
         -Path "$workspace/evidence.json" `
-        -ChangedPath 'Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs' | Out-Null
+        -ChangedPath 'Modules/Users/Contracts/Common/ICurrentUserAccessService.cs' | Out-Null
     $import = & (Join-Path $PSScriptRoot 'Import-LlmWikiEvidenceReceipts.ps1') `
         -WorkspacePath $workspace `
         -Format Json | ConvertFrom-Json

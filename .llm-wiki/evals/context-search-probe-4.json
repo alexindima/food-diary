@@ -16,15 +16,15 @@
   "cases": [
     {
       "id": "admin-audit-reader-probe-4",
-      "query": "read structured audit records for administrator review",
+      "query": "read administrator audit records for user role changes and impersonation sessions",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Admin/Application/Services/AdminAuditReadService.cs"]
+      "expectedPaths": ["Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs", "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs"]
     },
     {
       "id": "favorite-recipe-reader-probe-4",
       "query": "load a user's favorite recipe summaries",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQueryHandler.cs"]
     },
     {
       "id": "dietologist-user-context-probe-4",
@@ -48,7 +48,7 @@
       "id": "content-report-administration-probe-4",
       "query": "administrator service changes content report status",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs"]
+      "expectedPaths": ["Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs", "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs"]
     },
     {
       "id": "fasting-historical-insight-builder-probe-4",
@@ -60,7 +60,7 @@
       "id": "initial-admin-bootstrap-service-probe-4",
       "query": "bootstrap the initial administrator account during startup",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs"]
     },
     {
       "id": "product-usda-link-service-probe-4",
@@ -78,19 +78,22 @@
       "id": "weekly-check-in-user-profile-probe-4",
       "query": "load the user profile needed for a weekly check-in",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs"]
+      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs"]
     },
     {
       "id": "billing-webhook-inbox-service-probe-4",
       "query": "process queued billing webhook inbox events",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Billing/Application/Services/BillingWebhookInboxService.cs"]
+      "expectedPaths": [
+        "Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs",
+        "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs"
+      ]
     },
     {
       "id": "web-push-subscription-reader-probe-4",
       "query": "read web push subscriptions for notification administration",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs"]
     },
     {
       "id": "application-ai-telemetry-probe-4",

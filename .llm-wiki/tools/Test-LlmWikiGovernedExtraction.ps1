@@ -82,7 +82,7 @@ if (@($fastingPlan.criteria | Where-Object { $_ -match '(?i)\bby\b' }).Count -gt
 }
 foreach ($requiredPath in @(
     'Modules/Dashboard/Application'
-    'Modules/Dashboard/Application/Abstractions'
+    'Modules/Dashboard/Application.Abstractions'
     'FoodDiary.Initializer/Program.cs'
     'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'
     'FoodDiary.Web.Api/FoodDiary.Web.Api.csproj'

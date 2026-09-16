@@ -55,7 +55,7 @@
       "query": "implementation contract for artificial intelligence usage daily summary",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageDailySummary.cs"
+        "Modules/Ai/Contracts/Models/AiUsageDailySummary.cs"
       ]
     },
     {
@@ -64,7 +64,7 @@
       "query": "automated checks for dietologist recommendation comment handler",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/RecommendationCommentHandlerTests.cs"
       ]
     },
     {
@@ -160,10 +160,10 @@
     {
       "id": "unseen-v2-013",
       "cohort": "application-api",
-      "query": "implementation contract for common i weight entry read service",
+      "query": "consumer contract for reading weight entries",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+        "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadWeightEntries/ReadWeightEntriesQuery.cs"
       ]
     },
     {
@@ -181,7 +181,7 @@
       "query": "domain rule for wearables wearable sync entry",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs"
+        "Modules/Wearables/Domain/Entities/WearableSyncEntry.cs"
       ]
     },
     {
@@ -199,7 +199,7 @@
       "query": "storage or provider implementation for tracking fasting session configuration",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs"
+        "Modules/Fasting/PersistenceModel/Configurations/FastingSessionConfiguration.cs"
       ]
     },
     {
@@ -226,7 +226,7 @@
       "query": "automated checks for tracking and meal plan coverage gap",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs"
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/TrackingAndMealPlanCoverageGapTests.cs"
       ]
     },
     {
@@ -290,7 +290,7 @@
       "query": "domain rule for users user lifecycle",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs"
+        "Modules/Users/Domain/Entities/User.Lifecycle.cs"
       ]
     },
     {
@@ -308,7 +308,7 @@
       "query": "storage or provider implementation for token authentication options",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Options/JwtOptions.cs"
+        "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs"
       ]
     },
     {
@@ -416,7 +416,7 @@
       "query": "storage or provider implementation for dietologist recommendation bulk dispatch configuration",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
+        "Modules/Dietologist/PersistenceModel/Configurations/RecommendationBulkDispatchConfiguration.cs"
       ]
     },
     {
@@ -434,7 +434,7 @@
       "query": "implementation contract for responses user desired weight http response",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Responses/UserDesiredWeightHttpResponse.cs"
       ]
     },
     {
@@ -443,7 +443,7 @@
       "query": "automated checks for weekly check in calculator",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs"
+        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInCalculatorTests.cs"
       ]
     },
     {
@@ -506,7 +506,7 @@
       "query": "domain rule for meals meal artificial intelligence item",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs"
+        "Modules/Meals/Domain/Entities/MealAiItem.cs"
       ]
     },
     {
@@ -524,7 +524,7 @@
       "query": "storage or provider implementation for interceptors event dispatcher",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatcher.cs"
+        "Shared/FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatcher.cs"
       ]
     },
     {
@@ -551,7 +551,7 @@
       "query": "automated checks for notifications preferences",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs"
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.Preferences.cs"
       ]
     },
     {
@@ -719,10 +719,10 @@
     {
       "id": "unseen-v2-075",
       "cohort": "domain-invariants",
-      "query": "domain rule for ids cycle identifier",
+      "query": "domain rule for ids cycle profile identifier",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs"
+        "Modules/Cycles/Domain/ValueObjects/Ids/CycleProfileId.cs"
       ]
     },
     {
@@ -767,7 +767,7 @@
       "query": "automated checks for user security version",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserSecurityVersionTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserSecurityVersionTests.cs"
       ]
     },
     {
@@ -776,7 +776,7 @@
       "query": "domain rule for tracking cycle consent",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs"
+        "Modules/Cycles/Domain/Entities/CycleConsent.cs"
       ]
     },
     {
@@ -866,7 +866,7 @@
       "query": "implementation contract for process queued billing webhook command",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+        "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
       ]
     },
     {
@@ -884,7 +884,7 @@
       "query": "domain rule for users user role",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Users/Domain/Entities/Users/UserRole.cs"
+        "Modules/Users/Domain/Entities/UserRole.cs"
       ]
     },
     {
@@ -929,7 +929,7 @@
       "query": "automated checks for notifications validator",
       "changeType": "Tests",
       "expectedPaths": [
-        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsValidatorTests.cs"
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsValidatorTests.cs"
       ]
     },
     {

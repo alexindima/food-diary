@@ -48,55 +48,59 @@
       "id": "wearable-read-service-probe-5",
       "query": "read wearable connections and synchronization state",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Wearables/Application/Services/WearableReadService.cs"]
+      "expectedPaths": ["Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs"]
     },
     {
       "id": "favorite-product-read-service-probe-5",
       "query": "load a user's favorite product summaries",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs"]
     },
     {
       "id": "favorite-meal-read-service-probe-5",
       "query": "load a user's favorite meal summaries",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteMeals/Queries/ReadFavoriteMeals/ReadFavoriteMealsQueryHandler.cs"]
     },
     {
       "id": "waist-entry-read-service-probe-5",
       "query": "read a user's waist measurement entries",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs"]
+      "expectedPaths": ["Modules/BodyMetrics/Application/WaistEntries/Queries/ReadWaistEntries/ReadWaistEntriesQueryHandler.cs"]
     },
     {
       "id": "email-template-administration-reader-probe-5",
       "query": "administrator reads email template definitions",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatesQueryHandler.cs"]
     },
     {
       "id": "authentication-login-event-cleanup-probe-5",
       "query": "cleanup old authentication login events",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"]
     },
     {
       "id": "shopping-list-read-service-probe-5",
       "query": "read shopping list data for meal planning",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListReadService.cs"]
+      "expectedPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs"
+      ]
     },
     {
       "id": "meal-plan-read-service-probe-5",
       "query": "read saved meal plan details",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/MealPlanning/Application/MealPlans/Services/MealPlanReadService.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs"]
     },
     {
       "id": "post-commit-action-queue-probe-5",
       "query": "queue actions that must run after transaction commit",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs"]
     },
     {
       "id": "recipe-nutrition-applier-probe-5",

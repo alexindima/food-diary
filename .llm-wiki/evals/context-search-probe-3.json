@@ -18,13 +18,13 @@
       "id": "admin-user-login-reader-probe-3",
       "query": "read administrator login events and device summaries",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Admin/Application/Services/AdminUserLoginReadService.cs"]
+      "expectedPaths": ["Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs"]
     },
     {
       "id": "recommendation-discussion-reader-probe-3",
       "query": "load comments in a dietologist recommendation discussion",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs"]
     },
     {
       "id": "meal-manual-item-appender-probe-3",
@@ -66,7 +66,7 @@
       "id": "marketing-conversion-recorder-probe-3",
       "query": "record a marketing conversion when premium starts",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Marketing/Application/Services/MarketingConversionRecorder.cs"]
+      "expectedPaths": ["Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs"]
     },
     {
       "id": "notification-client-refresh-service-probe-3",

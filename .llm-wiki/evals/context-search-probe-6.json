@@ -36,13 +36,13 @@
       "id": "weekly-check-in-read-service-probe-6",
       "query": "build a seven-day check-in summary from nutrition meals weight waist and hydration",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs"]
+      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs"]
     },
     {
       "id": "gamification-read-service-probe-6",
       "query": "load streaks badges weekly adherence and health score for a gamification profile",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Gamification/Application/Services/GamificationReadService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs"]
     },
     {
       "id": "web-push-endpoint-policy-probe-6",

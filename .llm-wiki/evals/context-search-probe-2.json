@@ -42,25 +42,25 @@
       "id": "notification-cleanup-service-probe-2",
       "query": "remove expired notification data in the application layer",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationCleanupService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Commands/CleanupExpiredNotifications/CleanupExpiredNotificationsCommandHandler.cs"]
     },
     {
       "id": "user-identity-mutation-service-probe-2",
       "query": "change persisted login identities linked to a user",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Users/Application/Services/UserIdentityMutationService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Services/UserAuthenticationIdentityService.cs"]
     },
     {
       "id": "user-administration-reader-probe-2",
       "query": "read administrator views of user accounts",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Users/Application/Services/UserAdministrationReadService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs"]
     },
     {
       "id": "achievement-reconciliation-handler-probe-2",
       "query": "handler reconciles achievement state after domain changes",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Commands/ReconcileAchievements/ReconcileAchievementsCommandHandler.cs"]
     },
     {
       "id": "recipe-lookup-service-probe-2",
@@ -72,7 +72,7 @@
       "id": "current-waist-provider-probe-2",
       "query": "retrieve the user's current waist measurement",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Users/UserCurrentWaistProvider.cs"]
     },
     {
       "id": "exercise-entry-repository-probe-2",

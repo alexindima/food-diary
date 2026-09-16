@@ -207,7 +207,7 @@ Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
 
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(
-        'Modules/Fasting/Presentation/Features/Fasting/FastingReadController.cs'
+        'Modules/Fasting/Presentation/Controllers/FastingReadController.cs'
         'Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs'
         'FoodDiary.Web.Client/assets/i18n/en/common.json'
         'FoodDiary.Infrastructure/Persistence/Migrations/Example.cs'
@@ -343,7 +343,7 @@ Assert-Wiki ($intentBrief.analysis.confidence -eq 'low') 'Intent-inferred brief 
 Assert-Wiki (@($intentBrief.analysis.inferredPaths | Where-Object { $_ -match '(?i)(food|photo|openai)' }).Count -gt 0) 'Intent-inferred brief did not discover a relevant AI/photo path.'
 
 $criticalBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
-    -ChangedPath @('Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs') `
+    -ChangedPath @('Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs') `
     -Format Json
 $criticalBrief = $criticalBriefJson | ConvertFrom-Json
 Assert-Wiki ($criticalBrief.risk.level -eq 'high') 'Task brief did not elevate a security-sensitive API flow to high risk.'
@@ -364,7 +364,7 @@ Assert-Wiki (
 ) 'Database intent expanded an explicit changed-path boundary with research-only persistence paths.'
 
 $qualityBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
-    -ChangedPath @('Modules/Recipes/Domain/Entities/Recipes/Recipe.cs') `
+    -ChangedPath @('Modules/Recipes/Domain/Entities/Recipe.cs') `
     -Format Json
 $qualityBrief = $qualityBriefJson | ConvertFrom-Json
 Assert-Wiki (@($qualityBrief.quality.changedFiles).Count -eq 1) 'Task brief did not attach changed-file quality metrics.'
@@ -1024,7 +1024,7 @@ Assert-Wiki (@($domainPlan.scenarios.id) -contains 'domain-invariant-boundaries'
 $domainBrief = $domainPacket.brief
 Assert-Wiki (@($domainBrief.domainDataImpact.types).Count -gt 0) 'Task brief did not attach changed domain types.'
 Assert-Wiki (@($domainBrief.generatedActions) -contains './.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1') 'Domain change did not request domain/data-index regeneration.'
-$mappingPath = 'Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs'
+$mappingPath = 'Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserConfiguration.cs'
 $mappingPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') -ChangedPath $mappingPath -Format Json
 $mappingPlan = $mappingPlanJson | ConvertFrom-Json
 Assert-Wiki (@($mappingPlan.scenarios.id) -contains 'persistence-model-contract') 'Persistence test plan did not include model-contract verification.'
@@ -1217,7 +1217,7 @@ try {
         $directoryScopeManifest = $directoryScopeManifestRaw | ConvertFrom-Json
         $directoryScopePacket = $directoryScopePacketRaw | ConvertFrom-Json
         $directoryScopeManifest.scope.plannedPaths = @('Tooling/tests/FoodDiary.ArchitectureTests')
-        $directoryScopeManifest.scope.allowedPathPatterns = @('^tests/FoodDiary\.ArchitectureTests/')
+        $directoryScopeManifest.scope.allowedPathPatterns = @('^Tooling/tests/FoodDiary\.ArchitectureTests/')
         $governanceProvenancePath = '.llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1'
         $directoryScopePacket.diff.changedPaths = @(
             'Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs'
@@ -5206,7 +5206,7 @@ try {
         -CriterionId AC-002 `
         -ChangedPath $contractPath `
         -ScenarioId backend-validation `
-        -TestPath 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs' | Out-Null
+        -TestPath 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingValidatorTests.cs' | Out-Null
     & (Join-Path $toolsRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') resolve `
         -Path $acceptancePath `
         -CriterionId AC-002 `

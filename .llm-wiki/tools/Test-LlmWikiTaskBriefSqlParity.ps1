@@ -21,7 +21,7 @@ $cases = @(
         Compact = $false
     }
     [pscustomobject]@{ Intent = 'Review a hosted service'; ProposedPath = @('Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs'); Compact = $false }
-    [pscustomobject]@{ Intent = 'Review sensitive account data'; ProposedPath = @('Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs'); Compact = $false }
+    [pscustomobject]@{ Intent = 'Review sensitive account data'; ProposedPath = @('Modules/Identity/Contracts/Authentication/Common/AccountCreatedMessage.cs'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review an admin component contract'; ProposedPath = @('FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review a domain aggregate'; ProposedPath = @('Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review a backend command contract'; ProposedPath = @('Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs'); Compact = $false }

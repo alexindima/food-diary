@@ -141,8 +141,11 @@ Use the independently authored holdout corpus as the primary retrieval-quality
 signal. The frozen target-aware synthetic unseen corpus is a deterministic
 diagnostic for ranking regressions and cohort balance; because its expected
 paths informed its construction, it is not evidence of real-user query quality.
-Keep frozen target paths aligned with verified source relocations without
-changing their semantic targets, queries or thresholds. Structural ranking
+Keep target paths aligned with verified source relocations without changing
+their semantic targets or thresholds. Preserve queries for pure relocations;
+when an API is retired, explicitly document any query migration needed to remove
+a deleted type name or contradictory architectural premise. Such migrated cases
+are regression evidence, not a new blind evaluation. Structural ranking
 aliases preserve layer preferences for module providers and shared libraries;
 search results still name their current physical owners.
 

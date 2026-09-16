@@ -24,7 +24,7 @@ sources:
 
 ## Source Areas
 
-- `Modules/Dashboard/Application/Abstractions`
+- `Modules/Dashboard/Application.Abstractions`
 - `Modules/Statistics/Application`
 - `Modules/Statistics/Presentation`
 
@@ -37,19 +37,34 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 0
+- Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 16
+- Interfaces: 4
+- DTO/read-model/projection types: 11
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `interface IDashboardBodyReadService`
+- `interface IDashboardMealsReadService`
+- `interface IDashboardReadService`
+- `interface IDashboardStatisticsReadService`
+- `record DashboardBodyReadModel`
+- `record DashboardMealAiItemReadModel`
+- `record DashboardMealAiSessionReadModel`
+- `record DashboardMealItemReadModel`
+- `record DashboardMealReadModel`
+- `record DashboardMealsReadModel`
+- `record DashboardReadModel`
+- `record DashboardReadSections`
+- `record DashboardWaistPointReadModel`
+- `record DashboardWaistSummaryReadModel`
+- `record DashboardWeightPointReadModel`
+- `record DashboardWeightSummaryReadModel`
 
 ## Focused Tests
 

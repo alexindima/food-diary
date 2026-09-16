@@ -93,6 +93,14 @@ if ($missingBoundaryModules.Count -gt 0) {
     throw "Backend module boundary metadata is missing for: $($missingBoundaryModules -join ', ')."
 }
 $repositoryFilePaths = @(Get-RepositoryFilePaths)
+$repositoryAreas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+foreach ($repositoryFile in $repositoryFilePaths) {
+    $area = [string]$repositoryFile
+    while ($area.Contains('/')) {
+        $area = $area.Substring(0, $area.LastIndexOf('/'))
+        [void]$repositoryAreas.Add($area)
+    }
+}
 $sourceFiles = @(
     $repositoryFilePaths |
         Where-Object {
@@ -206,7 +214,9 @@ function Get-SourceAreaPaths {
     $candidatePaths.Add("FoodDiary.Presentation.Api/Features/$ModuleName")
 
     return @($candidatePaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique | Where-Object {
-        Test-Path -LiteralPath (Join-Path $repositoryRoot $_)
+        # Empty legacy folders and ignored build outputs are absent in a clean checkout.
+        # Derive source areas from repository files, not workstation directory residue.
+        $repositoryAreas.Contains($_.TrimEnd('/'))
     })
 }
 
@@ -218,7 +228,7 @@ function Resolve-AbstractionAreaPath {
     if (Test-Path -LiteralPath (Join-Path $repositoryRoot $rootDirectory) -PathType Container) {
         return $normalizedArea
     }
-    $moduleAbstractions = "Modules/$rootDirectory/Application/Abstractions"
+    $moduleAbstractions = "Modules/$rootDirectory/Application.Abstractions"
     if (Test-Path -LiteralPath (Join-Path $repositoryRoot $moduleAbstractions) -PathType Container) {
         return $moduleAbstractions
     }

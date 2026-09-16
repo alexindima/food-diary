@@ -76,7 +76,7 @@ $internalFeatureNamespaces = [Collections.Generic.HashSet[string]]::new([StringC
 foreach ($path in $moduleSourcePaths) {
     $text = $sourceText[$path]
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
-    foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.Application\.(?<feature>[A-Z][A-Za-z0-9_]+)(?:\.(?<subfeature>[A-Z][A-Za-z0-9_]+))?(?:\.|\s*[;{])')) {
+    foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.(?:Application\.(?<feature>[A-Z][A-Za-z0-9_]+)|Modules\.(?<feature>[A-Z][A-Za-z0-9_]+)\.Application)(?:\.(?<subfeature>[A-Z][A-Za-z0-9_]+))?(?:\.|\s*[;{])')) {
         $feature = $match.Groups['feature'].Value
         if ($feature -ne 'Abstractions') { $null = $internalFeatureNamespaces.Add($feature) }
         if ($feature -eq $Module -and $match.Groups['subfeature'].Success) {
@@ -88,13 +88,13 @@ $sourceDependencies = [Collections.Generic.List[object]]::new()
 foreach ($path in $moduleSourcePaths) {
     $text = $sourceText[$path]
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
-    foreach ($match in [regex]::Matches($scanText, '\bFoodDiary\.Application\.(?<module>[A-Z][A-Za-z0-9_]+)(?:\.[A-Za-z0-9_]+)*')) {
+    foreach ($match in [regex]::Matches($scanText, '\bFoodDiary\.(?:Application\.(?<module>[A-Z][A-Za-z0-9_]+)|Modules\.(?<module>[A-Z][A-Za-z0-9_]+)\.Application(?![A-Za-z0-9_]|\.Abstractions(?:\.|\b)))(?:\.[A-Za-z0-9_]+)*')) {
         $dependencyModule = $match.Groups['module'].Value
         if ($dependencyModule -in @($Module, 'Abstractions') -or $internalFeatureNamespaces.Contains($dependencyModule)) { continue }
         $line = 1 + ($text.Substring(0, $match.Index) -split "`n").Count - 1
         $kind = if ($text.Substring([Math]::Max(0, $match.Index - [Math]::Min(20, $match.Index)), [Math]::Min($match.Length + [Math]::Min(20, $match.Index), $text.Length - [Math]::Max(0, $match.Index - [Math]::Min(20, $match.Index)))) -match '(?i)using\s+static') {
             'static-helper'
-        } elseif ($text -match "(?m)^\s*using\s+FoodDiary\.Application\.$([regex]::Escape($dependencyModule))") {
+        } elseif ($text -match "(?m)^\s*using\s+$([regex]::Escape($match.Value))") {
             'namespace-import'
         } else { 'public-type-reference' }
         $sourceDependencies.Add([pscustomobject]@{ module = $dependencyModule; path = $path; line = $line; kind = $kind; reference = $match.Value })

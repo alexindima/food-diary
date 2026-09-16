@@ -115,6 +115,95 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Contains(result.Candidates, candidate => string.Equals(candidate.Path, ".llm-wiki/workflows/index.md", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task SearchAsync_DuplicateProjectionRowsDoNotChangeOtherFileScoresAsync() {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','first','Area/Alpha.cs','first','csharp','Sample','sampletoken'),
+                ('code','second','Area/Beta.cs','second','csharp','Sample','sampletoken');
+            """;
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+        WikiContextSearchResult before = await search.SearchAsync(
+            "sampletoken", 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        command.CommandText = """
+            INSERT INTO context_search VALUES
+                ('code','duplicate','Area/Alpha.cs','duplicate','csharp','Sample','sampletoken');
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult after = await search.SearchAsync(
+            "sampletoken", 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Equal(before.Candidates.Select(candidate => (candidate.Path, candidate.Score)),
+            after.Candidates.Select(candidate => (candidate.Path, candidate.Score)));
+    }
+
+    [Theory]
+    [InlineData("Domain/StockBalance.cs", true)]
+    [InlineData("web/stock-balance.utils.ts", true)]
+    [InlineData("Domain/Stock.cs", false)]
+    [InlineData("Domain/StockBalanceChangedEvent.cs", false)]
+    [InlineData("Domain/BalanceStock.cs", false)]
+    [InlineData("web/stock-balance.mapper.ts", false)]
+    public async Task SearchAsync_RecognizesCompleteCompoundFileIdentityAsync(string path, bool expected) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code','stock',$path,'stock','csharp','Stock balance','stock balance utils');
+            """;
+        command.Parameters.AddWithValue("$path", path);
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "stock balance utils", 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(expected, candidate.Reasons.Contains("complete compound file identity", StringComparer.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("stock", true)]
+    [InlineData("stockyard", false)]
+    [InlineData("складской", true)]
+    public async Task SearchAsync_PreservesExactAlternativesInPrefixGroupsAsync(string query, bool expected) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["queryPrefixExpansions"] = System.Text.Json.Nodes.JsonNode.Parse("""{"stock$|склад":["inventory"]}""");
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Equal(expected, result.QueryTerms.Contains("inventory", StringComparer.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("code")]
+    [InlineData("query-document")]
+    public async Task SearchAsync_EnforcesFrontendIntentForEveryImplementationProjectionAsync(string recordType) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ($recordType,'stock','Modules/Inventory/Application/StockService.cs','stock','csharp','Stock','stock');
+            """;
+        command.Parameters.AddWithValue("$recordType", recordType);
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "stock", 10, "Frontend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Contains("backend candidate penalty for frontend intent", Assert.Single(result.Candidates).Reasons, StringComparer.Ordinal);
+    }
+
     [Theory]
     [InlineData("stock mcp tests xx", false, false)]
     [InlineData("stock excluded tests xx", false, false)]
@@ -244,6 +333,35 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Theory]
+    [InlineData("parcel contracts", true)]
+    [InlineData("parcel interfaces", true)]
+    [InlineData("parcel abstractions", true)]
+    [InlineData("parcel implementation", false)]
+    public async Task SearchAsync_PluralAbstractionIntent_WaivesContractPenalty(string query, bool expectedWaiver) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["applicationAbstractionPenalty"] = 1_000_000;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code', 'parcel', 'Modules/Inventory/Contracts/Parcel.cs', 'parcel', 'csharp', 'Parcel', $body);
+            """;
+        command.Parameters.AddWithValue("$body", query);
+        await command.ExecuteNonQueryAsync();
+
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        Assert.Equal(expectedWaiver, Assert.Single(result.Candidates).Score > 0);
+    }
+
+    [Theory]
     [InlineData("FoodDiary.Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
     [InlineData("Modules/Inventory/Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
     [InlineData("Modules\\Inventory\\Domain\\Entities\\Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
@@ -282,6 +400,22 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Shared\\FoodDiary.Inventory.PersistenceModel\\StockRecord.cs", "stock storage implementation", "generic infrastructure-layer affinity", true)]
     [InlineData("Shared/FoodDiary.Inventory.PersistenceModel/Configurations/StockConfiguration.cs", "stock storage implementation", "generic database-layer affinity", true)]
     [InlineData("Shared/FoodDiary.Inventory.PersistenceModelExtra/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Modules/Inventory/PersistenceModel/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Inventory.Infrastructure/Persistence/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Email.MailRelay/StockSender.cs", "external stock provider", "generic integration-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Email.MailRelay/Stock.test.ts", "external stock provider", "generic integration-layer affinity", false)]
+    [InlineData("Modules/StockCatalog/Application/StockReader.cs", "lookup stock catalog entries", "exact module identity stockcatalog", true)]
+    [InlineData("Modules/StockCatalog/Application/StockReader.cs", "lookup catalog stock entries", "exact module identity stockcatalog", false)]
+    [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryHandler.cs", "load stock read", "structural role backend-read-service-role", true)]
+    [InlineData("Modules/Inventory/Contracts/ReadStocksQueryHandler.cs", "load stock read", "structural role backend-read-service-role", false)]
+    [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryValidator.cs", "load stock read", "structural role backend-read-service-role", false)]
+    [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryHandler.cs", "stock summaries", "structural role application-collection-reader", true)]
+    [InlineData("Modules/Inventory/Application/Queries/ReadStockStatusQueryHandler.cs", "stock summaries", "structural role application-collection-reader", false)]
+    [InlineData("Modules/Inventory/Application/Queries/ReadStockIdsQueryHandler.cs", "stock summaries", "structural role application-collection-reader", false)]
+    [InlineData("Modules/Inventory/PersistenceModelExtra/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Modules/Inventory/PersistenceModel/tests/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Modules/Inventory/Domain.Contracts/Enums/StockState.cs", "stock domain entity", "generic domain-layer affinity", true)]
+    [InlineData("Modules/Inventory/Domain.Contracts/StockResponse.cs", "stock domain entity", "generic domain-layer affinity", false)]
     [InlineData("Shared/FoodDiary.Inventory.PersistenceModel/tests/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
     [InlineData("Shared/FoodDiary..PersistenceModel/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
     [InlineData("Modules/Inventory/Infrastructure/Providers/Services/SupplierClient.cs", "stock provider implementation", "generic infrastructure-layer affinity", false)]
@@ -296,8 +430,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Modules/Inventory/Application/Ab.cs", "a-b", "direct file-name affinity ab", false)]
     [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "apples test", "direct file-name affinity apples", true, "Tests")]
     [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "pears test", "direct file-name affinity pears", false, "Tests")]
-    [InlineData("Modules/Inventory/Application/Apple.cs", "apples test", "direct file-name affinity apples", false, "Tests")]
-    [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "apples", "direct file-name affinity apples", false)]
+    [InlineData("Modules/Inventory/Application/Apple.cs", "apples test", "direct file-name affinity apples", true, "Tests")]
+    [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "apples", "direct file-name affinity apples", true)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory stock lookup", "module entry-point abstraction penalty waived", true)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory external provider lookup", "module entry-point abstraction penalty waived", false)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory http lookup", "module entry-point abstraction penalty waived", false)]

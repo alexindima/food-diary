@@ -22,7 +22,7 @@
       "intent": "Improve favorite product summary loading without changing its public contract",
       "query": "load a user's favorite product summaries",
       "plannedPath": "Modules/Favorites/Application/FavoriteProducts/",
-      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs"],
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs"],
       "expectedLayers": ["Application"]
     },
     {
@@ -30,7 +30,7 @@
       "intent": "Harden cleanup of old authentication login events",
       "query": "cleanup old authentication login events",
       "plannedPath": "Modules/Identity/Application/Authentication/",
-      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"],
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs"],
       "expectedLayers": ["Application"]
     },
     {
@@ -70,7 +70,7 @@
       "intent": "Review notification domain invariants before changing delivery state",
       "query": "domain notification entity and its delivery state rules",
       "plannedPath": null,
-      "expectedPaths": ["Modules/Notifications/Domain/Entities/Notifications/Notification.cs"],
+      "expectedPaths": ["Modules/Notifications/Domain/Entities/Notification.cs"],
       "expectedLayers": ["Domain"]
     },
     {
@@ -86,7 +86,7 @@
       "intent": "Review the persisted dashboard meal projection",
       "query": "database dashboard meal projection implementation",
       "plannedPath": null,
-      "expectedPaths": ["Modules/Dashboard/Infrastructure/Persistence/DashboardMealProjection.cs"],
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs"],
       "expectedLayers": ["Infrastructure"]
     },
     {

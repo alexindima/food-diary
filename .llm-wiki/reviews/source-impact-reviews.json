@@ -234,17 +234,17 @@
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
+      "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "74a79937288cdc13b36aeb3f302f4dd6de6c1effdce603dc6d67348f5e5d381c"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
         }
       ],
-      "reason": "Reviewed workflow guidance against current sources: ADR 0042 changes internal runtime context ownership only; routes, payloads and client packages remain unchanged by this task. Six HTTP scenarios passed. Concurrent module source relocation does not change these workflow instructions.",
+      "reason": "Reviewed code-graph changes: candidate recall, ownership aliases and ranking only; contract projections and contract-consumer validation remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:31.4555582Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:43:39.7757039Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -565,13 +565,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ed6382fbacb1657ffd2cd8d321ca1e9585af3a8fdaeb404f05d3be0217917df4"
+          "sha256": "39ea9bc2fbf6bbda8cd45500ace0e41b1a64ead9b22e49fffadcf59f5fc02e36"
         }
       ],
-      "reason": "Reviewed package.json change: only obsolete dependency overrides removed; scripts, browser workflow, UI source and visual-evidence instructions are unchanged. Direct dependency versions are preserved.",
+      "reason": "Only Vitest and coverage-v8 are restored to Angular-compatible 4.1.11. npm ci and 2732 app tests pass; no rendered UI, locale or visual-QA command changed.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:33:20.0885234Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:43:41.6518109Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -595,13 +595,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
+          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
         }
       ],
-      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
+      "reason": "Reviewed ranking and identity candidate changes; impact simulation still consumes the same typed edges and preserves source verification requirements.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:33:35.4260112Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:43:40.4235749Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -778,14 +778,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3ff1d71eb24aeb3b75121837c66676bc33d25c113337ea2e9defde59ff65359c"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
         }
       ],
-      "reason": "Regenerated sensitive-data inventory after source/test updates. Query scoping, freshness, classification and advisory-only interpretation remain unchanged; no provider sharing or new credential storage introduced.",
+      "reason": "Search changes affect bounded candidate recall and ordering only. No telemetry payload, privacy inventory, data-flow projection or external transmission changed.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:30.6653631Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:43:41.0301794Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6911338f68da050e7810208ef73f9e5b5b7fe003f87a33e641624bdaf9b897ac"
+          "sha256": "80ef3b7e29c6bda2fc44f79b17c11efe64f0a13beddbf9119d7393116d97e18c"
         }
       ],
-      "reason": "Regenerated quality inventory and audited test reference limitations. Restored discovery and negative scanner cases demonstrate why symbol references are navigation rather than execution coverage; workflow remains accurate.",
+      "reason": "Reviewed regenerated hotspot metrics for SqliteWikiContextSearch and module-page builder after retrieval fixes. Metrics remain structural navigation; 170 focused runtime tests passed and the full retrieval/parity gate is being rerun.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:27.751863Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:46:51.4420667Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -865,17 +865,17 @@
     {
       "pageId": "workflow-review-report",
       "pagePath": ".llm-wiki/workflows/review-report.md",
-      "pageSha256": "c1403fa47db2923eed0f5d2e634060bf032feb9769817b408efd38c151554fc1",
+      "pageSha256": "3817fa7e8462586fb846f88ff28972cca16744b121049e5776c9cc89043e7e27",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "548bd99fc68a578edf17eac6f1638b666afd974b8869caf0c4fb8f909ec3352a"
+          "sha256": "64f85b941b22c41db1ff3e2e82c145d91c476cd006c8121e282d9f69d440693e"
         }
       ],
-      "reason": "Reviewed CI audit matrix: focused report publication is unchanged; the stable gate still requires focused success and the aggregate audit result, now covering isolated Core and Governed jobs with fail-fast disabled and unique diagnostics.",
+      "reason": "CI diff only corrects Application.Runtime project paths in dependency audit and summary; report rendering and readiness contract are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
-      "reviewedAtUtc": "2026-09-09T23:10:06.7257828Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T04:58:25.9960184Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "83a32472a22c778a9d0ebd3312665befea3105dfaff7d040e3d31a20a1b8d1cb"
+          "sha256": "a389725ee717e35ca9207cae28e42e90f1a17c5b5ec10a361050351e530b171b"
         }
       ],
-      "reason": "Runtime inventory regenerated. Container COPY fixes restore RecentItems compilation; shared-context DI fixture fixes preserve actual rollback and outbox assertions. Topology query and retry guidance remain unchanged.",
+      "reason": "Reviewed regenerated topology: only source freshness fingerprint changed; services, workers, clients, recurring jobs and runtime behavior declarations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:30.2240558Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T07:53:39.3416888Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6911338f68da050e7810208ef73f9e5b5b7fe003f87a33e641624bdaf9b897ac"
+          "sha256": "80ef3b7e29c6bda2fc44f79b17c11efe64f0a13beddbf9119d7393116d97e18c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "83a32472a22c778a9d0ebd3312665befea3105dfaff7d040e3d31a20a1b8d1cb"
+          "sha256": "a389725ee717e35ca9207cae28e42e90f1a17c5b5ec10a361050351e530b171b"
         },
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3ff1d71eb24aeb3b75121837c66676bc33d25c113337ea2e9defde59ff65359c"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "49449c99e9202cf7f106a87d4adf124b91833daa6ec491198f2438c6ec233255"
         }
       ],
-      "reason": "Quality/runtime/privacy indexes refreshed; controller security discovery now covers canonical module assemblies. Workflow still correctly distinguishes navigation leads from proven security findings; no scanner verdict is inferred.",
+      "reason": "Reviewed final retrieval changes and regenerated sources. Plural contract intent now matches Node in the in-process reader; 174 focused search tests pass. Runtime topology changed only its source fingerprint; the security workflow remains source-navigation guidance.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:29.3531865Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T07:53:40.0949058Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1060,14 +1060,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "9c68936f4d7c56705461e3c334bb43086e6adde19c4bc193bbad8789d6e52961"
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "3605d8f19d73bf2aa9950e6e8c940ce738794f0fa9e65d24687f5d53629d55db"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Updated the OpenFoodFacts fixture after removal of its cached-search facade: four dependencies are direct on the query handler, and EfUnitOfWork exposes the nested domain-event publisher. Preserved bounded-hop/source-evidence assertions and updated the Identity presentation namespace. Test-LlmWikiTraceOutput passed.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:12.0687776Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T06:52:54.0259425Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1120,14 +1120,18 @@
       "pageSha256": "a4d6f6e45856ad6956a6133f5a9156fdca0a4ab5131c41b49df6ae6204a3aae4",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
+          "path": ".llm-wiki/evals/development-context-practical-holdout.json",
+          "sha256": "32087628aed4632d32687cb6841021d482190574817024ab9036b5c537b877b0"
+        },
+        {
+          "path": ".llm-wiki/evals/development-context-practical.json",
+          "sha256": "7256398389569004e921826d625f0263e970910033b5c16f346563660ee704bf"
         }
       ],
-      "reason": "The billing-security synthetic change set used the removed pre-extraction Billing project path. Updated only that input to the existing Modules/Billing/Application/Commands/ProcessBillingWebhook handler. Expected Billing ownership, security rules and architecture checks remain unchanged; the regression is preserved rather than weakened.",
+      "reason": "Verified moved retrieval fixture targets against current owners; practical cleanup cases now target CleanupLoginEventsCommandHandler. Queries, acceptance thresholds, and recorded baselines unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:57:56.9213328Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T05:24:19.8040399Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1165,14 +1169,18 @@
       "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "638d92b1e079a049eabfcda6fa763b7847b69daaea3262de7fae59fd1090c7b3"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "a83607dd54db9bd79333ad233f17494512a174ef3c5375b8f14f72862a893986"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "ed074a672f1ebf1cefdbeb209df60dae3d67a48c3c31db8c326aab8660880579"
         }
       ],
-      "reason": "Catalog regenerated for current project paths; MCP integration-test selector aliases now include Platform path while preserving module owner matching and actual returned path. Existing relocation guidance remains accurate.",
+      "reason": "Verified corpus target migration and generic sibling PersistenceModel/Application.Abstractions aliases. Search pool limits and frozen thresholds unchanged; 100-case holdout reaches 100 top-10 after layer fix.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:27.06641Z"
+      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
+      "reviewedAtUtc": "2026-09-16T05:24:20.5136593Z"
     },
     {
       "pageId": "workflow.review-diff",

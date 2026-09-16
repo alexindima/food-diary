@@ -44,19 +44,23 @@ Source: `Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/Mai
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 0
+- Public contract files: 5
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 5
+- Interfaces: 2
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `class ExportInputLimits`
+- `interface IDiaryPdfGenerator`
+- `interface IDiaryPdfReportTextProvider`
+- `record DiaryPdfReportTexts`
+- `record ExportDiaryMealsReadModel`
 
 ## Focused Tests
 

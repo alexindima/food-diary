@@ -42,7 +42,7 @@
       "id": "usda-limits",
       "query": "limit USDA API request query size",
       "changeType": "Api",
-      "expectedPaths": ["Modules/Usda/Presentation/Features/Usda/UsdaRequestLimits.cs"]
+      "expectedPaths": ["Modules/Usda/Presentation/UsdaRequestLimits.cs"]
     },
     {
       "id": "daily-advice",
@@ -99,7 +99,7 @@
       "id": "weekly-goal-reminder",
       "query": "send weekly goal reminder when progress is behind",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Application/Commands/SendWeeklyGoalReminders/SendWeeklyGoalRemindersCommandHandler.cs"]
     },
     {
       "id": "dashboard-snapshot",
@@ -129,7 +129,7 @@
       "id": "diary-export-read-service",
       "query": "read diary data for a personal export",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Export/Application/Services/ExportDiaryReadService.cs"]
+      "expectedPaths": ["Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs"]
     },
     {
       "id": "content-report-review",
@@ -189,7 +189,7 @@
       "id": "open-food-facts-http-endpoint",
       "query": "HTTP endpoint searches Open Food Facts products by barcode",
       "changeType": "Api",
-      "expectedPaths": ["Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/OpenFoodFactsController.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Presentation/Controllers/OpenFoodFactsController.cs"]
     },
     {
       "id": "weekly-goal-repository",
@@ -219,13 +219,13 @@
       "id": "hydration-goal-service",
       "query": "calculate the user's daily hydration goal",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Hydration/Application/Services/HydrationGoalService.cs"]
+      "expectedPaths": ["Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs"]
     },
     {
       "id": "recipe-comment-read-service",
       "query": "read comments for a community recipe",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs"]
+      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs"]
     },
     {
       "id": "toggle-recipe-like-handler",
@@ -243,7 +243,7 @@
       "id": "client-task-reminder-processor",
       "query": "process reminders for overdue dietologist client tasks",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Commands/SendClientTaskReminders/SendClientTaskRemindersCommandHandler.cs"]
     },
     {
       "id": "marketing-attribution-cleanup-job",
@@ -273,7 +273,7 @@
       "id": "weight-entry-read-service",
       "query": "read weight measurement history for body metrics",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs"]
+      "expectedPaths": ["Modules/BodyMetrics/Application/WeightEntries/Queries/ReadWeightEntries/ReadWeightEntriesQueryHandler.cs"]
     },
     {
       "id": "shopping-list-creation-service",
@@ -303,7 +303,7 @@
       "id": "fasting-push-dispatcher",
       "query": "dispatch fasting reminder notifications through web push",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Commands/SendFastingNotifications/SendFastingNotificationsCommandHandler.cs"]
     },
     {
       "id": "smtp-inbound-store",
@@ -339,13 +339,13 @@
       "id": "hydration-entry-read-service",
       "query": "read hydration entries for a date range",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Hydration/Application/Services/HydrationEntryReadService.cs"]
+      "expectedPaths": ["Modules/Hydration/Application/Queries/ReadHydrationEntries/ReadHydrationEntriesQueryHandler.cs"]
     },
     {
       "id": "achievement-definition-admin-service",
       "query": "administer gamification achievement definitions",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs", "Modules/Gamification/Application/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommandHandler.cs", "Modules/Gamification/Application/Commands/UpdateAchievementDefinition/UpdateAchievementDefinitionCommandHandler.cs"]
     },
     {
       "id": "dietologist-dashboard-access",
@@ -363,7 +363,7 @@
       "id": "recipe-like-read-service",
       "query": "read like status for a community recipe",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs"]
+      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs"]
     },
     {
       "id": "frontend-state-ownership-check",

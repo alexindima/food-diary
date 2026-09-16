@@ -3,6 +3,12 @@ import * as layout from './code-graph-path-layout.mjs';
 import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, rankingModuleIdentity, rankingPathIdentities } from './code-graph-path-layout.mjs';
 
 // Synthetic names deliberately independent of evaluation queries and targets.
+for (const path of ['Domain/StockBalance.cs', 'web/stock-balance.ts', 'web\\stock-balance.utils.ts']) {
+  assert.equal(layout.completeFileIdentityMatches(path, ['stock', 'balance', 'utils']), true);
+}
+for (const path of ['Stock.cs', 'StockBalanceChangedEvent.cs', 'stock-balance.mapper.ts', 'BalanceStock.cs']) {
+  assert.equal(layout.completeFileIdentityMatches(path, ['stock', 'balance']), false);
+}
 const moved = [
   ['Modules/Inventory/Application/Commands/Reserve/ReserveHandler.cs', 'FoodDiary.Application.Inventory/Commands/Reserve/ReserveHandler.cs'],
   ['Modules/Inventory/Application/Abstractions/Stock/IStockStore.cs', 'FoodDiary.Application.Abstractions/Stock/IStockStore.cs'],
@@ -20,6 +26,13 @@ const moved = [
   ['Hosts/tests/FoodDiary.Example.IntegrationTests/ContractTests.cs', 'tests/FoodDiary.Example.IntegrationTests/ContractTests.cs'],
   ['Platform/tests/FoodDiary.Example.Tests/QueryTests.cs', 'tests/FoodDiary.Example.Tests/QueryTests.cs'],
   ['Tooling/tests/FoodDiary.ArchitectureTests/BoundaryTests.cs', 'tests/FoodDiary.ArchitectureTests/BoundaryTests.cs'],
+  ['Modules/Inventory/PersistenceModel/Stock/StockReservation.cs', 'FoodDiary.Infrastructure/Persistence/Stock/StockReservation.cs'],
+  ['Modules/Inventory/Application.Abstractions/Stock/IStockReader.cs', 'FoodDiary.Application.Abstractions/Stock/IStockReader.cs'],
+  ['Modules/Inventory/Domain.Contracts/Enums/StockState.cs', 'FoodDiary.Domain/Enums/StockState.cs'],
+  ['Modules/Inventory/Domain.Contracts/ValueObjects/StockId.cs', 'FoodDiary.Domain/ValueObjects/StockId.cs'],
+  ['Shared/FoodDiary.Inventory.Contracts/IStockReader.cs', 'FoodDiary.Application.Abstractions/IStockReader.cs'],
+  ['Shared/FoodDiary.Inventory.Infrastructure/Persistence/StockStore.cs', 'FoodDiary.Infrastructure/Persistence/Inventory/StockStore.cs'],
+  ['Shared/FoodDiary.Email.MailRelay/RelaySender.cs', 'FoodDiary.Integrations/Email/RelaySender.cs'],
 ];
 for (const [current, legacy] of moved) {
   assert.deepEqual(rankingPathIdentities(current), [current.toLowerCase(), legacy.toLowerCase()]);
@@ -60,7 +73,8 @@ assert.equal(implicitImplementationIntent('Any', ['implementation', 'persist', '
 for (const layer of ['Application', 'Domain', 'Infrastructure', 'Infrastructure.Integration']) {
   const path = `Modules/Inventory/tests/FoodDiary.Modules.Inventory.${layer}.Tests/Stock/StockTests.cs`;
   const aliases = rankingPathIdentities(path);
-  assert.deepEqual(aliases, [path.toLowerCase(), `tests/fooddiary.${layer.toLowerCase()}.tests/stock/stocktests.cs`]);
+  assert.deepEqual(aliases, [path.toLowerCase(), `tests/fooddiary.${layer.toLowerCase()}.tests/stock/stocktests.cs`,
+    ...(layer === 'Infrastructure.Integration' ? ['platform/tests/fooddiary.infrastructure.integrationtests/stock/stocktests.cs'] : [])]);
   assert.equal(aliases.some(alias => alias.startsWith('fooddiary.application.inventory/')), false);
 }
 const foreignTest = 'Modules/Inventory/tests/FoodDiary.Modules.Other.Application.Tests/Test.cs';
@@ -68,8 +82,8 @@ assert.deepEqual(rankingPathIdentities(foreignTest), [foreignTest.toLowerCase()]
 for (const module of ['Inventory', 'Shipping']) {
   const path = `Modules/${module}/tests/FoodDiary.Modules.${module}.Infrastructure.IntegrationTests/Integration/StockStoreTests.cs`;
   const legacy = 'tests/fooddiary.infrastructure.integrationtests/integration/stockstoretests.cs';
-  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase(), legacy]);
-  assert.deepEqual(rankingPathIdentities(path.replaceAll('/', '\\')), [path.toLowerCase(), legacy]);
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase(), legacy, `platform/${legacy}`]);
+  assert.deepEqual(rankingPathIdentities(path.replaceAll('/', '\\')), [path.toLowerCase(), legacy, `platform/${legacy}`]);
 }
 for (const path of [
   'Modules/Inventory/tests/FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests/StockTests.cs',
@@ -117,4 +131,21 @@ assert.deepEqual(layout.testIdentityWeights(['acme', 'client', 'ab'], [...testRo
 const scaffoldWeights = layout.testIdentityWeights(['acme', 'feature', 'tests', 'spec'], testRows,
   { minimumTermLength: 3, scorePerMatch: 35, maximumScore: 175 });
 assert.deepEqual([...scaffoldWeights.keys()], ['acme']);
+for (const root of ['Shared/FoodDiary.Inventory.Contracts', 'Shared/FoodDiary.Inventory.Infrastructure/Persistence', 'Shared/FoodDiary.Email.MailRelay']) {
+  for (const tail of ['tests/Fixture.cs', 'Stock.spec.ts']) {
+    const path = `${root}/${tail}`;
+    assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
+  }
+}
+assert.equal(layout.compoundModuleMention('stockcatalog', ['lookup', 'stock', 'catalog', 'entries']), true);
+assert.equal(layout.compoundModuleMention('stockcatalog', ['catalog', 'stock']), false);
+assert.equal(layout.compoundModuleMention('stockcatalog', ['stock', 'remote', 'catalog']), false);
+assert.equal(layout.applicationRoleIdentity('Modules/Inventory/Application/Queries/GetStocksQueryHandler.cs'), 'read service reader readservice collection');
+assert.equal(layout.applicationRoleIdentity('Modules/Inventory/Application/Queries/GetStockStatusQueryHandler.cs'), 'read service reader readservice');
+assert.equal(layout.applicationRoleIdentity('Modules/Inventory/Application/Queries/GetStockIdsQueryHandler.cs'), 'read service reader readservice');
+assert.equal(layout.applicationRoleIdentity('Modules/Inventory/Application/Commands/ReserveCommandHandler.cs'), 'service');
+for (const path of ['Modules/Inventory/Contracts/GetStocksQueryHandler.cs', 'Modules/Inventory/Application/tests/GetStocksQueryHandler.cs',
+  'Modules/Inventory/Application/Queries/GetStocksQueryValidator.cs', 'Modules/Inventory/ApplicationExtra/GetStocksQueryHandler.cs']) {
+  assert.equal(layout.applicationRoleIdentity(path), '');
+}
 console.log('Ranking layout regression PASS: layer selectors, exclusions, exact module identity, Windows paths, legacy compatibility and negative boundaries.');

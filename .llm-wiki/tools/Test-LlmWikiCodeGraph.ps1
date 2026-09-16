@@ -224,7 +224,7 @@ if (@($recipeRelations.relations | Where-Object { $_.target -eq 'CreateRecipeCom
 }
 $migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($migrationRelations.relations).Count -eq 0) { throw 'Typed graph did not preserve migration table provenance.' }
-$namespaceTrace = & $manager trace -Query 'FoodDiary.Presentation.Api.Features.Auth' -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
+$namespaceTrace = & $manager trace -Query 'FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers' -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-filter' -and $_.path -match 'ControllerConventionsTests.cs$' }).Count -eq 0 -or
     @($namespaceTrace.namespaceFilters | Where-Object { [int]$_.matchedDeclarations -gt 0 }).Count -eq 0) {
     throw 'Code graph did not connect a namespace convention literal to matching production declarations.'
@@ -258,7 +258,7 @@ if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confi
     throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'
 }
 $auditRankingCases = @(
-    @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/OpenFoodFacts/Application/'; ExpectedPattern = '' }
+    @{ Query = 'OpenFoodFacts barcode lookup query handler'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/OpenFoodFacts/Application/'; ExpectedPattern = '' }
     @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/Meals/Application/'; ExpectedPattern = '' }
     @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/Dashboard/Application/'; ExpectedPattern = '' }
     @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|Modules/Notifications/(?:Application|Infrastructure)|FoodDiary\.Integrations)/' }

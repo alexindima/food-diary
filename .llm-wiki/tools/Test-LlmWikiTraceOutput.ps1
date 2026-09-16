@@ -44,13 +44,18 @@ $providerMapping = @($providerTrace.presentation | Where-Object confidence -eq '
 if ($providerMapping.Count -ne 1 -or $providerMapping[0].method -ne 'OpenFoodFactsHttpMappings.ToSearchQuery' -or $providerMapping[0].path -notmatch '/OpenFoodFactsController\.cs$') {
     throw 'Static mapping trace must follow the search factory, without unrelated barcode mappings.'
 }
-foreach ($nestedContract in @('IOpenFoodFactsService', 'IOpenFoodFactsProductCacheReadRepository', 'IOpenFoodFactsProductCacheWriteRepository', 'IUnitOfWork')) {
-    $edge = @($providerTrace.nestedDependencies | Where-Object contract -eq $nestedContract)
-    if ($edge.Count -ne 1 -or $edge[0].parentSymbol -ne 'OpenFoodFactsCachedProductSearch' -or $edge[0].status -ne 'source-candidate' -or @($edge[0].implementations).Count -ne 1) {
-        throw "Nested service trace lost a source-linked dependency: $nestedContract."
+foreach ($directContract in @('IOpenFoodFactsService', 'IOpenFoodFactsProductCacheReadRepository', 'IOpenFoodFactsProductCacheWriteRepository', 'IUnitOfWork')) {
+    $implementation = @($providerTrace.implementations | Where-Object contract -eq $directContract)
+    if (@($providerTrace.dependencies) -notcontains $directContract -or $implementation.Count -ne 1 -or $implementation[0].evidence -ne 'source-declaration') {
+        throw "Search handler trace lost a direct source-linked dependency after facade retirement: $directContract."
     }
 }
-if ($providerTrace.nestedDependenciesTruncated -or @($providerTrace.nestedDependencies | Where-Object parentSymbol -ne 'OpenFoodFactsCachedProductSearch').Count -gt 0) {
+$publisherEdge = @($providerTrace.nestedDependencies | Where-Object contract -eq 'IDomainEventPublisher')
+if ($publisherEdge.Count -ne 1 -or $publisherEdge[0].parentSymbol -ne 'EfUnitOfWork' -or $publisherEdge[0].status -ne 'source-candidate' -or
+    @($publisherEdge[0].implementations | Where-Object path -eq 'Shared/FoodDiary.Persistence.Runtime/Events/MediatorDomainEventPublisher.cs').Count -ne 1) {
+    throw 'Nested persistence trace lost the source-linked domain event publisher.'
+}
+if ($providerTrace.nestedDependenciesTruncated -or @($providerTrace.nestedDependencies | Where-Object parentSymbol -notin @($providerTrace.implementations.implementation)).Count -gt 0) {
     throw 'Nested dependency trace must stop after one service hop and preserve complete bounded results.'
 }
 $facadeText = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
@@ -130,7 +135,7 @@ if ($rankedCandidates.Count -gt 0 -and (-not $rankedCandidates[0].PSObject.Prope
     throw 'Ranked trace candidates omitted confidence or ranking explanations.'
 }
 
-$namespaceFacadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Query 'FoodDiary.Presentation.Api.Features.Auth' 6>&1 | ForEach-Object { $_.ToString() })
+$namespaceFacadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Query 'FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers' 6>&1 | ForEach-Object { $_.ToString() })
 $namespaceFacadeText = $namespaceFacadeOutput -join [Environment]::NewLine
 if ($LASTEXITCODE -ne 0 -or $namespaceFacadeText -notmatch 'namespace filter:.*ControllerConventionsTests.cs' -or $namespaceFacadeText -match 'falling back to semantic trace') {
     throw "Qualified namespace trace did not stay on the graph route: $($namespaceFacadeOutput -join [Environment]::NewLine)"

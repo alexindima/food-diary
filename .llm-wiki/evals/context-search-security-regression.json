@@ -70,7 +70,7 @@
       "cohort": "security-boundaries",
       "query": "email outbox retry race duplicate delivery",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxProcessor.cs"]
     },
     {
       "id": "security-user-deletion-lifecycle",

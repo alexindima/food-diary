@@ -41,24 +41,34 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: NutritionLesson, UserLessonProgress
-- Public contract files: 7
+- Public contract files: 17
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 7
-- Interfaces: 0
-- DTO/read-model/projection types: 1
-- Enums: 0
-- Exported repository-shaped contracts: 0
+- Public contract types: 17
+- Interfaces: 5
+- DTO/read-model/projection types: 4
+- Enums: 1
+- Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 0
+- `class LessonErrors`
+- `enum LessonSortOption`
+- `interface ILessonProgressTransactionRunner`
+- `interface INutritionLessonReadModelRepository`
+- `interface INutritionLessonReadRepository`
+- `interface INutritionLessonRepository`
+- `interface INutritionLessonWriteRepository`
 - `record CreateLessonCommand`
 - `record DeleteLessonCommand`
 - `record GetLessonsForAdministrationQuery`
 - `record ImportLessonsCommand`
 - `record LessonAdministrationItem`
 - `record LessonAdminReadModel`
+- `record LessonDetailReadModel`
+- `record LessonSummaryPageReadModel`
+- `record LessonSummaryReadModel`
 - `record UpdateLessonCommand`
 
 ## Focused Tests

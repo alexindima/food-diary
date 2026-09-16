@@ -2,6 +2,20 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+foreach ($corpusFile in Get-ChildItem (Join-Path $PSScriptRoot '../evals') -Filter 'context-search*.json') {
+    $corpus = Get-Content -LiteralPath $corpusFile.FullName -Raw | ConvertFrom-Json
+    foreach ($case in $corpus.cases) {
+        $sourcePaths = @($case.expectedPaths)
+        $acceptedPathsProperty = $case.PSObject.Properties['acceptedPaths']
+        if ($null -ne $acceptedPathsProperty) { $sourcePaths += @($acceptedPathsProperty.Value) }
+        foreach ($expectedPath in $sourcePaths | Where-Object { $_ }) {
+            if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot $expectedPath) -PathType Leaf)) {
+                throw "Retrieval fixture '$($corpusFile.Name)/$($case.id)' references missing source '$expectedPath'. Update the owner path after extraction before evaluating ranking."
+            }
+        }
+    }
+}
 $measure = Join-Path $PSScriptRoot 'Measure-LlmWikiSqlContextEvaluation.ps1'
 $primaryEvaluation = & $measure -Format Json | ConvertFrom-Json
 $challengeCorpus = Join-Path $PSScriptRoot '../evals/context-search-holdout.json'
@@ -39,20 +53,12 @@ $retirementHoldoutCorpus = [IO.File]::ReadAllText(
 $retirementHoldoutEvaluation = & $measure `
     -CorpusPath $retirementHoldoutCorpusPath `
     -SkipBuild `
-    -FailOnRegression `
     -Format Json | ConvertFrom-Json
-if (-not [bool]$retirementHoldoutEvaluation.liveRegressionPassed) {
-    throw "Independent 100-case holdout live regression gate failed: $($retirementHoldoutEvaluation.liveRegressionGaps -join '; ')."
-}
 $unseenCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-unseen-20260826.json'
 $unseenEvaluation = & $measure `
     -CorpusPath $unseenCorpusPath `
     -SkipBuild `
-    -FailOnRegression `
     -Format Json | ConvertFrom-Json
-if (-not [bool]$unseenEvaluation.liveRegressionPassed -or -not [bool]$unseenEvaluation.passed) {
-    throw "Target-aware unseen context regression gate failed: $($unseenEvaluation.liveRegressionGaps -join '; ')."
-}
 $postFixControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-postfix-control-30.json'
 $postFixControlCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $postFixControlCorpusPath).Path,
@@ -86,12 +92,10 @@ if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
 $conversationalCorpus = Join-Path $PSScriptRoot '../evals/context-search-conversational.json'
 $conversationalEvaluation = & $measure -CorpusPath $conversationalCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $conversationalParaphrases = & $measure -CorpusPath (Join-Path $PSScriptRoot '../evals/context-search-conversational-paraphrases.json') -SkipBuild -Format Json | ConvertFrom-Json
-if (-not $conversationalEvaluation.passed -or -not $conversationalParaphrases.passed) {
-    throw "Conversational retrieval regression: primary=$($conversationalEvaluation.metrics.top10Count)/$($conversationalEvaluation.caseCount), paraphrases=$($conversationalParaphrases.metrics.top10Count)/$($conversationalParaphrases.caseCount)."
-}
 $allEvaluations = @($mailRegressionEvaluation, $primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 # Persist per-case rankings before enforcing thresholds so CI failures are actionable.
-$failedEvaluations = @(@($allEvaluations) + @($businessWikiRegressionEvaluation) | Where-Object { -not $_.passed })
+$failedEvaluations = @(@($allEvaluations) + @($businessWikiRegressionEvaluation, $conversationalEvaluation, $conversationalParaphrases,
+    $retirementHoldoutEvaluation, $unseenEvaluation) | Where-Object { -not $_.passed -or $_.liveRegressionPassed -eq $false -or $_.switchReady -eq $false })
 if ($failedEvaluations.Count -gt 0) {
     $diagnosticRoot = Join-Path $PSScriptRoot '../../.artifacts/llm-wiki/context-evaluation'
     $null = New-Item -ItemType Directory -Path $diagnosticRoot -Force
@@ -100,6 +104,15 @@ if ($failedEvaluations.Count -gt 0) {
         [IO.File]::WriteAllText($diagnosticPath, ($failedEvaluation | ConvertTo-Json -Depth 30), [Text.UTF8Encoding]::new($false))
         Write-Host "Context evaluation failure details: $diagnosticPath"
     }
+}
+if (-not [bool]$retirementHoldoutEvaluation.liveRegressionPassed) {
+    throw "Independent 100-case holdout live regression gate failed: $($retirementHoldoutEvaluation.liveRegressionGaps -join '; ')."
+}
+if (-not [bool]$unseenEvaluation.liveRegressionPassed -or -not [bool]$unseenEvaluation.passed) {
+    throw "Target-aware unseen context regression gate failed: $($unseenEvaluation.liveRegressionGaps -join '; ')."
+}
+if (-not $conversationalEvaluation.passed -or -not $conversationalParaphrases.passed) {
+    throw "Conversational retrieval regression: primary=$($conversationalEvaluation.metrics.top10Count)/$($conversationalEvaluation.caseCount), paraphrases=$($conversationalParaphrases.metrics.top10Count)/$($conversationalParaphrases.caseCount)."
 }
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {

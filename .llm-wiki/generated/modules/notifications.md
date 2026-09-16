@@ -40,19 +40,46 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 0
+- Public contract files: 28
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 28
+- Interfaces: 18
+- DTO/read-model/projection types: 2
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `class NotificationErrors`
+- `class NotificationTargetUrlResolver`
+- `class WebPushDeliveryLimits`
+- `interface INotificationLookupRepository`
+- `interface INotificationPusher`
+- `interface INotificationReadModelRepository`
+- `interface INotificationReadRepository`
+- `interface INotificationRepository`
+- `interface INotificationTestScheduler`
+- `interface INotificationTextRenderer`
+- `interface INotificationWebPushOutbox`
+- `interface INotificationWebPushOutboxProcessor`
+- `interface INotificationWriteRepository`
+- `interface ITestNotificationDeliveryDispatcher`
+- `interface IWebPushConfigurationProvider`
+- `interface IWebPushDeliveryAudienceService`
+- `interface IWebPushNotificationSender`
+- `interface IWebPushSubscriptionReadModelRepository`
+- `interface IWebPushSubscriptionReadRepository`
+- `interface IWebPushSubscriptionRepository`
+- `interface IWebPushSubscriptionWriteRepository`
+- `record NotificationReadModel`
+- `record NotificationText`
+- `record ScheduledNotificationData`
+- `record WebPushClientConfiguration`
+- `record WebPushDeliverySubscription`
+- `record WebPushSubscriptionData`
+- `record WebPushSubscriptionReadModel`
 
 ## Focused Tests
 
