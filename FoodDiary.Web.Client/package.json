@@ -98,7 +98,7 @@
         "@emnapi/wasi-threads": "^2.1.0",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
         "@material-design-icons/font": "^0.14.15",
-        "@playwright/test": "^1.62.1",
+        "@playwright/test": "^1.63.0",
         "@storybook/angular": "^10.6.0",
         "@types/express": "^5.0.6",
         "@types/node": "^26.4.1",
