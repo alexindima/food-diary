@@ -186,4 +186,35 @@
     .dashboard-appearance-dialog__grid--styles {
         grid-template-columns: 1fr;
     }
+
+    .dashboard-appearance-dialog__option {
+        display: grid;
+        grid-template-columns: var(--fd-size-control-xl) minmax(0, 1fr);
+        column-gap: var(--fd-space-sm);
+        padding: var(--fd-space-sm);
+        align-items: center;
+    }
+
+    .dashboard-appearance-dialog__swatch,
+    .dashboard-appearance-dialog__style-preview {
+        grid-row: 1 / 3;
+        aspect-ratio: 1;
+    }
+
+    .dashboard-appearance-dialog__option-title,
+    .dashboard-appearance-dialog__option-copy {
+        grid-column: 2;
+    }
+
+    .dashboard-appearance-dialog__option-copy {
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-appearance-dialog__option {
+        transition: none;
+        transform: none;
+    }
 }

@@ -2208,7 +2208,7 @@
           "required": true
         },
         {
-          "name": "title",
+          "name": "titleKey",
           "type": "string",
           "required": false
         },

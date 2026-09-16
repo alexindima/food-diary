@@ -7,7 +7,7 @@
     "outputs": 465,
     "apiCalls": 255,
     "templatesWithTranslations": 306,
-    "translationKeys": 1754,
+    "translationKeys": 1759,
     "consumerEdges": 1081,
     "consumedComponents": 290,
     "unconsumedComponents": 159
@@ -1995,7 +1995,7 @@
           "required": true
         },
         {
-          "name": "title",
+          "name": "titleKey",
           "type": "string",
           "required": false
         },
@@ -19949,6 +19949,7 @@
       "keys": [
         "AI_INPUT_BAR.ADD_ACTION",
         "AI_INPUT_BAR.PHOTO_TITLE",
+        "AI_INPUT_BAR.SHORT_PLACEHOLDER",
         "DISABLED_HINTS.OPERATION_BUSY",
         "MEAL_LIST.VOICE_MIC_TITLE",
         "MEAL_LIST.VOICE_PLACEHOLDER"
@@ -20064,10 +20065,14 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
       "keys": [
         "DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS",
-        "DASHBOARD.DAY_SUMMARY.GOAL_MARKER",
+        "DASHBOARD.DAY_SUMMARY.HELP_TITLE",
+        "DASHBOARD.DAY_SUMMARY.OF_GOAL",
+        "DASHBOARD.DAY_SUMMARY.PETAL_LEGEND",
+        "DASHBOARD.DAY_SUMMARY.PULSE_NEXT",
+        "DASHBOARD.DAY_SUMMARY.PULSE_PREVIOUS",
+        "DASHBOARD.DAY_SUMMARY.PULSE_TITLE",
         "DASHBOARD.DAY_SUMMARY.TITLE",
-        "MEAL_RING.UNIT",
-        "MEAL_RING.WEEKLY_LABEL"
+        "MEAL_RING.UNIT"
       ]
     },
     {
@@ -22370,7 +22375,7 @@
         "stableTrendKey",
         "state",
         "targetValue",
-        "title",
+        "titleKey",
         "twoMeasurementsKey",
         "unitKey"
       ],
@@ -24055,6 +24060,21 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "ariaLabel",
+        "icon",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.html",
       "occurrences": 1,
       "inputsUsed": [],
@@ -24130,7 +24150,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
       "occurrences": 2,
       "inputsUsed": [
-        "appearance",
         "ariaLabel",
         "fill",
         "icon",
@@ -31760,20 +31779,6 @@
       "inputsUsed": [
         "segments",
         "showLegend"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiProgressRingComponent",
-      "selector": "fd-ui-progress-ring",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
-      "consumerFeature": "shared",
-      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaDescribedBy",
-        "focusable",
-        "value"
       ],
       "outputsHandled": []
     },

@@ -1,74 +1,142 @@
 <section class="day-summary" [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
     <fd-dashboard-widget-frame [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
+        <fd-ui-button
+            fdDashboardWidgetHeaderEnd
+            variant="ghost"
+            size="sm"
+            icon="info"
+            [ariaLabel]="'DASHBOARD.DAY_SUMMARY.HELP_TITLE' | translate"
+            [fdUiHint]="'DASHBOARD.DAY_SUMMARY.PETAL_LEGEND' | translate"
+        />
         <div class="day-summary__layout">
-            <div class="day-summary__calories">
-                <fd-ui-progress-ring
-                    class="day-summary__ring"
-                    ariaDescribedBy="day-summary-calorie-tooltip"
-                    [value]="dailyProgressValue()"
-                    [focusable]="true"
-                    [class.day-summary__ring--excess]="dailyPercent() > 100"
-                    [ariaLabel]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate"
-                >
-                    <div class="day-summary__ring-content">
-                        <div class="day-summary__percent fd-ui-metric-hero">
-                            {{ dailyPercent() }}<span class="fd-ui-metric-unit">%</span>
-                        </div>
-                        <div class="day-summary__calorie-value fd-ui-stat-value">
-                            {{ data().dailyConsumed | number: '1.0-0' }} / {{ data().dailyGoal | number: '1.0-0' }}
-                            {{ 'MEAL_RING.UNIT' | translate }}
-                        </div>
-                        <div class="day-summary__weekly fd-ui-body-sm">
-                            {{ 'MEAL_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
-                        </div>
-                    </div>
-                    <span id="day-summary-calorie-tooltip" class="day-summary__tooltip" role="tooltip">
-                        {{ calorieComparisonText() }}
+            <div #visual class="day-summary__visual">
+                <!-- A data-shaped SVG is local to this summary; UI-kit rings encode a single metric. -->
+                <svg class="day-summary__contour" viewBox="-48 -48 416 416" aria-hidden="true" focusable="false">
+                    <defs>
+                        <clipPath [id]="chartId">
+                            <path class="day-summary__contour-path" clip-rule="evenodd" [attr.d]="contourPath()" />
+                        </clipPath>
+                    </defs>
+                    <circle class="day-summary__contour-track" cx="160" cy="160" r="117" />
+                    <g [attr.clip-path]="`url(#${chartId})`">
+                        <foreignObject x="-48" y="-48" width="416" height="416">
+                            <div class="day-summary__contour-color" [style.background]="contourGradient()"></div>
+                        </foreignObject>
+                    </g>
+                    <circle class="day-summary__contour-goal" cx="160" cy="160" r="140" />
+                    <circle class="day-summary__contour-inner" cx="160" cy="160" r="94" />
+                    <circle
+                        class="day-summary__calorie-ring"
+                        cx="160"
+                        cy="160"
+                        r="94"
+                        pathLength="100"
+                        transform="rotate(-90 160 160)"
+                        stroke-dasharray="100 100"
+                        [attr.stroke-dashoffset]="100 - calorieRingProgress()"
+                    />
+                    @for (bar of bars(); track bar.id) {
+                        @if (bar.anchor; as anchor) {
+                            <g [style.color]="bar.colorEnd">
+                                @if (connectorEnds()[bar.id]; as end) {
+                                    <line
+                                        class="day-summary__connector"
+                                        [attr.x1]="end.x"
+                                        [attr.y1]="end.y"
+                                        [attr.x2]="anchor.x"
+                                        [attr.y2]="anchor.y"
+                                    />
+                                }
+                                <circle class="day-summary__anchor" r="5" [attr.cx]="anchor.x" [attr.cy]="anchor.y" />
+                                <circle
+                                    class="day-summary__anchor-halo"
+                                    r="8"
+                                    [class.day-summary__anchor-halo--visible]="bar.isExtreme"
+                                    [attr.cx]="anchor.x"
+                                    [attr.cy]="anchor.y"
+                                />
+                            </g>
+                        }
+                    }
+                </svg>
+                <div class="day-summary__calories" role="group" [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate">
+                    <strong class="day-summary__calorie-value fd-ui-metric-hero">{{
+                        data().dailyConsumed | localizedNumber: language()
+                    }}</strong>
+                    <span class="day-summary__unit fd-ui-body-sm">{{ 'MEAL_RING.UNIT' | translate }}</span>
+                    <span class="day-summary__goal-label fd-ui-caption">
+                        {{ 'DASHBOARD.DAY_SUMMARY.OF_GOAL' | translate: { value: (data().dailyGoal | localizedNumber: language()) } }}
                     </span>
-                </fd-ui-progress-ring>
+                    <span class="day-summary__remaining fd-ui-caption" [class.day-summary__remaining--excess]="dailyPercent() > 100">
+                        <span>{{ calorieDifference() | localizedNumber: language() }} {{ 'MEAL_RING.UNIT' | translate }}</span
+                        ><span class="day-summary__balance-label">{{
+                            (data().dailyConsumed > data().dailyGoal
+                                ? 'DASHBOARD.DAY_SUMMARY.BALANCE_OVER'
+                                : 'DASHBOARD.DAY_SUMMARY.BALANCE_LEFT'
+                            ) | translate
+                        }}</span>
+                    </span>
+                </div>
             </div>
-            <div class="day-summary__nutrients">
-                @for (bar of bars(); track bar.id) {
-                    <div
-                        class="day-summary__nutrient"
-                        tabindex="0"
-                        [attr.aria-describedby]="`day-summary-tooltip-${bar.id}`"
-                        [attr.aria-label]="`${bar.labelText}: ${bar.comparisonText}`"
-                        [style.--day-summary-index]="$index"
-                    >
-                        <div class="day-summary__nutrient-header">
+            <div class="day-summary__details">
+                <div class="day-summary__nutrients">
+                    @for (bar of bars(); track bar.id) {
+                        <div
+                            #nutrientLabel
+                            class="day-summary__nutrient"
+                            [style.--nutrient-color]="bar.colorEnd"
+                            [attr.aria-label]="`${bar.labelText}: ${bar.comparisonText}`"
+                        >
                             <span class="day-summary__nutrient-label fd-ui-body-sm">
                                 <fd-ui-icon [name]="getNutrientIcon(bar.id)" [style.color]="bar.colorEnd" />
                                 {{ bar.labelText }}
                             </span>
                             <span class="day-summary__nutrient-value fd-ui-meta-text">
-                                {{ bar.current | number: '1.0-0' }} / {{ bar.target | number: '1.0-0' }} {{ bar.unitText }}
+                                {{ bar.current | localizedNumber: language() }} / {{ bar.target | localizedNumber: language() }}
+                                {{ bar.unitText }}
                             </span>
                             <strong
-                                class="day-summary__nutrient-percent fd-ui-body-sm"
+                                class="day-summary__nutrient-percent fd-ui-caption"
+                                [style.color]="bar.colorEnd"
                                 [class.day-summary__nutrient-percent--excess]="bar.isExcess"
-                                >{{ bar.percent }}%</strong
                             >
+                                {{ bar.percent }}%
+                            </strong>
                         </div>
-                        <div class="day-summary__track fd-ui-progress-track">
-                            <div
-                                class="day-summary__fill fd-ui-progress-fill"
-                                [style.background]="bar.background"
-                                [style.width.%]="bar.fillWidth"
-                            ></div>
-                            @if (showGoalMarkers()) {
-                                <span
-                                    class="day-summary__goal"
-                                    [style.left.%]="goalPosition()"
-                                    [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.GOAL_MARKER' | translate"
-                                ></span>
-                            }
-                        </div>
-                        <span class="day-summary__tooltip" role="tooltip" [id]="`day-summary-tooltip-${bar.id}`">
-                            {{ bar.comparisonText }}
-                        </span>
+                    }
+                </div>
+                <div
+                    class="day-summary__legend day-summary__pulse"
+                    role="region"
+                    [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.PULSE_TITLE' | translate"
+                >
+                    <span class="day-summary__pulse-label fd-ui-caption">
+                        <span class="day-summary__pulse-icon" aria-hidden="true">✦</span>
+                        {{ 'DASHBOARD.DAY_SUMMARY.PULSE_TITLE' | translate }}
+                    </span>
+                    <div class="day-summary__pulse-content" aria-live="polite" aria-atomic="true">
+                        <span class="fd-ui-body-sm"
+                            ><strong>{{ activeInsight().title }}</strong> · {{ activeInsight().text }}</span
+                        >
                     </div>
-                }
+                    <div class="day-summary__pulse-controls" [hidden]="insights().length < 2">
+                        <fd-ui-button
+                            variant="ghost"
+                            size="sm"
+                            icon="chevron_left"
+                            [ariaLabel]="'DASHBOARD.DAY_SUMMARY.PULSE_PREVIOUS' | translate"
+                            (click)="moveInsight(-1)"
+                        />
+                        <span class="fd-ui-caption">{{ insightIndex() + 1 }} / {{ insights().length }}</span>
+                        <fd-ui-button
+                            variant="ghost"
+                            size="sm"
+                            icon="chevron_right"
+                            [ariaLabel]="'DASHBOARD.DAY_SUMMARY.PULSE_NEXT' | translate"
+                            (click)="moveInsight(1)"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     </fd-dashboard-widget-frame>

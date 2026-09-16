@@ -10,237 +10,336 @@
     padding: var(--fd-space-lg);
     border: var(--fd-border-strong);
     border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-surface);
+    background: var(--fd-bg-card-surface);
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
 
     &__layout {
         display: grid;
-        grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.45fr);
-        gap: var(--fd-space-xl);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: var(--fd-space-xs);
         align-items: center;
     }
 
+    &__visual {
+        container-type: inline-size;
+        position: relative;
+        grid-area: 2 / 1 / 3 / -1;
+        width: min(100%, 364px);
+        aspect-ratio: 1;
+        justify-self: center;
+        margin-block: -30px;
+    }
+
+    &__contour {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    &__contour-track {
+        fill: none;
+        stroke: var(--fd-color-text-subtle);
+        stroke-width: 46;
+        opacity: 0.05;
+    }
+
+    &__contour-path {
+        transition: d 420ms ease;
+    }
+
+    &__contour-color {
+        width: 100%;
+        height: 100%;
+        opacity: 0.85;
+    }
+
+    &__contour-goal,
+    &__contour-inner {
+        fill: none;
+        stroke: var(--fd-color-text-subtle);
+        stroke-width: 0.8;
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+    &__contour-goal {
+        stroke-dasharray: 3 4;
+    }
+
+    &__contour-inner {
+        stroke: var(--fd-color-text-muted);
+        stroke-width: 3;
+        opacity: 0.35;
+    }
+
+    &__calorie-ring {
+        fill: none;
+        stroke: var(--fd-color-text);
+        stroke-width: 3;
+        opacity: 0.75;
+        pointer-events: none;
+        transition: stroke-dashoffset 420ms ease;
+    }
+
+    &__connector {
+        stroke: currentColor;
+        stroke-width: 1;
+        stroke-dasharray: 3 3;
+        opacity: 0.65;
+    }
+
+    &__anchor {
+        fill: currentColor;
+        stroke: var(--fd-bg-surface);
+        stroke-width: 2;
+    }
+
+    &__anchor-halo {
+        opacity: 0;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1;
+    }
+
+    &__anchor-halo--visible {
+        opacity: 1;
+    }
+
     &__calories {
-        display: grid;
-        place-items: center;
-    }
-
-    &__ring {
-        --fd-progress-ring-size: min(100%, 300px);
-        --fd-progress-ring-stroke-width: 7.5;
-        width: min(100%, 300px);
-    }
-
-    &__ring--excess {
-        --fd-progress-ring-color: var(--fd-color-warning);
-    }
-
-    &__ring-content {
+        position: absolute;
+        inset: 29%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: var(--fd-space-xs);
         text-align: center;
     }
 
-    &__percent {
+    &__calorie-value {
+        font-size: min(9cqw, var(--fd-text-metric-hero-size));
+        line-height: 1.1;
         color: var(--fd-color-text-strong);
-    }
-    &__percent span,
-    &__weekly {
-        color: var(--fd-color-text-muted);
-    }
-    &__nutrients {
-        display: grid;
-        gap: var(--fd-space-lg);
-        min-width: 0;
-    }
-    &__nutrient {
-        position: relative;
-        display: grid;
-        gap: var(--fd-space-xs);
-        border-radius: var(--fd-radius-sm);
-        outline: none;
-    }
-
-    &__nutrient-header {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(3.5rem, auto);
-        align-items: baseline;
-        gap: var(--fd-space-md);
-    }
-
-    &__nutrient-value {
-        color: var(--fd-color-text-muted);
+        font-variant-numeric: tabular-nums;
         white-space: nowrap;
     }
-    &__nutrient-label {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
-        min-width: 0;
-    }
-    &__nutrient-label fd-ui-icon {
-        flex: 0 0 auto;
-    }
-    &__nutrient-percent {
+
+    &__unit,
+    &__goal-label,
+    &__legend,
+    &__nutrient-value {
         color: var(--fd-color-text-muted);
-        text-align: right;
     }
+
+    &__goal-label {
+        margin-top: var(--fd-space-xs);
+        font-weight: var(--fd-font-weight-regular);
+        color: var(--fd-color-text-subtle);
+    }
+
+    &__unit,
+    &__balance-label {
+        font-weight: var(--fd-font-weight-regular);
+    }
+
+    &__calories &__unit,
+    &__calories &__goal-label,
+    &__balance-label {
+        font-size: min(3.6cqw, var(--fd-text-caption-size));
+        line-height: 1.3;
+    }
+
+    &__remaining {
+        font-weight: var(--fd-font-weight-bold);
+        font-variant-numeric: tabular-nums;
+        display: flex;
+        flex-direction: column;
+        margin-top: var(--fd-space-xs);
+        padding-top: var(--fd-space-xs);
+        border-top: var(--fd-border-strong);
+        font-size: min(4.4cqw, var(--fd-text-body-sm-size));
+        line-height: 1.3;
+        white-space: nowrap;
+        color: var(--fd-color-text);
+    }
+
+    &__remaining--excess,
     &__nutrient-percent--excess {
         color: var(--fd-color-warning);
     }
 
-    &__track {
-        position: relative;
-        width: 100%;
-        overflow: visible;
-        --fd-progress-height: var(--fd-size-progress-height-xl);
-        --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: var(--fd-bg-progress-track-strong);
+    &__details,
+    &__nutrients {
+        display: contents;
     }
 
-    &__fill {
-        position: absolute;
-        inset: 0 auto 0 0;
-        border-radius: inherit;
-        animation: day-summary-bar-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-        animation-delay: calc(var(--day-summary-index, 0) * 70ms + 120ms);
-        transition:
-            width 0.4s ease,
-            filter 0.18s ease,
-            transform 0.18s ease;
-        transform-origin: left center;
+    &__nutrient {
+        display: grid;
+        box-sizing: border-box;
+        width: 160px;
+        max-width: 100%;
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-width) dashed var(--nutrient-color);
+        border-radius: var(--fd-radius-md);
+        gap: var(--fd-space-xxs);
+        min-width: 0;
+        grid-row: 1;
     }
 
-    &__nutrient:where(:hover, :focus-visible) &__fill {
-        filter: brightness(1.08) saturate(1.08);
-        transform: scaleY(1.16);
+    &__nutrient:nth-child(n + 3) {
+        grid-row: 3;
     }
 
-    &__nutrient:focus-visible {
-        box-shadow: var(--fd-shadow-focus);
+    &__nutrient:nth-child(odd) {
+        grid-column: 1;
+        justify-self: start;
     }
 
-    &__tooltip {
-        position: absolute;
-        right: 0;
-        bottom: calc(100% + var(--fd-space-xs));
-        z-index: var(--fd-z-index-floating-panel);
-        max-width: min(240px, 100%);
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-sm);
-        background: var(--fd-bg-surface-raised);
-        box-shadow: var(--fd-shadow-md);
-        color: var(--fd-color-text);
+    &__nutrient:nth-child(even) {
+        grid-column: 2;
+        justify-self: end;
+        text-align: right;
+        justify-items: end;
+    }
+
+    &__nutrient-percent {
+        font-size: var(--fd-text-body-size);
+        font-weight: var(--fd-font-weight-bold);
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__nutrient-label {
+        font-weight: var(--fd-font-weight-medium);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xs);
+    }
+
+    &__nutrient-label fd-ui-icon {
+        flex: 0 0 auto;
+    }
+
+    &__nutrient:where(:nth-child(even)) .day-summary__nutrient-label {
+        flex-direction: row-reverse;
+    }
+
+    &__nutrient-value {
         font-size: var(--fd-text-caption-size);
-        line-height: var(--fd-text-caption-line-height);
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(var(--fd-space-xs));
-        transition:
-            opacity 0.16s ease,
-            transform 0.16s ease,
-            visibility 0.16s ease;
-        visibility: hidden;
-        white-space: nowrap;
+        font-weight: var(--fd-font-weight-regular);
+        font-variant-numeric: tabular-nums;
     }
 
-    &__ring &__tooltip {
-        right: 50%;
-        bottom: var(--fd-space-md);
-        transform: translate(50%, var(--fd-space-xs));
+    &__legend {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        margin: var(--fd-space-md) 0 0;
+        text-align: center;
+        text-wrap: balance;
     }
 
-    &__ring:where(:hover, :focus-within) &__tooltip,
-    &__nutrient:where(:hover, :focus-visible) &__tooltip {
-        opacity: 1;
-        transform: translateY(0);
-        visibility: visible;
+    &__pulse {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: minmax(var(--fd-size-control-sm), auto) auto;
+        column-gap: var(--fd-space-xs);
+        row-gap: 0;
+        padding: var(--fd-space-xs) var(--fd-space-md) var(--fd-space-sm);
+        border: var(--fd-border-strong);
+        border-radius: var(--fd-radius-card);
+        background: color-mix(in srgb, var(--fd-color-text-muted) 5%, var(--fd-bg-surface));
+        text-align: start;
+        text-wrap: pretty;
     }
 
-    &__ring:where(:hover, :focus-within) &__tooltip {
-        transform: translate(50%, 0);
+    &__pulse-label,
+    &__pulse-content {
+        grid-column: 1;
+        min-width: 0;
     }
 
-    &__goal {
-        position: absolute;
-        top: calc(var(--fd-space-xs) * -1);
-        bottom: calc(var(--fd-space-xs) * -1);
-        border-left: var(--fd-border-width-strong) dashed var(--fd-color-text-subtle);
-        transform: translateX(-50%);
-        pointer-events: none;
+    &__pulse-label {
+        font-size: var(--fd-text-helper-size);
+        font-weight: var(--fd-font-weight-medium);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        grid-row: 1;
+        align-self: center;
     }
 
-    @container (max-width: 680px) {
+    &__pulse-icon {
+        color: color-mix(in srgb, var(--fd-color-amber-500) 70%, var(--fd-color-text-muted));
+    }
+
+    &__pulse-content {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        line-height: 1.35;
+    }
+
+    &__pulse-content > span {
+        line-height: inherit;
+        font-weight: var(--fd-font-weight-regular);
+    }
+
+    &__pulse-content strong {
+        color: var(--fd-color-text);
+        font-weight: var(--fd-font-weight-bold);
+    }
+
+    &__pulse-controls {
+        font-variant-numeric: tabular-nums;
+        display: flex;
+        grid-column: 2;
+        grid-row: 1;
+        align-items: center;
+        justify-content: center;
+        gap: var(--fd-space-sm);
+    }
+
+    &__pulse-controls[hidden] {
+        display: none;
+    }
+
+    @container (min-width: 760px) {
         &__layout {
-            grid-template-columns: 1fr;
-            gap: var(--fd-space-lg);
+            grid-template-columns: 160px minmax(0, 1fr) 160px;
+            grid-template-rows: repeat(2, 152px) auto;
+            row-gap: 0;
         }
-        &__ring {
-            width: min(100%, 180px);
+
+        &__visual {
+            grid-area: 1 / 2 / 3 / 3;
+            margin-block: -30px;
+        }
+
+        &__nutrient {
+            align-self: start;
+        }
+
+        &__nutrient:nth-child(even) {
+            grid-column: 3;
+        }
+
+        &__nutrient:nth-child(n + 3) {
+            grid-row: 2;
+            align-self: end;
+        }
+
+        &__legend {
+            grid-row: 3;
         }
     }
 
     @media #{variables.$media-mobile} {
         padding: var(--fd-space-md);
-
-        &__nutrient-header {
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: var(--fd-space-xs) var(--fd-space-sm);
-        }
-
-        &__nutrient-percent {
-            grid-column: 2;
-        }
-        &__nutrient-value {
-            grid-column: 1;
-            grid-row: 2;
-        }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        &__fill {
-            animation: none;
-        }
-
-        &__fill,
-        &__tooltip {
+        &__contour-path,
+        &__calorie-ring {
             transition: none;
         }
-    }
-}
-
-@keyframes day-summary-bar-reveal {
-    from {
-        clip-path: inset(0 100% 0 0);
-    }
-
-    to {
-        clip-path: inset(0);
-    }
-}
-
-@media #{variables.$media-mobile} {
-    .day-summary__nutrients {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--fd-space-md);
-    }
-    .day-summary__nutrient-header {
-        grid-template-columns: minmax(0, 1fr);
-        gap: var(--fd-space-xxs);
-    }
-    .day-summary__nutrient-percent {
-        display: none;
-    }
-    .day-summary__nutrient-label {
-        font-size: var(--fd-text-body-sm-size);
-        gap: var(--fd-space-xs);
-    }
-    .day-summary__track {
-        --fd-progress-height: var(--fd-space-xs);
     }
 }

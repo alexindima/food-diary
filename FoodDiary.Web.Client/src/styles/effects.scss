@@ -49,3 +49,36 @@
 .fd-shadow-xl {
     box-shadow: var(--fd-shadow-xl);
 }
+
+// Page bodies fade without transforms so fixed descendants keep their viewport anchor.
+@media (prefers-reduced-motion: no-preference) {
+    .fd-page-body {
+        animation: fd-content-appear 180ms ease-out;
+    }
+
+    .fd-motion-enter {
+        animation: fd-panel-appear 180ms ease-out;
+    }
+}
+
+@keyframes fd-content-appear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fd-panel-appear {
+    from {
+        opacity: 0;
+        transform: translateY(var(--fd-space-xs));
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

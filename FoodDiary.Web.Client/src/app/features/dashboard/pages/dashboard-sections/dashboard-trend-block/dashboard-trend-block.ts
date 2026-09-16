@@ -29,7 +29,7 @@ export class DashboardTrendBlockComponent {
     public readonly change = input.required<number | null>();
     public readonly points = input.required<DashboardWeightTrendPoint[]>();
     public readonly isLoading = input.required<boolean>();
-    public readonly title = input<string>('WEIGHT_CARD.TITLE');
+    public readonly titleKey = input<string>('WEIGHT_CARD.TITLE');
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
     public readonly measurementKind = input<'weight' | 'length'>('weight');
     public readonly emptyStateKey = input<string>('WEIGHT_TREND_CARD.NO_DATA');

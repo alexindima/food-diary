@@ -33,6 +33,14 @@ type CycleSummaryPill = {
     params?: Record<string, number | string>;
 };
 
+const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
+    Learning: 'CYCLE_CARD.CONFIDENCE_LEARNING',
+    Low: 'CYCLE_CARD.CONFIDENCE_LOW',
+    Moderate: 'CYCLE_CARD.CONFIDENCE_MODERATE',
+    Medium: 'CYCLE_CARD.CONFIDENCE_MODERATE',
+    High: 'CYCLE_CARD.CONFIDENCE_HIGH',
+};
+
 @Component({
     selector: 'fd-cycle-summary-card',
     imports: [CommonModule, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
@@ -142,7 +150,7 @@ export class CycleSummaryCardComponent {
 
         const confidence = this.confidence();
         if (confidence !== null) {
-            pills.push({ id: 'confidence', labelKey: 'CYCLE_CARD.CONFIDENCE', params: { value: confidence } });
+            pills.push({ id: 'confidence', labelKey: CONFIDENCE_LABELS[confidence] ?? 'CYCLE_CARD.CONFIDENCE_UNKNOWN' });
         }
 
         return [...pills, ...this.activeFactorPills()];

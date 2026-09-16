@@ -69,6 +69,7 @@ describe('CycleSummaryCardComponent', () => {
         expect(component['statusDays']()).toBe(DAYS_TO_PERIOD);
         expect(component['modeKey']()).toBe('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
         expect(component['confidence']()).toBe('Moderate');
+        expect(component['metaPills']()).toContainEqual({ id: 'confidence', labelKey: 'CYCLE_CARD.CONFIDENCE_MODERATE' });
         expect(component['activeFactorPills']()).toContainEqual({
             id: 'factor-factor-1',
             labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',

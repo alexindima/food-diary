@@ -6,7 +6,9 @@
 >
     <fd-dashboard-widget-frame iconName="water_drop" iconTone="info" [title]="'HYDRATION_CARD.TITLE' | translate">
         @if (hasGoal()) {
-            <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-stat-value"> {{ percent() | number: '1.0-0' }}% </span>
+            <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-stat-value">
+                {{ percent() | localizedNumber: language() }}%
+            </span>
         }
 
         @if (hasGoal()) {
@@ -30,24 +32,24 @@
 
                 <div class="hydration-card__metrics fd-stack fd-gap-xxs">
                     <div class="hydration-card__value fd-row fd-align-baseline fd-gap-xxs">
-                        <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
+                        <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | localizedNumber: language() }}</span>
                         <span class="hydration-card__unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.ML' | translate }}</span>
                     </div>
                     <div class="hydration-card__goal fd-ui-caption">
-                        {{ 'HYDRATION_CARD.OF_GOAL' | translate: { goal: (goal() | number: '1.0-0') } }}
+                        {{ 'HYDRATION_CARD.OF_GOAL' | translate: { goal: (goal() | localizedNumber: language()) } }}
                     </div>
                     <div class="hydration-card__remaining fd-ui-body-sm">
                         @if (isGoalReached()) {
                             {{ 'HYDRATION_CARD.GOAL_REACHED' | translate }}
                         } @else {
-                            {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining() | number: '1.0-0') } }}
+                            {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining() | localizedNumber: language()) } }}
                         }
                     </div>
                 </div>
             </div>
         } @else {
             <div class="hydration-card__value hydration-card__value--without-goal fd-row fd-align-baseline fd-gap-xxs">
-                <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | number: '1.0-0' }}</span>
+                <span class="hydration-card__total fd-ui-metric-hero fd-min-w-0">{{ total() | localizedNumber: language() }}</span>
                 <span class="hydration-card__unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.ML' | translate }}</span>
             </div>
             <fd-notice-banner
@@ -65,6 +67,7 @@
                     <fd-ui-button
                         class="hydration-card__quick-action"
                         size="sm"
+                        [class.hydration-card__quick-action--primary]="amount === primaryAddAmount"
                         [variant]="amount === primaryAddAmount ? 'primary' : 'secondary'"
                         [fill]="amount === primaryAddAmount ? 'solid' : 'outline'"
                         [fullWidth]="true"

@@ -11,6 +11,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -32,6 +33,7 @@ import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
 import { DashboardFacade } from '../lib/dashboard.facade';
+import { parseDashboardDate } from '../lib/dashboard-date.utils';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
@@ -92,6 +94,8 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
@@ -233,7 +237,11 @@ export class DashboardComponent {
     });
 
     public constructor() {
-        this.facade.initialize();
+        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+            const date = parseDashboardDate(params.get('date')) ?? new Date();
+            this.facade.initialize(date);
+            this.facade.setSelectedDate(date);
+        });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + DASHBOARD_LANGUAGE_VERSION_INCREMENT);
         });
@@ -260,7 +268,11 @@ export class DashboardComponent {
             return;
         }
 
-        this.facade.setSelectedDate(value);
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { date: formatDate(value, 'yyyy-MM-dd', 'en') },
+            queryParamsHandling: 'merge',
+        });
     }
 
     protected async openWeightHistoryAsync(): Promise<void> {

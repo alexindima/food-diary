@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1656,
+    "typescriptFiles": 1658,
     "symbols": 657,
     "routes": 98,
     "features": 43,
-    "specs": 574,
+    "specs": 575,
     "localeFiles": 5,
     "roles": {
       "Component": 445,
@@ -2588,7 +2588,7 @@
       "role": "Component",
       "selector": "fd-day-nutrition-summary",
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-      "line": 34
+      "line": 45
     },
     {
       "name": "DynamicProgressBarComponent",
@@ -3120,7 +3120,7 @@
       "role": "Component",
       "selector": "fd-cycle-summary-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.ts",
-      "line": 43
+      "line": 51
     },
     {
       "name": "DailyAdviceCardComponent",
@@ -3148,7 +3148,7 @@
       "role": "Component",
       "selector": "fd-hydration-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
-      "line": 18
+      "line": 22
     },
     {
       "name": "TdeeInsightCardContentComponent",
@@ -6455,8 +6455,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3465,
-      "russianProperties": 3465,
+      "englishProperties": 3480,
+      "russianProperties": 3480,
       "countsMatch": true
     },
     {

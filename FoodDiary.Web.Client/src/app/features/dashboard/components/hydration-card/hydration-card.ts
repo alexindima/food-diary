@@ -1,21 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { map } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML } from './hydration-card.config';
 
 @Component({
     selector: 'fd-hydration-card',
-    imports: [CommonModule, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
+    imports: [CommonModule, LocalizedNumberPipe, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
     templateUrl: './hydration-card.html',
     styleUrl: './hydration-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
+    private readonly translateService = inject(TranslateService);
+    protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: resolveTranslateLanguage(this.translateService),
+    });
     public readonly total = input.required<number>();
     public readonly goal = input.required<number | null>();
     public readonly isLoading = input.required<boolean>();

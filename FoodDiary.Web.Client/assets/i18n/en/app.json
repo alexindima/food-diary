@@ -161,6 +161,8 @@
             "RESULTS_TEXT": "Recent and full catalogue sections help you open details, favorite products, or add them to a meal.",
             "EXTERNAL_TITLE": "External matches",
             "EXTERNAL_TEXT": "When Open Food Facts has matches, you can use them as a starting point for a product.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the products tour whenever you need a reminder."
         }
@@ -298,6 +300,8 @@
             "START_TOUR": "Show statistics tour",
             "PERIOD_TITLE": "Choose a period",
             "PERIOD_TEXT": "Switch between week, month, year, or a custom date range before reviewing trends.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the statistics tour whenever you need a reminder."
         }
@@ -381,6 +385,8 @@
             "FAVORITES_TEXT": "Favorites keep your regular dishes available for quick repeat use or adding to meals.",
             "RESULTS_TITLE": "Recipe catalogue",
             "RESULTS_TEXT": "Open a recipe for details, add it to a meal, or mark it as a favorite from the results.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the recipes tour whenever you need a reminder."
         }
@@ -513,6 +519,8 @@
             "NUTRITION_DESCRIPTION": "Choose automatic nutrition calculation or enter manual nutrient values.",
             "ACTIONS_TITLE": "Save or cancel",
             "ACTIONS_DESCRIPTION": "Save the recipe when the form is valid, or return without applying changes.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
         }
@@ -623,6 +631,8 @@
             "TRACKING_TEXT": "Choose who can use this product and keep optional notes for future edits.",
             "ACTIONS_TITLE": "Save changes",
             "ACTIONS_TEXT": "Save the product when the required fields are complete, or cancel to return to the product list.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "Use this button whenever you need a quick reminder of the product form."
         },
@@ -863,11 +873,14 @@
             "FAVORITES_TEXT": "Favorite meals can be repeated for today without rebuilding the same entry.",
             "RESULTS_TITLE": "Meal timeline",
             "RESULTS_TEXT": "Open a meal to review details, edit it, repeat it, favorite it, or remove it.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the meals tour whenever you need a reminder."
         }
     },
     "AI_INPUT_BAR": {
+        "SHORT_PLACEHOLDER": "What did you eat?",
         "PHOTO_TITLE": "Recognize from photo",
         "ADD_ACTION": "Add",
         "TEXT_PREVIEW_LABEL": "Source request",
@@ -1098,6 +1111,8 @@
             "SATIETY_DESCRIPTION": "Record how full you felt before and after the meal for better context.",
             "NUTRITION_TITLE": "Nutrition summary",
             "NUTRITION_DESCRIPTION": "Review calories, macros, warnings, and save actions before submitting.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
         },
@@ -1552,6 +1567,8 @@
             "DIETOLOGIST_DESCRIPTION": "Invite or disconnect a dietologist and control which data they can see.",
             "PRIVACY_TITLE": "Privacy and data",
             "PRIVACY_DESCRIPTION": "Review AI consent, privacy links, and account deletion controls.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         },
@@ -1643,6 +1660,8 @@
             "START_TOUR": "Show recommendations tour",
             "LIST_TITLE": "Dietologist recommendations",
             "LIST_DESCRIPTION": "Read new recommendations and mark them as reviewed when you open an item.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -1697,6 +1716,8 @@
             "ITEMS_DESCRIPTION": "Add products, amounts, categories, and notes, then check items off as you shop.",
             "MANAGE_TITLE": "Manage lists",
             "MANAGE_DESCRIPTION": "Switch lists, rename them, clear completed planning, or create a new list.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -1724,6 +1745,17 @@
         "REMAINING_LABEL": "Remaining",
         "MACRO_TITLE": "Macro summary",
         "DAY_SUMMARY": {
+            "PULSE_PREVIOUS": "Previous insight",
+            "PULSE_NEXT": "Next insight",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
+            "HELP_TITLE": "How to read the shape",
+            "PULSE_CALORIES": "Daily calories",
+            "PULSE_EMPTY_TEXT": "Add the first meal for this day",
+            "PULSE_EMPTY_TITLE": "No meals recorded yet",
+            "PULSE_TITLE": "Daily pulse",
+            "PETAL_LEGEND": "Inner ring = calorie progress. Dashed outline = 100% of nutrient goals. Above 100%, growth is compressed and capped. Double marker = 250% or more.",
+            "OF_GOAL": "of {{value}} kcal",
             "TITLE": "Day summary",
             "GOAL_MARKER": "Nutrient goal",
             "CALORIE_PROGRESS": "Daily calorie progress",
@@ -1818,6 +1850,8 @@
             "APPEARANCE_TEXT": "This button opens appearance settings where you can choose the dashboard theme and interface style.",
             "SETTINGS_TITLE": "Customize the dashboard",
             "SETTINGS_TEXT": "Use this control to choose which dashboard cards stay visible.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This button restarts the dashboard tour whenever you need a quick reminder."
         },
@@ -1982,6 +2016,8 @@
             "GOAL_DESCRIPTION": "Set the weight goal used by dashboard progress and body insights.",
             "ENTRIES_TITLE": "Measurement history",
             "ENTRIES_DESCRIPTION": "Review previous entries and edit or delete incorrect logs.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -2092,6 +2128,8 @@
             "GOAL_DESCRIPTION": "Set the waist goal used by body progress insights.",
             "ENTRIES_TITLE": "Measurement history",
             "ENTRIES_DESCRIPTION": "Review previous entries and edit or delete incorrect logs.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -2355,6 +2393,8 @@
             "FACTORS_DESCRIPTION": "Track events that may affect predictions, such as contraception or postpartum changes.",
             "HISTORY_TITLE": "Logged days",
             "HISTORY_DESCRIPTION": "Review saved cycle days and edit or clear records when needed.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -2440,6 +2480,8 @@
             "INSIGHTS_TEXT": "Insights surface prompts and patterns that can help you adjust your fasting routine.",
             "HISTORY_TITLE": "Fasting history",
             "HISTORY_TEXT": "Review previous sessions, check-ins, and charts to compare how different fasts felt.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the fasting tour whenever you need a reminder."
         },
@@ -2749,6 +2791,8 @@
             "HEALTH_SCORE_DESCRIPTION": "This score combines consistency, goal adherence, and activity signals.",
             "BADGES_TITLE": "Badges",
             "BADGES_DESCRIPTION": "Earn badges as you build consistent nutrition habits.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -2879,6 +2923,8 @@
             "STATS_DESCRIPTION": "See the main totals and averages for the current weekly review.",
             "SUGGESTIONS_TITLE": "Suggestions",
             "SUGGESTIONS_DESCRIPTION": "Use personalized suggestions to adjust the next week of tracking.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -2982,6 +3028,8 @@
             "MACROS_TEXT": "Choose a preset or tune protein, carbs, and fats manually for your routine.",
             "BODY_TITLE": "Body goals",
             "BODY_TEXT": "Track weight and waist targets so dashboard trend cards have clear context.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the goals tour whenever you need a reminder."
         }
@@ -3112,6 +3160,11 @@
         "ADD_AMOUNT": "Add {{value}} ml of water"
     },
     "CYCLE_CARD": {
+        "CONFIDENCE_LEARNING": "Learning your pattern",
+        "CONFIDENCE_LOW": "Confidence: low",
+        "CONFIDENCE_MODERATE": "Confidence: moderate",
+        "CONFIDENCE_HIGH": "Confidence: high",
+        "CONFIDENCE_UNKNOWN": "Confidence not yet available",
         "TITLE": "Cycle",
         "DAY_LABEL": "Day {{day}}",
         "OVULATION_IN": "Ovulation in {{days}} days",
@@ -3217,6 +3270,8 @@
             "PLANS_DESCRIPTION": "Compare monthly and yearly options when checkout is available.",
             "BENEFITS_TITLE": "Premium benefits",
             "BENEFITS_DESCRIPTION": "Review what Premium unlocks across insights, AI features, and collaboration.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -3272,6 +3327,8 @@
             "FILTERS_DESCRIPTION": "Filter the academy by topic to focus on what matters now.",
             "GRID_TITLE": "Lesson library",
             "GRID_DESCRIPTION": "Open lessons from the grid and mark them as read as you learn.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         },
@@ -3279,6 +3336,8 @@
             "START_TOUR": "Show lesson tour",
             "CONTENT_TITLE": "Lesson content",
             "CONTENT_DESCRIPTION": "Read the lesson and mark it as completed when you are done.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this lesson."
         }
@@ -3319,6 +3378,8 @@
             "FILTERS_DESCRIPTION": "Filter curated plans by diet type to narrow the list.",
             "PLANS_TITLE": "Meal plans",
             "PLANS_DESCRIPTION": "Open a plan to review its days, recipes, and shopping list actions.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         },
@@ -3328,6 +3389,8 @@
             "HEADER_DESCRIPTION": "Review the plan summary and use actions to adopt it or generate a shopping list.",
             "DAYS_TITLE": "Plan days",
             "DAYS_DESCRIPTION": "Inspect each day of the plan and the recipes assigned to it.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this plan."
         },
@@ -3463,6 +3526,8 @@
             "SORT_DESCRIPTION": "Switch between the newest and most popular recipes.",
             "RECIPES_TITLE": "Recipe results",
             "RECIPES_DESCRIPTION": "Open a recipe card to inspect the details.",
+            "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
@@ -3506,7 +3571,9 @@
                 "START_TOUR": "Show clients tour",
                 "CLIENTS_TITLE": "Connected clients",
                 "CLIENTS_DESCRIPTION": "Open a client to review the data they have shared with you.",
-                "HELP_TITLE": "Replay this tour anytime",
+                "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
+            "HELP_TITLE": "Replay this tour anytime",
                 "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
             }
         },
@@ -3616,7 +3683,9 @@
                 "METRICS_DESCRIPTION": "Review nutrition, body progress, meals, hydration, fasting, and goals when permitted.",
                 "RECOMMENDATIONS_TITLE": "Send recommendations",
                 "RECOMMENDATIONS_DESCRIPTION": "Write recommendations and review what you have already sent to this client.",
-                "HELP_TITLE": "Replay this tour anytime",
+                "BALANCE_LEFT": "remaining",
+            "BALANCE_OVER": "over goal",
+            "HELP_TITLE": "Replay this tour anytime",
                 "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this dashboard."
             }
         }

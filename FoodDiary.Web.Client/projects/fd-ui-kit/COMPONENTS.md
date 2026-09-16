@@ -7,6 +7,10 @@ For tooltip and accessible-name rules, see `ACCESSIBILITY_AND_TOOLTIPS.md`.
 
 ## Usage
 
+Page bodies and `fd-ui-dialog` use a short entrance animation. Use the app's
+`fd-motion-enter` utility for newly revealed inline panels. These entrances respect
+`prefers-reduced-motion`; avoid applying them to content that updates continuously.
+
 Prefer importing from the barrel:
 
 ```ts
@@ -800,3 +804,5 @@ Update exports in:
 If the component should be available via `FdUiKitModule`, add it to:
 
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/fd-ui-kit.module.ts`
+
+Standard card surfaces use the shared `--fd-bg-card-surface` token: a subtle theme-aware neutral highlight over `--fd-bg-surface`. Explicit editor and gradient tones retain their dedicated backgrounds.

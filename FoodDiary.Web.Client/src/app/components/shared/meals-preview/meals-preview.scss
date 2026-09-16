@@ -82,9 +82,15 @@
 }
 
 .meals-preview__placeholder-action-button--ai {
-    --fd-button-text-default: var(--fd-color-on-ai);
-    --fd-button-text-hover: var(--fd-color-on-ai);
-    --fd-button-text-active: var(--fd-color-on-ai);
+    --fd-button-outline-text-default: var(--fd-color-text);
+    --fd-button-outline-background-default: var(--fd-bg-surface-raised);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .meals-preview__placeholder {
+        transition: none;
+        transform: none;
+    }
 }
 
 .meals-preview__ai-panel {

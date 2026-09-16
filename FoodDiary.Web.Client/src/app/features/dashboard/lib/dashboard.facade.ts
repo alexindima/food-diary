@@ -98,11 +98,14 @@ export class DashboardFacade {
     public readonly placeholderIcon = placeholderIcon;
     public readonly placeholderLabel = placeholderLabel;
 
-    public initialize(): void {
+    public initialize(date?: Date): void {
         if (this.initialized()) {
             return;
         }
 
+        if (date !== undefined) {
+            this.selectedDate.set(normalizeDate(date));
+        }
         this.initialized.set(true);
         this.loadDashboardSnapshot();
 

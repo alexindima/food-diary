@@ -1076,6 +1076,10 @@ $fd-theme-design-tokens: (
         --fd-bg-page: #{fd-theme-token($theme, layout-page, background)};
         --fd-bg-body: #{fd-theme-token($theme, layout-page, background)};
         --fd-bg-surface: var(--fd-color-surface);
+        --fd-bg-card-surface:
+            radial-gradient(ellipse at 50% 43%, color-mix(in srgb, var(--fd-color-text) 2.5%, transparent), transparent 45%),
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-text) 2%, transparent), transparent 50%),
+            var(--fd-bg-surface);
         --fd-bg-surface-raised: var(--fd-color-surface-raised);
         --fd-bg-surface-muted: var(--fd-color-surface-muted);
         --fd-bg-surface-inset: var(--fd-color-slate-50);

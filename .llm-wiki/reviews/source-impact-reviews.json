@@ -214,14 +214,14 @@
       "pageSha256": "f1377bfc80eadd0ff4d6265843c3eb2747177063ec40db6befaa9a8cfc37dabf",
       "sources": [
         {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "54a5fff46f187be8b4588bf2e6ca24b397e926458e0d39e9cbcbf9be7b9ae12e"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "e2dd335ae1a1c9cfe83fdef9d7d188e69fa938012a901f0330cb3a386c4baa75"
         }
       ],
-      "reason": "Reviewed the three intentional test-only reference allowances and regenerated the architecture health index. No production dependency, module cycle, or removal policy changed; dependency guards pass.",
+      "reason": "Reviewed regenerated dashboard frontend indexes: styling, localization, titleKey consumer migration and dialog entrances. Workflow guidance remains accurate; no dependency, transport, security or tracing-tool changes. All 3288 frontend tests passed with rendered mobile, tablet, desktop and theme checks.",
       "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:56:24.0689319Z"
+      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
+      "reviewedAtUtc": "2026-09-16T19:14:14.5559825Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47ac2fdf3432246b18a167a5810bc3533f67c75b9da1d240017dc099e155a4f0"
+          "sha256": "52ae124d3502357d558b7aefbcb5194f24fa139cc081445f9ad3546a256ae015"
         }
       ],
-      "reason": "Reviewed the full push range: added backend tests increase static test references; the bounded Wiki test-context query adds two decisions; InvariantCulture adds one using line in RequiresDockerPerformanceFact. These index measurements do not change the documented interpretation of static coverage. Full Core audit, search/retrieval regressions and the focused helper build/format checks passed.",
-      "baseRef": "origin/master",
-      "gitHead": "d671b618640b65753622b612c5351c6db1c9ee10",
-      "reviewedAtUtc": "2026-09-16T10:45:26.1196483Z"
+      "reason": "Tooltip substitution passed focused ESLint and Stylelint; live dashboard renders help button and Pulse empty state.",
+      "baseRef": "HEAD",
+      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
+      "reviewedAtUtc": "2026-09-16T21:26:24.3628237Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -906,17 +906,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47ac2fdf3432246b18a167a5810bc3533f67c75b9da1d240017dc099e155a4f0"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2271a85d96e2309e3aff607268a6e6c9ec855a38b60b8d6fe9dc05da50ec3aea"
+          "sha256": "52ae124d3502357d558b7aefbcb5194f24fa139cc081445f9ad3546a256ae015"
         }
       ],
-      "reason": "The complete push changes test helpers and focused test coverage, plus bounded Wiki test-context retrieval. RequiresDockerPerformanceFact now parses the CLR profiling integer flag with InvariantCulture to satisfy MA0011. Focused helper build and whitespace checks passed; runtime-topology changes are fingerprint/count only, with no runtime service/client or access-control changes. Full Core audit and Wiki search/retrieval verification passed before this isolated test-helper compilation fix.",
-      "baseRef": "origin/master",
-      "gitHead": "1f310e58f0cebd6b0a4427d7de7bc1cbb21bf35b",
-      "reviewedAtUtc": "2026-09-16T10:38:01.7112117Z"
+      "reason": "Existing local tooltip renders translated plain text; no data transport or storage changes.",
+      "baseRef": "HEAD",
+      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
+      "reviewedAtUtc": "2026-09-16T21:26:25.8466520Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1049,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "44b4415e158c020d7c315271b601a646ee19e2fdc27e820a10c27a472e0aa9e0"
+          "sha256": "386873765815f9d86ff77ff3deb9ee6a4330d6972cd71b7a308732d75b95ea1f"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "3605d8f19d73bf2aa9950e6e8c940ce738794f0fa9e65d24687f5d53629d55db"
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "cbb573d4466fe3defb0c6c1fc15f49e9364c9c7980fd0b72c65438b5e3576b1f"
         }
       ],
-      "reason": "Reviewed complete push range: moved-module ranking and runtime topology follow current sources, without weaker search thresholds; 289 Node/.NET parity cases passed. Trace fixtures follow the actual controller paths. Angular model inputs, implicit Change outputs and two-way bindings retain public payloads and are now indexed. Frontend contract SQL parity and all Wiki verify stages passed; security and trace guidance remains current because runtime data access and access controls are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
-      "reviewedAtUtc": "2026-09-16T08:43:59.4609915Z"
+      "reason": "Help icon delegates hover display to UI kit; removed inline help state and paragraph; manual Pulse navigation preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
+      "reviewedAtUtc": "2026-09-16T21:26:27.2499419Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,17 +1139,17 @@
     {
       "pageId": "workflow.frontend-contract-review",
       "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
-      "pageSha256": "c9bda8503dfd73d482a27bcdfd5ab318a8ebe5bf60a6279d29dbd31458e41995",
+      "pageSha256": "50e87b590ffcce7d83f4c1061f55f2210470a915e9fc56f3fab959d776a22f34",
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fec60092fdbda4386337f4fc802241eb375ebb60348af4d9a4561b2417b8d453"
+          "sha256": "386873765815f9d86ff77ff3deb9ee6a4330d6972cd71b7a308732d75b95ea1f"
         }
       ],
-      "reason": "Reviewed contract workflows against relocated DTOs and pure mappings: CLR names and wire shapes are preserved, all 15 Swagger checks pass. Frontend index changes do not alter the documented review procedure; frontend runtime verification is outside this refactoring.",
+      "reason": "Summary help now uses existing FdUiHintDirective with localized legend; no new public contract.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:24.0017708Z"
+      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
+      "reviewedAtUtc": "2026-09-16T21:26:22.9055490Z"
     },
     {
       "pageId": "workflow.query-context",

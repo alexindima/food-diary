@@ -7,7 +7,18 @@ import {
     normalizeDate,
     normalizeEndOfDayUtc,
     normalizeStartOfDayUtc,
+    parseDashboardDate,
 } from './dashboard-date.utils';
+
+describe('dashboard URL date', () => {
+    it('restores a local calendar day', () => {
+        expect(parseDashboardDate('2026-09-15')).toEqual(new Date('2026-09-15T00:00:00'));
+    });
+
+    it.each([null, '', 'invalid', '2026-02-30', '2026-13-01', '2026-09-15T00:00:00Z'])('rejects invalid date %s', value => {
+        expect(parseDashboardDate(value)).toBeNull();
+    });
+});
 
 const YEAR = 2026;
 const JANUARY = 0;

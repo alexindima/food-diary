@@ -310,6 +310,22 @@
     }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    .fd-ui-dialog {
+        animation: detail-dialog-in 180ms ease-out;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fd-ui-dialog,
+    .fd-ui-dialog-panel .fd-ui-dialog,
+    .fd-ui-dialog-backdrop {
+        animation: none;
+        transform: none;
+        opacity: 1;
+    }
+}
+
 @media #{variables.$media-tablet} {
     /* stylelint-disable declaration-no-important -- Angular CDK writes inline overlay pane geometry for dialogs. */
 

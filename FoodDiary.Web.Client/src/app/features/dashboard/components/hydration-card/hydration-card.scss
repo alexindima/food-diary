@@ -10,7 +10,7 @@
     border: var(--fd-border-strong);
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap);
-    background: var(--fd-color-surface);
+    background: var(--fd-bg-card-surface);
     color: var(--fd-color-text);
     box-shadow: var(--fd-shadow-lg);
 
@@ -163,6 +163,12 @@
 
     &__quick-action {
         min-width: 0;
+    }
+
+    &__quick-action--primary {
+        --fd-bg-brand: var(--fd-color-primary-700);
+        --fd-gradient-brand-hover-start: var(--fd-color-primary-700);
+        --fd-gradient-brand-hover-end: var(--fd-color-primary-700);
     }
 
     @media #{variables.$media-compact} {
