@@ -1,3 +1,4 @@
+using System.Globalization;
 using Xunit;
 
 namespace FoodDiary.Testing;
@@ -14,5 +15,5 @@ public sealed class RequiresDockerPerformanceFactAttribute : FactAttribute {
     }
 
     private static bool IsProfilingEnabled(string variable) =>
-        int.TryParse(Environment.GetEnvironmentVariable(variable), out int enabled) && enabled != 0;
+        int.TryParse(Environment.GetEnvironmentVariable(variable), CultureInfo.InvariantCulture, out int enabled) && enabled != 0;
 }

@@ -44058,11 +44058,11 @@
     },
     {
       "path": "Tooling/FoodDiary.Testing/RequiresDockerPerformanceFactAttribute.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.3
+      "structuralRiskScore": 6.32
     },
     {
       "path": "Tooling/FoodDiary.Testing/RequiresDockerTheoryAttribute.cs",

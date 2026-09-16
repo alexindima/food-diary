@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6d3a4ed130b1b623b2ecfbbfa8c97b732d18fe6814945ccc0e4c3a728c14d44b"
+          "sha256": "47ac2fdf3432246b18a167a5810bc3533f67c75b9da1d240017dc099e155a4f0"
         }
       ],
-      "reason": "Quality index changes reflect two extra decisions in the context facade for a bounded test-context query. No production access, permissions or security boundary changed; ranking preservation and module test discovery regression passed.",
-      "baseRef": "HEAD",
-      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
-      "reviewedAtUtc": "2026-09-16T10:18:58.3035971Z"
+      "reason": "Reviewed the full push range: added backend tests increase static test references; the bounded Wiki test-context query adds two decisions; InvariantCulture adds one using line in RequiresDockerPerformanceFact. These index measurements do not change the documented interpretation of static coverage. Full Core audit, search/retrieval regressions and the focused helper build/format checks passed.",
+      "baseRef": "origin/master",
+      "gitHead": "d671b618640b65753622b612c5351c6db1c9ee10",
+      "reviewedAtUtc": "2026-09-16T10:45:26.1196483Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "22d29cb362d6b6c6d9258f70b5eb655352be0f5517efcc8edf9126e2db63e7ba"
+          "sha256": "2271a85d96e2309e3aff607268a6e6c9ec855a38b60b8d6fe9dc05da50ec3aea"
         }
       ],
-      "reason": "Runtime topology changes are source-location metadata from test additions; no production host, worker, webhook, registration or provider implementation changed.",
-      "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:55.443678Z"
+      "reason": "The complete push changes test helpers and focused test coverage, plus bounded Wiki test-context retrieval. RequiresDockerPerformanceFact now parses the CLR profiling integer flag with InvariantCulture to satisfy MA0011. Focused helper build and whitespace checks passed; runtime-topology changes are fingerprint/count only, with no runtime service/client or access-control changes. Full Core audit and Wiki search/retrieval verification passed before this isolated test-helper compilation fix.",
+      "baseRef": "origin/master",
+      "gitHead": "1f310e58f0cebd6b0a4427d7de7bc1cbb21bf35b",
+      "reviewedAtUtc": "2026-09-16T10:38:00.9236149Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,17 +906,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6d3a4ed130b1b623b2ecfbbfa8c97b732d18fe6814945ccc0e4c3a728c14d44b"
+          "sha256": "47ac2fdf3432246b18a167a5810bc3533f67c75b9da1d240017dc099e155a4f0"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "22d29cb362d6b6c6d9258f70b5eb655352be0f5517efcc8edf9126e2db63e7ba"
+          "sha256": "2271a85d96e2309e3aff607268a6e6c9ec855a38b60b8d6fe9dc05da50ec3aea"
         }
       ],
-      "reason": "Reviewed the complete push range including fd53dd659: runtime-topology changes are source fingerprint/count only, with no service or provider boundary changes. Quality-index differences reflect additional tests and the bounded test-context query. Full Core audit and all eight Wiki verify stages passed, including context search and retrieval regressions. Security-review guidance remains current.",
+      "reason": "The complete push changes test helpers and focused test coverage, plus bounded Wiki test-context retrieval. RequiresDockerPerformanceFact now parses the CLR profiling integer flag with InvariantCulture to satisfy MA0011. Focused helper build and whitespace checks passed; runtime-topology changes are fingerprint/count only, with no runtime service/client or access-control changes. Full Core audit and Wiki search/retrieval verification passed before this isolated test-helper compilation fix.",
       "baseRef": "origin/master",
-      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
-      "reviewedAtUtc": "2026-09-16T10:30:04.0201625Z"
+      "gitHead": "1f310e58f0cebd6b0a4427d7de7bc1cbb21bf35b",
+      "reviewedAtUtc": "2026-09-16T10:38:01.7112117Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
