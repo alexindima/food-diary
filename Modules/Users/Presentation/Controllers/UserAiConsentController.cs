@@ -1,4 +1,3 @@
-using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Users.Presentation.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 

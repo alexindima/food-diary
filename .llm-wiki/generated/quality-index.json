@@ -39082,11 +39082,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UserAiConsentController.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
+      "structuralRiskScore": 2.48
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UserOverviewController.cs",
@@ -39106,11 +39106,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
+      "structuralRiskScore": 2.62
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
@@ -47929,7 +47929,7 @@
       "name": "UserAiConsentController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UserAiConsentController.cs",
-      "line": 15,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserAiConsentControllerTests.cs"
@@ -47969,7 +47969,7 @@
       "name": "UsersPasswordController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",
-      "line": 18,
+      "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersPasswordControllerTests.cs",

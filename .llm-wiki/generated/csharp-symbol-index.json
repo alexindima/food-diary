@@ -24125,7 +24125,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UserAiConsentController.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UserOverviewController",
@@ -24146,7 +24146,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "WaistGoalsController",
