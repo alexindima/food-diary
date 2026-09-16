@@ -1030,17 +1030,17 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "1428b1470e1ce9b297a02be8e34ce141a720915fa104e191ae808358443edbd1",
+      "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "edbafe65b40be8235bdbeb88410399630bbcbc7e6f7b71d43c171f444caad1c0"
+          "sha256": "226f1a3acc98c51209089d5e245c7161c71fc8eccb2ec21699c0d5000a0f772b"
         }
       ],
-      "reason": "Testing strategy now documents the exhaustive 157-project CI partition and reproduction commands. Focused local test planning and full-regression obligations remain unchanged; partition completeness and full-project execution preserve integration coverage.",
+      "reason": "Testing strategy now places the complete architecture project in integration-1 because ProjectFiles_MatchAutomaticFormatterAsync uses PowerShellFact. The partition validator passes for all 160 projects without filters, omissions or duplicates; fast remains 118 projects. Focused test-plan guidance is unchanged, and all suites remain required by the aggregate CI gate.",
       "baseRef": "HEAD",
-      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
-      "reviewedAtUtc": "2026-09-09T04:04:19.2278686Z"
+      "gitHead": "e5e1b5bba617ac978c02d99475910fd3bb53b45e",
+      "reviewedAtUtc": "2026-09-16T11:15:02.6364490Z"
     },
     {
       "pageId": "workflow-trace-feature",

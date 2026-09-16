@@ -39,14 +39,16 @@ dotnet test FoodDiary.slnx --maxcpucount:1
 
 ### Backend CI order and completeness
 
-`backend-fast` builds and runs the fast test projects first (architecture,
-domain, application, presentation, clients and other unit-only projects).
+`backend-fast` builds and runs the fast test projects first (domain,
+application, presentation, clients and other unit-only projects).
 After it succeeds, `backend-slow` runs a matrix with at most four concurrent
 jobs: `integration-1`, `integration-2`, `integration-3`, and `mcp`. Each job has
 its own runner, builds its selected projects and transitive dependencies once,
 and executes its projects sequentially. This bounds Docker resource pressure;
 existing xUnit collection isolation remains in effect. Mixed infrastructure
 projects run wholly in a slow group, including their unit tests.
+The architecture suite runs wholly in `integration-1` because its project-format
+convention test launches PowerShell. Its tests remain mandatory and unfiltered.
 
 The three integration groups were balanced using observed CI project durations,
 not project counts. `scripts/ci/backend-test-groups.json` is the explicit

@@ -4,7 +4,6 @@
     {
       "name": "fast",
       "projects": [
-        "Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/FoodDiary.Modules.Ai.Domain.Tests.csproj",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/FoodDiary.Modules.Billing.Domain.Tests.csproj",
@@ -128,6 +127,7 @@
     {
       "name": "integration-1",
       "projects": [
+        "Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/FoodDiary.Modules.Admin.Infrastructure.Tests.csproj",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/FoodDiary.Modules.Ai.Infrastructure.Tests.csproj",
         "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj",
