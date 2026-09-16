@@ -7,12 +7,28 @@
 }
 
 .day-summary {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     padding: var(--fd-space-lg);
     border: var(--fd-border-strong);
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-card-surface);
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset-inline-end: -12%;
+        inset-block: -8%;
+        width: 55%;
+        background: var(--fd-color-text);
+        mask: url('/assets/images/day-summary-wheat.svg') right center / contain no-repeat;
+        opacity: 0.03;
+        pointer-events: none;
+        z-index: -1;
+    }
 
     &__layout {
         display: grid;
@@ -177,6 +193,7 @@
 
     &__nutrient {
         display: grid;
+        background: var(--fd-bg-surface);
         box-sizing: border-box;
         width: 160px;
         max-width: 100%;
