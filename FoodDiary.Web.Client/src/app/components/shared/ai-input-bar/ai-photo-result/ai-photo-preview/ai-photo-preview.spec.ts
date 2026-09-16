@@ -18,6 +18,13 @@ const CARD_Y_START = 4;
 const CARD_Y_STEP = 20;
 const CARD_WIDTH = 28;
 const CARD_HEIGHT = 15;
+const IMAGE_LONG_SIDE = 1536;
+const IMAGE_SHORT_SIDE = 1024;
+const IMAGE_DIMENSIONS = [
+    [IMAGE_LONG_SIDE, IMAGE_SHORT_SIDE],
+    [IMAGE_SHORT_SIDE, IMAGE_LONG_SIDE],
+    [IMAGE_SHORT_SIDE, IMAGE_SHORT_SIDE],
+];
 
 function createAnnotations(count: number): AiPhotoAnnotation[] {
     return Array.from({ length: count }, (_, index) => ({
@@ -56,6 +63,34 @@ async function setupAiPhotoPreviewAsync(): Promise<ComponentFixture<AiPhotoPrevi
     fixture.componentRef.setInput('isNutritionLoading', false);
     return fixture;
 }
+
+describe('AiPhotoPreviewComponent image geometry', () => {
+    it('updates the annotation aspect ratio when a different image loads', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
+        fixture.componentRef.setInput('annotations', createAnnotations(SIX_PRODUCTS));
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const image = host.querySelector<HTMLImageElement>('.ai-photo-result__preview');
+        if (image === null) {
+            throw new Error('Expected a photo preview');
+        }
+        const orientations: boolean[] = [];
+        fixture.componentInstance.imageOrientationChanged.subscribe(value => orientations.push(value));
+
+        for (const [width, height] of IMAGE_DIMENSIONS) {
+            Object.defineProperty(image, 'naturalWidth', { configurable: true, value: width });
+            Object.defineProperty(image, 'naturalHeight', { configurable: true, value: height });
+            image.dispatchEvent(new Event('load'));
+            fixture.detectChanges();
+
+            const annotations = host.querySelector<HTMLElement>('.ai-photo-result__annotations');
+            expect(Number(annotations?.style.getPropertyValue('--ai-photo-aspect-ratio'))).toBeCloseTo(width / height);
+        }
+        expect(orientations).toEqual([false, true, false]);
+    });
+});
 
 describe('AiPhotoPreviewComponent', () => {
     it('shows a preparation status over the local image preview', async () => {

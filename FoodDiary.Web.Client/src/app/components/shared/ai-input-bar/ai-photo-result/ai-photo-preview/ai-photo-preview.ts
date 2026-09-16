@@ -3,6 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
 
+const DEFAULT_IMAGE_ASPECT_RATIO = 1.5;
+
 @Component({
     selector: 'fd-ai-photo-preview',
     imports: [TranslatePipe],
@@ -29,8 +31,7 @@ export class AiPhotoPreviewComponent {
     public readonly annotationsToggled = output();
     public readonly annotationSelected = output<string>();
     public readonly imageOrientationChanged = output<boolean>();
-    protected readonly isPortrait = signal(false);
-    protected readonly imageAspectRatio = signal('auto');
+    protected readonly imageAspectRatio = signal(DEFAULT_IMAGE_ASPECT_RATIO);
 
     protected readonly usesCompactAnnotations = computed(() => this.annotations().length > this.expandedAnnotationLimit);
     protected readonly activeAnnotation = computed(
@@ -63,10 +64,9 @@ export class AiPhotoPreviewComponent {
 
     protected onImageLoaded(event: Event): void {
         const image = event.currentTarget;
-        if (image instanceof HTMLImageElement) {
+        if (image instanceof HTMLImageElement && image.naturalWidth > 0 && image.naturalHeight > 0) {
             const isPortrait = image.naturalHeight > image.naturalWidth;
-            this.isPortrait.set(isPortrait);
-            this.imageAspectRatio.set(`${image.naturalWidth} / ${image.naturalHeight}`);
+            this.imageAspectRatio.set(image.naturalWidth / image.naturalHeight);
             this.imageOrientationChanged.emit(isPortrait);
         }
     }
