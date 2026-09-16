@@ -38,11 +38,11 @@
             [preMealSatietyLevel]="preMealSatietyLevel()"
             [postMealSatietyLevel]="postMealSatietyLevel()"
             [surface]="false"
-            (dateChange)="dateChange.emit($event)"
-            (timeChange)="timeChange.emit($event)"
-            (commentChange)="commentChange.emit($event)"
-            (preMealSatietyLevelChange)="preMealSatietyLevelChange.emit($event)"
-            (postMealSatietyLevelChange)="postMealSatietyLevelChange.emit($event)"
+            (dateChange)="date.set($event)"
+            (timeChange)="time.set($event)"
+            (commentChange)="comment.set($event)"
+            (preMealSatietyLevelChange)="preMealSatietyLevel.set($event)"
+            (postMealSatietyLevelChange)="postMealSatietyLevel.set($event)"
         />
     </div>
 }

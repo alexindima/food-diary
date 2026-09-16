@@ -14,7 +14,7 @@
                 class="meal-details-fields__input fd-ui-body-sm"
                 type="date"
                 [value]="date()"
-                (input)="dateChange.emit(dateInput.value)"
+                (input)="date.set(dateInput.value)"
             />
         </div>
         <div class="meal-details-fields__field fd-grid fd-gap-xxs">
@@ -27,7 +27,7 @@
                 class="meal-details-fields__input fd-ui-body-sm"
                 type="time"
                 [value]="time()"
-                (input)="timeChange.emit(timeInput.value)"
+                (input)="time.set(timeInput.value)"
             />
         </div>
     </div>
@@ -42,7 +42,7 @@
             class="meal-details-fields__textarea fd-ui-body-sm"
             [rows]="textareaRows()"
             [value]="comment()"
-            (input)="commentChange.emit(commentInput.value)"
+            (input)="comment.set(commentInput.value)"
         ></textarea>
     </div>
 

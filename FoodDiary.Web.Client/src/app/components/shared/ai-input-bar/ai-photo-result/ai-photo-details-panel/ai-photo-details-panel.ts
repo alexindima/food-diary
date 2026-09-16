@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
@@ -23,17 +23,12 @@ export class AiPhotoDetailsPanelComponent {
     public readonly submitLabelKey = input.required<string>();
     public readonly submitDisabled = input.required<boolean>();
     public readonly toggleDisabled = input.required<boolean>();
-    public readonly date = input.required<string>();
-    public readonly time = input.required<string>();
-    public readonly comment = input.required<string>();
-    public readonly preMealSatietyLevel = input.required<number | null>();
-    public readonly postMealSatietyLevel = input.required<number | null>();
+    public readonly date = model.required<string>();
+    public readonly time = model.required<string>();
+    public readonly comment = model.required<string>();
+    public readonly preMealSatietyLevel = model.required<number | null>();
+    public readonly postMealSatietyLevel = model.required<number | null>();
 
     public readonly detailsToggle = output();
     public readonly mealSubmit = output();
-    public readonly dateChange = output<string>();
-    public readonly timeChange = output<string>();
-    public readonly commentChange = output<string>();
-    public readonly preMealSatietyLevelChange = output<number | null>();
-    public readonly postMealSatietyLevelChange = output<number | null>();
 }

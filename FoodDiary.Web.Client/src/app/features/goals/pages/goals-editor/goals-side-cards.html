@@ -11,7 +11,7 @@
         <span class="goals-editor-card__label goals-editor-water-quick-label">{{ 'GOALS_PAGE.EDITOR.QUICK_SELECT' | translate }}</span>
         <div class="goals-editor-quick-values">
             @for (value of [2000, 2500, 3000]; track value) {
-                <button type="button" [class.goals-editor-quick-values__active]="water() === value" (click)="waterChange.emit(value)">
+                <button type="button" [class.goals-editor-quick-values__active]="water() === value" (click)="water.set(value)">
                     {{ value | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}
                 </button>
             }

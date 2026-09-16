@@ -22,6 +22,28 @@ async function setupMealDetailsFieldsAsync(): Promise<ComponentFixture<MealDetai
 }
 
 describe('MealDetailsFieldsComponent satiety', () => {
+    it('emits edited dates and accepts subsequent parent updates without echoing them', async () => {
+        const fixture = await setupMealDetailsFieldsAsync();
+        const changes: string[] = [];
+        fixture.componentInstance.date.subscribe(value => changes.push(value));
+        fixture.detectChanges();
+
+        const dateInput = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#meal-details-date');
+        if (dateInput === null) {
+            throw new Error('Date input was not rendered');
+        }
+        dateInput.value = '2026-05-18';
+        dateInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(fixture.componentInstance.date()).toBe('2026-05-18');
+        expect(changes).toEqual(['2026-05-18']);
+
+        fixture.componentRef.setInput('date', '2026-05-19');
+        fixture.detectChanges();
+        expect(dateInput.value).toBe('2026-05-19');
+        expect(changes).toEqual(['2026-05-18']);
+    });
+
     it('normalizes invalid satiety values to default', async () => {
         const fixture = await setupMealDetailsFieldsAsync();
         const component = fixture.componentInstance;

@@ -48,6 +48,8 @@ as `linkGoogle` and `google/link` resolve the same call.
 
 Angular signal contracts include typed and inferred `input()` / `output()`
 members, including nested generic types such as `input<readonly Item[]>([])`.
+`model()` and `model.required()` contribute an input and the implicit
+`<name>Change` output. Consumer edges include both sides of `[(name)]` bindings.
 Consumer edges record the bindings that each template actually uses. Main-app
 components under `src/app/components/shared` are classified as `shared`, while
 feature consumers retain their `/features/<name>/` ownership. Direct

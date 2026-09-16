@@ -219,17 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7a61137d51125c8564a8e74a6fe55612813bd47aa4a84d30c7b8bc64d6af3334"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0ddc609af610f6feff5877b5dbc388fb403b718b17fdd91038d75903e9c2a8f3"
+          "sha256": "d04814111e916a694b6e6bb0596c097f3f97608841fa9bc7c1bdd92acb9a623d"
         }
       ],
-      "reason": "The exact dependency matrix remains enforced; the passing architecture suite confirms the documented no-drift workflow without a new production project.",
+      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:19:20.8221299Z"
+      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
+      "reviewedAtUtc": "2026-09-16T08:41:35.9673653Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -636,17 +632,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "956836ea8d3085ebfd97b63a64edcc3e7aaa616a63a94981501426f19ad72171",
+      "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "64a0defe4bd14b5aee4eb0415daba8ea2c2c5566121016975a487462b8415a70"
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+          "sha256": "61305174610730334aa28d0647dd3945dd4877460737deb44b77eea13733be47"
         }
       ],
-      "reason": "Reviewed conversational ranking, shared morphology and explicit unmatched-identifier confidence. Contract/privacy/impact projection shapes and freshness guarantees remain unchanged; regenerated quality/runtime source metrics reviewed. Existing smoke and corpus gates remain required.",
+      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T16:30:03.2919174Z"
+      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
+      "reviewedAtUtc": "2026-09-16T08:41:36.2705858Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "80ef3b7e29c6bda2fc44f79b17c11efe64f0a13beddbf9119d7393116d97e18c"
+          "sha256": "b8dbd2d367902697a200cf0dcb0aeb77731abdcadee178ab3a58dd33c97f6b7d"
         }
       ],
-      "reason": "Reviewed regenerated hotspot metrics for SqliteWikiContextSearch and module-page builder after retrieval fixes. Metrics remain structural navigation; 170 focused runtime tests passed and the full retrieval/parity gate is being rerun.",
+      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:46:51.4420667Z"
+      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
+      "reviewedAtUtc": "2026-09-16T08:41:36.6442003Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,7 +910,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "80ef3b7e29c6bda2fc44f79b17c11efe64f0a13beddbf9119d7393116d97e18c"
+          "sha256": "b8dbd2d367902697a200cf0dcb0aeb77731abdcadee178ab3a58dd33c97f6b7d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
@@ -925,10 +921,10 @@
           "sha256": "49449c99e9202cf7f106a87d4adf124b91833daa6ec491198f2438c6ec233255"
         }
       ],
-      "reason": "Reviewed final retrieval changes and regenerated sources. Plural contract intent now matches Node in the in-process reader; 174 focused search tests pass. Runtime topology changed only its source fingerprint; the security workflow remains source-navigation guidance.",
-      "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T07:53:40.0949058Z"
+      "reason": "Reviewed complete push range: moved-module ranking and runtime topology follow current sources, without weaker search thresholds; 289 Node/.NET parity cases passed. Trace fixtures follow the actual controller paths. Angular model inputs, implicit Change outputs and two-way bindings retain public payloads and are now indexed. Frontend contract SQL parity and all Wiki verify stages passed; security and trace guidance remains current because runtime data access and access controls are unchanged.",
+      "baseRef": "origin/master",
+      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
+      "reviewedAtUtc": "2026-09-16T08:43:58.7981519Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1060,14 +1056,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "44b4415e158c020d7c315271b601a646ee19e2fdc27e820a10c27a472e0aa9e0"
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
           "sha256": "3605d8f19d73bf2aa9950e6e8c940ce738794f0fa9e65d24687f5d53629d55db"
         }
       ],
-      "reason": "Updated the OpenFoodFacts fixture after removal of its cached-search facade: four dependencies are direct on the query handler, and EfUnitOfWork exposes the nested domain-event publisher. Preserved bounded-hop/source-evidence assertions and updated the Identity presentation namespace. Test-LlmWikiTraceOutput passed.",
-      "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:52:54.0259425Z"
+      "reason": "Reviewed complete push range: moved-module ranking and runtime topology follow current sources, without weaker search thresholds; 289 Node/.NET parity cases passed. Trace fixtures follow the actual controller paths. Angular model inputs, implicit Change outputs and two-way bindings retain public payloads and are now indexed. Frontend contract SQL parity and all Wiki verify stages passed; security and trace guidance remains current because runtime data access and access controls are unchanged.",
+      "baseRef": "origin/master",
+      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
+      "reviewedAtUtc": "2026-09-16T08:43:59.4609915Z"
     },
     {
       "pageId": "workflow-verification-planner",

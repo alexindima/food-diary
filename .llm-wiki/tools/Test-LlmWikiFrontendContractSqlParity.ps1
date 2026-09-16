@@ -55,6 +55,26 @@ foreach ($case in $cases) {
 
 $probe = & $manager -Action frontend-contract -FrontendContractView all -Limit 30 -SkipRefresh -Format Json | ConvertFrom-Json
 $sourceText = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.llm-wiki/generated/frontend-contract-index.json')).Replace("`r`n", "`n")
+$sourceIndex = $sourceText | ConvertFrom-Json
+foreach ($contractCase in @(
+    @{ Class = 'MealSatietyCardComponent'; Name = 'preMealSatietyLevel'; Required = $true }
+    @{ Class = 'MealSatietyFieldsComponent'; Name = 'preMealSatietyLevel'; Required = $false }
+)) {
+    $component = @($sourceIndex.components | Where-Object { $_.class -eq $contractCase.Class })
+    $inputContract = @($component.inputs | Where-Object { $_.name -eq $contractCase.Name })
+    $outputContract = @($component.outputs | Where-Object { $_.name -eq ($contractCase.Name + 'Change') })
+    if ($component.Count -ne 1 -or $inputContract.Count -ne 1 -or $outputContract.Count -ne 1 -or
+        $inputContract[0].required -ne $contractCase.Required -or $inputContract[0].type -ne 'number | null' -or
+        $outputContract[0].type -ne $inputContract[0].type) {
+        throw "$($contractCase.Class): model input/implicit output contract was lost or changed."
+    }
+}
+$twoWayConsumer = @($sourceIndex.consumerEdges | Where-Object {
+    $_.selector -eq 'fd-ui-input' -and $_.consumerPath -eq 'FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.html'
+})
+if ($twoWayConsumer.Count -ne 1 -or $twoWayConsumer[0].inputsUsed -notcontains 'value' -or $twoWayConsumer[0].outputsHandled -notcontains 'valueChange') {
+    throw 'Two-way input binding must retain both input and output consumer edges.'
+}
 $sourceHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($sourceText))).ToLowerInvariant()
 if (-not [bool]$probe.ready -or [string]$probe.source -ne 'sqlite-query-documents' -or
     [string]$probe.sourceHash -cne $sourceHash -or [int]$probe.returnedRecords -ge [int]$probe.scannedRecords) {

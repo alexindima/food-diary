@@ -15,7 +15,7 @@
                 class="goals-editor-toggle__input"
                 type="checkbox"
                 [checked]="enabled()"
-                (change)="enabledChange.emit(!enabled())"
+                (change)="enabled.set(!enabled())"
             />
             <label class="goals-editor-toggle__control" for="goals-editor-cycling-enabled"><i aria-hidden="true"></i></label>
         </div>

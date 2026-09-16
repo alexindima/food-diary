@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
@@ -12,19 +12,15 @@ import { MealSatietyFieldsComponent } from '../meal-satiety-fields/meal-satiety-
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealDetailsFieldsComponent {
-    public readonly date = input.required<string>();
-    public readonly time = input.required<string>();
-    public readonly comment = input.required<string>();
+    public readonly date = model.required<string>();
+    public readonly time = model.required<string>();
+    public readonly comment = model.required<string>();
     public readonly preMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly postMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
     public readonly textareaRows = input(DEFAULT_SATIETY_LEVEL);
     public readonly surface = input(true);
     public readonly density = input<'compact' | 'regular'>('compact');
     public readonly satietyLayout = input<'stacked' | 'columns'>('stacked');
-
-    public readonly dateChange = output<string>();
-    public readonly timeChange = output<string>();
-    public readonly commentChange = output<string>();
 
     protected onPreMealSatietyLevelChange(value: number | null): void {
         const normalized = normalizeSatietyLevel(value);

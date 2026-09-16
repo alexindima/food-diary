@@ -31,7 +31,7 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         ]);
         fixture.componentRef.setInput('insights', []);
         const tabChange = vi.fn<(value: string) => void>();
-        fixture.componentInstance.selectedTabChange.subscribe(tabChange);
+        fixture.componentInstance.selectedTab.subscribe(tabChange);
         fixture.detectChanges();
 
         const root = fixture.nativeElement as HTMLElement;

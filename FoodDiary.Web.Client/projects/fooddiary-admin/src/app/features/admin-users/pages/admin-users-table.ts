@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
@@ -16,10 +16,9 @@ import type { AdminUser } from '../models/admin-user.models';
 export class AdminUsersTableComponent {
     public readonly users = input.required<AdminUser[]>();
     public readonly totalItems = input.required<number>();
-    public readonly page = input.required<number>();
+    public readonly page = model.required<number>();
     public readonly pageSize = input.required<number>();
     public readonly totalPages = input.required<number>();
 
     public readonly details = output<AdminUser>();
-    public readonly pageChange = output<number>();
 }

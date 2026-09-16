@@ -9,7 +9,7 @@
             [label]="'GOALS_PAGE.MACRO_PRESET_LABEL' | translate"
             [options]="presetOptions()"
             [value]="preset()"
-            (valueChange)="$event && presetChange.emit($event)"
+            (valueChange)="$event && preset.set($event)"
         />
     </header>
     <div class="goals-editor-form-row">
@@ -26,7 +26,7 @@
                 type="number"
                 min="0"
                 [value]="calories()"
-                (input)="emitNumber($event, caloriesChange.emit.bind(caloriesChange))"
+                (input)="emitNumber($event, value => calories.set(value))"
             /><span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>
     </div>

@@ -8,7 +8,7 @@
             label="Search login activity"
             placeholder="Email, IP or client"
             [value]="search()"
-            (valueChange)="searchChange.emit(getControlTextValue($event))"
+            (valueChange)="search.set(getControlTextValue($event))"
         />
     </div>
 
@@ -56,7 +56,7 @@
             [length]="totalItems()"
             [pageSize]="pageSize()"
             [pageIndex]="page() - 1"
-            (pageIndexChange)="pageChange.emit($event + 1)"
+            (pageIndexChange)="page.set($event + 1)"
         />
     }
 </section>

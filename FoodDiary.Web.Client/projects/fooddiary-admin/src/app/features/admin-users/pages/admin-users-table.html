@@ -47,9 +47,4 @@
     </table>
 </div>
 
-<fd-ui-pagination
-    [length]="totalItems()"
-    [pageSize]="pageSize()"
-    [pageIndex]="page() - 1"
-    (pageIndexChange)="pageChange.emit($event + 1)"
-/>
+<fd-ui-pagination [length]="totalItems()" [pageSize]="pageSize()" [pageIndex]="page() - 1" (pageIndexChange)="page.set($event + 1)" />

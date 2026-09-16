@@ -62,12 +62,12 @@ foreach ($file in $tsFiles) {
             if (Test-Path -LiteralPath $templateAbsolute) { $templatePath = ConvertTo-RepositoryPath $templateAbsolute }
         }
         $inputs = @(
-            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*input(?:\.required)?\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
+            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?:input|model)(?:\.required)?\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
                 ForEach-Object {
                     [pscustomobject]@{
                         name = $_.Groups['name'].Value
                         type = $_.Groups['type'].Value
-                        required = $_.Value -match 'input\.required'
+                        required = $_.Value -match '(?:input|model)\.required'
                     }
                 }
         )
@@ -75,6 +75,10 @@ foreach ($file in $tsFiles) {
             [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*output\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
                 ForEach-Object {
                     [pscustomobject]@{ name = $_.Groups['name'].Value; type = $_.Groups['type'].Value }
+                }
+            [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*model(?:\.required)?\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
+                ForEach-Object {
+                    [pscustomobject]@{ name = $_.Groups['name'].Value + 'Change'; type = $_.Groups['type'].Value }
                 }
         )
         $specPath = $file.FullName -replace '\.ts$', '.spec.ts'
@@ -207,7 +211,8 @@ foreach ($file in $templateFiles) {
             }
             foreach ($outputContract in @($component.outputs)) {
                 $name = [regex]::Escape($outputContract.name)
-                if ($attributes -match "(?i)\($name\)\s*=") {
+                $twoWayName = if ($outputContract.name -cmatch 'Change$') { [regex]::Escape(($outputContract.name -creplace 'Change$', '')) } else { $null }
+                if ($attributes -match "(?i)\($name\)\s*=" -or ($twoWayName -and $attributes -match "(?i)\[\($twoWayName\)\]\s*=")) {
                     $null = $outputsHandled.Add($outputContract.name)
                 }
             }

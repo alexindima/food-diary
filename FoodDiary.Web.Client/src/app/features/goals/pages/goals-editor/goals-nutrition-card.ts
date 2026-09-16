@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -16,13 +16,12 @@ import type { GoalsMacroDraft } from './goals-editor.models';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsNutritionCardComponent {
-    public readonly calories = input.required<number>();
+    public readonly calories = model.required<number>();
     public readonly macros = input.required<GoalsMacroDraft[]>();
-    public readonly preset = input.required<MacroPresetKey>();
+    public readonly preset = model.required<MacroPresetKey>();
     public readonly presetOptions = input.required<Array<FdUiSelectOption<MacroPresetKey>>>();
-    public readonly caloriesChange = output<number>();
+
     public readonly macroChange = output<{ key: MacroKey; value: number }>();
-    public readonly presetChange = output<MacroPresetKey>();
 
     protected emitNumber(event: Event, emit: (value: number) => void): void {
         if (event.target instanceof HTMLInputElement) {

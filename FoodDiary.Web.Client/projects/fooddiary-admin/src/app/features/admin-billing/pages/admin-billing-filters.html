@@ -3,12 +3,12 @@
         label="Search billing records"
         placeholder="Email or external ID"
         [value]="search()"
-        (valueChange)="searchChange.emit(getControlTextValue($event))"
+        (valueChange)="search.set(getControlTextValue($event))"
     />
-    <fd-ui-input label="Provider" [value]="provider()" (valueChange)="providerChange.emit(getControlTextValue($event))" />
-    <fd-ui-input label="Status" [value]="status()" (valueChange)="statusChange.emit(getControlTextValue($event))" />
+    <fd-ui-input label="Provider" [value]="provider()" (valueChange)="provider.set(getControlTextValue($event))" />
+    <fd-ui-input label="Status" [value]="status()" (valueChange)="status.set(getControlTextValue($event))" />
     @if (activeTab() === 'payments') {
-        <fd-ui-input label="Payment kind" [value]="kind()" (valueChange)="kindChange.emit(getControlTextValue($event))" />
+        <fd-ui-input label="Payment kind" [value]="kind()" (valueChange)="kind.set(getControlTextValue($event))" />
     }
     <fd-ui-button type="button" (click)="filtersApply.emit()"> Apply </fd-ui-button>
     <fd-ui-button type="button" variant="secondary" (click)="filtersReset.emit()"> Reset </fd-ui-button>

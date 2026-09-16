@@ -3,8 +3,8 @@
   "summary": {
     "components": 450,
     "componentsWithoutDirectSpecs": 145,
-    "inputs": 1363,
-    "outputs": 426,
+    "inputs": 1402,
+    "outputs": 465,
     "apiCalls": 255,
     "templatesWithTranslations": 306,
     "translationKeys": 1754,
@@ -124,6 +124,14 @@
       ],
       "outputs": [
         {
+          "name": "filtersApply",
+          "type": ""
+        },
+        {
+          "name": "filtersReset",
+          "type": ""
+        },
+        {
           "name": "searchChange",
           "type": "string"
         },
@@ -138,14 +146,6 @@
         {
           "name": "kindChange",
           "type": "string"
-        },
-        {
-          "name": "filtersApply",
-          "type": ""
-        },
-        {
-          "name": "filtersReset",
-          "type": ""
         }
       ],
       "specPath": null
@@ -3915,6 +3915,16 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "T | string | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
@@ -3928,6 +3938,14 @@
         {
           "name": "optionSelected",
           "type": "FdUiAutocompleteOption<T>"
+        },
+        {
+          "name": "valueChange",
+          "type": "T | string | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.spec.ts"
@@ -4133,6 +4151,16 @@
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.html",
       "inputs": [
         {
+          "name": "value",
+          "type": "Date | null",
+          "required": false
+        },
+        {
+          "name": "displayMonth",
+          "type": "Date | null",
+          "required": false
+        },
+        {
           "name": "min",
           "type": "Date | null",
           "required": false
@@ -4173,7 +4201,16 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date | null"
+        },
+        {
+          "name": "displayMonthChange",
+          "type": "Date | null"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.spec.ts"
     },
     {
@@ -4253,9 +4290,28 @@
           "name": "disabled",
           "type": "",
           "required": false
+        },
+        {
+          "name": "checked",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "checkedChange",
+          "type": ""
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.spec.ts"
     },
     {
@@ -4271,6 +4327,11 @@
           "required": false
         },
         {
+          "name": "selectedValues",
+          "type": "string[]",
+          "required": false
+        },
+        {
           "name": "ariaLabel",
           "type": "string | null",
           "required": false
@@ -4281,7 +4342,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValuesChange",
+          "type": "string[]"
+        }
+      ],
       "specPath": null
     },
     {
@@ -4352,12 +4418,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | Date | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | Date | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.spec.ts"
     },
     {
@@ -4367,6 +4452,11 @@
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.html",
       "inputs": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false
+        },
         {
           "name": "min",
           "type": "Date | null",
@@ -4398,7 +4488,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date | null"
+        }
+      ],
       "specPath": null
     },
     {
@@ -4442,9 +4537,28 @@
           "name": "controlDisabled",
           "type": "",
           "required": false
+        },
+        {
+          "name": "value",
+          "type": "FdUiDateRangeValue | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "FdUiDateRangeValue | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -4485,12 +4599,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | Date | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | Date | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -4588,6 +4721,11 @@
           "required": false
         },
         {
+          "name": "selectedValue",
+          "type": "FdUiEmojiPickerValue | null",
+          "required": false
+        },
+        {
           "name": "ariaLabel",
           "type": "string | null",
           "required": false
@@ -4613,7 +4751,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValueChange",
+          "type": "FdUiEmojiPickerValue | null"
+        }
+      ],
       "specPath": null
     },
     {
@@ -4993,6 +5136,16 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | number | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
@@ -5001,6 +5154,14 @@
       "outputs": [
         {
           "name": "suffixButtonClicked",
+          "type": ""
+        },
+        {
+          "name": "valueChange",
+          "type": "string | number | null"
+        },
+        {
+          "name": "touchedChange",
           "type": ""
         }
       ],
@@ -5420,12 +5581,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | number | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | number | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/nutrient-input/fd-ui-nutrient-input.spec.ts"
     },
     {
@@ -5444,9 +5624,19 @@
           "name": "pageSize",
           "type": "",
           "required": false
+        },
+        {
+          "name": "pageIndex",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "pageIndexChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.spec.ts"
     },
     {
@@ -5567,9 +5757,28 @@
           "name": "disabled",
           "type": "",
           "required": false
+        },
+        {
+          "name": "value",
+          "type": "T | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "T | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.spec.ts"
     },
     {
@@ -5654,6 +5863,16 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "number | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
@@ -5663,6 +5882,14 @@
         {
           "name": "levelSelected",
           "type": "number"
+        },
+        {
+          "name": "valueChange",
+          "type": "number | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.spec.ts"
@@ -5798,6 +6025,11 @@
           "required": false
         },
         {
+          "name": "selectedValue",
+          "type": "string",
+          "required": true
+        },
+        {
           "name": "ariaLabel",
           "type": "string | null",
           "required": false
@@ -5838,7 +6070,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValueChange",
+          "type": "string"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.spec.ts"
     },
     {
@@ -5894,12 +6131,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "T | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "T | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.spec.ts"
     },
     {
@@ -6148,12 +6404,22 @@
           "required": false
         },
         {
+          "name": "selectedValue",
+          "type": "string",
+          "required": true
+        },
+        {
           "name": "appearance",
           "type": "FdUiTabsAppearance",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValueChange",
+          "type": "string"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.spec.ts"
     },
     {
@@ -6219,12 +6485,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | number | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | number | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.spec.ts"
     },
     {
@@ -6280,12 +6565,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.spec.ts"
     },
     {
@@ -6321,6 +6625,11 @@
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.html",
       "inputs": [
+        {
+          "name": "value",
+          "type": "Date",
+          "required": false
+        },
         {
           "name": "min",
           "type": "Date | null",
@@ -6367,7 +6676,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.spec.ts"
     },
     {
@@ -6707,12 +7021,12 @@
       ],
       "outputs": [
         {
-          "name": "enabledChange",
-          "type": "boolean"
-        },
-        {
           "name": "dayCaloriesChange",
           "type": "{ key: DayCalorieKey; value: number }"
+        },
+        {
+          "name": "enabledChange",
+          "type": "boolean"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.spec.ts"
@@ -6813,12 +7127,12 @@
       ],
       "outputs": [
         {
-          "name": "caloriesChange",
-          "type": "number"
-        },
-        {
           "name": "macroChange",
           "type": "{ key: MacroKey; value: number }"
+        },
+        {
+          "name": "caloriesChange",
+          "type": "number"
         },
         {
           "name": "presetChange",
@@ -6857,12 +7171,12 @@
       ],
       "outputs": [
         {
-          "name": "waterChange",
-          "type": "number"
-        },
-        {
           "name": "bodyTargetChange",
           "type": "{ key: BodyTargetKey; value: number }"
+        },
+        {
+          "name": "waterChange",
+          "type": "number"
         }
       ],
       "specPath": null
@@ -11203,6 +11517,16 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "ImageSelection | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
@@ -11224,6 +11548,14 @@
         },
         {
           "name": "imagePreparationFailed",
+          "type": ""
+        },
+        {
+          "name": "valueChange",
+          "type": "ImageSelection | null"
+        },
+        {
+          "name": "touchedChange",
           "type": ""
         }
       ],
@@ -11306,6 +11638,16 @@
           "required": true
         },
         {
+          "name": "preMealSatietyLevel",
+          "type": "number | null",
+          "required": false
+        },
+        {
+          "name": "postMealSatietyLevel",
+          "type": "number | null",
+          "required": false
+        },
+        {
           "name": "textareaRows",
           "type": "",
           "required": false
@@ -11338,6 +11680,14 @@
         {
           "name": "commentChange",
           "type": "string"
+        },
+        {
+          "name": "preMealSatietyLevelChange",
+          "type": "number | null"
+        },
+        {
+          "name": "postMealSatietyLevelChange",
+          "type": "number | null"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.spec.ts"
@@ -11349,6 +11699,16 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.html",
       "inputs": [
+        {
+          "name": "preMealSatietyLevel",
+          "type": "number | null",
+          "required": false
+        },
+        {
+          "name": "postMealSatietyLevel",
+          "type": "number | null",
+          "required": false
+        },
         {
           "name": "labelBeforeKey",
           "type": "",
@@ -11370,7 +11730,16 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "preMealSatietyLevelChange",
+          "type": "number | null"
+        },
+        {
+          "name": "postMealSatietyLevelChange",
+          "type": "number | null"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.spec.ts"
     },
     {
@@ -26221,10 +26590,15 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html",
       "occurrences": 1,
       "inputsUsed": [
+        "displayMonth",
         "max",
-        "min"
+        "min",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "displayMonthChange",
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiCalendarComponent",
@@ -26234,10 +26608,15 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.html",
       "occurrences": 1,
       "inputsUsed": [
+        "displayMonth",
         "max",
-        "min"
+        "min",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "displayMonthChange",
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiCalendarComponent",
@@ -26248,13 +26627,18 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
+        "displayMonth",
         "locale",
         "max",
         "min",
         "selectedWeekLabel",
-        "selectionMode"
+        "selectionMode",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "displayMonthChange",
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiCalendarComponent",
@@ -26270,7 +26654,9 @@
         "max",
         "min"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiCardComponent",
@@ -27146,9 +27532,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 1,
       "inputsUsed": [
+        "checked",
         "label"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "checkedChange"
+      ]
     },
     {
       "component": "FdUiChipSelectComponent",
@@ -27160,9 +27549,12 @@
       "inputsUsed": [
         "ariaLabel",
         "options",
+        "selectedValues",
         "size"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValuesChange"
+      ]
     },
     {
       "component": "FdUiChipSelectComponent",
@@ -27174,9 +27566,12 @@
       "inputsUsed": [
         "ariaLabel",
         "options",
+        "selectedValues",
         "size"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValuesChange"
+      ]
     },
     {
       "component": "FdUiChipSelectComponent",
@@ -27188,9 +27583,12 @@
       "inputsUsed": [
         "ariaLabel",
         "options",
+        "selectedValues",
         "size"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValuesChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",
@@ -27229,9 +27627,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "max"
+        "max",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",
@@ -27242,9 +27643,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "max"
+        "max",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",
@@ -27307,7 +27711,9 @@
       "inputsUsed": [
         "label"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",
@@ -27347,9 +27753,12 @@
       "inputsUsed": [
         "ariaLabel",
         "disabled",
-        "hint"
+        "hint",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateRangeInputComponent",
@@ -28165,9 +28574,12 @@
       "inputsUsed": [
         "ariaLabel",
         "options",
+        "selectedValue",
         "size"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiEmojiPickerComponent",
@@ -28180,9 +28592,12 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "size"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiEmptyStateComponent",
@@ -29564,9 +29979,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29589,9 +30007,12 @@
       "occurrences": 4,
       "inputsUsed": [
         "label",
-        "placeholder"
+        "placeholder",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29638,9 +30059,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "occurrences": 3,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29650,9 +30074,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 2,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29662,9 +30089,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29701,9 +30131,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "occurrences": 2,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29713,9 +30146,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.html",
       "occurrences": 2,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29726,9 +30162,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "placeholder"
+        "placeholder",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29739,9 +30178,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "placeholder"
+        "placeholder",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29752,9 +30194,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "placeholder"
+        "placeholder",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29764,9 +30209,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29862,9 +30310,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "label",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29943,9 +30394,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29957,9 +30411,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -29971,9 +30428,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30000,9 +30460,12 @@
         "ariaLabel",
         "id",
         "placeholder",
-        "prefixIcon"
+        "prefixIcon",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30030,9 +30493,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30063,9 +30529,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30143,9 +30612,12 @@
         "label",
         "readonly",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30173,9 +30645,12 @@
       "inputsUsed": [
         "label",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30186,9 +30661,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30201,9 +30679,12 @@
         "label",
         "placeholder",
         "size",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30232,9 +30713,12 @@
       "inputsUsed": [
         "label",
         "placeholder",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30253,9 +30737,12 @@
         "readonly",
         "size",
         "step",
-        "type"
+        "type",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30315,9 +30802,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "placeholder"
+        "placeholder",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -30997,9 +31487,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31010,9 +31503,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31023,9 +31519,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31036,9 +31535,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31049,9 +31551,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31062,9 +31567,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31075,9 +31583,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31088,9 +31599,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31101,9 +31615,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31114,9 +31631,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31127,9 +31647,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31140,9 +31663,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31153,9 +31679,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31166,9 +31695,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31179,9 +31711,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31192,9 +31727,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPaginationComponent",
@@ -31205,9 +31743,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "length",
+        "pageIndex",
         "pageSize"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
     },
     {
       "component": "FdUiPieChartComponent",
@@ -31315,9 +31856,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "layout"
+        "layout",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSectionErrorStateComponent",
@@ -31375,11 +31919,14 @@
         "appearance",
         "fullWidth",
         "options",
+        "selectedValue",
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31393,10 +31940,13 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "size",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31410,10 +31960,13 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "stackOnNarrow",
         "wrapOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31426,11 +31979,14 @@
         "ariaLabel",
         "fitContent",
         "options",
+        "selectedValue",
         "shrinkItems",
         "size",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31444,11 +32000,14 @@
         "fitContent",
         "fullWidth",
         "options",
+        "selectedValue",
         "shrinkItems",
         "size",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31460,9 +32019,12 @@
       "inputsUsed": [
         "ariaLabel",
         "fullWidth",
-        "options"
+        "options",
+        "selectedValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31476,9 +32038,12 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31489,9 +32054,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
-        "options"
+        "options",
+        "selectedValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31503,9 +32071,12 @@
       "inputsUsed": [
         "ariaLabel",
         "fullWidth",
-        "options"
+        "options",
+        "selectedValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31519,9 +32090,12 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31533,11 +32107,14 @@
       "inputsUsed": [
         "ariaLabel",
         "options",
+        "selectedValue",
         "shrinkItems",
         "size",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31549,9 +32126,12 @@
       "inputsUsed": [
         "ariaLabel",
         "fullWidth",
-        "options"
+        "options",
+        "selectedValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31565,9 +32145,12 @@
         "ariaLabel",
         "fullWidth",
         "options",
+        "selectedValue",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31580,11 +32163,14 @@
         "appearance",
         "ariaLabel",
         "options",
+        "selectedValue",
         "shrinkItems",
         "size",
         "stackOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31597,11 +32183,14 @@
         "appearance",
         "fullWidth",
         "options",
+        "selectedValue",
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31614,11 +32203,14 @@
         "appearance",
         "fullWidth",
         "options",
+        "selectedValue",
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
@@ -31630,9 +32222,12 @@
       "inputsUsed": [
         "ariaLabel",
         "fullWidth",
-        "options"
+        "options",
+        "selectedValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31656,9 +32251,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31669,9 +32267,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31695,9 +32296,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31708,9 +32312,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31721,9 +32328,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31734,9 +32344,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31747,9 +32360,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31762,9 +32378,12 @@
         "ariaLabel",
         "id",
         "options",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31827,9 +32446,12 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31840,9 +32462,12 @@
       "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31899,9 +32524,12 @@
       "inputsUsed": [
         "label",
         "options",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -31943,9 +32571,12 @@
         "ariaLabel",
         "id",
         "options",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSidebarComponent",
@@ -32114,9 +32745,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32126,9 +32760,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32138,9 +32775,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32150,9 +32790,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32162,9 +32805,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32174,9 +32820,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTabsComponent",
@@ -32186,9 +32835,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
+        "selectedValue",
         "tabs"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiTextareaComponent",
@@ -32237,9 +32889,12 @@
       "inputsUsed": [
         "label",
         "placeholder",
-        "rows"
+        "rows",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiTextareaComponent",
@@ -32347,9 +33002,12 @@
         "id",
         "label",
         "placeholder",
-        "rows"
+        "rows",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiTextareaComponent",
@@ -32421,9 +33079,12 @@
       "inputsUsed": [
         "label",
         "placeholder",
-        "rows"
+        "rows",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiTextareaComponent",
@@ -32436,9 +33097,12 @@
         "error",
         "label",
         "placeholder",
-        "rows"
+        "rows",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiTimeInputComponent",
@@ -32465,9 +33129,12 @@
         "hoursLabel",
         "label",
         "minutesLabel",
-        "pickerAriaLabel"
+        "pickerAriaLabel",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiToastHostComponent",
@@ -32506,9 +33173,12 @@
         "openCalendarAriaLabel",
         "panelTitle",
         "previousWeekAriaLabel",
-        "returnToCurrentWeekLabel"
+        "returnToCurrentWeekLabel",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FeaturesComponent",
@@ -32769,7 +33439,8 @@
         "initialSelection",
         "label",
         "recommendedSize",
-        "resizeMaxDimension"
+        "resizeMaxDimension",
+        "value"
       ],
       "outputsHandled": [
         "imageChanged"
@@ -32806,7 +33477,8 @@
         "description",
         "label",
         "recommendedSize",
-        "resizeMaxDimension"
+        "resizeMaxDimension",
+        "value"
       ],
       "outputsHandled": [
         "imageChanged"
@@ -32829,9 +33501,12 @@
         "deleteOnClear",
         "label",
         "maxSizeMb",
-        "recommendedSize"
+        "recommendedSize",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "ImageUploadFieldComponent",
@@ -32867,9 +33542,12 @@
         "cropSize",
         "description",
         "maxSizeMb",
-        "recommendedSize"
+        "recommendedSize",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "LandingFaqComponent",
@@ -33092,6 +33770,8 @@
         "comment",
         "date",
         "density",
+        "postMealSatietyLevel",
+        "preMealSatietyLevel",
         "satietyLayout",
         "surface",
         "time"
@@ -33099,6 +33779,8 @@
       "outputsHandled": [
         "commentChange",
         "dateChange",
+        "postMealSatietyLevelChange",
+        "preMealSatietyLevelChange",
         "timeChange"
       ]
     },
@@ -33112,12 +33794,16 @@
       "inputsUsed": [
         "comment",
         "date",
+        "postMealSatietyLevel",
+        "preMealSatietyLevel",
         "textareaRows",
         "time"
       ],
       "outputsHandled": [
         "commentChange",
         "dateChange",
+        "postMealSatietyLevelChange",
+        "preMealSatietyLevelChange",
         "timeChange"
       ]
     },
@@ -33452,9 +34138,14 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.html",
       "occurrences": 1,
       "inputsUsed": [
-        "layout"
+        "layout",
+        "postMealSatietyLevel",
+        "preMealSatietyLevel"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "postMealSatietyLevelChange",
+        "preMealSatietyLevelChange"
+      ]
     },
     {
       "component": "MealSatietyFieldsComponent",
@@ -33467,9 +34158,14 @@
         "labelAfterKey",
         "labelBeforeKey",
         "layout",
-        "pickerSize"
+        "pickerSize",
+        "postMealSatietyLevel",
+        "preMealSatietyLevel"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "postMealSatietyLevelChange",
+        "preMealSatietyLevelChange"
+      ]
     },
     {
       "component": "MealsPreviewComponent",

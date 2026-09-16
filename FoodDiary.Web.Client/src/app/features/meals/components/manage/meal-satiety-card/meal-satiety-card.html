@@ -13,7 +13,7 @@
         labelAfterKey="MEAL_MANAGE.HUNGER_AFTER_LABEL"
         [preMealSatietyLevel]="preMealSatietyLevel()"
         [postMealSatietyLevel]="postMealSatietyLevel()"
-        (preMealSatietyLevelChange)="preMealSatietyLevelChange.emit($event)"
-        (postMealSatietyLevelChange)="postMealSatietyLevelChange.emit($event)"
+        (preMealSatietyLevelChange)="preMealSatietyLevel.set($event)"
+        (postMealSatietyLevelChange)="postMealSatietyLevel.set($event)"
     />
 </fd-ui-card>

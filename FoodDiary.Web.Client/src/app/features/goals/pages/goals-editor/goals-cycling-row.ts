@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -24,10 +24,10 @@ const AVERAGE_SCALE_MULTIPLIER = 2;
 })
 export class GoalsCyclingRowComponent {
     private readonly translateService = inject(TranslateService);
-    public readonly enabled = input.required<boolean>();
+    public readonly enabled = model.required<boolean>();
     public readonly baseCalories = input.required<number>();
     public readonly dayCalories = input.required<Record<DayCalorieKey, number>>();
-    public readonly enabledChange = output<boolean>();
+
     public readonly dayCaloriesChange = output<{ key: DayCalorieKey; value: number }>();
     protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
         initialValue: resolveTranslateLanguage(this.translateService),

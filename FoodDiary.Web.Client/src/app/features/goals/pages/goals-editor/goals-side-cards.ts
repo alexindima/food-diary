@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
@@ -18,9 +18,9 @@ import type { BodyTargetKey } from '../../lib/goals.facade';
 export class GoalsSideCardsComponent {
     private readonly translateService = inject(TranslateService);
     protected readonly measurements = inject(MeasurementSystemService);
-    public readonly water = input.required<number>();
+    public readonly water = model.required<number>();
     public readonly bodyTargets = input.required<Record<BodyTargetKey, number>>();
-    public readonly waterChange = output<number>();
+
     public readonly bodyTargetChange = output<{ key: BodyTargetKey; value: number }>();
     protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
         initialValue: resolveTranslateLanguage(this.translateService),
@@ -37,7 +37,7 @@ export class GoalsSideCardsComponent {
     protected updateWater(event: Event): void {
         const value = this.numberValue(event);
         if (value !== null) {
-            this.waterChange.emit(value);
+            this.water.set(value);
         }
     }
 

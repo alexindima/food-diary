@@ -1149,6 +1149,14 @@
       ],
       "outputs": [
         {
+          "name": "filtersApply",
+          "type": ""
+        },
+        {
+          "name": "filtersReset",
+          "type": ""
+        },
+        {
           "name": "searchChange",
           "type": "string"
         },
@@ -1163,14 +1171,6 @@
         {
           "name": "kindChange",
           "type": "string"
-        },
-        {
-          "name": "filtersApply",
-          "type": ""
-        },
-        {
-          "name": "filtersReset",
-          "type": ""
         }
       ],
       "specPath": null
@@ -3223,6 +3223,11 @@
           "required": false
         },
         {
+          "name": "selectedValues",
+          "type": "string[]",
+          "required": false
+        },
+        {
           "name": "ariaLabel",
           "type": "string | null",
           "required": false
@@ -3233,7 +3238,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValuesChange",
+          "type": "string[]"
+        }
+      ],
       "specPath": null
     },
     {
@@ -3243,6 +3253,11 @@
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.html",
       "inputs": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false
+        },
         {
           "name": "min",
           "type": "Date | null",
@@ -3274,7 +3289,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "Date | null"
+        }
+      ],
       "specPath": null
     },
     {
@@ -3318,9 +3338,28 @@
           "name": "controlDisabled",
           "type": "",
           "required": false
+        },
+        {
+          "name": "value",
+          "type": "FdUiDateRangeValue | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "FdUiDateRangeValue | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -3361,12 +3400,31 @@
           "required": false
         },
         {
+          "name": "value",
+          "type": "string | Date | null",
+          "required": false
+        },
+        {
+          "name": "touched",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "valueChange",
+          "type": "string | Date | null"
+        },
+        {
+          "name": "touchedChange",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -3379,6 +3437,11 @@
         {
           "name": "options",
           "type": "FdUiEmojiPickerOption[]",
+          "required": false
+        },
+        {
+          "name": "selectedValue",
+          "type": "FdUiEmojiPickerValue | null",
           "required": false
         },
         {
@@ -3407,7 +3470,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "selectedValueChange",
+          "type": "FdUiEmojiPickerValue | null"
+        }
+      ],
       "specPath": null
     },
     {
@@ -4247,12 +4315,12 @@
       ],
       "outputs": [
         {
-          "name": "caloriesChange",
-          "type": "number"
-        },
-        {
           "name": "macroChange",
           "type": "{ key: MacroKey; value: number }"
+        },
+        {
+          "name": "caloriesChange",
+          "type": "number"
         },
         {
           "name": "presetChange",
@@ -4281,12 +4349,12 @@
       ],
       "outputs": [
         {
-          "name": "waterChange",
-          "type": "number"
-        },
-        {
           "name": "bodyTargetChange",
           "type": "{ key: BodyTargetKey; value: number }"
+        },
+        {
+          "name": "waterChange",
+          "type": "number"
         }
       ],
       "specPath": null

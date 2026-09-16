@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -74,11 +74,10 @@ export class StatisticsNutritionTrendCardComponent {
     );
 
     public readonly tabs = input.required<FdUiTab[]>();
-    public readonly selectedTab = input.required<string>();
+    public readonly selectedTab = model.required<string>();
     public readonly days = input.required<readonly StatisticsNutritionDay[]>();
     public readonly calorieGoal = input.required<number>();
     public readonly insights = input.required<readonly StatisticsTrendInsight[]>();
-    public readonly selectedTabChange = output<string>();
 
     protected readonly chartMode = signal<StatisticsTrendChartMode>('bars');
     protected readonly chartModeOptions = computed<Array<FdUiSelectOption<StatisticsTrendChartMode>>>(() => {
@@ -268,7 +267,7 @@ export class StatisticsNutritionTrendCardComponent {
     });
 
     protected onTabChange(value: string): void {
-        this.selectedTabChange.emit(value);
+        this.selectedTab.set(value);
     }
 
     protected changeChartMode(value: StatisticsTrendChartMode | null): void {

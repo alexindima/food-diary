@@ -1,7 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { MealSatietyFieldsComponent } from '../../../../../components/shared/meal-satiety-fields/meal-satiety-fields';
 import { MealSatietyCardComponent } from './meal-satiety-card';
 
 const PRE_MEAL_SATIETY_LEVEL = 2;
@@ -10,12 +12,16 @@ const POST_MEAL_SATIETY_LEVEL = 3;
 
 describe('MealSatietyCardComponent', () => {
     it('should emit pre meal satiety changes', async () => {
-        const { component } = await setupComponentAsync();
+        const { component, fixture } = await setupComponentAsync();
         const handler = vi.fn();
-        component['preMealSatietyLevelChange'].subscribe(handler);
+        component.preMealSatietyLevel.subscribe(handler);
+        const fields = fixture.debugElement.query(By.directive(MealSatietyFieldsComponent)).injector.get(MealSatietyFieldsComponent);
 
-        component['preMealSatietyLevelChange'].emit(NEXT_PRE_MEAL_SATIETY_LEVEL);
+        fields.preMealSatietyLevel.set(NEXT_PRE_MEAL_SATIETY_LEVEL);
+        fixture.detectChanges();
 
+        expect(component.preMealSatietyLevel()).toBe(NEXT_PRE_MEAL_SATIETY_LEVEL);
+        expect(handler).toHaveBeenCalledTimes(1);
         expect(handler).toHaveBeenCalledWith(NEXT_PRE_MEAL_SATIETY_LEVEL);
     });
 });
