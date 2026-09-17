@@ -118,6 +118,7 @@
                     }
 
                     <div class="dashboard__column fd-grid">
+                        <ng-container [ngTemplateOutlet]="fastingFirst() ? fastingBlock : null" />
                         <fd-dashboard-summary-block
                             [shouldRender]="layout.shouldRenderBlock('summary')"
                             [state]="blockStates.summary"
@@ -142,13 +143,16 @@
                             (favoriteToggle)="facade.toggleMealFavorite($event.id)"
                         />
 
-                        <fd-dashboard-fasting-block
-                            [shouldRender]="shouldRenderFastingWidget()"
-                            [state]="blockStates.fasting"
-                            [isEditingLayout]="layout.isEditingLayout()"
-                            [session]="fastingCurrentSession()"
-                            (blockClick)="openFastingPage()"
-                        />
+                        <ng-template #fastingBlock>
+                            <fd-dashboard-fasting-block
+                                [shouldRender]="shouldRenderFastingWidget()"
+                                [state]="blockStates.fasting"
+                                [isEditingLayout]="layout.isEditingLayout()"
+                                [session]="fastingCurrentSession()"
+                                (blockClick)="openFastingPage()"
+                            />
+                        </ng-template>
+                        <ng-container [ngTemplateOutlet]="fastingFirst() ? null : fastingBlock" />
 
                         <fd-nutrition-weekly-trend-card
                             [interactive]="true"

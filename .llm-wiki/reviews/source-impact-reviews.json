@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f6425d80c02a1ba1e3820010c6d23c17157a1dd926433a6db573ccb49830a15c"
+          "sha256": "3fdb299fa4aec6b7757ba2b99a9aa98f2680232a6bb26440df384ee90a0d9730"
         }
       ],
-      "reason": "Reviewed dashboard fasting presentation: added localized short stage descriptions, a decorative stage-colored autorenew icon, Pulse surface color and existing wheat asset watermark. Component input, navigation, API, persistence and privacy boundaries remain unchanged. Eight component tests, ESLint, Stylelint and i18n checks passed; desktop and 390px browser checks confirmed inline text and natural wrapping.",
+      "reason": "Reviewed dashboard priority: current fasting phase is captured once after today snapshot loads, active fasting renders before summary, eating retains default order, historical dates do not promote it. Existing hidden-block settings and navigation are preserved. Thirteen focused tests passed with phase boundary, cyclic eating, ended and future session cases; ESLint, formatting and strict dependency checks passed. No backend or storage changes.",
       "baseRef": "HEAD",
-      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
-      "reviewedAtUtc": "2026-09-17T18:28:41.0074425Z"
+      "gitHead": "aa37562813724bf17f471872b137ad5076b5ac36",
+      "reviewedAtUtc": "2026-09-17T19:26:58.7979194Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -906,13 +906,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f6425d80c02a1ba1e3820010c6d23c17157a1dd926433a6db573ccb49830a15c"
+          "sha256": "3fdb299fa4aec6b7757ba2b99a9aa98f2680232a6bb26440df384ee90a0d9730"
         }
       ],
-      "reason": "Reviewed dashboard fasting presentation: added localized short stage descriptions, a decorative stage-colored autorenew icon, Pulse surface color and existing wheat asset watermark. Component input, navigation, API, persistence and privacy boundaries remain unchanged. Eight component tests, ESLint, Stylelint and i18n checks passed; desktop and 390px browser checks confirmed inline text and natural wrapping.",
+      "reason": "Reviewed dashboard priority: current fasting phase is captured once after today snapshot loads, active fasting renders before summary, eating retains default order, historical dates do not promote it. Existing hidden-block settings and navigation are preserved. Thirteen focused tests passed with phase boundary, cyclic eating, ended and future session cases; ESLint, formatting and strict dependency checks passed. No backend or storage changes.",
       "baseRef": "HEAD",
-      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
-      "reviewedAtUtc": "2026-09-17T18:28:42.2828265Z"
+      "gitHead": "aa37562813724bf17f471872b137ad5076b5ac36",
+      "reviewedAtUtc": "2026-09-17T19:26:59.7845588Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,18 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8eb26ad45a7d171b37bdeadc82e90ef787cbcb80445aa9dcf4aec0ac1cdf57c1"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "1c9a69846e17bb2e467a295eecc2563ce5604a1a23188c52179459c0ce5fddf1"
+          "sha256": "f878cc529173c251fd4a6acbc21d462f2c0a42154864c53c40b483334862c5ce"
         }
       ],
-      "reason": "Reviewed fasting timeline redesign and final presentation polish: phase-specific moon and sun watermarks, active phase hierarchy, compact stage description and marker labels. Existing session and navigation contracts are preserved. Component tests, localization checks, template and style lint passed during implementation.",
+      "reason": "Reviewed dashboard priority: current fasting phase is captured once after today snapshot loads, active fasting renders before summary, eating retains default order, historical dates do not promote it. Existing hidden-block settings and navigation are preserved. Thirteen focused tests passed with phase boundary, cyclic eating, ended and future session cases; ESLint, formatting and strict dependency checks passed. No backend or storage changes.",
       "baseRef": "HEAD",
-      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
-      "reviewedAtUtc": "2026-09-17T19:14:23.7144679Z"
+      "gitHead": "aa37562813724bf17f471872b137ad5076b5ac36",
+      "reviewedAtUtc": "2026-09-17T19:27:00.5891280Z"
     },
     {
       "pageId": "workflow-verification-planner",

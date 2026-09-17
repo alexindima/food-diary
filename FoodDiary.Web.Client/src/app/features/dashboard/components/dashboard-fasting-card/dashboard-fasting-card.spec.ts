@@ -5,8 +5,9 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import type { FastingSession } from '../../../fasting/models/fasting.data';
+import { shouldPrioritizeDashboardFasting } from '../../lib/dashboard-fasting-priority';
 import { DashboardFastingCardComponent } from './dashboard-fasting-card';
-import { buildDashboardFastingCycle, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
+import { buildDashboardFastingCycle, buildDashboardFastingDayTicks, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
 
 const CYCLE_LENGTH = 3;
 const TWELVE_HOURS = 12;
@@ -17,6 +18,49 @@ const QUARTER = 25;
 const HALF = 50;
 const THREE_QUARTERS = 75;
 const FULL = 100;
+
+describe('dashboard fasting priority', () => {
+    it('prioritizes an ongoing extended fast, but not completed or future sessions', () => {
+        const session = createSession();
+        const now = Date.parse('2026-04-12T12:00:00Z');
+        expect(shouldPrioritizeDashboardFasting(session, now)).toBe(true);
+        expect(shouldPrioritizeDashboardFasting(null, now)).toBe(false);
+        expect(shouldPrioritizeDashboardFasting({ ...session, endedAtUtc: '2026-04-12T11:00:00Z' }, now)).toBe(false);
+        expect(shouldPrioritizeDashboardFasting({ ...session, startedAtUtc: '2026-04-13T00:00:00Z' }, now)).toBe(false);
+    });
+
+    it('distinguishes intermittent fasting from eating, including the next cycle', () => {
+        const session = { ...createSession(), planType: 'Intermittent' as const, initialPlannedDurationHours: TWELVE_HOURS };
+        expect(shouldPrioritizeDashboardFasting(session, Date.parse('2026-04-12T11:59:59Z'))).toBe(true);
+        expect(shouldPrioritizeDashboardFasting(session, Date.parse('2026-04-12T12:00:00Z'))).toBe(false);
+        expect(shouldPrioritizeDashboardFasting(session, Date.parse('2026-04-13T00:00:00Z'))).toBe(true);
+    });
+
+    it('does not prioritize cyclic eating days', () => {
+        const session = { ...createSession(), planType: 'Cyclic' as const, occurrenceKind: 'EatDay' as const };
+        expect(shouldPrioritizeDashboardFasting(session, Date.parse('2026-04-12T12:00:00Z'))).toBe(false);
+    });
+});
+
+describe('extended fasting day ticks', () => {
+    it('uses local midnight and omits dates too close to either endpoint', () => {
+        const axis = buildDashboardFastingTimeline(createSession(), 0);
+        axis.intermittent = false;
+        axis.start = new Date('2026-09-17T23:13:00');
+        axis.end = new Date('2026-09-19T11:13:00');
+        const ticks = buildDashboardFastingDayTicks(axis);
+        expect(ticks.map(tick => tick.date)).toEqual([new Date('2026-09-19T00:00:00')]);
+    });
+
+    it('does not add day ticks to a one-day interval or an intermittent cycle', () => {
+        const axis = buildDashboardFastingTimeline(createSession(), 0);
+        expect(buildDashboardFastingDayTicks(axis)).toEqual([]);
+        axis.intermittent = false;
+        axis.start = new Date('2026-09-17T12:00:00');
+        axis.end = new Date('2026-09-18T12:00:00');
+        expect(buildDashboardFastingDayTicks(axis)).toEqual([]);
+    });
+});
 
 describe('DashboardFastingCardComponent', () => {
     let fixture: ComponentFixture<DashboardFastingCardComponent>;

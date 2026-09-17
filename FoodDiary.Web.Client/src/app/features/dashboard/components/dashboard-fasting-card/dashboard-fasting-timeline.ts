@@ -3,6 +3,8 @@ import { MAX_CYCLIC_DAYS, MAX_INTERMITTENT_FAST_HOURS } from '../../../fasting/l
 import type { FastingSession } from '../../../fasting/models/fasting.data';
 
 const FULL_PERCENT = 100;
+const DAY_TICK_GAP_PERCENT = 20;
+const MAX_DAY_TICKS = 3;
 export type DashboardFastingTimeline = {
     intermittent: boolean;
     eating: boolean;
@@ -16,6 +18,30 @@ export type DashboardFastingTimeline = {
     current: Date | null;
 };
 export type DashboardFastingCycleDay = { day: number; labelKey: string; current: boolean; complete: boolean };
+
+export function buildDashboardFastingDayTicks(axis: DashboardFastingTimeline): Array<{ date: Date; position: number }> {
+    if (axis.intermittent || axis.start === null || axis.end === null) {
+        return [];
+    }
+    const duration = axis.end.getTime() - axis.start.getTime();
+    if (duration <= HOURS_PER_DAY * MS_PER_HOUR || !Number.isFinite(duration)) {
+        return [];
+    }
+    const ticks: Array<{ date: Date; position: number }> = [];
+    const date = new Date(axis.start);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 1);
+    let previousPosition = 0;
+    while (date < axis.end && ticks.length < MAX_DAY_TICKS) {
+        const position = ((date.getTime() - axis.start.getTime()) / duration) * FULL_PERCENT;
+        if (position >= previousPosition + DAY_TICK_GAP_PERCENT && position <= FULL_PERCENT - DAY_TICK_GAP_PERCENT) {
+            ticks.push({ date: new Date(date), position });
+            previousPosition = position;
+        }
+        date.setDate(date.getDate() + 1);
+    }
+    return ticks;
+}
 
 export function buildDashboardFastingTimeline(session: FastingSession | null, elapsedMs: number): DashboardFastingTimeline {
     if (session === null) {

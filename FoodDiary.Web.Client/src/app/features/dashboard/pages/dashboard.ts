@@ -1,10 +1,11 @@
-import { formatDate } from '@angular/common';
+import { formatDate, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
+    effect,
     type ElementRef,
     inject,
     signal,
@@ -34,6 +35,7 @@ import { FdPageContainerDirective } from '../../../shared/ui/layout/page-contain
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { parseDashboardDate } from '../lib/dashboard-date.utils';
+import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-priority';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
@@ -68,6 +70,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         class: 'dashboard-host',
     },
     imports: [
+        NgTemplateOutlet,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -109,6 +112,7 @@ export class DashboardComponent {
     protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
+    private readonly fastingPriorityOnOpen = signal<boolean | null>(null);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
@@ -141,6 +145,7 @@ export class DashboardComponent {
     protected readonly placeholderLabel = this.facade.placeholderLabel;
     protected readonly fastingIsActive = this.facade.fastingIsActive;
     protected readonly fastingCurrentSession = this.facade.currentFastingSession;
+    protected readonly fastingFirst = computed(() => this.isTodaySelected() && this.fastingPriorityOnOpen() === true);
     protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
     protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
     protected readonly shouldRenderFastingWidget = computed(() => {
@@ -237,6 +242,12 @@ export class DashboardComponent {
     });
 
     public constructor() {
+        effect(() => {
+            if (this.fastingPriorityOnOpen() !== null || !this.isTodaySelected() || !this.hasSnapshot() || this.isLoading()) {
+                return;
+            }
+            this.fastingPriorityOnOpen.set(shouldPrioritizeDashboardFasting(this.fastingCurrentSession(), Date.now()));
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             const date = parseDashboardDate(params.get('date')) ?? new Date();
             this.facade.initialize(date);

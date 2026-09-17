@@ -77,6 +77,11 @@
                     <span class="dashboard-fasting-card__fill" [style.width.%]="fastFill()"></span>
                     <span class="dashboard-fasting-card__eating-fill" [style.left.%]="axis.boundary" [style.width.%]="eatFill()"></span>
                 </div>
+                @for (tick of dayTicks(); track tick.position) {
+                    <span class="dashboard-fasting-card__day-tick" aria-hidden="true" [style.left.%]="tick.position">
+                        {{ formatDate(tick.date) }}
+                    </span>
+                }
                 <span class="dashboard-fasting-card__marker" aria-hidden="true" [style.left.%]="axis.position"></span
                 ><span class="dashboard-fasting-card__now" [style.--position]="`${axis.position}%`"
                     >{{ 'FASTING.REDESIGN.NOW' | translate }}<strong>{{ formatTime(axis.current) }}</strong></span

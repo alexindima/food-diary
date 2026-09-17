@@ -187,7 +187,7 @@
         flex-direction: column;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-sm) var(--fd-space-md);
-        border: var(--fd-border-muted);
+        border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-text-muted) 12%, transparent);
         border-radius: var(--fd-radius-md);
     }
     &__remaining strong {
@@ -315,4 +315,33 @@
 
 .dashboard-fasting-card-shell--eating::before {
     mask-image: url('/assets/images/fasting-sun.svg');
+}
+
+.dashboard-fasting-card__day-tick {
+    position: absolute;
+    top: calc(var(--timeline-axis-top) - 24px);
+    transform: translateX(-50%);
+    font-size: var(--fd-text-caption-size);
+    color: var(--fd-color-text-muted);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.dashboard-fasting-card__day-tick::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    height: 16px;
+    border-left: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-text-muted) 45%, transparent);
+}
+
+@container (max-width: 430px) {
+    .dashboard-fasting-card__day-tick {
+        visibility: hidden;
+    }
+
+    .dashboard-fasting-card__day-tick::after {
+        visibility: visible;
+    }
 }

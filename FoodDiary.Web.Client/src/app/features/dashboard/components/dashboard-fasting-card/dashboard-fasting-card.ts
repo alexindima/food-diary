@@ -9,7 +9,7 @@ import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { buildFastingTimerCardComputedState } from '../../../fasting/lib/fasting-timer-card-state';
 import type { FastingSession } from '../../../fasting/models/fasting.data';
-import { buildDashboardFastingCycle, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
+import { buildDashboardFastingCycle, buildDashboardFastingDayTicks, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
 
 const EMPTY_DURATION_MS = 0;
 
@@ -30,6 +30,7 @@ export class DashboardFastingCardComponent {
 
     public readonly session = input.required<FastingSession | null>();
     protected readonly timeline = computed(() => buildDashboardFastingTimeline(this.session(), this.elapsedMs()));
+    protected readonly dayTicks = computed(() => buildDashboardFastingDayTicks(this.timeline()));
     protected readonly fastFill = computed(() =>
         this.timeline().intermittent ? Math.min(this.timeline().position, this.timeline().boundary) : this.timeline().position,
     );
@@ -38,9 +39,7 @@ export class DashboardFastingCardComponent {
     );
     protected readonly cycleDays = computed(() => buildDashboardFastingCycle(this.session()));
     protected readonly cycleProtocol = computed(() => `${this.session()?.cyclicFastDays ?? 1}:${this.session()?.cyclicEatDays ?? 1}`);
-    protected readonly phaseIcon = computed(() =>
-        this.timeline().eating ? 'restaurant' : this.session()?.planType === 'Extended' ? 'local_fire_department' : 'bedtime',
-    );
+    protected readonly phaseIcon = computed(() => (this.timeline().eating ? 'restaurant' : 'bedtime'));
     protected readonly phaseLabelKey = computed(() => (this.timeline().eating ? 'FASTING.EATING_WINDOW' : 'FASTING.FASTING_WINDOW'));
     protected readonly stageTitleKey = computed(() => (this.timeline().eating ? 'FASTING.EATING_WINDOW' : this.fastingStageTitleKey()));
     protected readonly stageDescriptionKey = computed(() => {
