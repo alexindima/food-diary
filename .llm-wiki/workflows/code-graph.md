@@ -263,6 +263,12 @@ and dismissal status transitions, now represented by their command handlers.
 `AchievementDefinitionAdministrationService` (`be74465^`) owned listing,
 creation, and updating definitions; the broad administration case retains all
 three current handlers as valid owners.
+The broad daily-advice repository case likewise accepts both the read repository
+and the write repository introduced for administration imports. The original
+query does not specify a read or write operation. Separate strict cases require
+the locale-reading repository and the import-writing repository respectively.
+This is an adjudicated regression fixture, not new blind evidence; ranking rules
+and the top-1, top-10, and MRR thresholds remain unchanged.
 Frontend refresh coordination is restricted to frontend or unspecified change
 types. Local-day loader affinity requires three temporal terms, distinguishing
 timezone calculations from a request to assemble a snapshot for a local day.
