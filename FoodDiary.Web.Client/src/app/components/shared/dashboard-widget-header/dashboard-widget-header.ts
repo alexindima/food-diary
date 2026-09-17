@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { FdUiButtonComponent, FdUiHintDirective,FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-dashboard-widget-header',

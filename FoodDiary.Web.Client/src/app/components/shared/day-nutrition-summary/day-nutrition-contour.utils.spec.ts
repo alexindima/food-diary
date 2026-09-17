@@ -4,6 +4,12 @@ import { describe, expect, it } from 'vitest';
 import { buildDayNutrientContour, getDayNutrientAnchor } from './day-nutrition-contour.utils';
 
 const ids = ['protein', 'fats', 'fiber', 'carbs'];
+const progressPairs = [
+    [100, 100],
+    [100, 90],
+    [100, 50],
+    [100, 20],
+];
 const bars = (values: number[]): Array<{ id: string; percent: number }> => ids.map((id, index) => ({ id, percent: values[index] }));
 function radii(path: string): number[] {
     return [...path.matchAll(/(-?\d+\.\d+) (-?\d+\.\d+)/g)].map(match => Math.hypot(Number(match[1]) - 160, Number(match[2]) - 160));
@@ -33,8 +39,7 @@ describe('day nutrient contour', () => {
     });
 
     it('deepens valleys as neighbouring progress diverges, including excess', () => {
-        const pairs = [[100, 100], [100, 90], [100, 50], [100, 20]];
-        const valleys = pairs.map(([first, second]) => radii(buildDayNutrientContour(bars([first, second, second, first])))[20]);
+        const valleys = progressPairs.map(([first, second]) => radii(buildDayNutrientContour(bars([first, second, second, first])))[20]);
         valleys.slice(1).forEach((radius, index) => {
             expect(radius).toBeLessThan(valleys[index]);
         });
