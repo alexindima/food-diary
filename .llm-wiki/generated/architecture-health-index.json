@@ -2033,9 +2033,18 @@
           "name": "aiMealClearToken",
           "type": "",
           "required": false
+        },
+        {
+          "name": "favoriteLoadingIds",
+          "type": "ReadonlySet<string>",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "favoriteToggle",
+          "type": "{ id: string }"
+        },
         {
           "name": "blockToggle",
           "type": ""

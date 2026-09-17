@@ -3,12 +3,12 @@
   "summary": {
     "components": 450,
     "componentsWithoutDirectSpecs": 145,
-    "inputs": 1402,
-    "outputs": 465,
+    "inputs": 1411,
+    "outputs": 469,
     "apiCalls": 255,
-    "templatesWithTranslations": 306,
-    "translationKeys": 1759,
-    "consumerEdges": 1081,
+    "templatesWithTranslations": 307,
+    "translationKeys": 1762,
+    "consumerEdges": 1082,
     "consumedComponents": 290,
     "unconsumedComponents": 159
   },
@@ -1810,9 +1810,18 @@
           "name": "aiMealClearToken",
           "type": "",
           "required": false
+        },
+        {
+          "name": "favoriteLoadingIds",
+          "type": "ReadonlySet<string>",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "favoriteToggle",
+          "type": "{ id: string }"
+        },
         {
           "name": "blockToggle",
           "type": ""
@@ -4004,6 +4013,11 @@
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.html",
       "inputs": [
         {
+          "name": "selectable",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "title",
           "type": "string",
           "required": false
@@ -4064,7 +4078,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "categorySelected",
+          "type": "number"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.spec.ts"
     },
     {
@@ -10965,6 +10984,11 @@
           "required": true
         },
         {
+          "name": "helpText",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "description",
           "type": "string | null",
           "required": false
@@ -10999,6 +11023,11 @@
           "name": "title",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "helpText",
+          "type": "string | null",
+          "required": false
         },
         {
           "name": "description",
@@ -11145,6 +11174,11 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card.html",
       "inputs": [
+        {
+          "name": "backgroundKey",
+          "type": "",
+          "required": false
+        },
         {
           "name": "imageUrl",
           "type": "string | null | undefined",
@@ -11800,12 +11834,21 @@
           "required": false
         },
         {
+          "name": "favoriteLoadingIds",
+          "type": "ReadonlySet<string>",
+          "required": false
+        },
+        {
           "name": "entries",
           "type": "MealPreviewEntry[]",
           "required": true
         }
       ],
       "outputs": [
+        {
+          "name": "favoriteToggle",
+          "type": "{ id: string }"
+        },
         {
           "name": "viewAll",
           "type": ""
@@ -11861,9 +11904,18 @@
           "name": "aiMealClearToken",
           "type": "",
           "required": false
+        },
+        {
+          "name": "favoriteLoadingIds",
+          "type": "ReadonlySet<string>",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "favoriteToggle",
+          "type": "{ id: string }"
+        },
         {
           "name": "open",
           "type": "MealCardItem"
@@ -12261,6 +12313,16 @@
         {
           "name": "isToday",
           "type": "",
+          "required": false
+        },
+        {
+          "name": "interactive",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "currentDate",
+          "type": "Date | null",
           "required": false
         }
       ],
@@ -20065,7 +20127,6 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
       "keys": [
         "DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS",
-        "DASHBOARD.DAY_SUMMARY.HELP_TITLE",
         "DASHBOARD.DAY_SUMMARY.OF_GOAL",
         "DASHBOARD.DAY_SUMMARY.PETAL_LEGEND",
         "DASHBOARD.DAY_SUMMARY.PULSE_NEXT",
@@ -20073,6 +20134,13 @@
         "DASHBOARD.DAY_SUMMARY.PULSE_TITLE",
         "DASHBOARD.DAY_SUMMARY.TITLE",
         "MEAL_RING.UNIT"
+      ]
+    },
+    {
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.html",
+      "keys": [
+        "GENERAL.UNITS.KCAL"
       ]
     },
     {
@@ -20182,9 +20250,14 @@
         "GENERAL.NUTRIENTS.CARB",
         "GENERAL.NUTRIENTS.FAT",
         "GENERAL.NUTRIENTS.PROTEIN",
+        "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
+        "NUTRITION_TREND.DAY_EMPTY",
+        "NUTRITION_TREND.DAY_GOAL",
         "NUTRITION_TREND.DETAILS",
+        "NUTRITION_TREND.OPEN_DAY",
         "NUTRITION_TREND.RANGE_LABEL",
+        "NUTRITION_TREND.STACK_NOTE",
         "NUTRITION_TREND.TITLE",
         "SHARED.NUTRIENTS_SUMMARY.FIBER"
       ]
@@ -22287,6 +22360,7 @@
       "inputsUsed": [
         "aiMealClearToken",
         "entries",
+        "favoriteLoadingIds",
         "isAiMealSaving",
         "previewState",
         "shouldRender",
@@ -22296,6 +22370,7 @@
         "add",
         "aiMealCreateRequested",
         "blockToggle",
+        "favoriteToggle",
         "open",
         "viewAll"
       ]
@@ -22391,6 +22466,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
       "occurrences": 1,
       "inputsUsed": [
+        "helpText",
         "title"
       ],
       "outputsHandled": []
@@ -22403,6 +22479,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "helpText",
         "title"
       ],
       "outputsHandled": []
@@ -22510,6 +22587,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "description",
+        "helpText",
         "iconLabel",
         "iconName",
         "iconTone",
@@ -22637,6 +22715,7 @@
       "inputsUsed": [
         "actionAriaLabel",
         "actionIcon",
+        "backgroundKey",
         "calories",
         "collageImages",
         "comment",
@@ -22671,6 +22750,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "actionAriaLabel",
+        "backgroundKey",
         "calories",
         "comment",
         "description",
@@ -22704,6 +22784,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "actionAriaLabel",
+        "backgroundKey",
         "calories",
         "comment",
         "description",
@@ -23289,9 +23370,12 @@
         "layout",
         "referenceLines",
         "scaleMaximum",
+        "selectable",
         "title"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "categorySelected"
+      ]
     },
     {
       "component": "FdUiBarChartComponent",
@@ -24060,8 +24144,23 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "icon",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
         "icon",
@@ -29183,7 +29282,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.html",
-      "occurrences": 7,
+      "occurrences": 6,
       "inputsUsed": [
         "name"
       ],
@@ -29195,7 +29294,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "name"
       ],
@@ -33670,9 +33769,11 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
       "occurrences": 1,
       "inputsUsed": [
+        "favoriteLoading",
         "meal"
       ],
       "outputsHandled": [
+        "favoriteToggle",
         "open"
       ]
     },
@@ -34183,6 +34284,7 @@
         "aiMealClearToken",
         "emptyKey",
         "entries",
+        "favoriteLoadingIds",
         "isAiMealSaving",
         "showAddButtons",
         "showAiButtons",
@@ -34194,6 +34296,7 @@
       "outputsHandled": [
         "add",
         "aiMealCreateRequested",
+        "favoriteToggle",
         "open",
         "viewAll"
       ]
@@ -34228,6 +34331,7 @@
         "aiMealClearToken",
         "entry",
         "expandedAiSlot",
+        "favoriteLoadingIds",
         "isAiMealSaving",
         "showAddButtons",
         "showAiButtons"
@@ -34236,6 +34340,7 @@
         "add",
         "aiMealCreateRequested",
         "aiToggle",
+        "favoriteToggle",
         "open"
       ]
     },
@@ -34367,7 +34472,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "alcohol",
-        "calories",
         "carbs",
         "fats",
         "fiber",
@@ -34524,8 +34628,10 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
       "occurrences": 1,
       "inputsUsed": [
+        "currentDate",
         "dailyGoal",
         "insight",
+        "interactive",
         "isToday",
         "points"
       ],

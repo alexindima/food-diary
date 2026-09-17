@@ -2609,7 +2609,7 @@
       "role": "Component",
       "selector": "fd-entity-card-body",
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.ts",
-      "line": 16
+      "line": 18
     },
     {
       "name": "EntityCardThumbComponent",
@@ -2770,7 +2770,7 @@
       "role": "Component",
       "selector": "fd-nutrition-weekly-trend-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-      "line": 93
+      "line": 96
     },
     {
       "name": "PageBodyComponent",
@@ -3260,7 +3260,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "line": 37
+      "line": 44
     },
     {
       "name": "DashboardBlockHostDirective",
@@ -3351,7 +3351,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 94
+      "line": 96
     },
     {
       "name": "DietologistService",
@@ -6455,16 +6455,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3480,
-      "russianProperties": 3480,
+      "englishProperties": 3534,
+      "russianProperties": 3534,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 919,
-      "russianProperties": 919,
+      "englishProperties": 923,
+      "russianProperties": 923,
       "countsMatch": true
     },
     {
