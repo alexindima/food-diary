@@ -1301,6 +1301,119 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/daily-advices",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminDailyAdviceHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminDailyAdviceHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminDailyAdviceHttpResponse"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/daily-advices/import",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "409",
+            "413",
+            "500",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminDailyAdvicesImportHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/dashboard",
       "Operations": [
         {
@@ -18836,6 +18949,111 @@
         },
         {
           "Name": "totalPages",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDailyAdviceHttpResponse",
+      "Properties": [
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "locale",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "tag",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "value",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "weight",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDailyAdviceImportItemHttpRequest",
+      "Properties": [
+        {
+          "Name": "locale",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "tag",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "value",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "weight",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDailyAdvicesImportHttpRequest",
+      "Properties": [
+        {
+          "Name": "advices",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminDailyAdviceImportItemHttpRequest"
+        },
+        {
+          "Name": "version",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDailyAdvicesImportHttpResponse",
+      "Properties": [
+        {
+          "Name": "importedCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "skippedCount",
           "Required": false,
           "Type": "integer",
           "Format": "int32",

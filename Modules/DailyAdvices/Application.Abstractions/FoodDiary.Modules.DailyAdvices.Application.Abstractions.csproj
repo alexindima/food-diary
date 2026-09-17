@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="../Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
   </ItemGroup>
 </Project>

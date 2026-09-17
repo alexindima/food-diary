@@ -1,0 +1,45 @@
+<div class="fd-grid fd-gap-md">
+    <p>{{ 'ADMIN_DAILY_ADVICES.HELP' | translate }}</p>
+    <div class="fd-row fd-gap-sm fd-flex-wrap">
+        <!-- The UI kit has no JSON file picker; a labelled native input uses the shared button trigger. -->
+        <label for="advice-import" hidden>{{ 'ADMIN_DAILY_ADVICES.IMPORT' | translate }}</label>
+        <input #importInput id="advice-import" type="file" accept="application/json,.json" hidden (change)="importFileAsync($event)" />
+        <fd-ui-button type="button" variant="secondary" (click)="downloadExample()">{{
+            'ADMIN_DAILY_ADVICES.EXAMPLE' | translate
+        }}</fd-ui-button>
+        <fd-ui-button
+            type="button"
+            [disabled]="importing()"
+            [disabledReason]="'ADMIN_DAILY_ADVICES.IMPORTING' | translate"
+            (click)="importInput.click()"
+        >
+            {{ (importing() ? 'ADMIN_DAILY_ADVICES.IMPORTING' : 'ADMIN_DAILY_ADVICES.IMPORT') | translate }}
+        </fd-ui-button>
+    </div>
+    @if (importError(); as error) {
+        <p role="alert" class="fd-ui-error-text">{{ error | translate }}</p>
+    }
+    @if (importResult(); as result) {
+        <p role="status">
+            {{ 'ADMIN_DAILY_ADVICES.SUCCESS' | translate: { imported: result.importedCount, skipped: result.skippedCount } }}
+        </p>
+    }
+    @if (loading()) {
+        <p role="status">{{ 'ADMIN_DAILY_ADVICES.LOADING' | translate }}</p>
+    } @else if (loadFailed()) {
+        <fd-admin-load-error (retry)="loadAdvices()" />
+    } @else {
+        <p>{{ 'ADMIN_DAILY_ADVICES.TOTAL' | translate: { count: advices().length } }}</p>
+        @for (advice of pageItems(); track advice.id) {
+            <fd-ui-card>
+                <p>{{ advice.value }}</p>
+                <p class="fd-ui-meta-text">
+                    {{ advice.locale }} · {{ 'ADMIN_DAILY_ADVICES.WEIGHT' | translate }}: {{ advice.weight }} · {{ advice.tag }}
+                </p>
+            </fd-ui-card>
+        } @empty {
+            <p>{{ 'ADMIN_DAILY_ADVICES.EMPTY' | translate }}</p>
+        }
+        <fd-ui-pagination [length]="advices().length" [pageSize]="pageSize" [pageIndex]="page()" (pageIndexChange)="page.set($event)" />
+    }
+</div>

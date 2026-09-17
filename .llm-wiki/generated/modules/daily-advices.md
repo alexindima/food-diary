@@ -37,23 +37,28 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: DailyAdvice
-- Public contract files: 5
+- Public contract files: 10
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
-- Interfaces: 1
-- DTO/read-model/projection types: 2
+- Public contract types: 10
+- Interfaces: 2
+- DTO/read-model/projection types: 3
 - Enums: 0
-- Exported repository-shaped contracts: 1
+- Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 0
 - `class DailyAdviceErrors`
 - `interface IDailyAdviceReadModelRepository`
+- `interface IDailyAdviceWriteRepository`
+- `record DailyAdviceImportItem`
+- `record DailyAdviceImportModel`
 - `record DailyAdviceModel`
 - `record DailyAdviceReadModel`
 - `record GetDailyAdviceQuery`
+- `record GetDailyAdvicesForAdministrationQuery`
+- `record ImportDailyAdvicesCommand`
 
 ## Focused Tests
 
@@ -61,6 +66,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ImportDailyAdvicesTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/DailyAdviceIdContractTests.cs`

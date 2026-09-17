@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1660,
-    "symbols": 657,
-    "routes": 98,
-    "features": 43,
-    "specs": 575,
+    "typescriptFiles": 1668,
+    "symbols": 660,
+    "routes": 100,
+    "features": 44,
+    "specs": 577,
     "localeFiles": 5,
     "roles": {
-      "Component": 445,
+      "Component": 446,
       "Directive": 12,
-      "Facade": 61,
+      "Facade": 62,
       "Other": 17,
       "Pipe": 4,
-      "Service": 118
+      "Service": 119
     }
   },
   "features": [
@@ -155,6 +155,23 @@
       "routes": [],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
+      ]
+    },
+    {
+      "area": "admin",
+      "name": "admin-daily-advices",
+      "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices",
+      "symbols": [
+        "AdminDailyAdvicesComponent",
+        "AdminDailyAdvicesFacade",
+        "AdminDailyAdvicesService"
+      ],
+      "routes": [
+        ""
+      ],
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
       ]
     },
     {
@@ -1867,7 +1884,7 @@
       "role": "Component",
       "selector": "app-root",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "line": 56
+      "line": 58
     },
     {
       "name": "AdminAchievementsService",
@@ -2071,6 +2088,27 @@
       "selector": "fd-admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.ts",
       "line": 37
+    },
+    {
+      "name": "AdminDailyAdvicesService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
+      "line": 13
+    },
+    {
+      "name": "AdminDailyAdvicesFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.ts",
+      "line": 9
+    },
+    {
+      "name": "AdminDailyAdvicesComponent",
+      "role": "Component",
+      "selector": "fd-admin-daily-advices",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.ts",
+      "line": 17
     },
     {
       "name": "AdminDashboardService",
@@ -6020,29 +6058,34 @@
       "line": 51
     },
     {
-      "path": "lessons",
+      "path": "daily-advices",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 55
     },
     {
-      "path": "achievements",
+      "path": "lessons",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 59
     },
     {
-      "path": "moderation",
+      "path": "achievements",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 63
     },
     {
-      "path": "unauthorized",
+      "path": "moderation",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 67
     },
     {
-      "path": "**",
+      "path": "unauthorized",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 71
+    },
+    {
+      "path": "**",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
+      "line": 75
     },
     {
       "path": "",
@@ -6073,6 +6116,11 @@
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
       "line": 8
+    },
+    {
+      "path": "",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/admin-daily-advices.routes.ts",
+      "line": 7
     },
     {
       "path": "",
@@ -6463,8 +6511,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 923,
-      "russianProperties": 923,
+      "englishProperties": 939,
+      "russianProperties": 939,
       "countsMatch": true
     },
     {

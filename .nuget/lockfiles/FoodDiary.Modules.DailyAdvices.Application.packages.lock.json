@@ -62,6 +62,7 @@
       "fooddiary.modules.dailyadvices.application.abstractions": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -69,7 +70,14 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dailyadvices.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.images.contracts": {

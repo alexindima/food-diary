@@ -492,6 +492,7 @@
           "FoodDiary.Modules.Billing.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.DailyAdvices.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
@@ -852,6 +853,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },

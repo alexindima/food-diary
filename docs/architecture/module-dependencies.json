@@ -5,6 +5,7 @@
     "Admin": [
       "Ai",
       "ContentReports",
+      "DailyAdvices",
       "Gamification",
       "Identity",
       "Lessons",
@@ -159,6 +160,7 @@
     "Admin": [
       "Ai",
       "ContentReports",
+      "DailyAdvices",
       "Gamification",
       "Identity",
       "Lessons",

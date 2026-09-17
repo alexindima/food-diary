@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5410,
+    "productionFiles": 5437,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 927,
-    "criticalSymbolsWithTestReferences": 900,
-    "criticalSymbolsWithoutTestReferences": 27,
+    "criticalSymbols": 933,
+    "criticalSymbolsWithTestReferences": 902,
+    "criticalSymbolsWithoutTestReferences": 31,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -3178,11 +3178,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.06
+      "structuralRiskScore": 1.1
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -3234,11 +3234,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 54,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.58
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -4274,11 +4274,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 12,
+      "nonBlankLines": 49,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.94
+      "structuralRiskScore": 21.98
     },
     {
       "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
@@ -6026,19 +6026,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "nonBlankLines": 73,
+      "nonBlankLines": 77,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.46
+      "structuralRiskScore": 1.54
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "nonBlankLines": 159,
+      "nonBlankLines": 161,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.68
+      "structuralRiskScore": 22.72
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/admin-achievements.routes.ts",
@@ -6415,6 +6415,54 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 15.8
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/admin-daily-advices.routes.ts",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.ts",
+      "nonBlankLines": 77,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.04
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.ts",
+      "nonBlankLines": 49,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 35.48
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/models/admin-daily-advice.models.ts",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.ts",
+      "nonBlankLines": 50,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/admin-dashboard.routes.ts",
@@ -14049,6 +14097,38 @@
       "structuralRiskScore": 2.16
     },
     {
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdviceItem.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.34
+    },
+    {
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
       "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonItem.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -14473,6 +14553,22 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Admin/Application/Models/AdminDailyAdviceModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Application/Models/AdminDailyAdvicesImportModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Admin/Application/Models/AdminDashboardOverviewModel.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -14759,6 +14855,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.7
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.34
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQuery.cs",
@@ -15353,6 +15465,14 @@
       "structuralRiskScore": 2.42
     },
     {
+      "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.72
+    },
+    {
       "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
       "nonBlankLines": 25,
       "decisionPoints": 0,
@@ -15599,6 +15719,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdviceImportItemHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdvicesImportHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateTestHttpRequest.cs",
@@ -15991,6 +16127,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdvicesImportHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminDashboardMetricsHttpResponse.cs",
@@ -20346,11 +20498,19 @@
     },
     {
       "path": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceReadModelRepository.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/DailyAdvices/Application.Abstractions/Models/DailyAdviceReadModel.cs",
@@ -20359,6 +20519,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.9
     },
     {
       "path": "Modules/DailyAdvices/Application/DependencyInjection.cs",
@@ -20385,12 +20553,44 @@
       "structuralRiskScore": 3.8
     },
     {
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.3
+    },
+    {
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
       "nonBlankLines": 68,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 13.36
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvices/ImportDailyAdvicesCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceImportItem.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceImportModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceModel.cs",
@@ -20407,6 +20607,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
@@ -20426,19 +20634,27 @@
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 35,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.12
+      "structuralRiskScore": 2.2
+    },
+    {
+      "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdvicesDbContext.cs",
@@ -45283,6 +45499,16 @@
       "coveredThrough": []
     },
     {
+      "name": "ImportAdminDailyAdvicesCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "ImportAdminLessonsCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommandHandler.cs",
@@ -45290,6 +45516,18 @@
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportDailyAdvicesCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "line": 12,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ImportDailyAdvicesTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46847,6 +47085,16 @@
       "coveredThrough": []
     },
     {
+      "name": "AdminDailyAdvicesController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "line": 20,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminDashboardController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
@@ -48392,6 +48640,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminDailyAdvicesQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminDashboardOverviewQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
@@ -48808,6 +49066,16 @@
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetDailyAdvicesForAdministrationQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
@@ -52208,6 +52476,18 @@
         "Platform/tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs",
         "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportAdminDailyAdvicesCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/ImportAdminDailyAdvicesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

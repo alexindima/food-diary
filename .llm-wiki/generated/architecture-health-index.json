@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1643,
+    "productionProjectEdges": 1647,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
-    "routedStandaloneComponents": 62,
+    "routedStandaloneComponents": 63,
     "componentsWithoutDirectSpecs": 145,
-    "criticalSymbolsWithoutTestReferences": 27,
+    "criticalSymbolsWithoutTestReferences": 31,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -50,18 +50,18 @@
       "role": "aggregate-owner"
     },
     {
+      "module": "Admin",
+      "fanIn": 0,
+      "fanOut": 7,
+      "level": "informational",
+      "role": "orchestrator"
+    },
+    {
       "module": "Recipes",
       "fanIn": 2,
       "fanOut": 5,
       "level": "informational",
       "role": "aggregate-owner"
-    },
-    {
-      "module": "Admin",
-      "fanIn": 0,
-      "fanOut": 6,
-      "level": "informational",
-      "role": "orchestrator"
     },
     {
       "module": "Notifications",
@@ -155,6 +155,13 @@
       "role": "read-composer"
     },
     {
+      "module": "DailyAdvices",
+      "fanIn": 2,
+      "fanOut": 1,
+      "level": "informational",
+      "role": "aggregate-owner"
+    },
+    {
       "module": "Exercises",
       "fanIn": 2,
       "fanOut": 1,
@@ -219,13 +226,6 @@
     },
     {
       "module": "ContentReports",
-      "fanIn": 1,
-      "fanOut": 1,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
-      "module": "DailyAdvices",
       "fanIn": 1,
       "fanOut": 1,
       "level": "informational",
@@ -5223,10 +5223,30 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "ImportAdminDailyAdvicesCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "RequestTelegramBackupEmailCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
       "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminDailyAdvicesController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5257,6 +5277,26 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
       "line": 17,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminDailyAdvicesQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetDailyAdvicesForAdministrationQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

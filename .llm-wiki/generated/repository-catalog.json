@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 295,
-    "documentationPages": 206
+    "documentationPages": 207
   },
   "dotnet": {
     "projects": [
@@ -1089,6 +1089,7 @@
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
           "Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj",
           "Modules/ContentReports/Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj",
+          "Modules/DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj",
           "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
           "Modules/Gamification/Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj",
           "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj",
@@ -3307,6 +3308,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -3324,6 +3326,7 @@
         "projectReferences": [
           "Modules/DailyAdvices/Application.Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
           "Modules/DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj",
+          "Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
@@ -3356,6 +3359,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -15727,6 +15731,7 @@
       "docs/BACKEND_PATTERNS_AND_ARCHITECTURE_INTERVIEW_GUIDE.md",
       "docs/README.md",
       "docs/TESTING_STRATEGY.md",
+      "docs/admin-daily-advices-import.md",
       "docs/adr/0001-modular-monolith-with-supporting-services.md",
       "docs/adr/0002-mailrelay-mailinbox-as-separate-services.md",
       "docs/adr/0003-presentation-models-live-in-presentation-api.md",

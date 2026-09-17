@@ -4,6 +4,7 @@ using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Results;
+using FoodDiary.ReadModel.Composition.Images;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -11,6 +12,35 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerTheory]
+    [InlineData("Queued")]
+    [InlineData("Running")]
+    [InlineData("Succeeded")]
+    [InlineData("Failed")]
+    public async Task ReferencedImage_IsProtectedFromCleanup_UntilRecognitionJobIsDeleted(string status) {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        var store = new FoodRecognitionJobStore(options, TimeProvider.System);
+        Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+        await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
+            options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
+        await context.FoodRecognitionJobs.ExecuteUpdateAsync(set => set.SetProperty(item => item.Status, status));
+        ImageAsset referenced = await context.ImageAssets.SingleAsync();
+        var unused = ImageAsset.Create(referenced.UserId, "unused/image.jpg", "https://example.com/unused.jpg");
+        context.ImageAssets.Add(unused);
+        await context.SaveChangesAsync();
+        var query = new ImageAssetUsageQuery(context);
+        DateTime cutoff = DateTime.UtcNow.AddDays(1);
+
+        Assert.True(await query.IsAssetInUseAsync(referenced.Id));
+        Assert.False(await query.IsAssetInUseAsync(unused.Id));
+        Assert.Equal(unused.Id, Assert.Single(await query.GetUnusedCandidatesOlderThanAsync(cutoff, 10)).Id);
+
+        await context.FoodRecognitionJobs.ExecuteDeleteAsync();
+
+        Assert.False(await query.IsAssetInUseAsync(referenced.Id));
+        Assert.Contains(await query.GetUnusedCandidatesOlderThanAsync(cutoff, 10), candidate => candidate.Id == referenced.Id);
+    }
+
     [RequiresDockerFact]
     public async Task ConcurrentAdmissionsAndClaims_AreIdempotentAndOwnerScoped() {
         (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();

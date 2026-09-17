@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4119,
-    "symbols": 4049,
-    "interfaceImplementationLinks": 188,
+    "sourceFiles": 4140,
+    "symbols": 4070,
+    "interfaceImplementationLinks": 189,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2143,
+      "class": 2150,
       "enum": 64,
-      "interface": 398,
-      "record": 1324,
+      "interface": 399,
+      "record": 1337,
       "record struct": 120
     },
     "roles": {
-      "Command": 211,
-      "CommandHandler": 206,
+      "Command": 213,
+      "CommandHandler": 208,
       "Configuration": 95,
-      "Controller": 104,
+      "Controller": 105,
       "Entity": 97,
       "Event": 19,
       "Factory": 14,
@@ -32,18 +32,18 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1684,
-      "Query": 261,
-      "QueryHandler": 189,
+      "Other": 1689,
+      "Query": 263,
+      "QueryHandler": 191,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
-      "Request": 150,
-      "Response": 213,
+      "Request": 152,
+      "Response": 215,
       "Service": 160,
-      "Validator": 225,
+      "Validator": 226,
       "ValueObject": 114,
-      "WriteRepository": 45
+      "WriteRepository": 47
     }
   },
   "symbols": [
@@ -2568,6 +2568,34 @@
       "line": 5
     },
     {
+      "name": "ImportAdminDailyAdviceItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdviceItem.cs",
+      "line": 2
+    },
+    {
+      "name": "ImportAdminDailyAdvicesCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportAdminDailyAdvicesCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ImportAdminDailyAdvicesCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandValidator.cs",
+      "line": 4
+    },
+    {
       "name": "ImportAdminLessonItem",
       "kind": "record",
       "role": "Other",
@@ -2939,6 +2967,20 @@
       "line": 2
     },
     {
+      "name": "AdminDailyAdviceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDailyAdviceModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdvicesImportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDailyAdvicesImportModel.cs",
+      "line": 2
+    },
+    {
       "name": "AdminDashboardOverviewModel",
       "kind": "record",
       "role": "Other",
@@ -3189,6 +3231,20 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "GetAdminDailyAdvicesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminDailyAdvicesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
+      "line": 9
     },
     {
       "name": "GetAdminDashboardOverviewQuery",
@@ -3702,6 +3758,13 @@
       "line": 17
     },
     {
+      "name": "AdminDailyAdvicesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "line": 20
+    },
+    {
       "name": "AdminDashboardController",
       "kind": "class",
       "role": "Controller",
@@ -3916,6 +3979,20 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdviceImportItemHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdviceImportItemHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdvicesImportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdvicesImportHttpRequest.cs",
       "line": 2
     },
     {
@@ -4259,6 +4336,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminContentReportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdviceHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdvicesImportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdvicesImportHttpResponse.cs",
       "line": 2
     },
     {
@@ -8021,11 +8112,25 @@
       "line": 4
     },
     {
+      "name": "IDailyAdviceWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs",
+      "line": 4
+    },
+    {
       "name": "DailyAdviceReadModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/DailyAdvices/Application.Abstractions/Models/DailyAdviceReadModel.cs",
       "line": 2
+    },
+    {
+      "name": "ImportDailyAdvicesCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "line": 12
     },
     {
       "name": "DependencyInjection",
@@ -8049,11 +8154,39 @@
       "line": 5
     },
     {
+      "name": "GetDailyAdvicesForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
+      "line": 9
+    },
+    {
       "name": "DailyAdviceSelector",
       "kind": "class",
       "role": "Other",
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
       "line": 8
+    },
+    {
+      "name": "ImportDailyAdvicesCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvices/ImportDailyAdvicesCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DailyAdviceImportItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceImportItem.cs",
+      "line": 2
+    },
+    {
+      "name": "DailyAdviceImportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceImportModel.cs",
+      "line": 2
     },
     {
       "name": "DailyAdviceModel",
@@ -8067,6 +8200,13 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDailyAdvicesForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQuery.cs",
       "line": 6
     },
     {
@@ -8102,6 +8242,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdvicesDbContext.cs",
+      "line": 6
+    },
+    {
+      "name": "DailyAdviceWriteRepository",
+      "kind": "class",
+      "role": "WriteRepository",
+      "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs",
       "line": 6
     },
     {
@@ -28558,6 +28705,13 @@
       "interfacePath": "Modules/Dietologist/Application.Abstractions/Common/IClientTaskRepository.cs",
       "implementation": "ClientTaskRepository",
       "implementationPath": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IDailyAdviceWriteRepository",
+      "interfacePath": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs",
+      "implementation": "DailyAdviceWriteRepository",
+      "implementationPath": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs",
       "confidence": "naming-convention"
     },
     {

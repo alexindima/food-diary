@@ -45,6 +45,8 @@ This directory contains long-form repository documentation. Keep root-level mark
 
 ## Frontend
 
+- [Daily advice JSON import](admin-daily-advices-import.md) - admin workflow, file format and duplicate handling.
+
 - `frontend/FRONTEND_ARCHITECTURE.md`
 - `frontend/TEMPLATE_LINTING.md` - active template-rule verification and existing complexity limits.
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`

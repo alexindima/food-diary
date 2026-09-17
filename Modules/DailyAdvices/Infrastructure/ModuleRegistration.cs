@@ -13,6 +13,8 @@ public static class ModuleRegistration {
             .CreateModuleContext<DailyAdvicesDbContext>(static options => new DailyAdvicesDbContext(options)));
         services.AddScoped<IDailyAdviceReadModelRepository>(static provider => new DailyAdviceRepository(
             provider.GetRequiredService<DailyAdvicesDbContext>().DailyAdvices));
+        services.AddScoped<IDailyAdviceWriteRepository>(static provider => new DailyAdviceWriteRepository(
+            provider.GetRequiredService<DailyAdvicesDbContext>().DailyAdvices));
         return services;
     }
 }

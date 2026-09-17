@@ -22,14 +22,14 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "b7b83f812d2d707b796e4720f595e013efc8a2603c09707e8a6120c0aac878ee"
+          "path": "docs/README.md",
+          "sha256": "19769bcc26460dc93b73c89594d3f59b152a22c2c49fb7f98c1c14b2273d22c7"
         }
       ],
-      "reason": "Reviewed docs/ARCHITECTURE.md atomic-command addition; repository remains a modular monolith with independent supporting services and existing navigation links.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:25.8514597Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:08.0598129Z"
     },
     {
       "pageId": "module.frontend",
@@ -90,14 +90,18 @@
       "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
       "sources": [
         {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "54a5fff46f187be8b4588bf2e6ca24b397e926458e0d39e9cbcbf9be7b9ae12e"
+          "sha256": "dbbd2b379f2efd70de7403ecd9d71f964197eda9563ac56c012ebd5c62d05db7"
         }
       ],
-      "reason": "Only test project references changed: ArchitectureTests and Development.Mcp.Tests reuse FoodDiary.Testing; Ai.Presentation.Tests consumes its own Application.Abstractions reader. Production edges and ownership are unchanged, and all 2090 architecture tests pass.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:56:22.957579Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:08.3296599Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -135,14 +139,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "c6c0b5e48fcb89cc41cfaf05dd828d1ade90d97f2f0d9b082123094787fbbc3a"
+          "path": "docs/README.md",
+          "sha256": "19769bcc26460dc93b73c89594d3f59b152a22c2c49fb7f98c1c14b2273d22c7"
         }
       ],
-      "reason": "ADR 0048 adds a decision without changing source authority or the ADR lifecycle; reviewed docs/adr/README.md and current policy.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:19:15.6857381Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:08.6164073Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -151,13 +155,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "70f9c2433400c3ae138eddd2355059182de6dc766e85fa094cc12f10709114ec"
+          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
         }
       ],
-      "reason": "The module graph was reconciled with canonical namespaces; catalog generation and all 2090 architecture tests passed. Inventory fields and limitations remain accurate.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:19:08.2603915Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:08.8248491Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -199,14 +203,14 @@
       "pageSha256": "eb7098f5c5a1c836f9c847d2327794f11a3cb71d9e6d9dccafe12b395cb2d03f",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "57a4b97ea6b373f1e7e4b52ab95928539bb61b446e8b661bd32d8595b7529549"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "0ea09bcb3c59bda6c6e87e14870987267ea6ff7752e9fead6e53f05a88fca068"
         }
       ],
-      "reason": "Full OpenAPI snapshot still passes; added focused RecipeLikes 404 schema snapshot for ApiErrorHttpResponse. Existing workflow correctly describes success-response coverage and separate error-shape review.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:28.2282801Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:09.3583034Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,13 +219,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e2dd335ae1a1c9cfe83fdef9d7d188e69fa938012a901f0330cb3a386c4baa75"
+          "sha256": "1ddee4ffa43964671040f88cbb5666bf885375033055bd481d70b82ff893a270"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "dbbd2b379f2efd70de7403ecd9d71f964197eda9563ac56c012ebd5c62d05db7"
         }
       ],
-      "reason": "Reviewed regenerated dashboard frontend indexes: styling, localization, titleKey consumer migration and dialog entrances. Workflow guidance remains accurate; no dependency, transport, security or tracing-tool changes. All 3288 frontend tests passed with rendered mobile, tablet, desktop and theme checks.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
-      "reviewedAtUtc": "2026-09-16T19:14:14.5559825Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:09.6195726Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "28d01fc8ef8603b6463bb4aecfc4c27096e7505469c76d1b7a06c6b807061455"
+          "sha256": "2df01991aada54a2239f5265dcd70621c5ebefaf1bb67dd8133128eb03b4d385"
         }
       ],
-      "reason": "Regenerated consumer index adds test-fixture references from coverage regressions; production contract declarations, serialization and HTTP snapshots are unchanged.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:51.4472543Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:10.4851994Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -711,13 +719,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "70f9c2433400c3ae138eddd2355059182de6dc766e85fa094cc12f10709114ec"
+          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
         }
       ],
-      "reason": "The reconciled module dependency manifest remains the input for downstream review; no ownership-tool behavior changed.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:19:18.5123353Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:11.2775521Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -770,14 +778,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "3fc6b3806ef1ff681e5d82e64748fc33fc0d0dc9582a37a073fb4ff9cde0b2dd"
         }
       ],
-      "reason": "Search changes affect bounded candidate recall and ordering only. No telemetry payload, privacy inventory, data-flow projection or external transmission changed.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:43:41.0301794Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:11.5750144Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -816,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "723dfd8659e5d17233feb8baa2a0a0ac6d4d26914ddf752e1387b6f37e7cbc86"
+          "sha256": "cd9aca7e05dd5607818a7508943978b7fb9e9e9c6c603dd47d1b0f1143a3f11b"
         }
       ],
-      "reason": "Reviewed mobile cyclic timeline polish: proportional day widths with content minimum, proximity snapping, thin scrollbar, initial current-day positioning guarded per rendered list using browser-only afterRenderEffect. Existing timer and scheduling unchanged. Thirteen component tests, ESLint, Stylelint and formatting passed. Also reviewed shared Fasting title localization and flow-based current-time label spacing.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9956d92760a70d93e49fd42ba684f18b68d04518",
-      "reviewedAtUtc": "2026-09-17T20:00:28.2835814Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:11.9995005Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2271a85d96e2309e3aff607268a6e6c9ec855a38b60b8d6fe9dc05da50ec3aea"
+          "sha256": "859051be494a610bd19f7533f6556655f5a0ced1d378bc7cc49fd963d4868692"
         }
       ],
-      "reason": "The complete push changes test helpers and focused test coverage, plus bounded Wiki test-context retrieval. RequiresDockerPerformanceFact now parses the CLR profiling integer flag with InvariantCulture to satisfy MA0011. Focused helper build and whitespace checks passed; runtime-topology changes are fingerprint/count only, with no runtime service/client or access-control changes. Full Core audit and Wiki search/retrieval verification passed before this isolated test-helper compilation fix.",
-      "baseRef": "origin/master",
-      "gitHead": "1f310e58f0cebd6b0a4427d7de7bc1cbb21bf35b",
-      "reviewedAtUtc": "2026-09-16T10:38:00.9236149Z"
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:12.5264939Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "723dfd8659e5d17233feb8baa2a0a0ac6d4d26914ddf752e1387b6f37e7cbc86"
+          "sha256": "cd9aca7e05dd5607818a7508943978b7fb9e9e9c6c603dd47d1b0f1143a3f11b"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "859051be494a610bd19f7533f6556655f5a0ced1d378bc7cc49fd963d4868692"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "3fc6b3806ef1ff681e5d82e64748fc33fc0d0dc9582a37a073fb4ff9cde0b2dd"
         }
       ],
-      "reason": "Reviewed mobile cyclic timeline polish: proportional day widths with content minimum, proximity snapping, thin scrollbar, initial current-day positioning guarded per rendered list using browser-only afterRenderEffect. Existing timer and scheduling unchanged. Thirteen component tests, ESLint, Stylelint and formatting passed. Also reviewed shared Fasting title localization and flow-based current-time label spacing.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9956d92760a70d93e49fd42ba684f18b68d04518",
-      "reviewedAtUtc": "2026-09-17T20:00:29.3440677Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:12.9554485Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1060,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "3240221df732a449a079f3df3b051fdd5080225e12ce2e3581c91b8ffdf6cc46"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "b158ebf7fb22f4cc7a02dab107ee75d44f2ae6cce44327c3c3bb9fe06d6e9976"
+          "sha256": "94537e0e12782458a9dfef33e664fca9d1790918074c7e66f0594f667382cac5"
         }
       ],
-      "reason": "Reviewed mobile cyclic timeline polish: proportional day widths with content minimum, proximity snapping, thin scrollbar, initial current-day positioning guarded per rendered list using browser-only afterRenderEffect. Existing timer and scheduling unchanged. Thirteen component tests, ESLint, Stylelint and formatting passed. Also reviewed shared Fasting title localization and flow-based current-time label spacing.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9956d92760a70d93e49fd42ba684f18b68d04518",
-      "reviewedAtUtc": "2026-09-17T20:00:30.2390275Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:13.3163610Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,28 +1159,28 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3a72ee9a488973fa4b88aa246b9ac55442ed29794f34d8a8a4b5f49ae7f9334f"
+          "sha256": "3240221df732a449a079f3df3b051fdd5080225e12ce2e3581c91b8ffdf6cc46"
         }
       ],
-      "reason": "Reviewed compact cyclic header presentation: removed duplicate cycle explanation, shortened localized day labels, combined current-day indicator inline and reduced spacing. Timeline and backend scheduling unchanged after inspecting cyclic EatDay semantics. Thirteen focused tests and template/style lint and localization checks passed.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b9a1719126fc81c2a69a8745a5f71657e4f46088",
-      "reviewedAtUtc": "2026-09-17T19:35:46.1791708Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:10.9538332Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "ca394e5f353ac38b3b8205ad1604b00ef4ea59a106bb7ba147fd89f2a6982fe6",
+      "pageSha256": "e7c2b2069fc37a41f4e86006e262e7a9c85c4e0f2e8b90d75d94a2d65a296234",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b4af3c9521ca541d55e9113914921f92229c7f1437eaf757d89d97a66b7b0e0c"
+          "sha256": "cdb57f7d2b3911d0ba8a54ea4a4bea88ca2a6fd8ae67514a7373809495b0f3e8"
         }
       ],
-      "reason": "Catalog changes reflect the moved shared PowerShell attribute, added test sources and test-only project references; query selection and SQLite behavior are unchanged.",
+      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a8c524466ad0d3145dd424230a513c430c1eb4f8",
-      "reviewedAtUtc": "2026-09-16T09:57:54.3394239Z"
+      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
+      "reviewedAtUtc": "2026-09-17T20:49:12.2811862Z"
     },
     {
       "pageId": "workflow.review-diff",

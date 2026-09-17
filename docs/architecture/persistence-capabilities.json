@@ -64,7 +64,7 @@
         "entity:RecipeStep",
         "entity:User"
       ],
-      "reason": "Preserves all six foreign image-reference predicates and SQL-side oldest-first candidate limit; returns only booleans and scalar IDs."
+      "reason": "Preserves foreign image-reference predicates, including images referenced by recognition jobs through the read context, and SQL-side oldest-first candidate limit; returns only booleans and scalar IDs."
     },
     "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs": {
       "module": "ReadModelComposition",
@@ -143,8 +143,8 @@
         "entity:DailyAdvice",
         "tracked:DailyAdvice"
       ],
-      "reason": "Registers the owned advice set on the existing shared connection; repository remains read-only and no-tracking.",
-      "technicalSourceSha256": "ad6a9dd90645302b0374631e1f04b00b5bb98dba2018350fec842bef934e59c6"
+      "reason": "Registers read-only projections and a separate owner-only advice writer on the same factory-created shared-connection context. The writer stages imported entities; the Admin transactional command retains coordinated save and commit.",
+      "technicalSourceSha256": "ef00d8eae51cf4575b46c10a0ceda6788e6e19ef14b2257f3a94f3ed927cac48"
     },
     "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs": {
       "module": "ReadModelComposition",
@@ -519,6 +519,15 @@
         "entity:DailyAdvice"
       ],
       "reason": "DailyAdvices-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs": {
+      "module": "DailyAdvices",
+      "capabilities": [
+        "entity:DailyAdvice",
+        "tracked:DailyAdvice",
+        "write:DailyAdvice"
+      ],
+      "reason": "Owner-only JSON import stages validated DailyAdvice aggregates through its DbSet. The Admin transactional command owns coordinated SaveChanges and commit; no foreign entities or independent context operations are exposed."
     },
     "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs": {
       "module": "Dashboard",

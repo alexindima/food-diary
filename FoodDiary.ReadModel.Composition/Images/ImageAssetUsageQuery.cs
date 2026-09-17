@@ -17,6 +17,7 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
                 context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
                 context.Meals.AsNoTracking().Any(m => m.ImageAssetId == assetId) ||
                 context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
+                context.FoodRecognitionImageAssets.AsNoTracking().Any(asset => asset.Id == assetId) ||
                 context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == assetId))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -35,6 +36,7 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
                 !context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
                 !context.Meals.AsNoTracking().Any(m => m.ImageAssetId == asset.Id) &&
                 !context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
+                !context.FoodRecognitionImageAssets.AsNoTracking().Any(image => image.Id == asset.Id) &&
                 !context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == asset.Id));
         if (after is not null) {
             candidates = candidates.Where(asset => EF.Functions.GreaterThan(

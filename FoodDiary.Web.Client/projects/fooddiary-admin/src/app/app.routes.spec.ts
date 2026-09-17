@@ -9,6 +9,7 @@ import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.rou
 import { adminAuditRoutes } from './features/admin-audit/admin-audit.routes';
 import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
 import { adminBugsRoutes } from './features/admin-bugs/admin-bugs.routes';
+import { adminDailyAdvicesRoutes } from './features/admin-daily-advices/admin-daily-advices.routes';
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
 import { adminLessonsRoutes } from './features/admin-lessons/admin-lessons.routes';
@@ -31,6 +32,7 @@ const protectedFeatureRoutes: Routes[] = [
     adminEmailTemplatesRoutes,
     adminOutgoingEmailsRoutes,
     adminMailInboxRoutes,
+    adminDailyAdvicesRoutes,
     adminLessonsRoutes,
     adminAchievementsRoutes,
     adminModerationRoutes,

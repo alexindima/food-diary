@@ -1295,7 +1295,8 @@
         "SECTIONS": "Admin sections",
         "BUGS": "Bugs",
         "AUDIT": "Audit",
-        "RETENTION": "Retention"
+        "RETENTION": "Retention",
+        "DAILY_ADVICES": "Daily advices"
     },
     "ADMIN_USER": {
         "ROLES": "Role",
@@ -1373,7 +1374,8 @@
         "MAIL": "Inspect inbound messages and DMARC reports.",
         "LESSONS": "Publish and maintain nutrition academy content.",
         "ACHIEVEMENTS": "Create rewards and manage safe progress conditions.",
-        "MODERATION": "Review reports and resolve content issues."
+        "MODERATION": "Review reports and resolve content issues.",
+        "DAILY_ADVICES": "Dashboard advices and JSON import"
     },
     "ADMIN_ACQUISITION": {
         "COMPARE": "Compared with the preceding period",
@@ -1399,6 +1401,21 @@
         "DAY": "UTC day",
         "HISTORY_NOTE": "Calculated from retained accounts and meal entries. Deletion changes historical values. A backdated meal date does not count as the return date; a login without an entry does not count as activity.",
         "SUBTITLE": "Activation and return to diary use."
+    },
+    "ADMIN_DAILY_ADVICES": {
+        "HELP": "Import a JSON file (version 1, advices array), up to 1000 advices and 5 MB. Each advice requires value (up to 512 characters) and locale (ru or en). Optional: weight (positive integer, default 1), tag (up to 64 characters). Exact duplicates are skipped; existing advices are not replaced. Imported advices become available on the dashboard immediately.",
+        "IMPORT": "Import JSON",
+        "IMPORTING": "Importing…",
+        "EXAMPLE": "Download example JSON",
+        "FILE_TOO_LARGE": "The file must be no larger than 5 MB.",
+        "INVALID_JSON": "The file is not valid JSON.",
+        "INVALID_FORMAT": "Invalid import format. Check the version, number of advices and fields against the example and limits above.",
+        "IMPORT_FAILED": "Import failed. Please try again.",
+        "SUCCESS": "Added: {{imported}}. Duplicates skipped: {{skipped}}.",
+        "LOADING": "Loading advices…",
+        "TOTAL": "Total advices: {{count}}",
+        "WEIGHT": "Weight",
+        "EMPTY": "No advices yet. Import a JSON file to add them."
     },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",

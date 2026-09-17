@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app';
 
-const ADMIN_ROUTE_COUNT = 17;
+const ADMIN_ROUTE_COUNT = 18;
 
 describe('AppComponent', () => {
     let component: AppComponent;

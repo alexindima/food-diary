@@ -16,4 +16,12 @@ public sealed class ModuleRegistrationTests {
         Assert.Contains(services, item => item.ServiceType == typeof(DailyAdvicesDbContext)
             && item.Lifetime == ServiceLifetime.Scoped);
     }
+    [Fact]
+    public void RegistersSeparateScopedWriter() {
+        var services = new ServiceCollection();
+        services.AddDailyAdvicesModule();
+        ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(IDailyAdviceWriteRepository));
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+    }
+
 }

@@ -18,7 +18,7 @@ are reported separately; `none observed` never means proven isolation.
 
 | Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| [Admin](admin.md) | orchestrator | 0 | 9 | 0 | 3 | assembly-isolated |
+| [Admin](admin.md) | orchestrator | 0 | 10 | 0 | 3 | assembly-isolated |
 | [Ai](ai.md) | aggregate-owner | 0 | 2 | 0 | 3 | assembly-isolated |
 | [Billing](billing.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |

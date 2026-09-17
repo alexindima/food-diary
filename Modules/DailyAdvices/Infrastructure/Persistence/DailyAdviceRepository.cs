@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 
 public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAdviceReadModelRepository {
+    public async Task<IReadOnlyList<DailyAdviceReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
+        await advices.AsNoTracking().OrderBy(advice => advice.Locale).ThenBy(advice => advice.Value).ThenBy(advice => advice.Id)
+            .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
         string locale,
         CancellationToken cancellationToken = default) {

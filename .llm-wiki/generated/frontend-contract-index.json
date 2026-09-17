@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 450,
+    "components": 451,
     "componentsWithoutDirectSpecs": 145,
     "inputs": 1411,
     "outputs": 469,
-    "apiCalls": 255,
-    "templatesWithTranslations": 307,
-    "translationKeys": 1766,
-    "consumerEdges": 1082,
+    "apiCalls": 257,
+    "templatesWithTranslations": 308,
+    "translationKeys": 1775,
+    "consumerEdges": 1086,
     "consumedComponents": 290,
-    "unconsumedComponents": 159
+    "unconsumedComponents": 160
   },
   "components": [
     {
@@ -259,6 +259,16 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
+    },
+    {
+      "class": "AdminDailyAdvicesComponent",
+      "selector": "fd-admin-daily-advices",
+      "feature": "admin-daily-advices",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
     },
     {
       "class": "AdminDashboardComponent",
@@ -14105,6 +14115,30 @@
       "resolvedUrlExpression": "this.url"
     },
     {
+      "feature": "admin-daily-advices",
+      "method": "GET",
+      "responseType": "AdminDailyAdvice[]",
+      "urlExpression": "this.baseUrl",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
+      "line": 18,
+      "publicMethod": "getAll",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/daily-advices`",
+      "resolvedUrlExpression": "this.baseUrl"
+    },
+    {
+      "feature": "admin-daily-advices",
+      "method": "POST",
+      "responseType": "AdminDailyAdvicesImportResponse",
+      "urlExpression": "`${this.baseUrl}/import`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
+      "line": 23,
+      "publicMethod": "importAdvices",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/daily-advices`",
+      "resolvedUrlExpression": "`${this.baseUrl}/import`"
+    },
+    {
       "feature": "admin-dashboard",
       "method": "GET",
       "responseType": "AdminDashboardSummary",
@@ -17198,6 +17232,21 @@
         "ADMIN_COMMON.LOADING",
         "ADMIN_COMMON.NEXT",
         "ADMIN_COMMON.PREVIOUS"
+      ]
+    },
+    {
+      "feature": "admin-daily-advices",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
+      "keys": [
+        "ADMIN_DAILY_ADVICES.EMPTY",
+        "ADMIN_DAILY_ADVICES.EXAMPLE",
+        "ADMIN_DAILY_ADVICES.HELP",
+        "ADMIN_DAILY_ADVICES.IMPORT",
+        "ADMIN_DAILY_ADVICES.IMPORTING",
+        "ADMIN_DAILY_ADVICES.LOADING",
+        "ADMIN_DAILY_ADVICES.SUCCESS",
+        "ADMIN_DAILY_ADVICES.TOTAL",
+        "ADMIN_DAILY_ADVICES.WEIGHT"
       ]
     },
     {
@@ -21134,6 +21183,18 @@
       "component": "AdminLoadErrorComponent",
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-daily-advices",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-email-templates",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.html",
       "occurrences": 1,
@@ -23635,6 +23696,21 @@
         "disabled",
         "disabledReason",
         "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-daily-advices",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "type",
+        "variant"
       ],
       "outputsHandled": []
     },
@@ -26822,6 +26898,16 @@
       "consumerFeature": "admin-ai-usage",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.html",
       "occurrences": 6,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "admin-daily-advices",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
+      "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -31638,6 +31724,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "admin-daily-advices",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",

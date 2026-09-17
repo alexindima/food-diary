@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1470,
+    "candidateFields": 1474,
     "credential": 156,
     "identity": 174,
-    "health": 688,
+    "health": 691,
     "financial": 129,
-    "privateContent": 323,
-    "boundaryFiles": 192,
+    "privateContent": 324,
+    "boundaryFiles": 193,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -1114,21 +1114,21 @@
       "name": "BillingPayments",
       "type": "IQueryable<BillingPayment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "financial",
       "name": "BillingSubscriptions",
       "type": "IQueryable<BillingSubscription>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvents",
       "type": "IQueryable<BillingWebhookEvent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 29
+      "line": 30
     },
     {
       "category": "financial",
@@ -2017,21 +2017,21 @@
       "name": "HydrationEntries",
       "type": "IQueryable<HydrationEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 35
+      "line": 36
     },
     {
       "category": "health",
       "name": "WaistEntries",
       "type": "IQueryable<WaistEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 53
+      "line": 54
     },
     {
       "category": "health",
       "name": "WeightEntries",
       "type": "IQueryable<WeightEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 54
+      "line": 55
     },
     {
       "category": "health",
@@ -2175,6 +2175,13 @@
     },
     {
       "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/Admin/Application/Models/AdminDailyAdviceModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
@@ -2298,6 +2305,13 @@
       "type": "int",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
       "line": 46
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "health",
@@ -3117,6 +3131,13 @@
       "type": "int",
       "path": "Modules/DailyAdvices/Application.Abstractions/Models/DailyAdviceReadModel.cs",
       "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "line": 37
     },
     {
       "category": "health",
@@ -8048,24 +8069,31 @@
     },
     {
       "category": "privateContent",
+      "name": "FoodRecognitionImageAssets",
+      "type": "IQueryable<ImageAsset>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 27
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 36
+      "line": 37
     },
     {
       "category": "privateContent",
       "name": "RecipeComments",
       "type": "IQueryable<RecipeComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 43
+      "line": 44
     },
     {
       "category": "privateContent",
       "name": "RecommendationComments",
       "type": "IQueryable<RecommendationComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 47
+      "line": 48
     },
     {
       "category": "privateContent",
@@ -10459,6 +10487,13 @@
         "identity"
       ],
       "fieldCount": 6
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminDashboardRevenuePointHttpResponse.cs",
