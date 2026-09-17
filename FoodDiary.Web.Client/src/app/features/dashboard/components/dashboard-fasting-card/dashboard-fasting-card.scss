@@ -29,8 +29,8 @@
     &__cycle {
         display: flex;
         flex-direction: column;
-        gap: var(--fd-space-lg);
-        padding-bottom: var(--fd-space-lg);
+        gap: var(--fd-space-md);
+        padding-bottom: var(--fd-space-md);
         border-bottom: var(--fd-border-muted);
     }
     &__days {
@@ -45,7 +45,7 @@
             flex: 1 0 100px;
             flex-direction: column;
             align-items: center;
-            gap: var(--fd-space-xs);
+            gap: var(--fd-space-xxs);
             text-align: center;
             &::before {
                 position: absolute;
@@ -86,6 +86,12 @@
     }
     &__today {
         color: var(--fd-color-primary-600);
+    }
+    &__day-caption {
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        color: var(--fd-color-text-muted);
+        white-space: nowrap;
     }
     &__labels {
         display: flex;

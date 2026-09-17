@@ -5110,6 +5110,8 @@
             "INTERMITTENT_FLOW": "{{ fastHours }} ч голодания · {{ eatHours }} ч питания",
             "EXTENDED_FLOW": "Непрерывное голодание · {{ hours }} ч",
             "CYCLIC_FLOW": "Цикл: {{ fastDays }} дн. поста / {{ eatDays }} дн. питания",
+            "FAST_DAY_SHORT": "Пост",
+            "EAT_DAY_SHORT": "Питание",
             "REMAINING": "Осталось",
             "SUPPORT": "Вы в хорошем ритме. Продолжайте прислушиваться к своему телу.",
             "MANAGE": "Управлять сессией",

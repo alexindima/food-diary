@@ -2428,6 +2428,8 @@
             "INTERMITTENT_FLOW": "{{ fastHours }}h fasting · {{ eatHours }}h eating",
             "EXTENDED_FLOW": "Continuous fast · {{ hours }}h",
             "CYCLIC_FLOW": "Cycle: {{ fastDays }} fast day(s) / {{ eatDays }} eat day(s)",
+            "FAST_DAY_SHORT": "Fasting",
+            "EAT_DAY_SHORT": "Eating",
             "REMAINING": "Remaining",
             "SUPPORT": "You are in a steady rhythm. Keep listening to your body.",
             "MANAGE": "Manage session",
@@ -3581,8 +3583,8 @@
                 "CLIENTS_TITLE": "Connected clients",
                 "CLIENTS_DESCRIPTION": "Open a client to review the data they have shared with you.",
                 "BALANCE_LEFT": "remaining",
-            "BALANCE_OVER": "over goal",
-            "HELP_TITLE": "Replay this tour anytime",
+                "BALANCE_OVER": "over goal",
+                "HELP_TITLE": "Replay this tour anytime",
                 "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
             }
         },
@@ -3693,8 +3695,8 @@
                 "RECOMMENDATIONS_TITLE": "Send recommendations",
                 "RECOMMENDATIONS_DESCRIPTION": "Write recommendations and review what you have already sent to this client.",
                 "BALANCE_LEFT": "remaining",
-            "BALANCE_OVER": "over goal",
-            "HELP_TITLE": "Replay this tour anytime",
+                "BALANCE_OVER": "over goal",
+                "HELP_TITLE": "Replay this tour anytime",
                 "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this dashboard."
             }
         }

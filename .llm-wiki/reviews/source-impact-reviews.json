@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "3a72ee9a488973fa4b88aa246b9ac55442ed29794f34d8a8a4b5f49ae7f9334f"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f878cc529173c251fd4a6acbc21d462f2c0a42154864c53c40b483334862c5ce"
+          "sha256": "6b20196e5fa24ccbef8a186289fbb47afc59fe9b903b58a9b4c62f729c520774"
         }
       ],
-      "reason": "Reviewed dashboard priority: current fasting phase is captured once after today snapshot loads, active fasting renders before summary, eating retains default order, historical dates do not promote it. Existing hidden-block settings and navigation are preserved. Thirteen focused tests passed with phase boundary, cyclic eating, ended and future session cases; ESLint, formatting and strict dependency checks passed. No backend or storage changes.",
+      "reason": "Reviewed compact cyclic header presentation: removed duplicate cycle explanation, shortened localized day labels, combined current-day indicator inline and reduced spacing. Timeline and backend scheduling unchanged after inspecting cyclic EatDay semantics. Thirteen focused tests and template/style lint and localization checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "aa37562813724bf17f471872b137ad5076b5ac36",
-      "reviewedAtUtc": "2026-09-17T19:27:00.5891280Z"
+      "gitHead": "b9a1719126fc81c2a69a8745a5f71657e4f46088",
+      "reviewedAtUtc": "2026-09-17T19:35:47.1170759Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8eb26ad45a7d171b37bdeadc82e90ef787cbcb80445aa9dcf4aec0ac1cdf57c1"
+          "sha256": "3a72ee9a488973fa4b88aa246b9ac55442ed29794f34d8a8a4b5f49ae7f9334f"
         }
       ],
-      "reason": "Reviewed fasting timeline redesign and final presentation polish: phase-specific moon and sun watermarks, active phase hierarchy, compact stage description and marker labels. Existing session and navigation contracts are preserved. Component tests, localization checks, template and style lint passed during implementation.",
+      "reason": "Reviewed compact cyclic header presentation: removed duplicate cycle explanation, shortened localized day labels, combined current-day indicator inline and reduced spacing. Timeline and backend scheduling unchanged after inspecting cyclic EatDay semantics. Thirteen focused tests and template/style lint and localization checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
-      "reviewedAtUtc": "2026-09-17T19:14:22.6928076Z"
+      "gitHead": "b9a1719126fc81c2a69a8745a5f71657e4f46088",
+      "reviewedAtUtc": "2026-09-17T19:35:46.1791708Z"
     },
     {
       "pageId": "workflow.query-context",

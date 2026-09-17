@@ -99,7 +99,7 @@ export function buildDashboardFastingCycle(session: FastingSession | null): Dash
     const current = isEating ? fastDays + Math.min(eatDays, phaseDay) : Math.min(fastDays, phaseDay);
     return Array.from({ length: fastDays + eatDays }, (_, index) => ({
         day: index + 1,
-        labelKey: index < fastDays ? 'FASTING.FAST_DAY' : 'FASTING.EAT_DAY',
+        labelKey: index < fastDays ? 'FASTING.REDESIGN.FAST_DAY_SHORT' : 'FASTING.REDESIGN.EAT_DAY_SHORT',
         current: index + 1 === current,
         complete: index + 1 < current,
     }));

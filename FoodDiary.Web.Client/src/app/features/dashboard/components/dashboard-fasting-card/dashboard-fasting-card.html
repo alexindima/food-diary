@@ -11,13 +11,7 @@
                 <section class="dashboard-fasting-card__cycle">
                     <div class="fd-row fd-align-center fd-gap-sm">
                         <fd-ui-icon name="calendar_month" size="lg" />
-                        <div class="fd-stack fd-gap-xxs">
-                            <strong>{{ 'FASTING.CYCLIC_TYPE' | translate }} {{ cycleProtocol() }}</strong>
-                            <span class="fd-ui-caption">{{
-                                'FASTING.REDESIGN.CYCLIC_FLOW'
-                                    | translate: { fastDays: session()?.cyclicFastDays, eatDays: session()?.cyclicEatDays }
-                            }}</span>
-                        </div>
+                        <strong>{{ 'FASTING.CYCLIC_TYPE' | translate }} · {{ cycleProtocol() }}</strong>
                     </div>
                     <ol class="dashboard-fasting-card__days">
                         @for (day of cycleDays(); track day.day) {
@@ -28,10 +22,12 @@
                             >
                                 <span class="dashboard-fasting-card__day-dot" aria-hidden="true"></span>
                                 <strong>{{ 'FASTING.DAY_LABEL' | translate: { day: day.day } }}</strong>
-                                <span>{{ day.labelKey | translate }}</span>
-                                <strong class="dashboard-fasting-card__today" [hidden]="!day.current">{{
-                                    'FASTING.REDESIGN.TODAY' | translate
-                                }}</strong>
+                                <span class="dashboard-fasting-card__day-caption">
+                                    {{ day.labelKey | translate
+                                    }}<strong class="dashboard-fasting-card__today" [hidden]="!day.current">
+                                        · {{ 'FASTING.REDESIGN.TODAY' | translate }}</strong
+                                    >
+                                </span>
                             </li>
                         }
                     </ol>

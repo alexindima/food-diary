@@ -5621,6 +5621,8 @@
             "INTERMITTENT_FLOW": "{{ fastHours }}h fasting · {{ eatHours }}h eating",
             "EXTENDED_FLOW": "Continuous fast · {{ hours }}h",
             "CYCLIC_FLOW": "Cycle: {{ fastDays }} fast day(s) / {{ eatDays }} eat day(s)",
+            "FAST_DAY_SHORT": "Fasting",
+            "EAT_DAY_SHORT": "Eating",
             "REMAINING": "Remaining",
             "SUPPORT": "You are in a steady rhythm. Keep listening to your body.",
             "MANAGE": "Manage session",

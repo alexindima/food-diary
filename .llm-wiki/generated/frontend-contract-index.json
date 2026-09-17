@@ -7,7 +7,7 @@
     "outputs": 469,
     "apiCalls": 255,
     "templatesWithTranslations": 307,
-    "translationKeys": 1767,
+    "translationKeys": 1766,
     "consumerEdges": 1082,
     "consumedComponents": 290,
     "unconsumedComponents": 159
@@ -17890,7 +17890,6 @@
         "FASTING.DAY_LABEL",
         "FASTING.EATING_WINDOW",
         "FASTING.HOURS",
-        "FASTING.REDESIGN.CYCLIC_FLOW",
         "FASTING.REDESIGN.ELAPSED",
         "FASTING.REDESIGN.NOW",
         "FASTING.REDESIGN.PHASE_PROGRESS",
