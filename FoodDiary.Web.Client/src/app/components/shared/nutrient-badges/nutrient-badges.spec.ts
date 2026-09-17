@@ -8,7 +8,8 @@ const PROTEIN_VALUE = 25;
 const FAT_VALUE = 10;
 const CARB_VALUE = 50;
 const FIBER_VALUE = 8;
-const EXPECTED_CHIP_COUNT = 5;
+const EXPECTED_CHIP_COUNT = 4;
+const ALCOHOL_VALUE = 7;
 
 describe('NutrientBadgesComponent', () => {
     let component: NutrientBadgesComponent;
@@ -41,11 +42,11 @@ describe('NutrientBadgesComponent', () => {
         expect(chips.length).toBe(EXPECTED_CHIP_COUNT);
     });
 
-    it('should render edge-to-edge layout by default', () => {
+    it('should hide alcohol when its value is zero', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
-        const badges = el.querySelector('.nutrient-badges');
-        expect(badges?.classList.contains('nutrient-badges--edge-to-edge')).toBe(true);
+        const alcoholChip = el.querySelector('.nutrient-badges__chip--alcohol');
+        expect(alcoholChip).toBeNull();
     });
 
     it('should render protein value', () => {
@@ -76,11 +77,12 @@ describe('NutrientBadgesComponent', () => {
         expect(fiberChip?.textContent).toContain(String(FIBER_VALUE));
     });
 
-    it('should render alcohol value', () => {
+    it('should render positive alcohol value', () => {
+        fixture.componentRef.setInput('alcohol', ALCOHOL_VALUE);
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;
         const alcoholChip = el.querySelector('.nutrient-badges__chip--alcohol .nutrient-badges__chip-value');
-        expect(alcoholChip?.textContent).toContain('0');
+        expect(alcoholChip?.textContent).toContain(String(ALCOHOL_VALUE));
     });
 
     it('should expose input values', () => {

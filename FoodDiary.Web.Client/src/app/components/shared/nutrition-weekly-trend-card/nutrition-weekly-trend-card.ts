@@ -79,7 +79,7 @@ const INSIGHT_CONFIG: Record<NutritionInsightKind, InsightConfig> = {
 };
 
 const METRIC_LABEL_KEYS: Record<NutritionInsightMetric, string> = {
-    calories: 'GENERAL.CALORIES',
+    calories: 'GENERAL.NUTRIENTS.CALORIES',
     proteins: 'GENERAL.NUTRIENTS.PROTEIN',
     fats: 'GENERAL.NUTRIENTS.FAT',
     carbs: 'GENERAL.NUTRIENTS.CARB',
@@ -211,7 +211,7 @@ export class NutritionWeeklyTrendCardComponent {
                 ...(this.interactive() && this.calculateStackCalories(point) <= 0
                     ? [
                           {
-                              label: this.translateService.instant('GENERAL.CALORIES'),
+                              label: this.translateService.instant('GENERAL.NUTRIENTS.CALORIES'),
                               value: Math.max(0, point.calories),
                               color: 'var(--fd-color-text-muted)',
                           },
