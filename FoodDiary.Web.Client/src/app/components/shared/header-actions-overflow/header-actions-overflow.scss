@@ -29,7 +29,6 @@
 
 @media #{variables.$media-tablet} {
     :host(:where(.fd-header-actions-overflow--has-overflow)) {
-        gap: var(--fd-space-xs);
         width: auto;
         min-width: var(--fd-size-control-touch);
 
@@ -46,6 +45,10 @@
         .fd-header-actions-overflow__trigger,
         .fd-header-actions-overflow__primary {
             display: inline-flex;
+        }
+
+        .fd-header-actions-overflow__primary {
+            margin-inline-end: var(--fd-space-xs);
         }
     }
 }

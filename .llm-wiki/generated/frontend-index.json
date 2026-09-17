@@ -3141,7 +3141,7 @@
       "role": "Component",
       "selector": "fd-dashboard-fasting-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.ts",
-      "line": 23
+      "line": 35
     },
     {
       "name": "HydrationCardComponent",

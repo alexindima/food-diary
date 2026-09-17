@@ -13,7 +13,7 @@
                         <fd-ui-icon name="calendar_month" size="lg" />
                         <strong>{{ 'FASTING.CYCLIC_TYPE' | translate }} · {{ cycleProtocol() }}</strong>
                     </div>
-                    <ol class="dashboard-fasting-card__days">
+                    <ol #cycleList class="dashboard-fasting-card__days">
                         @for (day of cycleDays(); track day.day) {
                             <li
                                 [class.is-current]="day.current"

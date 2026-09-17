@@ -8266,11 +8266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.ts",
-      "nonBlankLines": 138,
-      "decisionPoints": 20,
+      "nonBlankLines": 166,
+      "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.76
+      "structuralRiskScore": 37.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-timeline.ts",

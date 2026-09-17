@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import {
+    afterRenderEffect,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    input,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
@@ -27,6 +39,8 @@ export class DashboardFastingCardComponent {
     private readonly now = signal(new Date());
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
     private timerInterval: ReturnType<typeof setInterval> | null = null;
+    private readonly cycleList = viewChild<ElementRef<HTMLOListElement>>('cycleList');
+    private positionedCycle: HTMLOListElement | null = null;
 
     public readonly session = input.required<FastingSession | null>();
     protected readonly timeline = computed(() => buildDashboardFastingTimeline(this.session(), this.elapsedMs()));
@@ -102,6 +116,20 @@ export class DashboardFastingCardComponent {
     });
 
     public constructor() {
+        afterRenderEffect(() => {
+            const list = this.cycleList()?.nativeElement;
+            if (list === undefined || list === this.positionedCycle) {
+                return;
+            }
+            const current = list.querySelector<HTMLElement>('[aria-current="step"]');
+            if (current === null) {
+                return;
+            }
+            const listBounds = list.getBoundingClientRect();
+            const currentBounds = current.getBoundingClientRect();
+            list.scrollLeft += currentBounds.left - listBounds.left + (currentBounds.width - list.clientWidth) / 2;
+            this.positionedCycle = list;
+        });
         effect(() => {
             const session = this.session();
             if (session !== null && session.endedAtUtc === null) {
