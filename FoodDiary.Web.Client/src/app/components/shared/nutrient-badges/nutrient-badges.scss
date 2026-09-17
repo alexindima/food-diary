@@ -308,3 +308,62 @@
         text-align: center;
     }
 }
+
+.nutrient-badges--quiet {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--fd-space-xs) var(--fd-space-md);
+    width: 100%;
+    height: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+
+    .nutrient-badges__chip {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+    }
+
+    .nutrient-badges__unit {
+        display: inline;
+    }
+
+    .nutrient-badges__chip--quality {
+        flex-basis: 100%;
+        justify-content: flex-start;
+        color: var(--fd-color-text-muted);
+    }
+
+    .nutrient-badges__quality-label,
+    .nutrient-badges__quality-bar {
+        display: inline-block;
+        text-transform: none;
+        letter-spacing: normal;
+        font-weight: var(--fd-font-weight-regular);
+    }
+
+    .nutrient-badges__chip--protein {
+        --chip-color: var(--fd-color-primary-600);
+    }
+    .nutrient-badges__chip--carb {
+        --chip-color: var(--fd-color-sky-500);
+    }
+    .nutrient-badges__chip--fat {
+        --chip-color: var(--fd-color-orange-500);
+    }
+    .nutrient-badges__chip--fiber {
+        --chip-color: var(--fd-color-rose-500);
+    }
+}
+
+@container (max-width: 420px) {
+    .nutrient-badges--quiet {
+        row-gap: 0;
+    }
+}

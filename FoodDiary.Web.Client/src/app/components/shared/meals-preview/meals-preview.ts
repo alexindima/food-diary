@@ -25,6 +25,8 @@ export class MealsPreviewComponent {
     public readonly showEmptyState = input<boolean>(true);
     public readonly isAiMealSaving = input(false);
     public readonly aiMealClearToken = input(0);
+    public readonly favoriteLoadingIds = input<ReadonlySet<string>>(new Set());
+    public readonly favoriteToggle = output<{ id: string }>();
     public readonly entries = input.required<MealPreviewEntry[]>();
 
     public readonly viewAll = output();

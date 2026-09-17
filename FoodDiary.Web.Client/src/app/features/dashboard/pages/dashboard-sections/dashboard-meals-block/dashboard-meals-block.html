@@ -19,6 +19,8 @@
             [showEmptyState]="previewState().showEmptyState"
             [isAiMealSaving]="isAiMealSaving()"
             [aiMealClearToken]="aiMealClearToken()"
+            [favoriteLoadingIds]="favoriteLoadingIds()"
+            (favoriteToggle)="favoriteToggle.emit($event)"
             (viewAll)="viewAll.emit()"
             (add)="add.emit($event)"
             (aiMealCreateRequested)="aiMealCreateRequested.emit($event)"

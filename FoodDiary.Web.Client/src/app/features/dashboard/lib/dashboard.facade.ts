@@ -2,16 +2,23 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import type { PartialObserver } from 'rxjs';
-import { firstValueFrom } from 'rxjs';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import type { Observable, PartialObserver } from 'rxjs';
+import { finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
 
+import { NavigationService } from '../../../services/navigation.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../fasting/models/fasting.data';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
+import { FavoriteMealService } from '../../meals/api/favorite-meal.service';
+import { MealService } from '../../meals/api/meal.service';
+import type { MealDetailActionResult } from '../../meals/components/detail/meal-detail-lib/meal-detail.types';
 import type { Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
@@ -36,12 +43,92 @@ import { resolveDashboardNutritionInsight } from './nutrition-insight.policy';
 @Injectable()
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
+    private readonly mealService = inject(MealService);
+    private readonly navigationService = inject(NavigationService);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
+    private readonly favoriteMealService = inject(FavoriteMealService);
+    private readonly toastService = inject(FdUiToastService);
+    public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set());
+    private readonly favoriteStates = signal<Record<string, { isFavorite: boolean; favoriteMealId: string | null }>>({});
     private readonly dashboardService = inject(DashboardService);
     private readonly hydrationService = inject(HydrationService);
     private readonly goalsService = inject(GoalsService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     public readonly layout = inject(DashboardLayoutService);
+    public async openMealDetailsAsync(mealId: string): Promise<void> {
+        const meal = this.meals().find(item => item.id === mealId);
+        if (meal === undefined) {
+            return;
+        }
+        const { MealDetailComponent } = await import('../../meals/components/detail/meal-detail/meal-detail');
+        const result = await firstValueFrom(
+            this.dialogService
+                .open<InstanceType<typeof MealDetailComponent>, Meal, MealDetailActionResult>(MealDetailComponent, {
+                    preset: 'detail',
+                    data: meal,
+                })
+                .afterClosed(),
+        );
+        if (result === undefined) {
+            return;
+        }
+        if (result.favoriteChanged || result.action === 'FavoriteChanged') {
+            this.favoriteStates.set({});
+            this.reload(false);
+        }
+        if (result.action === 'Edit') {
+            await this.navigationService.navigateToMealEditAsync(result.id);
+            return;
+        }
+        if (result.action === 'FavoriteChanged') {
+            return;
+        }
+        try {
+            const targetDate = new Date();
+            await firstValueFrom<Meal | void>(
+                result.action === 'Repeat'
+                    ? this.mealService.repeat(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate))
+                    : this.mealService.deleteById(result.id),
+            );
+            this.invalidation.reportMealMutation();
+            this.reload(false);
+        } catch {
+            this.toastService.error(this.translateService.instant('MEAL_LIST.OPERATION_ERROR_MESSAGE'));
+        }
+    }
+    public toggleMealFavorite(mealId: string): void {
+        const meal = this.meals().find(item => item.id === mealId);
+        if (meal === undefined || this.favoriteLoadingIds().has(mealId)) {
+            return;
+        }
+        this.favoriteLoadingIds.update(ids => new Set([...ids, mealId]));
+        const request$: Observable<{ isFavorite: boolean; favoriteMealId: string | null }> =
+            meal.isFavorite === true
+                ? ((meal.favoriteMealId?.length ?? 0) > 0
+                      ? of(meal.favoriteMealId)
+                      : this.favoriteMealService.getAll().pipe(map(favorites => favorites.find(favorite => favorite.mealId === mealId)?.id))
+                  ).pipe(
+                      switchMap(id =>
+                          id !== undefined && id !== null && id.length > 0 ? this.favoriteMealService.remove(id) : of(undefined),
+                      ),
+                      map(() => ({ isFavorite: false, favoriteMealId: null })),
+                  )
+                : this.favoriteMealService.add(mealId).pipe(map(favorite => ({ isFavorite: true, favoriteMealId: favorite.id })));
+        request$
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.favoriteLoadingIds.update(ids => new Set([...ids].filter(id => id !== mealId)));
+                }),
+            )
+            .subscribe({
+                next: state => {
+                    this.favoriteStates.update(states => ({ ...states, [mealId]: state }));
+                },
+                error: () => this.toastService.error(this.translateService.instant('MEAL_LIST.OPERATION_ERROR_MESSAGE')),
+            });
+    }
 
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
@@ -64,7 +151,9 @@ export class DashboardFacade {
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
     public readonly caloriesBurned = computed(() => this.snapshot()?.caloriesBurned ?? 0);
-    public readonly meals = computed<Meal[]>(() => this.snapshot()?.meals.items ?? []);
+    public readonly meals = computed<Meal[]>(() =>
+        (this.snapshot()?.meals.items ?? []).map(meal => ({ ...meal, ...this.favoriteStates()[meal.id] })),
+    );
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weightKg ?? null);
     public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weightKg ?? null);
     public readonly desiredWeightKg = computed(() => this.snapshot()?.weight.desiredWeightKg ?? null);

@@ -1,11 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject, throwError } from 'rxjs';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { NavigationService } from '../../../services/navigation.service';
+import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
+import { FavoriteMealService } from '../../meals/api/favorite-meal.service';
+import { MealService } from '../../meals/api/meal.service';
+import type { FavoriteMeal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
@@ -16,6 +22,83 @@ const SECOND_HYDRATION_AMOUNT_ML = 150;
 const TDEE_TARGET = 2300;
 const DEFAULT_SNAPSHOT_CALORIES = 1200;
 const UPDATED_SNAPSHOT_CALORIES = 1800;
+
+describe('Dashboard meal details', () => {
+    it('opens the detail dialog and navigates only when Edit is selected', async () => {
+        const { facade, snapshot } = setupFacade();
+        const meal = {
+            id: 'meal-details',
+            date: '2026-03-15',
+            totalCalories: 100,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            totalFiber: 0,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            items: [],
+        };
+        snapshot.meals.items.push(meal);
+        facade.initialize();
+        const dialog = TestBed.inject(FdUiDialogService);
+        const open = vi.spyOn(dialog, 'open');
+        const closedDialog = { afterClosed: (): Observable<undefined> => of(undefined) };
+        open.mockReturnValue(closedDialog as ReturnType<FdUiDialogService['open']>);
+        const navigate = vi.spyOn(TestBed.inject(NavigationService), 'navigateToMealEditAsync');
+        await facade.openMealDetailsAsync(meal.id);
+        expect(open).toHaveBeenCalledWith(expect.any(Function), expect.objectContaining({ preset: 'detail', data: meal }));
+        expect(navigate).not.toHaveBeenCalled();
+        const editDialog = { afterClosed: (): Observable<{ action: string; id: string }> => of({ action: 'Edit', id: meal.id }) };
+        open.mockReturnValue(editDialog as ReturnType<FdUiDialogService['open']>);
+        await facade.openMealDetailsAsync(meal.id);
+        expect(navigate).toHaveBeenCalledWith(meal.id);
+    });
+});
+describe('DashboardFacade favorites', () => {
+    it('toggles a dashboard meal favorite and ignores duplicate clicks while saving', () => {
+        const { facade, snapshot } = setupFacade();
+        snapshot.meals.items.push({
+            id: 'meal-1',
+            date: '2026-03-15',
+            totalCalories: 100,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            totalFiber: 0,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            items: [],
+        });
+        facade.initialize();
+        const service = TestBed.inject(FavoriteMealService);
+        const pending = new Subject<FavoriteMeal>();
+        const add = vi.spyOn(service, 'add').mockReturnValue(pending);
+        const remove = vi.spyOn(service, 'remove').mockReturnValue(of(undefined));
+        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite('meal-1');
+        expect(add).toHaveBeenCalledTimes(1);
+        expect(facade.favoriteLoadingIds().has('meal-1')).toBe(true);
+        pending.next({
+            id: 'favorite-1',
+            mealId: 'meal-1',
+            name: null,
+            createdAtUtc: '2026-03-15',
+            mealDate: '2026-03-15',
+            mealType: null,
+            totalCalories: 100,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            itemCount: 0,
+        });
+        pending.complete();
+        expect(facade.meals()[0].isFavorite).toBe(true);
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+        facade.toggleMealFavorite('meal-1');
+        expect(remove).toHaveBeenCalledWith('favorite-1');
+        expect(facade.meals()[0].isFavorite).toBe(false);
+    });
+});
 
 describe('DashboardFacade loading', () => {
     it('should load snapshot on initialize', () => {
@@ -213,6 +296,11 @@ function setupFacade(): {
     TestBed.configureTestingModule({
         providers: [
             DashboardFacade,
+            { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },
+            { provide: NutritionDataInvalidationService, useValue: { reportMealMutation: vi.fn() } },
+            { provide: MealService, useValue: { repeat: vi.fn(), deleteById: vi.fn() } },
+            { provide: FavoriteMealService, useValue: { add: vi.fn(), remove: vi.fn(), getAll: vi.fn() } },
+            { provide: FdUiToastService, useValue: { error: vi.fn() } },
             { provide: DashboardService, useValue: dashboardService },
             { provide: GoalsService, useValue: goalsService },
             { provide: HydrationService, useValue: hydrationService },

@@ -1,5 +1,5 @@
 <div
-    class="nutrient-badges nutrient-badges--edge-to-edge fd-row fd-wrap"
+    class="nutrient-badges nutrient-badges--quiet fd-row fd-wrap"
     [class.nutrient-badges--with-calories]="calories() !== null"
     [class.nutrient-badges--with-quality]="quality() !== null"
 >
@@ -27,12 +27,14 @@
             {{ fiber() | number: '1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
         </span>
     </span>
-    <span class="nutrient-badges__chip nutrient-badges__chip--alcohol fd-inline-center fd-gap-pill">
-        <fd-ui-icon class="nutrient-badges__chip-icon" name="wine_bar" />
-        <span class="nutrient-badges__chip-value fd-ui-body-sm">
-            {{ alcohol() | number: '1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+    @if (alcohol() > 0) {
+        <span class="nutrient-badges__chip nutrient-badges__chip--alcohol fd-inline-center fd-gap-pill">
+            <fd-ui-icon class="nutrient-badges__chip-icon" name="wine_bar" />
+            <span class="nutrient-badges__chip-value fd-ui-body-sm">
+                {{ alcohol() | number: '1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+            </span>
         </span>
-    </span>
+    }
     @if (quality(); as cardQuality) {
         <span
             class="nutrient-badges__chip nutrient-badges__chip--quality entity-card__quality fd-inline-center fd-gap-pill"
@@ -41,7 +43,6 @@
             [class.nutrient-badges__chip--quality-red]="cardQuality.grade === 'red'"
             [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
         >
-            <fd-ui-icon class="nutrient-badges__chip-icon nutrient-badges__quality-icon" name="verified" />
             <span class="nutrient-badges__quality-label entity-card__quality-label fd-ui-stat-label fd-nowrap">
                 {{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}
             </span>

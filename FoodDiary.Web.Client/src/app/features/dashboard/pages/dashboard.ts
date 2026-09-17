@@ -106,7 +106,7 @@ export class DashboardComponent {
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
-    private readonly facade = inject(DashboardFacade);
+    protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
 
@@ -352,7 +352,7 @@ export class DashboardComponent {
     }
 
     protected openMeal(meal: { id: string }): void {
-        void this.navigationService.navigateToMealEditAsync(meal.id);
+        void this.facade.openMealDetailsAsync(meal.id);
     }
 
     protected addHydration(amount: number): void {

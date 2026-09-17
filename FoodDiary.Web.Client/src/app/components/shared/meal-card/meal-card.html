@@ -1,4 +1,5 @@
 <fd-entity-card
+    [backgroundKey]="meal().id"
     [imageUrl]="coverImage()"
     [collageImages]="collageImages()"
     [imageAlt]="mealTitle()"
@@ -8,8 +9,8 @@
     [favoriteLoading]="favoriteLoading()"
     [favoriteAriaLabel]="favoriteAriaLabelKey() | translate"
     [ownershipIcon]="null"
-    [title]="mealTime()"
-    [titleMuted]="mealTitle()"
+    [title]="mealTitle()"
+    [titleMuted]="mealTime()"
     [description]="description()"
     [comment]="meal().comment"
     [nutrition]="nutrition()"

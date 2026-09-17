@@ -1,4 +1,5 @@
-﻿<fd-media-card class="entity-card" (click)="openCard()">
+<fd-media-card class="entity-card" (click)="openCard()">
+    <span fdMediaCardContent class="entity-card__background" aria-hidden="true" [style.mask-image]="backgroundImage()"></span>
     <button fdMediaCardContent type="button" class="entity-card__open-button" [attr.aria-label]="title()"></button>
     @let previewInteraction = previewInteractionState();
     <div fdMediaCardMedia class="entity-card__media-shell">
@@ -17,24 +18,25 @@
                 <fd-ui-icon class="entity-card__ownership-badge-icon" [name]="icon" />
             </span>
         }
-
-        @if (showFavorite()) {
-            <button
-                type="button"
-                class="entity-card__favorite-button fd-favorite-button fd-inline-center"
-                [class.entity-card__favorite-button--active]="isFavorite()"
-                [class.fd-favorite-button--active]="isFavorite()"
-                [fdUiHint]="favoriteAriaLabel()"
-                [attr.aria-label]="favoriteAriaLabel()"
-                [disabled]="favoriteLoading()"
-                (click)="toggleFavorite($event)"
-                (keydown.enter)="stopCardKeyboardEvent($event)"
-                (keydown.space)="stopCardKeyboardEvent($event)"
-            >
-                <fd-ui-icon class="entity-card__favorite-button-icon" [name]="favoriteIcon()" />
-            </button>
-        }
     </div>
+
+    @if (showFavorite()) {
+        <button
+            fdMediaCardContent
+            type="button"
+            class="entity-card__favorite-button fd-favorite-button fd-inline-center"
+            [class.entity-card__favorite-button--active]="isFavorite()"
+            [class.fd-favorite-button--active]="isFavorite()"
+            [fdUiHint]="favoriteAriaLabel()"
+            [attr.aria-label]="favoriteAriaLabel()"
+            [disabled]="favoriteLoading()"
+            (click)="toggleFavorite($event)"
+            (keydown.enter)="stopCardKeyboardEvent($event)"
+            (keydown.space)="stopCardKeyboardEvent($event)"
+        >
+            <fd-ui-icon class="entity-card__favorite-button-icon" [name]="favoriteIcon()" />
+        </button>
+    }
 
     <fd-entity-card-body
         fdMediaCardContent

@@ -1,4 +1,4 @@
-﻿<section class="meals-preview fd-stack fd-gap-card-content">
+<section class="meals-preview fd-stack fd-gap-card-content">
     <div class="meals-preview__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-card-header">
         <h2 class="meals-preview__title fd-ui-title-md">{{ titleText() || (titleKey() | translate) }}</h2>
         @if (showViewAll()) {
@@ -20,6 +20,8 @@
                     [expandedAiSlot]="expandedAiSlot()"
                     [isAiMealSaving]="isAiMealSaving()"
                     [aiMealClearToken]="aiMealClearToken()"
+                    [favoriteLoadingIds]="favoriteLoadingIds()"
+                    (favoriteToggle)="favoriteToggle.emit($event)"
                     (open)="open.emit($event)"
                     (add)="add.emit($event)"
                     (aiToggle)="toggleAi($event)"

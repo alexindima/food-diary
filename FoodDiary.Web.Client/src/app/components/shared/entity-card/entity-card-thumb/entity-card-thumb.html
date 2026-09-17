@@ -1,5 +1,6 @@
 <div
     class="entity-card__thumb fd-place-center"
+    [class.entity-card__thumb--placeholder]="isPlaceholder()"
     [class.entity-card__thumb--has-image]="!!imageUrl() || collage().hasImages"
     [class.entity-card__thumb--previewable]="hasPreviewImage()"
     [fdUiHint]="previewInteraction().hint"

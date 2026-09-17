@@ -61,12 +61,12 @@
         'media content action'
         'media nutrients nutrients';
     grid-template-columns: clamp(112px, 14cqi, 136px) minmax(0, 1fr) minmax(clamp(64px, 6cqi, 88px), auto);
-    grid-template-rows: minmax(72px, 1fr) var(--fd-size-control-touch);
-    gap: 0;
+    grid-template-rows: auto auto;
+    gap: var(--fd-space-sm) var(--fd-space-md);
     padding: 0;
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-surface-solid);
+    background: var(--fd-bg-card-surface);
     box-shadow: var(--fd-shadow-lg);
 
     &:hover {
@@ -78,8 +78,8 @@
         inline-size: 100%;
         min-inline-size: 100%;
         block-size: 100%;
-        align-self: stretch;
-        border-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
+        align-self: start;
+        border-radius: var(--fd-radius-md);
     }
 
     .media-card__content {
@@ -159,11 +159,11 @@
         grid-template-columns: auto minmax(0, 1fr) minmax(clamp(var(--fd-size-control-chip), 10cqi, 72px), auto);
         grid-template-rows: auto minmax(var(--fd-size-control-touch), auto);
         column-gap: var(--fd-space-sm);
-        row-gap: 0;
+        row-gap: var(--fd-space-sm) var(--fd-space-md);
         padding: 0;
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-surface-solid);
+        background: var(--fd-bg-card-surface);
         box-shadow: var(--fd-shadow-sm);
 
         &:hover {
@@ -176,7 +176,7 @@
             min-inline-size: clamp(68px, 20cqi, 80px);
             block-size: clamp(68px, 20cqi, 80px);
             align-self: start;
-            border-radius: var(--fd-radius-card) 0 0 0;
+            border-radius: var(--fd-radius-md);
         }
 
         .media-card__content {
@@ -205,4 +205,9 @@
             padding: 0;
         }
     }
+}
+
+.fd-media-card--raised:has(.media-card__actions:empty),
+.fd-media-card--density-compact.fd-media-card--raised {
+    padding: var(--fd-space-md);
 }

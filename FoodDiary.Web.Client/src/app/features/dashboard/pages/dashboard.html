@@ -133,11 +133,13 @@
                             [previewState]="mealsPreviewState()"
                             [isAiMealSaving]="isAiMealSaving()"
                             [aiMealClearToken]="aiMealClearToken()"
+                            [favoriteLoadingIds]="facade.favoriteLoadingIds()"
                             (blockToggle)="layout.toggleBlock('meals')"
                             (viewAll)="manageMealsAsync()"
                             (add)="addMealAsync($event)"
                             (aiMealCreateRequested)="onAiMealCreateRequested($event)"
                             (open)="openMeal($event)"
+                            (favoriteToggle)="facade.toggleMealFavorite($event.id)"
                         />
 
                         <fd-dashboard-fasting-block

@@ -24,6 +24,22 @@
     }
 }
 
+.entity-card__background {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: -70px;
+    width: 200px;
+    height: 75%;
+    max-height: 200px;
+    transform: translateY(-50%);
+    background: var(--fd-color-text);
+    opacity: 0.035;
+    mask-size: contain;
+    mask-position: right center;
+    mask-repeat: no-repeat;
+    pointer-events: none;
+}
+
 .entity-card__media-shell:has([role='button']),
 fd-entity-card-actions {
     position: relative;
@@ -33,7 +49,7 @@ fd-entity-card-actions {
 .entity-card__thumb {
     width: 100%;
     height: 100%;
-    background: var(--fd-bg-brand-soft);
+    background: var(--fd-bg-surface-muted);
 
     img {
         width: 100%;
@@ -129,14 +145,21 @@ fd-entity-card-actions {
 }
 
 .entity-card__title-block {
+    padding-inline-end: var(--fd-size-control-sm);
     grid-area: content;
     align-self: start;
-    padding: var(--fd-space-card-profile-gap) var(--fd-space-lg) 0;
     align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--fd-space-xs) var(--fd-space-sm);
+    width: 100%;
+    padding: 0 var(--fd-size-control-sm) 0 0;
 }
 
 .entity-card__name-row {
     overflow: hidden;
+    grid-area: 1 / 1;
+    flex-wrap: wrap;
 }
 
 .entity-card__ownership-badge {
@@ -167,20 +190,19 @@ fd-entity-card-actions {
     --entity-card-favorite-size: max(24px, var(--fd-size-control-xs));
     appearance: none;
     position: absolute;
-    top: var(--fd-space-xs);
-    right: var(--fd-space-sm);
-    z-index: 1;
+    top: var(--fd-space-md);
+    right: var(--fd-space-md);
+    z-index: 2;
     width: var(--entity-card-favorite-size);
     min-width: var(--entity-card-favorite-size);
     height: var(--entity-card-favorite-size);
     padding: 0;
-    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 72%, transparent);
+    border: 0;
     border-radius: var(--fd-radius-pill);
-    background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, transparent);
+    background: transparent;
     color: var(--fd-color-favorite-muted);
     cursor: pointer;
     box-shadow: var(--fd-shadow-none);
-    backdrop-filter: blur(4px);
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
@@ -202,6 +224,7 @@ fd-entity-card-actions {
     }
 
     &:focus-visible {
+        background: var(--fd-bg-surface-raised);
         outline: none;
         box-shadow: var(--fd-shadow-button-focus-ring);
     }
@@ -330,13 +353,14 @@ fd-entity-card-actions {
     }
 
     .entity-card__title-block {
-        padding: var(--fd-space-xs) 0 0;
+        padding-inline-end: var(--fd-size-control-sm);
+        padding: 0 var(--fd-size-control-sm) 0 0;
     }
 
     .entity-card__favorite-button {
         --entity-card-favorite-size: max(24px, var(--fd-size-control-micro));
-        top: var(--fd-space-xxs);
-        right: var(--fd-space-xs);
+        top: var(--fd-space-md);
+        right: var(--fd-space-md);
     }
 
     .entity-card__ownership-badge {
@@ -397,5 +421,56 @@ fd-entity-card-actions {
 @container (max-width: 420px) {
     .entity-card__comment {
         display: none;
+    }
+}
+
+.entity-card__calories {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--fd-space-xxs);
+    grid-area: 1 / 2;
+    white-space: nowrap;
+    color: var(--fd-color-text);
+    font-weight: var(--fd-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+}
+
+.entity-card__description,
+.entity-card__comment {
+    grid-column: 1 / -1;
+    font-weight: var(--fd-font-weight-regular);
+}
+
+.entity-card__thumb--placeholder img {
+    object-fit: contain;
+    padding: 12%;
+    box-sizing: border-box;
+    opacity: 0.8;
+}
+
+.entity-card__calories-unit {
+    font-size: var(--fd-text-helper-size);
+    color: var(--fd-color-text-muted);
+    font-weight: var(--fd-font-weight-regular);
+}
+
+@container (max-width: 420px) {
+    .entity-card__title-block:has(.entity-card__title-muted) {
+        .entity-card__name-row {
+            display: contents;
+        }
+
+        .entity-card__title-muted {
+            grid-area: 1 / 1;
+            align-self: center;
+        }
+
+        .entity-card__name {
+            grid-area: 2 / 1 / auto / -1;
+        }
+    }
+
+    .entity-card__summary-row {
+        padding-top: var(--fd-space-sm);
     }
 }

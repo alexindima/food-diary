@@ -40,6 +40,7 @@ export class EntityCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
 
+    public readonly backgroundKey = input('');
     public readonly imageUrl = input<string | null | undefined>(null);
     public readonly collageImages = input<readonly EntityCardCollageImage[]>([]);
     public readonly imageAlt = input.required<string>();
@@ -72,6 +73,18 @@ export class EntityCardComponent {
     public readonly action = output();
 
     protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    protected readonly backgroundImage = computed(() => {
+        const images = ['2026647', '30393', '356519', '1295232', '23425', '1751148', '1978223', '41004', '576534'];
+        const key = this.backgroundKey();
+        // Deterministic variety keeps the decoration stable across renders and SSR hydration.
+        const offsetBasis = 2166136261;
+        const prime = 16777619;
+        let hash = offsetBasis;
+        for (const character of key) {
+            hash = Math.imul(hash ^ (character.codePointAt(0) ?? 0), prime);
+        }
+        return `url("assets/images/card-backgrounds/${images[(hash >>> 0) % images.length]}.svg")`;
+    });
     protected readonly normalizedImageUrl = computed(() => {
         const imageUrl = this.imageUrl()?.trim() ?? '';
         return imageUrl.length > 0 ? imageUrl : null;

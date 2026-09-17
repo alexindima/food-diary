@@ -1,5 +1,9 @@
 <div class="entity-card__content fd-grid fd-gap-entity-card-content fd-min-w-0">
     <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
+        <div class="entity-card__calories fd-ui-body-sm">
+            <span class="entity-card__calories-value">{{ calories() | number: '1.0-0' }}</span>
+            <span class="entity-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+        </div>
         <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
             <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
             @if (titleMuted(); as mutedTitle) {
@@ -29,7 +33,6 @@
                     [carbs]="nutrition().carbs"
                     [fiber]="nutrition().fiber"
                     [alcohol]="nutrition().alcohol"
-                    [calories]="calories()"
                     [quality]="quality()"
                 />
             </div>

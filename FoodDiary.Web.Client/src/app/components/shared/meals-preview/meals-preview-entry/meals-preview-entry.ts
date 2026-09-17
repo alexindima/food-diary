@@ -21,6 +21,8 @@ export class MealsPreviewEntryComponent {
     public readonly expandedAiSlot = input<string | null>(null);
     public readonly isAiMealSaving = input(false);
     public readonly aiMealClearToken = input(0);
+    public readonly favoriteLoadingIds = input<ReadonlySet<string>>(new Set());
+    public readonly favoriteToggle = output<{ id: string }>();
 
     public readonly open = output<MealCardItem>();
     public readonly add = output<string | null | undefined>();

@@ -1,5 +1,6 @@
 <fd-entity-card
     imageIcon="restaurant_menu"
+    [backgroundKey]="recipe().id ?? ''"
     [imageUrl]="imageUrl()"
     [imageAlt]="recipe().name"
     [previewable]="hasPreviewImage()"
