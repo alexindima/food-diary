@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective,FdUiIconComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-dashboard-widget-header',
-    imports: [FdUiIconComponent],
+    imports: [FdUiIconComponent, FdUiButtonComponent, FdUiHintDirective],
     templateUrl: './dashboard-widget-header.html',
     styleUrl: './dashboard-widget-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardWidgetHeaderComponent {
     public readonly title = input.required<string>();
+    public readonly helpText = input<string | null>(null);
     public readonly description = input<string | null>(null);
     public readonly iconName = input<string | null>(null);
     public readonly iconLabel = input<string | null>(null);

@@ -56,11 +56,15 @@
                         @if (category.values.length > 0) {
                             <div
                                 class="fd-ui-bar-chart__categorical-bar"
-                                role="img"
                                 tabindex="0"
+                                [attr.role]="selectable() ? 'button' : 'img'"
+                                [attr.aria-pressed]="selectable() ? !!category.highlighted : null"
                                 [class.fd-ui-bar-chart__categorical-bar--grouped]="layout() === 'grouped'"
                                 [style.grid-template-columns]="categoryGridTemplate(category.values.length)"
                                 [attr.aria-label]="category.ariaLabel"
+                                (click)="selectable() && categorySelected.emit($index)"
+                                (keydown.enter)="selectable() && categorySelected.emit($index)"
+                                (keydown.space)="selectable() && categorySelected.emit($index); $event.preventDefault()"
                             >
                                 @for (item of category.values; track $index) {
                                     <span

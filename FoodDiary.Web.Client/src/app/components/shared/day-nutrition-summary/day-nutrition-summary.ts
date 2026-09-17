@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
 import { LocalizedNumberPipe } from '../../../shared/i18n/localized-number.pipe';
@@ -37,7 +37,7 @@ type DayNutritionSummaryData = {
 
 @Component({
     selector: 'fd-day-nutrition-summary',
-    imports: [LocalizedNumberPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent, FdUiButtonComponent, FdUiHintDirective],
+    imports: [LocalizedNumberPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent, FdUiButtonComponent],
     templateUrl: './day-nutrition-summary.html',
     styleUrl: './day-nutrition-summary.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,7 +88,7 @@ export class DayNutritionSummaryComponent {
         if (!Number.isFinite(dailyConsumed) || !Number.isFinite(dailyGoal) || dailyGoal <= 0) {
             return 0;
         }
-        return Math.min(PERCENT, Math.max(0, dailyConsumed / dailyGoal * PERCENT));
+        return Math.min(PERCENT, Math.max(0, (dailyConsumed / dailyGoal) * PERCENT));
     });
     protected readonly calorieDifference = computed(() => Math.abs(this.data().dailyGoal - this.data().dailyConsumed));
     protected readonly calorieComparisonText = computed(() => {
@@ -150,11 +150,7 @@ export class DayNutritionSummaryComponent {
                     const y = (rect.top + rect.height / half - chart.top) * scale + viewBoxOffset;
                     const dx = x - bar.anchor.x;
                     const dy = y - bar.anchor.y;
-                    const inset = Math.min(
-                        ((rect.width / half) * scale) / Math.abs(dx),
-                        ((rect.height / half) * scale) / Math.abs(dy),
-                        1,
-                    );
+                    const inset = Math.min(((rect.width / half) * scale) / Math.abs(dx), ((rect.height / half) * scale) / Math.abs(dy), 1);
                     ends[bar.id] = { x: x - dx * inset, y: y - dy * inset };
                 });
                 this.connectorEnds.set(ends);

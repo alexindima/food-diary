@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 export type FdUiBarChartItem = {
     label: string;
@@ -74,6 +74,8 @@ const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-text-subtle)';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiBarChartComponent {
+    public readonly selectable = input(false);
+    public readonly categorySelected = output<number>();
     public readonly title = input<string>();
     public readonly items = input<readonly FdUiBarChartItem[]>([]);
     public readonly emptyLabel = input('No data');

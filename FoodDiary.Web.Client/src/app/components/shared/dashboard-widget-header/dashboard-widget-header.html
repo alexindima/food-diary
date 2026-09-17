@@ -10,7 +10,12 @@
     }
 
     <div class="dashboard-widget-header__copy fd-stack fd-gap-xxs fd-min-w-0">
-        <div class="dashboard-widget-header__title fd-ui-card-title">{{ title() }}</div>
+        <div class="fd-row fd-align-center fd-gap-xs">
+            <div class="dashboard-widget-header__title fd-ui-card-title">{{ title() }}</div>
+            @if (helpText(); as help) {
+                <fd-ui-button variant="ghost" size="sm" icon="info" [ariaLabel]="help" [fdUiHint]="help" />
+            }
+        </div>
 
         @if (description()) {
             <div class="dashboard-widget-header__description fd-ui-caption">{{ description() }}</div>

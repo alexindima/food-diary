@@ -151,6 +151,8 @@
                         />
 
                         <fd-nutrition-weekly-trend-card
+                            [interactive]="true"
+                            [currentDate]="selectedDate()"
                             [points]="weeklyCalories()"
                             [dailyGoal]="snapshot()?.dailyGoal ?? 0"
                             [insight]="nutritionInsight()"

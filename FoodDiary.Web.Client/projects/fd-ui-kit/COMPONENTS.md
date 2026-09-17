@@ -103,6 +103,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `emptyLabel?: string`
 - `showLabels?: boolean`
 - `categories?: FdUiBarChartCategory[]`
+- `selectable?: boolean` — makes category columns keyboard-accessible toggle buttons; `categorySelected` emits the clicked category index. Set `highlighted` on the selected category.
 - `layout?: 'single' | 'grouped' | 'stacked'`
 - `axisUnit?: string`
 - `axisTicks?: number[]`
@@ -117,6 +118,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `--fd-bar-chart-label-height`
 - `--fd-bar-chart-reference-label-space`
 - `--fd-bar-chart-bar-width`
+- `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` — categorical axis unit typography.
 - `--fd-bar-chart-group-width`
 
 #### `fd-ui-line-chart`

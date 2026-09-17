@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     type FdUiBarChartCategory,
@@ -48,7 +49,9 @@ type TrendRange = typeof SHORT_TREND_DAYS | typeof DEFAULT_TREND_DAYS;
 type TrendPoint = {
     date: string;
     label: string;
+    fullDateLabel: string;
     dayLabel: string;
+    dateKey: string;
     monthLabel: string;
     calories: number;
     proteins: number;
@@ -85,7 +88,7 @@ const METRIC_LABEL_KEYS: Record<NutritionInsightMetric, string> = {
 
 @Component({
     selector: 'fd-nutrition-weekly-trend-card',
-    imports: [FdUiBarChartComponent, FdUiIconComponent, FdUiSelectComponent, TranslatePipe, DashboardWidgetFrameComponent],
+    imports: [RouterLink, FdUiBarChartComponent, FdUiIconComponent, FdUiSelectComponent, TranslatePipe, DashboardWidgetFrameComponent],
     templateUrl: './nutrition-weekly-trend-card.html',
     styleUrl: './nutrition-weekly-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,6 +105,25 @@ export class NutritionWeeklyTrendCardComponent {
     public readonly insight = input.required<NutritionTrendInsight>();
     public readonly isToday = input(true);
     public readonly details = output();
+    public readonly interactive = input(false);
+    public readonly currentDate = input<Date | null>(null);
+    protected readonly currentDateKey = computed(() => {
+        const date = this.currentDate();
+        return date === null ? null : formatDate(date, 'yyyy-MM-dd', 'en-US');
+    });
+    protected readonly selectedDate = signal<string | null>(null);
+    protected readonly selectedPoint = computed(
+        () => this.trendPoints().find(point => point.date === this.selectedDate()) ?? this.trendPoints().at(-1),
+    );
+    protected selectDay(index: number): void {
+        this.selectedDate.set(this.trendPoints()[index]?.date ?? null);
+    }
+    protected readonly selectedMetrics = computed(() => {
+        const point = this.selectedPoint();
+        return point === undefined
+            ? []
+            : (['proteins', 'fats', 'carbs', 'fiber'] as const).map(key => ({ key, label: METRIC_LABEL_KEYS[key], value: point[key] }));
+    });
 
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
     protected readonly rangeOptions = computed<Array<FdUiSelectOption<TrendRange>>>(() => {
@@ -141,7 +163,10 @@ export class NutritionWeeklyTrendCardComponent {
     protected readonly hasChartData = computed(() => this.visibleSourcePoints().some(point => point.calories > 0));
     private readonly visibleSourcePoints = computed(() => this.points().slice(-this.visibleDays()));
     protected readonly maxCalories = computed(() => {
-        const maxStack = Math.max(0, ...this.visibleSourcePoints().map(point => this.calculateStackCalories(point)));
+        const maxStack = Math.max(
+            0,
+            ...this.visibleSourcePoints().map(point => (this.interactive() ? point.calories : this.calculateStackCalories(point))),
+        );
         const upperBound = Math.max(this.dailyGoal(), maxStack);
         return Math.max(CALORIE_SCALE_STEP, Math.ceil(upperBound / CALORIE_SCALE_STEP) * CALORIE_SCALE_STEP);
     });
@@ -162,9 +187,11 @@ export class NutritionWeeklyTrendCardComponent {
             const fiber = point.fiber ?? 0;
             return {
                 date: point.date,
+                dateKey: formatDate(point.date, 'yyyy-MM-dd', locale),
                 label: formatDate(point.date, 'd MMM', locale),
+                fullDateLabel: formatDate(point.date, 'd MMMM', locale),
                 dayLabel: formatDate(point.date, 'd', locale),
-                monthLabel: formatDate(point.date, 'MMM', locale),
+                monthLabel: formatDate(point.date, this.interactive() ? 'EEE' : 'MMM', locale),
                 calories: point.calories,
                 proteins,
                 fats,
@@ -177,28 +204,37 @@ export class NutritionWeeklyTrendCardComponent {
     protected readonly barChartCategories = computed<readonly FdUiBarChartCategory[]>(() => {
         this.translationChange();
         return this.trendPoints().map(point => ({
-            label: `${point.dayLabel}\n${point.monthLabel}`,
+            label: this.interactive() ? `${point.monthLabel}\n${point.dayLabel}` : `${point.dayLabel}\n${point.monthLabel}`,
             ariaLabel: `${point.label}: ${point.calories}`,
-            highlighted: point.isLatest,
+            highlighted: this.interactive() ? point.date === this.selectedPoint()?.date : point.isLatest,
             values: [
+                ...(this.interactive() && this.calculateStackCalories(point) <= 0
+                    ? [
+                          {
+                              label: this.translateService.instant('GENERAL.CALORIES'),
+                              value: Math.max(0, point.calories),
+                              color: 'var(--fd-color-text-muted)',
+                          },
+                      ]
+                    : []),
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.PROTEIN'),
-                    value: point.proteins * PROTEIN_CALORIES_PER_GRAM,
+                    value: this.segmentCalories(point, point.proteins * PROTEIN_CALORIES_PER_GRAM),
                     color: 'var(--fd-color-primary-500)',
                 },
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.FAT'),
-                    value: point.fats * FAT_CALORIES_PER_GRAM,
+                    value: this.segmentCalories(point, point.fats * FAT_CALORIES_PER_GRAM),
                     color: 'var(--fd-color-orange-500)',
                 },
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.CARB'),
-                    value: point.carbs * CARB_CALORIES_PER_GRAM,
+                    value: this.segmentCalories(point, point.carbs * CARB_CALORIES_PER_GRAM),
                     color: 'var(--fd-color-sky-500)',
                 },
                 {
                     label: this.translateService.instant('SHARED.NUTRIENTS_SUMMARY.FIBER'),
-                    value: point.fiber * FIBER_CALORIES_PER_GRAM,
+                    value: this.segmentCalories(point, point.fiber * FIBER_CALORIES_PER_GRAM),
                     color: 'var(--fd-color-rose-500)',
                 },
             ],
@@ -221,6 +257,11 @@ export class NutritionWeeklyTrendCardComponent {
         new Intl.NumberFormat(resolveTranslateLanguage(this.translateService), { maximumFractionDigits: 0 }).format(value);
     protected changeVisibleDays(value: TrendRange | null | undefined): void {
         this.visibleDays.set(value === SHORT_TREND_DAYS ? SHORT_TREND_DAYS : DEFAULT_TREND_DAYS);
+    }
+
+    private segmentCalories(point: NutritionTrendPoint, contribution: number): number {
+        const total = this.calculateStackCalories(point);
+        return this.interactive() && total > 0 ? (contribution / total) * Math.max(0, point.calories) : contribution;
     }
 
     private calculateStackCalories(point: NutritionTrendPoint): number {

@@ -1,5 +1,8 @@
 <section class="nutrition-trend" [attr.aria-label]="'NUTRITION_TREND.TITLE' | translate">
-    <fd-dashboard-widget-frame [title]="'NUTRITION_TREND.TITLE' | translate">
+    <fd-dashboard-widget-frame
+        [title]="'NUTRITION_TREND.TITLE' | translate"
+        [helpText]="interactive() ? ('NUTRITION_TREND.STACK_NOTE' | translate) : null"
+    >
         <fd-ui-select
             fdDashboardWidgetHeaderEnd
             class="nutrition-trend__range"
@@ -11,11 +14,12 @@
             (valueChange)="changeVisibleDays($event)"
         />
 
-        <div class="nutrition-trend__content" [class.nutrition-trend__content--empty]="!hasChartData()">
-            <div class="nutrition-trend__chart" [hidden]="!hasChartData()">
+        <div class="nutrition-trend__content" [class.nutrition-trend__content--empty]="!hasChartData() && !interactive()">
+            <div class="nutrition-trend__chart" [hidden]="!hasChartData() && !interactive()">
                 <fd-ui-bar-chart
                     class="nutrition-trend__bar-chart"
                     layout="stacked"
+                    [selectable]="interactive()"
                     [title]="'NUTRITION_TREND.TITLE' | translate"
                     [categories]="barChartCategories()"
                     [axisUnit]="'GENERAL.UNITS.KCAL' | translate"
@@ -23,6 +27,7 @@
                     [axisValueFormatter]="formatChartCalories"
                     [scaleMaximum]="maxCalories()"
                     [referenceLines]="barChartReferenceLines()"
+                    (categorySelected)="selectDay($event)"
                 />
                 <div class="nutrition-trend__legend fd-row fd-ui-caption">
                     <span
@@ -44,26 +49,70 @@
                 </div>
             </div>
 
-            @let insight = insightView();
-            <aside
-                class="nutrition-trend__insight"
-                [class.nutrition-trend__insight--positive]="insight.tone === 'positive'"
-                [class.nutrition-trend__insight--neutral]="insight.tone === 'neutral'"
-            >
-                <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
-                    <span class="nutrition-trend__insight-icon fd-place-center"><fd-ui-icon [name]="insight.icon" /></span>
-                    <h3 class="fd-ui-action-text">{{ insight.title }}</h3>
-                </div>
-                @if (insight.comparison; as comparison) {
-                    <p class="fd-ui-body-sm fd-ui-text-muted">{{ comparison }}</p>
+            @if (interactive()) {
+                @if (selectedPoint(); as day) {
+                    <aside class="nutrition-trend__day fd-stack fd-gap-md" aria-live="polite">
+                        <div class="nutrition-trend__day-header fd-row fd-align-center fd-justify-between fd-gap-sm">
+                            <div class="fd-ui-meta-text">{{ day.fullDateLabel }}</div>
+                            <a
+                                class="nutrition-trend__open-day fd-inline-center"
+                                routerLink="/dashboard"
+                                [hidden]="day.dateKey === currentDateKey()"
+                                [queryParams]="{ date: day.dateKey }"
+                                [attr.aria-label]="`${('NUTRITION_TREND.OPEN_DAY' | translate)}: ${day.fullDateLabel}`"
+                                ><fd-ui-icon name="open_in_new"
+                            /></a>
+                        </div>
+                        <div class="fd-stack fd-gap-xs">
+                            <div class="nutrition-trend__day-calories">
+                                {{ formatChartCalories(day.calories) }}
+                                <span class="fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                            </div>
+                            <div [hidden]="day.calories !== 0">
+                                <p class="fd-ui-body-sm">{{ 'NUTRITION_TREND.DAY_EMPTY' | translate }}</p>
+                            </div>
+                            <div [hidden]="day.calories === 0">
+                                <p class="fd-ui-body-sm fd-ui-text-muted">
+                                    {{
+                                        'NUTRITION_TREND.DAY_GOAL'
+                                            | translate
+                                                : { value: formatChartCalories(dailyGoal() > 0 ? (day.calories / dailyGoal()) * 100 : 0) }
+                                    }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="nutrition-trend__day-metrics">
+                            @for (metric of selectedMetrics(); track metric.key) {
+                                <div [class]="`nutrition-trend__metric nutrition-trend__metric--${metric.key}`">
+                                    <span class="fd-ui-caption">{{ metric.label | translate }}</span>
+                                    <strong>{{ formatChartCalories(metric.value) }} {{ 'GENERAL.UNITS.G' | translate }}</strong>
+                                </div>
+                            }
+                        </div>
+                    </aside>
                 }
-                <p class="fd-ui-body-sm fd-ui-text-muted">{{ insight.hint }}</p>
-                @if (insight.showDetails) {
-                    <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
-                        {{ 'NUTRITION_TREND.DETAILS' | translate }}
-                    </button>
-                }
-            </aside>
+            } @else {
+                @let insight = insightView();
+                <aside
+                    class="nutrition-trend__insight"
+                    [class.nutrition-trend__insight--positive]="insight.tone === 'positive'"
+                    [class.nutrition-trend__insight--neutral]="insight.tone === 'neutral'"
+                >
+                    <div class="nutrition-trend__insight-heading fd-row fd-gap-sm">
+                        <span class="nutrition-trend__insight-icon fd-place-center"><fd-ui-icon [name]="insight.icon" /></span>
+                        <h3 class="fd-ui-action-text">{{ insight.title }}</h3>
+                    </div>
+                    @if (insight.comparison; as comparison) {
+                        <p class="fd-ui-body-sm fd-ui-text-muted">{{ comparison }}</p>
+                    }
+                    <p class="fd-ui-body-sm fd-ui-text-muted">{{ insight.hint }}</p>
+                    @if (insight.showDetails) {
+                        <button type="button" class="nutrition-trend__details fd-ui-action-text" (click)="details.emit()">
+                            {{ 'NUTRITION_TREND.DETAILS' | translate }}
+                        </button>
+                    }
+                </aside>
+            }
         </div>
     </fd-dashboard-widget-frame>
 </section>

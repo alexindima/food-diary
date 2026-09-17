@@ -1,13 +1,8 @@
 <section class="day-summary" [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
-    <fd-dashboard-widget-frame [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate">
-        <fd-ui-button
-            fdDashboardWidgetHeaderEnd
-            variant="ghost"
-            size="sm"
-            icon="info"
-            [ariaLabel]="'DASHBOARD.DAY_SUMMARY.HELP_TITLE' | translate"
-            [fdUiHint]="'DASHBOARD.DAY_SUMMARY.PETAL_LEGEND' | translate"
-        />
+    <fd-dashboard-widget-frame
+        [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate"
+        [helpText]="'DASHBOARD.DAY_SUMMARY.PETAL_LEGEND' | translate"
+    >
         <div class="day-summary__layout">
             <div #visual class="day-summary__visual">
                 <!-- A data-shaped SVG is local to this summary; UI-kit rings encode a single metric. -->

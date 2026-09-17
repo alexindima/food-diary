@@ -11,6 +11,7 @@ import { DashboardWidgetHeaderComponent } from '../dashboard-widget-header/dashb
 })
 export class DashboardWidgetFrameComponent {
     public readonly title = input.required<string>();
+    public readonly helpText = input<string | null>(null);
     public readonly description = input<string | null>(null);
     public readonly iconName = input<string | null>(null);
     public readonly iconLabel = input<string | null>(null);

@@ -6,6 +6,9 @@
     --fd-bar-chart-bar-width: min(48px, 72%);
     --fd-bar-chart-group-width: min(76px, 92%);
     --fd-bar-chart-edge-category-width: var(--fd-bar-chart-bar-width);
+    --fd-bar-chart-unit-style: normal;
+    --fd-bar-chart-unit-weight: var(--fd-text-caption-weight);
+    --fd-bar-chart-unit-opacity: 1;
     display: block;
     min-width: 0;
 }
@@ -120,8 +123,9 @@
 
 .fd-ui-bar-chart__axis-unit {
     top: 0;
-    font-style: italic;
-    font-weight: var(--fd-text-caption-weight);
+    font-style: var(--fd-bar-chart-unit-style);
+    opacity: var(--fd-bar-chart-unit-opacity);
+    font-weight: var(--fd-bar-chart-unit-weight);
     transform: translateY(-150%);
 }
 
@@ -258,7 +262,7 @@
     overflow: hidden;
     padding-right: var(--fd-space-xxs);
     color: var(--fd-bar-chart-reference-color);
-    font-style: italic;
+    font-style: normal;
     text-overflow: ellipsis;
     transform: translateY(calc(-100% - (var(--fd-space-xxs) / 2)));
     white-space: nowrap;
@@ -299,4 +303,11 @@
 
 .fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:last-child) {
     justify-self: end;
+}
+
+.fd-ui-bar-chart__categorical-bar[role='button'] {
+    cursor: pointer;
+}
+.fd-ui-bar-chart__categorical-bar[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--fd-color-text) 5%, transparent);
 }

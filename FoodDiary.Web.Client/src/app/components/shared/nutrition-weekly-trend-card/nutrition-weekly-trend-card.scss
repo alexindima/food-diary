@@ -31,6 +31,9 @@
     }
 
     &__bar-chart {
+        --fd-bar-chart-unit-style: italic;
+        --fd-bar-chart-unit-weight: var(--fd-font-weight-regular);
+        --fd-bar-chart-unit-opacity: 0.75;
         --fd-bar-chart-height: 270px;
         --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
         --fd-bar-chart-label-height: var(--nutrition-trend-date-space);
@@ -185,4 +188,66 @@
 
 .nutrition-trend__content--empty {
     grid-template-columns: minmax(0, 1fr);
+}
+
+.nutrition-trend__day {
+    padding: var(--fd-space-lg);
+    border: var(--fd-border-subtle);
+    border-radius: var(--fd-radius-panel);
+    background: var(--fd-bg-surface);
+    font-variant-numeric: tabular-nums;
+}
+.nutrition-trend__day p {
+    margin: 0;
+}
+.nutrition-trend__day-header {
+    min-height: var(--fd-size-control-sm);
+}
+.nutrition-trend__open-day {
+    width: var(--fd-size-control-sm);
+    height: var(--fd-size-control-sm);
+    color: var(--fd-color-primary-600);
+    border-radius: var(--fd-radius-sm);
+}
+.nutrition-trend__open-day[hidden] {
+    display: none;
+}
+.nutrition-trend__open-day,
+.nutrition-trend__open-day:hover,
+.nutrition-trend__open-day:focus-visible {
+    text-decoration: none;
+}
+.nutrition-trend__open-day:focus-visible {
+    outline: var(--fd-outline-focus-strong);
+    outline-offset: var(--fd-outline-offset);
+}
+.nutrition-trend__day-calories {
+    font-size: var(--fd-text-title-md-size);
+    font-weight: var(--fd-font-weight-bold);
+}
+.nutrition-trend__day-calories .fd-ui-caption {
+    font-size: var(--fd-text-caption-size);
+    font-weight: var(--fd-font-weight-regular);
+    color: var(--fd-color-text-muted);
+}
+.nutrition-trend__day-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--fd-space-md);
+}
+.nutrition-trend__metric {
+    display: grid;
+    gap: var(--fd-space-xxs);
+}
+.nutrition-trend__metric--proteins strong {
+    color: var(--fd-color-primary-500);
+}
+.nutrition-trend__metric--fats strong {
+    color: var(--fd-color-orange-500);
+}
+.nutrition-trend__metric--carbs strong {
+    color: var(--fd-color-sky-500);
+}
+.nutrition-trend__metric--fiber strong {
+    color: var(--fd-color-rose-500);
 }

@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -79,11 +80,28 @@ describe('NutritionWeeklyTrendCardComponent', () => {
     });
 });
 
+it('selects a day without navigating and scales the stack to recorded calories', async () => {
+    const fixture = await setupAsync();
+    fixture.componentRef.setInput('interactive', true);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const bars = element.querySelectorAll<HTMLElement>('.fd-ui-bar-chart__categorical-bar');
+    bars[0].click();
+    fixture.detectChanges();
+    expect(bars[0].getAttribute('aria-pressed')).toBe('true');
+    expect(element.querySelector('.nutrition-trend__day')?.textContent).toContain('May');
+    const categories = fixture.componentInstance['barChartCategories']();
+    const total = categories[0].values.reduce((sum, segment) => sum + (segment.value ?? 0), 0);
+    expect(total).toBeCloseTo(BASE_CALORIES);
+    bars[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    fixture.detectChanges();
+    expect(bars[1].getAttribute('aria-pressed')).toBe('true');
+});
 async function setupAsync(insight: NutritionTrendInsight = DEFAULT_INSIGHT): Promise<ComponentFixture<NutritionWeeklyTrendCardComponent>> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [NutritionWeeklyTrendCardComponent],
-            providers: [provideTranslateTesting()],
+            providers: [provideTranslateTesting(), provideRouter([])],
         })
         .compileComponents();
 
