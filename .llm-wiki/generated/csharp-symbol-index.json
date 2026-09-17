@@ -3762,7 +3762,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "line": 20
+      "line": 19
     },
     {
       "name": "AdminDashboardController",
@@ -3909,14 +3909,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
-      "line": 20
+      "line": 21
     },
     {
       "name": "AdminHttpQueryMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "line": 25
+      "line": 26
     },
     {
       "name": "AdminHttpResponseMappings",

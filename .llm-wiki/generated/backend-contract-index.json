@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1231,
     "ambiguousContracts": 2,
-    "consumerEdges": 9666,
-    "productionConsumerEdges": 5505,
+    "consumerEdges": 9669,
+    "productionConsumerEdges": 5508,
     "testConsumerEdges": 4161,
     "consumedContracts": 1231,
     "unconsumedContracts": 0
@@ -22582,7 +22582,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdviceHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "AdminDailyAdviceHttpResponse",
@@ -22632,6 +22645,19 @@
         "Modules/Admin/Presentation/Requests/AdminDailyAdvicesImportHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicesImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicesImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
       "isTest": true,
       "referenceCount": 3
@@ -22647,7 +22673,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicesImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdvicesImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "AdminDailyAdvicesImportHttpResponse",
@@ -40101,7 +40140,7 @@
         "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -85341,7 +85380,7 @@
         "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },

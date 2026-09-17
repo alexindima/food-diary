@@ -15466,11 +15466,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.72
+      "structuralRiskScore": 7.66
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
@@ -15634,27 +15634,27 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
-      "nonBlankLines": 178,
+      "nonBlankLines": 184,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.56
+      "structuralRiskScore": 3.68
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "nonBlankLines": 136,
+      "nonBlankLines": 138,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.72
+      "structuralRiskScore": 11.76
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
-      "nonBlankLines": 171,
+      "nonBlankLines": 179,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.42
+      "structuralRiskScore": 3.58
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminMailInboxHttpResponseMappings.cs",
@@ -47088,7 +47088,7 @@
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "line": 20,
+      "line": 19,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -219,17 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1ddee4ffa43964671040f88cbb5666bf885375033055bd481d70b82ff893a270"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "dbbd2b379f2efd70de7403ecd9d71f964197eda9563ac56c012ebd5c62d05db7"
+          "sha256": "b0192308da84e4ae8d4ad2a303c808fb7f273e94167450bca14dc835daf66219"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:09.6195726Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:39.4105320Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "2df01991aada54a2239f5265dcd70621c5ebefaf1bb67dd8133128eb03b4d385"
+          "sha256": "92c6ba78e4015e9443033164ef60deee98193688dbf399e22b282e94c2536047"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:10.4851994Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:40.0968607Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -779,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3fc6b3806ef1ff681e5d82e64748fc33fc0d0dc9582a37a073fb4ff9cde0b2dd"
+          "sha256": "a86ed6395f374df4ecbb43a33c3258e9fee9d832b079efa20e9d5c81ad7b176f"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:11.5750144Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:40.5641093Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cd9aca7e05dd5607818a7508943978b7fb9e9e9c6c603dd47d1b0f1143a3f11b"
+          "sha256": "2aeea4d8f08259299c58fcf45e03c98543e58e2b19e6bdb492027844ea778da1"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:11.9995005Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:41.3037713Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "859051be494a610bd19f7533f6556655f5a0ced1d378bc7cc49fd963d4868692"
+          "sha256": "2887be20132cadf35d6c404311bca1c6af18b435413af6183b39727dad9a7838"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:12.5264939Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:41.6333329Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cd9aca7e05dd5607818a7508943978b7fb9e9e9c6c603dd47d1b0f1143a3f11b"
+          "sha256": "2aeea4d8f08259299c58fcf45e03c98543e58e2b19e6bdb492027844ea778da1"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "859051be494a610bd19f7533f6556655f5a0ced1d378bc7cc49fd963d4868692"
+          "sha256": "2887be20132cadf35d6c404311bca1c6af18b435413af6183b39727dad9a7838"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3fc6b3806ef1ff681e5d82e64748fc33fc0d0dc9582a37a073fb4ff9cde0b2dd"
+          "sha256": "a86ed6395f374df4ecbb43a33c3258e9fee9d832b079efa20e9d5c81ad7b176f"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:12.9554485Z"
+      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
+      "reviewedAtUtc": "2026-09-17T21:56:42.0939130Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

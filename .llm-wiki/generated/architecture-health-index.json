@@ -5246,7 +5246,7 @@
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "line": 20,
+      "line": 19,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

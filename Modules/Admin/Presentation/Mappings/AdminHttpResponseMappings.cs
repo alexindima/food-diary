@@ -7,6 +7,16 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
 public static class AdminHttpResponseMappings {
+    extension(AdminDailyAdviceModel model) {
+        public AdminDailyAdviceHttpResponse ToDailyAdviceHttpResponse() =>
+            new(model.Id, model.Locale, model.Value, model.Tag, model.Weight);
+    }
+
+    extension(AdminDailyAdvicesImportModel model) {
+        public AdminDailyAdvicesImportHttpResponse ToDailyAdvicesImportHttpResponse() =>
+            new(model.ImportedCount, model.SkippedCount);
+    }
+
     extension(AdminAuditEntryModel model) {
         public AdminAuditEntryHttpResponse ToHttpResponse() =>
                 new(

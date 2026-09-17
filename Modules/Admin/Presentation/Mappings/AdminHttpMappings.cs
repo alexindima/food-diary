@@ -3,6 +3,7 @@ using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
 using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
 using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.ImportAdminDailyAdvices;
 using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
 using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
@@ -19,6 +20,12 @@ using FoodDiary.Modules.Admin.Presentation.Requests;
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
 public static class AdminHttpMappings {
+    extension(AdminDailyAdvicesImportHttpRequest request) {
+        public ImportAdminDailyAdvicesCommand ToImportCommand() =>
+            new(request.Version, request.Advices?.Select(item => item is null ? null! :
+                new ImportAdminDailyAdviceItem(item.Value, item.Locale, item.Weight, item.Tag)).ToArray()!);
+    }
+
     extension(GetCollaborationAuditHttpQuery query) {
         public GetCollaborationAuditQuery ToQuery() =>
                 new(query.ClientUserId, query.Limit);

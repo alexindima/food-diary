@@ -8,6 +8,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminEmailTemplates;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminLessons;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminDailyAdvices;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessageDetails;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessagePage;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
@@ -72,6 +73,7 @@ public static class AdminHttpQueryMappings {
     public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery() => new();
     public static GetAdminAiPromptsQuery ToAiPromptsQuery() => new();
     public static GetAdminLessonsQuery ToLessonsQuery() => new();
+    public static GetAdminDailyAdvicesQuery ToDailyAdvicesQuery() => new();
 
     extension(GetAdminUsersHttpQuery query) {
         public GetAdminUsersQuery ToQuery() {
