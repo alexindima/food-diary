@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1658,
+    "typescriptFiles": 1659,
     "symbols": 657,
     "routes": 98,
     "features": 43,
@@ -3141,7 +3141,7 @@
       "role": "Component",
       "selector": "fd-dashboard-fasting-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "HydrationCardComponent",
@@ -6455,8 +6455,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3534,
-      "russianProperties": 3534,
+      "englishProperties": 3542,
+      "russianProperties": 3542,
       "countsMatch": true
     },
     {

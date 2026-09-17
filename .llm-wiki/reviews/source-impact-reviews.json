@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "52ae124d3502357d558b7aefbcb5194f24fa139cc081445f9ad3546a256ae015"
+          "sha256": "f6425d80c02a1ba1e3820010c6d23c17157a1dd926433a6db573ccb49830a15c"
         }
       ],
-      "reason": "Tooltip substitution passed focused ESLint and Stylelint; live dashboard renders help button and Pulse empty state.",
+      "reason": "Reviewed dashboard fasting presentation: added localized short stage descriptions, a decorative stage-colored autorenew icon, Pulse surface color and existing wheat asset watermark. Component input, navigation, API, persistence and privacy boundaries remain unchanged. Eight component tests, ESLint, Stylelint and i18n checks passed; desktop and 390px browser checks confirmed inline text and natural wrapping.",
       "baseRef": "HEAD",
-      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
-      "reviewedAtUtc": "2026-09-16T21:26:24.3628237Z"
+      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
+      "reviewedAtUtc": "2026-09-17T18:28:41.0074425Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -906,13 +906,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "52ae124d3502357d558b7aefbcb5194f24fa139cc081445f9ad3546a256ae015"
+          "sha256": "f6425d80c02a1ba1e3820010c6d23c17157a1dd926433a6db573ccb49830a15c"
         }
       ],
-      "reason": "Existing local tooltip renders translated plain text; no data transport or storage changes.",
+      "reason": "Reviewed dashboard fasting presentation: added localized short stage descriptions, a decorative stage-colored autorenew icon, Pulse surface color and existing wheat asset watermark. Component input, navigation, API, persistence and privacy boundaries remain unchanged. Eight component tests, ESLint, Stylelint and i18n checks passed; desktop and 390px browser checks confirmed inline text and natural wrapping.",
       "baseRef": "HEAD",
-      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
-      "reviewedAtUtc": "2026-09-16T21:26:25.8466520Z"
+      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
+      "reviewedAtUtc": "2026-09-17T18:28:42.2828265Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "386873765815f9d86ff77ff3deb9ee6a4330d6972cd71b7a308732d75b95ea1f"
+          "sha256": "8eb26ad45a7d171b37bdeadc82e90ef787cbcb80445aa9dcf4aec0ac1cdf57c1"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cbb573d4466fe3defb0c6c1fc15f49e9364c9c7980fd0b72c65438b5e3576b1f"
+          "sha256": "1c9a69846e17bb2e467a295eecc2563ce5604a1a23188c52179459c0ce5fddf1"
         }
       ],
-      "reason": "Help icon delegates hover display to UI kit; removed inline help state and paragraph; manual Pulse navigation preserved.",
+      "reason": "Reviewed fasting timeline redesign and final presentation polish: phase-specific moon and sun watermarks, active phase hierarchy, compact stage description and marker labels. Existing session and navigation contracts are preserved. Component tests, localization checks, template and style lint passed during implementation.",
       "baseRef": "HEAD",
-      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
-      "reviewedAtUtc": "2026-09-16T21:26:27.2499419Z"
+      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
+      "reviewedAtUtc": "2026-09-17T19:14:23.7144679Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "386873765815f9d86ff77ff3deb9ee6a4330d6972cd71b7a308732d75b95ea1f"
+          "sha256": "8eb26ad45a7d171b37bdeadc82e90ef787cbcb80445aa9dcf4aec0ac1cdf57c1"
         }
       ],
-      "reason": "Summary help now uses existing FdUiHintDirective with localized legend; no new public contract.",
+      "reason": "Reviewed fasting timeline redesign and final presentation polish: phase-specific moon and sun watermarks, active phase hierarchy, compact stage description and marker labels. Existing session and navigation contracts are preserved. Component tests, localization checks, template and style lint passed during implementation.",
       "baseRef": "HEAD",
-      "gitHead": "b1d273c3ad429ff5895d1e2177c3eff905047500",
-      "reviewedAtUtc": "2026-09-16T21:26:22.9055490Z"
+      "gitHead": "bf38111faffd9774454594182b170ef5de6e1834",
+      "reviewedAtUtc": "2026-09-17T19:14:22.6928076Z"
     },
     {
       "pageId": "workflow.query-context",

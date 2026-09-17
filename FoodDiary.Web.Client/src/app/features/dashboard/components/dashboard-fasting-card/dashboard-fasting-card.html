@@ -1,47 +1,121 @@
 @let view = state();
-<section class="dashboard-fasting-card-shell" [attr.aria-label]="'FASTING.TITLE' | translate">
+@let axis = timeline();
+<section
+    class="dashboard-fasting-card-shell"
+    [class.dashboard-fasting-card-shell--eating]="axis.eating"
+    [attr.aria-label]="'FASTING.TITLE' | translate"
+>
     <fd-dashboard-widget-frame [title]="'FASTING.TITLE' | translate">
         <div class="dashboard-fasting-card">
-            <fd-ui-progress-ring
-                class="dashboard-fasting-card__ring"
-                [value]="progress()"
-                [ariaLabel]="'FASTING.TITLE' | translate"
-                [style.--fd-progress-ring-color]="ringColor()"
-                [style.--fd-progress-ring-track-color]="'var(--fd-color-border-summary-track)'"
-                [style.--fd-progress-ring-stroke-width]="7"
-            >
-                <span class="dashboard-fasting-card__state fd-ui-caption">{{ view.stateLabel }}</span>
-                <strong class="dashboard-fasting-card__elapsed">{{ view.elapsedFormatted }}</strong>
-                <strong class="dashboard-fasting-card__percent">{{ progress().toFixed(0) }}%</strong>
-            </fd-ui-progress-ring>
-
-            <div class="dashboard-fasting-card__summary">
-                <div class="dashboard-fasting-card__protocol fd-row fd-wrap fd-align-baseline fd-gap-card-header">
-                    <span class="fd-ui-meta-text">{{ planTypeLabelKey() | translate }}</span>
-                    <span aria-hidden="true">&middot;</span>
-                    <strong>{{ view.detailLabel }}</strong>
+            @if (cycleDays().length) {
+                <section class="dashboard-fasting-card__cycle">
+                    <div class="fd-row fd-align-center fd-gap-sm">
+                        <fd-ui-icon name="calendar_month" size="lg" />
+                        <div class="fd-stack fd-gap-xxs">
+                            <strong>{{ 'FASTING.CYCLIC_TYPE' | translate }} {{ cycleProtocol() }}</strong>
+                            <span class="fd-ui-caption">{{
+                                'FASTING.REDESIGN.CYCLIC_FLOW'
+                                    | translate: { fastDays: session()?.cyclicFastDays, eatDays: session()?.cyclicEatDays }
+                            }}</span>
+                        </div>
+                    </div>
+                    <ol class="dashboard-fasting-card__days">
+                        @for (day of cycleDays(); track day.day) {
+                            <li
+                                [class.is-current]="day.current"
+                                [class.is-complete]="day.complete"
+                                [attr.aria-current]="day.current ? 'step' : null"
+                            >
+                                <span class="dashboard-fasting-card__day-dot" aria-hidden="true"></span>
+                                <strong>{{ 'FASTING.DAY_LABEL' | translate: { day: day.day } }}</strong>
+                                <span>{{ day.labelKey | translate }}</span>
+                                <strong class="dashboard-fasting-card__today" [hidden]="!day.current">{{
+                                    'FASTING.REDESIGN.TODAY' | translate
+                                }}</strong>
+                            </li>
+                        }
+                    </ol>
+                </section>
+            }
+            <div class="dashboard-fasting-card__labels">
+                <div
+                    class="dashboard-fasting-card__phase fd-row fd-align-center fd-gap-sm"
+                    [class.is-active]="!axis.intermittent || !axis.eating"
+                >
+                    <fd-ui-icon size="lg" [name]="axis.intermittent ? 'bedtime' : phaseIcon()" />
+                    <div class="dashboard-fasting-card__period fd-stack">
+                        <strong>{{ (axis.intermittent ? 'FASTING.FASTING_WINDOW' : phaseLabelKey()) | translate }}</strong>
+                        <span
+                            >{{ axis.intermittent ? axis.fastHours : session()?.plannedDurationHours }}
+                            {{ 'FASTING.HOURS' | translate }}</span
+                        >
+                    </div>
                 </div>
-
-                <div class="dashboard-fasting-card__remaining">
-                    <span class="fd-ui-caption">{{ view.remainingLabelKey | translate }}</span>
-                    <strong>{{ view.remainingFormatted }}</strong>
-                </div>
-
-                @if (view.stage !== null) {
-                    <div class="dashboard-fasting-card__stage">
-                        <span class="dashboard-fasting-card__stage-icon" aria-hidden="true"></span>
-                        <div>
-                            <strong>{{ view.stage.titleKey | translate }}</strong>
-                            <p>{{ view.stage.descriptionKey | translate }}</p>
+                @if (axis.intermittent) {
+                    <div class="dashboard-fasting-card__phase fd-row fd-align-center fd-gap-sm" [class.is-active]="axis.eating">
+                        <fd-ui-icon name="restaurant" size="lg" />
+                        <div class="dashboard-fasting-card__period fd-stack">
+                            <strong>{{ 'FASTING.EATING_WINDOW' | translate }}</strong>
+                            <span>{{ axis.eatHours }} {{ 'FASTING.HOURS' | translate }}</span>
                         </div>
                     </div>
                 }
-
-                @if (!view.isOvertime && view.nextStageFormatted !== null) {
-                    <span class="dashboard-fasting-card__next fd-ui-caption">
-                        {{ 'FASTING.STAGES.NEXT_IN' | translate: { time: view.nextStageFormatted } }}
+            </div>
+            <div class="dashboard-fasting-card__timeline" [class.dashboard-fasting-card__timeline--dated]="!axis.intermittent">
+                <div
+                    class="dashboard-fasting-card__track"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [attr.aria-label]="'FASTING.REDESIGN.ELAPSED' | translate"
+                    [attr.aria-valuenow]="axis.position"
+                    [attr.aria-valuetext]="view.elapsedFormatted"
+                >
+                    @if (axis.intermittent) {
+                        <span class="dashboard-fasting-card__eating-track" [style.left.%]="axis.boundary"></span>
+                    }
+                    <span class="dashboard-fasting-card__fill" [style.width.%]="fastFill()"></span>
+                    <span class="dashboard-fasting-card__eating-fill" [style.left.%]="axis.boundary" [style.width.%]="eatFill()"></span>
+                </div>
+                <span class="dashboard-fasting-card__marker" aria-hidden="true" [style.left.%]="axis.position"></span
+                ><span class="dashboard-fasting-card__now" [style.--position]="`${axis.position}%`"
+                    >{{ 'FASTING.REDESIGN.NOW' | translate }}<strong>{{ formatTime(axis.current) }}</strong></span
+                >
+                <div class="dashboard-fasting-card__ticks">
+                    <span
+                        ><span>{{ formatTime(axis.start) }}</span>
+                        <small [hidden]="axis.intermittent">{{ formatDate(axis.start) }}</small>
                     </span>
-                }
+                    <span class="dashboard-fasting-card__boundary" [hidden]="!axis.intermittent" [style.left.%]="axis.boundary">{{
+                        formatTime(axis.boundaryDate)
+                    }}</span>
+                    <span
+                        ><span>{{ formatTime(axis.end) }}</span>
+                        <small [hidden]="axis.intermittent">{{ formatDate(axis.end) }}</small>
+                    </span>
+                </div>
+            </div>
+            <div class="dashboard-fasting-card__metrics">
+                <div class="dashboard-fasting-card__timer">
+                    <strong class="dashboard-fasting-card__elapsed">{{ view.elapsedFormatted }}</strong>
+                    <span>{{
+                        'FASTING.REDESIGN.PHASE_PROGRESS' | translate: { hours: phaseDurationHours(), percent: progress().toFixed(0) }
+                    }}</span>
+                </div>
+                <div class="dashboard-fasting-card__remaining" [hidden]="axis.intermittent">
+                    <span>{{ view.remainingLabelKey | translate }}</span>
+                    <strong>{{ view.remainingFormatted }}</strong>
+                </div>
+            </div>
+            <div class="dashboard-fasting-card__stage">
+                <fd-ui-icon class="dashboard-fasting-card__stage-icon" name="autorenew" size="lg" [style.color]="stageColor()" />
+                <div class="fd-stack fd-gap-xxs">
+                    <div class="dashboard-fasting-card__stage-heading">
+                        <strong>{{ stageTitleKey() | translate }}</strong
+                        ><span class="dashboard-fasting-card__stage-description"> · {{ stageDescriptionKey() | translate }}</span>
+                    </div>
+                    <span>{{ stageSummary() }}</span>
+                </div>
             </div>
         </div>
     </fd-dashboard-widget-frame>

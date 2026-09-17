@@ -7,7 +7,7 @@
     "outputs": 469,
     "apiCalls": 255,
     "templatesWithTranslations": 307,
-    "translationKeys": 1762,
+    "translationKeys": 1767,
     "consumerEdges": 1082,
     "consumedComponents": 290,
     "unconsumedComponents": 159
@@ -17886,7 +17886,15 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.html",
       "keys": [
-        "FASTING.STAGES.NEXT_IN",
+        "FASTING.CYCLIC_TYPE",
+        "FASTING.DAY_LABEL",
+        "FASTING.EATING_WINDOW",
+        "FASTING.HOURS",
+        "FASTING.REDESIGN.CYCLIC_FLOW",
+        "FASTING.REDESIGN.ELAPSED",
+        "FASTING.REDESIGN.NOW",
+        "FASTING.REDESIGN.PHASE_PROGRESS",
+        "FASTING.REDESIGN.TODAY",
         "FASTING.TITLE"
       ]
     },
@@ -29341,6 +29349,19 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.html",
+      "occurrences": 4,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -31878,19 +31899,6 @@
       "inputsUsed": [
         "segments",
         "showLegend"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiProgressRingComponent",
-      "selector": "fd-ui-progress-ring",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "value"
       ],
       "outputsHandled": []
     },

@@ -2404,6 +2404,15 @@
         "WIDGET_LABEL": "Fasting",
         "SUBTITLE": "Stay in your rhythm without unnecessary pressure",
         "REDESIGN": {
+            "STAGE_DESCRIPTION": {
+                "EARLY": "Energy from the last meal is usually still being absorbed.",
+                "TRANSITION": "The body gradually shifts toward stored energy.",
+                "STORED_ENERGY": "Glycogen and fat stores help supply the body with energy.",
+                "DEEP": "The share of energy supplied by fat may gradually increase.",
+                "EATING": "Time for meals between fasting periods."
+            },
+            "PHASE_PROGRESS": "of {{ hours }}h · {{ percent }}%",
+            "STORED_ENERGY_SHORT": "Using stored energy",
             "PREVIEW_LABEL": "New design",
             "CURRENT_VERSION": "Current design",
             "ELAPSED": "Elapsed",

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiProgressRingComponent } from 'fd-ui-kit/progress-ring/fd-ui-progress-ring';
+import { FdUiIconComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -9,12 +9,13 @@ import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { buildFastingTimerCardComputedState } from '../../../fasting/lib/fasting-timer-card-state';
 import type { FastingSession } from '../../../fasting/models/fasting.data';
+import { buildDashboardFastingCycle, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
 
 const EMPTY_DURATION_MS = 0;
 
 @Component({
     selector: 'fd-dashboard-fasting-card',
-    imports: [TranslatePipe, FdUiProgressRingComponent, DashboardWidgetFrameComponent],
+    imports: [TranslatePipe, FdUiIconComponent, DashboardWidgetFrameComponent],
     templateUrl: './dashboard-fasting-card.html',
     styleUrl: './dashboard-fasting-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +29,60 @@ export class DashboardFastingCardComponent {
     private timerInterval: ReturnType<typeof setInterval> | null = null;
 
     public readonly session = input.required<FastingSession | null>();
+    protected readonly timeline = computed(() => buildDashboardFastingTimeline(this.session(), this.elapsedMs()));
+    protected readonly fastFill = computed(() =>
+        this.timeline().intermittent ? Math.min(this.timeline().position, this.timeline().boundary) : this.timeline().position,
+    );
+    protected readonly eatFill = computed(() =>
+        this.timeline().intermittent ? Math.max(0, this.timeline().position - this.timeline().boundary) : 0,
+    );
+    protected readonly cycleDays = computed(() => buildDashboardFastingCycle(this.session()));
+    protected readonly cycleProtocol = computed(() => `${this.session()?.cyclicFastDays ?? 1}:${this.session()?.cyclicEatDays ?? 1}`);
+    protected readonly phaseIcon = computed(() =>
+        this.timeline().eating ? 'restaurant' : this.session()?.planType === 'Extended' ? 'local_fire_department' : 'bedtime',
+    );
+    protected readonly phaseLabelKey = computed(() => (this.timeline().eating ? 'FASTING.EATING_WINDOW' : 'FASTING.FASTING_WINDOW'));
+    protected readonly stageTitleKey = computed(() => (this.timeline().eating ? 'FASTING.EATING_WINDOW' : this.fastingStageTitleKey()));
+    protected readonly stageDescriptionKey = computed(() => {
+        if (this.timeline().eating) {
+            return 'FASTING.REDESIGN.STAGE_DESCRIPTION.EATING';
+        }
+        const titleKey = this.state().stage?.titleKey;
+        return (
+            titleKey?.replace('FASTING.STAGES.', 'FASTING.REDESIGN.STAGE_DESCRIPTION.').replace('.TITLE', '') ??
+            'FASTING.REDESIGN.STAGE_DESCRIPTION.EARLY'
+        );
+    });
+    protected readonly phaseDurationHours = computed(() => {
+        const axis = this.timeline();
+        return axis.intermittent ? (axis.eating ? axis.eatHours : axis.fastHours) : (this.session()?.plannedDurationHours ?? 0);
+    });
+    protected readonly stageSummary = computed(() => {
+        this.currentLanguage();
+        const view = this.state();
+        if (view.isOvertime) {
+            return this.translateService.instant('FASTING.REDESIGN.PAST_TARGET');
+        }
+        if (!this.timeline().eating && view.nextStageFormatted !== null) {
+            return this.translateService.instant('FASTING.STAGES.NEXT_IN', { time: view.nextStageFormatted });
+        }
+        return `${this.translateService.instant(view.remainingLabelKey)}: ${view.remainingFormatted}`;
+    });
+
+    private fastingStageTitleKey(): string {
+        const key = this.state().stage?.titleKey;
+        return key === 'FASTING.STAGES.STORED_ENERGY.TITLE' ? 'FASTING.REDESIGN.STORED_ENERGY_SHORT' : (key ?? 'FASTING.REDESIGN.READY');
+    }
+
+    protected formatTime(date: Date | null): string {
+        return date === null
+            ? '—'
+            : new Intl.DateTimeFormat(this.currentLanguage(), { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date);
+    }
+
+    protected formatDate(date: Date | null): string {
+        return date === null ? '' : new Intl.DateTimeFormat(this.currentLanguage(), { day: 'numeric', month: 'short' }).format(date);
+    }
 
     protected readonly state = computed(() => {
         this.currentLanguage();
@@ -38,27 +93,13 @@ export class DashboardFastingCardComponent {
         });
     });
     protected readonly progress = computed(() => Math.min(PERCENT_MULTIPLIER, Math.max(EMPTY_DURATION_MS, this.state().progressPercent)));
-    protected readonly ringColor = computed(() => {
+    protected readonly stageColor = computed(() => {
         const state = this.state();
-        if (state.isOvertime) {
+        if (state.isOvertime || this.timeline().eating) {
             return 'var(--fd-color-green-500)';
         }
 
         return state.ringColor ?? 'var(--fd-color-primary-500)';
-    });
-    protected readonly planTypeLabelKey = computed(() => {
-        switch (this.session()?.planType) {
-            case 'Cyclic': {
-                return 'FASTING.CYCLIC_TYPE';
-            }
-            case 'Extended': {
-                return 'FASTING.EXTENDED_TYPE';
-            }
-            case 'Intermittent':
-            case undefined: {
-                return 'FASTING.INTERMITTENT_TYPE';
-            }
-        }
     });
 
     public constructor() {
