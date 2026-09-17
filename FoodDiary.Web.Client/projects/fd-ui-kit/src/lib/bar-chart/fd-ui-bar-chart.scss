@@ -288,7 +288,8 @@
     justify-items: end;
 }
 
-.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:first-child, span:last-child) {
+.fd-ui-bar-chart--edge-inset-none
+    :where(.fd-ui-bar-chart__categorical-labels span:first-child, .fd-ui-bar-chart__categorical-labels span:last-child) {
     width: var(--fd-bar-chart-edge-category-width);
 }
 
