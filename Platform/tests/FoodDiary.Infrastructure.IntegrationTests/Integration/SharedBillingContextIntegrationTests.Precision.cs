@@ -17,7 +17,9 @@ public sealed partial class SharedBillingContextIntegrationTests {
         await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(await databaseFixture.CreateIsolatedDatabaseAsync());
         IMigrator migrator = context.GetService<IMigrator>();
         const string previousMigration = "20260914032832_ProtectAiPromptConcurrentUpdates";
-        await migrator.MigrateAsync(upgrade ? previousMigration : null);
+        const string precisionMigration = "20260914190216_PreserveBillingPaymentPrecision";
+        // Exercise this migration's rollback without reverting unrelated later data migrations.
+        await migrator.MigrateAsync(upgrade ? previousMigration : precisionMigration);
         var user = User.Create("billing-precision@example.com", "hash");
         context.Users.Add(user);
         const decimal previousMaximum = 9_999_999_999_999_999.99m;
@@ -29,16 +31,16 @@ public sealed partial class SharedBillingContextIntegrationTests {
         context.Set<BillingPayment>().Add(payment);
         await context.SaveChangesAsync();
         if (upgrade) {
-            await migrator.MigrateAsync();
+            await migrator.MigrateAsync(precisionMigration);
         }
         context.ChangeTracker.Clear();
         BillingPayment saved = await context.Set<BillingPayment>().SingleAsync();
         Assert.Equal(previousMaximum, saved.Amount);
         Assert.Equal(-previousMaximum, saved.Tax);
         Assert.Equal(previousMaximum, saved.PayoutEarnings);
-        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        Assert.Equal(precisionMigration, (await context.Database.GetAppliedMigrationsAsync()).Last());
         await migrator.MigrateAsync(previousMigration);
-        await migrator.MigrateAsync();
+        await migrator.MigrateAsync(precisionMigration);
 
         saved.ApplyProviderResult(billingSubscriptionId: null, externalCustomerId: null, externalSubscriptionId: null,
             externalPaymentMethodId: null, externalPriceId: null, plan: null, "completed", BillingPaymentKinds.Transaction,

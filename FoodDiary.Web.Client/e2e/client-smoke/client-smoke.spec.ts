@@ -384,7 +384,7 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
     if (route === '/dashboard') {
-        await expect(page.getByPlaceholder('Describe your meal, e.g. "two eggs and toast"...')).toBeVisible();
+        await expect(page.getByRole('textbox', { name: 'Describe your meal, e.g. "two eggs and toast"...', exact: true })).toBeVisible();
     }
     if (route === '/fasting') {
         await expect(page.locator('.fd-ui-progress-ring')).toHaveAttribute('aria-label', /\S+/u);
