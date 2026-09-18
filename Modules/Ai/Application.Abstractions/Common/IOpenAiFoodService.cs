@@ -10,17 +10,20 @@ public interface IOpenAiFoodService {
         UserId userId,
         string? description,
         string requestId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null);
 
     Task<Result<FoodVisionModel>> ParseFoodTextAsync(
         string text,
         UserId userId,
         string requestId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null);
 
     Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
         string requestId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null);
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Abstractions.Prompts;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -11,12 +12,6 @@ internal sealed class AiPromptProvider(
     IMemoryCache cache,
     IServiceScopeFactory scopeFactory) : IAiPromptProvider {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
-
-    private static readonly Dictionary<string, string> Fallbacks = new(StringComparer.OrdinalIgnoreCase) {
-        ["vision"] = "Analyze the food photo and return only JSON with list of items. Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). Use grams (g) when possible. {{languageHint}}",
-        ["text-parse"] = "Parse the following food description into structured items: \"{{userText}}\". Return only JSON with list of items. Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). Use grams (g) when possible. Estimate typical portion sizes for items without explicit amounts. {{languageHint}}",
-        ["nutrition"] = "You are a nutrition assistant. Using the provided items with amounts, estimate calories and nutrients per item and totals. Item names are in English. Return only JSON.",
-    };
 
     public async Task<string> GetPromptAsync(string key, string? language, CancellationToken cancellationToken = default) {
         string locale = LanguageCode.FromPreferred(language).Value;
@@ -37,7 +32,7 @@ internal sealed class AiPromptProvider(
             promptText = template?.PromptText;
         }
 
-        string result = promptText ?? Fallbacks.GetValueOrDefault(key, key);
+        string result = promptText ?? AiPromptCatalog.GetDefault(key) ?? key;
         cache.Set(cacheKey, result, CacheDuration);
         return result;
     }

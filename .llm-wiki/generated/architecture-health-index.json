@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
     "componentsWithoutDirectSpecs": 142,
-    "criticalSymbolsWithoutTestReferences": 31,
+    "criticalSymbolsWithoutTestReferences": 35,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -1087,12 +1087,18 @@
       "specPath": null
     },
     {
-      "class": "AdminAiPromptsPageComponent",
-      "selector": "fd-admin-ai-prompts",
+      "class": "AdminAiPromptVariablesComponent",
+      "selector": "fd-admin-ai-prompt-variables",
       "feature": "admin-ai-prompts",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
-      "inputs": [],
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.html",
+      "inputs": [
+        {
+          "name": "variables",
+          "type": "string[]",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -5176,6 +5182,16 @@
       "coveredThrough": []
     },
     {
+      "name": "TestAdminAiPromptCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
@@ -5216,6 +5232,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminAiPromptScenariosQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminDailyAdvicesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
@@ -5250,6 +5276,26 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PreviewAdminAiPromptQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PreviewAiPromptQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

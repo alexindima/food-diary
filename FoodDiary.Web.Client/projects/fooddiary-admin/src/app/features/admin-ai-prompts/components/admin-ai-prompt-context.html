@@ -1,0 +1,20 @@
+<section class="prompt-context" [attr.aria-label]="'ADMIN_PROMPTS.CONTEXT_TITLE' | translate">
+    <h2 class="fd-ui-section-title">{{ 'ADMIN_PROMPTS.CONTEXT_TITLE' | translate }}</h2>
+    <p class="fd-ui-body-sm">{{ 'ADMIN_PROMPTS.CONTEXT_INTRO' | translate }}</p>
+    <div class="context-columns">
+        <div>
+            <h3 class="fd-ui-card-title">{{ 'ADMIN_PROMPTS.CONTEXT_INPUTS' | translate }}</h3>
+            <p class="fd-ui-body-sm">{{ `ADMIN_PROMPTS.INPUTS_${scenarioKey()}` | translate }}</p>
+        </div>
+        <div>
+            <h3 class="fd-ui-card-title">{{ 'ADMIN_PROMPTS.CONTEXT_AUTOMATIC' | translate }}</h3>
+            <p class="fd-ui-body-sm">{{ `ADMIN_PROMPTS.AUTOMATIC_${scenarioKey()}` | translate }}</p>
+        </div>
+    </div>
+    <p class="fd-ui-caption">{{ 'ADMIN_PROMPTS.CONTEXT_EDITING' | translate }}</p>
+    <details>
+        <summary>{{ 'ADMIN_PROMPTS.RESPONSE_FORMAT' | translate }}</summary>
+        <p class="fd-ui-body-sm">{{ 'ADMIN_PROMPTS.RESPONSE_FORMAT_HINT' | translate }}</p>
+        <pre tabindex="0" role="region" [attr.aria-label]="'ADMIN_PROMPTS.RESPONSE_FORMAT' | translate">{{ responseFormatJson() }}</pre>
+    </details>
+</section>

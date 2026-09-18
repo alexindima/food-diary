@@ -51,12 +51,7 @@ export class AdminAuthService {
             return;
         }
 
-        if (this.isAuthenticated()) {
-            this.clearCodeFromUrl(params);
-            this.tokenSignal.set(this.getToken());
-            return;
-        }
-
+        // A new SSO code takes precedence over a cached token, which may have expired or been revoked.
         if (this.wasCodeProcessed(code)) {
             this.clearCodeFromUrl(params);
             this.tokenSignal.set(this.getToken());
@@ -79,10 +74,6 @@ export class AdminAuthService {
         const result = this.extractCodeFromUrl(returnUrl);
         if (result === null) {
             return null;
-        }
-
-        if (this.isAuthenticated()) {
-            return result.cleanedUrl;
         }
 
         if (this.wasCodeProcessed(result.code)) {

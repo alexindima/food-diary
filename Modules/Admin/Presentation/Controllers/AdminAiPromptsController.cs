@@ -1,3 +1,6 @@
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Policies;
+using Microsoft.AspNetCore.RateLimiting;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
@@ -15,6 +18,33 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/admin/ai-prompts")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminAiPromptsController(ISender mediator) : BaseApiController(mediator) {
+    [HttpGet("scenarios")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [ProducesResponseType<List<AdminAiPromptScenarioHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetScenarios() => HandleOk(AdminAiPromptWorkbenchHttpMappings.ToScenariosQuery(),
+        static value => value.Select(item => item.ToScenarioHttpResponse()).ToList());
+
+    [HttpPost("preview")]
+    [RequestSizeLimit(PresentationRequestLimits.AiPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
+    [ProducesResponseType<AdminAiPromptInspectionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> Preview([FromBody] AdminAiPromptDraftHttpRequest request) =>
+        HandleOk(request.ToPreviewQuery(), static text => new AdminAiPromptInspectionHttpResponse(text));
+
+    [HttpPost("test")]
+    [EnableIdempotency(requireKey: true)]
+    [EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
+    [RequestSizeLimit(PresentationRequestLimits.AiPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
+    [ProducesResponseType<AdminAiPromptInspectionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> Test([FromCurrentUser] Guid userId, [FromBody] AdminAiPromptDraftHttpRequest request) =>
+        HandleOk(request.ToTestCommand(userId,
+            IdempotencyRequestContext.GetRequestId(HttpContext) ?? throw new InvalidOperationException("Required idempotency context is unavailable.")), static text => new AdminAiPromptInspectionHttpResponse(text));
+
     [HttpGet]
     [ProducesResponseType<List<AdminAiPromptHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll() =>

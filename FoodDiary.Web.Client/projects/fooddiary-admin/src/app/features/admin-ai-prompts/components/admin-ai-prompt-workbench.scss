@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    min-width: 0;
+}
+.sample-amount {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--fd-space-sm);
+}
+.workbench-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+}
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: 28rem;
+    overflow: auto;
+    padding: var(--fd-space-md);
+    background: var(--fd-bg-surface);
+    border-radius: var(--fd-radius-md);
+}

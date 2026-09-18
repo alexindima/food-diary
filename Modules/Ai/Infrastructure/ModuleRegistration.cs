@@ -18,6 +18,7 @@ public static class ModuleRegistration {
             .CreateOptions<AiDbContext>());
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AiUserDataPurgeParticipant>());
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
+        services.AddSingleton<IAiPromptPreviewRenderer, FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi.AiPromptPreviewRenderer>();
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
         services.AddScoped<FoodRecognitionJobStore>();
         services.AddScoped<IFoodRecognitionJobStore>(provider => provider.GetRequiredService<FoodRecognitionJobStore>());

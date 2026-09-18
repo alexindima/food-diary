@@ -1,0 +1,6 @@
+<h3 class="fd-ui-card-title">{{ 'ADMIN_PROMPTS.VARIABLES_TITLE' | translate }}</h3>
+@for (variable of variables(); track variable) {
+    <p class="fd-ui-body-sm">
+        <code>{{ `{{${variable}}}` }}</code> — {{ `ADMIN_PROMPTS.VARIABLE_${variable}` | translate }}
+    </p>
+}

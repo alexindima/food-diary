@@ -1,0 +1,28 @@
+:host {
+    display: block;
+    min-width: 0;
+    margin-top: var(--fd-space-lg);
+}
+
+.prompt-context {
+    padding: var(--fd-space-md);
+    background: var(--fd-bg-surface);
+    border-radius: var(--fd-radius-md);
+}
+
+.context-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--fd-space-md);
+}
+
+summary {
+    cursor: pointer;
+}
+
+pre {
+    max-height: 26rem;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

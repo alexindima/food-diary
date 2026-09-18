@@ -5,3 +5,30 @@
     margin-top: var(--fd-space-md);
     align-items: start;
 }
+
+.prompt-layout > form {
+    min-width: 0;
+}
+.prompt-scenarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+    margin-bottom: var(--fd-space-lg);
+}
+.prompt-heading {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    align-items: center;
+}
+.prompt-current {
+    margin-top: var(--fd-space-sm);
+}
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    padding: var(--fd-space-md);
+    background: var(--fd-bg-surface);
+    border-radius: var(--fd-radius-md);
+}

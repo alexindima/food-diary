@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Abstractions.Prompts;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -15,6 +16,10 @@ public sealed class UpsertAiPromptCommandHandler(IAiPromptTemplateWriteRepositor
         if (!LanguageCode.TryParse(request.Locale, out LanguageCode language)) {
             return Result.Failure<AiPromptTemplateReadModel>(
                 Errors.Validation.Invalid(nameof(request.Locale), "Locale must be one of the supported codes."));
+        }
+        if (request.IsActive && AiPromptCatalog.Keys.Contains(key, StringComparer.Ordinal) && !AiPromptCatalog.IsValid(key, request.PromptText)) {
+            return Result.Failure<AiPromptTemplateReadModel>(Errors.Validation.Invalid(nameof(request.PromptText),
+                "Use supported variables and include {{userText}} for text parsing."));
         }
         string locale = language.Value;
         string promptText = request.PromptText;

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 450,
+    "components": 453,
     "componentsWithoutDirectSpecs": 142,
-    "inputs": 1414,
-    "outputs": 468,
-    "apiCalls": 257,
-    "templatesWithTranslations": 309,
-    "translationKeys": 1789,
-    "consumerEdges": 1098,
-    "consumedComponents": 290,
+    "inputs": 1420,
+    "outputs": 469,
+    "apiCalls": 262,
+    "templatesWithTranslations": 312,
+    "translationKeys": 1814,
+    "consumerEdges": 1104,
+    "consumedComponents": 293,
     "unconsumedComponents": 159
   },
   "components": [
@@ -50,6 +50,74 @@
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.spec.ts"
     },
     {
+      "class": "AdminAiPromptContextComponent",
+      "selector": "fd-admin-ai-prompt-context",
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.html",
+      "inputs": [
+        {
+          "name": "scenarioKey",
+          "type": "AdminAiPromptKey",
+          "required": true
+        },
+        {
+          "name": "responseFormatJson",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.spec.ts"
+    },
+    {
+      "class": "AdminAiPromptVariablesComponent",
+      "selector": "fd-admin-ai-prompt-variables",
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.html",
+      "inputs": [
+        {
+          "name": "variables",
+          "type": "string[]",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminAiPromptWorkbenchComponent",
+      "selector": "fd-admin-ai-prompt-workbench",
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
+      "inputs": [
+        {
+          "name": "scenarioKey",
+          "type": "AdminAiPromptKey",
+          "required": true
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "promptText",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "verified",
+          "type": "string"
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.spec.ts"
+    },
+    {
       "class": "AdminAiPromptsPageComponent",
       "selector": "fd-admin-ai-prompts",
       "feature": "admin-ai-prompts",
@@ -57,7 +125,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.spec.ts"
     },
     {
       "class": "AdminAiUsageComponent",
@@ -14023,10 +14091,70 @@
     {
       "feature": "admin-ai-prompts",
       "method": "GET",
+      "responseType": "AdminAiPromptScenario[]",
+      "urlExpression": "`${this.url}/scenarios`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
+      "line": 17,
+      "publicMethod": "getScenarios",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/scenarios`"
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "method": "POST",
+      "responseType": "{ text: string }",
+      "urlExpression": "`${this.url}/preview`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
+      "line": 20,
+      "publicMethod": "preview",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/preview`"
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "method": "POST",
+      "responseType": "{ text: string }",
+      "urlExpression": "`${this.url}/test`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
+      "line": 27,
+      "publicMethod": "test",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/test`"
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "method": "POST",
+      "responseType": "{ uploadUrl: string; assetId: string }",
+      "urlExpression": "`${imagesUrl}/upload-url`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
+      "line": 33,
+      "publicMethod": "uploadImage",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${imagesUrl}/upload-url`"
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "method": "POST",
+      "responseType": "{ assetId: string }",
+      "urlExpression": "`${imagesUrl}/${upload.assetId}/confirm`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
+      "line": 46,
+      "publicMethod": "uploadImage",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${imagesUrl}/${upload.assetId}/confirm`"
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "method": "GET",
       "responseType": "AdminAiPrompt[]",
       "urlExpression": "this.url",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 13,
+      "line": 51,
       "publicMethod": "getAll",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -14038,7 +14166,7 @@
       "responseType": "AdminAiPrompt",
       "urlExpression": "`${this.url}/${encodeURIComponent(key",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 16,
+      "line": 54,
       "publicMethod": "save",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -14074,7 +14202,7 @@
       "responseType": "AdminSsoStartResponse",
       "urlExpression": "`${this.authUrl}/admin-sso/start`",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 109,
+      "line": 100,
       "publicMethod": "tryUpgradeToAdminAsync",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -14086,7 +14214,7 @@
       "responseType": "AuthenticationResponse",
       "urlExpression": "`${this.authUrl}/admin-sso/exchange`",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 125,
+      "line": 116,
       "publicMethod": "exchangeSsoCodeAsync",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -17098,20 +17226,64 @@
     },
     {
       "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.html",
+      "keys": [
+        "ADMIN_PROMPTS.CONTEXT_AUTOMATIC",
+        "ADMIN_PROMPTS.CONTEXT_EDITING",
+        "ADMIN_PROMPTS.CONTEXT_INPUTS",
+        "ADMIN_PROMPTS.CONTEXT_INTRO",
+        "ADMIN_PROMPTS.CONTEXT_TITLE",
+        "ADMIN_PROMPTS.RESPONSE_FORMAT",
+        "ADMIN_PROMPTS.RESPONSE_FORMAT_HINT"
+      ]
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.html",
+      "keys": [
+        "ADMIN_PROMPTS.VARIABLES_TITLE"
+      ]
+    },
+    {
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
+      "keys": [
+        "ADMIN_PROMPTS.AMOUNT",
+        "ADMIN_PROMPTS.FOOD_NAME",
+        "ADMIN_PROMPTS.PHOTO_HINT_FORMAT",
+        "ADMIN_PROMPTS.PREVIEW",
+        "ADMIN_PROMPTS.PREVIEW_FIRST",
+        "ADMIN_PROMPTS.PREVIEW_TITLE",
+        "ADMIN_PROMPTS.RESULT",
+        "ADMIN_PROMPTS.SAMPLE_HINT",
+        "ADMIN_PROMPTS.TEST",
+        "ADMIN_PROMPTS.TEST_COST",
+        "ADMIN_PROMPTS.UNIT",
+        "ADMIN_PROMPTS.UPLOAD_PHOTO",
+        "ADMIN_PROMPTS.WORKBENCH",
+        "DISABLED_HINTS.OPERATION_BUSY",
+        "GENERAL.UNITS.G",
+        "GENERAL.UNITS.ML"
+      ]
+    },
+    {
+      "feature": "admin-ai-prompts",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "keys": [
-        "ADMIN_COMMON.EMPTY",
         "ADMIN_COMMON.LOADING",
-        "ADMIN_COMMON.REQUIRED_FIELDS",
-        "ADMIN_COMMON.SEARCH",
         "ADMIN_NAV.PROMPTS",
-        "ADMIN_PROMPTS.ACTIVE",
-        "ADMIN_PROMPTS.KEY",
+        "ADMIN_PROMPTS.APPLY",
+        "ADMIN_PROMPTS.APPLY_HINT",
+        "ADMIN_PROMPTS.CACHE_HINT",
+        "ADMIN_PROMPTS.CURRENT_SOURCE",
+        "ADMIN_PROMPTS.CURRENT_TEXT",
+        "ADMIN_PROMPTS.CUSTOM",
+        "ADMIN_PROMPTS.DRAFT",
+        "ADMIN_PROMPTS.INHERITED_HINT",
         "ADMIN_PROMPTS.LOCALE",
-        "ADMIN_PROMPTS.NEW",
-        "ADMIN_PROMPTS.SAVE",
         "ADMIN_PROMPTS.SAVED",
         "ADMIN_PROMPTS.SAVE_ERROR",
+        "ADMIN_PROMPTS.SCENARIOS",
         "ADMIN_PROMPTS.SUBTITLE",
         "ADMIN_PROMPTS.TEXT"
       ]
@@ -21008,6 +21180,47 @@
       "outputsHandled": []
     },
     {
+      "component": "AdminAiPromptContextComponent",
+      "selector": "fd-admin-ai-prompt-context",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "responseFormatJson",
+        "scenarioKey"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminAiPromptVariablesComponent",
+      "selector": "fd-admin-ai-prompt-variables",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "variables"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminAiPromptWorkbenchComponent",
+      "selector": "fd-admin-ai-prompt-workbench",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "locale",
+        "promptText",
+        "scenarioKey"
+      ],
+      "outputsHandled": [
+        "verified"
+      ]
+    },
+    {
       "component": "AdminBillingFiltersComponent",
       "selector": "fd-admin-billing-filters",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.ts",
@@ -23645,8 +23858,23 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-ai-prompts",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
       "occurrences": 3,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 2,
       "inputsUsed": [
         "ariaPressed",
         "disabled",
@@ -27746,10 +27974,13 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "occurrences": 1,
       "inputsUsed": [
-        "id",
+        "checked",
+        "disabled",
         "label"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "checkedChange"
+      ]
     },
     {
       "component": "FdUiCheckboxComponent",
@@ -30333,11 +30564,11 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-ai-prompts",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
       "occurrences": 2,
       "inputsUsed": [
-        "id",
         "label",
+        "type",
         "value"
       ],
       "outputsHandled": [
@@ -32598,14 +32829,32 @@
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-ai-prompts",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "occurrences": 1,
       "inputsUsed": [
-        "id",
         "label",
-        "options"
+        "options",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -33285,10 +33534,25 @@
       "selector": "fd-ui-textarea",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
       "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "rows",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "admin-ai-prompts",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
       "occurrences": 1,
       "inputsUsed": [
-        "id",
         "label",
         "rows"
       ],

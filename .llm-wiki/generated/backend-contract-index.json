@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1231,
+    "contracts": 1241,
     "ambiguousContracts": 2,
-    "consumerEdges": 9669,
-    "productionConsumerEdges": 5508,
-    "testConsumerEdges": 4161,
-    "consumedContracts": 1231,
+    "consumerEdges": 9717,
+    "productionConsumerEdges": 5548,
+    "testConsumerEdges": 4169,
+    "consumedContracts": 1241,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -232,6 +232,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "AdminAiPromptDraftHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "AdminAiPromptHttpResponse",
       "roles": [
         "Response"
@@ -244,6 +261,40 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminAiPromptInspectionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptInspectionHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminAiPromptScenarioHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4908,6 +4959,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetAdminAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetAdminAiPromptsQuery",
       "roles": [
         "Query"
@@ -5634,6 +5702,23 @@
       ],
       "definitionPaths": [
         "Modules/Ai/Contracts/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8609,6 +8694,23 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IAggregateWithEvents.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16643,6 +16745,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "PreviewAdminAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "PreviewAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/PreviewAiPrompt/PreviewAiPromptQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "ProcessBillingWebhookCommand",
       "roles": [
         "Command"
@@ -19206,6 +19342,40 @@
       ],
       "definitionPaths": [
         "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "TestAdminAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "TestAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -21818,6 +21988,32 @@
       "referenceCount": 2
     },
     {
+      "contract": "AdminAiPromptDraftHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AdminAiPromptDraftHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
       "contract": "AdminAiPromptHttpResponse",
       "roles": [
         "Response"
@@ -21852,6 +22048,19 @@
         "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminAiPromptHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -21867,6 +22076,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminAiPromptInspectionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptInspectionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "AdminAiPromptScenarioHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminAiPromptScenarioHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -39235,6 +39483,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminAiPromptsQuery",
       "roles": [
         "Query"
@@ -41833,6 +42107,45 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAiPromptScenariosQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetAiPromptTemplatesQuery",
@@ -53808,6 +54121,71 @@
       "referenceCount": 3
     },
     {
+      "contract": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/AiPromptPreviewRenderer.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptPreviewRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IAiPromptProvider",
       "roles": [
         "Other"
@@ -53870,7 +54248,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "IAiPromptProvider",
@@ -53895,6 +54273,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53975,6 +54366,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IAiPromptTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IAiPromptTemplateReadModelRepository",
@@ -54090,6 +54494,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAiPromptTemplateWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -78009,6 +78426,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78025,6 +78455,19 @@
       "consumerPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IImageAssetContentService",
@@ -89515,7 +89958,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "IOpenAiFoodClient",
@@ -89591,6 +90034,19 @@
         "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89607,6 +90063,19 @@
       "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IOpenFoodFactsProductCacheReadRepository",
@@ -93075,6 +93544,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94948,6 +95430,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100771,6 +101266,32 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Contracts/Commands/SendBugAcknowledgements/SendBugAcknowledgementsCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -100797,6 +101318,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Contracts/Commands/UpsertAiPrompt/UpsertAiPromptCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -100811,6 +101345,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Contracts/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100863,6 +101410,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Contracts/Queries/GetCompletedFoodRecognition/GetCompletedFoodRecognitionQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Contracts/Queries/PreviewAiPrompt/PreviewAiPromptQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103072,6 +103632,32 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -103098,6 +103684,19 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -103112,6 +103711,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103164,6 +103776,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Queries/GetCompletedFoodRecognition/GetCompletedFoodRecognitionQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104996,6 +105621,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -105075,6 +105713,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105218,6 +105869,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -127449,7 +128113,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -129010,6 +129674,58 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "PreviewAdminAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PreviewAdminAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PreviewAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/PreviewAiPrompt/PreviewAiPromptQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PreviewAiPromptQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Queries/PreviewAiPrompt/PreviewAiPromptQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
     },
     {
       "contract": "ProcessBillingWebhookCommand",
@@ -139526,6 +140242,71 @@
       "referenceCount": 2
     },
     {
+      "contract": "TestAdminAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "TestAdminAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TestAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TestAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "TestAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ToggleRecipeLikeCommand",
       "roles": [
         "Command"
@@ -143656,6 +144437,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpsertAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/UpsertAiPrompt/UpsertAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

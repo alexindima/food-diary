@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, pattern, readonly, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, readonly, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FdUiButtonComponent,
     FdUiCheckboxComponent,
     FdUiConfirmDialogComponent,
     FdUiDialogService,
-    FdUiInputComponent,
     FdUiSelectComponent,
     FdUiTextareaComponent,
 } from 'fd-ui-kit';
@@ -16,11 +15,13 @@ import { firstValueFrom, map, type Observable, of } from 'rxjs';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminTemplateHistoryComponent } from '../../admin-template-history/components/admin-template-history';
 import type { AdminTemplateRevision } from '../../admin-template-history/models/admin-template-revision';
+import { AdminAiPromptContextComponent } from '../components/admin-ai-prompt-context';
+import { AdminAiPromptVariablesComponent } from '../components/admin-ai-prompt-variables';
+import { AdminAiPromptWorkbenchComponent } from '../components/admin-ai-prompt-workbench';
 import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
-import type { AdminAiPrompt } from '../models/admin-ai-prompt';
+import type { AdminAiPromptKey, AdminAiPromptScenario } from '../models/admin-ai-prompt-scenario';
 
-const PROMPT_KEY_MAX_LENGTH = 64;
-const PROMPT_TEXT_MAX_LENGTH = 4096;
+const PROMPT_MAX_LENGTH = 4096;
 
 @Component({
     selector: 'fd-admin-ai-prompts',
@@ -33,8 +34,10 @@ const PROMPT_TEXT_MAX_LENGTH = 4096;
         FormRoot,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiInputComponent,
         AdminLoadErrorComponent,
+        AdminAiPromptWorkbenchComponent,
+        AdminAiPromptVariablesComponent,
+        AdminAiPromptContextComponent,
     ],
     templateUrl: './admin-ai-prompts.html',
     styleUrl: './admin-ai-prompts.scss',
@@ -43,38 +46,43 @@ const PROMPT_TEXT_MAX_LENGTH = 4096;
 })
 export class AdminAiPromptsPageComponent {
     private readonly api = inject(AdminAiPromptsFacade);
+    private readonly languageSelect = viewChild(FdUiSelectComponent);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogs = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
-    protected readonly items = signal<AdminAiPrompt[]>([]);
+    protected readonly keys: AdminAiPromptKey[] = ['vision', 'text-parse', 'nutrition'];
+    protected readonly items = signal<AdminAiPromptScenario[]>([]);
+    protected readonly key = signal<AdminAiPromptKey>('vision');
+    protected readonly locale = signal('en');
+    protected readonly selected = computed(() => this.items().find(item => item.key === this.key() && item.locale === this.locale()));
     protected readonly loading = signal(false);
     protected readonly failed = signal(false);
     protected readonly saving = signal(false);
     protected readonly saveFailed = signal(false);
     protected readonly saved = signal(false);
-    protected readonly search = signal('');
-    protected readonly selected = signal<AdminAiPrompt | null>(null);
-    protected readonly filtered = computed(() =>
-        this.items().filter(item => `${item.key} ${item.locale}`.toLowerCase().includes(this.search().toLowerCase())),
-    );
-    protected readonly formModel = signal({ key: '', locale: 'en', promptText: '', isActive: true });
+    protected readonly verifiedText = signal<string | null>(null);
+    protected readonly formModel = signal({ promptText: '', isActive: false });
     private readonly baseline = signal(JSON.stringify(this.formModel()));
     private readonly dirty = computed(() => JSON.stringify(this.formModel()) !== this.baseline());
+    protected readonly draftText = computed(() =>
+        this.formModel().isActive ? this.formModel().promptText : (this.selected()?.inheritedPromptText ?? ''),
+    );
+    protected readonly canApply = computed(() => this.dirty() && this.verifiedText() === this.draftText() && !this.form().invalid());
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.saveAsync();
     };
     protected readonly form = form(
         this.formModel,
         path => {
-            required(path.key);
-            readonly(path.key, { when: () => this.selected() !== null });
-            maxLength(path.key, PROMPT_KEY_MAX_LENGTH);
-            required(path.locale);
-            pattern(path.locale, /^(en|ru)$/);
             required(path.promptText);
-            maxLength(path.promptText, PROMPT_TEXT_MAX_LENGTH);
+            readonly(path.promptText, { when: () => this.saving() });
+            maxLength(path.promptText, PROMPT_MAX_LENGTH);
         },
-        { submission: { action: this.submitFormAsync } },
+        {
+            submission: {
+                action: this.submitFormAsync,
+            },
+        },
     );
 
     public constructor() {
@@ -84,11 +92,12 @@ export class AdminAiPromptsPageComponent {
         this.loading.set(true);
         this.failed.set(false);
         this.api
-            .getAll()
+            .getScenarios()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: items => {
                     this.items.set(items);
+                    this.resetEditor();
                     this.loading.set(false);
                 },
                 error: () => {
@@ -97,27 +106,37 @@ export class AdminAiPromptsPageComponent {
                 },
             });
     }
-    protected edit(item: AdminAiPrompt | null): void {
+    protected selectScenario(key: AdminAiPromptKey, locale: string): void {
+        if (key === this.key() && locale === this.locale()) {
+            return;
+        }
         this.canLeave()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(allowed => {
                 if (!allowed) {
+                    this.languageSelect()?.value.set(this.locale());
                     return;
                 }
-                this.selected.set(item);
+                this.key.set(key);
+                this.locale.set(locale);
                 this.saved.set(false);
                 this.saveFailed.set(false);
-                this.setEditor(item);
+                this.resetEditor();
             });
     }
-    private setEditor(item: AdminAiPrompt | null): void {
+    protected setCustom(active: boolean): void {
+        this.formModel.update(value => ({ ...value, isActive: active }));
+        this.verifiedText.set(null);
+        this.saved.set(false);
+    }
+    private resetEditor(): void {
+        const item = this.selected();
         this.formModel.set({
-            key: item?.key ?? '',
-            locale: item?.locale ?? 'en',
-            promptText: item?.promptText ?? '',
-            isActive: item?.isActive ?? true,
+            promptText: item?.template?.promptText ?? item?.promptText ?? '',
+            isActive: item?.template?.isActive ?? false,
         });
         this.baseline.set(JSON.stringify(this.formModel()));
+        this.verifiedText.set(null);
     }
     // Router canDeactivate calls this contract outside the component template.
     // eslint-disable-next-line local/prefer-protected-template-members -- Router canDeactivate invokes this public contract.
@@ -146,23 +165,25 @@ export class AdminAiPromptsPageComponent {
         }
     }
     protected restoreRevision(revision: AdminTemplateRevision): void {
-        this.formModel.update(value => ({ ...value, promptText: revision.textBody, isActive: revision.isActive }));
+        this.formModel.set({ promptText: revision.textBody, isActive: revision.isActive });
+        this.verifiedText.set(null);
         this.saved.set(false);
     }
     protected async saveAsync(): Promise<void> {
-        if (this.form().invalid() || this.saving()) {
+        if (!this.canApply() || this.saving()) {
             return;
         }
         this.saving.set(true);
         this.saveFailed.set(false);
         this.saved.set(false);
-        const value = this.formModel();
         try {
-            const item = await firstValueFrom(
-                this.api.save(value.key.trim(), value.locale, value.promptText, value.isActive).pipe(takeUntilDestroyed(this.destroyRef)),
+            await firstValueFrom(
+                this.api
+                    .save(this.key(), this.locale(), this.formModel().promptText, this.formModel().isActive)
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
             );
-            this.selected.set(item);
-            this.setEditor(item);
+            this.baseline.set(JSON.stringify(this.formModel()));
+            this.verifiedText.set(null);
             this.saved.set(true);
             this.load();
         } catch {

@@ -17,7 +17,7 @@ AI owns food analysis, prompt administration, usage reporting contracts, quotas 
 - OpenAiFoodService owns deadlines, consent, prompt/provider calls and quota reconciliation across three operations; retain this workflow.
 - ProcessNextFoodRecognitionCommandHandler owns the background claim/vision/nutrition/completion lifecycle. The worker sends its Contracts request through ISender; preserve independent commits and protection against redispatch after uncertain provider outcomes.
 - FoodRecognitionResultReader validates ownership, completion and usable results for Meals; retain the public boundary.
-- AiPromptAdministrationService owns prompt mutation for Admin; retain the public boundary.
+- UpsertAiPromptCommandHandler owns prompt mutation through AI Contracts; Admin retains the transaction boundary.
 - Administration reads are owner Contracts queries dispatched through ISender; their Application handlers use internal projection ports. Prompt mutation and completed-recognition checks likewise remain in dedicated AI handlers.
 - ApplicationAiTelemetry owns shared application instrumentation, not a handler-forwarding service.
 - UserAiUsageSummaryReadService and AiUserContextService are retired. Do not reintroduce services solely to forward one handler or copy an identical owner DTO.
@@ -33,3 +33,43 @@ AiPromptProvider retains five-minute caching, active-version selection and exist
 Focused application/domain/infrastructure/presentation tests live under Modules/Ai/tests. Central PostgreSQL suites cover quota concurrency, usage projections, prompt persistence and shared transaction composition; central HTTP suites cover routes and snapshots. No live provider calls are required. Test discovery is not execution evidence.
 
 Architecture checks protect project layout, namespace alignment, module extraction, dependency references and controller convention discovery. See docs/adr/0038-read-model-composition.md and docs/ai/ai-persistence-boundary.md.
+
+## Admin prompt workbench
+
+The admin catalog exposes the three runtime scenarios (`vision`, `text-parse`,
+`nutrition`) for English and Russian, including built-in instructions when no
+custom template exists. `AiPromptCatalog` is the single source of unchanged
+built-in texts and supported variables. Requested-locale overrides, English
+fallbacks and built-ins retain the production selection order. The catalog
+reports configured values; cached provider requests may retain prior values for
+up to five minutes.
+
+Each catalog entry also exposes `responseFormatJson`, serialized from the same
+`OpenAiRequestFactory` format used by provider requests. The admin displays this
+read-only strict JSON schema alongside scenario-specific input and automatic
+instruction guidance. Schema fields cannot be edited through prompt text.
+Preview remains the assembled input text, rather than the full provider payload.
+
+Preview resolves an unsaved draft through the production `OpenAiRequestFactory`
+without contacting the provider. Applying an active supported template rejects
+unknown variables and text-parse instructions without `{{userText}}`. Legacy
+keys remain accessible through the existing template API but are not advertised
+as new runtime scenarios.
+
+An explicit admin test runs the draft and selected locale through
+`OpenAiFoodService`, preserving consent, profile access, operation deadlines,
+reservation, reconciliation and cancellation. Test calls require the current
+admin identity and an idempotency key and use the AI rate limiter and request
+size bounds. Photo tests use an image uploaded by the caller and recheck asset
+ownership before reading its content. Presigned uploads bypass the admin bearer
+interceptor. Tests create no meal and do not publish the draft; uploaded assets
+remain under the Images lifecycle. Automated verification uses substituted
+providers and never makes live AI calls.
+
+The workbench has explicit loading, validation, preview, result and failure
+states. A successful preview gates the Apply action. Editing the prompt or sample
+invalidates stale test results; switching scenario or language protects unsaved
+changes. The existing revision history restores into the draft and requires a
+new preview before publication. New catalog, preview and test routes are additive;
+ship the backend before or together with the admin frontend. No migration or
+configuration change is required.

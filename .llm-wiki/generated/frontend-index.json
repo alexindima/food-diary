@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1671,
-    "symbols": 659,
+    "typescriptFiles": 1679,
+    "symbols": 662,
     "routes": 100,
     "features": 44,
-    "specs": 580,
+    "specs": 584,
     "localeFiles": 5,
     "roles": {
-      "Component": 445,
+      "Component": 448,
       "Directive": 12,
       "Facade": 62,
       "Other": 17,
@@ -64,6 +64,9 @@
       "name": "admin-ai-prompts",
       "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts",
       "symbols": [
+        "AdminAiPromptContextComponent",
+        "AdminAiPromptVariablesComponent",
+        "AdminAiPromptWorkbenchComponent",
         "AdminAiPromptsFacade",
         "AdminAiPromptsPageComponent",
         "AdminAiPromptsService"
@@ -71,7 +74,12 @@
       "routes": [
         ""
       ],
-      "tests": []
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.spec.ts"
+      ]
     },
     {
       "area": "admin",
@@ -1941,21 +1949,42 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 9
+      "line": 11
+    },
+    {
+      "name": "AdminAiPromptContextComponent",
+      "role": "Component",
+      "selector": "fd-admin-ai-prompt-context",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
+      "line": 13
+    },
+    {
+      "name": "AdminAiPromptVariablesComponent",
+      "role": "Component",
+      "selector": "fd-admin-ai-prompt-variables",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
+      "line": 10
+    },
+    {
+      "name": "AdminAiPromptWorkbenchComponent",
+      "role": "Component",
+      "selector": "fd-admin-ai-prompt-workbench",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.ts",
+      "line": 21
     },
     {
       "name": "AdminAiPromptsFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/lib/admin-ai-prompts.facade.ts",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminAiPromptsPageComponent",
       "role": "Component",
       "selector": "fd-admin-ai-prompts",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
-      "line": 44
+      "line": 47
     },
     {
       "name": "AdminAiUsageService",
@@ -6505,8 +6534,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 952,
-      "russianProperties": 952,
+      "englishProperties": 1007,
+      "russianProperties": 1007,
       "countsMatch": true
     },
     {

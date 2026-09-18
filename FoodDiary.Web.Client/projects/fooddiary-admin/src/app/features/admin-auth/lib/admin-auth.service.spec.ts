@@ -60,6 +60,40 @@ describe('AdminAuthService token state', () => {
 });
 
 describe('AdminAuthService SSO exchange', () => {
+    it.each(['/?code=fresh-code', '/#code=fresh-code'])('replaces a stale session before continuing from %s', async url => {
+        localStorage.setItem('authToken', createToken({ role: 'Admin', exp: 1 }));
+        service.refreshTokenState();
+        window.history.replaceState({}, '', url);
+        const freshToken = createToken({ role: 'Admin', exp: 4102444800 });
+
+        const pending = service.applySsoFromQueryAsync();
+        const request = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
+        expect(request.request.body).toEqual({ code: 'fresh-code' });
+        request.flush({ accessToken: freshToken });
+        await pending;
+
+        expect(service.getToken()).toBe(freshToken);
+        expect(service.isAdmin()).toBe(true);
+        expect(window.location.search).toBe('');
+        expect(window.location.hash).toBe('');
+        await service.applySsoFromQueryAsync();
+        httpMock.expectNone(`${BASE_URL}/admin-sso/exchange`);
+    });
+
+    it('exchanges a fresh return-url code even when a token already exists', async () => {
+        localStorage.setItem('authToken', createToken({ role: 'Admin', exp: 1 }));
+        service.refreshTokenState();
+        const freshToken = createToken({ role: 'Admin', exp: 4102444800 });
+
+        const pending = service.tryApplySsoFromReturnUrlAsync('/users?page=2#code=recovery-code');
+        const request = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
+        expect(request.request.body).toEqual({ code: 'recovery-code' });
+        request.flush({ accessToken: freshToken });
+
+        await expect(pending).resolves.toBe('/users?page=2');
+        expect(service.getToken()).toBe(freshToken);
+    });
+
     it('should exchange sso code from query and clear code from url', async () => {
         const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
         window.history.replaceState({}, '', '/admin?code=sso-code&foo=1');

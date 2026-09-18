@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5437,
+    "productionFiles": 5467,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 933,
-    "criticalSymbolsWithTestReferences": 902,
-    "criticalSymbolsWithoutTestReferences": 31,
+    "criticalSymbols": 939,
+    "criticalSymbolsWithTestReferences": 904,
+    "criticalSymbolsWithoutTestReferences": 35,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -6154,19 +6154,51 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
+      "nonBlankLines": 57,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 2.64
     },
     {
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/lib/admin-ai-prompts.facade.ts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.ts",
+      "nonBlankLines": 134,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.18
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/lib/admin-ai-prompts.facade.ts",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/models/admin-ai-prompt-scenario.ts",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/models/admin-ai-prompt.ts",
@@ -6178,11 +6210,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
-      "nonBlankLines": 170,
-      "decisionPoints": 11,
+      "nonBlankLines": 191,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.9
+      "structuralRiskScore": 27.82
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/admin-ai-usage.routes.ts",
@@ -6274,11 +6306,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "nonBlankLines": 223,
-      "decisionPoints": 42,
+      "nonBlankLines": 216,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.46
+      "structuralRiskScore": 64.32
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
@@ -14281,6 +14313,22 @@
       "structuralRiskScore": 2.26
     },
     {
+      "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.18
+    },
+    {
       "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -14449,6 +14497,14 @@
       "structuralRiskScore": 0.34
     },
     {
+      "path": "Modules/Admin/Application/Mappings/AdminAiPromptDraftMappings.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.16
+    },
+    {
       "path": "Modules/Admin/Application/Mappings/AdminAiPromptMappings.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -14489,12 +14545,28 @@
       "structuralRiskScore": 1.16
     },
     {
+      "path": "Modules/Admin/Application/Models/AdminAiPromptDraft.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
       "path": "Modules/Admin/Application/Models/AdminAiPromptModel.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Admin/Application/Models/AdminAiPromptScenarioModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Admin/Application/Models/AdminAiUsageBreakdownModel.cs",
@@ -14679,6 +14751,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.26
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
@@ -15209,6 +15297,22 @@
       "structuralRiskScore": 2.58
     },
     {
+      "path": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.18
+    },
+    {
       "path": "Modules/Admin/Application/Services/AdminBillingQueryFilters.cs",
       "nonBlankLines": 51,
       "decisionPoints": 4,
@@ -15418,11 +15522,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
+      "nonBlankLines": 63,
+      "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
+      "structuralRiskScore": 4.76
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
@@ -15585,6 +15689,14 @@
       "structuralRiskScore": 1.18
     },
     {
+      "path": "Modules/Admin/Presentation/Mappings/AdminAiPromptWorkbenchHttpMappings.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
       "path": "Modules/Admin/Presentation/Mappings/AdminAuditJournalHttpMappings.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -15711,6 +15823,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
@@ -16015,6 +16135,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptInspectionHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminAiUsageBreakdownHttpResponse.cs",
@@ -16425,6 +16561,14 @@
       "structuralRiskScore": 2.26
     },
     {
+      "path": "Modules/Ai/Application.Abstractions/Common/AiPromptOverride.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Ai/Application.Abstractions/Common/AiProviderTokenBudget.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -16479,6 +16623,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptPreviewRenderer.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs",
@@ -16546,11 +16698,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs",
@@ -16567,6 +16719,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Prompts/AiPromptCatalog.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.46
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Prompts/AiPromptDraftValidation.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.76
     },
     {
       "path": "Modules/Ai/Application/AssemblyInfo.cs",
@@ -16681,12 +16849,20 @@
       "structuralRiskScore": 7.2
     },
     {
-      "path": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 2,
+      "path": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.66
+      "structuralRiskScore": 11.88
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.76
     },
     {
       "path": "Modules/Ai/Application/DependencyInjection.cs",
@@ -16703,6 +16879,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.24
+    },
+    {
+      "path": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.46
     },
     {
       "path": "Modules/Ai/Application/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQueryHandler.cs",
@@ -16793,6 +16977,14 @@
       "structuralRiskScore": 2.2
     },
     {
+      "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.32
+    },
+    {
       "path": "Modules/Ai/Application/Services/ApplicationAiTelemetry.cs",
       "nonBlankLines": 30,
       "decisionPoints": 0,
@@ -16802,11 +16994,11 @@
     },
     {
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "nonBlankLines": 209,
-      "decisionPoints": 22,
+      "nonBlankLines": 212,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.18
+      "structuralRiskScore": 47.74
     },
     {
       "path": "Modules/Ai/Contracts/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommand.cs",
@@ -16817,6 +17009,14 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Ai/Contracts/Commands/UpsertAiPrompt/UpsertAiPromptCommand.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -16825,12 +17025,28 @@
       "structuralRiskScore": 0.2
     },
     {
+      "path": "Modules/Ai/Contracts/Models/AiPromptDraft.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
       "path": "Modules/Ai/Contracts/Models/AiPromptRevisionReadModel.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Ai/Contracts/Models/AiPromptScenarioModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Ai/Contracts/Models/AiPromptTemplateReadModel.cs",
@@ -16921,6 +17137,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Ai/Contracts/Queries/GetAiPromptScenarios/GetAiPromptScenariosQuery.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Ai/Contracts/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -16951,6 +17175,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Ai/Contracts/Queries/PreviewAiPrompt/PreviewAiPromptQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Ai/Domain/Entities/AiPromptRevision.cs",
@@ -17018,11 +17250,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 43,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 2.36
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
@@ -17034,11 +17266,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 33,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.24
+      "structuralRiskScore": 11.16
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
@@ -17079,6 +17311,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.9
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/AiPromptPreviewRenderer.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.52
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs",
@@ -46453,6 +46693,28 @@
       "coveredThrough": []
     },
     {
+      "name": "TestAdminAiPromptCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "TestAiPromptCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
+      "line": 14,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ToggleRecipeLikeCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
@@ -46898,11 +47160,12 @@
       "name": "UpsertAiPromptCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
-      "line": 11,
-      "testReferenceCount": 4,
+      "line": 12,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs",
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Behaviors/OwnerRequestTransactionTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
@@ -47015,7 +47278,7 @@
       "name": "AdminAiPromptsController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
-      "line": 17,
+      "line": 20,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
@@ -48530,6 +48793,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminAiPromptScenariosQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminAiPromptsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
@@ -48860,6 +49133,18 @@
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAiPromptScenariosQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetAiPromptScenarios/GetAiPromptScenariosQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50384,6 +50669,26 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PreviewAdminAiPromptQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/PreviewAdminAiPrompt/PreviewAdminAiPromptQueryHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PreviewAiPromptQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

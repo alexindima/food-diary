@@ -28,7 +28,8 @@ public sealed class OpenAiFoodService(
         UserId userId,
         string? description,
         string requestId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null) {
         const string operation = "vision";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
@@ -37,10 +38,10 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
                 imageUrl,
-                contextResult.Value.Language,
+                promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
@@ -55,7 +56,7 @@ public sealed class OpenAiFoodService(
 
             Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.AnalyzeFoodImageAsync(
                 imageUrl,
-                contextResult.Value.Language,
+                promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
@@ -75,7 +76,8 @@ public sealed class OpenAiFoodService(
         string text,
         UserId userId,
         string requestId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null) {
         const string operation = "text-parse";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
@@ -84,10 +86,10 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetParseFoodTextTokenBudgetAsync(
                 text,
-                contextResult.Value.Language,
+                promptOverride?.Locale ?? contextResult.Value.Language,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
             if (budgetResult.IsFailure) {
@@ -101,7 +103,7 @@ public sealed class OpenAiFoodService(
 
             Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.ParseFoodTextAsync(
                 text,
-                contextResult.Value.Language,
+                promptOverride?.Locale ?? contextResult.Value.Language,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
             if (response.IsFailure) {
@@ -120,7 +122,8 @@ public sealed class OpenAiFoodService(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
         string requestId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        AiPromptOverride? promptOverride = null) {
         const string operation = "nutrition";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
@@ -129,7 +132,7 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodNutritionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetCalculateNutritionTokenBudgetAsync(
                 items,
                 promptTemplate,

@@ -5,6 +5,44 @@ import type { AdminDashboardOverview } from '../../projects/fooddiary-admin/src/
 const DAY_MS = 86_400_000;
 
 test.describe('admin smoke', () => {
+    for (const session of ['empty', 'expired'] as const) {
+        test(`opens from dashboard SSO on the first attempt with an ${session} session`, async ({ page }) => {
+            const freshToken = createJwt({ role: 'Admin', exp: 4102444800 });
+            if (session === 'expired') {
+                await page.addInitScript(
+                    token => {
+                        localStorage.setItem('authToken', token);
+                    },
+                    createJwt({ role: 'Admin', exp: 1 }),
+                );
+            }
+            await mockAdminApiAsync(page);
+            let exchanges = 0;
+            let dashboardRequests = 0;
+            page.on('request', request => {
+                if (request.url().includes('/admin/dashboard/overview')) {
+                    dashboardRequests++;
+                    expect(request.headers()['authorization']).toBe(`Bearer ${freshToken}`);
+                }
+            });
+            await page.route('**/api/v1/auth/admin-sso/exchange', async route => {
+                exchanges++;
+                expect(route.request().postDataJSON()).toEqual({ code: 'dashboard-code' });
+                expect(dashboardRequests).toBe(0);
+                await route.fulfill(jsonResponse({ accessToken: freshToken }));
+            });
+
+            await page.goto('/#code=dashboard-code');
+
+            await expect(page.getByText('Total accounts', { exact: true })).toBeVisible();
+            await expect(page.getByRole('heading', { name: 'Access denied' })).toHaveCount(0);
+            expect(exchanges).toBe(1);
+            await page.getByRole('link', { name: 'Accounts', exact: true }).click();
+            await expect(page.getByText('Total users: 1')).toBeVisible();
+            expect(exchanges).toBe(1);
+        });
+    }
+
     test('redirects unauthenticated user to unauthorized page', async ({ page }) => {
         await page.goto('/users');
 

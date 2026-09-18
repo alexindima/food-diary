@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1474,
+    "candidateFields": 1487,
     "credential": 156,
     "identity": 174,
     "health": 691,
     "financial": 129,
-    "privateContent": 324,
-    "boundaryFiles": 193,
+    "privateContent": 337,
+    "boundaryFiles": 195,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -8218,8 +8218,36 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptDraft.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptDraft.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
       "path": "Modules/Admin/Application/Models/AdminAiPromptModel.cs",
       "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptScenarioModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "InheritedPromptText",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptScenarioModel.cs",
+      "line": 4
     },
     {
       "category": "privateContent",
@@ -8239,6 +8267,20 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
       "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "line": 4
     },
@@ -8251,10 +8293,31 @@
     },
     {
       "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "InheritedPromptText",
+      "type": "string",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 34
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiPromptOverride.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -8281,8 +8344,36 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
+      "path": "Modules/Ai/Contracts/Models/AiPromptDraft.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Ai/Contracts/Models/AiPromptDraft.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
       "path": "Modules/Ai/Contracts/Models/AiPromptRevisionReadModel.cs",
       "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Models/AiPromptScenarioModel.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "InheritedPromptText",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Models/AiPromptScenarioModel.cs",
+      "line": 5
     },
     {
       "category": "privateContent",
@@ -10416,6 +10507,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
       "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -10457,6 +10555,13 @@
         "privateContent"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminAiUsageUserHttpResponse.cs",

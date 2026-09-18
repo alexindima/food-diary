@@ -514,6 +514,44 @@ public sealed class OpenAiFoodServiceTests {
             new(new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc));
     }
 
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("text-parse")]
+    [InlineData("nutrition")]
+    public async Task DraftOverride_StillRequiresConsent(string operation) {
+        var user = User.Create("draft-no-consent@example.com", "hash");
+        var client = new RecordingOpenAiFoodClient();
+        var quota = new RecordingAiQuotaRepository();
+        OpenAiFoodService service = CreateService(client, quota, user);
+        var prompt = new AiPromptOverride("Draft prompt", "ru");
+        Result result = operation switch {
+            "vision" => await service.AnalyzeFoodImageAsync("data:image/png;base64,AA==", user.Id, description: null, RequestId, CancellationToken.None, prompt),
+            "text-parse" => await service.ParseFoodTextAsync("apple", user.Id, RequestId, CancellationToken.None, prompt),
+            _ => await service.CalculateNutritionAsync(CreateItems(), user.Id, RequestId, CancellationToken.None, prompt),
+        };
+        ResultAssert.Failure(result);
+        Assert.Multiple(() => Assert.Equal("Ai.ConsentRequired", result.Error.Code),
+            () => Assert.Equal(0, client.ProviderCalls), () => Assert.Empty(quota.Reservations));
+    }
+
+    [Fact]
+    public async Task DraftOverride_UsesSelectedLocaleAndChargesNormalQuotaWithoutReadingSavedPrompt() {
+        IOpenAiFoodClient client = Substitute.For<IOpenAiFoodClient>();
+        client.GetParseFoodTextTokenBudgetAsync("apple", "ru", "Draft {{userText}}", Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new AiProviderTokenBudget(InputTokens: 10, MaximumOutputTokens: 20)));
+        client.ParseFoodTextAsync("apple", "ru", "Draft {{userText}}", Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(new FoodVisionModel([]), "text-parse", "test-model",
+                new AiUsageTokens(InputTokens: 10, OutputTokens: 5, TotalTokens: 15))));
+        var quota = new RecordingAiQuotaRepository();
+        IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
+        var service = new OpenAiFoodService(client, quota, CreateUserAiProfileReadService(), new StubDateTimeProvider(), prompts);
+        ResultAssert.Success(await service.ParseFoodTextAsync("apple", UserId.New(), RequestId, CancellationToken.None,
+            new AiPromptOverride("Draft {{userText}}", "ru")));
+        Assert.Multiple(() => Assert.Single(quota.Reservations), () => Assert.Single(quota.Reconciliations),
+            () => Assert.Empty(prompts.ReceivedCalls()));
+        await client.Received(1).ParseFoodTextAsync("apple", "ru", "Draft {{userText}}", Arg.Any<CancellationToken>());
+    }
+
     private static IAiPromptProvider CreateAiPromptProvider() {
         IAiPromptProvider provider = Substitute.For<IAiPromptProvider>();
         provider

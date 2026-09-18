@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "2c8afccb2b5bb5eefee9a2b592ca9b72a7ea915998f68ef0a75f0d0dbe48c423"
+          "sha256": "e448187278cd2b953b7dbca40b1cd1ca43b437f7ea9b16a68749fabc76ab47b6"
         }
       ],
-      "reason": "Retention adds optional CohortFrom/CohortTo query parameters and meal entry counts plus cohort date metadata. Existing date fields and routes remain unchanged; requests omitting cohort dates retain the original shared-range semantics. api-compat reported no structural breaking changes. Full OpenAPI snapshot regenerated and passed a rebuilt non-update host integration test; reader PostgreSQL and handler/presentation tests passed.",
+      "reason": "Added responseFormatJson to scenario response DTO and snapshot; normal full Swagger snapshot test passes. Existing endpoints and inputs unchanged, backend-before-admin rollout retained.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:35:34.4143557Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:59:00.0736333Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d6e0a8a4f0c37b2fe624911dce17079e04983ed9fce60229f52e3105acd424ff"
+          "sha256": "1ca5917931960eb6747ae5a48c409e453154a22169d4e9aa620f3fd7305a6fa5"
         }
       ],
-      "reason": "Retention stays in the existing Admin query and read-model composition boundary. No new project references or ownership changes. 104 focused Admin, composed-read and persistence capability architecture tests and frontend dependency checks passed.",
+      "reason": "No project edges changed, 817 focused architecture tests pass; Admin orchestrates and Ai owns prompt rules.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:05.5959018Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T04:48:25.6772120Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "d2a232423e9936642b10ff9c137bbdee1fa5a20ac23c225bd13576e135d59ea9"
+          "sha256": "54de81064bd1e55fd0cb382efef330ac9e6f1e9fbd2c5fb5ffc23756fbdcb63f"
         }
       ],
-      "reason": "Traced IAdminRetentionReader, report/day records, HTTP query and mappings through their production and test consumers. New cohort parameters are optional; omitted cohort ranges preserve legacy behavior. PostgreSQL counts and independent periods, 16 handler cases, mapping and regenerated OpenAPI snapshot passed.",
+      "reason": "Renderer port exposes format serialization from existing production schema builders; Ai catalog maps string through Admin owner contracts and HTTP DTO. API integration verifies each locale/scenario includes strict JSON schema.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:07.2624638Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:58:56.3310747Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -775,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a86ed6395f374df4ecbb43a33c3258e9fee9d832b079efa20e9d5c81ad7b176f"
+          "sha256": "53be9279915b701fa1be194cf9f909fa6154f2dc8a41023b50a054e60fd47db4"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "Preview no provider call, explicit test retains consent, quotas and owned image checks; upload avoids bearer disclosure; existing image lifecycle retained.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:40.5641093Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T04:48:23.0643179Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1270ac8a7e56adb5cc0cff1cc5077580080b688c94c371432042f181929ac25e"
+          "sha256": "a65d4f99479af7463150df6fab47a9f3ca3fd3d87df8b0d0d7879807d79ea6e7"
         }
       ],
-      "reason": "Added focused regression coverage for the API date-format defect, namespaced query controls, undefined query values, meal counts, zero days and independent cohort boundaries. Executed provider-backed PostgreSQL test; static test references were not treated as execution coverage.",
+      "reason": "Seven renderer tests and eleven owner tests pass, plus six integration checks and normal snapshot verification. Component regression covers schema and input guidance switching.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:10.5478530Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:58:59.2239770Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a045dc7312712cb8eea4d4d00150fa41b2655b01315381049c21ea449561304"
+          "sha256": "08d282f76c3137727cbc3e1cf7e9ac4e6cf904b0dbde5222f19cdef8e2a6561a"
         }
       ],
-      "reason": "Read-only Admin analytics retains existing authorization, cancellation, DI and HTTP route. No workers, outbound providers, persistent events, migrations or deployment configuration changed. Meal counts aggregate existing retained data; no new storage or external sharing.",
+      "reason": "Catalog serializes only static response format metadata. No provider call, prompt persistence, credentials, images or configuration added to this path.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:12.0844114Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:58:58.2451499Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1270ac8a7e56adb5cc0cff1cc5077580080b688c94c371432042f181929ac25e"
+          "sha256": "a65d4f99479af7463150df6fab47a9f3ca3fd3d87df8b0d0d7879807d79ea6e7"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a045dc7312712cb8eea4d4d00150fa41b2655b01315381049c21ea449561304"
+          "sha256": "08d282f76c3137727cbc3e1cf7e9ac4e6cf904b0dbde5222f19cdef8e2a6561a"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "53be9279915b701fa1be194cf9f909fa6154f2dc8a41023b50a054e60fd47db4"
         }
       ],
-      "reason": "All accounts remain included per user instruction. No email heuristics, credentials, user-data writes or new sharing/storage introduced. Existing Admin authorization and no-store response policy remain. Date ranges are validated and provider-backed no-tracking query test passed.",
+      "reason": "Context display is read-only and Angular text-escaped, schema contains no user sample or credential data. Existing admin access and AI test quotas unchanged; no live provider requests in validation.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:13.3606224Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:59:01.9865464Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,17 +1057,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6c562b02b67e9b51a8388ab86e1970aff8aa3a3a851bef7c93e5cf9547b4eb40"
+          "sha256": "616ff2eb78e94ec9e1f3df99a3050c9acd71b251fe3df1e114a51f09716ae687"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d02470acb8d740d88b025e88216bec0baf6b68389abcdad9b97736d89c7c35b4"
+          "sha256": "35fffedf365eb6c4e5166848dd64311200368d7f95a323d19c0dd1b1f40cec8b"
         }
       ],
-      "reason": "Traced Meal creation timestamps through the composition reader, Admin query/mapping/API and retention facade/component. Dates now use the actual API format; activity and cohort selection are independent and counts are explicitly distinguished in both locales.",
+      "reason": "Verified scenario query through Ai renderer, Admin mapping, HTTP response and context component. Mocked browser exercised all three scenarios, keyboard schema expansion, Russian rendering and 390px no-overflow layout.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:14.6148950Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:58:57.3231018Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6c562b02b67e9b51a8388ab86e1970aff8aa3a3a851bef7c93e5cf9547b4eb40"
+          "sha256": "616ff2eb78e94ec9e1f3df99a3050c9acd71b251fe3df1e114a51f09716ae687"
         }
       ],
-      "reason": "Checked full DateTime payload rendering, nullable retention values, separate namespaced period filters and omission of undefined HTTP parameters. 160 admin tests passed. Desktop/mobile browser checks cover independent URL filters, all time, zero days, empty cohorts and Russian labels without overflow or runtime errors.",
+      "reason": "New read-only context component binds selected scenario and backend schema. English/Russian input and automatic-rule guidance matches OpenAiRequestFactory. 170 admin tests and build pass.",
       "baseRef": "HEAD",
-      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
-      "reviewedAtUtc": "2026-09-18T03:38:08.9395356Z"
+      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
+      "reviewedAtUtc": "2026-09-18T08:59:01.0222455Z"
     },
     {
       "pageId": "workflow.query-context",

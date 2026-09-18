@@ -1,0 +1,81 @@
+<section class="fd-grid fd-gap-md" [attr.aria-label]="'ADMIN_PROMPTS.WORKBENCH' | translate">
+    <h2 class="fd-ui-section-title">{{ 'ADMIN_PROMPTS.WORKBENCH' | translate }}</h2>
+    <p class="fd-ui-body-sm">{{ 'ADMIN_PROMPTS.SAMPLE_HINT' | translate }}</p>
+    @if (scenarioKey() === 'nutrition') {
+        <fd-ui-input
+            [label]="'ADMIN_PROMPTS.FOOD_NAME' | translate"
+            [value]="foodName()"
+            (valueChange)="foodName.set($event?.toString() || '')"
+        />
+        <div class="sample-amount">
+            <fd-ui-input
+                type="number"
+                [label]="'ADMIN_PROMPTS.AMOUNT' | translate"
+                [value]="amount()"
+                (valueChange)="amount.set(+$event!)"
+            />
+            <fd-ui-select
+                [label]="'ADMIN_PROMPTS.UNIT' | translate"
+                [value]="unit()"
+                [options]="[
+                    { value: 'g', label: 'GENERAL.UNITS.G' | translate },
+                    { value: 'ml', label: 'GENERAL.UNITS.ML' | translate },
+                ]"
+                (valueChange)="unit.set($event?.toString() || 'g')"
+            />
+        </div>
+    } @else {
+        <fd-ui-textarea
+            [label]="(scenarioKey() === 'vision' ? 'ADMIN_PROMPTS.PHOTO_HINT' : 'ADMIN_PROMPTS.FOOD_TEXT') | translate"
+            [rows]="3"
+            [value]="text()"
+            (valueChange)="text.set($event?.toString() || '')"
+        />
+    }
+    @if (scenarioKey() === 'vision') {
+        <!-- UI kit has no file picker; a hidden native input opens the chooser through the shared button. -->
+        <input #photoInput type="file" hidden accept="image/jpeg,image/png,image/webp" (change)="uploadAsync(photoInput.files?.item(0))" />
+        <fd-ui-button
+            variant="secondary"
+            [loading]="uploading()"
+            [disabled]="busy()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            (click)="photoInput.click()"
+            >{{ 'ADMIN_PROMPTS.UPLOAD_PHOTO' | translate }}</fd-ui-button
+        >
+        <p class="fd-ui-caption">{{ imageName() || ('ADMIN_PROMPTS.PHOTO_HINT_FORMAT' | translate) }}</p>
+    }
+    <div class="workbench-actions">
+        <fd-ui-button
+            variant="secondary"
+            [loading]="busy()"
+            [disabled]="uploading()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            (click)="inspectAsync(false)"
+            >{{ 'ADMIN_PROMPTS.PREVIEW' | translate }}</fd-ui-button
+        >
+        <fd-ui-button
+            variant="secondary"
+            [disabled]="!canTest() || busy() || uploading()"
+            [disabledReason]="'ADMIN_PROMPTS.PREVIEW_FIRST' | translate"
+            (click)="inspectAsync(true)"
+            >{{ 'ADMIN_PROMPTS.TEST' | translate }}</fd-ui-button
+        >
+    </div>
+    <p class="fd-ui-caption">{{ 'ADMIN_PROMPTS.TEST_COST' | translate }}</p>
+    @if (errorKey()) {
+        <p role="alert">{{ errorKey() | translate }}</p>
+    }
+    @if (preview()) {
+        <div aria-live="polite">
+            <h3 class="fd-ui-card-title">{{ 'ADMIN_PROMPTS.PREVIEW_TITLE' | translate }}</h3>
+            <pre>{{ preview() }}</pre>
+        </div>
+    }
+    @if (result()) {
+        <div aria-live="polite">
+            <h3 class="fd-ui-card-title">{{ 'ADMIN_PROMPTS.RESULT' | translate }}</h3>
+            <pre>{{ result() }}</pre>
+        </div>
+    }
+</section>
