@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, min, pattern, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiCheckboxComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
@@ -36,6 +37,7 @@ const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
 @Component({
     selector: 'fd-admin-achievements',
     imports: [
+        FdUiCheckboxComponent,
         AdminCatalogFilterComponent,
         FdUiPaginationComponent,
         FormField,

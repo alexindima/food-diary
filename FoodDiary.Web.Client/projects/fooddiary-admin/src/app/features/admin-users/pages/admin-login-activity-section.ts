@@ -1,28 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import type { AdminUserLoginEvent } from '../models/admin-user.models';
 
 @Component({
     selector: 'fd-admin-login-activity-section',
-    imports: [RouterLink, DatePipe, FdUiInputComponent, FdUiPaginationComponent],
+    imports: [RouterLink, DatePipe, FdUiPaginationComponent],
     templateUrl: './admin-login-activity-section.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLoginActivitySectionComponent {
-    public readonly search = model.required<string>();
     public readonly isLoading = input.required<boolean>();
     public readonly totalItems = input.required<number>();
     public readonly events = input.required<AdminUserLoginEvent[]>();
     public readonly page = model.required<number>();
     public readonly pageSize = input.required<number>();
     public readonly totalPages = input.required<number>();
-
-    protected getControlTextValue(value: FdUiInputValue): string {
-        return fdUiCoerceInputTextValue(value);
-    }
 }

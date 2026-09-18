@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { email, form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -28,7 +29,16 @@ type AdminUserCreateFormModel = {
 
 @Component({
     selector: 'fd-admin-user-create-dialog',
-    imports: [FormField, FormRoot, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent],
+    imports: [
+        FdUiSelectComponent,
+        FdUiCheckboxComponent,
+        FormField,
+        FormRoot,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiInputComponent,
+    ],
     templateUrl: './admin-user-create-dialog.html',
     styleUrl: './admin-user-create-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,10 +85,11 @@ export class AdminUserCreateDialogComponent {
         return this.formModel().roles.includes(role);
     }
 
-    protected onSendCredentialsChange(): void {
-        if (this.formModel().sendCredentialsEmail) {
-            this.formModel.update(value => ({ ...value, requirePasswordChange: true }));
-        }
+    protected onCredentialsOptionChange(field: 'sendCredentialsEmail' | 'requirePasswordChange', checked: boolean): void {
+        this.formModel.update(value => {
+            const updated = { ...value, [field]: checked };
+            return { ...updated, requirePasswordChange: updated.sendCredentialsEmail || updated.requirePasswordChange };
+        });
     }
 
     protected submit(): void {

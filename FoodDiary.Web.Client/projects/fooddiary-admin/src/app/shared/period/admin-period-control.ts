@@ -9,6 +9,7 @@ import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
 @Component({
     selector: 'fd-admin-period',
+    host: { '[class.admin-period-inline]': 'inline()' },
     imports: [TranslatePipe, FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent],
     styleUrl: './admin-period-control.scss',
     templateUrl: './admin-period-control.html',
@@ -20,6 +21,7 @@ export class AdminPeriodControlComponent {
     private readonly translate = inject(TranslateService);
     private readonly language = toSignal(this.translate.onLangChange);
     private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
+    public readonly inline = input(false);
     public readonly defaultPeriod = input('all');
     public readonly label = input('ADMIN_COMMON.PERIOD');
     protected readonly preset = signal('all');

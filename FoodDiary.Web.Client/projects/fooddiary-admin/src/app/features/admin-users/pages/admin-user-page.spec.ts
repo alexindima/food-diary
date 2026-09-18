@@ -1,13 +1,18 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { FdUiDialogService } from 'fd-ui-kit';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
+import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent, PagedResponse } from '../models/admin-user.models';
-import { AdminUserDetailsDialogComponent } from './admin-user-details-dialog';
+import { AdminUserPageComponent } from './admin-user-page';
+
+const EXPECTED_ACTION_COUNT = 3;
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
 
@@ -17,15 +22,16 @@ type UsersFacadeMock = {
     getUserRoleAudit: ReturnType<typeof vi.fn>;
 };
 
-type DialogRefMock = {
-    close: ReturnType<typeof vi.fn>;
+type DialogServiceMock = {
+    open: ReturnType<typeof vi.fn>;
 };
 
 type TestContext = {
-    component: AdminUserDetailsDialogComponent;
-    fixture: ComponentFixture<AdminUserDetailsDialogComponent>;
+    component: AdminUserPageComponent;
+    fixture: ComponentFixture<AdminUserPageComponent>;
     usersFacade: UsersFacadeMock;
-    dialogRef: DialogRefMock;
+    dialogs: DialogServiceMock;
+    routeParams: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
 };
 
 const baseUser: AdminUser = {
@@ -116,7 +122,7 @@ function pagedLogins(items: AdminUserLoginEvent[]): PagedResponse<AdminUserLogin
     };
 }
 
-function host(fixture: ComponentFixture<AdminUserDetailsDialogComponent>): HTMLElement {
+function host(fixture: ComponentFixture<AdminUserPageComponent>): HTMLElement {
     return fixture.nativeElement as HTMLElement;
 }
 
@@ -129,28 +135,30 @@ function createUsersFacadeMock(): UsersFacadeMock {
 }
 
 async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => void, initialUser = baseUser): Promise<TestContext> {
+    const routeParams = new BehaviorSubject(convertToParamMap({ id: initialUser.id }));
     const usersFacade = createUsersFacadeMock();
-    const dialogRef: DialogRefMock = { close: vi.fn() };
+    const dialogs: DialogServiceMock = { open: vi.fn().mockReturnValue({ afterClosed: () => of(false) }) };
     configure?.(usersFacade);
 
     await TestBed.configureTestingModule({
-        imports: [AdminUserDetailsDialogComponent],
+        imports: [AdminUserPageComponent],
         providers: [
             provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersFacade },
-            { provide: FdUiDialogRef, useValue: dialogRef },
-            { provide: FD_UI_DIALOG_DATA, useValue: initialUser },
+            provideRouter([]),
+            { provide: FdUiDialogService, useValue: dialogs },
+            { provide: ActivatedRoute, useValue: { paramMap: routeParams } },
         ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(AdminUserDetailsDialogComponent);
+    const fixture = TestBed.createComponent(AdminUserPageComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { component, fixture, usersFacade, dialogRef };
+    return { component, fixture, usersFacade, dialogs, routeParams };
 }
 
-describe('AdminUserDetailsDialogComponent', () => {
+describe('AdminUserPageComponent', () => {
     it('renders a Telegram-only account without email or names', async () => {
         const telegramUser: AdminUser = {
             ...baseUser,
@@ -166,7 +174,7 @@ describe('AdminUserDetailsDialogComponent', () => {
 
         expect(component['initials']()).toBe('?');
         expect(component['sections']().flatMap(section => section.fields)).toContainEqual({ label: 'Email', value: '-' });
-        expect(component['hasError']()).toBe(false);
+        expect(component['failed']()).toBe(false);
         expect(host(fixture).textContent).not.toContain('Could not load user details.');
     });
 
@@ -177,8 +185,8 @@ describe('AdminUserDetailsDialogComponent', () => {
         expect(usersFacade.getUser).toHaveBeenCalledWith(baseUser.id);
         expect(usersFacade.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id });
         expect(usersFacade.getUserRoleAudit).toHaveBeenCalledWith(baseUser.id);
-        expect(component['isLoading']()).toBe(false);
-        expect(component['hasError']()).toBe(false);
+        expect(component['activityLoading']()).toBe(false);
+        expect(component['failed']()).toBe(false);
         expect(host(fixture).textContent).toContain(baseUser.email);
         expect(host(fixture).textContent).toContain('Role history');
     });
@@ -188,8 +196,10 @@ describe('AdminUserDetailsDialogComponent', () => {
             usersFacade.getLoginEvents.mockReturnValueOnce(throwError(() => new Error('activity failed')));
         });
 
-        expect(component['isLoading']()).toBe(false);
-        expect(component['hasError']()).toBe(false);
+        expect(component['activityLoading']()).toBe(false);
+        expect(component['failed']()).toBe(false);
+        expect(component['activityFailed']()).toBe(true);
+        expect(component['sections']()).not.toHaveLength(0);
         expect(component['loginEvents']()).toEqual([]);
         expect(component['roleAuditEvents']()).toEqual([]);
     });
@@ -199,23 +209,42 @@ describe('AdminUserDetailsDialogComponent', () => {
             usersFacade.getUser.mockReturnValueOnce(throwError(() => new Error('details failed')));
         });
 
-        expect(component['isLoading']()).toBe(false);
-        expect(component['hasError']()).toBe(true);
-        expect(host(fixture).textContent).toContain('Could not load user details.');
+        expect(component['activityLoading']()).toBe(false);
+        expect(component['failed']()).toBe(true);
+        expect(host(fixture).querySelector('fd-admin-load-error')).not.toBeNull();
+    });
+});
+
+describe('AdminUserPageComponent actions and navigation', () => {
+    it('exposes edit, password and impersonation actions directly on the page', async () => {
+        const { component, dialogs, usersFacade } = await createContextAsync();
+        dialogs.open.mockReturnValue({ afterClosed: () => of(true) });
+        component['edit'](baseUser);
+        component['setPassword'](baseUser);
+        expect(dialogs.open).toHaveBeenCalledWith(AdminUserEditDialogComponent, { size: 'sm', data: baseUser });
+        expect(dialogs.open).toHaveBeenCalledWith(AdminUserSetPasswordDialogComponent, { size: 'sm', data: baseUser });
+        expect(usersFacade.getUser).toHaveBeenCalledTimes(EXPECTED_ACTION_COUNT);
+        dialogs.open.mockReturnValue({ afterClosed: () => of(null) });
+        component['impersonate'](baseUser);
+        expect(dialogs.open).toHaveBeenCalledWith(AdminUserImpersonationDialogComponent, { size: 'sm', data: baseUser });
     });
 
-    it('closes with expected action results', async () => {
-        const { component, dialogRef } = await createContextAsync();
-
-        component['edit']();
-        component['setPassword']();
-        component['impersonate']();
-        component['close']();
-
-        expect(dialogRef.close).toHaveBeenCalledWith('edit');
-        expect(dialogRef.close).toHaveBeenCalledWith('setPassword');
-        expect(dialogRef.close).toHaveBeenCalledWith('impersonate');
-        expect(dialogRef.close).toHaveBeenCalledWith(null);
+    it('drops stale activity when navigating to a different account', async () => {
+        const pendingLogins = new Subject<PagedResponse<AdminUserLoginEvent>>();
+        const { component, usersFacade, routeParams } = await createContextAsync(facade => {
+            facade.getLoginEvents.mockReturnValueOnce(pendingLogins);
+        });
+        expect(component['activityLoading']()).toBe(true);
+        const nextUser = { ...baseUser, id: 'user-2', email: 'second@example.com' };
+        usersFacade.getUser.mockReturnValueOnce(of(nextUser));
+        usersFacade.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
+        usersFacade.getUserRoleAudit.mockReturnValueOnce(of([]));
+        routeParams.next(convertToParamMap({ id: nextUser.id }));
+        pendingLogins.next(pagedLogins([loginEvent]));
+        pendingLogins.complete();
+        expect(component['user']()?.id).toBe(nextUser.id);
+        expect(component['loginEvents']()).toEqual([]);
+        expect(component['roleAuditEvents']()).toEqual([]);
     });
 
     it('disables impersonation for admin and deleted users', async () => {

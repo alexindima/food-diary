@@ -24,6 +24,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly clearAriaLabel = input<string>();
     public readonly pickerAriaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly todayLabel = input<string>();
@@ -82,6 +83,16 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
                 this.closeDatePicker();
             }
         });
+    }
+
+    protected clearValue(): void {
+        if (this.disabled()) {
+            return;
+        }
+        this.internalValue.set(null);
+        this.value.set(null);
+        this.touched.set(true);
+        this.closeDatePicker();
     }
 
     protected openDatePicker(): void {

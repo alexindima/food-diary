@@ -27,6 +27,17 @@
                 (click)="openDatePicker()"
                 (keydown)="onInputKeydown($event)"
             />
+            @if (clearAriaLabel() && internalValue() !== null) {
+                <button
+                    type="button"
+                    class="fd-ui-date-input__suffix"
+                    [disabled]="disabled()"
+                    [attr.aria-label]="clearAriaLabel()"
+                    (click)="clearValue()"
+                >
+                    <fd-ui-icon name="close" />
+                </button>
+            }
             <button
                 type="button"
                 class="fd-ui-date-input__suffix"

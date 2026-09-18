@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -64,10 +65,15 @@ describe('AdminAcquisitionComponent', () => {
 
     it('filters the event log by attribution state', async () => {
         const element = fixture.nativeElement as HTMLElement;
-        const select = getRequiredSelect(element, '#admin-acquisition-channel');
-
-        select.value = 'tracked';
-        select.dispatchEvent(new Event('change'));
+        const select = element.querySelector<HTMLButtonElement>('button#admin-acquisition-channel');
+        expect(select).not.toBeNull();
+        select?.click();
+        fixture.detectChanges();
+        const option = Array.from(TestBed.inject(DOCUMENT).querySelectorAll<HTMLElement>('[role=option]')).find(item =>
+            item.textContent.includes('Tracked only'),
+        );
+        expect(option).toBeDefined();
+        option?.click();
         await fixture.whenStable();
         fixture.detectChanges();
 
@@ -172,13 +178,4 @@ function createSummary(): MarketingAttributionSummary {
             },
         ],
     };
-}
-
-function getRequiredSelect(element: HTMLElement, selector: string): HTMLSelectElement {
-    const select = element.querySelector<HTMLSelectElement>(selector);
-    if (select === null) {
-        throw new Error(`Expected select ${selector}`);
-    }
-
-    return select;
 }

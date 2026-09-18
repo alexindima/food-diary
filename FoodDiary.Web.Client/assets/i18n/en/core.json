@@ -880,6 +880,7 @@
         "PERIOD_30d": "Last 30 days",
         "RETRY": "Retry",
         "APPLY": "Apply",
+        "APPLY_PERIOD": "Apply period",
         "PERIOD_month": "This month",
         "PERIOD": "Reporting period",
         "PERIOD_all": "All time",
@@ -918,6 +919,10 @@
         "DAILY_ADVICES": "Daily advices"
     },
     "ADMIN_USER": {
+        "SET_PASSWORD": "Set password",
+        "IMPERSONATE": "Impersonate",
+        "IMPERSONATE_UNAVAILABLE": "This user cannot be impersonated.",
+        "PASSWORD_CHANGE_REQUIRED": "Password change required",
         "ROLES": "Role",
         "LAST_LOGIN": "Last login",
         "PROFILE": "Full profile",

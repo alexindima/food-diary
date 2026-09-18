@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 97,
+    "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 145,
+    "componentsWithoutDirectSpecs": 143,
     "criticalSymbolsWithoutTestReferences": 31,
     "explicitDebtMarkers": 10
   },
@@ -338,15 +338,7 @@
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
-      "specPath": null
-    },
-    {
-      "class": "AdminUserDetailsDialogComponent",
-      "selector": "fd-admin-user-details-dialog",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.spec.ts"
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.spec.ts"
     },
     {
       "class": "AdminUserEditDialogComponent",
@@ -1349,11 +1341,6 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.html",
       "inputs": [
         {
-          "name": "search",
-          "type": "string",
-          "required": true
-        },
-        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -1386,10 +1373,6 @@
       ],
       "outputs": [
         {
-          "name": "searchChange",
-          "type": "string"
-        },
-        {
           "name": "pageChange",
           "type": "number"
         }
@@ -1403,11 +1386,6 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.html",
       "inputs": [
-        {
-          "name": "search",
-          "type": "string",
-          "required": true
-        },
         {
           "name": "isLoading",
           "type": "boolean",
@@ -1441,34 +1419,10 @@
       ],
       "outputs": [
         {
-          "name": "searchChange",
-          "type": "string"
-        },
-        {
           "name": "pageChange",
           "type": "number"
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "AdminUserCreateDialogComponent",
-      "selector": "fd-admin-user-create-dialog",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminUserPageComponent",
-      "selector": "fd-admin-user-page",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
-      "inputs": [],
-      "outputs": [],
       "specPath": null
     },
     {
@@ -4158,6 +4112,11 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
       "inputs": [
+        {
+          "name": "inline",
+          "type": "",
+          "required": false
+        },
         {
           "name": "defaultPeriod",
           "type": "",

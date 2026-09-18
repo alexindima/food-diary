@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 451,
-    "componentsWithoutDirectSpecs": 145,
-    "inputs": 1411,
-    "outputs": 469,
+    "components": 450,
+    "componentsWithoutDirectSpecs": 143,
+    "inputs": 1413,
+    "outputs": 468,
     "apiCalls": 257,
-    "templatesWithTranslations": 308,
-    "translationKeys": 1775,
-    "consumerEdges": 1086,
+    "templatesWithTranslations": 309,
+    "translationKeys": 1783,
+    "consumerEdges": 1098,
     "consumedComponents": 290,
-    "unconsumedComponents": 160
+    "unconsumedComponents": 159
   },
   "components": [
     {
@@ -528,11 +528,6 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.html",
       "inputs": [
         {
-          "name": "search",
-          "type": "string",
-          "required": true
-        },
-        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -565,10 +560,6 @@
       ],
       "outputs": [
         {
-          "name": "searchChange",
-          "type": "string"
-        },
-        {
           "name": "pageChange",
           "type": "number"
         }
@@ -582,11 +573,6 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.html",
       "inputs": [
-        {
-          "name": "search",
-          "type": "string",
-          "required": true
-        },
         {
           "name": "isLoading",
           "type": "boolean",
@@ -620,10 +606,6 @@
       ],
       "outputs": [
         {
-          "name": "searchChange",
-          "type": "string"
-        },
-        {
           "name": "pageChange",
           "type": "number"
         }
@@ -638,15 +620,25 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.spec.ts"
     },
     {
       "class": "AdminUserDetailsBodyComponent",
       "selector": "fd-admin-user-details-body",
       "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.html",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.html",
       "inputs": [
+        {
+          "name": "activityLoading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "activityFailed",
+          "type": "",
+          "required": false
+        },
         {
           "name": "roleAuditEvents",
           "type": "AdminUserRoleAuditEvent[]",
@@ -663,18 +655,13 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.spec.ts"
-    },
-    {
-      "class": "AdminUserDetailsDialogComponent",
-      "selector": "fd-admin-user-details-dialog",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.spec.ts"
+      "outputs": [
+        {
+          "name": "retry",
+          "type": ""
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.spec.ts"
     },
     {
       "class": "AdminUserEditDialogComponent",
@@ -704,7 +691,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.spec.ts"
     },
     {
       "class": "AdminUserSetPasswordDialogComponent",
@@ -4407,6 +4394,11 @@
           "required": false
         },
         {
+          "name": "clearAriaLabel",
+          "type": "string",
+          "required": false
+        },
+        {
           "name": "pickerAriaLabel",
           "type": "string",
           "required": false
@@ -5086,7 +5078,7 @@
         },
         {
           "name": "type",
-          "type": "'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'",
+          "type": "'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'",
           "required": false
         },
         {
@@ -6884,6 +6876,11 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
       "inputs": [
+        {
+          "name": "inline",
+          "type": "",
+          "required": false
+        },
         {
           "name": "defaultPeriod",
           "type": "",
@@ -17102,6 +17099,7 @@
         "ADMIN_COMMON.LOADING",
         "ADMIN_COMMON.REQUIRED_FIELDS",
         "ADMIN_COMMON.SEARCH",
+        "ADMIN_NAV.PROMPTS",
         "ADMIN_PROMPTS.ACTIVE",
         "ADMIN_PROMPTS.KEY",
         "ADMIN_PROMPTS.LOCALE",
@@ -17109,6 +17107,7 @@
         "ADMIN_PROMPTS.SAVE",
         "ADMIN_PROMPTS.SAVED",
         "ADMIN_PROMPTS.SAVE_ERROR",
+        "ADMIN_PROMPTS.SUBTITLE",
         "ADMIN_PROMPTS.TEXT"
       ]
     },
@@ -17306,7 +17305,9 @@
       "feature": "admin-email-templates",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.html",
       "keys": [
-        "ADMIN_PAGINATION.RANGE"
+        "ADMIN_NAV.TEMPLATES",
+        "ADMIN_PAGINATION.RANGE",
+        "ADMIN_SUBTITLE.TEMPLATES"
       ]
     },
     {
@@ -17323,7 +17324,9 @@
       "keys": [
         "ADMIN_LESSONS.COMPLETED",
         "ADMIN_LESSONS.PUBLICATION_TITLE",
-        "ADMIN_PAGINATION.RANGE"
+        "ADMIN_NAV.LESSONS",
+        "ADMIN_PAGINATION.RANGE",
+        "ADMIN_SUBTITLE.LESSONS"
       ]
     },
     {
@@ -17467,6 +17470,13 @@
     },
     {
       "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING"
+      ]
+    },
+    {
+      "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "keys": [
         "ADMIN_COMMON.APPLY"
@@ -17485,8 +17495,6 @@
       "keys": [
         "ADMIN_COMMON.BACK",
         "ADMIN_COMMON.LOADING",
-        "ADMIN_COMMON.REGISTERED",
-        "ADMIN_COMMON.USER",
         "ADMIN_NAV.AI",
         "ADMIN_NAV.AUDIT",
         "ADMIN_NAV.BILLING",
@@ -17494,17 +17502,16 @@
         "ADMIN_NAV.SESSIONS",
         "ADMIN_OUTGOING.OUTGOING",
         "ADMIN_USER.EDIT",
-        "ADMIN_USER.LAST_LOGIN",
-        "ADMIN_USER.PROFILE",
+        "ADMIN_USER.IMPERSONATE",
+        "ADMIN_USER.IMPERSONATE_UNAVAILABLE",
         "ADMIN_USER.RELATED",
-        "ADMIN_USER.ROLES"
+        "ADMIN_USER.SET_PASSWORD"
       ]
     },
     {
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.html",
       "keys": [
-        "ADMIN_COMMON.OPEN",
         "ADMIN_COMMON.REGISTERED"
       ]
     },
@@ -17514,12 +17521,15 @@
       "keys": [
         "ADMIN_COMMON.ALL",
         "ADMIN_COMMON.APPLY",
+        "ADMIN_NAV.ACCOUNTS",
+        "ADMIN_SUBTITLE.ACCOUNTS",
         "ADMIN_USER.CONFIRMED",
         "ADMIN_USER.LOGIN_FROM",
         "ADMIN_USER.LOGIN_TO",
         "ADMIN_USER.NO",
         "ADMIN_USER.ROLES",
-        "ADMIN_USER.YES"
+        "ADMIN_USER.YES",
+        "COMMON.CLEAR"
       ]
     },
     {
@@ -18648,7 +18658,6 @@
       "feature": "fooddiary-admin",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
       "keys": [
-        "ADMIN_COMMON.APPLY",
         "ADMIN_COMMON.INVALID_PERIOD",
         "ADMIN_COMMON.UTC",
         "ADMIN_OVERVIEW.FROM",
@@ -21256,6 +21265,18 @@
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "occurrences": 1,
       "inputsUsed": [],
@@ -21311,13 +21332,11 @@
         "isLoading",
         "page",
         "pageSize",
-        "search",
         "totalItems",
         "totalPages"
       ],
       "outputsHandled": [
-        "pageChange",
-        "searchChange"
+        "pageChange"
       ]
     },
     {
@@ -21361,7 +21380,9 @@
       "consumerFeature": "admin-audit",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21371,7 +21392,9 @@
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21381,7 +21404,9 @@
       "consumerFeature": "admin-bugs",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21391,7 +21416,9 @@
       "consumerFeature": "admin-mail-inbox",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21401,7 +21428,9 @@
       "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21411,7 +21440,9 @@
       "consumerFeature": "admin-outgoing-emails",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21434,7 +21465,9 @@
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21444,7 +21477,9 @@
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "inline"
+      ],
       "outputsHandled": []
     },
     {
@@ -21455,6 +21490,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
       "occurrences": 1,
       "inputsUsed": [
+        "inline",
         "label"
       ],
       "outputsHandled": []
@@ -21470,14 +21506,12 @@
         "isLoading",
         "page",
         "pageSize",
-        "search",
         "sessions",
         "totalItems",
         "totalPages"
       ],
       "outputsHandled": [
-        "pageChange",
-        "searchChange"
+        "pageChange"
       ]
     },
     {
@@ -21516,16 +21550,20 @@
     {
       "component": "AdminUserDetailsBodyComponent",
       "selector": "fd-admin-user-details-body",
-      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.ts",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.ts",
       "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "activityFailed",
+        "activityLoading",
         "loginEvents",
         "roleAuditEvents",
         "sections"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "retry"
+      ]
     },
     {
       "component": "AdminUsersTableComponent",
@@ -23596,12 +23634,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-ai-prompts",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "ariaPressed",
         "disabled",
         "disabledReason",
         "loading",
-        "type"
+        "type",
+        "variant"
       ],
       "outputsHandled": []
     },
@@ -23636,6 +23676,19 @@
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.html",
       "occurrences": 2,
+      "inputsUsed": [
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-billing",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-metadata-panel.html",
+      "occurrences": 1,
       "inputsUsed": [
         "type",
         "variant"
@@ -23922,21 +23975,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.html",
-      "occurrences": 3,
-      "inputsUsed": [
-        "disabled",
-        "disabledReason",
-        "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -24003,8 +24041,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "variant"
       ],
       "outputsHandled": []
@@ -24048,7 +24088,9 @@
       "consumerFeature": "fooddiary-admin",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "type"
+      ],
       "outputsHandled": []
     },
     {
@@ -27675,6 +27717,32 @@
       "component": "FdUiCheckboxComponent",
       "selector": "fd-ui-checkbox",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-achievements",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
+        "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
+        "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
       "consumerFeature": "admin-email-templates",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.html",
       "occurrences": 1,
@@ -27690,6 +27758,39 @@
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
+      "occurrences": 5,
+      "inputsUsed": [
+        "checked",
+        "disabled",
+        "id",
+        "label"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "checked",
+        "id",
+        "label"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
     },
     {
       "component": "FdUiCheckboxComponent",
@@ -27839,6 +27940,23 @@
       "inputsUsed": [
         "label",
         "max",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiDateInputComponent",
+      "selector": "fd-ui-date-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "clearAriaLabel",
+        "id",
+        "label",
         "value"
       ],
       "outputsHandled": [
@@ -28095,20 +28213,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "dismissible",
-        "size",
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDialogComponent",
-      "selector": "fd-ui-dialog",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "bodyScrollInset",
         "size",
         "title"
       ],
@@ -29037,7 +29141,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "fd-ui-kit",
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "name"
       ],
@@ -30199,10 +30303,28 @@
       "component": "FdUiInputComponent",
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "admin-acquisition",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
+      "occurrences": 7,
+      "inputsUsed": [
+        "id",
+        "label",
+        "type",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-ai-prompts",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
+        "id",
         "label",
         "value"
       ],
@@ -30353,37 +30475,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "label",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "label",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.html",
-      "occurrences": 1,
+      "occurrences": 3,
       "inputsUsed": [
         "label",
         "placeholder",
@@ -30398,8 +30490,8 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.html",
-      "occurrences": 1,
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.html",
+      "occurrences": 3,
       "inputsUsed": [
         "label",
         "placeholder",
@@ -32446,10 +32538,58 @@
       "component": "FdUiSelectComponent",
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "fooddiary-admin",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "admin-achievements",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
       "occurrences": 1,
       "inputsUsed": [
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-acquisition",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "id",
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
         "label",
         "options"
       ],
@@ -32553,9 +32693,55 @@
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "admin-users",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "id",
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "id",
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "fooddiary-admin",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "id",
         "label",
         "options",
         "value"
@@ -32969,6 +33155,21 @@
       "component": "FdUiTabsComponent",
       "selector": "fd-ui-tabs",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
+      "consumerFeature": "admin-billing",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "selectedValue",
+        "tabs"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiTabsComponent",
+      "selector": "fd-ui-tabs",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
       "occurrences": 1,
@@ -33064,6 +33265,20 @@
       "occurrences": 2,
       "inputsUsed": [
         "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "admin-ai-prompts",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "id",
+        "label",
+        "rows"
       ],
       "outputsHandled": []
     },

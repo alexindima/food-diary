@@ -1,9 +1,14 @@
-<fd-admin-catalog-filter [categories]="categories()" [showState]="true" />
-<div class="admin-email-templates fd-grid fd-gap-md">
-    <div class="toolbar fd-row fd-justify-end">
+<header class="admin-page-header">
+    <div>
+        <h1 class="fd-page-title">{{ 'ADMIN_NAV.TEMPLATES' | translate }}</h1>
+        <p class="fd-page-subtitle">{{ 'ADMIN_SUBTITLE.TEMPLATES' | translate }}</p>
+    </div>
+    <div class="fd-row fd-wrap fd-gap-sm">
         <fd-ui-button type="button" (click)="openCreate()">Create template</fd-ui-button>
     </div>
-
+</header>
+<fd-admin-catalog-filter [categories]="categories()" [showState]="true" />
+<div class="admin-email-templates fd-grid fd-gap-md">
     @if (isLoading()) {
         <p>Loading templates...</p>
     } @else if (loadFailed()) {

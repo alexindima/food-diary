@@ -1,5 +1,11 @@
-<fd-admin-period />
-<div class="fd-row fd-gap-sm fd-wrap fd-align-end">
+<div class="admin-filter-bar">
+    <fd-admin-period [inline]="true" />
+    <fd-ui-input
+        label="Search login activity"
+        placeholder="Email, IP or client"
+        [value]="loginEventsSearch()"
+        (valueChange)="onLoginEventsSearchChange($event?.toString() ?? '')"
+    />
     <fd-ui-input
         [label]="'ADMIN_ACTIVITY.provider' | translate"
         [value]="firstFilter()"
@@ -17,14 +23,12 @@
 } @else {
     <div class="admin-users fd-grid fd-gap-md">
         <fd-admin-login-activity-section
-            [search]="loginEventsSearch()"
             [isLoading]="isLoginEventsLoading()"
             [totalItems]="loginEventsTotalItems()"
             [events]="loginEvents()"
             [page]="loginEventsPage()"
             [pageSize]="pageSize"
             [totalPages]="loginEventsTotalPages()"
-            (searchChange)="onLoginEventsSearchChange($event)"
             (pageChange)="goToLoginEventsPage($event)"
         />
     </div>

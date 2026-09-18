@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1668,
-    "symbols": 660,
+    "typescriptFiles": 1669,
+    "symbols": 659,
     "routes": 100,
     "features": 44,
-    "specs": 577,
+    "specs": 578,
     "localeFiles": 5,
     "roles": {
-      "Component": 446,
+      "Component": 445,
       "Directive": 12,
       "Facade": 62,
       "Other": 17,
@@ -333,7 +333,6 @@
         "AdminSessionsSectionComponent",
         "AdminUserCreateDialogComponent",
         "AdminUserDetailsBodyComponent",
-        "AdminUserDetailsDialogComponent",
         "AdminUserEditDialogComponent",
         "AdminUserImpersonationDialogComponent",
         "AdminUserPageComponent",
@@ -351,13 +350,14 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.spec.ts",
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.spec.ts",
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.spec.ts"
       ]
     },
@@ -1905,7 +1905,7 @@
       "role": "Component",
       "selector": "fd-admin-achievements",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "line": 53
+      "line": 55
     },
     {
       "name": "AdminAcquisitionService",
@@ -1933,7 +1933,7 @@
       "role": "Component",
       "selector": "fd-admin-acquisition",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.ts",
-      "line": 53
+      "line": 56
     },
     {
       "name": "AdminAiPromptsService",
@@ -1954,7 +1954,7 @@
       "role": "Component",
       "selector": "fd-admin-ai-prompts",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
-      "line": 33
+      "line": 44
     },
     {
       "name": "AdminAiUsageService",
@@ -2031,7 +2031,7 @@
       "role": "Component",
       "selector": "fd-admin-billing-metadata-panel",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-metadata-panel.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AdminBillingPaymentsTableComponent",
@@ -2059,7 +2059,7 @@
       "role": "Component",
       "selector": "fd-admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-      "line": 37
+      "line": 39
     },
     {
       "name": "AdminBugsService",
@@ -2356,32 +2356,25 @@
       "line": 31
     },
     {
+      "name": "AdminUserDetailsBodyComponent",
+      "role": "Component",
+      "selector": "fd-admin-user-details-body",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.ts",
+      "line": 16
+    },
+    {
       "name": "AdminUserCreateDialogComponent",
       "role": "Component",
       "selector": "fd-admin-user-create-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
-      "line": 36
-    },
-    {
-      "name": "AdminUserDetailsBodyComponent",
-      "role": "Component",
-      "selector": "fd-admin-user-details-body",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-body.ts",
-      "line": 23
-    },
-    {
-      "name": "AdminUserDetailsDialogComponent",
-      "role": "Component",
-      "selector": "fd-admin-user-details-dialog",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-details-dialog.ts",
-      "line": 25
+      "line": 46
     },
     {
       "name": "AdminUserEditDialogComponent",
       "role": "Component",
       "selector": "fd-admin-user-edit-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.ts",
-      "line": 27
+      "line": 36
     },
     {
       "name": "AdminUserImpersonationDialogComponent",
@@ -2423,35 +2416,35 @@
       "role": "Component",
       "selector": "fd-admin-login-activity-section",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AdminSessionsSectionComponent",
       "role": "Component",
       "selector": "fd-admin-sessions-section",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AdminUserPageComponent",
       "role": "Component",
       "selector": "fd-admin-user-page",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.ts",
-      "line": 25
+      "line": 35
     },
     {
       "name": "AdminUsersTableComponent",
       "role": "Component",
       "selector": "fd-admin-users-table",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AdminUsersComponent",
       "role": "Component",
       "selector": "fd-admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.ts",
-      "line": 44
+      "line": 41
     },
     {
       "name": "AdminCatalogFilterComponent",
@@ -2479,7 +2472,7 @@
       "role": "Component",
       "selector": "fd-admin-period",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AiConsentDialogComponent",
@@ -6511,8 +6504,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 939,
-      "russianProperties": 939,
+      "englishProperties": 944,
+      "russianProperties": 944,
       "countsMatch": true
     },
     {

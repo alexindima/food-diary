@@ -1,19 +1,18 @@
 <div class="admin-billing fd-grid fd-gap-md">
-    <fd-admin-period />
     <p role="alert" [hidden]="!billing.revenueFailed()">{{ 'ADMIN_BILLING.SUMMARY_ERROR' | translate }}</p>
     <div class="admin-billing__header fd-row fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="billing.load()"> Refresh </fd-ui-button>
     </div>
 
-    <div class="admin-billing__tabs fd-row fd-gap-sm fd-wrap">
-        <button type="button" [class.active]="billing.activeTab() === 'subscriptions'" (click)="billing.setTab('subscriptions')">
-            Subscriptions
-        </button>
-        <button type="button" [class.active]="billing.activeTab() === 'payments'" (click)="billing.setTab('payments')">Payments</button>
-        <button type="button" [class.active]="billing.activeTab() === 'webhook-events'" (click)="billing.setTab('webhook-events')">
-            Webhooks
-        </button>
-    </div>
+    <fd-ui-tabs
+        [tabs]="[
+            { value: 'subscriptions', label: 'Subscriptions' },
+            { value: 'payments', label: 'Payments' },
+            { value: 'webhook-events', label: 'Webhooks' },
+        ]"
+        [selectedValue]="billing.activeTab()"
+        (selectedValueChange)="onTabChange($event)"
+    />
 
     <fd-admin-billing-filters
         [activeTab]="billing.activeTab()"
@@ -27,7 +26,9 @@
         (kindChange)="billing.kind.set($event)"
         (filtersApply)="billing.applyFilters()"
         (filtersReset)="billing.resetFilters()"
-    />
+    >
+        <fd-admin-period [inline]="true" />
+    </fd-admin-billing-filters>
 
     @if (billing.revenueSummary(); as summary) {
         <section class="admin-billing__revenue fd-grid fd-gap-sm" aria-labelledby="billing-revenue-title">

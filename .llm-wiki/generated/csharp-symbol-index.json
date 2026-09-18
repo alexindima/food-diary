@@ -28388,7 +28388,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/ModuleContextSaveCoordinator.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "PersistenceSession",

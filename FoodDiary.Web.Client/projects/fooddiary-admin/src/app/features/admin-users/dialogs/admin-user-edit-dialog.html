@@ -1,32 +1,30 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
 <fd-ui-dialog title="Edit user">
     <div class="admin-user-edit-dialog fd-grid fd-gap-md">
         <div>
-            <input id="admin-user-edit-is-active" type="checkbox" [formField]="form.isActive" />
-            <label for="admin-user-edit-is-active">Active</label>
+            <fd-ui-checkbox label="Active" [id]="'admin-user-edit-is-active'" [formField]="form.isActive" />
         </div>
 
         <div>
-            <input id="admin-user-edit-is-email-confirmed" type="checkbox" [formField]="form.isEmailConfirmed" />
-            <label for="admin-user-edit-is-email-confirmed">Email confirmed</label>
+            <fd-ui-checkbox label="Email confirmed" [id]="'admin-user-edit-is-email-confirmed'" [formField]="form.isEmailConfirmed" />
         </div>
 
         <div class="roles fd-grid fd-gap-xs">
             <div class="roles__title">Roles</div>
             @for (role of roles; track role) {
                 <div>
-                    <input type="checkbox" [id]="`admin-user-edit-role-${role}`" [checked]="hasRole(role)" (change)="toggleRole(role)" />
-                    <label [attr.for]="`admin-user-edit-role-${role}`">{{ role }}</label>
+                    <fd-ui-checkbox
+                        [label]="role"
+                        [id]="`admin-user-edit-role-${role}`"
+                        [checked]="hasRole(role)"
+                        (checkedChange)="toggleRole(role)"
+                    />
                 </div>
             }
         </div>
 
         <div class="fd-grid fd-gap-xxs">
-            <label for="admin-user-edit-language">Language</label>
-            <select id="admin-user-edit-language" [formField]="form.language">
-                @for (language of languages; track language.value) {
-                    <option [value]="language.value">{{ language.label }}</option>
-                }
-            </select>
+            <fd-ui-select label="Language" [id]="'admin-user-edit-language'" [formField]="form.language" [options]="[...languages]" />
         </div>
     </div>
 

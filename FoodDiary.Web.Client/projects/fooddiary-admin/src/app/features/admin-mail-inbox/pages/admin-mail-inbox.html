@@ -1,5 +1,4 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
-    <fd-admin-period />
     <div class="fd-row fd-wrap fd-gap-sm">
         <fd-ui-button variant="secondary" [hidden]="unreadCount() === null" (click)="unreadFilter.set('unread'); loadMessages(true)"
             >{{ 'ADMIN_MAIL_INBOX.UNREAD' | translate }}: {{ unreadCount() }}</fd-ui-button
@@ -13,7 +12,8 @@
             'ADMIN_MAIL_INBOX.ALL_MESSAGES' | translate
         }}</a>
     }
-    <div class="fd-row fd-wrap fd-gap-sm">
+    <div class="admin-filter-bar">
+        <fd-admin-period [inline]="true" />
         <fd-ui-input
             [label]="'ADMIN_MAIL_INBOX.SUBJECT_FILTER' | translate"
             [value]="subjectFilter()"
@@ -24,9 +24,7 @@
             [value]="senderFilter()"
             (valueChange)="senderFilter.set($event?.toString() ?? '')"
         />
-        <fd-ui-button (click)="loadMessages(true)">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
-    </div>
-    <div class="toolbar fd-row fd-gap-sm fd-justify-end fd-wrap">
+
         <fd-ui-input
             [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
             [value]="recipientFilter()"
@@ -52,6 +50,7 @@
             [(value)]="unreadFilter"
             (valueChange)="loadMessages(true)"
         />
+        <fd-ui-button (click)="loadMessages(true)">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
 

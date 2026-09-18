@@ -5,3 +5,24 @@
 fd-ui-select {
     width: min(100%, 22rem);
 }
+
+:host(.admin-period-inline) {
+    display: contents;
+
+    .admin-period-fields {
+        display: contents;
+    }
+
+    fd-ui-select,
+    fd-ui-date-input {
+        min-width: 0;
+        width: auto;
+    }
+
+    .admin-period-hint {
+        grid-column: 1 / -1;
+        order: 1;
+        margin: 0;
+        color: var(--fd-color-text-muted);
+    }
+}

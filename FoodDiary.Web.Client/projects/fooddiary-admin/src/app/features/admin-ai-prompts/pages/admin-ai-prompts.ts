@@ -1,8 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, pattern, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, pattern, readonly, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiConfirmDialogComponent, FdUiDialogService, FdUiInputComponent } from 'fd-ui-kit';
+import {
+    FdUiButtonComponent,
+    FdUiCheckboxComponent,
+    FdUiConfirmDialogComponent,
+    FdUiDialogService,
+    FdUiInputComponent,
+    FdUiSelectComponent,
+    FdUiTextareaComponent,
+} from 'fd-ui-kit';
 import { firstValueFrom, map, type Observable, of } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -17,6 +25,9 @@ const PROMPT_TEXT_MAX_LENGTH = 4096;
 @Component({
     selector: 'fd-admin-ai-prompts',
     imports: [
+        FdUiSelectComponent,
+        FdUiCheckboxComponent,
+        FdUiTextareaComponent,
         AdminTemplateHistoryComponent,
         FormField,
         FormRoot,
@@ -56,6 +67,7 @@ export class AdminAiPromptsPageComponent {
         this.formModel,
         path => {
             required(path.key);
+            readonly(path.key, { when: () => this.selected() !== null });
             maxLength(path.key, PROMPT_KEY_MAX_LENGTH);
             required(path.locale);
             pattern(path.locale, /^(en|ru)$/);

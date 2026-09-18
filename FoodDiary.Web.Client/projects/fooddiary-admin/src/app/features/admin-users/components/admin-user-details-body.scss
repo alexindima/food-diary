@@ -1,6 +1,6 @@
 :host {
-    // Stay transparent so sections participate directly in the dialog body grid gap.
-    display: contents;
+    display: grid;
+    gap: var(--fd-space-lg);
 }
 
 .admin-user-details__section {
@@ -27,7 +27,7 @@
 
 .admin-user-details__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: var(--fd-space-sm);
     margin: 0;
 }

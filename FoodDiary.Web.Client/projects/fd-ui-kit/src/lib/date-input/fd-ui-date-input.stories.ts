@@ -66,3 +66,7 @@ export const Small: Story = {
 export const Large: Story = {
     args: { label: 'Date', size: 'lg' },
 };
+
+export const Clearable: Story = {
+    args: { label: 'Last login', value: '2026-07-24', clearAriaLabel: 'Clear last login date' },
+};

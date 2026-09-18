@@ -58,6 +58,21 @@ describe('FdUiDateInputComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('clears an optional date and emits null', () => {
+        fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+        fixture.componentRef.setInput('clearAriaLabel', 'Clear date');
+        fixture.detectChanges();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        requireButtonElement('[aria-label="Clear date"]').click();
+        fixture.detectChanges();
+        expect(component.value()).toBeNull();
+        expect(component.touched()).toBe(true);
+        expect(changed).toHaveBeenCalledWith(null);
+        expect(requireInputElement('input').value).toBe('');
+        expect(host().querySelector('[aria-label="Clear date"]')).toBeNull();
+    });
+
     registerLabelTests();
     registerValueAccessorTests();
     registerStateTests();

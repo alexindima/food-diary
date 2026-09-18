@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiSidebarComponent, type FdUiSidebarSection, FdUiTabsComponent } from 'fd-ui-kit';
+import { FdUiSelectComponent, FdUiSidebarComponent, type FdUiSidebarSection, FdUiTabsComponent } from 'fd-ui-kit';
 
 type AdminPageHeader = {
     title: string;
@@ -50,7 +50,7 @@ const ADMIN_TOOL_LINKS = [
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, FdUiSidebarComponent, FdUiTabsComponent, TranslatePipe],
+    imports: [FdUiSelectComponent, RouterOutlet, FdUiSidebarComponent, FdUiTabsComponent, TranslatePipe],
     templateUrl: './app.html',
     styleUrl: './app.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +74,11 @@ export class AppComponent {
     protected navigateMail(path: string): void {
         void this.router.navigateByUrl(path);
     }
-    protected readonly pageHeader = computed(() => ADMIN_PAGE_HEADERS[this.currentSection()] ?? null);
+    protected readonly pageHeader = computed(() =>
+        ['/users', '/email-templates', '/lessons', '/ai-prompts'].includes(this.currentPath())
+            ? null
+            : (ADMIN_PAGE_HEADERS[this.currentSection()] ?? null),
+    );
     protected readonly mobileItems = computed(() => [
         ...this.sidebarSections().flatMap(section =>
             section.items.flatMap(item => ('route' in item ? [{ id: item.id, route: item.route, label: item.label }] : [])),
@@ -152,14 +156,10 @@ export class AppComponent {
         this.isUsersSectionExpanded.update(isExpanded => !isExpanded);
     }
 
-    protected onMobileRouteChange(event: Event): void {
-        const target = event.target;
-        if (target === null || !('value' in target) || typeof target.value !== 'string') {
-            return;
-        }
+    protected readonly mobileOptions = computed(() => this.mobileItems().map(item => ({ value: item.route, label: item.label })));
 
-        const route = target.value;
-        if (route.length === 0 || route === this.currentPath()) {
+    protected onMobileRouteChange(route: string | null): void {
+        if (route === null || route.length === 0 || route === this.currentPath()) {
             return;
         }
 

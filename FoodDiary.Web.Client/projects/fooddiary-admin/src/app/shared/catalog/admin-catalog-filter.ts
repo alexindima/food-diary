@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, type ParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 
 import { adminQueryValue } from '../period/admin-query';
 
@@ -25,7 +25,7 @@ export function matchesAdminCatalog(
 
 @Component({
     selector: 'fd-admin-catalog-filter',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
+    imports: [FdUiSelectComponent, TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
     templateUrl: './admin-catalog-filter.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -37,6 +37,7 @@ export class AdminCatalogFilterComponent {
     public readonly showState = input(false);
     public readonly activeLabel = input('ADMIN_PROMPTS.ACTIVE');
     public readonly inactiveLabel = input('ADMIN_PROMPTS.INACTIVE');
+    protected readonly categoryOptions = computed(() => this.categories().map(value => ({ value, label: value })));
     protected readonly search = signal('');
     protected readonly locale = signal('');
     protected readonly category = signal('');
@@ -48,10 +49,6 @@ export class AdminCatalogFilterComponent {
             this.category.set(params.get('category') ?? '');
             this.state.set(params.get('state') ?? '');
         });
-    }
-    protected value(event: Event): string {
-        const target = event.target;
-        return target !== null && 'value' in target && typeof target.value === 'string' ? target.value : '';
     }
     protected apply(): void {
         void this.router.navigate([], {

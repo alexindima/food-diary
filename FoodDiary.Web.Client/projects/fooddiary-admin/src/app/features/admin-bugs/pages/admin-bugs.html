@@ -1,5 +1,5 @@
-<fd-admin-period />
-<form [formRoot]="form">
+<form class="admin-filter-bar" [formRoot]="form">
+    <fd-admin-period [inline]="true" />
     <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
     <fd-ui-input [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" />
     <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>

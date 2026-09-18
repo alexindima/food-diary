@@ -1,7 +1,7 @@
 :host {
     display: block;
 }
-form {
+form:not(.admin-filter-bar) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
     gap: var(--fd-space-md);

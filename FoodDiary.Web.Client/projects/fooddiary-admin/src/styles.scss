@@ -32,3 +32,41 @@ body {
         border-radius: 0;
     }
 }
+
+.admin-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-lg);
+
+    h1,
+    p {
+        margin: 0;
+    }
+
+    p {
+        margin-top: var(--fd-space-xxs);
+        color: var(--fd-color-text-muted);
+    }
+}
+
+// Keep a common field width when filters wrap, including projected period fields.
+.admin-filter-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    align-items: end;
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-md);
+
+    > fd-ui-input,
+    > fd-ui-select,
+    > fd-ui-date-input {
+        min-width: 0;
+    }
+
+    > fd-ui-button {
+        justify-self: start;
+    }
+}

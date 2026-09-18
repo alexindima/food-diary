@@ -1,8 +1,3 @@
-.admin-user-details {
-    display: grid;
-    gap: var(--fd-space-md);
-}
-
 .admin-user-details__header {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -31,7 +26,7 @@
     min-width: 0;
 }
 
-.admin-user-details__identity h2 {
+.admin-user-details__identity h1 {
     margin: 0;
     overflow-wrap: anywhere;
 }
@@ -39,18 +34,7 @@
 .admin-user-details__meta {
     display: grid;
     gap: var(--fd-space-xxs);
-}
-
-.admin-user-details__meta,
-.admin-user-details__error {
     color: var(--fd-color-text-muted);
-}
-
-.admin-user-details__footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: var(--fd-space-xs);
 }
 
 @media (max-width: 640px) {

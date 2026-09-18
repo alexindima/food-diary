@@ -1,5 +1,11 @@
-<fd-admin-period />
-<div class="fd-row fd-gap-sm fd-wrap fd-align-end">
+<div class="admin-filter-bar">
+    <fd-admin-period [inline]="true" />
+    <fd-ui-input
+        label="Search impersonation sessions"
+        placeholder="User, admin or reason"
+        [value]="sessionsSearch()"
+        (valueChange)="onSessionsSearchChange($event?.toString() ?? '')"
+    />
     <fd-ui-input
         [label]="'ADMIN_ACTIVITY.actorId' | translate"
         [value]="firstFilter()"
@@ -17,14 +23,12 @@
 } @else {
     <div class="admin-users fd-grid fd-gap-md">
         <fd-admin-sessions-section
-            [search]="sessionsSearch()"
             [isLoading]="isSessionsLoading()"
             [totalItems]="sessionsTotalItems()"
             [sessions]="sessions()"
             [page]="sessionsPage()"
             [pageSize]="pageSize"
             [totalPages]="sessionsTotalPages()"
-            (searchChange)="onSessionsSearchChange($event)"
             (pageChange)="goToSessionsPage($event)"
         />
     </div>

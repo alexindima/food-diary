@@ -3,16 +3,14 @@
 .admin-acquisition {
     &__toolbar,
     &__toolbar-actions,
-    &__events-heading,
-    &__filters {
+    &__events-heading {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: var(--fd-space-sm);
     }
 
-    &__toolbar-actions,
-    &__filters {
+    &__toolbar-actions {
         flex-wrap: wrap;
     }
 
@@ -139,28 +137,6 @@
         display: grid;
         gap: var(--fd-space-xxs);
 
-        label {
-            color: var(--fd-color-text-muted);
-            font-size: var(--fd-text-body-xs-size);
-            font-weight: var(--fd-font-weight-semibold);
-        }
-
-        input,
-        select {
-            min-width: 0;
-            padding: var(--fd-space-xs) var(--fd-space-sm);
-            border: var(--fd-border-width) solid var(--fd-color-border-subtle);
-            border-radius: var(--fd-radius-sm);
-            background: var(--fd-color-surface);
-            color: var(--fd-color-text);
-
-            &:where(:focus-visible) {
-                outline: none;
-                border-color: var(--fd-color-primary-500);
-                box-shadow: var(--fd-shadow-focus);
-            }
-        }
-
         &--compact {
             min-width: 160px;
         }
@@ -192,8 +168,7 @@
             flex-direction: column;
         }
 
-        &__toolbar-actions,
-        &__filters {
+        &__toolbar-actions {
             align-items: stretch;
         }
 
@@ -207,8 +182,7 @@
             grid-template-columns: 1fr;
         }
 
-        &__toolbar-actions,
-        &__filters {
+        &__toolbar-actions {
             flex-direction: column;
         }
 

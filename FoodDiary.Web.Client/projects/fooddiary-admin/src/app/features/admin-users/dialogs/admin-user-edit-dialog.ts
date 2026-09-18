@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
+import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -19,7 +20,15 @@ type AdminUserFormModel = {
 
 @Component({
     selector: 'fd-admin-user-edit-dialog',
-    imports: [CommonModule, FormField, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
+    imports: [
+        FdUiSelectComponent,
+        FdUiCheckboxComponent,
+        CommonModule,
+        FormField,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+    ],
     templateUrl: './admin-user-edit-dialog.html',
     styleUrl: './admin-user-edit-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

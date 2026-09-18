@@ -880,6 +880,7 @@
         "PERIOD_30d": "Последние 30 дней",
         "RETRY": "Повторить",
         "APPLY": "Применить",
+        "APPLY_PERIOD": "Применить период",
         "PERIOD_month": "Текущий месяц",
         "PERIOD": "Период отчёта",
         "PERIOD_all": "За всё время",
@@ -918,6 +919,10 @@
         "DAILY_ADVICES": "Советы дня"
     },
     "ADMIN_USER": {
+        "SET_PASSWORD": "Задать пароль",
+        "IMPERSONATE": "Войти как пользователь",
+        "IMPERSONATE_UNAVAILABLE": "Вход от имени этого пользователя недоступен.",
+        "PASSWORD_CHANGE_REQUIRED": "Требуется смена пароля",
         "ROLES": "Роль",
         "LAST_LOGIN": "Последний вход",
         "PROFILE": "Полный профиль",

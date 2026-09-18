@@ -2,23 +2,31 @@
 @if (failed()) {
     <fd-admin-load-error (retry)="reload()" />
 } @else if (user(); as account) {
-    <h1>{{ account.email }}</h1>
-    <fd-ui-card>
-        <dl>
-            <dt>{{ 'ADMIN_COMMON.USER' | translate }}</dt>
-            <dd>{{ account.id }}</dd>
-            <dt>{{ 'ADMIN_COMMON.REGISTERED' | translate }}</dt>
-            <dd>{{ account.createdOnUtc | date: 'medium' }}</dd>
-            <dt>{{ 'ADMIN_USER.ROLES' | translate }}</dt>
-            <dd>{{ account.roles.join(', ') }}</dd>
-            <dt>{{ 'ADMIN_USER.LAST_LOGIN' | translate }}</dt>
-            <dd>{{ account.lastLoginAtUtc | date: 'medium' }}</dd>
-        </dl>
-        <div class="fd-row fd-wrap fd-gap-sm">
-            <fd-ui-button (click)="details(account)">{{ 'ADMIN_USER.PROFILE' | translate }}</fd-ui-button>
-            <fd-ui-button variant="secondary" (click)="edit(account)">{{ 'ADMIN_USER.EDIT' | translate }}</fd-ui-button>
+    <header class="admin-user-details__header">
+        @if (account.profileImage) {
+            <img class="admin-user-details__avatar" alt="" [src]="account.profileImage" />
+        } @else {
+            <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
+        }
+        <div class="admin-user-details__identity">
+            <h1 class="fd-page-title">{{ account.email || account.username || account.id }}</h1>
+            <div class="admin-user-details__meta">
+                <span>{{ account.firstName || '-' }} {{ account.lastName || '' }}</span>
+                <span>{{ account.roles.join(', ') || '-' }}</span>
+            </div>
         </div>
-    </fd-ui-card>
+    </header>
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-button (click)="edit(account)">{{ 'ADMIN_USER.EDIT' | translate }}</fd-ui-button>
+        <fd-ui-button variant="secondary" (click)="setPassword(account)">{{ 'ADMIN_USER.SET_PASSWORD' | translate }}</fd-ui-button>
+        <fd-ui-button
+            variant="secondary"
+            [disabled]="!canImpersonate()"
+            [disabledReason]="!canImpersonate() ? ('ADMIN_USER.IMPERSONATE_UNAVAILABLE' | translate) : null"
+            (click)="impersonate(account)"
+            >{{ 'ADMIN_USER.IMPERSONATE' | translate }}</fd-ui-button
+        >
+    </div>
     <nav class="fd-row fd-wrap fd-gap-md" [attr.aria-label]="'ADMIN_USER.RELATED' | translate">
         <a routerLink="/billing" queryParamsHandling="merge" [queryParams]="{ search: account.email }">{{
             'ADMIN_NAV.BILLING' | translate
@@ -37,6 +45,16 @@
             'ADMIN_NAV.AUDIT' | translate
         }}</a>
     </nav>
+    <fd-ui-card>
+        <fd-admin-user-details-body
+            [sections]="sections()"
+            [loginEvents]="loginEvents()"
+            [roleAuditEvents]="roleAuditEvents()"
+            [activityLoading]="activityLoading()"
+            [activityFailed]="activityFailed()"
+            (retry)="reload()"
+        />
+    </fd-ui-card>
 } @else {
     <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
 }

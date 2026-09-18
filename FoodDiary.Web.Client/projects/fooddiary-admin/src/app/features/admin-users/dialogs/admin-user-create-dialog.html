@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
 <fd-ui-dialog title="Create user" size="sm" [dismissible]="false">
     @if (created(); as result) {
         <div class="admin-user-create-dialog fd-grid fd-gap-md" role="status">
@@ -25,31 +26,37 @@
             </div>
 
             <div class="fd-grid fd-gap-xxs">
-                <label for="admin-user-create-language">Language</label>
-                <select id="admin-user-create-language" [formField]="form.language">
-                    <option value="ru">Russian</option>
-                    <option value="en">English</option>
-                </select>
+                <fd-ui-select
+                    label="Language"
+                    [id]="'admin-user-create-language'"
+                    [formField]="form.language"
+                    [options]="[
+                        { value: 'ru', label: 'Russian' },
+                        { value: 'en', label: 'English' },
+                    ]"
+                />
             </div>
 
             <fieldset class="admin-user-create-dialog__roles fd-grid fd-gap-xs">
                 <legend>Roles</legend>
                 @for (role of availableRoles; track role) {
                     <div>
-                        <input
-                            type="checkbox"
+                        <fd-ui-checkbox
+                            [label]="role"
                             [id]="`admin-user-create-role-${role}`"
                             [checked]="hasRole(role)"
-                            (change)="toggleRole(role)"
+                            (checkedChange)="toggleRole(role)"
                         />
-                        <label [attr.for]="`admin-user-create-role-${role}`">{{ role }}</label>
                     </div>
                 }
             </fieldset>
 
             <div>
-                <input id="admin-user-create-generate-password" type="checkbox" [formField]="form.generatePassword" />
-                <label for="admin-user-create-generate-password">Generate a secure temporary password</label>
+                <fd-ui-checkbox
+                    label="Generate a secure temporary password"
+                    [id]="'admin-user-create-generate-password'"
+                    [formField]="form.generatePassword"
+                />
             </div>
             @if (!formModel().generatePassword) {
                 <fd-ui-input label="Temporary password" type="password" floatLabel="always" [formField]="form.temporaryPassword" />
@@ -59,26 +66,24 @@
             }
 
             <div>
-                <input id="admin-user-create-email-confirmed" type="checkbox" [formField]="form.isEmailConfirmed" />
-                <label for="admin-user-create-email-confirmed">Email confirmed</label>
+                <fd-ui-checkbox label="Email confirmed" [id]="'admin-user-create-email-confirmed'" [formField]="form.isEmailConfirmed" />
             </div>
             <div>
-                <input
-                    id="admin-user-create-send-credentials"
-                    type="checkbox"
-                    [formField]="form.sendCredentialsEmail"
-                    (change)="onSendCredentialsChange()"
+                <fd-ui-checkbox
+                    label="Send login credentials by email"
+                    [id]="'admin-user-create-send-credentials'"
+                    [checked]="formModel().sendCredentialsEmail"
+                    (checkedChange)="onCredentialsOptionChange('sendCredentialsEmail', $event)"
                 />
-                <label for="admin-user-create-send-credentials">Send login credentials by email</label>
             </div>
             <div>
-                <input
-                    id="admin-user-create-require-password-change"
-                    type="checkbox"
-                    [formField]="form.requirePasswordChange"
-                    (change)="onSendCredentialsChange()"
+                <fd-ui-checkbox
+                    label="Require password change on first sign-in"
+                    [id]="'admin-user-create-require-password-change'"
+                    [checked]="formModel().requirePasswordChange"
+                    [disabled]="formModel().sendCredentialsEmail"
+                    (checkedChange)="onCredentialsOptionChange('requirePasswordChange', $event)"
                 />
-                <label for="admin-user-create-require-password-change">Require password change on first sign-in</label>
             </div>
 
             @if (submitError()) {

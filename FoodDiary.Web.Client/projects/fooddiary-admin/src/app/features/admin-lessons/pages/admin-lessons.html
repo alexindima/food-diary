@@ -1,11 +1,9 @@
-<fd-admin-catalog-filter
-    activeLabel="ADMIN_LESSONS.PUBLICATION.true"
-    inactiveLabel="ADMIN_LESSONS.PUBLICATION.false"
-    [categories]="categories()"
-    [showState]="true"
-/>
-<div class="admin-lessons fd-grid fd-gap-md">
-    <div class="toolbar fd-row fd-gap-sm fd-justify-end">
+<header class="admin-page-header">
+    <div>
+        <h1 class="fd-page-title">{{ 'ADMIN_NAV.LESSONS' | translate }}</h1>
+        <p class="fd-page-subtitle">{{ 'ADMIN_SUBTITLE.LESSONS' | translate }}</p>
+    </div>
+    <div class="fd-row fd-wrap fd-gap-sm">
         <input #lessonImportInput class="import-input" type="file" accept="application/json,.json" (change)="importLessons($event)" />
         <fd-ui-button
             type="button"
@@ -26,7 +24,14 @@
         </fd-ui-button>
         <fd-ui-button type="button" (click)="openCreate()">Create lesson</fd-ui-button>
     </div>
-
+</header>
+<fd-admin-catalog-filter
+    activeLabel="ADMIN_LESSONS.PUBLICATION.true"
+    inactiveLabel="ADMIN_LESSONS.PUBLICATION.false"
+    [categories]="categories()"
+    [showState]="true"
+/>
+<div class="admin-lessons fd-grid fd-gap-md">
     @if (importMessage(); as message) {
         <p class="import-message">{{ message }}</p>
     }

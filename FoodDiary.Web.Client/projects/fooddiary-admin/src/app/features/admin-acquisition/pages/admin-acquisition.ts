@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { Subscription } from 'rxjs';
@@ -38,6 +39,8 @@ type CampaignUrlBuilderModel = {
 @Component({
     selector: 'fd-admin-acquisition',
     imports: [
+        FdUiSelectComponent,
+        FdUiInputComponent,
         AdminPeriodControlComponent,
         AdminLoadErrorComponent,
         AdminAcquisitionComparisonComponent,
@@ -142,17 +145,15 @@ export class AdminAcquisitionComponent {
         return `${source} / ${medium} / ${campaign}`;
     }
 
-    protected setEventTypeFilter(event: Event): void {
-        const value = this.getSelectValue(event);
-        if (this.isEventFilter(value)) {
+    protected setEventTypeFilter(value: string | null): void {
+        if (value !== null && this.isEventFilter(value)) {
             this.eventTypeFilter.set(value);
             this.applyEventFilters();
         }
     }
 
-    protected setChannelFilter(event: Event): void {
-        const value = this.getSelectValue(event);
-        if (this.isChannelFilter(value)) {
+    protected setChannelFilter(value: string | null): void {
+        if (value !== null && this.isChannelFilter(value)) {
             this.channelFilter.set(value);
             this.applyEventFilters();
         }
@@ -170,11 +171,8 @@ export class AdminAcquisitionComponent {
         void this.router.navigate([], { relativeTo: this.route, queryParamsHandling: 'merge', queryParams: { page } });
     }
 
-    protected setEventSearch(event: Event): void {
-        const target = event.target;
-        if (target !== null && 'value' in target && typeof target.value === 'string') {
-            this.eventSearch.set(target.value);
-        }
+    protected setEventSearch(value: string | number | null): void {
+        this.eventSearch.set(value?.toString() ?? '');
     }
 
     protected formatEventType(value: string): string {
@@ -203,11 +201,6 @@ export class AdminAcquisitionComponent {
         return days === 1 ? '24 hours' : `${days} days`;
     }
 
-    protected getSelectValue(event: Event): string {
-        const target = event.currentTarget;
-        return target instanceof HTMLSelectElement ? target.value : '';
-    }
-
     protected formatRate(value: number): string {
         return value.toFixed(1);
     }
@@ -216,16 +209,8 @@ export class AdminAcquisitionComponent {
         return this.buildCampaignUrl();
     }
 
-    protected updateBuilderField(field: keyof CampaignUrlBuilderModel, event: Event): void {
-        const target = event.currentTarget;
-        if (!(target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        this.builderModel.update(model => ({
-            ...model,
-            [field]: target.value,
-        }));
+    protected updateBuilderField(field: keyof CampaignUrlBuilderModel, value: string | number | null): void {
+        this.builderModel.update(model => ({ ...model, [field]: value?.toString() ?? '' }));
     }
 
     protected formatBreakdownLabel(item: MarketingAttributionBreakdown): string {

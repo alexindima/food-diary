@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
 <div class="admin-shell fd-grid">
     <fd-ui-sidebar
         brandTitle="FoodDiary"
@@ -9,12 +10,13 @@
 
     <main class="admin-shell__content">
         <nav class="admin-shell__mobile-nav" [attr.aria-label]="'ADMIN_NAV.SECTIONS' | translate">
-            <label for="admin-mobile-route">{{ 'ADMIN_NAV.SECTIONS' | translate }}</label>
-            <select id="admin-mobile-route" [value]="currentSection()" (change)="onMobileRouteChange($event)">
-                @for (item of mobileItems(); track item.id) {
-                    <option [value]="item.route">{{ item.label }}</option>
-                }
-            </select>
+            <fd-ui-select
+                [id]="'admin-mobile-route'"
+                [label]="'ADMIN_NAV.SECTIONS' | translate"
+                [value]="currentSection()"
+                [options]="mobileOptions()"
+                (valueChange)="onMobileRouteChange($event)"
+            />
         </nav>
         @if (isMailRoute()) {
             <h1 class="fd-page-title">{{ 'ADMIN_OUTGOING.MAIL' | translate }}</h1>

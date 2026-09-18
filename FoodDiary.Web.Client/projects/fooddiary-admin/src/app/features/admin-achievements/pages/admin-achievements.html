@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
 <fd-admin-catalog-filter [categories]="categories()" [showLocale]="false" [showState]="true" />
 <div class="achievements-layout">
     <section class="definition-list fd-grid fd-gap-sm" [attr.aria-label]="'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate">
@@ -9,6 +10,7 @@
             <p>{{ 'ADMIN_ACHIEVEMENTS.LOADING' | translate }}</p>
         } @else {
             @for (definition of pageItems(); track definition.id) {
+                <!-- Rich definition cards retain a semantic button; fd-ui-button is intended for action labels. -->
                 <button class="definition-card" type="button" (click)="edit(definition)">
                     <span class="definition-icon" aria-hidden="true">{{ definition.icon }}</span>
                     <small>{{ 'ADMIN_ACHIEVEMENTS.AWARDED_USERS' | translate }}: {{ definition.awardedUsers ?? 0 }}</small>
@@ -52,9 +54,11 @@
             <fd-ui-input [label]="'ADMIN_ACHIEVEMENTS.FIELDS.ICON' | translate" [formField]="form.icon" />
             <fd-ui-input type="number" [label]="'ADMIN_ACHIEVEMENTS.FIELDS.SORT_ORDER' | translate" [formField]="form.sortOrder" />
             <div class="active-field">
-                <input id="achievement-active" type="checkbox" [formField]="form.isActive" /><label for="achievement-active">{{
-                    'ADMIN_ACHIEVEMENTS.ENABLED' | translate
-                }}</label>
+                <fd-ui-checkbox
+                    [id]="'achievement-active'"
+                    [label]="'ADMIN_ACHIEVEMENTS.ENABLED' | translate"
+                    [formField]="form.isActive"
+                />
             </div>
         </div>
         @if (error(); as message) {

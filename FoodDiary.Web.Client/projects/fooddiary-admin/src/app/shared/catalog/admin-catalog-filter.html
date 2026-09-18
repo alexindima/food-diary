@@ -1,29 +1,40 @@
-<div class="fd-row fd-wrap fd-gap-sm fd-align-end">
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
+<div class="admin-filter-bar">
     <fd-ui-input [label]="'ADMIN_COMMON.SEARCH' | translate" [value]="search()" (valueChange)="search.set($event?.toString() || '')" />
     @if (showLocale()) {
-        <label for="admin-catalog-filter-field-1">{{ 'ADMIN_PROMPTS.LOCALE' | translate }}</label
-        ><select id="admin-catalog-filter-field-1" [value]="locale()" (change)="locale.set(value($event))">
-            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
-            <option value="ru">Русский</option>
-            <option value="en">English</option>
-        </select>
+        <fd-ui-select
+            [id]="'admin-catalog-filter-field-1'"
+            [label]="'ADMIN_PROMPTS.LOCALE' | translate"
+            [value]="locale()"
+            [options]="[
+                { value: '', label: ('ADMIN_COMMON.ALL' | translate) },
+                { value: 'ru', label: 'Русский' },
+                { value: 'en', label: 'English' },
+            ]"
+            (valueChange)="locale.set($event ?? '')"
+        />
     }
     @if (categories().length > 0) {
-        <label for="admin-catalog-filter-field-2">{{ 'ADMIN_CATALOG.CATEGORY' | translate }}</label
-        ><select id="admin-catalog-filter-field-2" [value]="category()" (change)="category.set(value($event))">
-            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
-            @for (item of categories(); track item) {
-                <option [value]="item">{{ item }}</option>
-            }
-        </select>
+        <fd-ui-select
+            [id]="'admin-catalog-filter-field-2'"
+            [label]="'ADMIN_CATALOG.CATEGORY' | translate"
+            [value]="category()"
+            [options]="[{ value: '', label: ('ADMIN_COMMON.ALL' | translate) }, ...categoryOptions()]"
+            (valueChange)="category.set($event ?? '')"
+        />
     }
     @if (showState()) {
-        <label for="admin-catalog-filter-field-3">{{ 'ADMIN_CATALOG.STATE' | translate }}</label
-        ><select id="admin-catalog-filter-field-3" [value]="state()" (change)="state.set(value($event))">
-            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
-            <option value="active">{{ activeLabel() | translate }}</option>
-            <option value="inactive">{{ inactiveLabel() | translate }}</option>
-        </select>
+        <fd-ui-select
+            [id]="'admin-catalog-filter-field-3'"
+            [label]="'ADMIN_CATALOG.STATE' | translate"
+            [value]="state()"
+            [options]="[
+                { value: '', label: ('ADMIN_COMMON.ALL' | translate) },
+                { value: 'active', label: (activeLabel() | translate) },
+                { value: 'inactive', label: (inactiveLabel() | translate) },
+            ]"
+            (valueChange)="state.set($event ?? '')"
+        />
     }
     <fd-ui-button (click)="apply()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
 </div>

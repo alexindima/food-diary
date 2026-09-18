@@ -10,7 +10,6 @@
                 <th>Last login</th>
                 <th>Confirmed</th>
                 <th>{{ 'ADMIN_COMMON.REGISTERED' | translate }}</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -28,19 +27,10 @@
                     <td>{{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'medium') : '-' }}</td>
                     <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
                     <td>{{ user.createdOnUtc | date: 'mediumDate' }}</td>
-                    <td>
-                        <a
-                            queryParamsHandling="preserve"
-                            [routerLink]="['/users', user.id]"
-                            (click)="$event.stopPropagation()"
-                            (keydown)="$event.stopPropagation()"
-                            >{{ 'ADMIN_COMMON.OPEN' | translate }}</a
-                        >
-                    </td>
                 </tr>
             } @empty {
                 <tr>
-                    <td colspan="7">No users found.</td>
+                    <td colspan="6">No users found.</td>
                 </tr>
             }
         </tbody>

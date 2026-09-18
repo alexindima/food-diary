@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiTabsComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
@@ -19,6 +20,7 @@ import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-tab
 @Component({
     selector: 'fd-admin-billing',
     imports: [
+        FdUiTabsComponent,
         CommonModule,
         AdminPeriodControlComponent,
         TranslatePipe,
@@ -37,6 +39,12 @@ import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-tab
 export class AdminBillingComponent {
     protected readonly billing = inject(AdminBillingFacade);
     private readonly route = inject(ActivatedRoute);
+
+    protected onTabChange(value: string): void {
+        if (value === 'subscriptions' || value === 'payments' || value === 'webhook-events') {
+            this.billing.setTab(value);
+        }
+    }
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {

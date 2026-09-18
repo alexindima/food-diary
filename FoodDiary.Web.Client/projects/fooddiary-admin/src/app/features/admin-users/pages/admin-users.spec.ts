@@ -1,15 +1,15 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
-import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersComponent } from './admin-users';
+
+const EXPECTED_ACTION_COUNT = 3;
 
 const FIRST_PAGE = 1;
 const SECOND_PAGE = 2;
@@ -69,7 +69,7 @@ describe('AdminUsersComponent', () => {
     it('exposes persistent names for the user filters', () => {
         const element = fixture.nativeElement as HTMLElement;
         const searchInput = element.querySelector<HTMLInputElement>('fd-ui-input input');
-        const statusButton = element.querySelector<HTMLButtonElement>('.toolbar fd-ui-select button');
+        const statusButton = element.querySelector<HTMLButtonElement>('.admin-filter-bar > fd-ui-select button');
         if (searchInput === null || statusButton === null) {
             throw new Error('Expected user filter controls to render.');
         }
@@ -144,7 +144,7 @@ describe('AdminUsersComponent dialogs', () => {
             afterClosed: () => close$.asObservable(),
         });
 
-        component['openEdit'](pagedUsers.items[0]);
+        (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('header fd-ui-button button')?.click();
         close$.next(true);
         close$.complete();
 
@@ -152,45 +152,19 @@ describe('AdminUsersComponent dialogs', () => {
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
     });
 
-    it('should open set password dialog and reload after success', () => {
-        const close$ = new Subject<boolean>();
-        dialogService.open.mockReturnValue({
-            afterClosed: () => close$.asObservable(),
-        });
-
-        component['openSetPassword'](pagedUsers.items[0]);
-        close$.next(true);
-        close$.complete();
-
-        expect(dialogService.open).toHaveBeenCalledWith(AdminUserSetPasswordDialogComponent, {
-            size: 'sm',
-            data: pagedUsers.items[0],
-        });
-        expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
-    });
-
-    it('should open impersonation dialog and start session from dialog result', () => {
-        const close$ = new Subject<{ code: string; expiresAtUtc: string; reason: string } | null>();
-        const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-        dialogService.open.mockReturnValue({
-            afterClosed: () => close$.asObservable(),
-        });
-
-        component['startImpersonation'](pagedUsers.items[0]);
-        close$.next({
-            code: 'code',
-            expiresAtUtc: '2026-01-01T00:10:00Z',
-            reason: 'Support case investigation',
-        });
-        close$.complete();
-
-        expect(dialogService.open).toHaveBeenCalledWith(AdminUserImpersonationDialogComponent, {
-            size: 'sm',
-            data: pagedUsers.items[0],
-        });
-        expect(openSpy).toHaveBeenCalledWith('http://localhost:4200/dashboard?impersonationCode=code', '_blank', 'noopener,noreferrer');
-
-        openSpy.mockRestore();
+    it('navigates row click and keyboard activation to the user page with list filters', () => {
+        const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+        const row = (fixture.nativeElement as HTMLElement).querySelector<HTMLTableRowElement>('tbody .users-table__row');
+        if (row === null) {
+            throw new Error('Expected an account row');
+        }
+        expect(row.querySelector('a')).toBeNull();
+        row.click();
+        row.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        row.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+        expect(navigate).toHaveBeenCalledTimes(EXPECTED_ACTION_COUNT);
+        expect(navigate).toHaveBeenLastCalledWith(['/users', 'u1'], { queryParamsHandling: 'preserve' });
+        expect(dialogService.open).not.toHaveBeenCalled();
     });
 });
 

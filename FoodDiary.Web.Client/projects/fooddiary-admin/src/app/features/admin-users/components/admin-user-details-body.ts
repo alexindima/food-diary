@@ -1,26 +1,22 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import type { DetailSection } from '../lib/admin-user-sections';
 import type { AdminUserLoginEvent, AdminUserRoleAuditEvent } from '../models/admin-user.models';
-
-export type DetailField = {
-    label: string;
-    value: string;
-};
-
-export type DetailSection = {
-    title: string;
-    fields: DetailField[];
-};
 
 @Component({
     selector: 'fd-admin-user-details-body',
-    imports: [DatePipe],
+    imports: [DatePipe, TranslatePipe, AdminLoadErrorComponent],
     templateUrl: './admin-user-details-body.html',
     styleUrl: './admin-user-details-body.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUserDetailsBodyComponent {
+    public readonly activityLoading = input(false);
+    public readonly activityFailed = input(false);
+    public readonly retry = output();
     public readonly roleAuditEvents = input.required<AdminUserRoleAuditEvent[]>();
     public readonly loginEvents = input.required<AdminUserLoginEvent[]>();
     public readonly sections = input.required<DetailSection[]>();

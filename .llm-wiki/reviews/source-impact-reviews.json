@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b0192308da84e4ae8d4ad2a303c808fb7f273e94167450bca14dc835daf66219"
+          "sha256": "81b5af5de2a055e48540d3912eca4d2d0ae38b66c823311d6236ffb33fbffabf"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "Admin filter layout remains within existing frontend components; strict dependency cruise passed for 1651 modules. No module, provider, route guard or persistence changes in this layout update.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:39.4105320Z"
+      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
+      "reviewedAtUtc": "2026-09-18T03:04:50.7020919Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2aeea4d8f08259299c58fcf45e03c98543e58e2b19e6bdb492027844ea778da1"
+          "sha256": "0586131838dea02d6929ca0840cd06c3ee78c1c530aea96b7237dbcead34af85"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "Layout updates preserve request and filtering semantics; 156 admin tests, targeted lint, strict dependency checks and mocked browser filter/navigation checks passed. Generated test-reference signals remain navigation rather than coverage.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:41.3037713Z"
+      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
+      "reviewedAtUtc": "2026-09-18T03:04:56.4229904Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,21 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2aeea4d8f08259299c58fcf45e03c98543e58e2b19e6bdb492027844ea778da1"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2887be20132cadf35d6c404311bca1c6af18b435413af6183b39727dad9a7838"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a86ed6395f374df4ecbb43a33c3258e9fee9d832b079efa20e9d5c81ad7b176f"
+          "sha256": "0586131838dea02d6929ca0840cd06c3ee78c1c530aea96b7237dbcead34af85"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "This update changes admin header and filter layout only; authentication guards, API authorization, request payloads and storage boundaries are unchanged. Browser checks used mock data and did not mutate real accounts.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:42.0939130Z"
+      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
+      "reviewedAtUtc": "2026-09-18T03:04:58.0151731Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1049,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3240221df732a449a079f3df3b051fdd5080225e12ce2e3581c91b8ffdf6cc46"
+          "sha256": "883d5077d7157bb384fc001c5e29756b6fe99b370e6a6a36bff06d385b7716a8"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "94537e0e12782458a9dfef33e664fca9d1790918074c7e66f0594f667382cac5"
+          "sha256": "cee4ed9907586d24a84aa5c4cfd8a5c4ce23cec9007a7497710400fd038d615d"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Verified Accounts row navigation and header create action, shared period control consumers, catalog filter consumers and relocated activity search bindings in current templates and TypeScript. Existing routes and API calls are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:13.3163610Z"
+      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
+      "reviewedAtUtc": "2026-09-18T03:04:59.7339638Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3240221df732a449a079f3df3b051fdd5080225e12ce2e3581c91b8ffdf6cc46"
+          "sha256": "883d5077d7157bb384fc001c5e29756b6fe99b370e6a6a36bff06d385b7716a8"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Verified period inline input defaults to existing standalone behavior; migrated both section search consumers to their owning page. Admin build and 156 tests pass; rendered accounts, login, mail and audit controls checked on desktop/mobile, including custom dates and preserved URL filters.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:10.9538332Z"
+      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
+      "reviewedAtUtc": "2026-09-18T03:04:52.9280428Z"
     },
     {
       "pageId": "workflow.query-context",

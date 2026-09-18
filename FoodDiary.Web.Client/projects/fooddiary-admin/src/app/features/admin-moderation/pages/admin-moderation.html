@@ -1,6 +1,6 @@
 <div class="admin-moderation">
-    <fd-admin-period />
-    <div class="toolbar fd-row fd-wrap fd-gap-sm">
+    <div class="admin-filter-bar">
+        <fd-admin-period [inline]="true" />
         <fd-ui-select
             [label]="'ADMIN_MODERATION.STATUS' | translate"
             [value]="statusFilter()"

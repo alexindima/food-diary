@@ -1,23 +1,44 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
+<header class="admin-page-header">
+    <div>
+        <h1 class="fd-page-title">{{ 'ADMIN_NAV.ACCOUNTS' | translate }}</h1>
+        <p class="fd-page-subtitle">{{ 'ADMIN_SUBTITLE.ACCOUNTS' | translate }}</p>
+    </div>
+    <fd-ui-button type="button" (click)="openCreate()">Create user</fd-ui-button>
+</header>
 <div class="admin-users fd-grid fd-gap-md">
-    <fd-admin-period label="ADMIN_USER.REGISTRATION_PERIOD" />
-    <div class="toolbar fd-row fd-gap-sm fd-wrap">
+    <div class="admin-filter-bar">
+        <fd-admin-period label="ADMIN_USER.REGISTRATION_PERIOD" [inline]="true" />
         <fd-ui-input label="Search users" placeholder="Email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
 
         <fd-ui-select label="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
-        <fd-ui-button type="button" (click)="openCreate()">Create user</fd-ui-button>
-    </div>
-    <div class="fd-row fd-wrap fd-gap-sm fd-align-end">
+
         <fd-ui-input [label]="'ADMIN_USER.ROLES' | translate" [value]="role()" (valueChange)="role.set($event?.toString() || '')" />
-        <label for="admin-users-field-1">{{ 'ADMIN_USER.CONFIRMED' | translate }}</label
-        ><select id="admin-users-field-1" [value]="confirmed()" (change)="confirmed.set(controlValue($event))">
-            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
-            <option value="true">{{ 'ADMIN_USER.YES' | translate }}</option>
-            <option value="false">{{ 'ADMIN_USER.NO' | translate }}</option>
-        </select>
-        <label for="admin-users-field-2">{{ 'ADMIN_USER.LOGIN_FROM' | translate }}</label
-        ><input id="admin-users-field-2" type="date" [value]="lastLoginFrom()" (input)="lastLoginFrom.set(controlValue($event))" />
-        <label for="admin-users-field-3">{{ 'ADMIN_USER.LOGIN_TO' | translate }}</label
-        ><input id="admin-users-field-3" type="date" [value]="lastLoginTo()" (input)="lastLoginTo.set(controlValue($event))" />
+        <fd-ui-select
+            [id]="'admin-users-field-1'"
+            [label]="'ADMIN_USER.CONFIRMED' | translate"
+            [value]="confirmed()"
+            [options]="[
+                { value: '', label: ('ADMIN_COMMON.ALL' | translate) },
+                { value: 'true', label: ('ADMIN_USER.YES' | translate) },
+                { value: 'false', label: ('ADMIN_USER.NO' | translate) },
+            ]"
+            (valueChange)="confirmed.set($event?.toString() ?? '')"
+        />
+        <fd-ui-date-input
+            [id]="'admin-users-field-2'"
+            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.LOGIN_FROM' | translate)}`"
+            [label]="'ADMIN_USER.LOGIN_FROM' | translate"
+            [value]="lastLoginFrom()"
+            (valueChange)="lastLoginFrom.set($event?.toString() ?? '')"
+        />
+        <fd-ui-date-input
+            [id]="'admin-users-field-3'"
+            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.LOGIN_TO' | translate)}`"
+            [label]="'ADMIN_USER.LOGIN_TO' | translate"
+            [value]="lastLoginTo()"
+            (valueChange)="lastLoginTo.set($event?.toString() ?? '')"
+        />
         <fd-ui-button (click)="page.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
     </div>
 

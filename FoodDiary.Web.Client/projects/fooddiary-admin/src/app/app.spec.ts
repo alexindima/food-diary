@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -34,9 +35,11 @@ describe('AppComponent', () => {
 
     it('provides every admin section through the mobile route selector', () => {
         fixture.detectChanges();
-        const routeSelector = (fixture.nativeElement as HTMLElement).querySelector<HTMLSelectElement>('#admin-mobile-route');
+        const routeSelector = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button#admin-mobile-route');
 
-        expect(routeSelector?.options).toHaveLength(ADMIN_ROUTE_COUNT);
-        expect(routeSelector?.value).toBe('/');
+        expect(routeSelector?.textContent).toContain('ADMIN_NAV.DASHBOARD');
+        routeSelector?.click();
+        fixture.detectChanges();
+        expect(TestBed.inject(DOCUMENT).querySelectorAll('[role=option]')).toHaveLength(ADMIN_ROUTE_COUNT);
     });
 });

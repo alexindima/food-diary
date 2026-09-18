@@ -53,7 +53,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly label = input<string>();
     public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
-    public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'>('text');
+    public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'>('text');
     public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly error = input<string | null>();
     public readonly required = input(false);

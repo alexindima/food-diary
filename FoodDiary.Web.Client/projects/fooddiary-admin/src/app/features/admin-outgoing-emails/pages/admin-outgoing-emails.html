@@ -1,7 +1,7 @@
 <div class="fd-grid fd-gap-md">
-    <fd-admin-period />
     <fd-outgoing-status-counts [counts]="statusCounts()" (selected)="status.set($event); load(true)" />
-    <div class="mail-filters fd-row fd-gap-sm fd-wrap">
+    <div class="admin-filter-bar">
+        <fd-admin-period [inline]="true" />
         <fd-ui-input
             [label]="'ADMIN_OUTGOING.RECIPIENT' | translate"
             [value]="recipient()"

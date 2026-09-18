@@ -2,23 +2,6 @@
     padding: var(--fd-space-lg);
 }
 
-.toolbar {
-    margin-bottom: var(--fd-space-md);
-
-    select {
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border: var(--fd-border-strong);
-        border-radius: var(--fd-radius-xs);
-        font-size: var(--fd-text-body-xs-size);
-
-        &:where(:focus-visible) {
-            outline: none;
-            border-color: var(--fd-color-primary-500);
-            box-shadow: var(--fd-shadow-focus);
-        }
-    }
-}
-
 .summary {
     margin-bottom: var(--fd-space-sm);
     font-size: var(--fd-text-body-xs-size);

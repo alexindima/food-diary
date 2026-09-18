@@ -1,6 +1,13 @@
-<div class="fd-row fd-wrap fd-gap-sm">
-    <fd-ui-input [label]="'ADMIN_COMMON.SEARCH' | translate" [value]="search()" (valueChange)="search.set($event?.toString() || '')" />
+<header class="admin-page-header">
+    <div>
+        <h1 class="fd-page-title">{{ 'ADMIN_NAV.PROMPTS' | translate }}</h1>
+        <p class="fd-page-subtitle">{{ 'ADMIN_PROMPTS.SUBTITLE' | translate }}</p>
+    </div>
     <fd-ui-button (click)="edit(null)">{{ 'ADMIN_PROMPTS.NEW' | translate }}</fd-ui-button>
+</header>
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
+<div class="admin-filter-bar">
+    <fd-ui-input [label]="'ADMIN_COMMON.SEARCH' | translate" [value]="search()" (valueChange)="search.set($event?.toString() || '')" />
 </div>
 @if (loading()) {
     <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
@@ -10,26 +17,32 @@
     <div class="prompt-layout">
         <div class="fd-grid fd-gap-sm">
             @for (item of filtered(); track item.id) {
-                <button type="button" [attr.aria-pressed]="selected()?.id === item.id" (click)="edit(item)">
+                <fd-ui-button variant="secondary" type="button" [ariaPressed]="selected()?.id === item.id" (click)="edit(item)">
                     {{ item.key }} · {{ item.locale }} · v{{ item.version }} ·
                     {{ (item.isActive ? 'ADMIN_PROMPTS.ACTIVE' : 'ADMIN_PROMPTS.INACTIVE') | translate }}
-                </button>
+                </fd-ui-button>
             } @empty {
                 <p>{{ 'ADMIN_COMMON.EMPTY' | translate }}</p>
             }
         </div>
         <form class="fd-grid fd-gap-sm" [formRoot]="form">
-            <label for="admin-ai-prompts-field-1">{{ 'ADMIN_PROMPTS.KEY' | translate }}</label
-            ><input id="admin-ai-prompts-field-1" [formField]="form.key" [readOnly]="selected() !== null" />
-            <label for="admin-ai-prompts-field-2">{{ 'ADMIN_PROMPTS.LOCALE' | translate }}</label
-            ><select id="admin-ai-prompts-field-2" [formField]="form.locale">
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
-            </select>
-            <label for="admin-ai-prompts-field-3">{{ 'ADMIN_PROMPTS.TEXT' | translate }}</label
-            ><textarea id="admin-ai-prompts-field-3" rows="18" [formField]="form.promptText"></textarea>
-            <label for="admin-ai-prompts-field-4">{{ 'ADMIN_PROMPTS.ACTIVE' | translate }}</label
-            ><input id="admin-ai-prompts-field-4" type="checkbox" [formField]="form.isActive" />
+            <fd-ui-input [id]="'admin-ai-prompts-field-1'" [label]="'ADMIN_PROMPTS.KEY' | translate" [formField]="form.key" />
+            <fd-ui-select
+                [id]="'admin-ai-prompts-field-2'"
+                [label]="'ADMIN_PROMPTS.LOCALE' | translate"
+                [formField]="form.locale"
+                [options]="[
+                    { value: 'en', label: 'English' },
+                    { value: 'ru', label: 'Русский' },
+                ]"
+            />
+            <fd-ui-textarea
+                [id]="'admin-ai-prompts-field-3'"
+                [label]="'ADMIN_PROMPTS.TEXT' | translate"
+                [rows]="18"
+                [formField]="form.promptText"
+            />
+            <fd-ui-checkbox [id]="'admin-ai-prompts-field-4'" [label]="'ADMIN_PROMPTS.ACTIVE' | translate" [formField]="form.isActive" />
             @if (saveFailed()) {
                 <p role="alert">{{ 'ADMIN_PROMPTS.SAVE_ERROR' | translate }}</p>
             }

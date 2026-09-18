@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
 <div class="admin-acquisition fd-grid fd-gap-md">
     <div class="admin-acquisition__toolbar">
         <div>
@@ -166,31 +167,37 @@
                             {{ 'ADMIN_ACQUISITION.EVENT_TOTAL' | translate }}: {{ report()?.eventTotal }}
                         </div>
                     </div>
-                    <div class="admin-acquisition__filters">
-                        <div>
-                            <label for="acquisition-event-search">{{ 'ADMIN_COMMON.SEARCH' | translate }}</label
-                            ><input id="acquisition-event-search" [value]="eventSearch()" (input)="setEventSearch($event)" /><fd-ui-button
-                                (click)="applyEventFilters()"
-                                >{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button
-                            >
-                        </div>
-                        <div class="admin-acquisition__field admin-acquisition__field--compact">
-                            <label for="admin-acquisition-event-type">Event</label>
-                            <select id="admin-acquisition-event-type" [value]="eventTypeFilter()" (change)="setEventTypeFilter($event)">
-                                <option value="all">All events</option>
-                                <option value="page_landing">Visits</option>
-                                <option value="signup_completed">Signups</option>
-                                <option value="premium_started">Premium starts</option>
-                            </select>
-                        </div>
-                        <div class="admin-acquisition__field admin-acquisition__field--compact">
-                            <label for="admin-acquisition-channel">Attribution</label>
-                            <select id="admin-acquisition-channel" [value]="channelFilter()" (change)="setChannelFilter($event)">
-                                <option value="all">All traffic</option>
-                                <option value="tracked">Tracked only</option>
-                                <option value="direct">Direct only</option>
-                            </select>
-                        </div>
+                    <div class="admin-filter-bar">
+                        <fd-ui-input
+                            [id]="'acquisition-event-search'"
+                            [label]="'ADMIN_COMMON.SEARCH' | translate"
+                            [value]="eventSearch()"
+                            (valueChange)="setEventSearch($event)"
+                        />
+                        <fd-ui-select
+                            label="Event"
+                            [id]="'admin-acquisition-event-type'"
+                            [value]="eventTypeFilter()"
+                            [options]="[
+                                { value: 'all', label: 'All events' },
+                                { value: 'page_landing', label: 'Visits' },
+                                { value: 'signup_completed', label: 'Signups' },
+                                { value: 'premium_started', label: 'Premium starts' },
+                            ]"
+                            (valueChange)="setEventTypeFilter($event)"
+                        />
+                        <fd-ui-select
+                            label="Attribution"
+                            [id]="'admin-acquisition-channel'"
+                            [value]="channelFilter()"
+                            [options]="[
+                                { value: 'all', label: 'All traffic' },
+                                { value: 'tracked', label: 'Tracked only' },
+                                { value: 'direct', label: 'Direct only' },
+                            ]"
+                            (valueChange)="setChannelFilter($event)"
+                        />
+                        <fd-ui-button (click)="applyEventFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
                     </div>
                 </div>
 
@@ -260,57 +267,57 @@
                 @let builder = builderModel();
                 <div class="admin-acquisition__builder">
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-base-url">Base URL</label>
-                        <input
-                            id="admin-acquisition-base-url"
+                        <fd-ui-input
+                            label="Base URL"
                             type="url"
+                            [id]="'admin-acquisition-base-url'"
                             [value]="builder.baseUrl"
-                            (input)="updateBuilderField('baseUrl', $event)"
+                            (valueChange)="updateBuilderField('baseUrl', $event)"
                         />
                     </div>
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-source">Source</label>
-                        <input
-                            id="admin-acquisition-source"
+                        <fd-ui-input
+                            label="Source"
                             type="text"
+                            [id]="'admin-acquisition-source'"
                             [value]="builder.source"
-                            (input)="updateBuilderField('source', $event)"
+                            (valueChange)="updateBuilderField('source', $event)"
                         />
                     </div>
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-medium">Medium</label>
-                        <input
-                            id="admin-acquisition-medium"
+                        <fd-ui-input
+                            label="Medium"
                             type="text"
+                            [id]="'admin-acquisition-medium'"
                             [value]="builder.medium"
-                            (input)="updateBuilderField('medium', $event)"
+                            (valueChange)="updateBuilderField('medium', $event)"
                         />
                     </div>
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-campaign">Campaign</label>
-                        <input
-                            id="admin-acquisition-campaign"
+                        <fd-ui-input
+                            label="Campaign"
                             type="text"
+                            [id]="'admin-acquisition-campaign'"
                             [value]="builder.campaign"
-                            (input)="updateBuilderField('campaign', $event)"
+                            (valueChange)="updateBuilderField('campaign', $event)"
                         />
                     </div>
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-content">Content</label>
-                        <input
-                            id="admin-acquisition-content"
+                        <fd-ui-input
+                            label="Content"
                             type="text"
+                            [id]="'admin-acquisition-content'"
                             [value]="builder.content"
-                            (input)="updateBuilderField('content', $event)"
+                            (valueChange)="updateBuilderField('content', $event)"
                         />
                     </div>
                     <div class="admin-acquisition__field">
-                        <label for="admin-acquisition-term">Term</label>
-                        <input
-                            id="admin-acquisition-term"
+                        <fd-ui-input
+                            label="Term"
                             type="text"
+                            [id]="'admin-acquisition-term'"
                             [value]="builder.term"
-                            (input)="updateBuilderField('term', $event)"
+                            (valueChange)="updateBuilderField('term', $event)"
                         />
                     </div>
                 </div>

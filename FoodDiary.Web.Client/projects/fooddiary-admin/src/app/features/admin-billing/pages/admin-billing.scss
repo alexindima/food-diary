@@ -4,51 +4,6 @@
     max-width: 100%;
 }
 
-.admin-billing__tabs button {
-    border: var(--fd-border-strong);
-    border-radius: var(--fd-radius-md);
-    padding: var(--fd-space-xs) var(--fd-space-sm);
-    background: var(--fd-color-white);
-    cursor: pointer;
-
-    &:where(:focus-visible) {
-        outline: var(--fd-outline-focus);
-        outline-offset: var(--fd-outline-offset);
-    }
-
-    &.active {
-        border-color: var(--fd-color-primary-600);
-        background: var(--fd-bg-status-info);
-        color: var(--fd-color-primary-700);
-        font-weight: var(--fd-text-section-title-weight);
-    }
-}
-
-.admin-billing__filters {
-    padding: var(--fd-space-md);
-    border: var(--fd-border-default);
-    border-radius: var(--fd-radius-lg);
-    background: var(--fd-color-white);
-
-    label {
-        font-size: var(--fd-text-label-floating-size);
-        color: var(--fd-color-text-muted);
-    }
-
-    input {
-        min-height: 2.5rem;
-        border: var(--fd-border-strong);
-        border-radius: var(--fd-radius-md);
-        padding: 0 var(--fd-space-sm);
-
-        &:where(:focus-visible) {
-            outline: none;
-            border-color: var(--fd-color-primary-500);
-            box-shadow: var(--fd-shadow-focus);
-        }
-    }
-}
-
 .admin-billing__error {
     margin: 0;
     color: var(--fd-color-danger-700);

@@ -160,7 +160,7 @@ Universal single-line input.
 - `label?: string`
 - `ariaLabel?: string` (accessible name for compact controls without a visible label)
 - `placeholder?: string`
-- `type?: 'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'` (default `text`)
+- `type?: 'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'` (default `text`)
 - `error?: string | null`
 - `required?: boolean`
 - `readonly?: boolean`
@@ -266,6 +266,8 @@ Inline calendar primitive for custom date pickers and date popovers.
 #### `fd-ui-date-input`
 
 Date input (value as `YYYY-MM-DD`).
+
+Providing `clearAriaLabel` enables an optional clear button that emits `null`; pass a localized accessible name.
 
 **Inputs**
 
