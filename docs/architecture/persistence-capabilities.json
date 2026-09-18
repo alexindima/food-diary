@@ -1679,8 +1679,8 @@
         "entity:AiPromptTemplate",
         "tracked:AiPromptTemplate"
       ],
-      "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "fde109505915fe2eb543cde55b821756978b6cbaacd2edd81b7b14d659d071dd"
+      "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions. The singleton prompt preview renderer uses only the request factory and adds no persistence access.",
+      "technicalSourceSha256": "f4149bd79315b4f658a1c7300ae9c7ece7d5412b83b7c26ca095667787875098"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",
