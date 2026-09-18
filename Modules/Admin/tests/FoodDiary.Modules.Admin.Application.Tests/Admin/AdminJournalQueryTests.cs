@@ -131,6 +131,39 @@ public class AdminJournalQueryTests {
     }
 
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Retention_PreservesIndependentCohortDates(bool explicitEnd) {
+        var now = new DateTimeOffset(2026, 9, 9, 12, 0, 0, TimeSpan.Zero);
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(now);
+        IAdminRetentionReader reader = Substitute.For<IAdminRetentionReader>();
+        var from = new DateOnly(2026, 9, 1);
+        var cohortFrom = new DateOnly(2026, 6, 1);
+        var cohortTo = new DateOnly(2026, 7, 31);
+        await new GetAdminRetentionQueryHandler(reader, clock).Handle(
+            new GetAdminRetentionQuery(from, from, cohortFrom, explicitEnd ? cohortTo : null), CancellationToken.None);
+        await reader.Received(1).GetAsync(from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
+            from.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), now.UtcDateTime, CancellationToken.None,
+            cohortFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), (explicitEnd ? cohortTo : DateOnly.FromDateTime(now.UtcDateTime)).AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc));
+    }
+
+    [Theory]
+    [InlineData("2026-09-09", "2026-09-08")]
+    [InlineData("2026-09-09", "2026-09-10")]
+    [InlineData("1969-12-31", "2026-09-09")]
+    public async Task Retention_InvalidCohortRangeDoesNotRead(string from, string to) {
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 9, 9, 12, 0, 0, TimeSpan.Zero));
+        IAdminRetentionReader reader = Substitute.For<IAdminRetentionReader>();
+        Result<AdminRetentionReport> result = await new GetAdminRetentionQueryHandler(reader, clock).Handle(
+            new GetAdminRetentionQuery(From: null, To: null, DateOnly.Parse(from, System.Globalization.CultureInfo.InvariantCulture),
+                DateOnly.Parse(to, System.Globalization.CultureInfo.InvariantCulture)), CancellationToken.None);
+        ResultAssert.Failure(result);
+        Assert.Empty(reader.ReceivedCalls());
+    }
+
+    [Theory]
     [InlineData("2026-09-09", "2026-09-08")]
     [InlineData("2026-09-09", "2026-09-10")]
     [InlineData("1969-12-31", "2026-09-09")]

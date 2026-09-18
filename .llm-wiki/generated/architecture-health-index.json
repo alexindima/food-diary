@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 143,
+    "componentsWithoutDirectSpecs": 142,
     "criticalSymbolsWithoutTestReferences": 31,
     "explicitDebtMarkers": 10
   },
@@ -4103,32 +4103,6 @@
           "type": ""
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "AdminPeriodControlComponent",
-      "selector": "fd-admin-period",
-      "feature": "fooddiary-admin",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
-      "inputs": [
-        {
-          "name": "inline",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "defaultPeriod",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "label",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [],
       "specPath": null
     },
     {

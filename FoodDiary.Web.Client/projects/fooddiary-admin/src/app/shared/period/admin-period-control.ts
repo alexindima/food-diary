@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 
-import { adminPeriod } from './admin-period';
+import { adminPeriod, adminPeriodParams } from './admin-period';
 import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
 @Component({
@@ -21,6 +21,7 @@ export class AdminPeriodControlComponent {
     private readonly translate = inject(TranslateService);
     private readonly language = toSignal(this.translate.onLangChange);
     private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
+    public readonly queryPrefix = input('');
     public readonly inline = input(false);
     public readonly defaultPeriod = input('all');
     public readonly label = input('ADMIN_COMMON.PERIOD');
@@ -31,7 +32,7 @@ export class AdminPeriodControlComponent {
     protected readonly today = new Date().toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH);
     protected readonly presets = computed(() => {
         this.language();
-        return ['all', 'today', '7d', '30d', 'month', 'custom'].map(value => ({
+        return ['all', 'today', '7d', '30d', '90d', 'month', 'custom'].map(value => ({
             value,
             label: String(this.translate.instant(`ADMIN_COMMON.PERIOD_${value}`)),
         }));
@@ -39,7 +40,7 @@ export class AdminPeriodControlComponent {
 
     public constructor() {
         effect(() => {
-            const params = this.params();
+            const params = adminPeriodParams(this.params(), this.queryPrefix());
             this.preset.set(params.get('period') ?? this.defaultPeriod());
             this.from.set(params.get('from'));
             this.to.set(params.get('to'));
@@ -60,7 +61,10 @@ export class AdminPeriodControlComponent {
             queryParams.from = null;
             queryParams.to = null;
         }
-        void this.router.navigate([], { relativeTo: this.route, queryParams, queryParamsHandling: 'merge' });
+        const scopedParams = Object.fromEntries(
+            Object.entries(queryParams).map(([key, value]) => [key === 'page' ? key : `${this.queryPrefix()}${key}`, value]),
+        );
+        void this.router.navigate([], { relativeTo: this.route, queryParams: scopedParams, queryParamsHandling: 'merge' });
     }
 
     private date(value: string | Date | null): string | null {

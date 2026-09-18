@@ -1,10 +1,10 @@
-import type { ParamMap } from '@angular/router';
+import { convertToParamMap, type ParamMap } from '@angular/router';
 
 import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
 const DAY_MS = 86_400_000;
 const MAX_RANGE_DAYS = 3660;
-const PRESET_DAYS: Readonly<Partial<Record<string, number>>> = { '7d': 7, '30d': 30 };
+const PRESET_DAYS: Readonly<Partial<Record<string, number>>> = { '7d': 7, '30d': 30, '90d': 90 };
 export type AdminPeriod = { from?: string; to?: string };
 
 export function adminExclusiveDatePeriod(range: AdminPeriod, now = new Date()): { from: string; to: string } {
@@ -42,6 +42,12 @@ function customPeriod(params: ParamMap, today: string): AdminPeriod | null {
     return from >= '1970-01-01' && from <= to && to <= today && Date.parse(to) - Date.parse(from) <= MAX_RANGE_DAYS * DAY_MS
         ? { from, to }
         : null;
+}
+
+export function adminPeriodParams(params: ParamMap, prefix: string): ParamMap {
+    return prefix === ''
+        ? params
+        : convertToParamMap({ period: params.get(`${prefix}period`), from: params.get(`${prefix}from`), to: params.get(`${prefix}to`) });
 }
 
 export function adminPeriod(params: ParamMap, defaultPeriod = 'all', now = new Date()): AdminPeriod | null {

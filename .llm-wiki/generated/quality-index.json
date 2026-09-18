@@ -4098,11 +4098,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 10,
+      "nonBlankLines": 41,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.64
+      "structuralRiskScore": 21.82
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
@@ -6826,11 +6826,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/api/admin-retention.service.ts",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
+      "nonBlankLines": 20,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 3.4
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/lib/admin-retention.facade.ts",
@@ -6842,19 +6842,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/models/admin-retention.ts",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.38
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.ts",
-      "nonBlankLines": 65,
-      "decisionPoints": 3,
+      "nonBlankLines": 73,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.8
+      "structuralRiskScore": 8.96
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-template-history/api/admin-template-history.service.ts",
@@ -7066,19 +7066,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
-      "nonBlankLines": 65,
+      "nonBlankLines": 69,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.3
+      "structuralRiskScore": 7.38
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period.ts",
-      "nonBlankLines": 58,
+      "nonBlankLines": 63,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.66
+      "structuralRiskScore": 26.76
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-query.ts",
@@ -15066,11 +15066,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 5,
+      "nonBlankLines": 25,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.9
+      "structuralRiskScore": 19
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs",
@@ -15690,11 +15690,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminRetentionHttpMappings.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminTelemetryHttpResponseMappings.cs",

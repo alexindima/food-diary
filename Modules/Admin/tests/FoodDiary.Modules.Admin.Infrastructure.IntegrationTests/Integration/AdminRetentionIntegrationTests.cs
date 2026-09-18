@@ -21,7 +21,7 @@ public sealed class AdminRetentionIntegrationTests(PostgresDatabaseFixture datab
         context.Entry(active).Property(user => user.CreatedOnUtc).CurrentValue = start;
         context.Entry(inactive).Property(user => user.CreatedOnUtc).CurrentValue = start;
         context.Entry(recent).Property(user => user.CreatedOnUtc).CurrentValue = start.AddDays(31);
-        foreach (int day in new[] { 1, 1, 7, 30 }) {
+        foreach (int day in new[] { 1, 1, 7, 30, 32 }) {
             // A backdated diary date is not the day the user returned to create the record.
             var meal = Meal.Create(active.Id, start.AddYears(-1));
             context.Meals.Add(meal);
@@ -45,7 +45,29 @@ public sealed class AdminRetentionIntegrationTests(PostgresDatabaseFixture datab
         Assert.Null(immature.Day7);
         Assert.Null(immature.Day30);
         Assert.Equal(1, result.ActiveUsersInPeriod);
-        Assert.All(result.ActivityByDay, day => Assert.Equal(1, day.ActiveUsers));
+        Assert.Equal(4, result.MealEntriesInPeriod);
+        Assert.Equal(32, result.ActivityByDay.Count);
+        Assert.Equal(0, result.ActivityByDay[0].ActiveUsers);
+        Assert.Equal(0, result.ActivityByDay[0].MealEntries);
+        Assert.Equal(1, result.ActivityByDay[1].ActiveUsers);
+        Assert.Equal(2, result.ActivityByDay[1].MealEntries);
+        Assert.Equal(0, result.ActivityByDay[^1].MealEntries);
+        Assert.Equal(start, result.CohortFromUtc);
+
+        // Activity includes older accounts even when the selected registration cohort is recent.
+        AdminRetentionReport separate = await reader.GetAsync(start.AddDays(7), start.AddDays(9),
+            start.AddDays(31).AddHours(12), CancellationToken.None, start.AddDays(31), start.AddDays(32));
+        Assert.Single(separate.Cohorts);
+        Assert.Equal(start.AddDays(31), separate.Cohorts[0].Date);
+        Assert.Equal(1, separate.ActiveUsersInPeriod);
+        Assert.Equal(1, separate.MealEntriesInPeriod);
+        Assert.Equal(2, separate.ActivityByDay.Count);
+        Assert.Equal(0, separate.ActivityByDay[1].ActiveUsers);
+        Assert.Null(separate.Cohorts[0].Day30);
+
+        AdminRetentionReport all = await reader.GetAsync(DateTime.UnixEpoch, start.AddDays(32),
+            start.AddDays(31).AddHours(12), CancellationToken.None);
+        Assert.Equal(start.AddDays(1), all.ActivityByDay[0].Date);
         Assert.Empty(context.ChangeTracker.Entries());
     }
 }

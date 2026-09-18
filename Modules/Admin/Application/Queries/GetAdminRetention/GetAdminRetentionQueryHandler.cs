@@ -13,10 +13,15 @@ public sealed class GetAdminRetentionQueryHandler(IAdminRetentionReader reader, 
         var today = DateOnly.FromDateTime(now);
         DateOnly from = query.From ?? today.AddDays(-29);
         DateOnly to = query.To ?? today;
-        if (from > to || to > today || from < DateOnly.FromDateTime(DateTime.UnixEpoch)) {
+        bool hasCohortPeriod = query.CohortFrom.HasValue || query.CohortTo.HasValue;
+        DateOnly cohortFrom = query.CohortFrom ?? from;
+        DateOnly cohortTo = query.CohortTo ?? (hasCohortPeriod ? today : to);
+        if (cohortFrom > cohortTo || cohortTo > today || cohortFrom < DateOnly.FromDateTime(DateTime.UnixEpoch) || from > to || to > today || from < DateOnly.FromDateTime(DateTime.UnixEpoch)) {
             return Result.Failure<AdminRetentionReport>(Errors.Validation.Invalid("Period", "Invalid cohort date range."));
         }
         return Result.Success(await reader.GetAsync(from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
-            to.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), now, cancellationToken).ConfigureAwait(false));
+            to.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), now, cancellationToken,
+            hasCohortPeriod ? cohortFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc) : null,
+            hasCohortPeriod ? cohortTo.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc) : null).ConfigureAwait(false));
     }
 }

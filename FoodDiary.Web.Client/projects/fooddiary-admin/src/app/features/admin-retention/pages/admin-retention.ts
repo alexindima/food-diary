@@ -7,7 +7,7 @@ import { FdUiCardComponent } from 'fd-ui-kit';
 import { catchError, combineLatest, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { adminPeriod } from '../../../shared/period/admin-period';
+import { adminPeriod, adminPeriodParams } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { AdminRetentionFacade } from '../lib/admin-retention.facade';
 import type { AdminRetentionReport } from '../models/admin-retention';
@@ -37,18 +37,26 @@ export class AdminRetentionComponent {
                 switchMap(([query]) => {
                     this.report.set(null);
                     this.failed.set(false);
-                    const range = adminPeriod(query, '30d');
-                    if (range === null) {
+                    const range = adminPeriod(adminPeriodParams(query, 'activity_'), '30d');
+                    const cohorts = adminPeriod(query, '90d');
+                    if (range === null || cohorts === null) {
                         this.loading.set(false);
                         return of(null);
                     }
                     this.loading.set(true);
-                    return this.api.getReport({ ...range, from: range.from ?? '1970-01-01' }).pipe(
-                        catchError(() => {
-                            this.failed.set(true);
-                            return of(null);
-                        }),
-                    );
+                    return this.api
+                        .getReport({
+                            ...range,
+                            from: range.from ?? '1970-01-01',
+                            cohortFrom: cohorts.from ?? '1970-01-01',
+                            cohortTo: cohorts.to,
+                        })
+                        .pipe(
+                            catchError(() => {
+                                this.failed.set(true);
+                                return of(null);
+                            }),
+                        );
                 }),
                 takeUntilDestroyed(),
             )

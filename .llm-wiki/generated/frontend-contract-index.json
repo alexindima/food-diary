@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "components": 450,
-    "componentsWithoutDirectSpecs": 143,
-    "inputs": 1413,
+    "componentsWithoutDirectSpecs": 142,
+    "inputs": 1414,
     "outputs": 468,
     "apiCalls": 257,
     "templatesWithTranslations": 309,
-    "translationKeys": 1783,
+    "translationKeys": 1789,
     "consumerEdges": 1098,
     "consumedComponents": 290,
     "unconsumedComponents": 159
@@ -6877,6 +6877,11 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
       "inputs": [
         {
+          "name": "queryPrefix",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "inline",
           "type": "",
           "required": false
@@ -6893,7 +6898,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.spec.ts"
     },
     {
       "class": "AppComponent",
@@ -14357,7 +14362,7 @@
       "responseType": "AdminRetentionReport",
       "urlExpression": "this.url",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/api/admin-retention.service.ts",
-      "line": 14,
+      "line": 21,
       "publicMethod": "getReport",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -17448,13 +17453,19 @@
         "ADMIN_RETENTION.ACTIVATION",
         "ADMIN_RETENTION.ACTIVE",
         "ADMIN_RETENTION.ACTIVITY_DAYS",
+        "ADMIN_RETENTION.ACTIVITY_NOTE",
+        "ADMIN_RETENTION.ACTIVITY_TITLE",
         "ADMIN_RETENTION.AS_OF",
         "ADMIN_RETENTION.COHORT",
+        "ADMIN_RETENTION.COHORTS_TITLE",
         "ADMIN_RETENTION.DAY",
         "ADMIN_RETENTION.DEFINITION",
         "ADMIN_RETENTION.EMPTY",
         "ADMIN_RETENTION.HISTORY_NOTE",
-        "ADMIN_RETENTION.REGISTERED"
+        "ADMIN_RETENTION.MEAL_ENTRIES",
+        "ADMIN_RETENTION.NO_ACTIVITY",
+        "ADMIN_RETENTION.REGISTERED",
+        "ADMIN_RETENTION.WINDOW_NOTE"
       ]
     },
     {
@@ -21451,10 +21462,11 @@
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
       "consumerFeature": "admin-retention",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "defaultPeriod",
-        "label"
+        "label",
+        "queryPrefix"
       ],
       "outputsHandled": []
     },
@@ -26969,7 +26981,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "admin-retention",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": []
     },

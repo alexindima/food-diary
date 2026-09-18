@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1669,
+    "typescriptFiles": 1671,
     "symbols": 659,
     "routes": 100,
     "features": 44,
-    "specs": 578,
+    "specs": 580,
     "localeFiles": 5,
     "roles": {
       "Component": 445,
@@ -305,6 +305,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/api/admin-retention.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.spec.ts"
       ]
     },
@@ -6504,8 +6505,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 944,
-      "russianProperties": 944,
+      "englishProperties": 952,
+      "russianProperties": 952,
       "countsMatch": true
     },
     {

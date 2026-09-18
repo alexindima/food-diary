@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminRetention;
 
-public sealed record GetAdminRetentionQuery(DateOnly? From, DateOnly? To) : IQuery<Result<AdminRetentionReport>>;
+public sealed record GetAdminRetentionQuery(DateOnly? From, DateOnly? To, DateOnly? CohortFrom = null, DateOnly? CohortTo = null) : IQuery<Result<AdminRetentionReport>>;

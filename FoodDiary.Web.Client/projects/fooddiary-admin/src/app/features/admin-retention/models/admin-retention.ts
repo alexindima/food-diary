@@ -11,7 +11,10 @@ export type AdminRetentionReport = {
     fromUtc: string;
     toUtc: string;
     asOfUtc: string;
+    cohortFromUtc: string;
+    cohortToUtc: string;
+    mealEntriesInPeriod: number;
     activeUsersInPeriod: number;
     cohorts: AdminRetentionCohort[];
-    activityByDay: Array<{ date: string; activeUsers: number }>;
+    activityByDay: Array<{ date: string; activeUsers: number; mealEntries: number }>;
 };

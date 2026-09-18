@@ -15,12 +15,18 @@ describe('AdminRetentionComponent', () => {
         query.next(convertToParamMap({}));
         getReport.mockReset().mockReturnValue(
             of({
-                from: '2026-01-01',
-                to: '2026-01-02',
+                fromUtc: '2026-01-01T00:00:00Z',
+                cohortFromUtc: '2025-11-01T00:00:00Z',
+                cohortToUtc: '2026-01-03T00:00:00Z',
+                toUtc: '2026-01-03T00:00:00Z',
+                mealEntriesInPeriod: 3,
                 asOfUtc: '2026-02-01T00:00:00Z',
                 activeUsersInPeriod: 0,
-                activityByDay: [],
-                cohorts: [{ date: '2026-01-01', registered: 2, activatedWithinSevenDays: 0, day1: 0, day7: 0, day30: null }],
+                activityByDay: [
+                    { date: '2026-01-01T00:00:00Z', activeUsers: 1, mealEntries: 3 },
+                    { date: '2026-01-02T00:00:00Z', activeUsers: 0, mealEntries: 0 },
+                ],
+                cohorts: [{ date: '2026-01-01T00:00:00Z', registered: 2, activatedWithinSevenDays: 0, day1: 0, day7: 0, day30: null }],
             }),
         );
         await TestBed.configureTestingModule({
@@ -41,6 +47,31 @@ describe('AdminRetentionComponent', () => {
         expect(text).toContain('Jan 1, 2026');
         expect(text).toContain('0.0% (0/2)');
         expect(text).toContain('ADMIN_RETENTION.IMMATURE');
+    });
+
+    it('sends independent activity and cohort periods and renders zero days', () => {
+        query.next(
+            convertToParamMap({
+                period: 'custom',
+                from: '2025-11-01',
+                to: '2025-12-01',
+                activity_period: 'custom',
+                activity_from: '2026-01-01',
+                activity_to: '2026-01-02',
+            }),
+        );
+        const fixture = TestBed.createComponent(AdminRetentionComponent);
+        fixture.detectChanges();
+        expect(getReport).toHaveBeenLastCalledWith({
+            from: '2026-01-01',
+            to: '2026-01-02',
+            cohortFrom: '2025-11-01',
+            cohortTo: '2025-12-01',
+        });
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.textContent).toContain('Jan 2, 2026');
+        expect(element.querySelectorAll('tbody')[0].rows[1].textContent).toMatch(/Jan 2, 2026\s*0\s*0/);
+        expect(element.querySelector('details')).toBeNull();
     });
 
     it('shows failure and can retry without presenting a false empty report', () => {

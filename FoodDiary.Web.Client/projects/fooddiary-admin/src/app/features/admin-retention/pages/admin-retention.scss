@@ -1,9 +1,27 @@
+section {
+    min-width: 0;
+}
+
+.retention-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--fd-space-md);
+    margin-bottom: var(--fd-space-lg);
+}
+
 .retention-table-wrap {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: 28rem;
 
     table {
         width: 100%;
         border-collapse: collapse;
+    }
+
+    caption {
+        text-align: start;
+        padding-block: var(--fd-space-sm);
+        font-weight: var(--fd-font-weight-semibold);
     }
 
     th,
@@ -11,5 +29,16 @@
         padding: var(--fd-space-sm);
         text-align: start;
         white-space: nowrap;
+        border-bottom: var(--fd-border-default);
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        background: var(--fd-bg-page);
+    }
+
+    tbody th {
+        font-weight: var(--fd-font-weight-regular);
     }
 }

@@ -627,6 +627,20 @@
           ],
           "QueryParameters": [
             {
+              "Name": "CohortFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "CohortTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "From",
               "Location": "query",
               "Required": false,
@@ -20393,6 +20407,13 @@
           "Type": "string",
           "Format": "date-time",
           "Nullable": false
+        },
+        {
+          "Name": "mealEntries",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
         }
       ]
     },
@@ -20421,6 +20442,20 @@
           "Nullable": false
         },
         {
+          "Name": "cohortFromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "cohortToUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
           "Name": "cohorts",
           "Required": false,
           "Type": "array",
@@ -20432,6 +20467,13 @@
           "Required": false,
           "Type": "string",
           "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "mealEntriesInPeriod",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
           "Nullable": false
         },
         {

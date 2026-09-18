@@ -1276,7 +1276,8 @@
         "NEXT": "Next",
         "FIRST_PAGE": "This is the first page.",
         "LAST_PAGE": "This is the last page.",
-        "REQUIRED_FIELDS": "Complete the required fields."
+        "REQUIRED_FIELDS": "Complete the required fields.",
+        "PERIOD_90d": "Last 90 days"
     },
     "ADMIN_NAV": {
         "DASHBOARD": "Dashboard",
@@ -1394,18 +1395,25 @@
     },
     "ADMIN_RETENTION": {
         "COHORT_PERIOD": "Cohort registration period",
-        "DEFINITION": "Activity means creating a meal entry. Cohorts use the UTC registration day. Activation is an entry on D0–D6; D1, D7 and D30 require an entry on that exact calendar day after registration. The denominator is every retained account in the cohort. Incomplete windows are not treated as zero.",
-        "ACTIVE": "Users creating entries in the period",
+        "DEFINITION": "Each row groups accounts registered on the same UTC day. Activation means at least one meal entry on days D0–D6. Percentages use all accounts in that row as the denominator.",
+        "ACTIVE": "Users creating entries",
         "AS_OF": "As of",
         "COHORT": "Registration date",
         "REGISTERED": "Accounts",
         "ACTIVATION": "7-day activation",
-        "IMMATURE": "Window not complete",
-        "EMPTY": "No registrations in this period.",
-        "ACTIVITY_DAYS": "Days with new entries",
+        "IMMATURE": "Not yet available",
+        "EMPTY": "No registrations in this period. Select an earlier or wider registration period; existing users can still be active.",
+        "ACTIVITY_DAYS": "Activity by UTC day",
         "DAY": "UTC day",
-        "HISTORY_NOTE": "Calculated from retained accounts and meal entries. Deletion changes historical values. A backdated meal date does not count as the return date; a login without an entry does not count as activity.",
-        "SUBTITLE": "Activation and return to diary use."
+        "HISTORY_NOTE": "All accounts are included, including administrators and test accounts. Deleting accounts or meal entries changes historical results. We use entry creation time, not the diary date; sign-ins and edits do not count. For All time, daily activity starts at the first retained entry.",
+        "SUBTITLE": "Activation and return to diary use.",
+        "ACTIVITY_TITLE": "Diary activity",
+        "ACTIVITY_PERIOD": "Entry creation period",
+        "ACTIVITY_NOTE": "All accounts are included, regardless of their registration date or role. A user with several new meal entries counts once in the period total and once on each active day. Entry counts are shown separately. Today is a partial day.",
+        "MEAL_ENTRIES": "Meal entries created",
+        "NO_ACTIVITY": "No retained meal entries in this period.",
+        "COHORTS_TITLE": "Retention by registration cohort",
+        "WINDOW_NOTE": "Percentages count people, not meals. D1, D7 and D30 measure that exact UTC day, not any return within the interval. Results appear after the whole observation day ends; D30 requires 31 calendar days from the registration day. Activity is observed through the report time, independently of the activity filter above."
     },
     "ADMIN_DAILY_ADVICES": {
         "HELP": "Import a JSON file (version 1, advices array), up to 1000 advices and 5 MB. Each advice requires value (up to 512 characters) and locale (ru or en). Optional: weight (positive integer, default 1), tag (up to 64 characters). Exact duplicates are skipped; existing advices are not replaced. Imported advices become available on the dashboard immediately.",

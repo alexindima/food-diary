@@ -82,10 +82,10 @@ public sealed class AdminJournalControllerTests {
     [Fact]
     public async Task Retention_MapsCohortsAndDailyActivity() {
         var report = new AdminRetentionReport(DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(2), DateTime.UnixEpoch.AddDays(40), 15,
-            [new AdminRetentionCohort(DateTime.UnixEpoch, 10, 8, 7, 6, Day30: null)], [new AdminRetentionDay(DateTime.UnixEpoch, 5)]);
+            [new AdminRetentionCohort(DateTime.UnixEpoch, 10, 8, 7, 6, Day30: null)], [new AdminRetentionDay(DateTime.UnixEpoch, 5, 12)], 12, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(2));
         CapturedSender sender = SubstituteSender.Capture(Result.Success(report));
         AdminRetentionController controller = WithContext(new AdminRetentionController(sender));
-        var request = new GetAdminRetentionHttpQuery(new DateOnly(1970, 1, 1), new DateOnly(1970, 1, 2));
+        var request = new GetAdminRetentionHttpQuery(new DateOnly(1970, 1, 1), new DateOnly(1970, 1, 2), new DateOnly(1970, 1, 1), new DateOnly(1970, 1, 2));
         OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.Get(request));
         AdminRetentionReportHttpResponse response = Assert.IsType<AdminRetentionReportHttpResponse>(result.Value);
         GetAdminRetentionQuery query = Assert.IsType<GetAdminRetentionQuery>(sender.Request);

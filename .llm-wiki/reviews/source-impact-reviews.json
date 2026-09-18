@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0ea09bcb3c59bda6c6e87e14870987267ea6ff7752e9fead6e53f05a88fca068"
+          "sha256": "2c8afccb2b5bb5eefee9a2b592ca9b72a7ea915998f68ef0a75f0d0dbe48c423"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Retention adds optional CohortFrom/CohortTo query parameters and meal entry counts plus cohort date metadata. Existing date fields and routes remain unchanged; requests omitting cohort dates retain the original shared-range semantics. api-compat reported no structural breaking changes. Full OpenAPI snapshot regenerated and passed a rebuilt non-update host integration test; reader PostgreSQL and handler/presentation tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:09.3583034Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:35:34.4143557Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "81b5af5de2a055e48540d3912eca4d2d0ae38b66c823311d6236ffb33fbffabf"
+          "sha256": "d6e0a8a4f0c37b2fe624911dce17079e04983ed9fce60229f52e3105acd424ff"
         }
       ],
-      "reason": "Admin filter layout remains within existing frontend components; strict dependency cruise passed for 1651 modules. No module, provider, route guard or persistence changes in this layout update.",
+      "reason": "Retention stays in the existing Admin query and read-model composition boundary. No new project references or ownership changes. 104 focused Admin, composed-read and persistence capability architecture tests and frontend dependency checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
-      "reviewedAtUtc": "2026-09-18T03:04:50.7020919Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:05.5959018Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "92c6ba78e4015e9443033164ef60deee98193688dbf399e22b282e94c2536047"
+          "sha256": "d2a232423e9936642b10ff9c137bbdee1fa5a20ac23c225bd13576e135d59ea9"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "Traced IAdminRetentionReader, report/day records, HTTP query and mappings through their production and test consumers. New cohort parameters are optional; omitted cohort ranges preserve legacy behavior. PostgreSQL counts and independent periods, 16 handler cases, mapping and regenerated OpenAPI snapshot passed.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:40.0968607Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:07.2624638Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0586131838dea02d6929ca0840cd06c3ee78c1c530aea96b7237dbcead34af85"
+          "sha256": "1270ac8a7e56adb5cc0cff1cc5077580080b688c94c371432042f181929ac25e"
         }
       ],
-      "reason": "Layout updates preserve request and filtering semantics; 156 admin tests, targeted lint, strict dependency checks and mocked browser filter/navigation checks passed. Generated test-reference signals remain navigation rather than coverage.",
+      "reason": "Added focused regression coverage for the API date-format defect, namespaced query controls, undefined query values, meal counts, zero days and independent cohort boundaries. Executed provider-backed PostgreSQL test; static test references were not treated as execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
-      "reviewedAtUtc": "2026-09-18T03:04:56.4229904Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:10.5478530Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2887be20132cadf35d6c404311bca1c6af18b435413af6183b39727dad9a7838"
+          "sha256": "0a045dc7312712cb8eea4d4d00150fa41b2655b01315381049c21ea449561304"
         }
       ],
-      "reason": "Reviewed AdminDailyAdvicesController extraction into existing HTTP mappings. Identical command fields, null handling, response fields, routes, admin authorization, idempotency and limits; no new persistence, provider, logging, credential or retention behavior. All 333 Presentation.Api tests pass including the controller boundary regression. No project dependency changes; navigation-only generated changes do not alter these workflow instructions.",
+      "reason": "Read-only Admin analytics retains existing authorization, cancellation, DI and HTTP route. No workers, outbound providers, persistent events, migrations or deployment configuration changed. Meal counts aggregate existing retained data; no new storage or external sharing.",
       "baseRef": "HEAD",
-      "gitHead": "49eaad08a73f432de15d29b669b2daa37cf99a5c",
-      "reviewedAtUtc": "2026-09-17T21:56:41.6333329Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:12.0844114Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0586131838dea02d6929ca0840cd06c3ee78c1c530aea96b7237dbcead34af85"
+          "sha256": "1270ac8a7e56adb5cc0cff1cc5077580080b688c94c371432042f181929ac25e"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "0a045dc7312712cb8eea4d4d00150fa41b2655b01315381049c21ea449561304"
         }
       ],
-      "reason": "This update changes admin header and filter layout only; authentication guards, API authorization, request payloads and storage boundaries are unchanged. Browser checks used mock data and did not mutate real accounts.",
+      "reason": "All accounts remain included per user instruction. No email heuristics, credentials, user-data writes or new sharing/storage introduced. Existing Admin authorization and no-store response policy remain. Date ranges are validated and provider-backed no-tracking query test passed.",
       "baseRef": "HEAD",
-      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
-      "reviewedAtUtc": "2026-09-18T03:04:58.0151731Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:13.3606224Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1049,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "883d5077d7157bb384fc001c5e29756b6fe99b370e6a6a36bff06d385b7716a8"
+          "sha256": "6c562b02b67e9b51a8388ab86e1970aff8aa3a3a851bef7c93e5cf9547b4eb40"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cee4ed9907586d24a84aa5c4cfd8a5c4ce23cec9007a7497710400fd038d615d"
+          "sha256": "d02470acb8d740d88b025e88216bec0baf6b68389abcdad9b97736d89c7c35b4"
         }
       ],
-      "reason": "Verified Accounts row navigation and header create action, shared period control consumers, catalog filter consumers and relocated activity search bindings in current templates and TypeScript. Existing routes and API calls are preserved.",
+      "reason": "Traced Meal creation timestamps through the composition reader, Admin query/mapping/API and retention facade/component. Dates now use the actual API format; activity and cohort selection are independent and counts are explicitly distinguished in both locales.",
       "baseRef": "HEAD",
-      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
-      "reviewedAtUtc": "2026-09-18T03:04:59.7339638Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:14.6148950Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1147,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "883d5077d7157bb384fc001c5e29756b6fe99b370e6a6a36bff06d385b7716a8"
+          "sha256": "6c562b02b67e9b51a8388ab86e1970aff8aa3a3a851bef7c93e5cf9547b4eb40"
         }
       ],
-      "reason": "Verified period inline input defaults to existing standalone behavior; migrated both section search consumers to their owning page. Admin build and 156 tests pass; rendered accounts, login, mail and audit controls checked on desktop/mobile, including custom dates and preserved URL filters.",
+      "reason": "Checked full DateTime payload rendering, nullable retention values, separate namespaced period filters and omission of undefined HTTP parameters. 160 admin tests passed. Desktop/mobile browser checks cover independent URL filters, all time, zero days, empty cohorts and Russian labels without overflow or runtime errors.",
       "baseRef": "HEAD",
-      "gitHead": "ca04ff27f5486b3f1ac86712c09276ad71f2d690",
-      "reviewedAtUtc": "2026-09-18T03:04:52.9280428Z"
+      "gitHead": "59d141bd3efbf114f3a83309debdc56f3bb7c626",
+      "reviewedAtUtc": "2026-09-18T03:38:08.9395356Z"
     },
     {
       "pageId": "workflow.query-context",

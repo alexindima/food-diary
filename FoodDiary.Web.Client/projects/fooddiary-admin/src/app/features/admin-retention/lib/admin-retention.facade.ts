@@ -7,7 +7,7 @@ import type { AdminRetentionReport } from '../models/admin-retention';
 @Service()
 export class AdminRetentionFacade {
     private readonly api = inject(AdminRetentionService);
-    public getReport(params: { from?: string; to?: string }): Observable<AdminRetentionReport> {
+    public getReport(params: { from?: string; to?: string; cohortFrom?: string; cohortTo?: string }): Observable<AdminRetentionReport> {
         return this.api.getReport(params);
     }
 }
