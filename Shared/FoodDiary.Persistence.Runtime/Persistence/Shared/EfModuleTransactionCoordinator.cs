@@ -80,12 +80,13 @@ internal sealed class EfModuleTransactionCoordinator(
         Func<Exception, Exception>? translateException = null) {
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
+            T transactionResult;
             try {
                 IDbContextTransaction transaction = isolationLevel.HasValue
                     ? await context.Database.BeginTransactionAsync(isolationLevel.Value, cancellationToken).ConfigureAwait(false)
                     : await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 await using (transaction.ConfigureAwait(false)) {
-                    return await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), async () => {
+                    transactionResult = await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), async () => {
                         T result = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
                         if (result is not FoodDiary.Results.Result { IsFailure: true } && (alwaysSave || unitOfWork.HasPendingChanges)) {
                             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -104,6 +105,7 @@ internal sealed class EfModuleTransactionCoordinator(
                 }
                 throw translated;
             }
+            return transactionResult;
         }, cancellationToken)).ConfigureAwait(false);
     }
 }

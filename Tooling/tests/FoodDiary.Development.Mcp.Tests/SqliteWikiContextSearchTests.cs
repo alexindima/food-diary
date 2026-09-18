@@ -407,6 +407,9 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Modules/StockCatalog/Application/StockReader.cs", "lookup stock catalog entries", "exact module identity stockcatalog", true)]
     [InlineData("Modules/StockCatalog/Application/StockReader.cs", "lookup catalog stock entries", "exact module identity stockcatalog", false)]
     [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryHandler.cs", "load stock read", "structural role backend-read-service-role", true)]
+    [InlineData("Modules/Inventory/Application/Commands/CleanupStockCommandHandler.cs", "cleanup service stock", "ranking policy cleanup-service-role", true)]
+    [InlineData("Modules/Inventory/Contracts/CleanupStockCommandHandler.cs", "cleanup service stock", "ranking policy cleanup-service-role", false)]
+    [InlineData("Modules/Inventory/Application/Commands/CleanupStockCommandValidator.cs", "cleanup service stock", "ranking policy cleanup-service-role", false)]
     [InlineData("Modules/Inventory/Contracts/ReadStocksQueryHandler.cs", "load stock read", "structural role backend-read-service-role", false)]
     [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryValidator.cs", "load stock read", "structural role backend-read-service-role", false)]
     [InlineData("Modules/Inventory/Application/Queries/ReadStocksQueryHandler.cs", "stock summaries", "structural role application-collection-reader", true)]
@@ -478,6 +481,13 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Shared/tests/Unrelated/StockStoreTests.cs", false, "tests/Unrelated/")]
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Email/")]
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/Configurations/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Configurations/Email/")]
+    [InlineData("Shared/FoodDiary.Inventory.Contracts/StockStoreTests.cs", true, "FoodDiary.Application.Abstractions/")]
+    [InlineData("Modules/Inventory/Application.Abstractions/StockStoreTests.cs", true, "FoodDiary.Application.Abstractions/")]
+    [InlineData("Modules/Inventory/Application.AbstractionsExtra/StockStoreTests.cs", false, "FoodDiary.Application.Abstractions/")]
+    [InlineData("Shared/FoodDiary.Inventory.ContractsExtra/StockStoreTests.cs", false, "FoodDiary.Application.Abstractions/")]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Application.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Application.Tests/")]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Domain.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Domain.Tests/")]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Infrastructure.Tests/")]
     public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch,
         string selectorPrefix = "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/") {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");

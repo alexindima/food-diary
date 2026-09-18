@@ -9,6 +9,25 @@ namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 public sealed partial class BillingGatewayTests {
     [Theory]
+    [InlineData("invoice.created")]
+    [InlineData("invoice.payment_failed")]
+    public async Task StripeInvoice_UnsupportedEvent_IsIgnoredWithoutProviderRequests(string eventType) {
+        string payload = CreateStripeInvoicePayload(Guid.NewGuid(), eventType, "usd", 799, "price_other");
+        Stripe.IStripeClient client = Substitute.For<Stripe.IStripeClient>();
+        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+        }), client);
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload, CreateStripeSignature(payload, "whsec_test"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.IsFailure ? result.Error.ToString() : null);
+        Assert.Null(result.Value);
+        Assert.Empty(client.ReceivedCalls());
+    }
+
+    [Theory]
     [InlineData("invoice.paid", "usd", 799, 7.99, "price_monthly", "monthly")]
     [InlineData("invoice.payment_succeeded", "usd", 799, 7.99, "price_yearly", "yearly")]
     [InlineData("invoice.paid", "jpy", 799, 799, "price_monthly", "monthly")]

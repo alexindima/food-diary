@@ -49,6 +49,7 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
             ["client_id"] = options.Value.ClientId,
             ["code_verifier"] = codeVerifier,
         });
+        Result<TelegramOidcIdentity> result;
         try {
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) {
@@ -61,13 +62,14 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
                 if (!document.RootElement.TryGetProperty("id_token", out JsonElement idToken) || idToken.ValueKind != JsonValueKind.String) {
                     return Invalid();
                 }
-                return await tokens.ValidateAsync(idToken.GetString()!, nonce, cancellationToken).ConfigureAwait(false);
+                result = await tokens.ValidateAsync(idToken.GetString()!, nonce, cancellationToken).ConfigureAwait(false);
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidOperationException or OperationCanceledException) {
             return Invalid();
         }
+        return result;
     }
 
     private static Result<TelegramOidcIdentity> Invalid() => Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof);

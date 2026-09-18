@@ -7,6 +7,21 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiDbContextTests {
+    [Fact]
+    public async Task FoodRecognitionJobs_UsesMappedOwnerSetAsync() {
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        await using var context = new AiDbContext(options);
+
+        IQueryable jobs = context.FoodRecognitionJobs;
+
+        Assert.Multiple(
+            () => Assert.Same(jobs, context.FoodRecognitionJobs),
+            () => Assert.Equal("FoodRecognitionJobs", context.FoodRecognitionJobs.EntityType.GetTableName()),
+            () => Assert.Same(context.Model.FindEntityType(jobs.ElementType), context.FoodRecognitionJobs.EntityType));
+        Assert.Empty(await context.FoodRecognitionJobs.ToListAsync());
+    }
+
     [Theory]
     [InlineData("23505", "public", "AiPromptTemplates", "IX_AiPromptTemplates_Key_Locale", true)]
     [InlineData("23505", "public", "AiPromptTemplates", "PK_AiPromptTemplates", false)]

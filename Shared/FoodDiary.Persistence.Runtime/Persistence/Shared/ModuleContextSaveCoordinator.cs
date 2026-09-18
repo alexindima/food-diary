@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -44,24 +45,27 @@ internal static class ModuleContextSaveCoordinator {
                 ? null : participant.Database.CurrentTransaction?.GetDbTransaction());
         const string savepoint = "module_unit_of_work";
         await transaction.CreateSavepointAsync(savepoint, cancellationToken).ConfigureAwait(false);
+        ExceptionDispatchInfo? saveFailure = null;
         try {
             foreach (DbContext module in participants.Where(participant => !ReferenceEquals(participant, context))) {
                 await module.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
             }
             await SaveParticipantsAsync(session, participants, cancellationToken).ConfigureAwait(false);
             await transaction.ReleaseSavepointAsync(savepoint, cancellationToken).ConfigureAwait(false);
-        } catch {
+        } catch (Exception exception) {
+            saveFailure = ExceptionDispatchInfo.Capture(exception);
             try {
                 await transaction.RollbackToSavepointAsync(savepoint, CancellationToken.None).ConfigureAwait(false);
             } catch (Exception rollbackException) {
                 logger.LogWarning(rollbackException, "Could not roll back module savepoint; preserving the original persistence failure.");
             }
-            throw;
         } finally {
             foreach (DbContext module in participants.Where(participant => !ReferenceEquals(participant, context))) {
                 await module.Database.UseTransactionAsync(previousTransactions[module], CancellationToken.None).ConfigureAwait(false);
             }
         }
+        // Preserve the original stack after cleanup without an unreachable async catch exit.
+        saveFailure?.Throw();
     }
 
     private static async Task SaveParticipantsAsync(PersistenceSession session, DbContext[] participants, CancellationToken cancellationToken) {

@@ -16,11 +16,13 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class ModuleSaveFailureIntegrationTests(PostgresDatabaseFixture databaseFixture) {
-    [RequiresDockerFact]
-    public async Task FailedSavepointRollbackPreservesOriginalSaveFailureAsync() {
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SavepointRollbackPreservesOriginalSaveFailureAsync(bool rollbackFails) {
         await using FoodDiaryDbContext setup = await databaseFixture.CreateDbContextAsync();
         var failure = new InvalidOperationException("Original save failure");
-        var rollback = new RejectSavepointRollback();
+        var rollback = new RecordingSavepointRollback(rollbackFails);
         await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(setup.Database.GetConnectionString()).AddInterceptors(new RejectSave(failure), rollback).Options);
         UsersDbContext owner = context.CreateModuleContext<UsersDbContext>(options => new UsersDbContext(options));
@@ -32,11 +34,12 @@ public sealed class ModuleSaveFailureIntegrationTests(PostgresDatabaseFixture da
         Exception observed = await Assert.ThrowsAsync<InvalidOperationException>(() => unitOfWork.SaveChangesAsync());
 
         Assert.Same(failure, observed);
+        Assert.Contains(nameof(RejectSave.SavingChangesAsync), observed.StackTrace, StringComparison.Ordinal);
         Assert.True(rollback.Attempted);
         Assert.Null(owner.Database.CurrentTransaction);
         Assert.False(context.IsCoordinatingModuleSave);
         Assert.True(unitOfWork.HasPendingChanges);
-        Assert.Equal("Rollback failed", logger.Warning?.Message);
+        Assert.Equal(rollbackFails ? "Rollback failed" : null, logger.Warning?.Message);
         await transaction.RollbackAsync();
         Assert.Empty(await setup.Users.ToListAsync());
     }
@@ -72,12 +75,12 @@ public sealed class ModuleSaveFailureIntegrationTests(PostgresDatabaseFixture da
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RejectSavepointRollback : DbTransactionInterceptor {
+    private sealed class RecordingSavepointRollback(bool fail) : DbTransactionInterceptor {
         public bool Attempted { get; private set; }
         public override ValueTask<InterceptionResult> RollingBackToSavepointAsync(DbTransaction transaction,
             TransactionEventData eventData, InterceptionResult result, CancellationToken cancellationToken = default) {
             Attempted = true;
-            throw new InvalidOperationException("Rollback failed");
+            return fail ? throw new InvalidOperationException("Rollback failed") : ValueTask.FromResult(result);
         }
     }
 }
