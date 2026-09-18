@@ -20,7 +20,7 @@
     }
 
     &__percent {
-        color: var(--hydration-accent-text);
+        color: var(--fd-color-text-muted);
         white-space: nowrap;
     }
 
@@ -144,8 +144,8 @@
     }
 
     &__remaining {
-        color: var(--hydration-accent-text);
-        font-weight: var(--fd-font-weight-semibold);
+        color: var(--fd-color-text-muted);
+        font-weight: var(--fd-font-weight-regular);
     }
 
     &--goal-reached &__remaining {
@@ -166,9 +166,9 @@
     }
 
     &__quick-action--primary {
-        --fd-bg-brand: var(--fd-color-primary-700);
-        --fd-gradient-brand-hover-start: var(--fd-color-primary-700);
-        --fd-gradient-brand-hover-end: var(--fd-color-primary-700);
+        --fd-bg-brand: var(--fd-color-sky-700);
+        --fd-gradient-brand-hover-start: var(--fd-color-sky-700);
+        --fd-gradient-brand-hover-end: var(--fd-color-sky-700);
     }
 
     @media #{variables.$media-compact} {

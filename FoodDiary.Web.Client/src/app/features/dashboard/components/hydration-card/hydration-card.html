@@ -6,7 +6,7 @@
 >
     <fd-dashboard-widget-frame iconName="water_drop" iconTone="info" [title]="'HYDRATION_CARD.TITLE' | translate">
         @if (hasGoal()) {
-            <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-stat-value">
+            <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-caption">
                 {{ percent() | localizedNumber: language() }}%
             </span>
         }
@@ -76,7 +76,7 @@
                         [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                         (click)="onAdd(amount)"
                     >
-                        +{{ amount }}
+                        +{{ amount }} {{ 'GENERAL.UNITS.ML' | translate }}
                     </fd-ui-button>
                 }
             </div>
