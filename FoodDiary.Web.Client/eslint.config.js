@@ -1494,10 +1494,26 @@ const localTsPlugin = {
 
 export default [
     {
-        ignores: ['**/node_modules/**', '**/dist/**', '**/dist-admin/**', '**/dist-storybook/**', '**/.angular/**', '**/*.min.js'],
+        ignores: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/dist-admin/**',
+            '**/dist-storybook/**',
+            '**/coverage/**',
+            '**/.angular/**',
+            '**/*.min.js',
+        ],
     },
     {
-        ignores: ['**/node_modules/**', '**/dist/**', '**/dist-admin/**', '**/dist-storybook/**', '**/.angular/**', '**/*.min.js'],
+        ignores: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/dist-admin/**',
+            '**/dist-storybook/**',
+            '**/coverage/**',
+            '**/.angular/**',
+            '**/*.min.js',
+        ],
         files: ['**/*.js', '**/*.ts'],
         languageOptions: {
             parser,
