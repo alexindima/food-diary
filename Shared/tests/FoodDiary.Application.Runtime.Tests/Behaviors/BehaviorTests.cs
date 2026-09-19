@@ -408,6 +408,52 @@ public class BehaviorTests {
             measurement => Assert.True(measurement.Outcome is "succeeded" or "failed" or "timed_out" or "dropped"));
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(3)]
+    public async Task PostCommitActionQueue_ExpiredBudget_CountsEveryUnstartedAction(int remaining) {
+        var measurements = new ConcurrentBag<MetricMeasurement>();
+        using var listener = new MeterListener {
+            InstrumentPublished = (instrument, meterListener) => {
+                if (string.Equals(instrument.Meter.Name, ApplicationRuntimeTelemetry.MeterName, StringComparison.Ordinal)) {
+                    meterListener.EnableMeasurementEvents(instrument);
+                }
+            },
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, measurement, tags, _) =>
+            measurements.Add(CreateMeasurement(instrument.Name, measurement, tags)));
+        listener.Start();
+        var time = new AdvancingTimestampProvider();
+        var queue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance, time,
+            TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), maxActions: remaining + 1);
+        queue.Enqueue("consume-budget", _ => {
+            time.Advance(TimeSpan.FromSeconds(10));
+            return Task.CompletedTask;
+        });
+        for (int index = 0; index < remaining; index++) {
+            queue.Enqueue("unstarted", _ => throw new InvalidOperationException("Expired actions must not execute."));
+        }
+
+        await queue.FlushAsync();
+
+        MetricMeasurement dropped = Assert.Single(measurements, measurement =>
+            string.Equals(measurement.Reason, "flush_timeout", StringComparison.Ordinal));
+        Assert.Equal((double)remaining, dropped.Value);
+        Assert.False(queue.HasActions);
+        bool executed = false;
+        queue.Enqueue("next-flush", _ => { executed = true; return Task.CompletedTask; });
+        await queue.FlushAsync();
+        Assert.True(executed);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class AdvancingTimestampProvider : TimeProvider {
+        private long _timestamp;
+        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+        public override long GetTimestamp() => _timestamp;
+        public void Advance(TimeSpan duration) => _timestamp += duration.Ticks;
+    }
+
     private static MetricMeasurement CreateMeasurement<T>(
         string name,
         T value,

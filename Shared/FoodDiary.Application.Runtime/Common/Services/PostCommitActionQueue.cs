@@ -78,13 +78,14 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
         using var flushTimeoutSource = new CancellationTokenSource(_flushTimeout, _timeProvider);
 
         try {
-            while (_actions.TryDequeue(out PostCommitAction? action)) {
+            while (_actions.Count > 0) {
                 if (flushTimeoutSource.IsCancellationRequested ||
                     _timeProvider.GetElapsedTime(startedAt) >= _flushTimeout) {
                     DropUnstartedActionsAfterFlushTimeout();
                     return;
                 }
 
+                PostCommitAction action = _actions.Dequeue();
                 using var actionTimeoutSource = new CancellationTokenSource(_actionTimeout, _timeProvider);
                 using var actionSource = CancellationTokenSource.CreateLinkedTokenSource(
                     cancellationToken,

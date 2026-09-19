@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8a2ecd2d20acfa448fa47b6b9cf0d7d7318967cf4dd5351674185d5847e021d0"
+          "sha256": "aff9726e1ff099a634588887b456e42e79919fc2a426deffb10cf81eb50b05aa"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:59.2027630Z"
+      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
+      "reviewedAtUtc": "2026-09-19T09:46:03.5490382Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a422cc3eff5232c99a96cd0aa66ef6abacd90ef2254733423fcf69738ee693e5"
+          "sha256": "3412ff96a86bcd05802300b8f79b07cfe98132630b5bd1bbbe9f85cbe3c217b2"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:37:00.0499843Z"
+      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
+      "reviewedAtUtc": "2026-09-19T09:46:03.9016964Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +918,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8a2ecd2d20acfa448fa47b6b9cf0d7d7318967cf4dd5351674185d5847e021d0"
+          "sha256": "aff9726e1ff099a634588887b456e42e79919fc2a426deffb10cf81eb50b05aa"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a422cc3eff5232c99a96cd0aa66ef6abacd90ef2254733423fcf69738ee693e5"
+          "sha256": "3412ff96a86bcd05802300b8f79b07cfe98132630b5bd1bbbe9f85cbe3c217b2"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:37:00.6186851Z"
+      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
+      "reviewedAtUtc": "2026-09-19T09:46:04.4875967Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

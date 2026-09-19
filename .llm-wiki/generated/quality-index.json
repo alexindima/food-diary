@@ -43642,11 +43642,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
-      "nonBlankLines": 126,
+      "nonBlankLines": 127,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.02
+      "structuralRiskScore": 19.04
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/DependencyInjection.cs",
