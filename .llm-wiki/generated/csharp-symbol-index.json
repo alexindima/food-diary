@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4189,
-    "symbols": 4120,
+    "sourceFiles": 4190,
+    "symbols": 4121,
     "interfaceImplementationLinks": 190,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2169,
+      "class": 2170,
       "enum": 64,
       "interface": 400,
       "record": 1367,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1704,
+      "Other": 1705,
       "Query": 269,
       "QueryHandler": 197,
       "ReadModelRepository": 33,
@@ -53,6 +53,13 @@
       "role": "Other",
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
       "line": 12
+    },
+    {
+      "name": "IgnoredResultAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/IgnoredResultAnalyzer.cs",
+      "line": 10
     },
     {
       "name": "ModulePersistenceBoundaryAnalyzer",
@@ -19526,7 +19533,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WebPushDeliveryAudienceService",

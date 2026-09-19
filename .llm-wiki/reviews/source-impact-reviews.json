@@ -22,22 +22,14 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
-        },
-        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
+          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:33.1686978Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:57.4849631Z"
     },
     {
       "pageId": "module.frontend",
@@ -61,17 +53,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
+          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:33.3965707Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:57.7345879Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -103,29 +91,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "480d29c5349e81bc842478cd10cbc01fc4768a81bfce3b69cc1506a3e75838e7"
+          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:33.8604852Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:57.9513475Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -274,13 +246,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1717adace6797bc779b1b4950bf26ac8fce4c0ea27a26bf70b07ed4ac7fd16d6"
+          "sha256": "3c14e4a4841df3b964b0b7eb3b82e9175bd032025f4c569cab89279bbbbb2bff"
         }
       ],
-      "reason": "Verified owner-request relocation to Meals, scoped Dashboard adapter registration, and all 221 API integration tests. External DTOs and HTTP routes are unchanged; these pages describe the still-valid generic contract and composition rules.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:35.4374202Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:58.5646594Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -856,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a2db7a364518fd4b11e64a719858c3c4bb81ca7f1ae075ef3ad7d3f336f73903"
+          "sha256": "8a2ecd2d20acfa448fa47b6b9cf0d7d7318967cf4dd5351674185d5847e021d0"
         }
       ],
-      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:32:26.7723831Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:59.2027630Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -931,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b02b421664cb00c45119f6a3581919eb27f6c7360b0e214e013e495ae1854b58"
+          "sha256": "a422cc3eff5232c99a96cd0aa66ef6abacd90ef2254733423fcf69738ee693e5"
         }
       ],
-      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:32:28.3751869Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:37:00.0499843Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -946,21 +918,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a2db7a364518fd4b11e64a719858c3c4bb81ca7f1ae075ef3ad7d3f336f73903"
+          "sha256": "8a2ecd2d20acfa448fa47b6b9cf0d7d7318967cf4dd5351674185d5847e021d0"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b02b421664cb00c45119f6a3581919eb27f6c7360b0e214e013e495ae1854b58"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "faafce7655386fe5fcc7c4b7aeceba9339ed89222a41fa4446f87ad132a10c4e"
+          "sha256": "a422cc3eff5232c99a96cd0aa66ef6abacd90ef2254733423fcf69738ee693e5"
         }
       ],
-      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:32:30.1788651Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:37:00.6186851Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1210,17 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "2587de755c447b99d33da7e94982e696f5bef91d9bea24e82f05ad1edcb1cf7e"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
+          "sha256": "df2ab23a7c00a23d2243c9d5fb2233b116ec3ef130da10586b34699fa6be01a0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:38.9112174Z"
+      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
+      "reviewedAtUtc": "2026-09-19T09:36:59.6317663Z"
     },
     {
       "pageId": "workflow.review-diff",

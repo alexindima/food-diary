@@ -5,6 +5,13 @@ when the rule expects production sources. Do not freeze source-file counts or du
 exact project-reference lists from ProjectDependencyMatrixTests in extraction tests.
 Retain unique ownership, public API, transaction and runtime registration constraints.
 
+ConsumerTransactionBoundaryTests discovers all public module contract requests and
+rejects transaction-owning requests except the reviewed HTTP/job entrypoints. Foreign
+Application modules cannot acquire those entrypoints. AtomicMealBoundaryTests also
+discovers handlers receiving immediate meal-evaluation writes and requires atomic
+execution. Keep source-discovery negative fixtures and evidence links valid when
+moving projects; see docs/architecture/ai-development-reliability.md.
+
 QueryReadBoundaryScanner checks aggregate types in query handlers using Roslyn; scalar
 and projection reads are legal regardless of repository naming. Keep all module
 Application assemblies available to this test project for metadata resolution. Test

@@ -52,3 +52,9 @@ FD0018 protects FoodDiary.ReadModel.Composition from EF writes/tracking, raw SQL
 FD0016 also fingerprints IModuleContextFactory, IIndependentModuleContextOptionsFactory
 and IModuleChangeTrackerSource calls and method groups. Narrow interfaces that return
 mutable EF capabilities do not exempt their consumers from persistence review.
+
+FD0019 rejects discarded FoodDiary Result values and Task/ValueTask results in module
+Application sources, including explicit discard assignments and ConfigureAwait.
+Handle or propagate failures. Deliberate best-effort exceptions need a local
+suppression with a reason; do not disable the rule for a whole module. The rule does
+not prove correct handling of values assigned to locals on every control-flow path.

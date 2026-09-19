@@ -3,6 +3,44 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ArchitectureSourceDiscoveryTests {
     [Theory]
+    [InlineData("IExampleRepository", true)]
+    [InlineData("IExampleStore", true)]
+    [InlineData("string", false)]
+    public void ForeignRepositoryGuard_DetectsViolationsInSiblingAbstractions(string dependency, bool violates) {
+        DirectoryInfo root = Directory.CreateTempSubdirectory("fooddiary-repository-guard-");
+        try {
+            foreach (string folder in new[] { "Owner/Application.Abstractions", "Owner/Application", "Consumer/Application" }) {
+                Directory.CreateDirectory(Path.Combine(root.FullName, folder));
+            }
+            File.WriteAllText(Path.Combine(root.FullName, "Owner/Application.Abstractions/Ports.cs"),
+                "public interface IExampleRepository { } public interface IExampleStore { }");
+            File.WriteAllText(Path.Combine(root.FullName, "Owner/Application/Handler.cs"),
+                "public class OwnerHandler(IExampleRepository repository) { }");
+            File.WriteAllText(Path.Combine(root.FullName, "Consumer/Application/Handler.cs"),
+                $"public class ConsumerHandler({dependency} repository) {{ }}");
+            string[] violations = ApplicationConsumerBoundaryTests.FindForeignRepositoryUsages(root.FullName);
+            if (violates) {
+                Assert.Contains(dependency, Assert.Single(violations), StringComparison.Ordinal);
+            } else {
+                Assert.Empty(violations);
+            }
+        } finally {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void ForeignRepositoryGuard_RejectsEmptyDiscovery() {
+        DirectoryInfo root = Directory.CreateTempSubdirectory("fooddiary-empty-guard-");
+        try {
+            Assert.Throws<Xunit.Sdk.NotEmptyException>(() =>
+                ApplicationConsumerBoundaryTests.FindForeignRepositoryUsages(root.FullName));
+        } finally {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Theory]
     [InlineData("FoodDiary.MailInbox.Internal")]
     [InlineData("System.Net.Mail")]
     public void ProductionRoots_ScanRelocatedModuleAndSharedSources(string forbiddenNamespace) {

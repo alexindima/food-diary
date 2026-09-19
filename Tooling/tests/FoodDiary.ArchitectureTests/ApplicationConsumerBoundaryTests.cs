@@ -37,10 +37,13 @@ public sealed class ApplicationConsumerBoundaryTests {
 
     [Fact]
     public void ApplicationImplementations_DoNotAcquireForeignRepositoriesOrStores() {
-        string modules = ArchitectureTestPaths.FromRoot("Modules");
+        Assert.Empty(FindForeignRepositoryUsages(ArchitectureTestPaths.FromRoot("Modules")));
+    }
+
+    internal static string[] FindForeignRepositoryUsages(string modules) {
         Dictionary<string, string> repositoryOwners = [];
         foreach (string module in Directory.GetDirectories(modules)) {
-            string abstractions = Path.Combine(module, "Application", "Abstractions");
+            string abstractions = Path.Combine(module, "Application.Abstractions");
             if (!Directory.Exists(abstractions)) {
                 continue;
             }
@@ -54,12 +57,14 @@ public sealed class ApplicationConsumerBoundaryTests {
                 }
             }
         }
+        Assert.NotEmpty(repositoryOwners);
         var violations = new List<string>();
         foreach (string module in Directory.GetDirectories(modules)) {
             string application = Path.Combine(module, "Application");
             string owner = Path.GetFileName(module);
-            foreach (string file in SourceScanner.SourceFiles(application)
-                         .Where(file => !Path.GetRelativePath(application, file).StartsWith($"Abstractions{Path.DirectorySeparatorChar}", StringComparison.Ordinal))) {
+            string[] applicationSources = [.. SourceScanner.SourceFiles(application)];
+            Assert.NotEmpty(applicationSources);
+            foreach (string file in applicationSources) {
                 foreach (IdentifierNameSyntax identifier in CSharpSyntaxTree.ParseText(File.ReadAllText(file)).GetRoot()
                              .DescendantNodes().OfType<IdentifierNameSyntax>()) {
                     if (repositoryOwners.TryGetValue(identifier.Identifier.ValueText, out string? targetOwner) &&
@@ -69,7 +74,7 @@ public sealed class ApplicationConsumerBoundaryTests {
                 }
             }
         }
-        Assert.Empty(violations);
+        return [.. violations];
     }
 
     [Theory]

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5491,
+    "productionFiles": 5492,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 947,
@@ -2463,6 +2463,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 10.12
+    },
+    {
+      "path": "FoodDiary.Analyzers/IgnoredResultAnalyzer.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.88
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
@@ -33754,11 +33762,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 1.76
     },
     {
       "path": "Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs",

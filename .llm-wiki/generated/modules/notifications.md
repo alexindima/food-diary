@@ -98,6 +98,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.WebPush.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/TestNotificationDeliveryDispatcherTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Domain.Tests/NotificationInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Domain.Tests/NotificationsIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Domain.Tests/WebPushRefreshAtomicityTests.cs`
@@ -114,7 +115,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs`
 - [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPusherTests.cs`
 - [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs`
-- [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsPresentationCompositionTests.cs`
 
 ## Working Rule
 

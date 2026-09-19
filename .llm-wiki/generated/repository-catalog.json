@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 208
+    "documentationPages": 209
   },
   "dotnet": {
     "projects": [
@@ -15802,6 +15802,7 @@
       "docs/architecture/COMPOSED_READ_BOUNDARIES.md",
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/TEST_PROJECT_OWNERSHIP.md",
+      "docs/architecture/ai-development-reliability.md",
       "docs/architecture/architecture-improvements-20260905.md",
       "docs/architecture/infrastructure-boundary-audit.md",
       "docs/architecture/runtime-context-dependencies.md",

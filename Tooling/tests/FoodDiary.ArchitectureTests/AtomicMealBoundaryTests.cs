@@ -2,11 +2,28 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 using FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AtomicMealBoundaryTests {
+    [Fact]
+    public void EveryHandlerAcquiringImmediateEvaluationWrites_RequiresAtomicExecution() {
+        Type[] consumers = [.. typeof(CreateMealCommand).Assembly.GetTypes()
+            .Where(type => type.GetConstructors().Any(constructor => constructor.GetParameters()
+                .Any(parameter => parameter.ParameterType == typeof(IMealAchievementEvaluationRequest))))];
+        Assert.NotEmpty(consumers);
+        foreach (Type consumer in consumers) {
+            Type[] handlers = [.. consumer.GetInterfaces().Where(type => type.IsGenericType
+                && type.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))];
+            Assert.NotEmpty(handlers);
+            Assert.All(handlers, handler => Assert.True(typeof(IAtomicCommand).IsAssignableFrom(handler.GetGenericArguments()[0]),
+                $"{consumer.FullName} acquires immediate outbox writes; its request must own an atomic handler/save transaction."));
+        }
+    }
+
     [Theory]
     [InlineData(typeof(CreateMealCommand))]
     [InlineData(typeof(RepeatMealCommand))]

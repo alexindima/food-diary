@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1253,
     "ambiguousContracts": 2,
-    "consumerEdges": 9772,
+    "consumerEdges": 9781,
     "productionConsumerEdges": 5595,
-    "testConsumerEdges": 4177,
+    "testConsumerEdges": 4186,
     "consumedContracts": 1253,
     "unconsumedContracts": 0
   },
@@ -31562,7 +31562,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/AtomicMealBoundaryTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "CreateMealFromRecognitionCommand",
@@ -35933,6 +35933,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "DeliverTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/TestNotificationDeliveryDispatcherTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
       "contract": "DiaryStatisticsDayHttpResponse",
       "roles": [
         "Response"
@@ -37631,6 +37644,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthImpersonationControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeAdminImpersonationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerTransactionBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ExchangeImpersonationHttpRequest",
@@ -55413,6 +55439,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/AtomicMealBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAtomicCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IAtomicCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerTransactionBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -82483,6 +82522,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "IMealAchievementEvaluationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Common/IMealAchievementEvaluationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/AtomicMealBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IMealActivityReadRepository",
       "roles": [
         "ReadRepository"
@@ -104343,6 +104395,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerTransactionBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -106010,6 +106075,19 @@
       "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 11
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/AtomicMealBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRequestHandler",
@@ -109868,6 +109946,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/TestNotificationDeliveryDispatcherTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -112912,6 +113003,19 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITransactionalCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ITransactionalCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerTransactionBoundaryTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -138297,6 +138401,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskDueReminderProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SendClientTaskRemindersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Contracts/Commands/SendClientTaskReminders/SendClientTaskRemindersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerTransactionBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
