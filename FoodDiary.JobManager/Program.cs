@@ -28,7 +28,6 @@ using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 
 using FoodDiary.Modules.Export.Infrastructure;
-using FoodDiary.Modules.Dashboard.Infrastructure;
 
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Dietologist.Infrastructure;
@@ -60,12 +59,29 @@ builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();
 builder.Services.AddRecentItemsModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddOutboxProcessing(builder.Configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(builder.Configuration).AddIdentityEmailOptions(builder.Configuration).AddExportInfrastructure().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddOutboxProcessing(builder.Configuration)
+    .AddAuditInfrastructure()
+    .AddEmailInfrastructure()
+    .AddOutboxReplayManagement()
+    .AddSharedAuthentication(builder.Configuration)
+    .AddIdentityEmailOptions(builder.Configuration)
+    .AddExportInfrastructure()
+    .AddRecipesPersistence()
+    .AddAdminPersistence()
+    .AddIdentityPersistence()
+    .AddIdentityAuthenticationInfrastructure()
+    .AddProductsPersistence();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddBillingIntegrations(builder.Configuration)
     .AddAdminMailInboxIntegration(builder.Configuration)
     .AddMailRelayIntegration(builder.Configuration)
-    .AddIdentityProvider(builder.Configuration).AddImagesProvider(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
+    .AddIdentityProvider(builder.Configuration)
+    .AddImagesProvider(builder.Configuration)
+    .AddAiProvider(builder.Configuration)
+    .AddUsdaProvider(builder.Configuration)
+    .AddOpenFoodFactsProvider(builder.Configuration)
+    .AddWearablesProvider(builder.Configuration);
 builder.Services.AddDataProtection();
 builder.Services.AddNotificationResources();
 builder.Services.AddJobManagerServices(builder.Configuration);

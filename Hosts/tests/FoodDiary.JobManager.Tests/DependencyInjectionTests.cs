@@ -26,7 +26,6 @@ using FoodDiary.ReadModel.Composition;
 using System.Diagnostics.Metrics;
 using OpenTelemetry;
 using FoodDiary.Application.Runtime;
-using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
@@ -179,7 +178,7 @@ public sealed class DependencyInjectionTests {
         services.AddRecentItemsModule();
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
-        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
         services.AddBillingIntegrations(configuration)
             .AddAdminMailInboxIntegration(configuration)
             .AddMailRelayIntegration(configuration)

@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Queries.GetWeeklyCheckIn;
@@ -23,12 +23,12 @@ public sealed partial class WeeklyCheckInFeatureTests {
             (lastDay.AddDays(1), 10000),
         ];
         ISender statistics = Substitute.For<ISender>();
-        statistics.Send(Arg.Any<ReadDashboardStatisticsQuery>(), Arg.Any<CancellationToken>())
+        statistics.Send(Arg.Any<ReadMealNutritionStatisticsQuery>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                ReadDashboardStatisticsQuery query = call.Arg<ReadDashboardStatisticsQuery>();
+                ReadMealNutritionStatisticsQuery query = call.Arg<ReadMealNutritionStatisticsQuery>();
                 double calories = meals.Where(meal => meal.Date >= query.DateFrom && meal.Date <= query.DateTo)
                     .Sum(meal => meal.Calories);
-                return Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
+                return Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([
                     new(query.DateFrom, query.DateTo, calories, 0, 0, 0, 0),
                 ]);
             });
@@ -53,12 +53,12 @@ public sealed partial class WeeklyCheckInFeatureTests {
     public async Task GetWeeklyCheckIn_NormalizesAveragesByElapsedCalendarDays(int elapsedDays) {
         var user = User.Create("weekly-averages@example.com", "hashed");
         ISender statistics = Substitute.For<ISender>();
-        statistics.Send(Arg.Any<ReadDashboardStatisticsQuery>(), Arg.Any<CancellationToken>())
+        statistics.Send(Arg.Any<ReadMealNutritionStatisticsQuery>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                ReadDashboardStatisticsQuery query = call.Arg<ReadDashboardStatisticsQuery>();
+                ReadMealNutritionStatisticsQuery query = call.Arg<ReadMealNutritionStatisticsQuery>();
                 int days = (query.DateTo.Date - query.DateFrom.Date).Days + 1;
-                return Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
-                    .. Enumerable.Range(0, days).Select(day => new DashboardStatisticsBucketReadModel(
+                return Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([
+                    .. Enumerable.Range(0, days).Select(day => new MealNutritionStatisticsBucket(
                         query.DateFrom.AddDays(day), query.DateFrom.AddDays(day), 2000, 0, 0, 0, 0,
                         TotalProteins: 100, TotalFats: 60, TotalCarbs: 250)),
                 ]);

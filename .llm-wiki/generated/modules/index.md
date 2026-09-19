@@ -25,7 +25,7 @@ are reported separately; `none observed` never means proven isolation.
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
-| [Dashboard](dashboard.md) | read-composer | 0 | 11 | 0 | 3 | project-reference-matrix |
+| [Dashboard](dashboard.md) | read-composer | 0 | 12 | 0 | 3 | project-reference-matrix |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 6 | 0 | 3 | project-reference-matrix |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Export](export.md) | read-composer | 0 | 4 | 0 | 4 | project-reference-matrix |
@@ -50,5 +50,5 @@ are reported separately; `none observed` never means proven isolation.
 | [Usda](usda.md) | reference-data-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [Users](users.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 3 | assembly-isolated |
-| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 5 | 0 | 2 | project-reference-matrix |
+| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 4 | 0 | 2 | project-reference-matrix |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix |

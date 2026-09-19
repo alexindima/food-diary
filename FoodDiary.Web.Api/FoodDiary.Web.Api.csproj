@@ -56,7 +56,6 @@
     <ProjectReference Include="../Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
-    <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
     <ProjectReference Include="../Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj" />

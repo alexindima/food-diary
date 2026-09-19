@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Services;
@@ -26,7 +26,7 @@ public class WeeklyCheckInCalculatorTests {
 
     [Fact]
     public void BuildSummary_WithMeals_CalculatesAveragesCorrectly() {
-        IReadOnlyList<DashboardStatisticsBucketReadModel> buckets = [
+        IReadOnlyList<MealNutritionStatisticsBucket> buckets = [
             CreateNutritionBucket(WeekStart, 700, 40, 25, 80, 8),
             CreateNutritionBucket(WeekStart.AddDays(1), 700, 40, 25, 80, 8),
             CreateNutritionBucket(WeekStart.AddDays(2), 700, 40, 25, 80, 8),
@@ -180,7 +180,7 @@ public class WeeklyCheckInCalculatorTests {
         Assert.Contains("suggestion.keep_going", suggestions, StringComparer.Ordinal);
     }
 
-    private static DashboardStatisticsBucketReadModel CreateNutritionBucket(
+    private static MealNutritionStatisticsBucket CreateNutritionBucket(
         DateTime date,
         double calories,
         double proteins,

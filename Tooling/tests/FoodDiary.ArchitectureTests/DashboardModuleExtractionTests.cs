@@ -13,7 +13,8 @@ public sealed class DashboardModuleExtractionTests {
 
     [Fact]
     public void DashboardReadAdaptersAndPorts_HavePhysicalOwnersWithoutAggregateOwnership() {
-        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Persistence")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application/Services/DashboardStatisticsReadService.cs")));
         Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application.Abstractions")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Domain")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/PersistenceModel")));
@@ -27,7 +28,7 @@ public sealed class DashboardModuleExtractionTests {
     public void ExtractedDashboardAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Contracts", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.DailyAdvices.Contracts", "FoodDiary.Modules.Dashboard.Application.Abstractions", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Dietologist.Contracts", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Tdee.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Contracts", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.DailyAdvices.Contracts", "FoodDiary.Modules.Dashboard.Application.Abstractions", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Dietologist.Contracts", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.Tdee.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]
@@ -36,6 +37,6 @@ public sealed class DashboardModuleExtractionTests {
     public void ExecutableCompositionRoots_RegisterDashboardModule(string relativePath) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));
         Assert.Contains("AddDashboardModule()", source, StringComparison.Ordinal);
-        Assert.Contains("AddDashboardReadServices()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("AddDashboardReadServices()", source, StringComparison.Ordinal);
     }
 }

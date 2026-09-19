@@ -6,7 +6,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Infrastructure.Tests.Persistence.Dashboard;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardBodyReadServiceTests {

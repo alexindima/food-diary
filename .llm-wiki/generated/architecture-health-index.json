@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1647,
+    "productionProjectEdges": 1637,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -30,14 +30,14 @@
     },
     {
       "module": "Meals",
-      "fanIn": 7,
+      "fanIn": 8,
       "fanOut": 8,
       "level": "review-candidate",
       "role": "aggregate-owner"
     },
     {
       "module": "Dashboard",
-      "fanIn": 2,
+      "fanIn": 0,
       "fanOut": 11,
       "level": "review-candidate",
       "role": "read-composer"
@@ -99,13 +99,6 @@
       "role": "read-composer"
     },
     {
-      "module": "WeeklyCheckIn",
-      "fanIn": 0,
-      "fanOut": 5,
-      "level": "informational",
-      "role": "read-composer"
-    },
-    {
       "module": "Ai",
       "fanIn": 2,
       "fanOut": 2,
@@ -149,6 +142,13 @@
     },
     {
       "module": "Statistics",
+      "fanIn": 0,
+      "fanOut": 4,
+      "level": "informational",
+      "role": "read-composer"
+    },
+    {
+      "module": "WeeklyCheckIn",
       "fanIn": 0,
       "fanOut": 4,
       "level": "informational",
@@ -5225,9 +5225,9 @@
       "coveredThrough": []
     },
     {
-      "name": "ReadDashboardStatisticsQueryHandler",
+      "name": "ReadMealNutritionStatisticsQueryHandler",
       "role": "QueryHandler",
-      "path": "Modules/Dashboard/Application/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQueryHandler.cs",
+      "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],

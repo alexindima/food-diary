@@ -14,7 +14,7 @@ using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Infrastructure.Tests.Persistence.Dashboard;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardMealsReadServiceTests {

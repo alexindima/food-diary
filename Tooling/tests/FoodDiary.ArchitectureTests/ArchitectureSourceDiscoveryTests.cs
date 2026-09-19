@@ -2,6 +2,29 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ArchitectureSourceDiscoveryTests {
+    [Fact]
+    public void ProductionRoots_ScanRelocatedModuleAndSharedSources() {
+        DirectoryInfo root = Directory.CreateTempSubdirectory("fooddiary-roots-");
+        try {
+            string[] folders = ["Modules/Example/Application", "Shared/FoodDiary.Example.Contracts"];
+            foreach (string folder in folders) {
+                string directory = Path.Combine(root.FullName, folder);
+                Directory.CreateDirectory(directory);
+                File.WriteAllText(Path.Combine(directory, Path.GetFileName(directory) + ".csproj"), "<Project />");
+                File.WriteAllText(Path.Combine(directory, "Consumer.cs"), "using FoodDiary.MailInbox.Internal;");
+            }
+
+            IReadOnlyDictionary<string, string> roots = ProjectReferenceReader.ReadProductionProjectRoots(root.FullName);
+            Assert.Equal(folders.Select(folder => Path.GetFullPath(Path.Combine(root.FullName, folder))).Order(StringComparer.Ordinal),
+                roots.Values.Order(StringComparer.Ordinal), StringComparer.Ordinal);
+            Assert.Equal(2, SourceScanner.FindLinePatternViolations(roots.Values, ["FoodDiary.MailInbox"], requireSourceRoot: true).Length);
+            Assert.Throws<DirectoryNotFoundException>(() => SourceScanner.FindLinePatternViolations(
+                Path.Combine(root.FullName, "Missing"), ["FoodDiary.MailInbox"], requireSourceRoot: true));
+        } finally {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [InlineData("C:\\FD\\.artifacts\\evidence\\Snapshot.cs", true)]
     [InlineData("C:/FD/.artifacts/evidence/Snapshot.csproj", true)]

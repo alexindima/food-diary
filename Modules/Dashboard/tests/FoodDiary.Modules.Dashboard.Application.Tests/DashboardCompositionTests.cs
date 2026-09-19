@@ -1,5 +1,6 @@
-using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Application;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Statistics.Application;
 using FoodDiary.Modules.Statistics.Application.Models;
@@ -21,15 +22,15 @@ public sealed class DashboardCompositionTests {
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             scope.ServiceProvider.GetRequiredService<ISender>().Send(CreateQuery()));
 
-        Assert.Contains(nameof(IDashboardStatisticsReadService), exception.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(IMealNutritionStatisticsReadService), exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task Statistics_WithAnExplicitReader_InvokesItOnceThroughTheRealMediator() {
         IServiceCollection services = CreateServices();
-        IDashboardStatisticsReadService reader = Substitute.For<IDashboardStatisticsReadService>();
+        IMealNutritionStatisticsReadService reader = Substitute.For<IMealNutritionStatisticsReadService>();
         reader.GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]));
+            .Returns(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([]));
         services.AddScoped(_ => reader);
         await using ServiceProvider provider = services.BuildServiceProvider();
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
@@ -45,7 +46,7 @@ public sealed class DashboardCompositionTests {
 
     private static ServiceCollection CreateServices() {
         var services = new ServiceCollection();
-        services.AddDashboardModule();
+        services.AddMealsApplication();
         services.AddStatisticsModule();
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         access.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<Error?>(null));

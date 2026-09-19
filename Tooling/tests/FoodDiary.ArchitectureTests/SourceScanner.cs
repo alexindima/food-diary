@@ -9,8 +9,12 @@ namespace FoodDiary.ArchitectureTests;
 internal static class SourceScanner {
     public static string[] FindLinePatternViolations(
         string sourceRoot,
-        IReadOnlyCollection<string> forbiddenPatterns) {
+        IReadOnlyCollection<string> forbiddenPatterns,
+        bool requireSourceRoot = false) {
         if (!Directory.Exists(sourceRoot)) {
+            if (requireSourceRoot) {
+                throw new DirectoryNotFoundException($"Required source root does not exist: {sourceRoot}");
+            }
             return [];
         }
 
@@ -27,9 +31,10 @@ internal static class SourceScanner {
 
     public static string[] FindLinePatternViolations(
         IEnumerable<string> sourceRoots,
-        IReadOnlyCollection<string> forbiddenPatterns) =>
+        IReadOnlyCollection<string> forbiddenPatterns,
+        bool requireSourceRoot = false) =>
         [.. sourceRoots
-            .SelectMany(sourceRoot => FindLinePatternViolations(sourceRoot, forbiddenPatterns))
+            .SelectMany(sourceRoot => FindLinePatternViolations(sourceRoot, forbiddenPatterns, requireSourceRoot))
             .Order(StringComparer.Ordinal)];
 
     public static IEnumerable<string> SourceFiles(string sourceRoot) {

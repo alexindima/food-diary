@@ -305,9 +305,7 @@
         "contractProjects": [
           "Modules/Dashboard/Contracts"
         ],
-        "infrastructureProjects": [
-          "Modules/Dashboard/Infrastructure"
-        ],
+        "infrastructureProjects": [],
         "abstractionAreas": [
           "Modules/Dashboard/Application.Abstractions",
           "Modules/Dashboard/Contracts"

@@ -125,8 +125,8 @@
     ],
     "Statistics": [
       "BodyMetrics",
-      "Dashboard",
       "Hydration",
+      "Meals",
       "Users"
     ],
     "Tdee": [
@@ -144,7 +144,6 @@
     ],
     "WeeklyCheckIn": [
       "BodyMetrics",
-      "Dashboard",
       "Hydration",
       "Meals",
       "Users"
@@ -280,8 +279,8 @@
     ],
     "Statistics": [
       "BodyMetrics",
-      "Dashboard",
       "Hydration",
+      "Meals",
       "Users"
     ],
     "Tdee": [
@@ -299,7 +298,6 @@
     ],
     "WeeklyCheckIn": [
       "BodyMetrics",
-      "Dashboard",
       "Hydration",
       "Meals",
       "Users"

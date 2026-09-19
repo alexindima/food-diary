@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.Results;
 using FoodDiary.Results;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
@@ -87,7 +87,7 @@ public class StatisticsFeatureTests {
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var handler = new GetStatisticsQueryHandler(
-            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(from, to, 0, 0, 0, 0, 0)]),
+            new StaticStatisticsReadService([new MealNutritionStatisticsBucket(from, to, 0, 0, 0, 0, 0)]),
             CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 1);
 
@@ -123,8 +123,8 @@ public class StatisticsFeatureTests {
         DateTime to = new(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc);
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
-            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == user.Id && query.DateFrom == from && query.DateTo == to && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+            .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == user.Id && query.DateFrom == from && query.DateTo == to && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
         var handler = new GetStatisticsQueryHandler(statisticsReadService, CreateCurrentUserAccessService(user));
 
@@ -142,7 +142,7 @@ public class StatisticsFeatureTests {
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 2, 23, 59, 59, DateTimeKind.Utc);
         var handler = new GetStatisticsQueryHandler(
-            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(
+            new StaticStatisticsReadService([new MealNutritionStatisticsBucket(
                 from,
                 to,
                 TotalCalories: 1000,
@@ -178,7 +178,7 @@ public class StatisticsFeatureTests {
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
         var handler = new GetStatisticsQueryHandler(
-            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(
+            new StaticStatisticsReadService([new MealNutritionStatisticsBucket(
                 localDayStartUtc,
                 localDayEndUtc,
                 TotalCalories: 946,
@@ -211,7 +211,7 @@ public class StatisticsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StaticStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) : RequestTestSender {
+    private sealed class StaticStatisticsReadService(IReadOnlyList<MealNutritionStatisticsBucket> buckets) : RequestTestSender {
         public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
             Task.FromResult((TResponse)(object)Result.Success(buckets));
     }

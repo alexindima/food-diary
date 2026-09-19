@@ -3,6 +3,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class AiModuleExtractionTests {
     [Fact]
+    public void PersistenceModel_DoesNotDependOnApplicationPorts() {
+        string root = ArchitectureTestPaths.FromRoot("Modules/Ai/PersistenceModel");
+        Assert.DoesNotContain("FoodDiary.Modules.Ai.Application.Abstractions",
+            ProjectReferenceReader.ReadProjectReferences("Modules/Ai/PersistenceModel/FoodDiary.Modules.Ai.PersistenceModel.csproj"), StringComparer.Ordinal);
+        Assert.Empty(SourceScanner.FindLinePatternViolations(root, ["Application.Abstractions", "AiQuotaReservationRequest"], requireSourceRoot: true));
+    }
+
+    [Fact]
     public void PromptPorts_ExposeOnlyUsedReadModelsAndOwnerWrites() {
         string root = ArchitectureTestPaths.FromRoot("Modules", "Ai", "Application.Abstractions", "Common");
         Assert.False(File.Exists(Path.Combine(root, "IAiUsageWriteRepository.cs")));

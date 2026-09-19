@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 namespace FoodDiary.Modules.Ai.PersistenceModel;
 
@@ -20,31 +19,32 @@ internal sealed class AiQuotaReservation {
     private AiQuotaReservation() {
     }
 
-    public static AiQuotaReservation Create(AiQuotaReservationRequest request, DateTime nowUtc) => new() {
-        RequestId = request.RequestId,
-        UserId = request.UserId,
-        PeriodStartUtc = request.PeriodStartUtc,
-        Operation = request.Operation,
-        ReservedInputTokens = request.InputTokens,
-        ReservedOutputTokens = request.OutputTokens,
-        State = AiQuotaReservationState.Pending,
-        ExpiresOnUtc = request.ExpiresOnUtc,
-        CreatedOnUtc = nowUtc,
-        UpdatedOnUtc = nowUtc,
-    };
+    public static AiQuotaReservation Create(string requestId, UserId userId, DateTime periodStartUtc, string operation,
+        long inputTokens, long outputTokens, DateTime expiresOnUtc, DateTime nowUtc) => new() {
+            RequestId = requestId,
+            UserId = userId,
+            PeriodStartUtc = periodStartUtc,
+            Operation = operation,
+            ReservedInputTokens = inputTokens,
+            ReservedOutputTokens = outputTokens,
+            State = AiQuotaReservationState.Pending,
+            ExpiresOnUtc = expiresOnUtc,
+            CreatedOnUtc = nowUtc,
+            UpdatedOnUtc = nowUtc,
+        };
 
-    public bool BelongsTo(AiQuotaReservationRequest request) =>
-        UserId == request.UserId &&
-        PeriodStartUtc == request.PeriodStartUtc &&
-        string.Equals(Operation, request.Operation, StringComparison.Ordinal);
+    public bool BelongsTo(UserId userId, DateTime periodStartUtc, string operation) =>
+        UserId == userId &&
+        PeriodStartUtc == periodStartUtc &&
+        string.Equals(Operation, operation, StringComparison.Ordinal);
 
-    public void Reacquire(AiQuotaReservationRequest request, DateTime nowUtc) {
-        ReservedInputTokens = request.InputTokens;
-        ReservedOutputTokens = request.OutputTokens;
+    public void Reacquire(long inputTokens, long outputTokens, DateTime expiresOnUtc, DateTime nowUtc) {
+        ReservedInputTokens = inputTokens;
+        ReservedOutputTokens = outputTokens;
         ActualInputTokens = null;
         ActualOutputTokens = null;
         State = AiQuotaReservationState.Pending;
-        ExpiresOnUtc = request.ExpiresOnUtc;
+        ExpiresOnUtc = expiresOnUtc;
         UpdatedOnUtc = nowUtc;
     }
 

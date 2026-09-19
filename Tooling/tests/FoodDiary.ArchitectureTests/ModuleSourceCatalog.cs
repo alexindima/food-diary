@@ -30,7 +30,7 @@ internal static class ModuleSourceCatalog {
     public static IEnumerable<string> InfrastructureRoots() =>
         ApplicationRoots.Values.Select(root => Path.Combine(Path.GetDirectoryName(root)!, "Infrastructure"))
             .Concat(ApplicationRoots.Values.Select(root => Path.Combine(Path.GetDirectoryName(root)!, "PersistenceModel")))
-            .Where(Directory.Exists)
+            .Where(root => Directory.Exists(root) && Directory.EnumerateFiles(root, "*.csproj").Any())
             .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure"))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"))
             .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime"))

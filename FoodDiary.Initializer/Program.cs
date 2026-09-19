@@ -29,7 +29,6 @@ using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
-using FoodDiary.Modules.Dashboard.Infrastructure;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -411,7 +410,7 @@ public partial class Program {
             services.AddUsersModule().AddReadModelComposition();
             services.AddBillingModule();
             services.AddMarketingModule();
-            services.AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddDashboardReadServices();
+            services.AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure();
             services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
             services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
         } else if (command.Name is "replay-outbox" or "list-dead-letters" or "show-dead-letter" or "list-outbox-replays") {

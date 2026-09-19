@@ -348,7 +348,7 @@
         "write:AiUsage"
       ],
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "6233c631b1245a844bf4262bcda68eb1e8052a53b1c0196dd954fd990cbaced4"
+      "technicalSourceSha256": "f4378c355b9de3cb5d5e21b26a90f0c1893261671d1b396fafe31c46a89e056f"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",

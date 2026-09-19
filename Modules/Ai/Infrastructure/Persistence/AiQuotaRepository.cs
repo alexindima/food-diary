@@ -31,7 +31,7 @@ public sealed class AiQuotaRepository(
                 .SingleOrDefaultAsync(x => x.RequestId == request.RequestId, token)
                 .ConfigureAwait(false);
             if (existing is not null) {
-                if (!existing.BelongsTo(request)) {
+                if (!existing.BelongsTo(request.UserId, request.PeriodStartUtc, request.Operation)) {
                     return AiQuotaReservationStatus.Duplicate;
                 }
 
@@ -54,9 +54,11 @@ public sealed class AiQuotaRepository(
 
             period.Reserve(request.InputTokens, request.OutputTokens, nowUtc);
             if (existing is null) {
-                context.AiQuotaReservations.Add(AiQuotaReservation.Create(request, nowUtc));
+                context.AiQuotaReservations.Add(AiQuotaReservation.Create(
+                    request.RequestId, request.UserId, request.PeriodStartUtc, request.Operation,
+                    request.InputTokens, request.OutputTokens, request.ExpiresOnUtc, nowUtc));
             } else {
-                existing.Reacquire(request, nowUtc);
+                existing.Reacquire(request.InputTokens, request.OutputTokens, request.ExpiresOnUtc, nowUtc);
             }
 
             await context.SaveChangesAsync(token).ConfigureAwait(false);

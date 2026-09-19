@@ -1,16 +1,14 @@
-# Dashboard extraction ownership inventory
+# Dashboard ownership inventory
 
-Baseline: `a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6`; initially clean isolated worktree `C:/Users/alexi/.codex/worktrees/11c6/FD`.
+Dashboard is a read composer without owned aggregates or EF mappings. Application
+owns snapshots, builders, validation and its scoped statistics adapter over Meals.
+Contracts owns snapshot DTOs and the client-dashboard query. General nutrition
+requests/buckets belong to Meals; Statistics and WeeklyCheckIn dispatch them directly.
 
-Dashboard is a read composer, not the owner of the aggregates visible on its screen.
-
-- Application: GetDashboardSnapshot, GetDietologistClientDashboard, ReadDashboardStatistics, SendDashboardTestEmail, validators, shared snapshot/section builders, user context, mappings, date normalization and fallback projection services. Projects and tests use canonical FoodDiary.Modules.Dashboard identities and folder namespaces.
-- Stable Contracts: ReadDashboardStatisticsQuery and DashboardStatisticsBucketReadModel, plus the public snapshot graph and client-dashboard query. Statistics and WeeklyCheckIn dispatch the statistics query through ISender and retain their existing authorization/date validation. Dashboard does not invoke Statistics to implement its own statistics port.
-- Application.Abstractions: internal read ports, including IDashboardStatisticsReadService, and projection/section records used by Dashboard composition and its adapters. This is a sibling project. No aggregate repository or write port is introduced.
-- Infrastructure: statistics adapters and loaders that consume owner read contracts. The single snapshot composition lives in Application as ComposedDashboardReadService; Infrastructure does not replace it. Body and meal SQL projections live in host ReadModel.Composition. Preserve query expressions, tenant predicates, cancellation, inclusive instant ranges, UTC/date normalization, batching and sequential shared-context access. Preserve single weekly statistics read for one-day snapshots and scoped concrete/interface aliases.
-- No owned aggregates, IDs, domain events, EF configurations, DbSets, migrations, provider clients or scheduled jobs were found. Do not create Domain or PersistenceModel. Test-email orchestration consumes existing mail/audit capabilities; it does not own their providers.
-- Central seams: FoodDiaryDbContext, contributing entity types and IDs, historical migrations/model snapshot remain central or with their existing owners. Module Infrastructure has no central Infrastructure or EF Core reference; host ReadModel.Composition owns the remaining SQL. HTTP routes, response DTOs, controller/mappings stay in Presentation. API, Initializer and any relevant host composition explicitly install optimized readers.
-- Tests: DashboardFeatureTests and DashboardSnapshotBuilderTests are Dashboard-owned despite using concrete neighboring read services as fixtures. Move their test project with the necessary fixture-only references. Split Dashboard validator methods from mixed DailyAdvice/Statistics validators; leave the latter central. Move the four Dashboard adapter unit suites. Keep shared PostgreSQL fixture/integration suite, HTTP/host, mixed DI, CommonAbstractions and date-normalizer suites central; do not duplicate tests.
-- Required verification: force-evaluate restore, full solution build, module suites, donor/consumer/DI/Presentation/HTTP tests, full architecture, actual PostgreSQL body projection and HTTP first-dashboard flow, available batching regressions, EF pending-model check, NuGet audit and Wiki/governance evidence. No collectors, paid APIs, production access, arbitrary timing threshold or API optimization.
-
-Discovery limitations: generated Dashboard page correctly lists source areas and eleven focused test paths, but reports no observed business-module consumers and omits the PostgreSQL HTTP user flow/payload snapshot, mixed DI/date tests, and registration alias seam. Its `extracted-project` label only proves the existing horizontal Application project, not a physical logical module extraction. Source/project/DI checks take precedence.
+No Dashboard.Infrastructure assembly remains. Hosts use AddDashboardModule and
+AddReadModelComposition; the latter owns body/meal SQL readers and scoped aliases.
+HTTP routes and wire contracts retain their existing Presentation owners.
+Application tests remain module-owned. Cross-module projection tests live in
+Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/Dashboard. Existing
+PostgreSQL, host and API suites retain their owners and scenarios. No schema or
+HTTP change is intended. See ADR 0049 for the decision and verification obligations.

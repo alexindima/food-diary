@@ -20,7 +20,7 @@ public sealed class DirectOwnerContractReferenceTests {
     }
 
     [Theory]
-    [InlineData("Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj", "FoodDiary.Modules.Dashboard.Contracts")]
+    [InlineData("Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj", "FoodDiary.Modules.Meals.Contracts")]
     [InlineData("Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj", "FoodDiary.Modules.Favorites.Contracts")]
     [InlineData("Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj", "FoodDiary.Modules.Recipes.Contracts")]
     [InlineData("Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj", "FoodDiary.Modules.Notifications.Contracts")]

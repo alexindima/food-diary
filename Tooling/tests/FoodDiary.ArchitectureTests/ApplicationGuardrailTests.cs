@@ -2977,9 +2977,7 @@ public sealed class ApplicationGuardrailTests {
         string dashboardPlanPath = Path.Combine(root, "Modules/Dashboard/Application", "Dashboard-Query-Plan.md");
         Assert.False(File.Exists(dashboardPlanPath), "Dashboard migration plan should not be kept after the dedicated read path is implemented.");
 
-        string repositoryRegistrationPath = Path.Combine(root, "Modules", "Dashboard", "Infrastructure", "DependencyInjection.cs");
-        string registrationSource = File.ReadAllText(repositoryRegistrationPath);
-        Assert.DoesNotContain("IDashboardReadService", registrationSource, StringComparison.Ordinal);
+        Assert.False(File.Exists(Path.Combine(root, "Modules", "Dashboard", "Infrastructure", "DependencyInjection.cs")));
         Assert.False(File.Exists(Path.Combine(root, "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs")));
 
         string applicationRegistrationPath = Path.Combine(root, "Modules/Dashboard/Application", "DependencyInjection.cs");

@@ -22,14 +22,22 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "19769bcc26460dc93b73c89594d3f59b152a22c2c49fb7f98c1c14b2273d22c7"
+          "path": "AGENTS.md",
+          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:08.0598129Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:33.1686978Z"
     },
     {
       "pageId": "module.frontend",
@@ -53,36 +61,40 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "b7b83f812d2d707b796e4720f595e013efc8a2603c09707e8a6120c0aac878ee"
+          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
         }
       ],
-      "reason": "Reviewed architecture delta: atomic Meals commands and Recipes nutrition ownership do not alter MailRelay/MailInbox hosts, client-package boundary, or BugTriage ownership.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:29.7579122Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:33.3965707Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "1f2d93b0ccd86a9a9aecd6ac712685b0936eba4ccc90213b6a8ae77189c78e86",
+      "pageSha256": "c159de7d87fab3af4797d412e925d9c35188294ad7e4ddd0a25f0a5b256bd8be",
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
         },
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "720e162ee94fe105b0730e327159f9841e2503d59c330bb9bfece993a65838df"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
         },
         {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "891eb74ef39019c72af0b35d998de969db1b840f6a134398966d06d18a1cbb90"
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "sha256": "de693ebbbe3313b17cb6ae6cf4d9c01711ea39862e354a32e2c2cd974a8aafa4"
         }
       ],
-      "reason": "Identity internal namespace and shared JWT options relocation preserves controller DTOs and token format; offline token and API host unit tests passed.",
+      "reason": "Verified owner-request relocation to Meals, scoped Dashboard adapter registration, and all 221 API integration tests. External DTOs and HTTP routes are unchanged; these pages describe the still-valid generic contract and composition rules.",
       "baseRef": "HEAD",
-      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
-      "reviewedAtUtc": "2026-09-15T06:36:34.6710871Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:33.6205786Z"
     },
     {
       "pageId": "system.architecture",
@@ -90,18 +102,30 @@
       "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "71d88f103b5565327b8b5635a960d0e6511b3086bf623efeb4e98aba1b801f28"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
+        },
+        {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
+          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "dbbd2b379f2efd70de7403ecd9d71f964197eda9563ac56c012ebd5c62d05db7"
+          "sha256": "480d29c5349e81bc842478cd10cbc01fc4768a81bfce3b69cc1506a3e75838e7"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:08.3296599Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:33.8604852Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -139,14 +163,18 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "19769bcc26460dc93b73c89594d3f59b152a22c2c49fb7f98c1c14b2273d22c7"
+          "path": "AGENTS.md",
+          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "febfc39db358befa0891cb5fb58b4b1b82ef8563eed70269dbddb1f31266e52d"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:08.6164073Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:34.1013332Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -154,14 +182,18 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "b937dbb52046bce01ac76a53c3621777531a100f4aab0911f830e7eec67aa624"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
         }
       ],
-      "reason": "Coverage configuration changes only test execution; repository project catalog remains accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:20.7091318Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:34.3900464Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -219,13 +251,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b0492d019646cba26fab292bf867a676eda53bb51eb9399276ce46426fd9281e"
+          "sha256": "90734b5cacf0ce27a8bb645f444520582e94a2af1f596147c3e7d78ff09202ca"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "480d29c5349e81bc842478cd10cbc01fc4768a81bfce3b69cc1506a3e75838e7"
         }
       ],
-      "reason": "Regenerated index reflects frontend test references; project edges and architecture review procedure are unchanged.",
+      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:26.5748108Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:34.6783675Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +274,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "54de81064bd1e55fd0cb382efef330ac9e6f1e9fbd2c5fb5ffc23756fbdcb63f"
+          "sha256": "1717adace6797bc779b1b4950bf26ac8fce4c0ea27a26bf70b07ed4ac7fd16d6"
         }
       ],
-      "reason": "Renderer port exposes format serialization from existing production schema builders; Ai catalog maps string through Admin owner contracts and HTTP DTO. API integration verifies each locale/scenario includes strict JSON schema.",
+      "reason": "Verified owner-request relocation to Meals, scoped Dashboard adapter registration, and all 221 API integration tests. External DTOs and HTTP routes are unchanged; these pages describe the still-valid generic contract and composition rules.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:58:56.3310747Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:35.4374202Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -282,22 +322,14 @@
       "pageSha256": "433b745096b5db261a9ea75c834051853f3fb8279a1d4ccc30378a4e9f44be9f",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "e76b8e501390f89c304febaa08422cd6a0cf126c9d3f50b580ced08846c337bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "1cf33d635833f255bc61fe9ad74e9a6261a49c793222b371bd1c703c6c2fed65"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "7aed30f76439fb59343c5f89763a368aa5d2f77928355acb7e1dbaae4386e140"
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "79b8024cfcce954d6e99280e8ca862c82fbf2c16275008e802420fa670bc1f05"
         }
       ],
-      "reason": "Reviewed two narrowed role affinities; frozen corpus answers and thresholds are unchanged. Evaluation adds per-corpus progress, expected/actual paths, ranking reasons and explicit runtime-unavailable diagnostics. Full search thresholds passed; stable-tree parity validation follows. Query-context documents the publication and snapshot contracts.",
+      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
-      "reviewedAtUtc": "2026-09-18T12:11:25.8702533Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:36.0548924Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -460,13 +492,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "c6c0b5e48fcb89cc41cfaf05dd828d1ade90d97f2f0d9b082123094787fbbc3a"
+          "sha256": "febfc39db358befa0891cb5fb58b4b1b82ef8563eed70269dbddb1f31266e52d"
         }
       ],
-      "reason": "ADR 0048 records the atomic execution and formula ownership decisions. Trigger and decision workflow remain unchanged.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:19:11.7761211Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:36.3507605Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -639,14 +671,14 @@
       "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "9a2c67a4360a7b5aa3050b17914bf786a375797dfeda0337935109de2e311916"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "51829acac6e157137a536eae86a756079d99f479cea2db4117fb7e04304316a7"
         }
       ],
-      "reason": "Pinned new coverage upload action to the same reviewed SHA used by existing workflow uploads; Wiki job behavior unchanged.",
+      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cfa823b05c540fc817a8a1463715986a6689230b",
-      "reviewedAtUtc": "2026-09-19T04:16:59.2350561Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:36.7517579Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -719,13 +751,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
+          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:11.2775521Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:37.2253137Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -779,13 +811,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "53be9279915b701fa1be194cf9f909fa6154f2dc8a41023b50a054e60fd47db4"
+          "sha256": "faafce7655386fe5fcc7c4b7aeceba9339ed89222a41fa4446f87ad132a10c4e"
         }
       ],
-      "reason": "Preview no provider call, explicit test retains consent, quotas and owned image checks; upload avoids bearer disclosure; existing image lifecycle retained.",
+      "reason": "Compared changed quota scalar mapping and nutrition query consumers: user scoping, persistence values, provider payloads and authorization behavior are preserved. All 294 PostgreSQL integration tests pass; refreshed indexes remain navigation evidence as these pages require.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T04:48:23.0643179Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:37.6452671Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +856,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "221fa38f7b390b084da06a0a1da67b061188c510400243d18d5dabd151953687"
+          "sha256": "a2db7a364518fd4b11e64a719858c3c4bb81ca7f1ae075ef3ad7d3f336f73903"
         }
       ],
-      "reason": "New facade specs update static test references; executed V8 reports separately measure coverage, preserving the documented distinction.",
+      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:25.5305672Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:32:26.7723831Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +931,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "08d282f76c3137727cbc3e1cf7e9ac4e6cf904b0dbde5222f19cdef8e2a6561a"
+          "sha256": "b02b421664cb00c45119f6a3581919eb27f6c7360b0e214e013e495ae1854b58"
         }
       ],
-      "reason": "Catalog serializes only static response format metadata. No provider call, prompt persistence, credentials, images or configuration added to this path.",
+      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:58:58.2451499Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:32:28.3751869Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,13 +946,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "221fa38f7b390b084da06a0a1da67b061188c510400243d18d5dabd151953687"
+          "sha256": "a2db7a364518fd4b11e64a719858c3c4bb81ca7f1ae075ef3ad7d3f336f73903"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "b02b421664cb00c45119f6a3581919eb27f6c7360b0e214e013e495ae1854b58"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "faafce7655386fe5fcc7c4b7aeceba9339ed89222a41fa4446f87ad132a10c4e"
         }
       ],
-      "reason": "Quality index refresh adds frontend test references; security compiler, controls and runtime boundaries are unchanged.",
+      "reason": "Reviewed regenerated quality/runtime projections after whitespace-only JobManager fluent-chain formatting. Registration calls, lifetimes and provider boundaries are unchanged. Generic workflow guidance remains accurate; all four affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:23.1291112Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:32:30.1788651Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1037,14 +1077,18 @@
       "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "51829acac6e157137a536eae86a756079d99f479cea2db4117fb7e04304316a7"
+        },
+        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8e74b05d9c5184e47b1a0b3bfc3053557cf541a8f2cd659d30c7a21260c56454"
+          "sha256": "2d34967175469b362ae2b3994f83835f1d0aa044d21f77491c5c6d2ce5fc2cfa"
         }
       ],
-      "reason": "Testing strategy now documents full-source coverage and measured regression thresholds; focused test-plan workflow remains valid.",
+      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:21.8508271Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:40.6744333Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1102,13 +1146,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
+          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
         }
       ],
-      "reason": "Reviewed index, catalog, knowledge model and mail service ownership pages. ADR 0042 is linked in the updated architecture and primary backend pages; supporting services, client boundaries and project catalog semantics remain unchanged.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:32.1875492Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:35.7636541Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1162,17 +1206,21 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "e7c2b2069fc37a41f4e86006e262e7a9c85c4e0f2e8b90d75d94a2d65a296234",
+      "pageSha256": "b7525ecd7b9faccbda196a096f2daceb74862dd63ab01677b08d79e75e0cf70b",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "cdb57f7d2b3911d0ba8a54ea4a4bea88ca2a6fd8ae67514a7373809495b0f3e8"
+          "sha256": "2587de755c447b99d33da7e94982e696f5bef91d9bea24e82f05ad1edcb1cf7e"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:12.2811862Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:38.9112174Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1181,13 +1229,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "da9230a7a1b09a64093fe23e15437c10a8f6cdb3ad9719bee8e7b81b67dd194c"
+          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
         }
       ],
-      "reason": "Reviewed workflow pages and root guidance: scoped tests, source authority, dependency checks and evidence obligations still apply. Runtime session behavior is backed by actual TRX receipts; mapped-file Wiki failures are tool execution issues, not coverage evidence.",
+      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb5e73e4bfaa74b9ce1bd6c6e1a59b7aafc2566b",
-      "reviewedAtUtc": "2026-09-15T08:25:40.9075238Z"
+      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
+      "reviewedAtUtc": "2026-09-19T08:17:39.2527792Z"
     }
   ]
 }

@@ -188,16 +188,15 @@ Before release or large PR:
 
 ## Dashboard logical extraction
 
-`Modules/Dashboard` owns Application, Application/Abstractions, Contracts and
-Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
-statistics contracts retain their CLR namespaces and are referenced one-way by
-central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
-Optimized projection readers own no contributing aggregates. Shared DbContext,
-migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
-`AddDashboardReadServices` after infrastructure registration; Application fallback
-registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
-query behavior are preserved. Owned application/adapter tests live under module
-tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
+Dashboard owns Application, Application.Abstractions, Contracts and HTTP presentation
+projects, with no Domain, PersistenceModel or Infrastructure project.
+AddDashboardModule registers the scoped statistics adapter over Meals contracts;
+host AddReadModelComposition supplies SQL body/meal readers. Statistics and WeeklyCheckIn
+dispatch ReadMealNutritionStatisticsQuery from Meals directly. Dashboard bucket DTOs
+remain local to the snapshot contract. Cross-module EF projection tests live in
+Platform Infrastructure.Tests; snapshot application tests stay with Dashboard.
+Preserve scoped identity, filtering, ordering and the single weekly read for one-day
+snapshots. See ADR 0049.
 
 Users-focused application tests live in `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests`. Mixed Authentication/Admin/application tests remain in the central donor suite, while shared repository, cleanup, EF model, provider-backed PostgreSQL, host composition, presentation, and HTTP contract tests remain with their established cross-module owners. Users extraction verification must include the focused module suite, central application/Identity consumers, full architecture tests, provider-backed Infrastructure integration tests, HTTP integration tests, EF pending-model detection, and NuGet vulnerability audit; it must not add a migration when the model is unchanged.
 

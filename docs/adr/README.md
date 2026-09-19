@@ -79,3 +79,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0047: Test project ownership and shared configuration](0047-test-project-ownership.md)
 
 - [0048: Explicit atomic commands and owner nutrition policy](0048-atomic-command-and-nutrition-boundaries.md)
+- [0049: Owner nutrition reads and dashboard composition](0049-owner-nutrition-reads-and-dashboard-composition.md)

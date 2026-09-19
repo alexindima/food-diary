@@ -4,6 +4,10 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 internal static class ProjectReferenceReader {
+    public static IReadOnlyDictionary<string, string> ReadProductionProjectRoots(string? repositoryRoot = null) =>
+        ReadProductionProjectPaths(repositoryRoot)
+            .ToDictionary(GetProjectNameFromPath, static path => Path.GetDirectoryName(path)!, StringComparer.Ordinal);
+
     public static IReadOnlyDictionary<string, string[]> ReadProductionProjectReferences() =>
         ReadProductionProjectPaths()
             .ToDictionary(

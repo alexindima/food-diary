@@ -1,10 +1,10 @@
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Models;
 
 namespace FoodDiary.Modules.Statistics.Application.Mappings;
 
 internal static class StatisticsMappings {
-    internal static AggregatedStatisticsModel ToModel(DashboardStatisticsBucketReadModel model) =>
+    internal static AggregatedStatisticsModel ToModel(MealNutritionStatisticsBucket model) =>
         new(
             model.DateFrom,
             model.DateTo,

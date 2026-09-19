@@ -31,8 +31,8 @@ public sealed class ReadModelCompositionBoundaryTests {
     }
 
     [Fact]
-    public void DashboardInfrastructure_HasNoPersistenceDependency() {
-        const string project = "Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj";
+    public void DashboardApplication_HasNoPersistenceDependency() {
+        const string project = "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj";
         Assert.DoesNotContain("FoodDiary.Infrastructure", ProjectReferenceReader.ReadProjectReferences(project), StringComparer.Ordinal);
         Assert.DoesNotContain("Microsoft.EntityFrameworkCore", ProjectReferenceReader.ReadPackageReferences(project), StringComparer.Ordinal);
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Dashboard", "Infrastructure", "Persistence", "Dashboard", "DashboardBodyReadService.cs")));

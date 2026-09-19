@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Statistics.Application.Mappings;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Common;
 using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -51,7 +51,7 @@ public sealed class GetStatisticsQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
 
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statisticsResult = await sender.Send(new ReadDashboardStatisticsQuery(
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> statisticsResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,
             normalizedFrom,
             normalizedTo,

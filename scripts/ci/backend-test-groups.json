@@ -140,7 +140,6 @@
       "projects": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.csproj",
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.Tests/FoodDiary.Modules.Cycles.Infrastructure.Tests.csproj",
-        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests.csproj",
         "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/FoodDiary.Modules.Export.Infrastructure.Tests.csproj",
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj",

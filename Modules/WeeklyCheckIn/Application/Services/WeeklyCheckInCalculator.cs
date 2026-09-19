@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.WeeklyCheckIn.Application.Services;
 
 public static class WeeklyCheckInCalculator {
     public static WeekSummaryModel BuildSummary(
-        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        IReadOnlyList<MealNutritionStatisticsBucket> nutritionBuckets,
         int mealsLogged,
         IReadOnlyList<WeightEntryModel> weights,
         IReadOnlyList<WaistEntryModel> waists,
@@ -22,7 +22,7 @@ public static class WeeklyCheckInCalculator {
             daysInPeriod);
 
     private static WeekSummaryModel BuildSummaryCore(
-        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        IReadOnlyList<MealNutritionStatisticsBucket> nutritionBuckets,
         int mealsLogged,
         IReadOnlyList<WeightSample> weights,
         IReadOnlyList<WaistSample> waists,

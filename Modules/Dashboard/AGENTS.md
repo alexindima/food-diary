@@ -1,26 +1,21 @@
 # Dashboard logical module
 
-Dashboard owns snapshot read composition, projection ports and optimized read adapters.
-It owns no contributing aggregate, Domain, DbSet, EF configuration or PersistenceModel.
-Keep all SQL/LINQ batching, tenant predicates, UTC/date semantics, snapshot sections,
-fallback paths and cancellation unchanged during extraction.
+Dashboard owns snapshots, projection ports and dashboard-specific DTOs. It owns no
+contributing aggregate, Domain, DbSet, EF configuration or PersistenceModel.
+Use canonical project identities and folder namespaces. Projects remain siblings.
 
-Projects use canonical FoodDiary.Modules.Dashboard identities and folder-aligned namespaces, including tests. Application.Abstractions is a sibling project.
-Contracts contains ReadDashboardStatisticsQuery, its bucket model, public snapshot/result models and client-dashboard query;
-Statistics and WeeklyCheckIn reference it directly; nutrition calculations use Meals contracts.
-Central Application.Abstractions does not re-export this project. Never reference Dashboard
-Application from Statistics; use its stable Contracts seam.
+Application registers the scoped DashboardStatisticsReadService adapter over Meals
+nutrition contracts through AddDashboardModule. No Dashboard Infrastructure assembly
+or separate AddDashboardReadServices registration remains. Body and meal SQL readers
+belong to host ReadModel.Composition; modules must never reference that assembly.
+Preserve scoped aliases, sequential shared-context reads, user/date predicates and
+the single weekly read for one-day snapshots.
 
-Infrastructure depends only on application/scalar contracts; it has no EF Core or central Infrastructure reference.
-Body and meal SQL projections belong to host ReadModel.Composition, which modules must never reference. Hosts call AddDashboardModule for Application
-and AddDashboardReadServices after AddInfrastructure for optimized reads. The latter
-preserves concrete/interface scoped aliases and replaces fallback read registrations.
-HTTP transport lives in `Modules/Dashboard/Presentation`; shared PostgreSQL fixtures, migrations, snapshot and the Presentation kernel remain central.
+Contracts owns the public snapshot graph and client-dashboard query. Statistics and
+WeeklyCheckIn consume ReadMealNutritionStatisticsQuery and its model from Meals.Contracts.
+Never route dashboard's statistics adapter through Statistics. Callers own authorization.
+Retain shared snapshot/section builders; keep single-use orchestration in handlers.
 
-See docs/ai/dashboard-ownership-inventory.md for retained seams and tests.
-
-## Refactoring guardrails
-
-- Keep all projects as siblings; namespace and physical layout are checked by MigratedModuleNamespaceTests and PhysicalProjectLayoutTests.
-- Put single-use query orchestration directly in its handler; retain only genuinely shared operations, independent algorithms, authorization capabilities and technical ports.
-- External statistics consumers dispatch ReadDashboardStatisticsQuery; IDashboardStatisticsReadService is an internal Application.Abstractions projection port. Never route that adapter back through Statistics queries. Authorization remains with the caller. DashboardSnapshotBuilder is shared by the ordinary and dietologist snapshots.
+HTTP transport stays in Presentation. Application tests remain module-owned;
+cross-module EF projection and composition tests live in Platform/tests.
+See docs/adr/0049-owner-nutrition-reads-and-dashboard-composition.md.

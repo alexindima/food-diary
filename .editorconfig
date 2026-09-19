@@ -21,6 +21,12 @@ csharp_new_line_before_else = false
 csharp_new_line_before_catch = false
 csharp_new_line_before_finally = false
 
+# Rider/ReSharper: put each call of long or multiline fluent chains on its own line.
+# These wrapping options are not enforced by Roslyn/dotnet format.
+resharper_csharp_wrap_chained_method_calls = chop_if_long
+resharper_csharp_wrap_after_dot_in_method_calls = false
+resharper_csharp_wrap_before_first_method_call = false
+
 # Prefer modern C# shape consistently across backend projects.
 csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_implicit_object_creation_when_type_is_apparent = true:error

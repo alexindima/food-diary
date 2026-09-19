@@ -43,13 +43,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 33
+- Public contract files: 34
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 33
+- Public contract types: 34
 - Interfaces: 14
 - DTO/read-model/projection types: 11
 - Enums: 0
@@ -85,7 +85,7 @@ No literal attribute-routed controller was associated with this module.
 - `record MealQueryFilters`
 - `record MealRecipeSourceReadModel`
 - `record ReadDistinctMealDatesQuery`
-- ... 3 more type(s)
+- ... 4 more type(s)
 
 ## Focused Tests
 

@@ -61,6 +61,6 @@ AiUsageQuery implements the owner IAiUsageQuery port. Preserve SQL-side usage to
 
 Users current weight/waist providers implement the existing consumer ports with scalar BodyMetrics reads. Preserve user filtering, descending Date then CreatedOnUtc ordering, null for no measurements, cancellation and no tracking. Users goal mutation remains in its application layer.
 
-Dashboard body composition implements IDashboardBodyReadService. Preserve two latest measurements, Date/CreatedOnUtc ordering, UTC date normalization for weight/waist, inclusive original instant bounds for hydration, trend buckets and section flags. Register the scoped concrete/interface alias here; AddDashboardReadServices must not remove it. Dashboard Infrastructure has no EF Core or central Infrastructure dependency.
+Dashboard body composition implements IDashboardBodyReadService. Preserve two latest measurements, Date/CreatedOnUtc ordering, UTC date normalization for weight/waist, inclusive original instant bounds for hydration, trend buckets and section flags. Register the scoped concrete/interface alias here; AddDashboardModule must not remove it. Dashboard Application has no EF Core or central Infrastructure dependency.
 
 FD0018 rejects EF writes, tracking acquisition, raw SQL, explicit DbContext casts and ADO command/transaction methods during compilation, including method groups. IQueryable itself is not a write-safe type. Recipe nutrition uses the Recipes-owned scalar RecipeNutritionPolicy; SQL composition does not own the formula.

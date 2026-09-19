@@ -36,7 +36,8 @@ using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
-using FoodDiary.Modules.Dashboard.Infrastructure;
+using FoodDiary.Modules.Dashboard.Application;
+using FoodDiary.Modules.Dashboard.Application.Services;
 
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 
@@ -538,7 +539,6 @@ public sealed class DependencyInjectionTests {
     public void AddInfrastructureAndDashboard_ReadServicesResolveThroughScopedConcreteInstances(bool compositionFirst) {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
-        services.AddScoped<IDashboardStatisticsReadService>(_ => Substitute.For<IDashboardStatisticsReadService>());
         services.AddScoped<IDashboardBodyReadService>(_ => Substitute.For<IDashboardBodyReadService>());
         services.AddScoped<IDashboardMealsReadService>(_ => Substitute.For<IDashboardMealsReadService>());
         services.AddScoped<IDashboardReadService>(_ => Substitute.For<IDashboardReadService>());
@@ -554,9 +554,9 @@ public sealed class DependencyInjectionTests {
 
         services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence();
         if (compositionFirst) {
-            services.AddReadModelComposition().AddDashboardReadServices();
+            services.AddReadModelComposition().AddDashboardModule();
         } else {
-            services.AddDashboardReadServices().AddReadModelComposition();
+            services.AddDashboardModule().AddReadModelComposition();
         }
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),

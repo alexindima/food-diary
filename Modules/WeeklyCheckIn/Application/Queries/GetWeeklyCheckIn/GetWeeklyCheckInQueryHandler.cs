@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Results;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
@@ -99,7 +99,7 @@ public sealed class GetWeeklyCheckInQueryHandler(
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken) {
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> nutritionResult = await sender.Send(new ReadDashboardStatisticsQuery(
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> nutritionResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,
             dateFrom,
             dateTo.Date.AddDays(1).AddTicks(-10),

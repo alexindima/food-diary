@@ -1,8 +1,8 @@
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Common;
@@ -46,11 +46,11 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
         }
         var summaries = new List<DiaryStatisticsDayModel>(days.Count);
         foreach (LocalStatisticsDay day in days) {
-            IReadOnlyList<DashboardStatisticsBucketReadModel> buckets = [];
+            IReadOnlyList<MealNutritionStatisticsBucket> buckets = [];
             long waterMl = 0;
             if (day.StartUtc < day.EndExclusiveUtc) {
                 // Two-day quantization keeps even a 25-hour local day in one existing owner bucket.
-                Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await sender.Send(new ReadDashboardStatisticsQuery(owner.Value,
+                Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await sender.Send(new ReadMealNutritionStatisticsQuery(owner.Value,
                     day.StartUtc, day.EndExclusiveUtc.AddTicks(-10), QuantizationDays: 2), cancellationToken).ConfigureAwait(false);
                 if (result.IsFailure) {
                     return Result.Failure<DiaryStatisticsSummaryModel>(result.Error);

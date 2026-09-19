@@ -537,14 +537,12 @@
     <Project Path="Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <Project Path="Modules/Dashboard/Application.Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
     <Project Path="Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
-    <Project Path="Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
     <Project Path="Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
     <Project Path="Modules/Dashboard/Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
     <Project Path="Modules/Dashboard/Presentation.Mappings/FoodDiary.Modules.Dashboard.Presentation.Mappings.csproj" />
   </Folder>
   <Folder Name="/Modules/Dashboard/tests/">
     <Project Path="Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FoodDiary.Modules.Dashboard.Application.Tests.csproj" />
-    <Project Path="Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests.csproj" />
     <Project Path="Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/FoodDiary.Modules.Dashboard.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Recipes/">

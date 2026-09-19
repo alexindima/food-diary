@@ -35,7 +35,8 @@ public sealed class DailyDashboardDietologistRefactoringTests {
     public void StatisticsConsumers_UseTheOwnerRequest(string module) {
         string application = ArchitectureTestPaths.FromRoot("Modules", module, "Application");
         string source = string.Join(Environment.NewLine, SourceScanner.SourceFiles(application).Select(File.ReadAllText));
-        Assert.Contains("ReadDashboardStatisticsQuery", source, StringComparison.Ordinal);
+        Assert.Contains("ReadMealNutritionStatisticsQuery", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Dashboard", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IDashboardStatisticsReadService", source, StringComparison.Ordinal);
     }
 }

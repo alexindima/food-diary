@@ -221,7 +221,6 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dashboard application: `Modules/Dashboard/Application/AGENTS.md`
 - Dashboard application ports: `Modules/Dashboard/Application.Abstractions/AGENTS.md`
 - Dashboard contracts: `Modules/Dashboard/Contracts/AGENTS.md`
-- Dashboard infrastructure: `Modules/Dashboard/Infrastructure/AGENTS.md`
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
 - Read model composition: `FoodDiary.ReadModel.Composition/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`

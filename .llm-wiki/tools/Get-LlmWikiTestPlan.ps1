@@ -124,8 +124,8 @@ if ($databaseIntent) {
     $null = $behavioralIntentTests.Add('Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs')
     $null = $behavioralIntentTests.Add('Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs')
     if ($dashboardIntent) {
-        $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
-        $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
+        $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ComposedDashboardReadServiceTests.cs')
+        $null = $behavioralIntentTests.Add('Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/Dashboard/DashboardBodyReadServiceTests.cs')
     }
 }
 if ($identitySessionIntent) {

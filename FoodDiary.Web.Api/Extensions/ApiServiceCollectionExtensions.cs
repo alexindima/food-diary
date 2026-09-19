@@ -63,7 +63,6 @@ using FoodDiary.Modules.Admin.Presentation.Extensions;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
-using FoodDiary.Modules.Dashboard.Infrastructure;
 
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
@@ -154,7 +153,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddExportInfrastructure()
                 .AddIdentityPersistence()
                 .AddIdentityAuthenticationInfrastructure()
-                .AddDashboardReadServices()
+
                 .AddImagesInfrastructure()
                 .AddBillingIntegrations(configuration)
                 .AddAdminMailInboxIntegration(configuration)

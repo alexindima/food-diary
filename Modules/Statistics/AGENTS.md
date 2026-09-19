@@ -8,10 +8,10 @@ Rules for `Modules/Statistics/`.
 
 - Own Statistics query orchestration, calculation projections, response models, and date normalization.
 - Keep the real application assembly under `Application/`; do not create root wrappers or empty symmetric layers.
-- Consume Dashboard through a direct `Modules/Dashboard/Contracts` reference; consume Body Metrics and user access through their existing read contracts. Do not use central Application.Abstractions as a Dashboard dependency umbrella.
+- Consume nutrition statistics through a direct `Modules/Meals/Contracts` reference; consume Body Metrics and user access through their existing read contracts. Do not use central Application.Abstractions as a nutrition dependency umbrella.
 - Use canonical `FoodDiary.Modules.Statistics.<Project>` assembly identities and folder namespaces.
 - Do not add Contracts, Application Abstractions, Domain, Infrastructure, or persistence-model projects unless a separately proven responsibility appears.
-- Keep HTTP transport in `Modules/Statistics/Presentation` and the optimized Dashboard projection in Modules/Dashboard/Infrastructure.
+- Keep HTTP transport in `Modules/Statistics/Presentation` and nutrition aggregation in its Meals owner.
 
 ## Tests
 

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4191,
-    "symbols": 4121,
+    "sourceFiles": 4189,
+    "symbols": 4120,
     "interfaceImplementationLinks": 190,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2170,
+      "class": 2169,
       "enum": 64,
       "interface": 400,
       "record": 1367,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1705,
+      "Other": 1704,
       "Query": 269,
       "QueryHandler": 197,
       "ReadModelRepository": 33,
@@ -766,7 +766,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 373
+      "line": 372
     },
     {
       "name": "UsdaCsvReader",
@@ -787,7 +787,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 95
+      "line": 111
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -1970,7 +1970,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 101
+      "line": 100
     },
     {
       "name": "ApiTelemetry",
@@ -5484,7 +5484,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/PersistenceModel/AiQuotaReservation.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "AiQuotaReservationState",
@@ -8812,13 +8812,6 @@
       "line": 16
     },
     {
-      "name": "ReadDashboardStatisticsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "Modules/Dashboard/Application/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQueryHandler.cs",
-      "line": 8
-    },
-    {
       "name": "ComposedDashboardReadService",
       "kind": "class",
       "role": "Service",
@@ -8887,6 +8880,13 @@
       "role": "Mapper",
       "path": "Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs",
       "line": 5
+    },
+    {
+      "name": "DashboardStatisticsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/DashboardStatisticsReadService.cs",
+      "line": 9
     },
     {
       "name": "DashboardUserContextService",
@@ -8992,27 +8992,6 @@
       "role": "Query",
       "path": "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
       "line": 6
-    },
-    {
-      "name": "ReadDashboardStatisticsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs",
-      "line": 9
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "line": 7
-    },
-    {
-      "name": "DashboardStatisticsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
-      "line": 9
     },
     {
       "name": "DailyAdviceHttpResponse",
@@ -18318,6 +18297,13 @@
       "line": 6
     },
     {
+      "name": "ReadMealNutritionStatisticsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
+      "line": 8
+    },
+    {
       "name": "ReadMealsForExportQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -18519,6 +18505,13 @@
       "role": "Query",
       "path": "Modules/Meals/Contracts/Queries/ReadMealCount/ReadMealCountQuery.cs",
       "line": 6
+    },
+    {
+      "name": "ReadMealNutritionStatisticsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs",
+      "line": 9
     },
     {
       "name": "ReadMealsForExportQuery",
@@ -29110,7 +29103,7 @@
       "interface": "IDashboardStatisticsReadService",
       "interfacePath": "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs",
       "implementation": "DashboardStatisticsReadService",
-      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
+      "implementationPath": "Modules/Dashboard/Application/Services/DashboardStatisticsReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -30261,21 +30254,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 415
+      "line": 414
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 416
+      "line": 415
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 86
+      "line": 102
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30331,7 +30324,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 232
+      "line": 231
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30373,35 +30366,35 @@
       "implementation": "RepositoryDashboardBodyReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 16
+      "line": 18
     },
     {
       "service": "IDashboardMealsReadService",
       "implementation": "MediatorDashboardMealsReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 19
     },
     {
       "service": "IDashboardReadService",
       "implementation": "ComposedDashboardReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 20
     },
     {
       "service": "IDashboardUserContextService",
       "implementation": "DashboardUserContextService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 21
     },
     {
       "service": "IDashboardSectionDataLoader",
       "implementation": "DashboardSectionDataLoader",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 22
     },
     {
       "service": "IDietologistDashboardAccessService",

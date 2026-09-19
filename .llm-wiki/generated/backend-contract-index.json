@@ -4,8 +4,8 @@
     "contracts": 1253,
     "ambiguousContracts": 2,
     "consumerEdges": 9772,
-    "productionConsumerEdges": 5596,
-    "testConsumerEdges": 4176,
+    "productionConsumerEdges": 5595,
+    "testConsumerEdges": 4177,
     "consumedContracts": 1253,
     "unconsumedContracts": 0
   },
@@ -17119,23 +17119,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "ReadDistinctMealDatesQuery",
       "roles": [
         "Query"
@@ -17437,6 +17420,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadMealFavoriteStatus/ReadMealFavoriteStatusQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -25567,19 +25567,6 @@
         "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/PersistenceModel/AiQuotaReservation.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "AiQuotaReservationRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -25633,6 +25620,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAiContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AiQuotaReservationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -68141,7 +68141,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IDashboardSectionDataLoader",
@@ -68295,7 +68295,7 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Application/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68321,20 +68321,7 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardStatisticsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68360,19 +68347,6 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCompositionTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/SenderStatisticsFixture.cs",
       "isTest": true,
       "referenceCount": 1
@@ -68388,7 +68362,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 2
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -82907,7 +82881,7 @@
         "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardStatisticsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82921,6 +82895,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealNutritionStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82975,6 +82962,19 @@
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IMealNutritionStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCompositionTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IMealNutritionStatisticsReadService",
@@ -94801,19 +94801,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -95582,6 +95569,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -96712,19 +96712,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Application/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -97506,6 +97493,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -131193,149 +131193,6 @@
       "referenceCount": 1
     },
     {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Application/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/DiaryStatisticsQueryTests.cs",
-      "isTest": true,
-      "referenceCount": 9
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 9
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 12
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs",
-      "isTest": true,
-      "referenceCount": 6
-    },
-    {
-      "contract": "ReadDashboardStatisticsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Contracts/Queries/ReadDashboardStatistics/ReadDashboardStatisticsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/DailyDashboardDietologistRefactoringTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
       "contract": "ReadDistinctMealDatesQuery",
       "roles": [
         "Query"
@@ -132359,6 +132216,149 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/DiaryStatisticsQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 12
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "ReadMealNutritionStatisticsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/DailyDashboardDietologistRefactoringTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

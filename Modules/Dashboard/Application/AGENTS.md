@@ -19,10 +19,10 @@ Rules for `Modules/Dashboard/Application/`.
 
 Reference Products FoodQuality directly for the existing shared food-quality calculation. Do not reference Products Domain for scoring.
 
-`IDashboardStatisticsReadService` must be supplied by composition (normally Dashboard Infrastructure). Never register a mediator fallback that sends GetStatisticsQuery back to the handler using the same reader. Dashboard consumes its own statistics read models and does not reference Statistics.Application.
+`AddDashboardModule` registers its internal statistics adapter over Meals nutrition contracts. Never register a mediator fallback that sends GetStatisticsQuery back to the handler using the same reader. Dashboard consumes its own statistics read models and does not reference Statistics.Application.
 
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
 
-ComposedDashboardReadService is the single snapshot read composition. Preserve the single weekly statistics query for a one-day snapshot and forward the exact dayEnd instant to body readers. Infrastructure supplies optimized ports, not a second IDashboardReadService implementation.
+ComposedDashboardReadService is the single snapshot read composition. Preserve the single weekly statistics query for a one-day snapshot and forward the exact dayEnd instant to body readers. Host ReadModel.Composition supplies optimized body/meal ports, not a second IDashboardReadService implementation.

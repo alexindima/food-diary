@@ -1,13 +1,13 @@
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
-using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Modules.Dashboard.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Queries.GetWeeklyCheckIn;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
@@ -86,8 +86,8 @@ public sealed partial class WeeklyCheckInFeatureTests {
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
-            .Send(Arg.Any<ReadDashboardStatisticsQuery>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+            .Send(Arg.Any<ReadMealNutritionStatisticsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
         GetWeeklyCheckInQueryHandler handler = CreateHandler(
             statisticsReadService: statisticsReadService,
@@ -110,11 +110,11 @@ public sealed partial class WeeklyCheckInFeatureTests {
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
-            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == thisWeekStart && query.DateTo == Today.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+            .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == thisWeekStart && query.DateTo == Today.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([])));
         statisticsReadService
-            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == lastWeekStart && query.DateTo == lastWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+            .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == lastWeekStart && query.DateTo == lastWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid("statistics", "Last week unavailable."))));
         GetWeeklyCheckInQueryHandler handler = CreateHandler(
             statisticsReadService: statisticsReadService,
@@ -151,7 +151,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
         DateTime thisWeekStart = Today;
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
-        DashboardStatisticsBucketReadModel[] thisWeekBuckets = [
+        MealNutritionStatisticsBucket[] thisWeekBuckets = [
             new(thisWeekStart, thisWeekStart, TotalCalories: 700, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 35, TotalFats: 20, TotalCarbs: 90),
             new(Today, Today, TotalCalories: 900, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 45, TotalFats: 30, TotalCarbs: 110),
         ];
@@ -161,11 +161,11 @@ public sealed partial class WeeklyCheckInFeatureTests {
             .Returns(Task.FromResult(3));
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
-            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == thisWeekStart && query.DateTo == Today.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(thisWeekBuckets)));
+            .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == thisWeekStart && query.DateTo == Today.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(thisWeekBuckets)));
         statisticsReadService
-            .Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == lastWeekStart && query.DateTo == lastWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+            .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == lastWeekStart && query.DateTo == lastWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([])));
 
         GetWeeklyCheckInQueryHandler handler = CreateHandler(
             mealActivityReadService: mealActivityReadService,
@@ -204,8 +204,8 @@ public sealed partial class WeeklyCheckInFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal(DateTimeKind.Utc, selectedWeekStart.Kind);
-        await statisticsReadService.Received(1).Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == selectedWeekStart && query.DateFrom.Kind == DateTimeKind.Utc && query.DateTo == selectedWeekEnd.Date.AddDays(1).AddTicks(-10) && query.DateTo.Kind == DateTimeKind.Utc && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
-        await statisticsReadService.Received(1).Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == previousWeekStart && query.DateTo == previousWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == selectedWeekStart && query.DateFrom.Kind == DateTimeKind.Utc && query.DateTo == selectedWeekEnd.Date.AddDays(1).AddTicks(-10) && query.DateTo.Kind == DateTimeKind.Utc && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == previousWeekStart && query.DateTo == previousWeekEnd.Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
     }
 
     [Theory]
@@ -239,7 +239,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
-        await statisticsReadService.DidNotReceiveWithAnyArgs().Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == default && query.DateFrom == default && query.DateTo == default && query.QuantizationDays == default), default);
+        await statisticsReadService.DidNotReceiveWithAnyArgs().Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == default && query.DateFrom == default && query.DateTo == default && query.QuantizationDays == default), default);
     }
 
     [Fact]
@@ -258,8 +258,8 @@ public sealed partial class WeeklyCheckInFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        await statisticsReadService.Received(1).Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == new DateTime(1, 1, 8, 0, 0, 0, DateTimeKind.Utc) && query.DateTo == new DateTime(1, 1, 14, 0, 0, 0, DateTimeKind.Utc).Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
-        await statisticsReadService.Received(1).Send(Arg.Is<ReadDashboardStatisticsQuery>(query => query.UserId == userId && query.DateFrom == new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc) && query.DateTo == new DateTime(1, 1, 7, 0, 0, 0, DateTimeKind.Utc).Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == new DateTime(1, 1, 8, 0, 0, 0, DateTimeKind.Utc) && query.DateTo == new DateTime(1, 1, 14, 0, 0, 0, DateTimeKind.Utc).Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == userId && query.DateFrom == new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc) && query.DateTo == new DateTime(1, 1, 7, 0, 0, 0, DateTimeKind.Utc).Date.AddDays(1).AddTicks(-10) && query.QuantizationDays == 1), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -287,7 +287,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
         new(
             RequestTestSender.Route(
                 (mealActivityReadService ?? CreateMealActivityReadService(), [typeof(ReadMealCountQuery)]),
-                (statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadDashboardStatisticsQuery)]),
+                (statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadMealNutritionStatisticsQuery)]),
                 (weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(ReadWeightEntriesQuery)]),
                 (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(ReadWaistEntriesQuery)]),
                 (hydrationEntryReadService ?? CreateHydrationEntryReadService(), [typeof(ReadHydrationDailyTotalsQuery)])),
@@ -304,11 +304,11 @@ public sealed partial class WeeklyCheckInFeatureTests {
     }
 
     private static ISender CreateStatisticsReadService(
-        IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {
+        IReadOnlyList<MealNutritionStatisticsBucket>? buckets = null) {
         ISender service = Substitute.For<ISender>();
         service
-            .Send(Arg.Any<ReadDashboardStatisticsQuery>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(buckets ?? [])));
+            .Send(Arg.Any<ReadMealNutritionStatisticsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(buckets ?? [])));
         return service;
     }
 

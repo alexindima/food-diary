@@ -8,7 +8,7 @@ Rules for `Modules/WeeklyCheckIn/`.
 
 - Own weekly check-in queries, models, calculations, and user-profile composition in `Application/`.
 - Keep the real application assembly at `Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj`; do not recreate a root module project or empty wrapper layers.
-- Read hydration through `Modules/Hydration/Contracts` and meal, dashboard statistics, body-metric, and user-profile data only through stable Contracts/Application Abstractions.
+- Read hydration through `Modules/Hydration/Contracts` and meal nutrition statistics through Meals.Contracts and body-metric/user-profile data through their owner contracts.
 - Do not load Hydration or Meal aggregates.
 - Register through `AddWeeklyCheckInModule`; executable hosts remain composition roots.
 - Do not add Contracts, Domain, Application Abstractions, or Infrastructure projects unless WeeklyCheckIn gains a proven owned contract, domain type, port, or adapter.

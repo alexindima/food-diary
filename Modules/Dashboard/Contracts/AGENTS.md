@@ -1,10 +1,11 @@
 # Dashboard cross-module contracts
 
-Own ReadDashboardStatisticsQuery, DashboardStatisticsBucketReadModel and the
-public Dashboard snapshot/result graph plus GetDietologistClientDashboardQuery.
-Keep folder-aligned namespaces; preserve optional fields, dates and cancellation semantics. Consume
-contributor models through their narrow owner contracts; no whole Application,
-Domain, Infrastructure or Presentation dependencies. DashboardUserContextModel
-remains internal implementation data in Application.
+Own DashboardStatisticsBucketReadModel, the public snapshot/result graph and
+GetDietologistClientDashboardQuery. Keep folder-aligned namespaces and preserve
+optional fields, dates and cancellation. Consume contributors through narrow owner
+contracts; no whole Application, Domain, Infrastructure or Presentation references.
+DashboardUserContextModel remains an internal Application implementation type.
 
-ReadDashboardStatisticsQuery is a trusted composition read over an explicitly supplied UserId. Callers retain their authorization and date-validation responsibility. The internal statistics provider port belongs to Application.Abstractions.
+General nutrition reads belong to Meals.Contracts.ReadMealNutritionStatisticsQuery.
+The dashboard bucket is its snapshot shape, not an intermediate Statistics or
+WeeklyCheckIn contract. Internal adapter ports stay in Application.Abstractions.

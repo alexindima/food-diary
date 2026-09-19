@@ -5,7 +5,7 @@ using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed class DashboardStatisticsReadService(IMealNutritionStatisticsReadService meals) : IDashboardStatisticsReadService {
     public async Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(

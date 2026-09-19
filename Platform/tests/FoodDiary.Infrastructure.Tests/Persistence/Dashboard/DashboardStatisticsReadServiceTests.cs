@@ -5,11 +5,11 @@ using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+using FoodDiary.Modules.Dashboard.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Infrastructure.Tests.Persistence.Dashboard;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardStatisticsReadServiceTests {
