@@ -3430,6 +3430,7 @@
         "RED": "Calorie-dense"
     },
     "TDEE_CARD": {
+        "CURRENT_ESTIMATE_NOTICE": "Current expenditure estimate. Applying a goal updates your current settings.",
         "TITLE": "Energy expenditure",
         "LOADING": "Calculating your TDEE...",
         "EMPTY": "Fill in your profile and log meals to calculate TDEE.",

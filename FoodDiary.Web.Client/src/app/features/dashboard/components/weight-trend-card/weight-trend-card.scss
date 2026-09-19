@@ -40,6 +40,12 @@
         color: var(--fd-color-text);
     }
 
+    &__goal {
+        --fd-text-caption-weight: var(--fd-font-weight-regular);
+        margin-top: var(--fd-space-xxs);
+        text-align: right;
+    }
+
     &__chart {
         margin-top: var(--fd-space-sm);
         height: var(--fd-size-control-sm);

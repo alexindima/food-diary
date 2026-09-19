@@ -92,7 +92,7 @@ describe('WeightTrendCardComponent', () => {
             expect.objectContaining({ value: TARGET_WEIGHT, color: 'var(--fd-color-blue-500)' }),
         ]);
         expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-line')).not.toBeNull();
-        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-label')).not.toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.weight-trend-card__goal')).not.toBeNull();
     });
 });
 

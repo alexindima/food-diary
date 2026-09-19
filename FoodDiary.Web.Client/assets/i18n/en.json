@@ -152,7 +152,7 @@
         }
     },
     "NUTRITION_TREND": {
-        "DAY_EMPTY": "No entries yet",
+        "DAY_EMPTY": "0 kcal logged for this day",
         "DAY_GOAL": "{{value}}% of the daily goal",
         "OPEN_DAY": "Open day →",
         "STACK_NOTE": "Height shows recorded calories. Color proportions are estimated from nutrients.",
@@ -6689,6 +6689,7 @@
         "RESET_FILTER": "Show all plans"
     },
     "TDEE_CARD": {
+        "CURRENT_ESTIMATE_NOTICE": "Current expenditure estimate. Applying a goal updates your current settings.",
         "TITLE": "Energy expenditure",
         "LOADING": "Calculating your TDEE...",
         "EMPTY": "Fill in your profile and log meals to calculate TDEE.",

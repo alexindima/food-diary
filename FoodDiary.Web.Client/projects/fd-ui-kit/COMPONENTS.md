@@ -323,7 +323,7 @@ export type FdUiDateRangeValue = { start: Date | null; end: Date | null };
 
 #### `fd-ui-date-picker-button`
 
-Compact date trigger with overlay calendar.
+Compact date trigger with overlay calendar. The optional `locale: string | null` input sets the calendar language and updates when the application language changes.
 
 #### `fd-ui-week-picker`
 

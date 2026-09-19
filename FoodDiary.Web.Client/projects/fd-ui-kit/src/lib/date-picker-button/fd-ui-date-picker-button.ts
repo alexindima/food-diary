@@ -15,6 +15,7 @@ import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 })
 export class FdUiDatePickerButtonComponent {
     public readonly value = model<Date | null>(null);
+    public readonly locale = input<string | null>(null);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
     public readonly disabled = input(false, { transform: booleanAttribute });

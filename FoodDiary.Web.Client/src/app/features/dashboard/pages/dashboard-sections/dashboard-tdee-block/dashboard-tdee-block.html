@@ -5,6 +5,7 @@
                 <fd-tdee-insight-card
                     class="dashboard__card dashboard__card--tdee"
                     [insight]="insight()"
+                    [isHistorical]="isHistorical()"
                     [isLoading]="isLoading()"
                     (applyGoal)="applyGoal.emit($event)"
                 />

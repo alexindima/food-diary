@@ -175,6 +175,11 @@ export class DashboardComponent {
 
         return buildDashboardHeaderState(isToday, selectedDateLabel);
     });
+    protected readonly mobileHydrationFirst = computed(() => this.viewportService.isMobile() && this.isTodaySelected());
+    protected readonly calendarLocale = computed(() => {
+        this.languageVersion();
+        return resolveTranslateLanguage(this.translateService);
+    });
     protected readonly dashboardTitle = computed(() => {
         const headerState = this.dashboardHeaderState();
         const titleKey = this.viewportService.isMobile() ? headerState.compactTitleKey : headerState.fullTitleKey;
@@ -210,6 +215,7 @@ export class DashboardComponent {
         const ringData = this.mealRingData();
 
         return {
+            mealCount: this.snapshot()?.meals.total ?? 0,
             dailyGoal: ringData.dailyGoal,
             dailyConsumed: ringData.dailyConsumed,
             weeklyConsumed: ringData.weeklyConsumed,

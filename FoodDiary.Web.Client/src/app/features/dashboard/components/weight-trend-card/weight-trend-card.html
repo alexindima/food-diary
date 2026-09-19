@@ -8,7 +8,7 @@
                     <div class="weight-trend-card__value-row fd-row fd-align-baseline fd-gap-xs fd-min-w-0">
                         <div class="weight-trend-card__value fd-ui-metric-hero">
                             @if (hasValue()) {
-                                {{ displayCurrentValue() | number: '1.0-1' }}
+                                {{ displayCurrentValue() | localizedNumber: locale() : 0 : 1 }}
                             }
                         </div>
                         <div class="weight-trend-card__unit fd-ui-metric-unit fd-ui-text-muted">{{ displayUnitKey() | translate }}</div>
@@ -45,6 +45,9 @@
                         [showArea]="true"
                         [showPoints]="true"
                     />
+                </div>
+                <div class="weight-trend-card__goal fd-ui-caption fd-ui-text-muted" [style.display]="goalLabel() === null ? 'none' : null">
+                    {{ goalLabel() }}
                 </div>
             } @else {
                 <div class="weight-trend-card__sparse fd-ui-body-sm fd-ui-text-muted">

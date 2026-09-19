@@ -23,6 +23,7 @@ export class DashboardTdeeBlockComponent {
     public readonly shouldRender = input.required<boolean>();
     public readonly state = input.required<DashboardBlockState>();
     public readonly insight = input.required<DashboardTdeeInsight>();
+    public readonly isHistorical = input(false);
     public readonly isLoading = input.required<boolean>();
 
     public readonly blockClick = output<Event>();

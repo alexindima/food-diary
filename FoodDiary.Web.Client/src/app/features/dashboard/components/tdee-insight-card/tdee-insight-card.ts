@@ -16,6 +16,7 @@ import { TdeeInsightCardContentComponent } from './tdee-insight-card-content/tde
 })
 export class TdeeInsightCardComponent {
     public readonly insight = input.required<TdeeInsight | null>();
+    public readonly isHistorical = input(false);
     public readonly isLoading = input.required<boolean>();
     public readonly applyGoal = output<number>();
 

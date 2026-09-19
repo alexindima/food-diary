@@ -152,7 +152,7 @@
         }
     },
     "NUTRITION_TREND": {
-        "DAY_EMPTY": "No entries yet",
+        "DAY_EMPTY": "0 kcal logged for this day",
         "DAY_GOAL": "{{value}}% of the daily goal",
         "OPEN_DAY": "Open day →",
         "STACK_NOTE": "Height shows recorded calories. Color proportions are estimated from nutrients.",

@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
+import { map } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { compareDatesAsc, formatDateValue, parseDateValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
@@ -25,13 +28,16 @@ export type WeightTrendPoint = {
 
 @Component({
     selector: 'fd-weight-trend-card',
-    imports: [CommonModule, TranslatePipe, FdUiLineChartComponent, DashboardWidgetFrameComponent],
+    imports: [LocalizedNumberPipe, CommonModule, TranslatePipe, FdUiLineChartComponent, DashboardWidgetFrameComponent],
     templateUrl: './weight-trend-card.html',
     styleUrl: './weight-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightTrendCardComponent {
     private readonly translateService = inject(TranslateService);
+    protected readonly locale = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: resolveTranslateLanguage(this.translateService),
+    });
     private readonly measurements = inject(MeasurementSystemService);
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
     public readonly currentWeight = input.required<number | null>();
@@ -95,15 +101,19 @@ export class WeightTrendCardComponent {
                   {
                       value: this.displayValue(targetValue),
                       color: this.accentColor(),
-                      label: this.translateService.instant('WEIGHT_TREND_CARD.CHART_GOAL', {
-                          value: new Intl.NumberFormat(resolveTranslateLanguage(this.translateService), {
-                              maximumFractionDigits: 1,
-                          }).format(this.displayValue(targetValue)),
-                          unit: this.translateService.instant(this.displayUnitKey()),
-                      }),
                   },
               ];
     });
+    protected readonly goalLabel = computed(() =>
+        this.targetValue() === null
+            ? null
+            : this.translateService.instant('WEIGHT_TREND_CARD.CHART_GOAL', {
+                  value: new Intl.NumberFormat(this.locale(), {
+                      maximumFractionDigits: 1,
+                  }).format(this.displayValue(this.targetValue() ?? 0)),
+                  unit: this.translateService.instant(this.displayUnitKey()),
+              }),
+    );
 
     protected readonly formattedChangeValue = computed(() => {
         const delta = this.change();
@@ -113,7 +123,7 @@ export class WeightTrendCardComponent {
         const displayDelta = this.displayValue(delta);
         const rounded = Math.round(displayDelta * WEIGHT_TREND_ROUNDING_FACTOR) / WEIGHT_TREND_ROUNDING_FACTOR;
         const sign = rounded > 0 ? '+' : '';
-        return `${sign}${rounded.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)}`;
+        return `${sign}${new Intl.NumberFormat(this.locale(), { minimumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS, maximumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS }).format(rounded)}`;
     });
     protected readonly hasMeaningfulChange = computed(() => Math.abs(this.change() ?? 0) > WEIGHT_TREND_EPSILON);
 
@@ -128,7 +138,7 @@ export class WeightTrendCardComponent {
 
     private formatPointLabel(date: string | Date): string {
         return (
-            formatDateValue(date, resolveTranslateLanguage(this.translateService), {
+            formatDateValue(date, this.locale(), {
                 day: 'numeric',
                 month: 'long',
                 timeZone: 'UTC',

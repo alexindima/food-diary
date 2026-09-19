@@ -5,7 +5,10 @@
         [title]="'TDEE_CARD.TITLE' | translate"
         [helpText]="'TDEE_CARD.HELP' | translate"
     >
-        <div class="tdee-card__body">
+        <div class="tdee-card__body fd-stack fd-gap-xs">
+            @if (isHistorical()) {
+                <p class="fd-ui-caption fd-ui-text-muted">{{ 'TDEE_CARD.CURRENT_ESTIMATE_NOTICE' | translate }}</p>
+            }
             @if (isLoading()) {
                 <div class="tdee-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">
                     <fd-ui-icon name="hourglass_empty" />

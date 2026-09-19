@@ -29,6 +29,7 @@ let uniqueId = 0;
 
 type DayNutritionSummaryData = {
     dailyGoal: number;
+    mealCount?: number;
     dailyConsumed: number;
     weeklyConsumed: number;
     weeklyGoal: number | null;
@@ -58,7 +59,7 @@ export class DayNutritionSummaryComponent {
         this.translationChange();
         const translate = (key: string): string => this.translateService.instant(`DASHBOARD.DAY_SUMMARY.${key}`);
         const bars = this.bars().filter(bar => bar.target > 0);
-        if (this.data().dailyConsumed === 0 && bars.every(bar => bar.current === 0)) {
+        if ((this.data().mealCount ?? 0) === 0 && this.data().dailyConsumed === 0 && bars.every(bar => bar.current === 0)) {
             return [{ title: translate('PULSE_EMPTY_TITLE'), text: translate('PULSE_EMPTY_TEXT') }];
         }
         const result = [{ title: translate('PULSE_CALORIES'), text: this.calorieComparisonText() }];

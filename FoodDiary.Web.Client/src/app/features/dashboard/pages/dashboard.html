@@ -9,6 +9,7 @@
             <fd-ui-date-picker-button
                 class="dashboard__date-button"
                 [value]="selectedDate()"
+                [locale]="calendarLocale()"
                 [disabled]="layout.isEditingLayout()"
                 [ariaLabel]="dashboardHeaderState().selectedDateLabel || ('DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate)"
                 [hint]="
@@ -117,6 +118,18 @@
                         <fd-dashboard-edit-hint [actionLabel]="editSaveActionLabel()" (save)="layout.save()" />
                     }
 
+                    <ng-template #hydrationBlock>
+                        <fd-dashboard-hydration-block
+                            [shouldRender]="layout.shouldRenderBlock('hydration')"
+                            [state]="blockStates.hydration"
+                            [cardState]="hydrationCardState()"
+                            [isLoading]="isHydrationLoading()"
+                            [canAdd]="isTodaySelected()"
+                            (blockToggle)="layout.toggleBlock('hydration')"
+                            (addClick)="addHydration($event)"
+                            (goalAction)="openGoalsAsync()"
+                        />
+                    </ng-template>
                     <div class="dashboard__column fd-grid">
                         <ng-container [ngTemplateOutlet]="fastingFirst() ? fastingBlock : null" />
                         <fd-dashboard-summary-block
@@ -127,6 +140,7 @@
                             (blockToggle)="layout.toggleBlock('summary')"
                         />
 
+                        <ng-container [ngTemplateOutlet]="mobileHydrationFirst() ? hydrationBlock : null" />
                         <fd-dashboard-meals-block
                             [shouldRender]="layout.shouldRenderBlock('meals')"
                             [state]="blockStates.meals"
@@ -166,16 +180,7 @@
                     </div>
 
                     <div class="dashboard__column dashboard__column--aside fd-grid">
-                        <fd-dashboard-hydration-block
-                            [shouldRender]="layout.shouldRenderBlock('hydration')"
-                            [state]="blockStates.hydration"
-                            [cardState]="hydrationCardState()"
-                            [isLoading]="isHydrationLoading()"
-                            [canAdd]="isTodaySelected()"
-                            (blockToggle)="layout.toggleBlock('hydration')"
-                            (addClick)="addHydration($event)"
-                            (goalAction)="openGoalsAsync()"
-                        />
+                        <ng-container [ngTemplateOutlet]="mobileHydrationFirst() ? null : hydrationBlock" />
 
                         <fd-dashboard-cycle-block
                             [shouldRender]="layout.shouldRenderBlock('cycle')"
@@ -222,6 +227,7 @@
                         />
 
                         <fd-dashboard-tdee-block
+                            [isHistorical]="!isTodaySelected()"
                             [shouldRender]="layout.shouldRenderBlock('tdee')"
                             [state]="blockStates.tdee"
                             [insight]="tdeeInsight()"

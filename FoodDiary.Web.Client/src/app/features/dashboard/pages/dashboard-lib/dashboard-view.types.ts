@@ -54,6 +54,7 @@ export type DashboardFastingSession = FastingSession | null;
 
 export type DashboardSummaryData = {
     dailyGoal: number;
+    mealCount?: number;
     dailyConsumed: number;
     weeklyConsumed: number;
     weeklyGoal: number | null;
