@@ -1,9 +1,14 @@
+import { registerLocaleData } from '@angular/common';
+import ru from '@angular/common/locales/ru';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { TdeeInsight } from '../../../models/tdee-insight.data';
 import { TdeeInsightCardContentComponent } from './tdee-insight-card-content';
+
+registerLocaleData(ru);
 
 const EFFECTIVE_TDEE = 2100;
 const SUGGESTED_TARGET = 1900;
@@ -22,13 +27,27 @@ describe('TdeeInsightCardContentComponent', () => {
         expect(component['showSuggestion']()).toBe(true);
     });
 
+    it('updates grouping of the estimate and suggestion when changing language', async () => {
+        const { fixture } = await setupComponentAsync(createInsight());
+        const translate = TestBed.inject(TranslateService);
+        translate.use('en');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.tdee-card__number')?.textContent).toBe('2,100');
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(host.querySelector('.tdee-card__number')?.textContent.replaceAll(/\s/gu, ' ')).toBe('2 100');
+        expect(host.querySelector('.tdee-card__calculated-goal')?.textContent.replaceAll(/\s/gu, ' ')).toContain('1 900');
+    });
+
     it('emits apply goal click event', async () => {
-        const { component } = await setupComponentAsync(createInsight());
-        const event = new MouseEvent('click');
+        const { component, fixture } = await setupComponentAsync(createInsight());
+        fixture.detectChanges();
+        const event = new MouseEvent('click', { bubbles: true });
         const applySpy = vi.fn();
         component['applyGoal'].subscribe(applySpy);
 
-        component['applyGoal'].emit(event);
+        (fixture.nativeElement as HTMLElement).querySelector('button')?.dispatchEvent(event);
 
         expect(applySpy).toHaveBeenCalledWith(event);
     });

@@ -1,12 +1,21 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { FastingService } from '../api/fasting.service';
-import type { FastingOverview, FastingSession } from '../models/fasting.data';
+import type { FastingMessage, FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
+
+const OUT_OF_RANGE_DURATION = 100;
+const MAX_INTERVAL_HOURS = 23;
+const EATING_DAYS = 3;
+const LONGER_INTERVAL_HOURS = 18;
+const EXCESS_INTERVAL_HOURS = 50;
+const MINUTES_PER_HOUR = 60;
+const TIMER_TICK_MS = 1000;
+const INITIAL_PROGRESS_PERCENT = 12.5;
 
 const DEFAULT_FASTING_HOURS = 16;
 const DEFAULT_EXTEND_HOURS = 24;
@@ -375,6 +384,163 @@ describe('FastingFacade setup modes and target changes', () => {
         facade.reduceTargetByHours(CUSTOM_REDUCE_HOURS);
 
         expect(fastingService.reduceTarget).not.toHaveBeenCalled();
+    });
+});
+
+describe('FastingFacade lifecycle regression (1)', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+    it('clamps custom intervals and cyclic days before starting', () => {
+        facade.selectMode('intermittent');
+        facade.selectProtocol('CustomIntermittent');
+        facade.setCustomIntermittentFastHours(0);
+        expect(facade.plannedDurationHours()).toBe(1);
+        facade.setCustomIntermittentFastHours(OUT_OF_RANGE_DURATION);
+        expect(facade.plannedDurationHours()).toBe(MAX_INTERVAL_HOURS);
+        facade.setCyclicPreset(2, EATING_DAYS);
+        expect(facade.cyclicUsesCustomPreset()).toBe(false);
+        expect([facade.cyclicFastDays(), facade.cyclicEatDays()]).toEqual([2, EATING_DAYS]);
+        facade.selectCustomCyclicPreset();
+        facade.setCyclicFastDays(0);
+        facade.setCyclicEatDays(OUT_OF_RANGE_DURATION);
+        expect(facade.cyclicUsesCustomPreset()).toBe(true);
+        expect(facade.cyclicFastDays()).toBe(1);
+        expect(facade.cyclicEatDays()).toBeLessThan(OUT_OF_RANGE_DURATION);
+        facade.selectCyclicEatDayProtocol('Fast18Eat6');
+        expect(facade.cyclicEatDayFastHours()).toBe(LONGER_INTERVAL_HOURS);
+        facade.selectCyclicEatDayProtocol('CustomIntermittent');
+        expect(facade.cyclicEatDayFastHours()).toBe(LONGER_INTERVAL_HOURS);
+        facade.setCyclicEatDayFastHours(EXCESS_INTERVAL_HOURS);
+        expect(facade.cyclicEatDayProtocol()).toBe('CustomIntermittent');
+        expect(facade.cyclicEatDayFastHours()).toBe(MAX_INTERVAL_HOURS);
+    });
+    it('updates elapsed and remaining times and stops the timer after destruction', () => {
+        const startedAtUtc = new Date(Date.now() - 2 * MINUTES_PER_HOUR * MINUTES_PER_HOUR * TIMER_TICK_MS).toISOString();
+        fastingService.getOverview.mockReturnValueOnce(of({ ...baseOverview, currentSession: { ...activeSession, startedAtUtc } }));
+        facade.initialize();
+        expect(facade.isActive()).toBe(true);
+        expect(facade.elapsedFormatted()).toBe('02:00:00');
+        expect(facade.remainingFormatted()).toBe('14:00:00');
+        expect(facade.progressPercent()).toBeCloseTo(INITIAL_PROGRESS_PERCENT);
+        expect(facade.isOvertime()).toBe(false);
+        vi.advanceTimersByTime(TIMER_TICK_MS);
+        expect(facade.elapsedFormatted()).toBe('02:00:01');
+        TestBed.resetTestingModule();
+        const last = facade.now();
+        vi.advanceTimersByTime(TIMER_TICK_MS);
+        expect(facade.now()).toBe(last);
+    });
+});
+
+describe('FastingFacade lifecycle regression (2)', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+    it('extends the active session and replaces its history entry', () => {
+        facade.currentSession.set(activeSession);
+        facade.history.set([activeSession]);
+        const updated = { ...activeSession, plannedDurationHours: 24, addedDurationHours: 8 };
+        fastingService.extend.mockReturnValueOnce(of(updated));
+        facade.setExtendHours(CUSTOM_REDUCE_HOURS);
+        facade.extendByHours(facade.extendHours());
+        expect(fastingService.extend).toHaveBeenCalledWith({ additionalHours: 8 });
+        expect(facade.currentSession()).toEqual(updated);
+        expect(facade.history()).toEqual([updated]);
+        expect(facade.isExtending()).toBe(false);
+    });
+    it('preserves the session after failed extension and releases loading', () => {
+        facade.currentSession.set(activeSession);
+        fastingService.extend.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.extendByHours(CUSTOM_REDUCE_HOURS);
+        expect(facade.currentSession()).toEqual(activeSession);
+        expect(facade.isExtending()).toBe(false);
+    });
+});
+
+describe('FastingFacade lifecycle regression (3)', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+    it.each(['skip', 'postpone'] as const)('updates the cyclic day after %s', action => {
+        const updated = { ...activeSession, planType: 'Cyclic' as const, cyclicPhaseDayNumber: 2 };
+        fastingService.skipCyclicDay.mockReturnValueOnce(of(updated));
+        fastingService.postponeCyclicDay.mockReturnValueOnce(of(updated));
+        fastingService.getOverviewStrict.mockReturnValueOnce(of({ ...baseOverview, currentSession: updated }));
+        if (action === 'skip') {
+            facade.skipCyclicDay();
+        } else {
+            facade.postponeCyclicDay();
+        }
+        expect(facade.currentSession()).toEqual(updated);
+        expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
+        expect(facade.isUpdatingCycle()).toBe(false);
+    });
+    it('cancels pending cycle mutations on destruction', () => {
+        const pending = new Subject<FastingSession>();
+        fastingService.postponeCyclicDay.mockReturnValueOnce(pending);
+        facade.postponeCyclicDay();
+        expect(facade.isUpdatingCycle()).toBe(true);
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
+        expect(facade.isUpdatingCycle()).toBe(false);
+        expect(fastingService.getOverviewStrict).not.toHaveBeenCalled();
+    });
+});
+
+describe('FastingFacade lifecycle regression (4)', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+    it('toggles symptoms and resets check-in drafts from the confirmed session', () => {
+        facade.currentSession.set({ ...activeSession, symptoms: ['headache'], checkInNotes: 'saved' });
+        facade.toggleSymptom('fatigue');
+        expect(facade.selectedSymptoms()).toContain('fatigue');
+        facade.toggleSymptom('fatigue');
+        expect(facade.selectedSymptoms()).not.toContain('fatigue');
+        facade.setCheckInNotes('draft');
+        facade.resetCheckInDraft();
+        expect(facade.selectedSymptoms()).toEqual(['headache']);
+        expect(facade.checkInNotes()).toBe('saved');
+    });
+    it('does not save a check-in without an active session', () => {
+        facade.saveCheckIn();
+        facade.currentSession.set({ ...activeSession, endedAtUtc: new Date().toISOString() });
+        facade.saveCheckIn();
+        expect(fastingService.updateCheckIn).not.toHaveBeenCalled();
+    });
+});
+
+describe('FastingFacade prompt visibility', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+    const prompt: FastingMessage = { id: 'check-in', titleKey: 'TITLE', bodyKey: 'BODY', tone: 'neutral', bodyParams: null };
+
+    it('hides prompts without a running session or a message', () => {
+        expect(facade.isPromptVisible(null, prompt)).toBe(false);
+        expect(facade.isPromptVisible(activeSession, null)).toBe(false);
+        expect(facade.isPromptVisible({ ...activeSession, endedAtUtc: new Date().toISOString() }, prompt)).toBe(false);
+        facade.dismissPrompt(prompt.id);
+        facade.snoozePrompt(prompt.id);
+        expect(facade.promptState()).toEqual({});
+    });
+
+    it('dismisses only the current session prompt and persists its state', () => {
+        facade.currentSession.set(activeSession);
+        expect(facade.isPromptVisible(activeSession, prompt)).toBe(true);
+        facade.dismissPrompt(prompt.id);
+        expect(facade.isPromptVisible(activeSession, prompt)).toBe(false);
+        expect(facade.isPromptVisible({ ...activeSession, id: 'another' }, prompt)).toBe(true);
+        expect(Object.values(facade.promptState())).toEqual([{ dismissed: true }]);
+    });
+
+    it('shows a snoozed prompt again only after the saved deadline', () => {
+        facade.currentSession.set(activeSession);
+        facade.snoozePrompt(prompt.id);
+        expect(facade.isPromptVisible(activeSession, prompt)).toBe(false);
+        const state = Object.values(facade.promptState())[0];
+        const deadline = Date.parse(state?.snoozedUntilUtc ?? '');
+        expect(Number.isFinite(deadline)).toBe(true);
+        facade.now.set(new Date(deadline - 1));
+        expect(facade.isPromptVisible(activeSession, prompt)).toBe(false);
+        facade.now.set(new Date(deadline));
+        expect(facade.isPromptVisible(activeSession, prompt)).toBe(true);
     });
 });
 

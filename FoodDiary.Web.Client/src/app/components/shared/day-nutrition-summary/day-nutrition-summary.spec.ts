@@ -9,9 +9,7 @@ describe('Day summary empty state', () => {
         await TestBed.configureTestingModule({
             imports: [DayNutritionSummaryComponent],
             providers: [provideTranslateTesting()],
-        })
-            .overrideComponent(DayNutritionSummaryComponent, { set: { template: '' } })
-            .compileComponents();
+        }).compileComponents();
         const fixture = TestBed.createComponent(DayNutritionSummaryComponent);
         fixture.componentRef.setInput('data', {
             mealCount,
@@ -21,7 +19,13 @@ describe('Day summary empty state', () => {
             weeklyGoal: null,
             nutrientBars: [],
         });
-        const title = fixture.componentInstance['insights']()[0].title;
-        expect(title).toBe(mealCount === 0 ? 'DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE' : 'DASHBOARD.DAY_SUMMARY.PULSE_CALORIES');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain(
+            mealCount === 0 ? 'DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE' : 'DASHBOARD.DAY_SUMMARY.PULSE_CALORIES',
+        );
+        expect(host.textContent).not.toContain(
+            mealCount === 0 ? 'DASHBOARD.DAY_SUMMARY.PULSE_CALORIES' : 'DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE',
+        );
     });
 });

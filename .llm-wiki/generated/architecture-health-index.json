@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 143,
+    "componentsWithoutDirectSpecs": 139,
     "criticalSymbolsWithoutTestReferences": 40,
     "explicitDebtMarkers": 10
   },
@@ -1216,27 +1216,6 @@
       "specPath": null
     },
     {
-      "class": "DailyAdviceGroupCardComponent",
-      "selector": "fd-admin-daily-advice-group-card",
-      "feature": "admin-daily-advices",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.html",
-      "inputs": [
-        {
-          "name": "advice",
-          "type": "AdminDailyAdvice",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "changed",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "AdminDashboardContentComponent",
       "selector": "fd-admin-dashboard-content",
       "feature": "admin-dashboard",
@@ -1818,16 +1797,6 @@
       "specPath": null
     },
     {
-      "class": "DashboardComponent",
-      "selector": "fd-dashboard",
-      "feature": "dashboard",
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "DashboardCycleBlockComponent",
       "selector": "fd-dashboard-cycle-block",
       "feature": "dashboard",
@@ -2138,6 +2107,11 @@
           "required": true
         },
         {
+          "name": "isHistorical",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -2151,117 +2125,6 @@
         {
           "name": "applyGoal",
           "type": "number"
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "DashboardTrendBlockComponent",
-      "selector": "fd-dashboard-trend-block",
-      "feature": "dashboard",
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.html",
-      "inputs": [
-        {
-          "name": "shouldRender",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "state",
-          "type": "DashboardBlockState",
-          "required": true
-        },
-        {
-          "name": "cardClass",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "current",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "change",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "points",
-          "type": "DashboardWeightTrendPoint[]",
-          "required": true
-        },
-        {
-          "name": "isLoading",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "titleKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "unitKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "measurementKind",
-          "type": "'weight' | 'length'",
-          "required": false
-        },
-        {
-          "name": "emptyStateKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "actionLabelKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "actionRoute",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "firstMeasurementKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "twoMeasurementsKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "stableTrendKey",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "accentColor",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "targetValue",
-          "type": "number | null",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "blockToggle",
-          "type": ""
         }
       ],
       "specPath": null
@@ -3246,6 +3109,11 @@
         {
           "name": "value",
           "type": "Date | null",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "string | null",
           "required": false
         },
         {
@@ -4789,22 +4657,6 @@
           "type": ""
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "DayNutritionSummaryComponent",
-      "selector": "fd-day-nutrition-summary",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
-      "inputs": [
-        {
-          "name": "data",
-          "type": "DayNutritionSummaryData",
-          "required": true
-        }
-      ],
-      "outputs": [],
       "specPath": null
     },
     {

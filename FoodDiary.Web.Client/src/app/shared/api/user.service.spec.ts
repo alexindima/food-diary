@@ -1,13 +1,16 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { Observable } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { SessionEventsService } from '../auth/session-events.service';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
+
+const DESIRED_WAIST = 80;
 
 const BASE_URL = environment.apiUrls.users;
 const USER_CALORIES = 2000;
@@ -238,3 +241,222 @@ function setCurrentUser(user: User = MOCK_USER): void {
     req.flush(user);
     expect(service.user()).toEqual(user);
 }
+
+describe('UserService dashboard persistence', () => {
+    it('saves both layouts and publishes the server user', () => {
+        const layout = { web: ['summary', 'weight'], mobile: ['summary', 'hydration'] };
+        const user = { ...MOCK_USER, dashboardLayout: layout };
+        const next = vi.fn();
+        service.updateDashboardLayout(layout).subscribe(next);
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(req.request.method).toBe('PATCH');
+        expect(req.request.body).toEqual({ dashboardLayout: layout });
+        req.flush(user);
+        expect(next).toHaveBeenCalledWith(user);
+        expect(service.user()).toEqual(user);
+    });
+
+    it('retains the confirmed user when layout save fails', () => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        const next = vi.fn();
+        service.updateDashboardLayout({ web: ['summary'], mobile: ['summary'] }).subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/info`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).toHaveBeenCalledWith(null);
+        expect(service.user()).toEqual(MOCK_USER);
+    });
+});
+
+describe('UserService body goal contracts', () => {
+    it.each(['weight', 'waist'] as const)('reads %s goal and history', kind => {
+        const waist = kind === 'waist';
+        const goal = waist
+            ? { desiredWaistCm: 80, startWaistCm: 90, startedAtUtc: '2026-03-01' }
+            : { desiredWeightKg: 70, startWeightKg: 80, startedAtUtc: '2026-03-01' };
+        const next = vi.fn();
+        const request: Observable<unknown> = waist ? service.getWaistGoal() : service.getWeightGoal();
+        request.subscribe(next);
+        const req = httpMock.expectOne(`${BASE_URL}/desired-${kind}`);
+        expect(req.request.method).toBe('GET');
+        req.flush(goal);
+        expect(next).toHaveBeenCalledWith(goal);
+        const historyNext = vi.fn();
+        const historyRequest: Observable<unknown> = waist ? service.getWaistGoalHistory() : service.getWeightGoalHistory();
+        historyRequest.subscribe(historyNext);
+        const historyReq = httpMock.expectOne(`${BASE_URL}/${kind}-goals`);
+        expect(historyReq.request.method).toBe('GET');
+        historyReq.flush([]);
+        expect(historyNext).toHaveBeenCalledWith([]);
+    });
+
+    it.each(['weight', 'waist'] as const)('returns empty %s goals/history after read errors', kind => {
+        const waist = kind === 'waist';
+        const next = vi.fn();
+        const request: Observable<unknown> = waist ? service.getWaistGoal() : service.getWeightGoal();
+        request.subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/desired-${kind}`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).toHaveBeenCalledWith(
+            waist
+                ? { desiredWaistCm: null, startWaistCm: null, startedAtUtc: null }
+                : { desiredWeightKg: null, startWeightKg: null, startedAtUtc: null },
+        );
+        const historyNext = vi.fn();
+        const historyRequest: Observable<unknown> = waist ? service.getWaistGoalHistory() : service.getWeightGoalHistory();
+        historyRequest.subscribe(historyNext);
+        httpMock.expectOne(`${BASE_URL}/${kind}-goals`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(historyNext).toHaveBeenCalledWith([]);
+    });
+});
+
+describe('UserService body goal writes', () => {
+    it.each(['weight', 'waist'] as const)('saves and clears %s target using canonical units', kind => {
+        const waist = kind === 'waist';
+        for (const value of [DESIRED_WEIGHT, null]) {
+            const next = vi.fn();
+            const request: Observable<unknown> = waist ? service.updateWaistGoal(value) : service.updateWeightGoal(value);
+            request.subscribe(next);
+            const req = httpMock.expectOne(`${BASE_URL}/desired-${kind}`);
+            expect(req.request.method).toBe('PUT');
+            expect(req.request.body).toEqual(waist ? { desiredWaistCm: value } : { desiredWeightKg: value });
+            const result = waist
+                ? { desiredWaistCm: value, startWaistCm: null, startedAtUtc: null }
+                : { desiredWeightKg: value, startWeightKg: null, startedAtUtc: null };
+            req.flush(result);
+            expect(next).toHaveBeenCalledWith(result);
+        }
+    });
+
+    it.each(['weight', 'waist'] as const)('propagates %s write errors', kind => {
+        const waist = kind === 'waist';
+        const requests: Array<Observable<unknown>> = [
+            waist ? service.updateWaistGoal(DESIRED_WEIGHT) : service.updateWeightGoal(DESIRED_WEIGHT),
+            waist ? service.updateDesiredWaist(DESIRED_WEIGHT) : service.updateDesiredWeight(DESIRED_WEIGHT),
+        ];
+        for (const request of requests) {
+            const error = vi.fn();
+            const next = vi.fn();
+            request.subscribe({ error, next });
+            httpMock.expectOne(`${BASE_URL}/desired-${kind}`).flush('offline', { status: 503, statusText: 'Unavailable' });
+            expect(next).not.toHaveBeenCalled();
+            expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 503 }));
+        }
+    });
+
+    it('reads and clears the scalar waist target', () => {
+        const next = vi.fn();
+        service.getDesiredWaist().subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/desired-waist`).flush({ desiredWaistCm: 80 });
+        expect(next).toHaveBeenLastCalledWith(DESIRED_WAIST);
+        service.updateDesiredWaist(null).subscribe(next);
+        const req = httpMock.expectOne(`${BASE_URL}/desired-waist`);
+        expect(req.request.body).toEqual({ desiredWaistCm: null });
+        req.flush({ desiredWaistCm: null });
+        expect(next).toHaveBeenLastCalledWith(null);
+    });
+});
+
+describe('UserService overview state', () => {
+    it('loads overview user and clears stale user data after an overview error', () => {
+        const overview = { user: MOCK_USER, notificationPreferences: {}, webPushSubscriptions: [], dietologistRelationship: null };
+        const next = vi.fn();
+        service.getOverview().subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/overview`).flush(overview);
+        expect(next).toHaveBeenLastCalledWith(overview);
+        expect(service.user()).toEqual(MOCK_USER);
+        service.getOverview().subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/overview`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).toHaveBeenLastCalledWith(null);
+        expect(service.user()).toBeNull();
+    });
+
+    it('clears stale user information when a silent fetch fails', () => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        const next = vi.fn();
+        service.getInfoSilently().subscribe(next);
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        req.flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).toHaveBeenCalledWith(null);
+        expect(service.user()).toBeNull();
+    });
+});
+
+describe('UserService consent state', () => {
+    it.each([false, true])('accepts and revokes consent with cached user=%s', cached => {
+        if (cached) {
+            service.getInfo().subscribe();
+            httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        }
+        service.acceptAiConsent().subscribe();
+        const accept = httpMock.expectOne(`${BASE_URL}/ai-consent`);
+        expect(accept.request.method).toBe('POST');
+        expect(accept.request.body).toEqual({});
+        accept.flush(null);
+        if (cached) {
+            expect(service.user()?.aiConsentAcceptedAt).toEqual(expect.any(String));
+        } else {
+            expect(service.user()).toBeNull();
+        }
+        service.revokeAiConsent().subscribe();
+        const revoke = httpMock.expectOne(`${BASE_URL}/ai-consent`);
+        expect(revoke.request.method).toBe('DELETE');
+        revoke.flush(null);
+        if (cached) {
+            expect(service.user()?.aiConsentAcceptedAt).toBeNull();
+        } else {
+            expect(service.user()).toBeNull();
+        }
+    });
+
+    it.each(['accept', 'revoke'] as const)('does not change consent when %s fails', action => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        const error = vi.fn();
+        const next = vi.fn();
+        (action === 'accept' ? service.acceptAiConsent() : service.revokeAiConsent()).subscribe({ next, error });
+        httpMock.expectOne(`${BASE_URL}/ai-consent`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 503 }));
+        expect(service.user()).toEqual(MOCK_USER);
+    });
+});
+
+describe('UserService failure contracts', () => {
+    it.each([
+        { method: 'update', endpoint: 'info', fallback: null },
+        { method: 'updateAppearance', endpoint: 'preferences/appearance', fallback: null },
+        { method: 'deleteCurrentUser', endpoint: '', fallback: false },
+        { method: 'setPassword', endpoint: 'password/set', fallback: false },
+        { method: 'getDesiredWeight', endpoint: 'desired-weight', fallback: null },
+        { method: 'getDesiredWaist', endpoint: 'desired-waist', fallback: null },
+    ] as const)('returns the documented fallback for $method and retains confirmed user', ({ method, endpoint, fallback }) => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        let request: Observable<unknown>;
+        switch (method) {
+            case 'update': {
+                request = service.update(new UpdateUserDto({}));
+                break;
+            }
+            case 'updateAppearance': {
+                request = service.updateAppearance(new UpdateUserAppearanceDto({}));
+                break;
+            }
+            case 'setPassword': {
+                request = service.setPassword({ newPassword: 'test-only-password' });
+                break;
+            }
+            case 'deleteCurrentUser':
+            case 'getDesiredWeight':
+            case 'getDesiredWaist': {
+                request = service[method]();
+            }
+        }
+        const next = vi.fn();
+        request.subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/${endpoint}`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        expect(next).toHaveBeenCalledWith(fallback);
+        expect(service.user()).toEqual(MOCK_USER);
+    });
+});

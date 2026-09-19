@@ -125,13 +125,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "62d3735db5537c13167e0b9350ad7a60880bd302617ea692dd973838d29e35c1"
+          "sha256": "b937dbb52046bce01ac76a53c3621777531a100f4aab0911f830e7eec67aa624"
         }
       ],
-      "reason": "Admin CSS optimization changed; frontend routes, contracts and project structure remain unchanged.",
+      "reason": "Angular coverage thresholds and runner isolation changed; project routes and build ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "40aeff70b24e16921316b223c5ce5a98b798a034",
-      "reviewedAtUtc": "2026-09-07T14:46:33.9117794Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:18.2183242Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -154,14 +154,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "a3481a4aa49172485235e5c08496292cf4c2a76521497c73cdf0a14d21135f8d"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "b937dbb52046bce01ac76a53c3621777531a100f4aab0911f830e7eec67aa624"
         }
       ],
-      "reason": "Reviewed the additive admin daily-advice list and JSON import against lesson import, regenerated source indexes, and checked the linked workflow and system summaries. Admin consumes only DailyAdvices.Contracts; the separate writer stages only owned DailyAdvice entities and shared transactions retain commit ownership. Persistence capability entries document that exact new writer and existing factory registration. Import validation, deduplication and authorization are covered by owner and PostgreSQL HTTP tests; frontend translations and desktop/mobile flows were checked. Index schemas, discovery workflows, providers, jobs and credential handling are unchanged; docs README only adds the import guide. Existing page explanations remain accurate.",
+      "reason": "Coverage configuration changes only test execution; repository project catalog remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "edc3b452cd5c64e7a21a69d022b458f260707385",
-      "reviewedAtUtc": "2026-09-17T20:49:08.8248491Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:20.7091318Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1ca5917931960eb6747ae5a48c409e453154a22169d4e9aa620f3fd7305a6fa5"
+          "sha256": "b0492d019646cba26fab292bf867a676eda53bb51eb9399276ce46426fd9281e"
         }
       ],
-      "reason": "No project edges changed, 817 focused architecture tests pass; Admin orchestrates and Ai owns prompt rules.",
+      "reason": "Regenerated index reflects frontend test references; project edges and architecture review procedure are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T04:48:25.6772120Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:26.5748108Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -565,13 +565,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "39ea9bc2fbf6bbda8cd45500ace0e41b1a64ead9b22e49fffadcf59f5fc02e36"
+          "sha256": "93be9d4601890dee1b725b7bf7ab624084e12a81e742dd15dc4bec5ab595dee5"
         }
       ],
-      "reason": "Only Vitest and coverage-v8 are restored to Angular-compatible 4.1.11. npm ci and 2732 app tests pass; no rendered UI, locale or visual-QA command changed.",
+      "reason": "package.json coverage scripts now include tour and scoped coverage configurations; browser smoke commands and visual evidence requirements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:43:41.6518109Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:27:24.6592163Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -639,14 +639,14 @@
       "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/.husky/pre-push",
-          "sha256": "528a7762081d0d7b718f8eaa071ef68aaf654fbc87c1e0655fc2a0032e833824"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "a2ed56da5b3b70d17480fc1f10784118682d95a19b3cf4f58e4a6c571269ab94"
         }
       ],
-      "reason": "Reviewed pre-push sequencing: affected index freshness is preserved; the same frozen retrieval and Node/.NET parity gate used by CI now runs before expensive solution checks. Existing frontend and backend checks remain mandatory; shell syntax and eight build-workflow tests pass.",
+      "reason": "CI frontend unit commands now collect coverage; Wiki pipeline jobs and index verification commands are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
-      "reviewedAtUtc": "2026-09-18T12:08:25.7816589Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:27:43.1323944Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a65d4f99479af7463150df6fab47a9f3ca3fd3d87df8b0d0d7879807d79ea6e7"
+          "sha256": "221fa38f7b390b084da06a0a1da67b061188c510400243d18d5dabd151953687"
         }
       ],
-      "reason": "Seven renderer tests and eleven owner tests pass, plus six integration checks and normal snapshot verification. Component regression covers schema and input guidance switching.",
+      "reason": "New facade specs update static test references; executed V8 reports separately measure coverage, preserving the documented distinction.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:58:59.2239770Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:25.5305672Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -869,13 +869,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "64f85b941b22c41db1ff3e2e82c145d91c476cd006c8121e282d9f69d440693e"
+          "sha256": "a2ed56da5b3b70d17480fc1f10784118682d95a19b3cf4f58e4a6c571269ab94"
         }
       ],
-      "reason": "CI diff only corrects Application.Runtime project paths in dependency audit and summary; report rendering and readiness contract are unchanged.",
+      "reason": "CI adds frontend coverage artifacts without changing Wiki review report generation or readiness gates.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T04:58:25.9960184Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:27:45.4326565Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -913,14 +913,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "e76b8e501390f89c304febaa08422cd6a0cf126c9d3f50b580ced08846c337bc"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "221fa38f7b390b084da06a0a1da67b061188c510400243d18d5dabd151953687"
         }
       ],
-      "reason": "Ranking policy changes are limited to localized resource rendering and dashboard projection intent. Security query rules and frozen security corpus remain intact; no runtime authorization, provider, credential or privacy behavior changes.",
+      "reason": "Quality index refresh adds frontend test references; security compiler, controls and runtime boundaries are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
-      "reviewedAtUtc": "2026-09-18T12:08:28.4700584Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:23.1291112Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1038,13 +1038,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "226f1a3acc98c51209089d5e245c7161c71fc8eccb2ec21699c0d5000a0f772b"
+          "sha256": "8e74b05d9c5184e47b1a0b3bfc3053557cf541a8f2cd659d30c7a21260c56454"
         }
       ],
-      "reason": "Testing strategy now places the complete architecture project in integration-1 because ProjectFiles_MatchAutomaticFormatterAsync uses PowerShellFact. The partition validator passes for all 160 projects without filters, omissions or duplicates; fast remains 118 projects. Focused test-plan guidance is unchanged, and all suites remain required by the aggregate CI gate.",
+      "reason": "Testing strategy now documents full-source coverage and measured regression thresholds; focused test-plan workflow remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "e5e1b5bba617ac978c02d99475910fd3bb53b45e",
-      "reviewedAtUtc": "2026-09-16T11:15:02.6364490Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:21.8508271Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1053,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "616ff2eb78e94ec9e1f3df99a3050c9acd71b251fe3df1e114a51f09716ae687"
+          "sha256": "6ff4f982db437f205d2dca77d40a6b2bc8ed9498ffa4b8fdd3aab9839f322267"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "35fffedf365eb6c4e5166848dd64311200368d7f95a323d19c0dd1b1f40cec8b"
+          "sha256": "d3e66380771fb17b1a78c8a5e25ebf044a23bdf7c165bddd878160e6079828ca"
         }
       ],
-      "reason": "Verified scenario query through Ai renderer, Admin mapping, HTTP response and context component. Mocked browser exercised all three scenarios, keyboard schema expansion, Russian rendering and 390px no-overflow layout.",
+      "reason": "Frontend indexes refresh test references and source positions; trace commands and route contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:58:57.3231018Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:19.6553926Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "616ff2eb78e94ec9e1f3df99a3050c9acd71b251fe3df1e114a51f09716ae687"
+          "sha256": "6ff4f982db437f205d2dca77d40a6b2bc8ed9498ffa4b8fdd3aab9839f322267"
         }
       ],
-      "reason": "New read-only context component binds selected scenario and backend schema. English/Russian input and automatic-rule guidance matches OpenAiRequestFactory. 170 admin tests and build pass.",
+      "reason": "Dashboard hydration busy lifetime changed without API or component contract changes; regression cases cover pending, stale, error and cancellation states.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:59:01.0222455Z"
+      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
+      "reviewedAtUtc": "2026-09-19T03:36:24.3209629Z"
     },
     {
       "pageId": "workflow.query-context",

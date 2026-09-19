@@ -132,6 +132,7 @@ export class DashboardFacade {
 
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
+    private readonly isHydrationRefreshing = signal(false);
     private readonly trendDays = DASHBOARD_TREND_DAYS;
     private readonly snapshotRequest = new RequestStateController<DashboardSnapshot, 'DASHBOARD.LOAD_ERROR'>();
 
@@ -170,7 +171,7 @@ export class DashboardFacade {
     public readonly currentFastingSession = computed<FastingSession | null>(() => this.snapshot()?.currentFastingSession ?? null);
     private readonly weightTrendPoints = computed(() => this.snapshot()?.weightTrend ?? []);
     private readonly waistTrendPoints = computed(() => this.snapshot()?.waistTrend ?? []);
-    public readonly isHydrationLoading = computed(() => this.isLoading() || this.isHydrationUpdating());
+    public readonly isHydrationLoading = computed(() => this.isLoading() || this.isHydrationUpdating() || this.isHydrationRefreshing());
     public readonly isWeightTrendLoading = computed(() => this.isLoading());
     public readonly isWaistTrendLoading = computed(() => this.isLoading());
     public readonly isAdviceLoading = computed(() => this.isLoading());
@@ -214,6 +215,9 @@ export class DashboardFacade {
     }
 
     public addHydration(amount: number): void {
+        if (this.isHydrationLoading()) {
+            return;
+        }
         const targetDate = getHydrationDateUtc(this.selectedDate());
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
             next: () => {
@@ -247,7 +251,10 @@ export class DashboardFacade {
         this.loadDashboardSnapshot(showLoader);
     }
 
-    private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
+    private loadDashboardSnapshot(showLoader = true, refreshHydration = false): void {
+        if (refreshHydration) {
+            this.isHydrationRefreshing.set(true);
+        }
         const requestId = this.snapshotRequest.begin({ showLoading: showLoader });
         const selectedDate = this.selectedDate();
         const targetDate = getDashboardDateUtc(selectedDate);
@@ -268,18 +275,12 @@ export class DashboardFacade {
                     if (showLoader && failed) {
                         this.layout.initializeLayout(null);
                     }
-                    if (clearHydrationUpdate) {
-                        this.isHydrationUpdating.set(false);
-                    }
                     return;
                 }
                 if (!this.snapshotRequest.succeed(requestId, snapshot)) {
                     return;
                 }
                 this.layout.initializeLayout(snapshot.dashboardLayout ?? null);
-                if (clearHydrationUpdate) {
-                    this.isHydrationUpdating.set(false);
-                }
             },
             error: () => {
                 if (!this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader })) {
@@ -289,13 +290,19 @@ export class DashboardFacade {
                 if (showLoader) {
                     this.layout.initializeLayout(null);
                 }
-                if (clearHydrationUpdate) {
-                    this.isHydrationUpdating.set(false);
-                }
             },
         };
 
-        request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(observer);
+        request$
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    if (refreshHydration) {
+                        this.isHydrationRefreshing.set(false);
+                    }
+                }),
+            )
+            .subscribe(observer);
     }
 
     private getCurrentLocale(): string {

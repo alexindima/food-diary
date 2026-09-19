@@ -261,3 +261,77 @@ API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-ag
 Retry and image-reference boundaries follow [ADR 0032](adr/0032-retry-isolation-and-image-reference-integrity.md): fresh attempt state, isolated orphan cleanup, restrictive image FKs and immutable Images service contracts.
 
 See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-safe Wearables/replay, outbox claim-owner fencing and the narrow cross-module consumer APIs.
+
+## Dashboard regression coverage
+
+The dashboard page spec keeps its real template and tests bindings/composition with
+isolated service and child boundaries. Card specs exercise rendered controls;
+facade specs cover loading races, refresh failures, favorites and writes. Weight
+and waist share the same state, locale and target-label regression cases.
+
+Browser cases named `dashboard regression` in
+`FoodDiary.Web.Client/e2e/client-smoke/client-smoke.spec.ts` run as part of the
+existing client smoke CI job. They intercept API requests, use synthetic data,
+and do not mutate a real user's diary. They cover:
+
+- Fasting in intermittent, extended and cyclic modes at 360, 390 and 1440 px,
+  with non-overlapping current-time and elapsed-time labels.
+- Today's mobile hydration placement and historical-day quick-action restrictions.
+- Weekly chart selection, empty/populated detail geometry, opening a date and browser back.
+- Weight/waist chart alignment and keyboard navigation; the weight goal below the plot.
+- Hydration writes and refresh, calorie-goal application without bubbling into the detail dialog,
+  and editing a layout without accidentally navigating or saving.
+
+Run from `FoodDiary.Web.Client`:
+
+```powershell
+npm run test:ci:app
+npx playwright test --config playwright.client.smoke.config.ts --grep "dashboard regression"
+```
+
+The browser checks assert layout relationships rather than OS-dependent pixel
+snapshots. They are not a pixel-perfect visual baseline, a backend integration
+suite, or a guarantee of exhaustive coverage. Keep manual checks for typography,
+colour, photos and long translated content. Use an advancing controlled clock:
+freezing `Date.now()` prevents Angular deferred views with a minimum loading time
+from completing.
+
+
+### Frontend coverage and state isolation
+
+CI runs `test:coverage:app`, `test:coverage:tour`, `test:coverage:admin`, and
+`test:coverage:ui-kit`. `npm run test:coverage` runs the same four projects locally.
+Each project's `coverage` configuration in `FoodDiary.Web.Client/angular.json`
+explicitly includes its own TypeScript source tree, including files that no test
+imports. Specs, declarations, and Storybook stories are excluded; runtime facades
+and services are not. Angular HTML templates and Playwright execution are not
+included in these TypeScript coverage figures.
+
+`vitest.config.mjs` keeps reports even when tests fail. HTML, JSON,
+JSON-summary, and lcov reports live in `FoodDiary.Web.Client/coverage/<project>/`.
+CI uploads this directory with `if: always()` as `frontend-checks-coverage`.
+Open `index.html` for line/branch details; consult functions as well as branches:
+an uncalled error callback can coexist with 100% branch coverage.
+
+The main app has minimum coverage thresholds in its Angular configuration
+(80% lines, 81% statements, 75% branches, 78% functions). Key dashboard, fasting,
+weekly check-in, and user API files also have individual thresholds in
+`vitest.config.mjs`, so their coverage cannot be hidden by unrelated tests. Raise
+these as important gaps close; do not lower them or exclude runtime files to make
+a build pass. A passing percentage does not replace assertions about outcomes,
+request payloads, failure recovery, cancellation, or stale responses. Component
+tests using facade mocks protect presentation but do not test facade behavior.
+
+The main app enables test-file isolation, with four workers configured in
+`vitest.config.mjs` to bound resource usage in local runs and CI.
+`src/test-setup.ts` clears local and session storage on both the test global and
+the jsdom window before and after every test. Seed storage in each test or its
+`beforeEach`, never rely on another test's persisted state. Keep time-dependent
+facade tests deterministic and restore fake timers after each test.
+
+Dashboard facade regressions include meal mutations/favorites, initial and silent
+load failures, language/day changes, stale responses, and destruction. Water tests
+use separate asynchronous write and refresh responses: controls stay busy across
+both, and duplicate writes are ignored. Weight and waist API goal tests share the
+same success/error contract checks. Weekly check-in tests use actual Angular
+resources to verify retained data during refresh and obsolete-week results.

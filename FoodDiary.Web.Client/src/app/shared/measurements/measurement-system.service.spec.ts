@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
@@ -54,6 +55,8 @@ describe('MeasurementSystemService test isolation', () => {
     it('starts the next test with the metric default', () => {
         TestBed.configureTestingModule({ providers: [BrowserStorageService, MeasurementSystemService] });
 
+        expect(globalThis.localStorage.getItem('fd_measurement_system')).toBeNull();
+        expect(TestBed.inject(DOCUMENT).defaultView?.localStorage.getItem('fd_measurement_system')).toBeNull();
         expect(TestBed.inject(MeasurementSystemService).system()).toBe('metric');
     });
 });

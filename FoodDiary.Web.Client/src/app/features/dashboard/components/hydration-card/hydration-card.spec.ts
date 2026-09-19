@@ -12,6 +12,47 @@ const OVER_GOAL_TOTAL_ML = 3000;
 const FULL_LEVEL = '100%';
 
 describe('HydrationCardComponent', () => {
+    it('disables all additions while saving', async () => {
+        const { component, fixture } = await setupComponentAsync({ isLoading: true });
+        const add = vi.fn();
+        component.addClick.subscribe(add);
+        fixture.detectChanges();
+        const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.hydration-card__quick-action button');
+        expect(buttons.length).toBe(HYDRATION_CARD_ADD_AMOUNTS_ML.length);
+        buttons.forEach(button => {
+            expect(button.disabled).toBe(true);
+            button.click();
+        });
+        expect(add).not.toHaveBeenCalled();
+    });
+
+    it('removes quick actions on historical days while retaining the recorded amount', async () => {
+        const { fixture } = await setupComponentAsync({ canAdd: false });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.hydration-card__quick-add')).toBeNull();
+        expect(host.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(String(TOTAL_ML));
+    });
+
+    it.each([null, 0])('offers goal setup instead of an invalid progress bar for goal %s', async goal => {
+        const { component, fixture } = await setupComponentAsync();
+        fixture.componentRef.setInput('goal', goal);
+        fixture.detectChanges();
+        const action = vi.fn();
+        component.goalAction.subscribe(action);
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="progressbar"]')).toBeNull();
+        host.querySelector<HTMLButtonElement>('fd-notice-banner button')?.click();
+        expect(action).toHaveBeenCalledOnce();
+    });
+
+    it('keeps accessible progress within its maximum after exceeding the goal', async () => {
+        const { fixture } = await setupComponentAsync({ total: OVER_GOAL_TOTAL_ML });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(String(GOAL_ML));
+        expect(host.textContent).toContain('HYDRATION_CARD.GOAL_REACHED');
+    });
     it('calculates progress, remaining amount, and caps the vessel fill level', async () => {
         const { component, fixture } = await setupComponentAsync({ total: TOTAL_ML, goal: GOAL_ML });
 
@@ -38,8 +79,10 @@ describe('HydrationCardComponent', () => {
         const buttons = element.querySelectorAll('.hydration-card__quick-action');
 
         expect(buttons).toHaveLength(HYDRATION_CARD_ADD_AMOUNTS_ML.length);
-        component['onAdd'](HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML);
-        expect(addSpy).toHaveBeenCalledWith(HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML);
+        buttons.forEach(button => button.querySelector<HTMLButtonElement>('button')?.click());
+        HYDRATION_CARD_ADD_AMOUNTS_ML.forEach((amount, index) => {
+            expect(addSpy).toHaveBeenNthCalledWith(index + 1, amount);
+        });
     });
 
     it('does not emit when adding is unavailable or the amount is unsupported', async () => {

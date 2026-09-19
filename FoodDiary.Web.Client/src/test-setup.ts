@@ -1,4 +1,4 @@
-import { afterEach } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
 
 installWebStorageMock('localStorage');
 installWebStorageMock('sessionStorage');
@@ -6,9 +6,19 @@ installResizeObserverMock();
 installCssParseWarningFilter();
 installCssParseStderrFilter();
 
-afterEach(() => {
-    globalThis.localStorage.removeItem('fd_measurement_system');
-});
+// The jsdom window and Node global can outlive different test files when isolation
+// is disabled. Reset both surfaces before and after each test, not only one key.
+beforeEach(resetWebStorage);
+afterEach(resetWebStorage);
+
+function resetWebStorage(): void {
+    globalThis.localStorage.clear();
+    globalThis.sessionStorage.clear();
+    if (typeof window === 'object') {
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+    }
+}
 
 function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): void {
     const current = getOwnGlobalValue(storageName);

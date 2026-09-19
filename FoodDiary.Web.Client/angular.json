@@ -166,7 +166,6 @@
                             "serviceWorker": "ngsw-config.json"
                         }
                     },
-
                     "defaultConfiguration": "production"
                 },
                 "serve": {
@@ -195,7 +194,23 @@
                 "test": {
                     "builder": "@angular/build:unit-test",
                     "options": {
-                        "setupFiles": ["src/test-setup.ts"]
+                        "setupFiles": ["src/test-setup.ts"],
+                        "isolate": true,
+                        "runnerConfig": "vitest.config.mjs"
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "coverage": true,
+                            "coverageInclude": ["src/app/**/*.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "runnerConfig": "vitest.config.mjs",
+                            "coverageThresholds": {
+                                "statements": 81,
+                                "lines": 80,
+                                "branches": 75,
+                                "functions": 78
+                            }
+                        }
                     }
                 }
             }
@@ -222,6 +237,14 @@
                     "builder": "@angular/build:unit-test",
                     "options": {
                         "setupFiles": ["src/test-setup.ts"]
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "coverage": true,
+                            "coverageInclude": ["projects/fd-ui-kit/src/**/*.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "runnerConfig": "vitest.config.mjs"
+                        }
                     }
                 },
                 "storybook": {
@@ -371,6 +394,14 @@
                     "builder": "@angular/build:unit-test",
                     "options": {
                         "setupFiles": ["src/test-setup.ts"]
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "coverage": true,
+                            "coverageInclude": ["projects/fooddiary-admin/src/**/*.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "runnerConfig": "vitest.config.mjs"
+                        }
                     }
                 }
             }
@@ -397,6 +428,14 @@
                     "builder": "@angular/build:unit-test",
                     "options": {
                         "tsConfig": "projects/fd-tour/tsconfig.spec.json"
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "coverage": true,
+                            "coverageInclude": ["projects/fd-tour/src/**/*.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "runnerConfig": "vitest.config.mjs"
+                        }
                     }
                 }
             }

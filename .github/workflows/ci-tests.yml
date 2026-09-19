@@ -736,7 +736,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
           set +e
-          npx ng test food-diary-web-client --watch=false --reporters=default > "$log_file" 2>&1
+          npm run test:coverage:app -- --reporters=default > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -771,7 +771,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-tour-tests.log"
           set +e
-          npm run test:ci:tour > "$log_file" 2>&1
+          npm run test:coverage:tour > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -850,7 +850,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/admin-unit-tests.log"
           set +e
-          npx ng test fooddiary-admin --watch=false --reporters=default > "$log_file" 2>&1
+          npm run test:coverage:admin -- --reporters=default > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -885,7 +885,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
           set +e
-          npx ng test fd-ui-kit --watch=false --reporters=default > "$log_file" 2>&1
+          npm run test:coverage:ui-kit -- --reporters=default > "$log_file" 2>&1
           status=$?
           set -e
           if [ "$status" -ne 0 ]; then
@@ -1094,6 +1094,16 @@ jobs:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs/
           if-no-files-found: ignore
+
+
+      - name: Upload frontend coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-checks-coverage
+          path: FoodDiary.Web.Client/coverage/
+          if-no-files-found: ignore
+          retention-days: 14
 
   notify-ci-failure:
     if: always() && (needs.llm-wiki.result == 'failure' || needs.dotnet-tests.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')

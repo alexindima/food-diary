@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1680,
+    "typescriptFiles": 1686,
     "symbols": 663,
     "routes": 100,
     "features": 44,
-    "specs": 584,
+    "specs": 590,
     "localeFiles": 5,
     "roles": {
       "Component": 449,
@@ -179,6 +179,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
       ]
@@ -523,6 +524,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-date.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.spec.ts",
@@ -532,7 +534,9 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/tdee-insight-view.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-block-host.directive.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-view-state.mapper.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-view-state.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.spec.ts"
       ]
     },
     {
@@ -1345,6 +1349,7 @@
         "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-suggestions-card/weekly-check-in-suggestions-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-trends/weekly-check-in-trends.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-review.mapper.spec.ts"
       ]
@@ -2657,7 +2662,7 @@
       "role": "Component",
       "selector": "fd-day-nutrition-summary",
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-      "line": 45
+      "line": 46
     },
     {
       "name": "DynamicProgressBarComponent",
@@ -3224,14 +3229,14 @@
       "role": "Component",
       "selector": "fd-tdee-insight-card-content",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.ts",
-      "line": 18
+      "line": 20
     },
     {
       "name": "TdeeInsightCardDetailsComponent",
       "role": "Component",
       "selector": "fd-tdee-insight-card-details",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.ts",
-      "line": 15
+      "line": 18
     },
     {
       "name": "TdeeInsightCardComponent",
@@ -3245,7 +3250,7 @@
       "role": "Component",
       "selector": "fd-weight-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "DashboardAppearanceDialogComponent",
@@ -3413,7 +3418,7 @@
       "role": "Component",
       "selector": "fd-dashboard-trend-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.ts",
-      "line": 24
+      "line": 25
     },
     {
       "name": "DashboardComponent",
@@ -6534,8 +6539,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3544,
-      "russianProperties": 3544,
+      "englishProperties": 3567,
+      "russianProperties": 3567,
       "countsMatch": true
     },
     {

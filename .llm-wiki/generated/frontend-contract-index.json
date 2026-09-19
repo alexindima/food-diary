@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 454,
-    "componentsWithoutDirectSpecs": 143,
-    "inputs": 1421,
+    "componentsWithoutDirectSpecs": 139,
+    "inputs": 1424,
     "outputs": 470,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1826,
-    "consumerEdges": 1108,
+    "translationKeys": 1831,
+    "consumerEdges": 1106,
     "consumedComponents": 294,
     "unconsumedComponents": 159
   },
@@ -357,7 +357,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts"
     },
     {
       "class": "AdminDashboardComponent",
@@ -1691,7 +1691,7 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.spec.ts"
     },
     {
       "class": "DashboardCycleBlockComponent",
@@ -2030,6 +2030,11 @@
           "required": true
         },
         {
+          "name": "isHistorical",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -2156,7 +2161,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.spec.ts"
     },
     {
       "class": "HydrationCardComponent",
@@ -2209,6 +2214,11 @@
           "name": "insight",
           "type": "TdeeInsight | null",
           "required": true
+        },
+        {
+          "name": "isHistorical",
+          "type": "",
+          "required": false
         },
         {
           "name": "isLoading",
@@ -4565,6 +4575,11 @@
         {
           "name": "value",
           "type": "Date | null",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "string | null",
           "required": false
         },
         {
@@ -11168,7 +11183,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.spec.ts"
     },
     {
       "class": "DynamicProgressBarComponent",
@@ -18225,8 +18240,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
       "keys": [
         "TDEE_CARD.APPLY",
-        "TDEE_CARD.KCAL_DAY",
-        "TDEE_CARD.SUGGESTED_GOAL"
+        "TDEE_CARD.CALCULATED_GOAL",
+        "TDEE_CARD.CURRENT_GOAL",
+        "TDEE_CARD.GOAL_TITLE",
+        "TDEE_CARD.KCAL",
+        "TDEE_CARD.KCAL_DAY"
       ]
     },
     {
@@ -18244,7 +18262,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.html",
       "keys": [
+        "TDEE_CARD.CURRENT_ESTIMATE_NOTICE",
         "TDEE_CARD.EMPTY",
+        "TDEE_CARD.HELP",
         "TDEE_CARD.LOADING",
         "TDEE_CARD.TITLE"
       ]
@@ -18255,7 +18275,8 @@
       "keys": [
         "WEIGHT_TREND_CARD.EMPTY_TITLE",
         "WEIGHT_TREND_CARD.LATEST_MEASUREMENT",
-        "WEIGHT_TREND_CARD.NO_CHANGE"
+        "WEIGHT_TREND_CARD.NO_CHANGE",
+        "WEIGHT_TREND_CARD.OVER_PERIOD"
       ]
     },
     {
@@ -22825,6 +22846,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
+        "isHistorical",
         "isLoading",
         "shouldRender",
         "state"
@@ -22954,6 +22976,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "helpText",
         "iconName",
         "iconTone",
         "title"
@@ -25152,20 +25175,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "fill",
-        "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -27185,6 +27194,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "displayMonth",
+        "locale",
         "max",
         "min",
         "value"
@@ -28419,6 +28429,7 @@
         "ariaLabel",
         "disabled",
         "hint",
+        "locale",
         "value"
       ],
       "outputsHandled": [
@@ -29863,7 +29874,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
         "name"
       ],
@@ -29879,18 +29890,6 @@
       "inputsUsed": [
         "name",
         "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "name"
       ],
       "outputsHandled": []
     },
@@ -31650,6 +31649,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "fillColor",
+        "horizontalEdgeInset",
         "lineColor",
         "maxValue",
         "minValue",
@@ -37141,6 +37141,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
+        "isHistorical",
         "isLoading"
       ],
       "outputsHandled": [

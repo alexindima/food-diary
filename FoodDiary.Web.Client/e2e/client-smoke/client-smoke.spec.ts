@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page, type Request, type Route, test } from '@playwright/test';
+import { expect, type Locator, type Page, type Request, type Route, test } from '@playwright/test';
 
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
@@ -616,6 +616,329 @@ test.describe('deterministic authenticated feature fixtures', () => {
     });
 });
 
+const DASHBOARD_NARROW_WIDTH = 360;
+const DASHBOARD_MOBILE_WIDTH = 390;
+const DASHBOARD_DESKTOP_WIDTH = 1440;
+const DASHBOARD_TEST_WIDTHS = [DASHBOARD_NARROW_WIDTH, DASHBOARD_MOBILE_WIDTH, DASHBOARD_DESKTOP_WIDTH] as const;
+const DASHBOARD_WATER_ACTIONS = 3;
+const DASHBOARD_WEEK_DAYS = 7;
+const DASHBOARD_WEEK_START_DAY = 13;
+const DASHBOARD_RECORDED_CALORIES = 1800;
+const DASHBOARD_PREVIOUS_DAY_INDEX = 5;
+const DASHBOARD_WEIGHT_START = 79.2;
+const DASHBOARD_WEIGHT_MIDDLE = 78.7;
+const DASHBOARD_WEIGHT_END = 78;
+const DASHBOARD_WEIGHT_VALUES = [DASHBOARD_WEIGHT_START, DASHBOARD_WEIGHT_MIDDLE, DASHBOARD_WEIGHT_END] as const;
+const DASHBOARD_WAIST_START = 82;
+const DASHBOARD_WAIST_MIDDLE = 81.5;
+const DASHBOARD_WAIST_END = 81;
+const DASHBOARD_WAIST_VALUES = [DASHBOARD_WAIST_START, DASHBOARD_WAIST_MIDDLE, DASHBOARD_WAIST_END] as const;
+const DASHBOARD_TREND_START_DAY = 17;
+const DASHBOARD_FAST_HOURS = 16;
+const DASHBOARD_DAY_HOURS = 24;
+const DASHBOARD_CYCLE_EAT_DAYS = 3;
+
+// Dashboard regressions run with intercepted APIs; no local diary is changed.
+test.describe('dashboard regression', () => {
+    test.use({ timezoneId: 'UTC' });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+
+    for (const width of DASHBOARD_TEST_WIDTHS) {
+        for (const phase of ['Intermittent', 'Extended', 'Cyclic'] as const) {
+            test(`${phase} at ${width}px keeps current marker clear of the timer`, async ({ page }) => {
+                await page.setViewportSize({ width, height: 900 });
+                const snapshot = createDashboardRegressionSnapshot();
+                snapshot['currentFastingSession'] = createDashboardRegressionFast(phase);
+                await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+                await page.goto('/dashboard');
+                const card = page.locator('fd-dashboard-fasting-card');
+                await expect(card.locator('.dashboard-fasting-card__elapsed')).toHaveText(/^01:00:\d{2}$/u);
+                const marker = await dashboardBoundsAsync(card.locator('.dashboard-fasting-card__now'));
+                const timer = await dashboardBoundsAsync(card.locator('.dashboard-fasting-card__elapsed'));
+                expect(marker).not.toBeNull();
+                expect(timer).not.toBeNull();
+                expect(timer.y).toBeGreaterThanOrEqual(marker.y + marker.height);
+                const summary = page.locator('fd-dashboard-summary-block');
+                expect(
+                    await card.evaluate(
+                        (element, next) => Boolean(element.compareDocumentPosition(next as Node) & Node.DOCUMENT_POSITION_FOLLOWING),
+                        await summary.elementHandle(),
+                    ),
+                ).toBe(true);
+                if (phase === 'Cyclic') {
+                    await expect(card.locator('[aria-current="step"]')).toHaveCount(1);
+                    await expect(card.locator('[aria-current="step"]')).toBeInViewport();
+                }
+                await expectNoHorizontalOverflowAsync(page);
+            });
+        }
+    }
+});
+
+test.describe('dashboard regression eating phases', () => {
+    test.use({ timezoneId: 'UTC' });
+    for (const phase of ['Intermittent', 'Cyclic'] as const) {
+        test(`${phase} eating state keeps summary first and shows the current cycle day on mobile`, async ({ page }) => {
+            await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.setViewportSize({ width: 390, height: 844 });
+            const snapshot = createDashboardRegressionSnapshot();
+            snapshot['currentFastingSession'] = {
+                ...createDashboardRegressionFast(phase),
+                startedAtUtc: '2026-04-18T18:00:00Z',
+                occurrenceKind: phase === 'Cyclic' ? 'EatDay' : 'FastingWindow',
+                cyclicPhaseDayNumber: 2,
+                cyclicPhaseDayTotal: 3,
+            };
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+            await page.goto('/dashboard');
+            await page.locator('fd-dashboard-fasting-block').scrollIntoViewIfNeeded();
+            const card = page.locator('fd-dashboard-fasting-card');
+            await expect(card.locator('.dashboard-fasting-card-shell--eating')).toBeVisible();
+            await expect(card.locator('.dashboard-fasting-card__stage')).toContainText('Eating');
+            await expect(page.locator('.dashboard__column').first().locator(':scope > :first-child')).toHaveJSProperty(
+                'tagName',
+                'FD-DASHBOARD-SUMMARY-BLOCK',
+            );
+            if (phase === 'Cyclic') {
+                await card.locator('.dashboard-fasting-card__days').scrollIntoViewIfNeeded();
+                await expect(card.locator('[aria-current="step"]')).toContainText('Day 3');
+                await expect(card.locator('[aria-current="step"]')).toBeInViewport({ ratio: 1 });
+            } else {
+                await expect(card.locator('.dashboard-fasting-card__elapsed')).toHaveText(/^02:00:\d{2}$/u);
+            }
+            await expectNoHorizontalOverflowAsync(page);
+        });
+    }
+});
+
+test.describe('dashboard regression interactions', () => {
+    test.use({ timezoneId: 'UTC' });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+    test('mobile today has one water card before meals; historical dates disable quick additions', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+            route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+        );
+        await page.goto('/dashboard');
+        await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
+        await expect(page.locator('fd-hydration-card')).toHaveCount(1);
+        await expect(page.locator('.dashboard__column:not(.dashboard__column--aside) fd-hydration-card')).toBeVisible();
+        await expect(page.locator('fd-hydration-card .hydration-card__quick-action')).toHaveCount(DASHBOARD_WATER_ACTIONS);
+        await page.goto('/dashboard?date=2026-04-18');
+        await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
+        await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
+        await expect(page.locator('fd-hydration-card')).toHaveCount(1);
+        await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
+        await expect(page.locator('fd-hydration-card .hydration-card__quick-action')).toHaveCount(0);
+        await page.locator('fd-dashboard-tdee-block').scrollIntoViewIfNeeded();
+        await expect(page.locator('fd-tdee-insight-card')).toContainText('current', { ignoreCase: true });
+    });
+
+    test('the weekly chart preserves desktop composition for both populated and empty days and opens the selected date', async ({
+        page,
+    }) => {
+        await page.setViewportSize({ width: 1440, height: 1000 });
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+            route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+        );
+        await page.goto('/dashboard');
+        const chart = page.locator('fd-nutrition-weekly-trend-card');
+        await chart.scrollIntoViewIfNeeded();
+        const choices = chart.locator('[aria-pressed]');
+        await expect(choices).toHaveCount(DASHBOARD_WEEK_DAYS);
+        await expect(chart.locator('.nutrition-trend__open-day')).toBeHidden();
+        const original = await dashboardBoundsAsync(chart);
+        await choices.nth(DASHBOARD_PREVIOUS_DAY_INDEX).click();
+        await expect(chart.locator('.nutrition-trend__day-calories')).toContainText('1,800');
+        const populated = await dashboardBoundsAsync(chart);
+        await choices.first().click();
+        await expect(chart.locator('.nutrition-trend__day-calories')).toContainText('0');
+        const empty = await dashboardBoundsAsync(chart);
+        expect(Math.abs(populated.height - empty.height)).toBeLessThanOrEqual(2);
+        expect(Math.abs(original.width - empty.width)).toBeLessThanOrEqual(2);
+        const detail = await dashboardBoundsAsync(chart.locator('.nutrition-trend__day'));
+        const bars = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
+        expect(detail.x).toBeGreaterThan(bars.x);
+        await chart.locator('.nutrition-trend__open-day').click();
+        await expect(page).toHaveURL(/date=2026-04-13/);
+        await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
+        await page.goBack();
+        await expect(page.locator('fd-dashboard-quick-add')).toBeVisible();
+    });
+});
+
+test.describe('dashboard regression measurement charts', () => {
+    test.use({ timezoneId: 'UTC' });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+    for (const kind of ['weight', 'waist'] as const) {
+        test(`${kind} chart aligns with metrics and opens its history with the keyboard`, async ({ page }) => {
+            await page.setViewportSize({ width: 1440, height: 1000 });
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+                route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+            );
+            await page.goto('/dashboard');
+            const block = page.locator('fd-dashboard-trend-block').nth(kind === 'weight' ? 0 : 1);
+            await block.scrollIntoViewIfNeeded();
+            const chart = block.locator('.weight-trend-card__chart');
+            await expect(chart).toBeVisible();
+            const bounds = await dashboardBoundsAsync(chart);
+            const metrics = await dashboardBoundsAsync(block.locator('.weight-trend-card__metrics'));
+            expect(Math.abs(bounds.x - metrics.x)).toBeLessThanOrEqual(1);
+            expect(Math.abs(bounds.width - metrics.width)).toBeLessThanOrEqual(1);
+            if (kind === 'weight') {
+                const goal = block.locator('.weight-trend-card__goal');
+                await expect(goal).toBeVisible();
+                const goalBounds = await dashboardBoundsAsync(goal);
+                expect(goalBounds.y).toBeGreaterThanOrEqual(bounds.y + bounds.height);
+                await expect(block.locator('.fd-ui-line-chart__reference-label')).toHaveCount(0);
+            }
+            const action = block.getByRole('button').first();
+            await action.focus();
+            await action.press('Enter');
+            await expect(page).toHaveURL(kind === 'weight' ? /\/weight-history$/ : /\/waist-history$/);
+        });
+    }
+});
+
+test.describe('dashboard regression writes', () => {
+    test.use({ timezoneId: 'UTC' });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+
+    test('adding water sends the selected amount once and refreshes the displayed total', async ({ page }) => {
+        const snapshot = createDashboardRegressionSnapshot();
+        const requests: unknown[] = [];
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+        await page.route(/\/api\/v1\/hydrations\/?$/u, async route => {
+            requests.push(route.request().postDataJSON());
+            snapshot['hydration'] = { goalMl: 2200, totalMl: 1050, entries: [] };
+            await route.fulfill(jsonResponse({ id: 'water-added' }));
+        });
+        await page.goto('/dashboard');
+        await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
+        const card = page.locator('fd-hydration-card');
+        await expect(card.locator('.hydration-card__total')).toHaveText('800');
+        await card.getByRole('button', { name: /250/u }).click();
+        await expect(card.locator('.hydration-card__total')).toHaveText('1,050');
+        expect(requests).toEqual([expect.objectContaining({ amountMl: 250 })]);
+    });
+
+    test('applying a calculated goal updates the target without opening the details dialog', async ({ page }) => {
+        const snapshot = createDashboardRegressionSnapshot();
+        const insight = { ...createTdeeInsight(), suggestedCalorieTarget: 2100 };
+        snapshot['tdeeInsight'] = insight;
+        const requests: unknown[] = [];
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+        await page.route(/\/api\/v1\/goals\/?$/u, async route => {
+            requests.push(route.request().postDataJSON());
+            snapshot['dailyGoal'] = 2100;
+            insight['currentCalorieTarget'] = 2100;
+            await route.fulfill(jsonResponse({ dailyCalorieTarget: 2100 }));
+        });
+        await page.goto('/dashboard');
+        await page.locator('fd-dashboard-tdee-block').scrollIntoViewIfNeeded();
+        const apply = page.locator('fd-tdee-insight-card').getByRole('button', { name: 'Apply', exact: true });
+        await apply.click();
+        await expect(apply).toHaveCount(0);
+        expect(requests).toEqual([{ dailyCalorieTarget: 2100 }]);
+        await expect(page.locator('fd-tdee-insight-dialog')).toHaveCount(0);
+        await expect(page.locator('.day-summary__goal-label')).toContainText('2,100');
+    });
+
+    test('layout mode toggles a measurement card without navigating to history or saving prematurely', async ({ page }) => {
+        const writes: string[] = [];
+        page.on('request', request => {
+            if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method()) && request.url().includes('/api/v1/users/')) {
+                writes.push(request.url());
+            }
+        });
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+            route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+        );
+        await page.setViewportSize({ width: 1440, height: 1000 });
+        await page.goto('/dashboard');
+        await page.locator('.dashboard__settings-action button').click();
+        await expect(page.locator('.dashboard--editing')).toBeVisible();
+        const block = page.locator('fd-dashboard-trend-block').first().locator('[role="button"]');
+        await block.click();
+        await expect(block).toHaveAttribute('aria-pressed', 'false');
+        await expect(page).toHaveURL(/\/dashboard$/u);
+        await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
+        expect(writes).toEqual([]);
+    });
+});
+
+function createDashboardRegressionSnapshot(): Record<string, unknown> {
+    return {
+        ...createDashboardSnapshot(),
+        tdeeInsight: createTdeeInsight(),
+        weight: { latest: { date: '2026-04-19', weightKg: 78 }, previous: { date: '2026-04-12', weightKg: 79.2 }, desiredWeightKg: 75 },
+        waist: {
+            latest: { date: '2026-04-19', circumferenceCm: 81 },
+            previous: { date: '2026-04-12', circumferenceCm: 82 },
+            desiredWaistCm: 76,
+        },
+        weightTrend: DASHBOARD_WEIGHT_VALUES.map((value, index) => ({
+            startDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
+            averageWeightKg: value,
+        })),
+        waistTrend: DASHBOARD_WAIST_VALUES.map((value, index) => ({
+            startDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
+            averageCircumferenceCm: value,
+        })),
+        weeklyCalories: Array.from({ length: DASHBOARD_WEEK_DAYS }, (_, index) => ({
+            date: `2026-04-${DASHBOARD_WEEK_START_DAY + index}`,
+            calories: index === DASHBOARD_PREVIOUS_DAY_INDEX ? DASHBOARD_RECORDED_CALORIES : 0,
+            proteins: 100,
+            fats: 60,
+            carbs: 190,
+            fiber: 20,
+        })),
+    };
+}
+
+function createDashboardRegressionFast(planType: 'Intermittent' | 'Extended' | 'Cyclic'): Record<string, unknown> {
+    return {
+        id: 'dashboard-fast',
+        startedAtUtc: '2026-04-19T11:00:00Z',
+        endedAtUtc: null,
+        initialPlannedDurationHours: planType === 'Intermittent' ? DASHBOARD_FAST_HOURS : DASHBOARD_DAY_HOURS,
+        plannedDurationHours: planType === 'Intermittent' ? DASHBOARD_FAST_HOURS : DASHBOARD_DAY_HOURS,
+        addedDurationHours: 0,
+        protocol: 'Custom',
+        planType,
+        occurrenceKind: planType === 'Cyclic' ? 'FastDay' : 'FastingWindow',
+        cyclicFastDays: planType === 'Cyclic' ? 1 : null,
+        cyclicEatDays: planType === 'Cyclic' ? DASHBOARD_CYCLE_EAT_DAYS : null,
+        cyclicPhaseDayNumber: planType === 'Cyclic' ? 1 : null,
+        cyclicPhaseDayTotal: planType === 'Cyclic' ? 1 : null,
+        cyclicEatDayFastHours: 16,
+        cyclicEatDayEatingWindowHours: 8,
+        isCompleted: false,
+        status: 'Active',
+        notes: null,
+        checkIns: [],
+        symptoms: [],
+    };
+}
+
 async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
     await page.addInitScript((token: string) => {
         window.localStorage.setItem('authToken', token);
@@ -1208,3 +1531,11 @@ type NetworkAuditRouteResult = {
     failedRequests: NetworkAuditRequest[];
     requests: NetworkAuditRequest[];
 };
+
+async function dashboardBoundsAsync(locator: Locator): Promise<{ x: number; y: number; width: number; height: number }> {
+    const bounds = await locator.boundingBox();
+    if (bounds === null) {
+        throw new Error(`Expected a visible dashboard element: ${locator.toString()}`);
+    }
+    return bounds;
+}

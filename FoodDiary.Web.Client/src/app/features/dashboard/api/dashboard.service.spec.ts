@@ -146,3 +146,25 @@ describe('DashboardService silent snapshot', () => {
         req.flush(MOCK_SNAPSHOT);
     });
 });
+
+describe('DashboardService silent failures', () => {
+    it.each([false, true])('preserves silent request context on failure (strict=%s)', strict => {
+        const next = vi.fn();
+        const error = vi.fn();
+        const query = { date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES, locale: '  ' };
+        const request = strict ? service.getSnapshotSilentlyStrict(query) : service.getSnapshotSilently(query);
+        request.subscribe({ next, error });
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        expect(req.request.params.has('locale')).toBe(false);
+        expect(req.request.params.has('trendDays')).toBe(false);
+        req.flush('offline', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        if (strict) {
+            expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.ServiceUnavailable }));
+            expect(next).not.toHaveBeenCalled();
+        } else {
+            expect(next).toHaveBeenCalledWith(null);
+            expect(error).not.toHaveBeenCalled();
+        }
+    });
+});

@@ -22,16 +22,50 @@ describe('TdeeInsightCardComponent', () => {
         expect(component['effectiveTdee']()).toBe(ADAPTIVE_TDEE);
     });
 
-    it('emits suggested target and stops click propagation', async () => {
-        const { component } = await setupComponentAsync(createInsight());
+    it('applies the suggested target through the actual button without opening the parent card', async () => {
+        const { component, fixture } = await setupComponentAsync(createInsight());
         const applySpy = vi.fn();
-        const stopPropagation = vi.fn();
-        component['applyGoal'].subscribe(applySpy);
+        const parentClick = vi.fn();
+        component.applyGoal.subscribe(applySpy);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        host.addEventListener('click', parentClick);
+        const button = host.querySelector<HTMLButtonElement>('.tdee-card__calculated-goal button');
+        expect(button).not.toBeNull();
+        button?.click();
+        expect(applySpy).toHaveBeenCalledExactlyOnceWith(SUGGESTED_TARGET);
+        expect(parentClick).not.toHaveBeenCalled();
+    });
 
-        component['onApplyGoal']({ stopPropagation } as unknown as Event);
+    it.each([null, { ...createInsight(), suggestedCalorieTarget: null }])(
+        'does not offer an apply action without a target',
+        async insight => {
+            const { fixture } = await setupComponentAsync(insight);
+            fixture.detectChanges();
+            expect((fixture.nativeElement as HTMLElement).querySelector('.tdee-card__calculated-goal')).toBeNull();
+        },
+    );
 
-        expect(stopPropagation).toHaveBeenCalledTimes(1);
-        expect(applySpy).toHaveBeenCalledWith(SUGGESTED_TARGET);
+    it('shows loading instead of stale actionable data', async () => {
+        const { fixture } = await setupComponentAsync(createInsight());
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.tdee-card__loading')).not.toBeNull();
+        expect(host.querySelector('fd-tdee-insight-card-content')).toBeNull();
+    });
+
+    it('only explains the current estimate when viewing a historical date', async () => {
+        const { fixture } = await setupComponentAsync(createInsight());
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).not.toContain('TDEE_CARD.CURRENT_ESTIMATE_NOTICE');
+        fixture.componentRef.setInput('isHistorical', true);
+        fixture.detectChanges();
+        expect(host.textContent).toContain('TDEE_CARD.CURRENT_ESTIMATE_NOTICE');
+        fixture.componentRef.setInput('isHistorical', false);
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain('TDEE_CARD.CURRENT_ESTIMATE_NOTICE');
     });
 
     it('does not emit when suggested target is missing', async () => {

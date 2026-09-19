@@ -5186,11 +5186,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
-      "nonBlankLines": 53,
+      "nonBlankLines": 54,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.06
+      "structuralRiskScore": 10.08
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.stories.ts",
@@ -5554,11 +5554,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.stories.ts",
-      "nonBlankLines": 143,
-      "decisionPoints": 0,
+      "nonBlankLines": 150,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.86
+      "structuralRiskScore": 4.5
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
@@ -7394,11 +7394,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-      "nonBlankLines": 172,
-      "decisionPoints": 19,
+      "nonBlankLines": 173,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.94
+      "structuralRiskScore": 34.96
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.utils.ts",
@@ -8386,27 +8386,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.ts",
+      "nonBlankLines": 34,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.68
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.ts",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.ts",
       "nonBlankLines": 28,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.56
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.ts",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.ts",
-      "nonBlankLines": 27,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.config.ts",
@@ -8418,11 +8418,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-      "nonBlankLines": 137,
-      "decisionPoints": 14,
+      "nonBlankLines": 145,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.74
+      "structuralRiskScore": 20.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dashboard.routes.ts",
@@ -8570,11 +8570,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "nonBlankLines": 285,
-      "decisionPoints": 46,
+      "nonBlankLines": 292,
+      "decisionPoints": 47,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 74.7
+      "structuralRiskScore": 76.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.ts",
@@ -8642,11 +8642,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-view.types.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 57,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.12
+      "structuralRiskScore": 1.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-welcome-tour.ts",
@@ -8722,27 +8722,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.ts",
-      "nonBlankLines": 27,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.56
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.ts",
-      "nonBlankLines": 43,
-      "decisionPoints": 0,
+      "nonBlankLines": 52,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.86
+      "structuralRiskScore": 2.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "nonBlankLines": 433,
-      "decisionPoints": 34,
+      "nonBlankLines": 439,
+      "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 59.66
+      "structuralRiskScore": 62.78
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
@@ -13666,11 +13666,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/test-setup.ts",
-      "nonBlankLines": 153,
-      "decisionPoints": 24,
+      "nonBlankLines": 162,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.06
+      "structuralRiskScore": 40.74
     },
     {
       "path": "FoodDiary.Web.Client/src/testing/async-testing.ts",
