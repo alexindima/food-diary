@@ -15,12 +15,11 @@ const MAXIMUM_CHART_BOUND_OFFSET = 2;
 const TARGET_WEIGHT = 72;
 
 describe('WeightTrendCardComponent', () => {
-    it('formats change tone and value', async () => {
+    it('formats the change value', async () => {
         const { component, fixture } = await setupComponentAsync({ change: WEIGHT_CHANGE });
 
         fixture.detectChanges();
 
-        expect(component['changeTone']()).toBe('positive');
         expect(component['formattedChangeValue']()).toBe(EXPECTED_FORMATTED_CHANGE);
     });
 
@@ -77,7 +76,7 @@ describe('WeightTrendCardComponent', () => {
         expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('WEIGHT_TREND_CARD.NO_DATA');
     });
 
-    it('passes an optional target to the compact chart without a label', async () => {
+    it('labels an optional target on the compact chart', async () => {
         const { component, fixture } = await setupComponentAsync({
             targetValue: TARGET_WEIGHT,
             points: [
@@ -89,9 +88,11 @@ describe('WeightTrendCardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(component['referenceLines']()).toEqual([{ value: TARGET_WEIGHT, color: 'var(--fd-color-blue-500)' }]);
+        expect(component['referenceLines']()).toEqual([
+            expect.objectContaining({ value: TARGET_WEIGHT, color: 'var(--fd-color-blue-500)' }),
+        ]);
         expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-line')).not.toBeNull();
-        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-label')).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-line-chart__reference-label')).not.toBeNull();
     });
 });
 

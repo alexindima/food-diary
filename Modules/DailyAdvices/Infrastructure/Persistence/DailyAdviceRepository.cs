@@ -8,7 +8,7 @@ namespace FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAdviceReadModelRepository {
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
         await advices.AsNoTracking().OrderBy(advice => advice.Locale).ThenBy(advice => advice.Value).ThenBy(advice => advice.Id)
-            .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight))
+            .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight, advice.GroupId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
@@ -25,7 +25,7 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
                 advice.Locale,
                 advice.Value,
                 advice.Tag,
-                advice.Weight))
+                advice.Weight, advice.GroupId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

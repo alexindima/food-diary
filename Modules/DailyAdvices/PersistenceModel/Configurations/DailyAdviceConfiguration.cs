@@ -11,6 +11,9 @@ internal sealed class DailyAdviceConfiguration : IEntityTypeConfiguration<DailyA
             id => id.Value,
             value => new DailyAdviceId(value));
 
+        builder.Property(e => e.GroupId).HasDefaultValueSql("gen_random_uuid()");
+        builder.HasIndex(e => new { e.GroupId, e.Locale }).IsUnique();
+
         builder.Property(e => e.Locale)
             .IsRequired()
             .HasMaxLength(10);

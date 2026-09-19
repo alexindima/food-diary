@@ -31,7 +31,7 @@ if [ "$saw_ref_update" = false ]; then
   changed_paths=$(git ls-files) || exit 1
 fi
 changed_paths=$(printf '%s\n' "$changed_paths" | sort -u)
-hook_progress_init "pre-push" 3
+hook_progress_init "pre-push" 4
 
 HOOK_POWERSHELL=$(command -v pwsh || true)
 if [ -z "$HOOK_POWERSHELL" ]; then
@@ -45,6 +45,10 @@ hook_run "LLM Wiki affected index freshness" "$HOOK_POWERSHELL" -NoLogo -NoProfi
 WIKI_STATUS=$?
 rm -f "$WIKI_PATH_FILE"
 [ "$WIKI_STATUS" -eq 0 ] || exit "$WIKI_STATUS"
+
+# Application symbols can change retrieval rankings even when Wiki code is untouched.
+# Run the same corpus and Node/.NET parity gate as CI before the expensive builds.
+hook_run "LLM Wiki retrieval regressions" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1 || exit 1
 
 PRE_PUSH_ARTIFACTS_PATH=".artifacts/pre-push/$$"
 hook_run "Scoped and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH" || exit 1

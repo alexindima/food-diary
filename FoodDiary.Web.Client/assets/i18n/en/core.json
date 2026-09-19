@@ -1090,18 +1090,30 @@
         "WINDOW_NOTE": "Percentages count people, not meals. D1, D7 and D30 measure that exact UTC day, not any return within the interval. Results appear after the whole observation day ends; D30 requires 31 calendar days from the registration day. Activity is observed through the report time, independently of the activity filter above."
     },
     "ADMIN_DAILY_ADVICES": {
-        "HELP": "Import a JSON file (version 1, advices array), up to 1000 advices and 5 MB. Each advice requires value (up to 512 characters) and locale (ru or en). Optional: weight (positive integer, default 1), tag (up to 64 characters). Exact duplicates are skipped; existing advices are not replaced. Imported advices become available on the dashboard immediately.",
+        "HELP": "Each card shows one advice in Russian and English. Import paired JSON (version 2) to link translations; legacy version 1 remains supported.",
         "IMPORT": "Import JSON",
         "IMPORTING": "Importing…",
         "EXAMPLE": "Download example JSON",
         "FILE_TOO_LARGE": "The file must be no larger than 5 MB.",
         "INVALID_JSON": "The file is not valid JSON.",
-        "INVALID_FORMAT": "Invalid import format. Check the version, number of advices and fields against the example and limits above.",
+        "INVALID_FORMAT": "Invalid advice JSON. Use a supported version and valid fields.",
         "IMPORT_FAILED": "Import failed. Please try again.",
         "SUCCESS": "Added: {{imported}}. Duplicates skipped: {{skipped}}.",
         "LOADING": "Loading advices…",
-        "TOTAL": "Total advices: {{count}}",
+        "TOTAL": "Advice groups: {{count}}",
         "WEIGHT": "Weight",
-        "EMPTY": "No advices yet. Import a JSON file to add them."
+        "EMPTY": "No advices yet. Import a JSON file to add them.",
+        "RU": "Russian",
+        "EN": "English",
+        "TAG": "Category",
+        "EDIT": "Edit translations",
+        "DELETE": "Delete advice",
+        "DELETE_BOTH": "Delete both translations",
+        "DELETE_CONFIRM": "Delete this advice and all its translations? This cannot be undone.",
+        "CANCEL": "Cancel",
+        "SAVE": "Save both translations",
+        "MISSING": "Translation missing",
+        "EDIT_HELP": "Both translations are required (up to 512 characters each). Category: up to 64 characters. Weight: a positive whole number.",
+        "CHANGE_FAILED": "Could not save the change. Please try again."
     }
 }

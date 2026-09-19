@@ -23,30 +23,13 @@
         pointer-events: none;
     }
 
-    &--with-chart {
-        min-height: calc((var(--fd-size-control-xl) * 3) + var(--fd-space-lg));
-    }
-
     &__period {
         white-space: nowrap;
     }
 
     &__delta {
-        --fd-pill-bg: var(--fd-bg-status-info);
-        --fd-pill-border: transparent;
-        --fd-pill-color: var(--fd-color-text);
-        --fd-pill-min-height: var(--fd-size-pill-height-relaxed);
-        flex: 0 0 auto;
-
-        &--positive {
-            --fd-pill-bg: var(--fd-bg-status-success);
-            --fd-pill-color: var(--fd-color-emerald-700);
-        }
-
-        &--negative {
-            --fd-pill-bg: var(--fd-bg-category-orange);
-            --fd-pill-color: var(--fd-color-orange-700);
-        }
+        color: var(--fd-color-text);
+        white-space: nowrap;
     }
 
     &__value-row {
@@ -58,15 +41,13 @@
     }
 
     &__chart {
-        position: absolute;
-        right: calc(var(--fd-space-card-profile-gap) + var(--fd-space-sm));
-        bottom: var(--fd-space-md);
-        left: calc(var(--fd-space-card-profile-gap) + var(--fd-space-sm));
+        margin-top: var(--fd-space-sm);
         height: var(--fd-size-control-sm);
     }
 
     &__chart fd-ui-line-chart {
         --fd-line-chart-height: var(--fd-size-control-sm);
+        --fd-line-chart-point-size: var(--fd-space-xxs);
     }
 
     &__sparse {

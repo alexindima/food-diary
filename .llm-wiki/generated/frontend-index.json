@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1679,
-    "symbols": 662,
+    "typescriptFiles": 1680,
+    "symbols": 663,
     "routes": 100,
     "features": 44,
     "specs": 584,
     "localeFiles": 5,
     "roles": {
-      "Component": 448,
+      "Component": 449,
       "Directive": 12,
       "Facade": 62,
       "Other": 17,
@@ -172,7 +172,8 @@
       "symbols": [
         "AdminDailyAdvicesComponent",
         "AdminDailyAdvicesFacade",
-        "AdminDailyAdvicesService"
+        "AdminDailyAdvicesService",
+        "DailyAdviceGroupCardComponent"
       ],
       "routes": [
         ""
@@ -2124,21 +2125,28 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
-      "line": 13
+      "line": 14
+    },
+    {
+      "name": "DailyAdviceGroupCardComponent",
+      "role": "Component",
+      "selector": "fd-admin-daily-advice-group-card",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.ts",
+      "line": 21
     },
     {
       "name": "AdminDailyAdvicesFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AdminDailyAdvicesComponent",
       "role": "Component",
       "selector": "fd-admin-daily-advices",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AdminDashboardService",
@@ -6534,8 +6542,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1007,
-      "russianProperties": 1007,
+      "englishProperties": 1019,
+      "russianProperties": 1019,
       "countsMatch": true
     },
     {

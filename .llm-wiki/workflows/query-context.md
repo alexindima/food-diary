@@ -23,6 +23,27 @@ sources:
 
 # Query Repository Context
 
+## Retrieval regression checks
+
+Application files are retrieval inputs: adding a renderer or moving a module can
+change rankings even when Wiki scripts are untouched. Pre-push runs
+`Test-LlmWikiSqlContextEvaluation.ps1` before solution builds, using the same
+frozen corpora, quality thresholds and Node/.NET parity checks as CI. Index
+freshness alone does not validate search quality.
+
+On failure, inspect `.artifacts/llm-wiki/context-evaluation/`. Reports contain
+per-case expected/actual paths, confidence, score margins and ranking reasons;
+the console also lists missed cases. Check role specificity and exact file
+identity before adding a path-specific rule. Keep frozen thresholds and expected
+answers intact. A generic renderer name is insufficient evidence of localized
+resource ownership, and a query naming a projection must not receive a generic
+reader-service bonus. Both search runtimes must apply the same rules.
+
+Keep the working tree stable during evaluation. A runtime `snapshot-mismatch`
+means source/index state changed, not that every query ranked incorrectly.
+The parity gate reports unavailable runtime context separately; finish edits
+and index generation before rerunning the complete evaluation.
+
 Search supplements the existing lexical and identity candidate pools with at
 most `identityCandidatePoolLimit` candidates from a compact path/title FTS index.
 This index excludes document bodies so long pages retain title-based recall.

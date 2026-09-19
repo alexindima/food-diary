@@ -1,21 +1,28 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiIconComponent } from 'fd-ui-kit';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { map } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { buildTdeeHintKey, formatTdeeWeightTrend, hasMeaningfulTdeeSuggestion } from '../../../lib/tdee-insight-view.mapper';
 import type { TdeeInsight } from '../../../models/tdee-insight.data';
 import { TdeeInsightCardDetailsComponent } from '../tdee-insight-card-details/tdee-insight-card-details';
 
 @Component({
     selector: 'fd-tdee-insight-card-content',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiIconComponent, TdeeInsightCardDetailsComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiButtonComponent, TdeeInsightCardDetailsComponent, TranslatePipe],
     templateUrl: './tdee-insight-card-content.html',
     styleUrl: '../tdee-insight-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TdeeInsightCardContentComponent {
+    private readonly translate = inject(TranslateService);
+    protected readonly locale = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: resolveTranslateLanguage(this.translate),
+    });
+
     public readonly insight = input.required<TdeeInsight | null>();
     public readonly effectiveTdee = input.required<number>();
     public readonly applyGoal = output<Event>();

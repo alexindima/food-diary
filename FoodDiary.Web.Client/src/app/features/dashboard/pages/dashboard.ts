@@ -234,8 +234,8 @@ export class DashboardComponent {
             meals: stateFor('meals'),
             hydration: stateFor('hydration'),
             cycle: stateFor('cycle'),
-            weight: stateFor('weight'),
-            waist: stateFor('waist'),
+            weight: stateFor('weight', { alwaysInteractive: true, defaultLabelKey: 'WEIGHT_CARD.TITLE' }),
+            waist: stateFor('waist', { alwaysInteractive: true, defaultLabelKey: 'WAIST_CARD.TITLE' }),
             tdee: stateFor('tdee', { alwaysInteractive: true, defaultLabelKey: 'TDEE_CARD.TITLE' }),
             advice: stateFor('advice'),
         };

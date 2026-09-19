@@ -1,15 +1,16 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiCardComponent, FdUiPaginationComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { DailyAdviceGroupCardComponent } from '../components/daily-advice-group-card';
 import { AdminDailyAdvicesFacade } from '../lib/admin-daily-advices.facade';
 import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
 
 @Component({
     selector: 'fd-admin-daily-advices',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiPaginationComponent, AdminLoadErrorComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiPaginationComponent, AdminLoadErrorComponent, DailyAdviceGroupCardComponent],
     providers: [AdminDailyAdvicesFacade],
     templateUrl: './admin-daily-advices.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,4 @@
-<div
-    class="weight-trend-card fd-min-w-0"
-    [class.weight-trend-card--loading]="isLoading()"
-    [class.weight-trend-card--with-chart]="showChart()"
->
+<div class="weight-trend-card fd-min-w-0" [class.weight-trend-card--loading]="isLoading()">
     <fd-dashboard-widget-frame iconTone="neutral" [title]="title() | translate" [iconName]="iconName()">
         <span fdDashboardWidgetHeaderEnd class="weight-trend-card__period fd-ui-caption fd-ui-text-muted">{{ timeframeLabel() }}</span>
 
@@ -21,16 +17,15 @@
                 </div>
 
                 @if (measurementCount() >= 2) {
-                    <div
-                        class="weight-trend-card__delta fd-ui-pill fd-ui-stat-value"
-                        [class.weight-trend-card__delta--positive]="changeTone() === 'positive'"
-                        [class.weight-trend-card__delta--negative]="changeTone() === 'negative'"
-                    >
-                        @if (hasMeaningfulChange()) {
-                            {{ formattedChangeValue() }} {{ displayUnitKey() | translate }}
-                        } @else {
-                            {{ 'WEIGHT_TREND_CARD.NO_CHANGE' | translate }}
-                        }
+                    <div class="fd-stack fd-gap-xxs">
+                        <div class="weight-trend-card__delta fd-ui-stat-value">
+                            @if (hasMeaningfulChange()) {
+                                {{ formattedChangeValue() }} {{ displayUnitKey() | translate }}
+                            } @else {
+                                {{ 'WEIGHT_TREND_CARD.NO_CHANGE' | translate }}
+                            }
+                        </div>
+                        <span class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_TREND_CARD.OVER_PERIOD' | translate }}</span>
                     </div>
                 }
             </div>
@@ -38,6 +33,7 @@
             @if (showChart()) {
                 <div class="weight-trend-card__chart">
                     <fd-ui-line-chart
+                        horizontalEdgeInset="none"
                         [title]="title() | translate"
                         [points]="measurementPoints()"
                         [lineColor]="accentColor()"
@@ -46,7 +42,7 @@
                         [maxValue]="chartBounds().maximum"
                         [referenceLines]="referenceLines()"
                         [valueSuffix]="displayUnitKey() | translate"
-                        [showArea]="false"
+                        [showArea]="true"
                         [showPoints]="true"
                     />
                 </div>
@@ -65,9 +61,6 @@
                     <div class="weight-trend-card__empty-title fd-ui-stat-value">{{ 'WEIGHT_TREND_CARD.EMPTY_TITLE' | translate }}</div>
                     <div class="fd-ui-body-sm fd-ui-text-muted">{{ emptyStateKey() | translate }}</div>
                 </div>
-                <fd-ui-button class="weight-trend-card__action" variant="secondary" fill="outline" size="sm" [routerLink]="actionRoute()">
-                    {{ actionLabelKey() | translate }}
-                </fd-ui-button>
             </div>
         }
     </fd-dashboard-widget-frame>

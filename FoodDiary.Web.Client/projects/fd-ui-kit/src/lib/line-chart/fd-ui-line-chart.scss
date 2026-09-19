@@ -1,4 +1,5 @@
 :host {
+    --fd-line-chart-point-size: 10px;
     --fd-line-chart-angled-axis-height: 40px;
     --fd-line-chart-stacked-axis-height: calc(1lh + var(--fd-line-chart-x-axis-label-offset));
     --fd-line-chart-x-axis-label-offset: var(--fd-space-sm);
@@ -110,8 +111,8 @@
 .fd-ui-line-chart__point {
     position: absolute;
     z-index: 1;
-    width: 10px;
-    height: 10px;
+    width: var(--fd-line-chart-point-size);
+    height: var(--fd-line-chart-point-size);
     border-radius: 50%;
     cursor: help;
     transform: translate(-50%, -50%);

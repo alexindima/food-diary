@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1241,
+    "contracts": 1253,
     "ambiguousContracts": 2,
-    "consumerEdges": 9717,
-    "productionConsumerEdges": 5548,
-    "testConsumerEdges": 4169,
-    "consumedContracts": 1241,
+    "consumerEdges": 9772,
+    "productionConsumerEdges": 5596,
+    "testConsumerEdges": 4176,
+    "consumedContracts": 1253,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -555,6 +555,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "AdminDailyAdviceGroupHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminDailyAdviceGroupUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdviceGroupUpdateHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "AdminDailyAdviceHttpResponse",
       "roles": [
         "Response"
@@ -584,6 +618,40 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Requests/AdminDailyAdviceImportItemHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminDailyAdvicePairHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminDailyAdvicePairsImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3598,6 +3666,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "DeleteAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "DeleteAdminLessonCommand",
       "roles": [
         "Command"
@@ -3627,6 +3712,23 @@
       ],
       "definitionPaths": [
         "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "DeleteDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5214,6 +5316,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetAdminDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetAdminDailyAdvicesQuery",
       "roles": [
         "Query"
@@ -6008,6 +6127,23 @@
       ],
       "definitionPaths": [
         "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12048,6 +12184,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ImportAdminDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "ImportAdminDailyAdvicesCommand",
       "roles": [
         "Command"
@@ -12077,6 +12230,23 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -19517,6 +19687,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "UpdateAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "UpdateAdminLessonCommand",
       "roles": [
         "Command"
@@ -19631,6 +19818,23 @@
       ],
       "definitionPaths": [
         "Modules/Cycles/Presentation/Requests/UpdateCycleSettingsHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "UpdateDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -22820,6 +23024,84 @@
       "referenceCount": 1
     },
     {
+      "contract": "AdminDailyAdviceGroupHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AdminDailyAdviceGroupHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdviceGroupHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "AdminDailyAdviceGroupUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdviceGroupUpdateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdviceGroupUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdviceGroupUpdateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdviceGroupUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdviceGroupUpdateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "AdminDailyAdviceHttpResponse",
       "roles": [
         "Response"
@@ -22856,7 +23138,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 8
     },
     {
       "contract": "AdminDailyAdviceImportItemHttpRequest",
@@ -22870,6 +23152,58 @@
       "consumerPath": "Modules/Admin/Presentation/Requests/AdminDailyAdvicesImportHttpRequest.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicePairHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicePairsImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicePairsImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminDailyAdvicePairsImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminDailyAdvicesImportHttpRequest",
@@ -22908,7 +23242,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "AdminDailyAdvicesImportHttpResponse",
@@ -22920,6 +23254,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AdminDailyAdvicesImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminDailyAdvicesImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -34390,6 +34737,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "DeleteAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DeleteAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "DeleteAdminLessonCommand",
       "roles": [
         "Command"
@@ -34555,6 +34928,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DeleteDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DeleteDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -40393,6 +40805,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminDailyAdvicesQuery",
       "roles": [
         "Query"
@@ -43211,6 +43649,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDailyAdviceGroupsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
+      "isTest": false,
       "referenceCount": 2
     },
     {
@@ -58432,6 +58896,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -58446,6 +58923,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -58550,6 +59040,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60616,6 +61119,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -60643,6 +61159,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60747,6 +61276,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67103,6 +67645,19 @@
         "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDailyAdviceReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67207,7 +67762,46 @@
         "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDailyAdviceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDailyAdviceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDailyAdviceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67236,6 +67830,19 @@
       "consumerPath": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IDailyAdviceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+      "isTest": true,
+      "referenceCount": 14
     },
     {
       "contract": "IDailyAdviceWriteRepository",
@@ -85789,6 +86396,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "ImportAdminDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ImportAdminDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "ImportAdminDailyAdvicesCommand",
       "roles": [
         "Command"
@@ -85917,6 +86550,45 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "ImportDailyAdvicesCommand",
@@ -93661,6 +94333,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -95547,6 +96232,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -101682,7 +102380,59 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvices/ImportDailyAdvicesCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104048,7 +104798,59 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105530,6 +106332,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -105544,6 +106359,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105635,6 +106463,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105752,6 +106593,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -140723,6 +141577,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "UpdateAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UpdateAdminDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "UpdateAdminLessonCommand",
       "roles": [
         "Command"
@@ -141215,6 +142095,45 @@
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "UpdateDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UpdateDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "UpdateDesiredWaistCommand",

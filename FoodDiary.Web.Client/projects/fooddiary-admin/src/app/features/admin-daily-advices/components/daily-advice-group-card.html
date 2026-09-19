@@ -1,0 +1,63 @@
+<fd-ui-card>
+    @if (editing()) {
+        <form class="fd-grid fd-gap-md" [formRoot]="form">
+            <fd-ui-textarea [formField]="form.ru" [label]="'ADMIN_DAILY_ADVICES.RU' | translate" />
+            <fd-ui-textarea [formField]="form.en" [label]="'ADMIN_DAILY_ADVICES.EN' | translate" />
+            <fd-ui-input [formField]="form.tag" [label]="'ADMIN_DAILY_ADVICES.TAG' | translate" />
+            <fd-ui-input type="number" [formField]="form.weight" [label]="'ADMIN_DAILY_ADVICES.WEIGHT' | translate" />
+            <p class="fd-ui-meta-text">{{ 'ADMIN_DAILY_ADVICES.EDIT_HELP' | translate }}</p>
+            <div class="fd-row fd-gap-sm">
+                <fd-ui-button
+                    type="submit"
+                    [loading]="busy()"
+                    [disabled]="form().invalid()"
+                    [disabledReason]="form().invalid() ? ('ADMIN_DAILY_ADVICES.EDIT_HELP' | translate) : null"
+                    >{{ 'ADMIN_DAILY_ADVICES.SAVE' | translate }}</fd-ui-button
+                >
+                <fd-ui-button type="button" variant="secondary" [loading]="busy()" (click)="editing.set(false)">{{
+                    'ADMIN_DAILY_ADVICES.CANCEL' | translate
+                }}</fd-ui-button>
+            </div>
+        </form>
+    } @else {
+        <div class="fd-grid fd-gap-md">
+            <div>
+                <strong>{{ 'ADMIN_DAILY_ADVICES.RU' | translate }}</strong>
+                <p lang="ru">{{ advice().ru ?? ('ADMIN_DAILY_ADVICES.MISSING' | translate) }}</p>
+            </div>
+            <div>
+                <strong>{{ 'ADMIN_DAILY_ADVICES.EN' | translate }}</strong>
+                <p lang="en">{{ advice().en ?? ('ADMIN_DAILY_ADVICES.MISSING' | translate) }}</p>
+            </div>
+            <p class="fd-ui-meta-text">
+                @if (advice().tag) {
+                    {{ advice().tag }} ·
+                }
+                {{ 'ADMIN_DAILY_ADVICES.WEIGHT' | translate }}: {{ advice().weight }}
+            </p>
+            @if (confirmingDelete()) {
+                <p role="alert">{{ 'ADMIN_DAILY_ADVICES.DELETE_CONFIRM' | translate }}</p>
+                <div class="fd-row fd-gap-sm">
+                    <fd-ui-button type="button" [loading]="busy()" (click)="delete()">{{
+                        'ADMIN_DAILY_ADVICES.DELETE_BOTH' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button type="button" variant="secondary" [loading]="busy()" (click)="confirmingDelete.set(false)">{{
+                        'ADMIN_DAILY_ADVICES.CANCEL' | translate
+                    }}</fd-ui-button>
+                </div>
+            } @else {
+                <div class="fd-row fd-gap-sm">
+                    <fd-ui-button type="button" variant="secondary" (click)="edit()">{{
+                        'ADMIN_DAILY_ADVICES.EDIT' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button type="button" variant="secondary" (click)="confirmingDelete.set(true)">{{
+                        'ADMIN_DAILY_ADVICES.DELETE' | translate
+                    }}</fd-ui-button>
+                </div>
+            }
+        </div>
+    }
+    @if (error()) {
+        <p role="alert" class="fd-ui-error-text">{{ 'ADMIN_DAILY_ADVICES.CHANGE_FAILED' | translate }}</p>
+    }
+</fd-ui-card>

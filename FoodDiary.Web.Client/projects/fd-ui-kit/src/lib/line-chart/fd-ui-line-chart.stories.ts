@@ -6,6 +6,13 @@ const meta: Meta<FdUiLineChartComponent> = {
     title: 'Components/Charts/Line Chart',
     component: FdUiLineChartComponent,
     tags: ['autodocs'],
+    parameters: {
+        docs: {
+            description: {
+                component: 'Use --fd-line-chart-point-size to adjust marker diameter for compact sparklines. The default is 10px.',
+            },
+        },
+    },
     argTypes: {
         title: { control: 'text' },
         emptyLabel: { control: 'text' },

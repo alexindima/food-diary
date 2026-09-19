@@ -7,6 +7,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class BuildWorkflowGuardrailTests {
     [Fact]
+    public void PrePush_ChecksRetrievalBeforeBuildingTheSolution() {
+        string hook = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
+        int retrieval = hook.IndexOf("-File .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1 || exit 1", StringComparison.Ordinal);
+        Assert.True(retrieval >= 0);
+        Assert.True(retrieval < hook.IndexOf("command dotnet build", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void WikiCi_RunsIndependentWorkersAndRequiresTheirCombinedResult() {
         string workflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"))
             .Replace("\r\n", "\n", StringComparison.Ordinal);

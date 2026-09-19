@@ -108,7 +108,7 @@ foreach ($case in $cases) {
         topCandidateAmbiguous = $null -ne $topCandidate -and [bool]$topCandidate.ambiguous
         failureCategory = $(if ($rank -eq 1) { $null } else { Get-FailureCategory ([string]$case.query) $expectedPaths[0] $topPath $changeType })
         sqlDurationMs = [double]$search.durationMs
-        topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score, scoreMargin, confidence, ambiguous, ambiguityReason, sameNameCandidateCount)
+        topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score, scoreMargin, confidence, ambiguous, ambiguityReason, sameNameCandidateCount, reasons)
     })
     $caseIndex++
 }

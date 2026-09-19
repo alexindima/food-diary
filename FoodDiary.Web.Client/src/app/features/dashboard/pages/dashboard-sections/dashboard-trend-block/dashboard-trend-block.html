@@ -1,5 +1,5 @@
 @if (shouldRender()) {
-    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
+    <div fdDashboardBlockHost class="dashboard__block dashboard__card--clickable" [state]="state()" (blockActivated)="activate()">
         @defer (on viewport) {
             <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
                 <fd-weight-trend-card

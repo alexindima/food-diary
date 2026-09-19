@@ -1253,6 +1253,7 @@
     {
       "id": "dashboard-meals-reader",
       "queryTerms": ["dashboard", "meal", "persistence", "read"],
+      "excludedQueryTerms": ["projection"],
       "minimumMatches": 2,
       "identityTerms": ["dashboardmealsreadservice"],
       "score": 300
@@ -3585,7 +3586,7 @@
       "minimumMatches": 2,
       "candidateTerms": ["renderer"],
       "minimumCandidateMatches": 1,
-      "minimumQueryIdentityMatches": 1,
+      "minimumQueryIdentityMatches": 2,
       "score": 900,
       "identityScope": "file",
       "affinityDirectOnly": false,

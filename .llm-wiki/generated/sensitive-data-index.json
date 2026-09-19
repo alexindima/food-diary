@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1487,
+    "candidateFields": 1492,
     "credential": 156,
     "identity": 174,
-    "health": 691,
+    "health": 696,
     "financial": 129,
     "privateContent": 337,
-    "boundaryFiles": 195,
+    "boundaryFiles": 196,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2177,6 +2177,20 @@
       "category": "health",
       "name": "Weight",
       "type": "int",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/Admin/Application/Models/AdminDailyAdviceGroupModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
       "path": "Modules/Admin/Application/Models/AdminDailyAdviceModel.cs",
       "line": 3
     },
@@ -2305,6 +2319,13 @@
       "type": "int",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
       "line": 46
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "health",
@@ -3143,6 +3164,20 @@
       "category": "health",
       "name": "Weight",
       "type": "int",
+      "path": "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceGroupModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
       "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceModel.cs",
       "line": 8
     },
@@ -3151,7 +3186,7 @@
       "name": "Weight",
       "type": "int",
       "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
-      "line": 15
+      "line": 17
     },
     {
       "category": "health",
@@ -10592,6 +10627,13 @@
         "identity"
       ],
       "fieldCount": 6
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceHttpResponse.cs",

@@ -170,6 +170,48 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Theory]
+    [InlineData("Area/InvoiceResourceRenderer.cs", true)]
+    [InlineData("Area/InvoicePreviewRenderer.cs", false)]
+    public async Task SearchAsync_RequiresResourceIdentityForLocalizedRendererBoostAsync(string path, bool expected) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code','renderer',$path,'renderer','csharp','Invoice renderer','localized resource renderer');
+            """;
+        command.Parameters.AddWithValue("$path", path);
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "localized resource renderer", 10, "Backend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(expected, candidate.Reasons.Any(reason => reason.StartsWith("structural role localized-resource-renderer-role", StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData("dashboard meal read", true)]
+    [InlineData("dashboard meal projection", false)]
+    public async Task SearchAsync_DoesNotBoostReaderForProjectionIntentAsync(string query, bool expected) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code','reader','Area/DashboardMealsReadService.cs','reader','csharp',
+                 'DashboardMealsReadService','dashboard meal read projection');
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Backend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(expected, candidate.Reasons.Contains("ranking policy dashboard-meals-reader", StringComparer.Ordinal));
+    }
+
+    [Theory]
     [InlineData("stock", true)]
     [InlineData("stockyard", false)]
     [InlineData("складской", true)]

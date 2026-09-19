@@ -36,21 +36,44 @@ function isTag(tag: unknown): boolean {
     return tag === undefined || tag === null || (typeof tag === 'string' && tag.trim().length <= MAX_TAG_LENGTH);
 }
 
-export function isDailyAdviceImport(value: unknown): value is AdminDailyAdvicesImportRequest {
+function isPair(value: unknown): boolean {
+    if (
+        !isRecord(value) ||
+        typeof value['id'] !== 'string' ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value['id']) ||
+        value['id'] === '00000000-0000-0000-0000-000000000000'
+    ) {
+        return false;
+    }
     return (
-        isRecord(value) &&
-        value['version'] === 1 &&
-        Array.isArray(value['advices']) &&
-        value['advices'].length > 0 &&
-        value['advices'].length <= MAX_ADVICE_COUNT &&
-        value['advices'].every(isAdvice)
+        isAdvice({ value: value['ru'], locale: 'ru', weight: value['weight'], tag: value['tag'] }) &&
+        isAdvice({ value: value['en'], locale: 'en', weight: value['weight'], tag: value['tag'] })
     );
 }
 
+export function isDailyAdviceImport(value: unknown): value is AdminDailyAdvicesImportRequest {
+    if (!isRecord(value) || !Array.isArray(value['advices']) || value['advices'].length === 0) {
+        return false;
+    }
+    if (value['version'] === 1) {
+        return value['advices'].length <= MAX_ADVICE_COUNT && value['advices'].every(isAdvice);
+    }
+    if (value['version'] !== 2 || value['advices'].length > MAX_ADVICE_COUNT / 2 || !value['advices'].every(isPair)) {
+        return false;
+    }
+    const ids = value['advices'].map((item: Record<string, unknown>) => String(item['id']).toLowerCase());
+    return new Set(ids).size === ids.length;
+}
+
 export const DAILY_ADVICE_IMPORT_EXAMPLE: AdminDailyAdvicesImportRequest = {
-    version: 1,
+    version: 2,
     advices: [
-        { value: 'Пейте воду в течение дня.', locale: 'ru', weight: 1, tag: 'hydration' },
-        { value: 'Drink water throughout the day.', locale: 'en', weight: 1, tag: 'hydration' },
+        {
+            id: 'dfd9ce3d-dba5-45c5-a4f0-b3277f282d33',
+            ru: 'Пейте воду в течение дня.',
+            en: 'Drink water throughout the day.',
+            weight: 1,
+            tag: 'hydration',
+        },
     ],
 };

@@ -66,7 +66,46 @@ public sealed partial class PresentationBoundaryIntegrationTests {
         using HttpResponseMessage list = await client.GetAsync("/api/v1/admin/daily-advices");
         using HttpResponseMessage import = await PostWithIdempotencyAsync(client, "/api/v1/admin/daily-advices/import",
             new AdminDailyAdvicesImportHttpRequest(1, [new("Advice", "en")]));
-        Assert.Multiple(() => Assert.Equal(expected, list.StatusCode), () => Assert.Equal(expected, import.StatusCode));
+        using HttpResponseMessage groups = await client.GetAsync("/api/v1/admin/daily-advices/groups");
+        var groupId = Guid.NewGuid();
+        using HttpResponseMessage pairs = await PostWithIdempotencyAsync(client, "/api/v1/admin/daily-advices/groups/import",
+            new AdminDailyAdvicePairsImportHttpRequest(2, [new(groupId, "Russian", "English")]));
+        using HttpResponseMessage edit = await client.PutAsJsonAsync($"/api/v1/admin/daily-advices/groups/{groupId}",
+            new AdminDailyAdviceGroupUpdateHttpRequest("Russian", "English"));
+        using HttpResponseMessage delete = await client.DeleteAsync($"/api/v1/admin/daily-advices/groups/{groupId}");
+        Assert.Multiple(() => Assert.Equal(expected, list.StatusCode), () => Assert.Equal(expected, import.StatusCode),
+            () => Assert.Equal(expected, groups.StatusCode), () => Assert.Equal(expected, pairs.StatusCode),
+            () => Assert.Equal(expected, edit.StatusCode), () => Assert.Equal(expected, delete.StatusCode));
+    }
+
+    [RequiresDockerFact]
+    public async Task AdminDailyAdviceGroups_LinkLegacyEditAndDeleteBothTranslations() {
+        using HttpClient client = CreateAdviceAdminClient();
+        var groupId = Guid.NewGuid();
+        string ru = $"Russian {groupId:N}";
+        string en = $"English {groupId:N}";
+        using HttpResponseMessage legacy = await PostWithIdempotencyAsync(client, "/api/v1/admin/daily-advices/import",
+            new AdminDailyAdvicesImportHttpRequest(1, [new(ru, "ru"), new(en, "en")]));
+        Assert.Equal(HttpStatusCode.OK, legacy.StatusCode);
+        var payload = new AdminDailyAdvicePairsImportHttpRequest(2, [new(groupId, ru, en)]);
+        using HttpResponseMessage imported = await PostWithIdempotencyAsync(client, "/api/v1/admin/daily-advices/groups/import", payload);
+        Assert.Equal(HttpStatusCode.OK, imported.StatusCode);
+        List<AdminDailyAdviceGroupHttpResponse>? groups = await client.GetFromJsonAsync<List<AdminDailyAdviceGroupHttpResponse>>("/api/v1/admin/daily-advices/groups");
+        Assert.NotNull(groups);
+        AdminDailyAdviceGroupHttpResponse group = Assert.Single(groups, item => item.Id == groupId);
+        Assert.Multiple(() => Assert.Equal(ru, group.Ru), () => Assert.Equal(en, group.En));
+        using HttpResponseMessage edited = await client.PutAsJsonAsync($"/api/v1/admin/daily-advices/groups/{groupId}",
+            new AdminDailyAdviceGroupUpdateHttpRequest(ru + " edited", en + " edited", 3, "habit"));
+        Assert.Equal(HttpStatusCode.OK, edited.StatusCode);
+        List<AdminDailyAdviceHttpResponse>? rows = await client.GetFromJsonAsync<List<AdminDailyAdviceHttpResponse>>("/api/v1/admin/daily-advices");
+        Assert.NotNull(rows);
+        Assert.Contains(rows, item => string.Equals(item.Value, ru + " edited", StringComparison.Ordinal) && item.Weight == 3);
+        Assert.Contains(rows, item => string.Equals(item.Value, en + " edited", StringComparison.Ordinal) && item.Weight == 3);
+        using HttpResponseMessage deleted = await client.DeleteAsync($"/api/v1/admin/daily-advices/groups/{groupId}");
+        Assert.Equal(HttpStatusCode.NoContent, deleted.StatusCode);
+        rows = await client.GetFromJsonAsync<List<AdminDailyAdviceHttpResponse>>("/api/v1/admin/daily-advices");
+        Assert.NotNull(rows);
+        Assert.DoesNotContain(rows, item => item.Value.Contains(groupId.ToString("N"), StringComparison.Ordinal));
     }
 
     private HttpClient CreateAdviceAdminClient() {

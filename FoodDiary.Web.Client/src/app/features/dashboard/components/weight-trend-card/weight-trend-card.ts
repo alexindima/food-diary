@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
@@ -27,7 +25,7 @@ export type WeightTrendPoint = {
 
 @Component({
     selector: 'fd-weight-trend-card',
-    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiLineChartComponent, DashboardWidgetFrameComponent],
+    imports: [CommonModule, TranslatePipe, FdUiLineChartComponent, DashboardWidgetFrameComponent],
     templateUrl: './weight-trend-card.html',
     styleUrl: './weight-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,21 +89,20 @@ export class WeightTrendCardComponent {
     );
     protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
         const targetValue = this.targetValue();
-        return targetValue === null ? [] : [{ value: this.displayValue(targetValue), color: this.accentColor() }];
-    });
-
-    protected readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
-        const value = this.change();
-        if (value === null) {
-            return 'neutral';
-        }
-        if (value < -WEIGHT_TREND_EPSILON) {
-            return 'positive';
-        }
-        if (value > WEIGHT_TREND_EPSILON) {
-            return 'negative';
-        }
-        return 'neutral';
+        return targetValue === null
+            ? []
+            : [
+                  {
+                      value: this.displayValue(targetValue),
+                      color: this.accentColor(),
+                      label: this.translateService.instant('WEIGHT_TREND_CARD.CHART_GOAL', {
+                          value: new Intl.NumberFormat(resolveTranslateLanguage(this.translateService), {
+                              maximumFractionDigits: 1,
+                          }).format(this.displayValue(targetValue)),
+                          unit: this.translateService.instant(this.displayUnitKey()),
+                      }),
+                  },
+              ];
     });
 
     protected readonly formattedChangeValue = computed(() => {

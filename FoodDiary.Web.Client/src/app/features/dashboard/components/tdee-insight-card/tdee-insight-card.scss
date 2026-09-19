@@ -27,28 +27,10 @@
 
     &__confidence {
         --fd-pill-border: transparent;
+        --fd-pill-bg: color-mix(in srgb, var(--fd-color-text-muted) 8%, transparent);
+        --fd-pill-color: var(--fd-color-text-muted);
         width: fit-content;
-
-        fd-ui-icon {
-            font-size: var(--fd-size-icon-xs);
-            width: var(--fd-size-icon-xs);
-            height: var(--fd-size-icon-xs);
-        }
-
-        &--low {
-            --fd-pill-bg: var(--fd-bg-status-danger);
-            --fd-pill-color: var(--fd-color-danger);
-        }
-
-        &--medium {
-            --fd-pill-bg: var(--fd-bg-status-warning);
-            --fd-pill-color: var(--fd-color-orange-700);
-        }
-
-        &--high {
-            --fd-pill-bg: var(--fd-bg-status-success);
-            --fd-pill-color: var(--fd-color-emerald-700);
-        }
+        text-transform: none;
     }
 
     &__meta {
@@ -59,30 +41,25 @@
         text-align: right;
     }
 
-    &__hint {
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel);
-        background: var(--fd-bg-category-sky);
-        color: var(--fd-color-sky-700);
-        line-height: 1.5;
-
-        fd-ui-icon {
-            font-size: var(--fd-size-icon-md);
-            width: var(--fd-size-icon-md);
-            height: var(--fd-size-icon-md);
-            flex-shrink: 0;
-            margin-top: var(--fd-border-width);
-        }
-    }
-
     &__suggestion {
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-panel);
-        background: var(--fd-bg-status-success);
+        margin-top: var(--fd-space-xs);
+        padding-top: var(--fd-space-md);
+        border-top: var(--fd-border-subtle);
     }
 
-    &__suggestion-text {
-        color: var(--fd-color-emerald-700);
+    &__suggestion-title {
+        color: color-mix(in srgb, var(--fd-color-amber-500) 70%, var(--fd-color-text-muted));
+    }
+
+    &__calculated-goal {
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-subtle);
+        border-radius: var(--fd-radius-panel);
+        background: var(--fd-color-surface-raised);
+    }
+
+    &__explanation {
+        --fd-text-caption-weight: var(--fd-font-weight-regular);
     }
 
     &__loading,

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
@@ -22,6 +23,7 @@ import type { DashboardBlockState, DashboardWeightTrendPoint } from '../../dashb
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTrendBlockComponent {
+    private readonly router = inject(Router);
     public readonly shouldRender = input.required<boolean>();
     public readonly state = input.required<DashboardBlockState>();
     public readonly cardClass = input.required<string>();
@@ -43,4 +45,12 @@ export class DashboardTrendBlockComponent {
     public readonly targetValue = input<number | null>(null);
 
     public readonly blockToggle = output();
+
+    protected activate(): void {
+        if (this.state().inert !== null) {
+            this.blockToggle.emit();
+            return;
+        }
+        void this.router.navigateByUrl(this.actionRoute());
+    }
 }

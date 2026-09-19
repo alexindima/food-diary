@@ -10,6 +10,8 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     private const int LocaleMaxLength = 10;
     private const int TagMaxLength = 64;
 
+    public Guid GroupId { get; private set; }
+
     public string Value { get; private set; } = string.Empty;
     public string Locale { get; private set; } = string.Empty;
     public int Weight { get; private set; }
@@ -33,6 +35,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         int normalizedWeight = NormalizeWeight(weight);
 
         var advice = new DailyAdvice(DailyAdviceId.New()) {
+            GroupId = Guid.NewGuid(),
             Value = normalizedValue,
             Locale = normalizedLocale,
             Weight = normalizedWeight,
@@ -41,6 +44,16 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
         advice.SetCreated();
         return advice;
+    }
+
+    public void AssignGroup(Guid groupId) {
+        if (groupId == Guid.Empty) {
+            throw new ArgumentException("Advice group id must not be empty.", nameof(groupId));
+        }
+        if (GroupId != groupId) {
+            GroupId = groupId;
+            SetModified();
+        }
     }
 
     public void Update(string? value = null, string? locale = null, int? weight = null, string? tag = null, bool clearTag = false) {

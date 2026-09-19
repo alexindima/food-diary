@@ -1797,7 +1797,21 @@
             "PROTEIN": "Protein",
             "PREP": "Prep",
             "MOVEMENT": "Movement",
-            "PLANNING": "Planning"
+            "PLANNING": "Planning",
+            "BALANCED-EATING": "Balanced eating",
+            "PLANT-FOODS": "Plant foods",
+            "PROTEIN-AND-FATS": "Protein and fats",
+            "FOOD-SAFETY": "Food safety",
+            "SHOPPING-AND-LABELS": "Shopping and labels",
+            "FOOD-LITERACY": "Food literacy",
+            "MEAL-PLANNING": "Meal planning",
+            "EVERYDAY-MOVEMENT": "Everyday movement",
+            "SLEEP-AND-REST": "Sleep and rest",
+            "SUSTAINABLE-HABITS": "Sustainable habits",
+            "BUDGET-FRIENDLY": "Budget-friendly eating",
+            "EATING-OUT": "Eating out",
+            "BUSY-DAYS": "Busy days",
+            "EATING-COMFORT": "Eating comfort"
         },
         "ACTIONS": {
             "ADD_MEAL_TITLE": "Add meal",
@@ -3081,6 +3095,8 @@
         "LAST_7_DAYS": "Last 7 days",
         "LAST_30_DAYS": "30 days",
         "LATEST_MEASUREMENT": "Latest measurement",
+        "OVER_PERIOD": "over the period",
+        "CHART_GOAL": "Goal {{value}} {{unit}}",
         "NO_CHANGE": "Stable",
         "FIRST_MEASUREMENT": "First measurement recorded. Add two more to see the trend.",
         "TWO_MEASUREMENTS": "One more measurement will unlock the trend chart.",
@@ -3420,17 +3436,17 @@
         "KCAL_DAY": "kcal/day",
         "KCAL": "kcal",
         "BMR": "Basal metabolic rate",
-        "FORMULA_ESTIMATE": "Formula estimate",
+        "FORMULA_ESTIMATE": "Formula-based expenditure",
         "WEIGHT_TREND": "Weight trend",
         "SUGGESTED_GOAL": "Suggested goal: {{ value }} kcal",
         "APPLY": "Apply",
         "CONFIDENCE": {
-            "LOW": "Low confidence — need more data",
+            "LOW": "Low confidence",
             "MEDIUM": "Medium confidence",
             "HIGH": "High confidence"
         },
         "HINTS": {
-            "DEFICIT_TOO_AGGRESSIVE": "Your calorie deficit is very aggressive. Consider increasing your target to avoid muscle loss.",
+            "DEFICIT_TOO_AGGRESSIVE": "Your current goal results in a large estimated calorie deficit. A higher goal may reduce it.",
             "DEFICIT_MODERATE": "Good moderate deficit for steady weight loss.",
             "DEFICIT_MILD": "Mild deficit — weight loss will be slow but sustainable.",
             "MAINTENANCE_ON_TRACK": "You're eating close to maintenance. Great for weight stability.",
@@ -3438,7 +3454,13 @@
             "SURPLUS_TOO_AGGRESSIVE": "Large surplus — you may gain weight faster than desired.",
             "SURPLUS_MODERATE": "Moderate surplus — good for lean muscle gain.",
             "REVIEW_GOALS": "Review your calorie target based on your current goals."
-        }
+        },
+        "ADAPTIVE_DESCRIPTION": "Estimated from your diary and weight changes",
+        "FORMULA_DESCRIPTION": "Formula-based estimate",
+        "GOAL_TITLE": "Calorie goal",
+        "CURRENT_GOAL": "Current goal",
+        "CALCULATED_GOAL": "Calculated goal",
+        "HELP": "The formula estimate uses your profile and activity. The diary estimate uses logged calories and weight changes. Confidence depends on available data and does not guarantee accuracy."
     },
     "TDEE_DIALOG": {
         "TITLE": "Energy expenditure",

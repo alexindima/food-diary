@@ -1,8 +1,9 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { Observable } from 'rxjs';
 
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
-import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse } from '../models/admin-daily-advice.models';
+import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse, AdminDailyAdviceUpdate } from '../models/admin-daily-advice.models';
 import { isDailyAdviceImport, MAX_ADVICE_IMPORT_BYTES } from './daily-advice-import';
 
 @Injectable()
@@ -16,6 +17,14 @@ export class AdminDailyAdvicesFacade {
     public readonly importError = signal<string | null>(null);
     public readonly importResult = signal<AdminDailyAdvicesImportResponse | null>(null);
     public readonly page = signal(0);
+
+    public update(id: string, value: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
+        return this.api.update(id, value);
+    }
+
+    public delete(id: string): Observable<void> {
+        return this.api.delete(id);
+    }
 
     public loadAdvices(): void {
         this.loading.set(true);

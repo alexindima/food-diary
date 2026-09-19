@@ -1,5 +1,10 @@
 <div class="tdee-card fd-stack fd-gap-sm" [class.tdee-card--loading]="isLoading()">
-    <fd-dashboard-widget-frame iconName="local_fire_department" iconTone="energy" [title]="'TDEE_CARD.TITLE' | translate">
+    <fd-dashboard-widget-frame
+        iconName="local_fire_department"
+        iconTone="energy"
+        [title]="'TDEE_CARD.TITLE' | translate"
+        [helpText]="'TDEE_CARD.HELP' | translate"
+    >
         <div class="tdee-card__body">
             @if (isLoading()) {
                 <div class="tdee-card__loading fd-row fd-gap-xs fd-ui-action-text fd-ui-text-muted">

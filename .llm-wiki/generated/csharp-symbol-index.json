@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4166,
-    "symbols": 4096,
+    "sourceFiles": 4191,
+    "symbols": 4121,
     "interfaceImplementationLinks": 190,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2161,
+      "class": 2170,
       "enum": 64,
       "interface": 400,
-      "record": 1351,
+      "record": 1367,
       "record struct": 120
     },
     "roles": {
-      "Command": 215,
-      "CommandHandler": 210,
+      "Command": 221,
+      "CommandHandler": 216,
       "Configuration": 95,
       "Controller": 105,
       "Entity": 97,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1700,
-      "Query": 267,
-      "QueryHandler": 195,
+      "Other": 1705,
+      "Query": 269,
+      "QueryHandler": 197,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
-      "Request": 153,
-      "Response": 217,
+      "Request": 156,
+      "Response": 218,
       "Service": 160,
       "Validator": 226,
       "ValueObject": 114,
@@ -2526,6 +2526,20 @@
       "line": 7
     },
     {
+      "name": "DeleteAdminDailyAdviceGroupCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteAdminDailyAdviceGroupCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
+      "line": 7
+    },
+    {
       "name": "DeleteAdminLessonCommand",
       "kind": "record",
       "role": "Command",
@@ -2566,6 +2580,27 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "ImportAdminDailyAdvicePairItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairItem.cs",
+      "line": 2
+    },
+    {
+      "name": "ImportAdminDailyAdvicePairsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportAdminDailyAdvicePairsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
+      "line": 9
     },
     {
       "name": "ImportAdminDailyAdviceItem",
@@ -2762,6 +2797,20 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
       "line": 7
+    },
+    {
+      "name": "UpdateAdminDailyAdviceGroupCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateAdminDailyAdviceGroupCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
+      "line": 9
     },
     {
       "name": "UpdateAdminLessonCommand",
@@ -2999,6 +3048,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Models/AdminContentReportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdviceGroupModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDailyAdviceGroupModel.cs",
       "line": 2
     },
     {
@@ -3280,6 +3336,20 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "GetAdminDailyAdviceGroupsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminDailyAdviceGroupsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
+      "line": 9
     },
     {
       "name": "GetAdminDailyAdvicesQuery",
@@ -3968,6 +4038,13 @@
       "line": 5
     },
     {
+      "name": "AdminDailyAdviceGroupHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Mappings/AdminDailyAdviceGroupHttpMappings.cs",
+      "line": 10
+    },
+    {
       "name": "AdminDashboardOverviewHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -4059,10 +4136,31 @@
       "line": 2
     },
     {
+      "name": "AdminDailyAdviceGroupUpdateHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdviceGroupUpdateHttpRequest.cs",
+      "line": 2
+    },
+    {
       "name": "AdminDailyAdviceImportItemHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/Admin/Presentation/Requests/AdminDailyAdviceImportItemHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdvicePairHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdvicePairsImportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminDailyAdvicePairsImportHttpRequest.cs",
       "line": 2
     },
     {
@@ -4427,6 +4525,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminContentReportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDailyAdviceGroupHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs",
       "line": 2
     },
     {
@@ -8308,11 +8413,32 @@
       "line": 2
     },
     {
+      "name": "DeleteDailyAdviceGroupCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/DailyAdvices/Application/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ImportDailyAdvicePairsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommandHandler.cs",
+      "line": 10
+    },
+    {
       "name": "ImportDailyAdvicesCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvices/ImportDailyAdvicesCommandHandler.cs",
       "line": 12
+    },
+    {
+      "name": "UpdateDailyAdviceGroupCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/DailyAdvices/Application/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommandHandler.cs",
+      "line": 10
     },
     {
       "name": "DependencyInjection",
@@ -8336,6 +8462,13 @@
       "line": 5
     },
     {
+      "name": "GetDailyAdviceGroupsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
+      "line": 9
+    },
+    {
       "name": "GetDailyAdvicesForAdministrationQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -8350,11 +8483,39 @@
       "line": 8
     },
     {
+      "name": "DeleteDailyAdviceGroupCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/DailyAdvices/Contracts/Commands/DeleteDailyAdviceGroup/DeleteDailyAdviceGroupCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ImportDailyAdvicePairsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs",
+      "line": 6
+    },
+    {
       "name": "ImportDailyAdvicesCommand",
       "kind": "record",
       "role": "Command",
       "path": "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvices/ImportDailyAdvicesCommand.cs",
       "line": 6
+    },
+    {
+      "name": "UpdateDailyAdviceGroupCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DailyAdviceGroupModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceGroupModel.cs",
+      "line": 2
     },
     {
       "name": "DailyAdviceImportItem",
@@ -8378,10 +8539,24 @@
       "line": 2
     },
     {
+      "name": "DailyAdvicePairImportItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdvicePairImportItem.cs",
+      "line": 2
+    },
+    {
       "name": "GetDailyAdviceQuery",
       "kind": "record",
       "role": "Query",
       "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDailyAdviceGroupsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQuery.cs",
       "line": 6
     },
     {

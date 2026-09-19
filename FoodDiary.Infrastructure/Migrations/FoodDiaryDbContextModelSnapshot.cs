@@ -588,6 +588,11 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Property<DateTime>("CreatedOnUtc")
                     .HasColumnType("timestamp with time zone");
 
+                b.Property<Guid>("GroupId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
                 b.Property<string>("Locale")
                     .IsRequired()
                     .HasMaxLength(10)
@@ -611,6 +616,9 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasDefaultValue(1);
 
                 b.HasKey("Id");
+
+                b.HasIndex("GroupId", "Locale")
+                    .IsUnique();
 
                 b.HasIndex("Locale", "Tag");
 

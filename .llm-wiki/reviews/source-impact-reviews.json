@@ -279,21 +279,25 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "302053473c79245b3486eebd10e393115d8e635c0206910a2901e3ea03c9d655",
+      "pageSha256": "433b745096b5db261a9ea75c834051853f3fb8279a1d4ccc30378a4e9f44be9f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
-          "sha256": "0a9626c94824e58028e0897c9319e244f244c12f3bb9eecbf4fe883287696986"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "e76b8e501390f89c304febaa08422cd6a0cf126c9d3f50b580ced08846c337bc"
         },
         {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "9dc903f477f3dc9e90f1cb9adf9edb0701742c31fc27014c9fe7a3bcbac1f4c8"
+          "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "1cf33d635833f255bc61fe9ad74e9a6261a49c793222b371bd1c703c6c2fed65"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "7aed30f76439fb59343c5f89763a368aa5d2f77928355acb7e1dbaae4386e140"
         }
       ],
-      "reason": "Verified module integration-test path aliases preserve current output paths; SQL/JSON backend-contract parity passes all seven views. Removing accidental zero-ambiguity counts preserves exact shape, source-hash and fail-closed guarantees.",
+      "reason": "Reviewed two narrowed role affinities; frozen corpus answers and thresholds are unchanged. Evaluation adds per-corpus progress, expected/actual paths, ranking reasons and explicit runtime-unavailable diagnostics. Full search thresholds passed; stable-tree parity validation follows. Query-context documents the publication and snapshot contracts.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:28.7063787Z"
+      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
+      "reviewedAtUtc": "2026-09-18T12:11:25.8702533Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -635,14 +639,14 @@
       "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
-          "sha256": "61305174610730334aa28d0647dd3945dd4877460737deb44b77eea13733be47"
+          "path": "FoodDiary.Web.Client/.husky/pre-push",
+          "sha256": "528a7762081d0d7b718f8eaa071ef68aaf654fbc87c1e0655fc2a0032e833824"
         }
       ],
-      "reason": "Reviewed Angular signal-model migration and generated contract differences: public binding names and payloads remain stable; model inputs, implicit Change outputs and two-way consumer edges are now indexed. Backend graph, HTTP API, access controls and data flows are unchanged. App tests (2733), admin tests (149), app/admin production builds and changed-file lint passed; focused event-forwarding and parent-update tests passed. Frontend contract SQL/JSON parity passed all 8 cases, including model metadata and two-way consumer regression assertions. Existing workflow guidance remains valid; frontend-contract-review documents the added model discovery.",
+      "reason": "Reviewed pre-push sequencing: affected index freshness is preserved; the same frozen retrieval and Node/.NET parity gate used by CI now runs before expensive solution checks. Existing frontend and backend checks remain mandatory; shell syntax and eight build-workflow tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "8110bc590e41fd337eb84ff0bf2ed1b4586f5b48",
-      "reviewedAtUtc": "2026-09-16T08:41:36.2705858Z"
+      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
+      "reviewedAtUtc": "2026-09-18T12:08:25.7816589Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -909,22 +913,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a65d4f99479af7463150df6fab47a9f3ca3fd3d87df8b0d0d7879807d79ea6e7"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "08d282f76c3137727cbc3e1cf7e9ac4e6cf904b0dbde5222f19cdef8e2a6561a"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "53be9279915b701fa1be194cf9f909fa6154f2dc8a41023b50a054e60fd47db4"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "e76b8e501390f89c304febaa08422cd6a0cf126c9d3f50b580ced08846c337bc"
         }
       ],
-      "reason": "Context display is read-only and Angular text-escaped, schema contains no user sample or credential data. Existing admin access and AI test quotas unchanged; no live provider requests in validation.",
+      "reason": "Ranking policy changes are limited to localized resource rendering and dashboard projection intent. Security query rules and frozen security corpus remain intact; no runtime authorization, provider, credential or privacy behavior changes.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:59:01.9865464Z"
+      "gitHead": "eb381d509bcb1c820fb0bf3d58a66cdc487f6b11",
+      "reviewedAtUtc": "2026-09-18T12:08:28.4700584Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

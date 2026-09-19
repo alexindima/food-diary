@@ -31,12 +31,7 @@
     } @else {
         <p>{{ 'ADMIN_DAILY_ADVICES.TOTAL' | translate: { count: advices().length } }}</p>
         @for (advice of pageItems(); track advice.id) {
-            <fd-ui-card>
-                <p>{{ advice.value }}</p>
-                <p class="fd-ui-meta-text">
-                    {{ advice.locale }} · {{ 'ADMIN_DAILY_ADVICES.WEIGHT' | translate }}: {{ advice.weight }} · {{ advice.tag }}
-                </p>
-            </fd-ui-card>
+            <fd-admin-daily-advice-group-card [advice]="advice" (changed)="loadAdvices()" />
         } @empty {
             <p>{{ 'ADMIN_DAILY_ADVICES.EMPTY' | translate }}</p>
         }

@@ -37,34 +37,41 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: DailyAdvice
-- Public contract files: 10
+- Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 10
+- Public contract types: 16
 - Interfaces: 2
-- DTO/read-model/projection types: 3
+- DTO/read-model/projection types: 4
 - Enums: 0
 - Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 0
 - `class DailyAdviceErrors`
 - `interface IDailyAdviceReadModelRepository`
 - `interface IDailyAdviceWriteRepository`
+- `record DailyAdviceGroupModel`
 - `record DailyAdviceImportItem`
 - `record DailyAdviceImportModel`
 - `record DailyAdviceModel`
+- `record DailyAdvicePairImportItem`
 - `record DailyAdviceReadModel`
+- `record DeleteDailyAdviceGroupCommand`
+- `record GetDailyAdviceGroupsQuery`
 - `record GetDailyAdviceQuery`
 - `record GetDailyAdvicesForAdministrationQuery`
+- `record ImportDailyAdvicePairsCommand`
 - `record ImportDailyAdvicesCommand`
+- `record UpdateDailyAdviceGroupCommand`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ImportDailyAdvicesTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs`
