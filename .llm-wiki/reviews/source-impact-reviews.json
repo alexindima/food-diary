@@ -640,13 +640,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "a2ed56da5b3b70d17480fc1f10784118682d95a19b3cf4f58e4a6c571269ab94"
+          "sha256": "9a2c67a4360a7b5aa3050b17914bf786a375797dfeda0337935109de2e311916"
         }
       ],
-      "reason": "CI frontend unit commands now collect coverage; Wiki pipeline jobs and index verification commands are unchanged.",
+      "reason": "Pinned new coverage upload action to the same reviewed SHA used by existing workflow uploads; Wiki job behavior unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:27:43.1323944Z"
+      "gitHead": "cfa823b05c540fc817a8a1463715986a6689230b",
+      "reviewedAtUtc": "2026-09-19T04:16:59.2350561Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -869,13 +869,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "a2ed56da5b3b70d17480fc1f10784118682d95a19b3cf4f58e4a6c571269ab94"
+          "sha256": "9a2c67a4360a7b5aa3050b17914bf786a375797dfeda0337935109de2e311916"
         }
       ],
-      "reason": "CI adds frontend coverage artifacts without changing Wiki review report generation or readiness gates.",
+      "reason": "Coverage upload now uses the existing repository-pinned action SHA; review-report workflow remains unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:27:45.4326565Z"
+      "gitHead": "cfa823b05c540fc817a8a1463715986a6689230b",
+      "reviewedAtUtc": "2026-09-19T04:17:02.8727354Z"
     },
     {
       "pageId": "workflow-risk-calibration",
