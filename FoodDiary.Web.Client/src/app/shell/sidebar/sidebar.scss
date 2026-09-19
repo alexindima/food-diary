@@ -191,9 +191,9 @@
         grid-template-columns: auto 1fr auto;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-surface);
-        border: var(--fd-border-default);
-        box-shadow: var(--fd-shadow-sm);
+        background: transparent;
+        border: var(--fd-border-width) solid transparent;
+        box-shadow: var(--fd-shadow-none);
         cursor: pointer;
         text-align: left;
         transition:
@@ -201,8 +201,7 @@
             transform 0.15s ease;
 
         &:hover {
-            box-shadow: var(--fd-shadow-md);
-            transform: translateY(-1px);
+            background: var(--fd-bg-brand-tint);
         }
 
         &:where(:focus-visible) {

@@ -1,10 +1,11 @@
 .fd-ui-sidebar {
+    --fd-space-sidebar-nav-gap: var(--fd-space-xs);
     --fd-ui-sidebar-background: var(--fd-bg-sidebar);
     --fd-ui-sidebar-border: var(--fd-border-default);
     --fd-ui-sidebar-shadow: var(--fd-shadow-shell-sidebar);
     --fd-ui-sidebar-text: var(--fd-color-text-muted);
-    --fd-ui-sidebar-brand-background: var(--fd-bg-surface);
-    --fd-ui-sidebar-brand-shadow: var(--fd-shadow-md);
+    --fd-ui-sidebar-brand-background: transparent;
+    --fd-ui-sidebar-brand-shadow: var(--fd-shadow-none);
     --fd-ui-sidebar-logo-background: transparent;
     --fd-ui-sidebar-logo-text: var(--fd-color-white);
     --fd-ui-sidebar-logo-mark-background: var(--fd-color-primary-600);
@@ -12,13 +13,13 @@
     --fd-ui-sidebar-brand-subtitle: var(--fd-color-primary-600);
     --fd-ui-sidebar-section-title: var(--fd-color-text-muted);
     --fd-ui-sidebar-link-text: var(--fd-color-text-muted);
-    --fd-ui-sidebar-link-icon: var(--fd-color-primary-600);
+    --fd-ui-sidebar-link-icon: var(--fd-color-text-muted);
     --fd-ui-sidebar-link-hover-background: var(--fd-bg-brand-tint);
     --fd-ui-sidebar-link-hover-text: var(--fd-color-text-strong);
-    --fd-ui-sidebar-link-active-background: var(--fd-bg-brand);
-    --fd-ui-sidebar-link-active-text: var(--fd-color-on-brand);
-    --fd-ui-sidebar-link-active-shadow: var(--fd-shadow-accent-strong);
-    --fd-ui-sidebar-link-active-icon: var(--fd-color-on-brand);
+    --fd-ui-sidebar-link-active-background: color-mix(in srgb, var(--fd-color-primary-600) 9%, transparent);
+    --fd-ui-sidebar-link-active-text: var(--fd-color-primary-600);
+    --fd-ui-sidebar-link-active-shadow: var(--fd-shadow-none);
+    --fd-ui-sidebar-link-active-icon: var(--fd-color-primary-600);
     position: sticky;
     top: 0;
     height: 100dvh;
@@ -198,6 +199,8 @@
 
 .fd-ui-sidebar__section-slot--bottom {
     order: 3;
+    padding-top: var(--fd-space-sm);
+    border-top: var(--fd-border-default);
 }
 
 .fd-ui-sidebar__spacer {

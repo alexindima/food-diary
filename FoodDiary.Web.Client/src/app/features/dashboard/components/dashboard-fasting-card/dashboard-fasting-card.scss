@@ -10,7 +10,7 @@
     overflow: hidden;
     box-sizing: border-box;
     height: 100%;
-    padding: var(--fd-space-lg);
+    padding: var(--fd-space-md) var(--fd-space-lg);
     border: var(--fd-border-strong);
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-card-surface);
@@ -19,7 +19,7 @@
 .dashboard-fasting-card {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-lg);
+    gap: var(--fd-space-sm);
     color: var(--fd-color-text);
     font-variant-numeric: tabular-nums;
     &__period {
@@ -271,7 +271,7 @@
 }
 .dashboard-fasting-card__now {
     position: relative;
-    margin-top: var(--fd-space-lg);
+    margin-top: var(--fd-space-md);
     left: clamp(0px, calc(var(--position) - 2em), calc(100% - 4em));
     width: 4em;
     display: flex;
