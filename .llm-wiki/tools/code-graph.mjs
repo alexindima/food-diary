@@ -9,14 +9,14 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
-import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership } from './code-graph-maintenance.mjs';
+import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, contextPathOwnership, exactFileIdentity, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '15-named-import-function-consumers-v2';
-const contextSearchSchemaVersion = '9';
+const contextSearchSchemaVersion = '10';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -981,7 +981,7 @@ function refreshContextSearch(database) {
   }));
   const metadata = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value;
   const existingCount = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
-  if (metadata === fingerprint && existingCount > 0) {
+  if (metadata === fingerprint && existingCount > 0 && inspectProjectionCompleteness(database).length === 0) {
     return { refreshed: false, documents: existingCount, fingerprint };
   }
 
@@ -1017,13 +1017,15 @@ function refreshContextSearch(database) {
     const sourceBody = ['powershell', 'json', 'yaml', 'configuration'].includes(file.language)
       ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
       : (tokensByPath.get(file.path) ?? []).join(' ');
+    const synopsis = file.language === 'powershell'
+      ? sourceBody.match(/\.SYNOPSIS\s*\r?\n([\s\S]*?)(?=\r?\n\s*\.[A-Z]|#>)/i)?.[1]?.trim() ?? '' : '';
     insertContextRecord(
       'code',
       file.path,
       file.path,
       file.path,
       file.language,
-      expandSearchText((symbolsByPath.get(file.path) ?? []).join(' ')),
+      expandSearchText((symbolsByPath.get(file.path) ?? []).join(' ') + (synopsis ? `\n${synopsis}` : '')),
       expandSearchText(sourceBody));
   }
   for (const item of queryDocuments) {
@@ -2277,7 +2279,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
   const changeType = String(filters.changeType ?? 'Any').toLowerCase();
   const stronglyRequestsTest = explicitlyRequestsTest &&
     (changeType === 'tests' || (changeType === 'frontend' && directTerms.includes('tests')) ||
-      /^(?:какие\s+тесты|which\s+tests|what\s+tests)(?=\s|$)/iu.test(query.trim()));
+      /^(?:(?:какие|найти|найди|покажи)\s+тесты|(?:which|what|find|show)\s+tests)(?=\s|$)/iu.test(query.trim()));
   const testSubjectWeights = stronglyRequestsTest ? testIdentityWeights(directTerms,
     candidates.map(item => ({ path: String(item.path ?? ''), identity: expandSearchText(basename(String(item.path ?? '').replaceAll('\\', '/'))).toLowerCase() })),
     contextSearchRanking.directFileNameAffinity ?? {}) : new Map();
@@ -2637,6 +2639,11 @@ function searchContext(database, query, limit, filters = {}, batchState) {
           boostTerms.some((term) => ['repository', 'project', 'module', 'convention', 'access', 'readonly'].includes(term)));
       score += requestsGuidance ? Number(contextSearchRanking.agentGuideBoost ?? 15) : -Number(contextSearchRanking.agentGuideBoost ?? 15);
       reasons.push(requestsGuidance ? 'agent guide affinity' : 'agent guide penalty for code intent');
+    }
+    if (item.recordType === 'code' && /^[A-Za-z_$][\w$]*$/.test(query.trim()) && /[a-z][A-Z]/.test(query.trim()) &&
+        String(item.title).split('\n')[0].split(/\s+/).some(symbol => symbol.toLowerCase() === query.trim().toLowerCase())) {
+      score = 900_000;
+      reasons.push('exact declared symbol identity');
     }
     if (exactFileIdentity(path, query)) {
       score = 1_000_000;

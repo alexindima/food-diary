@@ -41,6 +41,8 @@ $recipesSourcePrefix = if (Test-Path -LiteralPath (Join-Path $repositoryRoot $fl
 $russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
 Write-CodeGraphRegressionTiming 'process and ranking fixtures'
 $build = & $manager build -Format Json | ConvertFrom-Json
+& node --test (Join-Path $PSScriptRoot 'code-graph-maintenance-recovery.test.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Incomplete projection recovery regression failed.' }
 & (Join-Path $PSScriptRoot 'Test-LlmWikiCodeGraphPathTransport.ps1')
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }
 if ([int]$build.typedEdges -lt 1000) { throw 'Code graph build produced an implausibly small typed relationship graph.' }

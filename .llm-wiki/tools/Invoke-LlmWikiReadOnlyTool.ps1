@@ -103,6 +103,8 @@ function Select-RelevantOverlayPath {
 
     $scopePaths = if ($Arguments.ContainsKey('ProposedPath') -and @($Arguments['ProposedPath']).Count -gt 0) {
         @($Arguments['ProposedPath'])
+    } elseif ($Arguments.ContainsKey('ScopePath') -and @($Arguments['ScopePath']).Count -gt 0) {
+        @($Arguments['ScopePath'])
     } elseif ($Arguments.ContainsKey('ChangedPath')) {
         @($Arguments['ChangedPath'])
     } else {
@@ -125,20 +127,21 @@ function Select-RelevantOverlayPath {
 function Get-ReadOnlySnapshotFingerprint {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
-        [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$OverlayPath
+        [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$OverlayPath,
+        [switch]$SlotKey
     )
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
-    $material.Add('schema=4')
+    $material.Add('schema=5')
     $material.Add("head=$head")
     foreach ($relativePath in @($OverlayPath | Sort-Object -Unique)) {
-        $material.Add("$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))")
+        $material.Add($(if ($SlotKey) { "scope=$relativePath" } else { "$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))" }))
     }
     foreach ($dependencyPath in @(
         '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
     )) {
-        $material.Add("dependency:$dependencyPath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $dependencyPath))")
+        if (-not $SlotKey) { $material.Add("dependency:$dependencyPath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $dependencyPath))") }
     }
     $hasher = [Security.Cryptography.SHA256]::Create()
     try {
@@ -359,6 +362,8 @@ $relativeToolPath = Get-RepositoryRelativePath -RepositoryRoot $sourceRepository
 if (-not $relativeToolPath) { throw "Read-only Wiki tool must be inside the repository: $ToolPath" }
 $requestedScopePaths = if ($ToolArguments.ContainsKey('ProposedPath') -and @($ToolArguments['ProposedPath']).Count -gt 0) {
     @($ToolArguments['ProposedPath'])
+} elseif ($ToolArguments.ContainsKey('ScopePath') -and @($ToolArguments['ScopePath']).Count -gt 0) {
+    @($ToolArguments['ScopePath'])
 } elseif ($ToolArguments.ContainsKey('ChangedPath')) {
     @($ToolArguments['ChangedPath'])
 } else {
@@ -367,7 +372,10 @@ $requestedScopePaths = if ($ToolArguments.ContainsKey('ProposedPath') -and @($To
 $workspaceOverlayPaths = @(Get-WorkspaceOverlayPaths -RepositoryRoot $sourceRepositoryRoot -RelevantPath $requestedScopePaths)
 $overlayPaths = @(Select-RelevantOverlayPath -WorkspacePath $workspaceOverlayPaths -Arguments $ToolArguments)
 Write-ReadOnlyTiming -Stage 'outer-overlay-ready'
-$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $overlayPaths
+$snapshotContentFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $overlayPaths
+# Serialize reuse within one HEAD/scope slot. New edits refresh its overlay,
+# avoiding a full checkout per keystroke while other scopes retain concurrency.
+$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath @($requestedScopePaths) -SlotKey
 Write-ReadOnlyTiming -Stage 'outer-fingerprint-ready'
 $snapshotRoot = Join-Path $snapshotParent $snapshotFingerprint
 $readyPath = Join-Path $snapshotParent "$snapshotFingerprint.ready"
@@ -375,6 +383,7 @@ $snapshotLockPath = Join-Path $snapshotParent "$snapshotFingerprint.lock"
 $snapshotLock = $null
 $removeSnapshot = $false
 $snapshotCreated = $false
+$snapshotRefreshed = $false
 $requiredSnapshotFiles = @(
     '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
     '.llm-wiki/tools/LlmWikiGitPaths.ps1'
@@ -395,7 +404,8 @@ try {
     }
     Write-ReadOnlyTiming -Stage 'outer-lock-acquired'
     $snapshotIsReady = (Test-Path -LiteralPath $readyPath -PathType Leaf) -and
-        (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git'))
+        (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git')) -and
+        ([IO.File]::ReadAllText($readyPath).Trim() -ceq $snapshotContentFingerprint)
     if ($snapshotIsReady) {
         foreach ($requiredPath in $requiredSnapshotFiles) {
             $sourceRequiredPath = Join-Path $sourceRepositoryRoot $requiredPath
@@ -414,19 +424,26 @@ try {
             throw "Refusing to prepare a read-only snapshot outside its cache root: $resolvedSnapshotRoot"
         }
         Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
-        if (Test-Path -LiteralPath $snapshotRoot) { Remove-Item -LiteralPath $snapshotRoot -Recurse -Force }
         $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $sourceRepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot clone.').Lines[0].Trim()
         $previousErrorActionPreference = $ErrorActionPreference
         try {
             $ErrorActionPreference = 'Continue'
-            $cloneOutput = & git clone --shared --no-checkout --quiet $sourceRepositoryRoot $snapshotRoot 2>&1 | Out-String
-            $cloneExitCode = $LASTEXITCODE
-            if ($cloneExitCode -eq 0) {
-                $checkoutOutput = & git -C $snapshotRoot checkout --detach --quiet $head 2>&1 | Out-String
+            if (Test-Path -LiteralPath (Join-Path $resolvedSnapshotRoot '.git') -PathType Container) {
+                $snapshotRefreshed = $true
+                # Only this verified, exclusively locked private clone is reset.
+                # Keep ignored compiler/graph caches; remove prior untracked overlay.
+                $cloneOutput = & git -C $resolvedSnapshotRoot reset --hard --quiet $head 2>&1 | Out-String
+                $cloneExitCode = $LASTEXITCODE
+                $checkoutOutput = & git -C $resolvedSnapshotRoot clean -fd --quiet -e .artifacts/ 2>&1 | Out-String
                 $checkoutExitCode = $LASTEXITCODE
             } else {
-                $checkoutOutput = ''
-                $checkoutExitCode = -1
+                if (Test-Path -LiteralPath $resolvedSnapshotRoot) { Remove-Item -LiteralPath $resolvedSnapshotRoot -Recurse -Force }
+                $cloneOutput = & git clone --shared --no-checkout --quiet $sourceRepositoryRoot $snapshotRoot 2>&1 | Out-String
+                $cloneExitCode = $LASTEXITCODE
+                if ($cloneExitCode -eq 0) {
+                    $checkoutOutput = & git -C $snapshotRoot checkout --detach --quiet $head 2>&1 | Out-String
+                    $checkoutExitCode = $LASTEXITCODE
+                } else { $checkoutOutput = ''; $checkoutExitCode = -1 }
             }
         } finally {
             $ErrorActionPreference = $previousErrorActionPreference
@@ -436,14 +453,20 @@ try {
         }
         $snapshotCreated = $true
         Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path $overlayPaths
-        Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path @(
-            '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
-            '.artifacts/llm-wiki/code-graph/code-graph.sqlite-wal'
-            '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
-        )
-        [IO.File]::WriteAllText($readyPath, $snapshotFingerprint + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+        if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot '.artifacts/llm-wiki/code-graph/code-graph.sqlite'))) {
+            Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path @(
+                '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
+                '.artifacts/llm-wiki/code-graph/code-graph.sqlite-wal'
+                '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
+            )
+        }
+        $currentOverlayPaths = @(Select-RelevantOverlayPath -WorkspacePath @(Get-WorkspaceOverlayPaths -RepositoryRoot $sourceRepositoryRoot -RelevantPath $requestedScopePaths) -Arguments $ToolArguments)
+        if ((Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $currentOverlayPaths) -cne $snapshotContentFingerprint) {
+            throw 'Workspace changed while preparing the read-only snapshot. Retry the query against the new state.'
+        }
+        [IO.File]::WriteAllText($readyPath, $snapshotContentFingerprint + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     }
-    Write-ReadOnlyTiming -Stage $(if ($snapshotCreated) { 'outer-snapshot-created' } else { 'outer-snapshot-reused' })
+    Write-ReadOnlyTiming -Stage $(if ($snapshotRefreshed) { 'outer-overlay-refreshed' } elseif ($snapshotCreated) { 'outer-snapshot-created' } else { 'outer-snapshot-reused' })
     $snapshotToolPath = Join-Path $snapshotRoot $relativeToolPath
     if (-not (Test-Path -LiteralPath $snapshotToolPath -PathType Leaf) -or
         (Get-FileHashOrMissing $snapshotToolPath) -cne (Get-FileHashOrMissing $ToolPath)) {

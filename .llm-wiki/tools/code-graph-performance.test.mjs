@@ -11,6 +11,38 @@ import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { contextPathOwnership, exactFileIdentity } from './code-graph-path-layout.mjs';
 import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, repairWikiReferences } from './code-graph-maintenance.mjs';
 
+test('maintenance detects missing, orphaned and duplicate feature rows without pretending repair succeeded', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`CREATE TABLE context_search(path); CREATE TABLE context_search_features(context_rowid, module, layer);
+      INSERT INTO context_search VALUES ('Modules/Identity/Domain/Token.cs'), ('Modules/Identity/Domain/User.cs');
+      INSERT INTO context_search_features VALUES (2, 'Identity', 'domain'), (2, 'Identity', 'domain'), (99, 'Identity', 'domain');`);
+    const result = inspectProjectionOwnership(db, discoverProjectOwnership(['Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj']), true);
+    assert.equal(result.unresolvedCount, 3);
+    assert.equal(result.repairedRecords, 0);
+    assert.deepEqual(result.findings.map(item => item.kind).sort(), ['duplicate-projection-features', 'missing-projection-features', 'orphan-projection-features']);
+  } finally { db.close(); }
+});
+
+test('Markdown repair preserves literals and formatting while repairing real destination spans', () => {
+  const literal = '[Example](../../src/Old.cs)';
+  const preserved = ['```md\n' + literal + '\n```', '~~~~\n' + literal + '\n~~~~',
+    '> ```md\n> ' + literal + '\n> ```', '    ' + literal, '`' + literal + '`',
+    '``prefix `' + literal + '``', '<!-- ' + literal + ' -->', '<pre>' + literal + '</pre>', '\\[Example](../../src/Old.cs)'];
+  const original = preserved.join('\r\n\r\n') + '\r\n😀 [real](../../src/Old.cs#section "title")\r\n[ref]: <../../src/Old File.cs> "title"\r\n[use][ref]\r\n';
+  const result = repairWikiReferences(original, '.llm-wiki/system/example.md',
+    new Map([['src/Old.cs', 'src/New.cs'], ['src/Old File.cs', 'src/New File.cs']]), new Set(['src/New.cs', 'src/New File.cs']));
+  assert.equal(result.repaired, 2);
+  for (const value of preserved) assert.ok(result.text.includes(value), value);
+  assert.ok(result.text.includes('😀 [real](../../src/New.cs#section "title")\r\n'));
+  assert.ok(result.text.includes('[ref]: <../../src/New%20File.cs> "title"\r\n'));
+  const titleLiteral = `[real](../../src/Old.cs "${literal}")\n[ref]: ../../src/Old.cs "${literal}"\n`;
+  const withTitles = repairWikiReferences(titleLiteral, '.llm-wiki/system/example.md',
+    new Map([['src/Old.cs', 'src/New.cs']]), new Set(['src/New.cs']));
+  assert.equal(withTitles.repaired, 2);
+  assert.equal(withTitles.text.split(literal).length, 3);
+});
+
 test('Wiki provenance repair only follows confirmed moves and preserves narrative', () => {
   const original = '---\r\nid: example\r\nsources:\r\n  - Modules/Old.cs\r\n  - missing.cs\r\n---\r\nOld behavior is unchanged. [Source](../../Modules/Old.cs#rule)\r\n';
   const result = repairWikiReferences(original, '.llm-wiki/system/example.md',
@@ -60,6 +92,20 @@ test('physical module ownership covers sibling layers, tests and misleading name
   assert.deepEqual(contextPathOwnership('Modules/Ai/Application/Abstractions/IClient.cs'), { module: 'Ai', layer: 'abstractions' });
   assert.deepEqual(contextPathOwnership('Modules/Ai/Infrastructure/Model/Config.cs'), { module: 'Ai', layer: 'persistence' });
   assert.equal(contextPathOwnership('FoodDiary.Web.Client/src/app/services/domain.service.ts').layer, 'frontend');
+});
+
+test('project discovery includes services, shared libraries, hosts and unknown identities after relocation', () => {
+  const projects = discoverProjectOwnership([
+    'Moved/Shared/FoodDiary.Email.PersistenceModel.csproj',
+    'Moved/Service/FoodDiary.MailRelay.Application.csproj',
+    'Moved/Host/FoodDiary.Web.Api.csproj',
+    'Moved/Unknown/Future.Component.csproj',
+  ]);
+  assert.equal(projects.length, 4);
+  assert.equal(projectOwnership('Moved/Shared/Email.cs', projects).layer, 'persistence');
+  assert.equal(projectOwnership('Moved/Service/Send.cs', projects).layer, 'application');
+  assert.equal(projectOwnership('Moved/Host/Program.cs', projects).layer, 'api');
+  assert.equal(projectOwnership('Moved/Unknown/Thing.cs', projects).layer, 'unknown');
 });
 
 test('exact file identity preserves paths and test suffixes without substring guesses', () => {

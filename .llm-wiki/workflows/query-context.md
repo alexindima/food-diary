@@ -91,10 +91,12 @@ test/diagnostic baseline and never select it automatically.
 JSON result callers reuse an exact content-addressed result keyed by the query
 arguments, HEAD, relevant worktree paths, and the selected source dependencies.
 SQLite routes use the graph dependency fingerprint; explicit JSON baselines hash
-their generated source files. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
+their generated source files. For the JSON baseline, `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
 corresponding application project paths through the backend module map, including
-`Modules/<Module>/Application` and supported legacy layouts. An unrelated edit no longer invalidates
-the query, while an edit inside the scope or a dependent-index change does.
+`Modules/<Module>/Application` and supported legacy layouts. Unrelated edits can
+reuse that JSON cache; scoped edits or dependent-index changes invalidate it.
+SQLite context also keys on the complete graph change-set fingerprint, so an
+unrelated edit that changes that projection can invalidate its result cache.
 Unchanged orchestration calls avoid querying and transporting catalog/symbol
 records again.
 Text output remains an uncached interactive view.
@@ -201,7 +203,10 @@ as JavaScript, TypeScript, C# and PowerShell tests. References are not execution
 Use `wiki.ps1 context -Query '<question>' -Compact -Format Json` for a single
 bounded list instead of repeated legacy categories. The SQL compact view has
 a 12000-character budget and reports omitted candidates; with room for more
-than one result it preserves a test lead when available. Omit `-Compact` for
+than one result it includes a test lead when this does not displace the only
+representative of a requested scope. `output.missingScopes` reports uncovered
+scopes when the candidate limit is insufficient. If the character budget cannot
+retain scope representatives, the command fails explicitly. Omit `-Compact` for
 the unchanged full response schema. Cached responses mark `cache.hit` and
 `cache.storedTimings`: stored timings are not a fresh latency measurement.
 SQLite cache reuse follows freshness validation and fingerprints the graph,
@@ -212,6 +217,16 @@ names across different paths remain explicitly ambiguous. Physical module and
 layer metadata derive from current project identities, including relocated
 project folders. [Self-maintenance](self-maintenance.md) checks this projection
 and repairs deterministic drift through the existing writer.
+
+Exact compound declared symbols precede fuzzy filenames. PowerShell synopsis
+text is indexed as command identity, making a tool's purpose searchable in its
+documented languages without adding query-specific ranking rules.
+
+Read-only facades reuse an exclusively locked checkout per HEAD and requested
+scope. Changed overlays reset the private checkout and apply the current files;
+obsolete untracked files are removed. A fingerprint recheck rejects concurrent
+source changes during preparation. `ScopePath` and `ProposedPath` both constrain
+the overlay. Verbose snapshot stage timings separate preparation from lookup.
 
 The maintenance regression corpus records audit-driven cases, not a new blind
 holdout. Keep independently collected answer-quality questions separate from

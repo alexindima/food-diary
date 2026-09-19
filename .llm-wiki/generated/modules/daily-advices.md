@@ -72,6 +72,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ImportDailyAdvicesTests.cs`
 - [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs`

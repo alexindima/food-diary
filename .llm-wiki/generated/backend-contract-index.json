@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1253,
     "ambiguousContracts": 2,
-    "consumerEdges": 9781,
+    "consumerEdges": 9792,
     "productionConsumerEdges": 5595,
-    "testConsumerEdges": 4186,
+    "testConsumerEdges": 4197,
     "consumedContracts": 1253,
     "unconsumedContracts": 0
   },
@@ -22218,6 +22218,19 @@
       "referenceCount": 3
     },
     {
+      "contract": "AdminAiPromptDraftHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAiPromptTestControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "AdminAiPromptHttpResponse",
       "roles": [
         "Response"
@@ -22294,6 +22307,19 @@
       "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "AdminAiPromptInspectionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAiPromptInspectionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAiPromptTestControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "AdminAiPromptScenarioHttpResponse",
@@ -67892,6 +67918,19 @@
         "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IDailyAdviceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ImportDailyAdvicesTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -79087,7 +79126,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 10
     },
     {
       "contract": "IImageAssetContentService",
@@ -86474,6 +86513,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ImportAdminDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ImportAdminDailyAdvicesCommand",
       "roles": [
         "Command"
@@ -86638,7 +86690,33 @@
         "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ImportDailyAdvicePairsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -90799,7 +90877,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 10
     },
     {
       "contract": "IOpenFoodFactsProductCacheReadRepository",
@@ -109078,6 +109156,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "ISender",
@@ -141239,6 +141330,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "TestAdminAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TestAdminAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAiPromptTestControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "TestAiPromptCommand",
       "roles": [
         "Command"
@@ -141273,9 +141390,22 @@
         "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "TestAiPromptCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Commands/TestAiPrompt/TestAiPromptCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptWorkbenchTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "ToggleRecipeLikeCommand",
@@ -142251,6 +142381,19 @@
       "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "UpdateDailyAdviceGroupCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Contracts/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "UpdateDesiredWaistCommand",

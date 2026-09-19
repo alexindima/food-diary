@@ -185,21 +185,21 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
+      "pageSha256": "4f28ea95d3a372fbbe73c4de4f4bee2a1dc475842bdf62db6c29ea7e34a47e20",
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "181517d94f48f213992d60678d48b80859aee07a18709fe8cc1404eaba9e6a4b"
+          "sha256": "fd8bffb3ed9bd25758f39c0ab16a2e21381bffe8ca5ee686a6875fa634fb61a9"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "69e4c7994185697bffed97c16f1c4f44dc000371a9cb29a7a9ad161ce4e8a469"
+          "sha256": "f438ce67ee2156aeefefd071fd9af89de9ae76f96f7d61a1b15d76797aea2e00"
         }
       ],
-      "reason": "Read-only regression scheduling now expands the legacy group into the same four tests across three concrete groups. Mutation fixtures and their temporary files run inside a private clone with bounded cleanup; the cold checkout overlaps safely, while retrieval stays serial behind shared graph writers. The parallel uncached run passed all groups with unchanged source fingerprints. Existing output contracts, failure checks and safety assertions remain intact.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T03:24:53.2191205Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:13.7564847Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -238,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
+          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
         }
       ],
-      "reason": "Reviewed current generated-index diff and additive graph ownership repair: dependency rules, consumer filters, runtime interpretation and static-test caveats are unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:27.4891203Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:13.9775954Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -283,17 +283,37 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "433b745096b5db261a9ea75c834051853f3fb8279a1d4ccc30378a4e9f44be9f",
+      "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "79b8024cfcce954d6e99280e8ca862c82fbf2c16275008e802420fa670bc1f05"
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "a3007a2fe1103d588ee78ca98366fe7adb4b7332b788e1a0ba738b284dc30163"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "b5b86a5e1e53732d57e63ace76ade3d43e761aa009bab59ff720e0071b8d4c97"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "8a3fa4b917513db1bcefb67d7d85d5f33a0444f52e723eb093decddd6576666a"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "1ed52b79b84e12648e5e2eb38d4c56f1aeaa1d26d3077e9a5eb8065b59dcd973"
         }
       ],
-      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:36.0548924Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:14.2140957Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -328,17 +348,17 @@
     {
       "pageId": "workflow-context-bundles",
       "pagePath": ".llm-wiki/workflows/context-bundles.md",
-      "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
+      "pageSha256": "37270c5801c9218b051ae3eb03fb2a1f13120593112aacf3a91145de9944e30f",
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "1533e6655aa0f2cb82cdada29a2b5da5340165fc1e05ddd72e31eff12647cb54"
+          "sha256": "b5b86a5e1e53732d57e63ace76ade3d43e761aa009bab59ff720e0071b8d4c97"
         }
       ],
-      "reason": "The context facade now retrieves tests independently only when the bounded primary candidate window contains none. It reuses query/module/path scopes, leaves primary candidate ranks and confidence unchanged, and retains fail-closed SQLite behavior. Billing, Products and Recipes regression checks passed; bundle security and path authorization contracts are unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "fd53dd659f70a7a4543fb39f52ccef3a0d539cee",
-      "reviewedAtUtc": "2026-09-16T10:18:57.4574312Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:14.4555673Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -482,17 +502,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "9f6bae95818d903f73f64f0e716692d7ed0c9cab0f4ded06be4253df021bb5ba",
+      "pageSha256": "6ce828816cde0b981b3efd7f436989473d6aa51c138829a521116fc5e5ff8020",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
+          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:16.1526288Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:14.7292211Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -591,13 +611,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
+          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
         }
       ],
-      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:28.6053486Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:14.9791357Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -635,26 +655,26 @@
       "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "48936365523a5ae3ab9c5b875966cc239e2d2bf16a3fccee17d61e36612c79f0"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "9be7b591687d5cc4dbff1a759ef6ce2260f4a50c70dea0aa3fd33a5b3e7a0893"
+          "sha256": "a3007a2fe1103d588ee78ca98366fe7adb4b7332b788e1a0ba738b284dc30163"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "d058d7a5de41ef3e27fabc35b8f23df7a93c025488b4a0b4ece8fba98881e535"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "fd8bffb3ed9bd25758f39c0ab16a2e21381bffe8ca5ee686a6875fa634fb61a9"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "f438ce67ee2156aeefefd071fd9af89de9ae76f96f7d61a1b15d76797aea2e00"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
+          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
         }
       ],
-      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:29.7347281Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:15.2443647Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -787,13 +807,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
+          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
         }
       ],
-      "reason": "Reviewed retrieval-only changes and regenerated symbol-derived indexes: privacy classification, provider boundaries, source verification and security-evidence caveats are unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:30.7198613Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:15.4896603Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1013,13 +1033,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
+          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
         }
       ],
-      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:36.8289314Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:16.1789852Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1205,13 +1225,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
+          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
         }
       ],
-      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
+      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:33.6156026Z"
+      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
+      "reviewedAtUtc": "2026-09-19T13:02:15.7962206Z"
     }
   ]
 }

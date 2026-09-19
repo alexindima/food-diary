@@ -7,20 +7,20 @@
   "summary": {
     "productionFiles": 5493,
     "wikiToolFiles": 206,
-    "wikiToolsWithoutTestReferences": 5,
+    "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 948,
-    "criticalSymbolsWithTestReferences": 907,
-    "criticalSymbolsWithoutTestReferences": 41,
+    "criticalSymbolsWithTestReferences": 910,
+    "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 10
   },
   "hotspots": [
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1625,
-      "decisionPoints": 437,
+      "nonBlankLines": 1633,
+      "decisionPoints": 441,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 688
+      "structuralRiskScore": 694.16
     },
     {
       "path": ".llm-wiki/wiki.ps1",
@@ -40,11 +40,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1076,
-      "decisionPoints": 152,
+      "nonBlankLines": 1096,
+      "decisionPoints": 155,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 251.52
+      "structuralRiskScore": 256.42
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -183,6 +183,14 @@
       "structuralRiskScore": 142.3
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+      "nonBlankLines": 483,
+      "decisionPoints": 87,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 142.16
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
       "nonBlankLines": 726,
       "decisionPoints": 84,
@@ -229,14 +237,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 130.9
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 460,
-      "decisionPoints": 79,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.7
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
@@ -1002,11 +1002,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1076,
-      "decisionPoints": 152,
+      "nonBlankLines": 1096,
+      "decisionPoints": 155,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 251.52
+      "structuralRiskScore": 256.42
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",
@@ -1586,19 +1586,19 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 460,
-      "decisionPoints": 79,
+      "nonBlankLines": 483,
+      "decisionPoints": 87,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.7
+      "structuralRiskScore": 142.16
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",
-      "nonBlankLines": 46,
+      "nonBlankLines": 51,
       "decisionPoints": 10,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 22.92
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.02
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
@@ -2818,11 +2818,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1625,
-      "decisionPoints": 437,
+      "nonBlankLines": 1633,
+      "decisionPoints": 441,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 688
+      "structuralRiskScore": 694.16
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -14189,8 +14189,8 @@
       "nonBlankLines": 18,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.86
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
     },
     {
       "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdviceItem.cs",
@@ -14389,8 +14389,8 @@
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.18
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
@@ -45973,9 +45973,11 @@
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -46005,9 +46007,10 @@
       "role": "CommandHandler",
       "path": "Modules/DailyAdvices/Application/Commands/ImportDailyAdvicePairs/ImportDailyAdvicePairsCommandHandler.cs",
       "line": 10,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs"
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46950,9 +46953,11 @@
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminWorkbenchDispatchTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47120,9 +47125,10 @@
       "role": "CommandHandler",
       "path": "Modules/DailyAdvices/Application/Commands/UpdateDailyAdviceGroup/UpdateDailyAdviceGroupCommandHandler.cs",
       "line": 10,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs"
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdviceGroupTests.cs",
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvicePairImportValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47554,8 +47560,9 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
       "line": 20,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAiPromptTestControllerTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
       ],
@@ -55548,9 +55555,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiFacadeCommandCatalog.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

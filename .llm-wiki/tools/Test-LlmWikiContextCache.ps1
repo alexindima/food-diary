@@ -57,3 +57,11 @@ if ($warm.candidates[0].path -notlike '*/RefreshTokenCommandHandlerTests.cs' -or
 if (($warm.candidates.path -join "`n") -cne ($uncached.candidates.path -join "`n")) { throw 'SQLite context cache changed candidate selection.' }
 if (@($warm.candidates.path | Sort-Object -Unique).Count -ne $warm.candidates.Count) { throw 'Compact context repeated a candidate.' }
 Write-Host 'LLM Wiki SQLite compact context-cache smoke passed: exact test identity, output budget, cache parity and explicit stored timings.'
+
+$scoped = & $tool -Query RefreshTokenCommandHandler -ScopePath @('Modules/Identity', 'Modules/Meals') -Limit 2 -Compact -Format Json -SkipQueryCache | ConvertFrom-Json
+foreach ($scope in @('Modules/Identity', 'Modules/Meals')) {
+    if (@($scoped.candidates | Where-Object { $_.path.StartsWith("$scope/") }).Count -eq 0) { throw "Compact context lost requested scope $scope." }
+}
+if (@($scoped.output.missingScopes).Count -ne 0) { throw 'Compact context reports missing scopes despite complete coverage.' }
+$insufficient = & $tool -Query RefreshTokenCommandHandler -ScopePath @('Modules/Identity', 'Modules/Meals') -Limit 1 -Compact -Format Json -SkipQueryCache | ConvertFrom-Json
+if (@($insufficient.output.missingScopes).Count -eq 0) { throw 'Compact context hid scope loss when the candidate budget was insufficient.' }

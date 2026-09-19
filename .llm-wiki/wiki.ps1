@@ -2543,7 +2543,7 @@ switch ($Command) {
     }
     'health' {
         if ($QualityArea -eq 'Wiki') {
-            Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ Format = $Format; BaseRef = $BaseRef }
+            Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ Format = $Format; BaseRef = $BaseRef; FailOnInvalid = $FailOnInvalid }
             break
         }
         Invoke-WikiTool 'Find-LlmWikiArchitectureHealth.ps1' @{

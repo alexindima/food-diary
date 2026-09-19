@@ -136,6 +136,18 @@ function Select-ContextRecordsWithScopeCoverage([object[]]$Records, [string[]]$S
     }
     return @($selected | Sort-Object rank, path)
 }
+function Get-ContextRemovableIndex([object[]]$Records, [string[]]$Scopes) {
+    for ($index = $Records.Count - 1; $index -ge 0; $index--) {
+        $remaining = @($Records | Where-Object { $_.path -ne $Records[$index].path })
+        $protected = @($Scopes | Where-Object {
+            $scope = $_
+            (Test-ContextScopeMatch ([string]$Records[$index].path) $scope) -and
+                @($remaining | Where-Object { Test-ContextScopeMatch ([string]$_.path) $scope }).Count -eq 0
+        }).Count -gt 0
+        if (-not $protected) { return $index }
+    }
+    return -1
+}
 if ($CompiledIndexSource -eq 'Sqlite') {
     $graphManager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
     $graphStatus = & $graphManager `
@@ -295,8 +307,9 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         $compactRecords = [Collections.Generic.List[object]]::new()
         foreach ($record in $visibleRecords) { $compactRecords.Add($record) }
         if ($Limit -gt 1 -and $testRecords.Count -gt 0 -and @($compactRecords | Where-Object isTest).Count -eq 0) {
-            if ($compactRecords.Count -ge $Limit) { $compactRecords.RemoveAt($compactRecords.Count - 1) }
-            $compactRecords.Add($testRecords[0])
+            $replacementIndex = Get-ContextRemovableIndex @($compactRecords) $scopePaths
+            if ($compactRecords.Count -lt $Limit) { $compactRecords.Add($testRecords[0]) }
+            elseif ($replacementIndex -ge 0) { $compactRecords[$replacementIndex] = $testRecords[0] }
         }
         $context = [ordered]@{
             query = $context.query; confidence = $confidence; conclusive = $conclusive
@@ -307,11 +320,18 @@ if ($CompiledIndexSource -eq 'Sqlite') {
             })
             compiledIndex = $context.compiledIndex
             output = [ordered]@{ compact = $true; characterBudget = 12000; omittedCandidates = [Math]::Max(0, $records.Count - $compactRecords.Count)
+                missingScopes = @($scopePaths | Where-Object {
+                    $scope = $_
+                    @($compactRecords | Where-Object { Test-ContextScopeMatch ([string]$_.path) $scope }).Count -eq 0
+                })
                 details = 'Use context-explain or omit -Compact for full ranking diagnostics. Read source before editing.' }
         }
         # Reserve room for cache-hit metadata added on subsequent requests.
         while (($context | ConvertTo-Json -Depth 12).Length -gt 11800 -and $context.candidates.Count -gt 1) {
-            $context.candidates = @($context.candidates | Select-Object -First ($context.candidates.Count - 1))
+            $removableIndex = Get-ContextRemovableIndex $context.candidates $scopePaths
+            if ($removableIndex -lt 0) { throw 'Compact context cannot preserve requested scope coverage within its character budget. Narrow the scopes or omit -Compact.' }
+            $removePath = $context.candidates[$removableIndex].path
+            $context.candidates = @($context.candidates | Where-Object { $_.path -ne $removePath })
             $context.output.omittedCandidates++
         }
     }

@@ -1,3 +1,8 @@
+<#
+.SYNOPSIS
+Wiki health self-maintenance: stale paths, source links, missing index metadata, project discovery and ownership repair; FailOnInvalid enforces validation.
+Самопроверка вики: устаревшие пути, ссылки на исходники, полнота индекса, новые модули и папки; поиск и исправление проблем.
+#>
 [CmdletBinding()]
 param(
     [switch]$Repair,

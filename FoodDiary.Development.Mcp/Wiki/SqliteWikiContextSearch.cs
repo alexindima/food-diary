@@ -434,7 +434,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) ||
                 (string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
                     directTerms.Contains("tests")) ||
-                Regex.IsMatch(query.Trim(), @"^(?:какие\s+тесты|which\s+tests|what\s+tests)(?=\s|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
+                Regex.IsMatch(query.Trim(), @"^(?:(?:какие|найти|найди|покажи)\s+тесты|(?:which|what|find|show)\s+tests)(?=\s|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
         Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
             ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
             : [];
@@ -962,6 +962,14 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 reasons.Add(requestsGuidance
                     ? "agent guide affinity"
                     : "agent guide penalty for code intent");
+            }
+            if (string.Equals(candidate.RecordType, "code", StringComparison.Ordinal) &&
+                Regex.IsMatch(query.Trim(), @"^[A-Za-z_$][\w$]*$", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)) &&
+                Regex.IsMatch(query.Trim(), @"[a-z][A-Z]", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)) &&
+                candidate.Title.Split('\n')[0].Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
+                    .Contains(query.Trim(), StringComparer.OrdinalIgnoreCase)) {
+                score = 900_000;
+                reasons.Add("exact declared symbol identity");
             }
             if (ExactFileIdentity(candidate.Path, query)) {
                 score = 1_000_000;

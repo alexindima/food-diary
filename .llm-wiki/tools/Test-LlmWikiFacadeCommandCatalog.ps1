@@ -128,4 +128,19 @@ Unknown registry commands: $($unknownRegistryCommands -join ', ')
 "@
 }
 
+$healthClause = $commandSwitches[0].Clauses | Where-Object { $_.Item1.Extent.Text -eq "'health'" } | Select-Object -First 1
+& {
+    function Invoke-WikiTool([string]$Name, [hashtable]$Arguments) {
+        if ($Name -ne 'Invoke-LlmWikiSelfMaintenance.ps1') { throw 'Wiki health routed to the wrong checker.' }
+        return $Arguments
+    }
+    $QualityArea = 'Wiki'; $Format = 'Json'; $BaseRef = 'HEAD'
+    $route = [scriptblock]::Create("switch ('health') { 'health' $($healthClause.Item2.Extent.Text) }")
+    foreach ($FailOnInvalid in @($false, $true)) {
+        $forwarded = & $route
+        if (-not $forwarded.ContainsKey('FailOnInvalid') -or [bool]$forwarded.FailOnInvalid -ne $FailOnInvalid) {
+            throw 'Wiki health lost the requested failure-exit contract.'
+        }
+    }
+}
 Write-Host "LLM Wiki facade command catalog passed: $($declaredCommands.Count) declared command(s), one route each, $($compactCommandLines.Count) primary help entries, and detailed compatibility help."

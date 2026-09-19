@@ -3,6 +3,27 @@ using Microsoft.Data.Sqlite;
 namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
+    [Fact]
+    public async Task SearchAsync_ExactDeclaredFunctionOutranksRelatedFileNamesAsync() {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','function','.llm-wiki/tools/code-graph-maintenance.mjs','function','typescript','repairWikiReferences repair Wiki References','repair wiki references'),
+                ('code','related','.llm-wiki/tools/Manage-LlmWikiRepairLearning.ps1','related','powershell','','repairWikiReferences repair wiki references');
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "repairWikiReferences", 5, "Any", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Multiple(
+            () => Assert.Equal(".llm-wiki/tools/code-graph-maintenance.mjs", result.Candidates[0].Path),
+            () => Assert.Contains("exact declared symbol identity", result.Candidates[0].Reasons, StringComparer.Ordinal));
+    }
+
     [Theory]
     [InlineData("RefreshTokenCommandHandlerTests")]
     [InlineData("RefreshTokenCommandHandlerTests.cs")]

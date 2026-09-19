@@ -189,6 +189,23 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         throw 'Read-only guard rebuilt a valid cached snapshot solely because Git normalized text-file line endings.'
     }
 
+    $reuseIdentity = Join-Path $cleanSnapshotRoot '.git/checkout-reuse.marker'
+    [IO.File]::WriteAllText($reuseIdentity, 'same-clone', [Text.Encoding]::ASCII)
+    $scopeDirectory = Join-Path $cleanRepositoryRoot 'CleanScope'
+    $null = New-Item -ItemType Directory -Path $scopeDirectory -Force
+    $overlayFile = Join-Path $scopeDirectory 'overlay.txt'
+    foreach ($content in @('first edit', 'second edit')) {
+        [IO.File]::WriteAllText($overlayFile, $content, [Text.Encoding]::ASCII)
+        $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') }
+        if (-not (Test-Path -LiteralPath $reuseIdentity) -or
+            [IO.File]::ReadAllText((Join-Path $cleanSnapshotRoot 'CleanScope/overlay.txt')) -cne $content) {
+            throw 'Changed overlay was not applied to the existing locked checkout.'
+        }
+    }
+    Remove-Item -LiteralPath $overlayFile -Force
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') }
+    if (Test-Path -LiteralPath (Join-Path $cleanSnapshotRoot 'CleanScope/overlay.txt')) { throw 'Snapshot retained an obsolete untracked overlay file.' }
+
     Remove-Item -LiteralPath $cachedGuardPath -Force
 
     $recoveredOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
