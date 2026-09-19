@@ -242,7 +242,7 @@ export class DashboardComponent {
             cycle: stateFor('cycle'),
             weight: stateFor('weight', { alwaysInteractive: true, defaultLabelKey: 'WEIGHT_CARD.TITLE' }),
             waist: stateFor('waist', { alwaysInteractive: true, defaultLabelKey: 'WAIST_CARD.TITLE' }),
-            tdee: stateFor('tdee', { alwaysInteractive: true, defaultLabelKey: 'TDEE_CARD.TITLE' }),
+            tdee: stateFor('tdee', { defaultLabelKey: 'TDEE_CARD.TITLE' }),
             advice: stateFor('advice'),
         };
     });

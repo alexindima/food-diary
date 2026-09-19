@@ -335,3 +335,25 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
     }
 }
+
+.dashboard__block--tdee {
+    position: relative;
+
+    fd-dashboard-card-shell {
+        position: relative;
+    }
+}
+
+.dashboard__tdee-action {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--fd-radius-card);
+    background: transparent;
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--fd-shadow-focus);
+    }
+}

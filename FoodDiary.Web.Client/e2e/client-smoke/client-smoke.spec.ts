@@ -1539,3 +1539,26 @@ async function dashboardBoundsAsync(locator: Locator): Promise<{ x: number; y: n
     }
     return bounds;
 }
+
+test.describe('dashboard TDEE accessibility regression', () => {
+    for (const key of ['Enter', 'Space']) {
+        test(`opens details once with ${key} while help remains a separate control`, async ({ page }) => {
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.goto('/dashboard');
+            const block = page.locator('fd-dashboard-tdee-block');
+            await block.scrollIntoViewIfNeeded();
+            await expect(block.locator('fd-tdee-insight-card')).toBeVisible();
+            const help = block.locator('fd-ui-button[icon="info"] button');
+            await help.click();
+            await expect(page.locator('fd-tdee-insight-dialog')).toHaveCount(0);
+            const results = await new AxeBuilder({ page }).include('fd-dashboard-tdee-block').analyze();
+            expect(results.violations).toEqual([]);
+            const open = block.getByRole('button', { name: 'Energy expenditure', exact: true });
+            await open.focus();
+            await expect(open).toBeFocused();
+            await open.press(key);
+            await expect(page.locator('fd-tdee-insight-dialog')).toHaveCount(1);
+        });
+    }
+});

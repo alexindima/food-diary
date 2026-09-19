@@ -13,7 +13,16 @@
         <div class="fd-row fd-align-center fd-gap-xs">
             <div class="dashboard-widget-header__title fd-ui-card-title">{{ title() }}</div>
             @if (helpText(); as help) {
-                <fd-ui-button variant="ghost" size="sm" icon="info" [ariaLabel]="help" [fdUiHint]="help" />
+                <fd-ui-button
+                    variant="ghost"
+                    size="sm"
+                    icon="info"
+                    [ariaLabel]="help"
+                    [fdUiHint]="help"
+                    (click)="$event.stopPropagation()"
+                    (keydown.enter)="$event.stopPropagation()"
+                    (keydown.space)="$event.stopPropagation()"
+                />
             }
         </div>
 
