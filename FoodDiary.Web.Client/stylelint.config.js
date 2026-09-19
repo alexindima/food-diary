@@ -20,7 +20,7 @@ const restrictedValueRules = {
 
 export default {
     extends: ['stylelint-config-standard-scss'],
-    ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
+    ignoreFiles: ['coverage/**', 'dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
     plugins: [designTokenValues, disableCommentReason, noComponentFileSuffix, noSassUseAsWildcard],
     rules: {
         'alpha-value-notation': null,
