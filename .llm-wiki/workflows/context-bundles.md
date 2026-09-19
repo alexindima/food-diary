@@ -31,7 +31,8 @@ prompt-injection assessment before excerpts are persisted.
 Bundle creation delegates ranked repository discovery to the shared context
 resolver. Repeated bundles with identical discovery arguments, HEAD, relevant
 scope content, and the SQLite graph dependency fingerprint reuse its content-addressed JSON
-result. Unrelated worktree edits do not evict scoped discovery; bundle-specific
+result. SQLite context discovery additionally keys the complete change-set
+fingerprint, so any indexed worktree edit can evict it; bundle-specific
 security, learning, provenance, and integrity checks still run normally.
 Diff-selected Wiki pages plus changed C# and frontend symbols are resolved from
 the same refreshed SQLite compiled-index projection. Ranked frontend discovery

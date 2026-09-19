@@ -140,14 +140,30 @@ JSON files remain projection sources and explicit parity oracles, never automati
 fallbacks. Quality indexing also measures the Wiki's own non-test PowerShell
 tools and direct regression-script references.
 
-Interactive `context` requests query the SQLite FTS projection directly and
-return ranked candidates with top-level confidence, ambiguity, and explicit
-abstention fields. A read does not refresh the projection: stale or unavailable
-state is reported and must be repaired with `graph-build` or `update`. Broad
+Interactive `context` requests query the SQLite FTS projection and return ranked
+candidates with confidence, ambiguity, and explicit abstention. The CLI facade
+may prepare a stale projection inside its isolated snapshot; read-only describes
+the source checkout, not the derived cache. The persistent MCP reader validates
+freshness and uses its bounded recovery path. `graph-build` and `update` remain
+the deliberate index writer entrypoints. Broad
 "trace the primary scenario" requests return ranked entry candidates and
 abstain from inventing an end-to-end chain until an exact symbol or endpoint is
 selected. Intent-based `ownership -Query` follows the same calibrated contract;
 path-based ownership remains available through `-ChangedPath`.
+
+For daily lookup use `context -Query '<question>' -Compact -Format Json`.
+Compact output has one bounded candidate list, includes a test lead when space
+permits, and omits repeated category payloads. Omit `-Compact` for compatibility
+with existing structured consumers. Exact file paths and names precede fuzzy
+ranking; duplicate exact names explicitly remain ambiguous.
+
+Run `health -QualityArea Wiki` to inspect the Wiki itself. `repair-verify`
+rechecks physical projects and repairs derived ownership from `.csproj` identity,
+including relocated roots. It repairs Markdown source/link paths only for exact
+Git-confirmed renames in the selected base diff, then rechecks. Generated pages
+remain owned by their generators. Unknown architectural roles, unconfirmed moves,
+and narrative contradictions require evidence-backed changes and remain visible
+findings. See [self-maintenance](workflows/self-maintenance.md).
 
 `get_server_status` exposes bounded SQL-route health under
 `runtimeMetrics.contextRouting`. The persistent sample contains only timestamp,

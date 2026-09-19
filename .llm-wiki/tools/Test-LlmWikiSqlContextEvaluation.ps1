@@ -24,6 +24,9 @@ function Invoke-ContextCorpus {
     & $measure @PSBoundParameters
 }
 $primaryEvaluation = Invoke-ContextCorpus -Format Json | ConvertFrom-Json
+$maintenanceCorpus = Join-Path $PSScriptRoot '../evals/context-search-maintenance-regression.json'
+$maintenanceEvaluation = Invoke-ContextCorpus -CorpusPath $maintenanceCorpus -SkipBuild -Format Json | ConvertFrom-Json
+if (-not $maintenanceEvaluation.passed) { throw 'Wiki maintenance retrieval regression failed; inspect the per-case results.' }
 $challengeCorpus = Join-Path $PSScriptRoot '../evals/context-search-holdout.json'
 $challengeEvaluation = Invoke-ContextCorpus -CorpusPath $challengeCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $generalizationCorpus = Join-Path $PSScriptRoot '../evals/context-search-generalization.json'
@@ -406,6 +409,7 @@ function Assert-CurrentRuntimeParity(
     }
 }
 Assert-CurrentRuntimeParity $retirementHoldoutEvaluation $retirementHoldoutCorpusPath 'Independent holdout'
+Assert-CurrentRuntimeParity $maintenanceEvaluation $maintenanceCorpus 'Maintenance regression'
 Assert-CurrentRuntimeParity $unseenEvaluation $unseenCorpusPath 'Target-aware unseen corpus'
 Assert-CurrentRuntimeParity $conversationalEvaluation $conversationalCorpus 'Conversational corpus'
 Write-Host "LLM Wiki SQL context evaluation passed: promoted top1=$strictTop1Count/$strictCaseCount and top10=$strictTop10Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."

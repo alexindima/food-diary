@@ -91,8 +91,11 @@ PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
 The companion `context_search_features` table stores indexed layer, module,
 role, test, and extension attributes keyed by the FTS row id. These attributes
-are computed once during projection refresh and exposed by explain diagnostics;
-they remain available for measured SQL prefilter experiments without weakening
+are computed during projection refresh and exposed by explain diagnostics;
+each build also checks module/layer ownership against discovered project roots
+and repairs derived drift, even when document content is unchanged. See
+[self-maintenance](self-maintenance.md) for diagnosis and bounded source-link repair.
+These attributes remain available for measured SQL prefilter experiments without weakening
 the broad FTS recall path.
 The database also projects the generated repository catalog and C# symbol index
 into versioned `compiled_indexes` and `compiled_index_records` tables. The

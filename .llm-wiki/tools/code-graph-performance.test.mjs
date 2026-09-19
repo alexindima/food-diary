@@ -8,6 +8,68 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
+import { contextPathOwnership, exactFileIdentity } from './code-graph-path-layout.mjs';
+import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, repairWikiReferences } from './code-graph-maintenance.mjs';
+
+test('Wiki provenance repair only follows confirmed moves and preserves narrative', () => {
+  const original = '---\r\nid: example\r\nsources:\r\n  - Modules/Old.cs\r\n  - missing.cs\r\n---\r\nOld behavior is unchanged. [Source](../../Modules/Old.cs#rule)\r\n';
+  const result = repairWikiReferences(original, '.llm-wiki/system/example.md',
+    new Map([['Modules/Old.cs', 'Modules/New.cs']]), new Set(['Modules/New.cs']));
+  assert.equal(result.repaired, 2);
+  assert.ok(result.text.includes('  - Modules/New.cs\r\n'));
+  assert.ok(result.text.includes('[Source](../../Modules/New.cs#rule)'));
+  assert.ok(result.text.includes('Old behavior is unchanged.'));
+  assert.ok(result.text.includes('  - missing.cs'));
+  assert.equal(result.findings.filter(item => !item.repairable).length, 1);
+  assert.equal(repairWikiReferences(result.text, '.llm-wiki/system/example.md',
+    new Map([['Modules/Old.cs', 'Modules/New.cs']]), new Set(['Modules/New.cs'])).repaired, 0);
+});
+
+test('self-maintenance discovers relocated project roots and repairs derived data idempotently', () => {
+  const projects = discoverProjectOwnership([
+    'Modules/Identity/Storage/FoodDiary.Modules.Identity.PersistenceModel.csproj',
+    'Modules/Identity/Specs/FoodDiary.Modules.Identity.Domain.Tests.csproj',
+    'Modules/NewOwner/Future/FoodDiary.Modules.NewOwner.FutureRole.csproj',
+  ]);
+  assert.equal(projectOwnership('Modules/Identity/Storage/TokenConfiguration.cs', projects).layer, 'persistence');
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`CREATE TABLE context_search(path); CREATE TABLE context_search_features(context_rowid, module, layer);
+      INSERT INTO context_search VALUES ('Modules/Identity/Storage/TokenConfiguration.cs');
+      INSERT INTO context_search_features VALUES (1, 'Modules', 'other');`);
+    const before = inspectProjectionOwnership(db, projects);
+    assert.equal(before.findingCount, 2);
+    assert.equal(db.prepare('SELECT layer FROM context_search_features').get().layer, 'other');
+    const repaired = inspectProjectionOwnership(db, projects, true);
+    assert.equal(repaired.repairedRecords, 1);
+    assert.notEqual(before.fingerprint, repaired.fingerprint);
+    assert.equal(inspectProjectionOwnership(db, projects).fingerprint, repaired.fingerprint);
+    assert.equal(repaired.unresolvedCount, 1);
+    assert.equal(db.prepare('SELECT module FROM context_search_features').get().module, 'Identity');
+    assert.equal(inspectProjectionOwnership(db, projects, true).repairedRecords, 0);
+    assert.equal(inspectProjectionOwnership(db, projects).findings[0].kind, 'unknown-project-role');
+  } finally { db.close(); }
+});
+
+test('physical module ownership covers sibling layers, tests and misleading names', () => {
+  for (const [root, layer] of Object.entries({ Application: 'application', 'Application.Abstractions': 'abstractions', Domain: 'domain',
+    'Domain.Contracts': 'domain', Infrastructure: 'infrastructure', PersistenceModel: 'persistence', Presentation: 'api', Contracts: 'contracts', ApplicationExtra: 'other' })) {
+    assert.deepEqual(contextPathOwnership(`Modules/Identity/${root}/Token.cs`), { module: 'Identity', layer });
+  }
+  assert.deepEqual(contextPathOwnership('Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/TokenTests.cs'), { module: 'Identity', layer: 'tests' });
+  assert.deepEqual(contextPathOwnership('Modules/Ai/Application/Abstractions/IClient.cs'), { module: 'Ai', layer: 'abstractions' });
+  assert.deepEqual(contextPathOwnership('Modules/Ai/Infrastructure/Model/Config.cs'), { module: 'Ai', layer: 'persistence' });
+  assert.equal(contextPathOwnership('FoodDiary.Web.Client/src/app/services/domain.service.ts').layer, 'frontend');
+});
+
+test('exact file identity preserves paths and test suffixes without substring guesses', () => {
+  const path = 'Modules/Identity/tests/RefreshTokenCommandHandlerTests.cs';
+  for (const query of [path, path.replaceAll('/', '\\'), 'RefreshTokenCommandHandlerTests.cs', 'RefreshTokenCommandHandlerTests']) {
+    assert.equal(exactFileIdentity(path, query), true);
+    assert.equal(exactFileIdentity('Modules/Identity/Application/RefreshTokenCommandHandler.cs', query), false);
+  }
+  assert.equal(exactFileIdentity(path, 'where is RefreshTokenCommandHandlerTests'), false);
+});
 
 test('English plural recall preserves previous alternatives and recognizes es plurals', () => {
   for (const [plural, singular] of [['indexes', 'index'], ['boxes', 'box'], ['classes', 'class'], ['watches', 'watch'], ['brushes', 'brush'], ['buzzes', 'buzz']]) {

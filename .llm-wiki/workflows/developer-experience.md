@@ -95,8 +95,9 @@ independent critique for evidence that requires them.
 Repeated structured planning queries reuse a content-addressed cache under the
 ignored Git directory. Task briefs, research packets, context queries, and test
 plans include the current commit, normalized arguments, hashes of relevant
-modified/untracked paths, and hashes of their dependent indexes. An edit outside
-the declared scope preserves a warm result; a relevant edit or index-lineage
+modified/untracked paths, and hashes of their dependent indexes. Scoped planning
+caches can preserve a warm result outside their scope. SQLite context discovery
+also includes the complete indexed change-set fingerprint; a relevant edit or index-lineage
 change invalidates it. Injected test inputs bypass the cache, and the cache stores
 only derived JSON; authoritative sources and generated Wiki pages remain unchanged.
 Writes use unique temporary files and atomic replacement. Cleanup is

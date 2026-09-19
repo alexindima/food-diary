@@ -138,6 +138,8 @@ authoritative.
 
 ### Learn And Maintain
 
+- [Diagnose and repair Wiki drift](workflows/self-maintenance.md)
+
 - [Reuse failure knowledge](workflows/failure-knowledge.md)
 - [Turn failures into governed regression evals](workflows/learned-regression-evals.md)
 - [Run AI development evals](workflows/evals.md)

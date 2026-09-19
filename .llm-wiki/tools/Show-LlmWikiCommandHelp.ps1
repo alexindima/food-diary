@@ -8,6 +8,7 @@ $tier = @($registry.tiers | Where-Object { @($_.commands) -contains $Command } |
 if ($tier.Count -eq 0) { throw "Wiki command is not registered: $Command" }
 
 $help = @{
+    context = @("context -Query '<question or exact file>' [-Module <owner>] [-ChangeType Any|Backend|Frontend|Tests] [-Compact] [-Limit <1..50>] [-Format Text|Json]", 'Retrieves fresh ranked sources; compact JSON uses one bounded list with test evidence and a 12000-character budget.')
     start = @("start -Intent '<large task>' [-PlannedPath <path[]>] [-WorkspacePath <path>]", 'Creates governed research, acceptance, and delivery state for large work.')
     brief = @("brief -Intent '<task>' [-PlannedPath <path[]>] [-CompiledIndexSource Sqlite|Json] [-Compact]", 'Compiles affected scope, risk, instructions, tests, and review obligations.')
     research = @("research -Intent '<task>' [-PlannedPath <path[]>] [-ResearchPurpose Auto|Assessment|Implementation] [-CompiledIndexSource Sqlite|Json] [-Compact] [-SkipHistory]", 'Ranks current-source evidence and Git precedents; explicit planned paths constrain the read set.')

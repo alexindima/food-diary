@@ -10,6 +10,7 @@ param(
     [ValidateSet('Sqlite', 'Json')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$SkipQueryCache,
+    [switch]$Compact,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -40,6 +41,9 @@ if ($SqlShadow) {
 }
 if ($CompiledIndexSource -eq 'Json' -and -not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
+}
+if ($Compact -and ($CompiledIndexSource -ne 'Sqlite' -or $Format -ne 'Json')) {
+    throw '-Compact requires -CompiledIndexSource Sqlite -Format Json.'
 }
 
 $queryCacheEntry = $null
@@ -152,6 +156,26 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         $graphStatus = & $graphManager -Action status -SkipRefresh -Format Json | ConvertFrom-Json
     }
     $indexFresh = [bool]$graphStatus.changeSetFresh
+    # Validate freshness before cache reuse. A cached answer never authorizes a
+    # stale projection, and ranking/format changes invalidate the same key.
+    if ($indexFresh -and $Format -eq 'Json' -and -not $SkipQueryCache) {
+        $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context-sqlite' -Arguments @{
+            Module = $Module; Query = $Query; ScopePath = $scopePaths; ChangeType = $ChangeType
+            Limit = $Limit; Compact = [bool]$Compact; Fingerprint = [string]$graphStatus.changeSetFingerprint
+        } -DependencyPath @(
+            '.artifacts/llm-wiki/code-graph/code-graph.fingerprint',
+            '.llm-wiki/policies/context-search-ranking.json',
+            '.llm-wiki/tools/code-graph.mjs', '.llm-wiki/tools/code-graph-path-layout.mjs',
+            '.llm-wiki/tools/Find-LlmWikiContext.ps1'
+        )
+        $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+        if ($null -ne $cachedContext) {
+            $cached = $cachedContext | ConvertFrom-Json
+            $cached | Add-Member -NotePropertyName cache -NotePropertyValue @{ hit = $true; storedTimings = $true } -Force
+            $cached | ConvertTo-Json -Depth 12
+            return
+        }
+    }
     $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
     $sqlResult = & $graphManager `
         -Action search `
@@ -265,7 +289,36 @@ if ($CompiledIndexSource -eq 'Sqlite') {
             currentChangeSetFingerprint = [string]$graphStatus.currentChangeSetFingerprint
         }
     }
+    if ($Compact) {
+        # One bounded list, with test evidence included without duplicating the
+        # production list into every legacy-shaped category.
+        $compactRecords = [Collections.Generic.List[object]]::new()
+        foreach ($record in $visibleRecords) { $compactRecords.Add($record) }
+        if ($Limit -gt 1 -and $testRecords.Count -gt 0 -and @($compactRecords | Where-Object isTest).Count -eq 0) {
+            if ($compactRecords.Count -ge $Limit) { $compactRecords.RemoveAt($compactRecords.Count - 1) }
+            $compactRecords.Add($testRecords[0])
+        }
+        $context = [ordered]@{
+            query = $context.query; confidence = $confidence; conclusive = $conclusive
+            abstained = $context.abstained; ambiguityReason = $context.ambiguityReason
+            candidates = @($compactRecords | ForEach-Object {
+                [ordered]@{ path = $_.path; rank = $_.rank; kind = $_.role; module = $_.module; layer = $_.layer
+                    confidence = $_.confidence; reasons = @($_.reasons | Select-Object -First 2) }
+            })
+            compiledIndex = $context.compiledIndex
+            output = [ordered]@{ compact = $true; characterBudget = 12000; omittedCandidates = [Math]::Max(0, $records.Count - $compactRecords.Count)
+                details = 'Use context-explain or omit -Compact for full ranking diagnostics. Read source before editing.' }
+        }
+        # Reserve room for cache-hit metadata added on subsequent requests.
+        while (($context | ConvertTo-Json -Depth 12).Length -gt 11800 -and $context.candidates.Count -gt 1) {
+            $context.candidates = @($context.candidates | Select-Object -First ($context.candidates.Count - 1))
+            $context.output.omittedCandidates++
+        }
+    }
     $contextJson = $context | ConvertTo-Json -Depth 12
+    if ($Compact -and $contextJson.Length -gt 11800) {
+        throw 'Compact context exceeds its character budget. Narrow the query or scope, or omit -Compact.'
+    }
     if ($Format -eq 'Json') {
         if ($null -ne $queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $contextJson }
         Write-Output $contextJson

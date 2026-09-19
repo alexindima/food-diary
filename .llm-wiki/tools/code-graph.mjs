@@ -9,13 +9,14 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
+import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
-import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
+import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, contextPathOwnership, exactFileIdentity, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '15-named-import-function-consumers-v2';
-const contextSearchSchemaVersion = '8';
+const contextSearchSchemaVersion = '9';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -45,7 +46,9 @@ function publishGraphDependencyFingerprint(databasePath, result) {
       + readFileSync(resolve(import.meta.dirname, 'code-graph-path-layout.mjs'), 'utf8')
       + readFileSync(resolve(import.meta.dirname, 'code-graph-query-terms.mjs'), 'utf8')
       + readFileSync(resolve(import.meta.dirname, 'code-graph-identity.mjs'), 'utf8')),
+    ownershipImplementationFingerprint: sha256(readFileSync(resolve(import.meta.dirname, 'code-graph-maintenance.mjs'), 'utf8')),
     changeSetFingerprint: result.changeSetFingerprint ?? null,
+    ownershipFingerprint: result.ownership?.fingerprint ?? null,
   }));
   writeFileSync(graphDependencyFingerprintPath(databasePath), `${fingerprint}\n`, 'utf8');
   return fingerprint;
@@ -933,22 +936,14 @@ function contextDocumentPaths() {
     || /^docs\/.+\.md$/i.test(path));
 }
 
-function contextSearchFeatures(path, recordType) {
+function contextSearchFeatures(path, recordType, projects = []) {
   const normalized = String(path ?? '').replaceAll('\\', '/');
   const lower = normalized.toLowerCase();
   const fileName = basename(lower);
   const extension = extname(lower);
   const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
-  const moduleFolderMatch = /^Modules\/([^/]+)\/(?:Application|Contracts|Domain(?:\.Contracts)?|Infrastructure)(?:\/|$)/i.exec(normalized);
-  const layer = lower.startsWith('.llm-wiki/') ? 'wiki'
-    : lower.startsWith('docs/') ? 'documentation'
-      : isTest ? 'tests'
-        : lower.includes('presentation') || lower.includes('web.api') ? 'api'
-          : lower.includes('infrastructure') || lower.includes('integrations') || lower.includes('jobmanager') ? 'infrastructure'
-            : moduleFolderMatch || lower.includes('application') ? 'application'
-              : lower.includes('domain') ? 'domain'
-                : lower.includes('web.client') ? 'frontend' : 'other';
-  const module = moduleFolderMatch?.[1] ?? (normalized.split('/')[0] || recordType || 'other');
+  const project = projectOwnership(normalized, projects);
+  const { layer, module } = project && project.layer !== 'unknown' ? project : contextPathOwnership(normalized);
   const rolePatterns = [
     ['handler', /handler\.[^.]+$/], ['validator', /validator(?:tests?)?\.[^.]+$/],
     ['repository', /repository(?:tests?)?\.[^.]+$/], ['controller', /controller(?:tests?)?\.[^.]+$/],
@@ -964,6 +959,7 @@ function contextSearchFeatures(path, recordType) {
 }
 
 function refreshContextSearch(database) {
+  const ownershipProjects = discoverProjectOwnership(repositoryPaths());
   const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
   const queryDocuments = database.prepare(`
     SELECT category, record_key recordKey, path, source_path sourcePath, record_kind recordKind, payload_json payloadJson
@@ -977,6 +973,8 @@ function refreshContextSearch(database) {
   });
   const fingerprint = sha256(JSON.stringify({
     schema: contextSearchSchemaVersion,
+    ownershipProjects,
+    ownershipImplementation: sha256(readFileSync(resolve(import.meta.dirname, 'code-graph-maintenance.mjs'), 'utf8')),
     files: files.map((item) => [item.path, item.contentHash]),
     queryDocuments: queryDocuments.map((item) => [item.category, item.recordKey, item.path, sha256(item.payloadJson)]),
     documentation: documentation.map((item) => [item.path, item.contentHash]),
@@ -1011,7 +1009,7 @@ function refreshContextSearch(database) {
   const insertContextRecord = (recordType, recordKey, path, sourcePath, category, title, body) => {
     const result = insert.run(recordType, recordKey, path, sourcePath, category, title, body);
     insertIdentity.run(result.lastInsertRowid, path, title);
-    const features = contextSearchFeatures(path, recordType);
+    const features = contextSearchFeatures(path, recordType, ownershipProjects);
     insertFeatures.run(result.lastInsertRowid, recordType, path, features.layer, features.module,
       features.role, features.isTest, features.extension);
   };
@@ -2278,7 +2276,8 @@ function searchContext(database, query, limit, filters = {}, batchState) {
   const scopePaths = String(filters.path ?? '').split(';').filter(Boolean).map((path) => path.replaceAll('\\', '/').toLowerCase());
   const changeType = String(filters.changeType ?? 'Any').toLowerCase();
   const stronglyRequestsTest = explicitlyRequestsTest &&
-    (changeType === 'tests' || (changeType === 'frontend' && directTerms.includes('tests')));
+    (changeType === 'tests' || (changeType === 'frontend' && directTerms.includes('tests')) ||
+      /^(?:какие\s+тесты|which\s+tests|what\s+tests)(?=\s|$)/iu.test(query.trim()));
   const testSubjectWeights = stronglyRequestsTest ? testIdentityWeights(directTerms,
     candidates.map(item => ({ path: String(item.path ?? ''), identity: expandSearchText(basename(String(item.path ?? '').replaceAll('\\', '/'))).toLowerCase() })),
     contextSearchRanking.directFileNameAffinity ?? {}) : new Map();
@@ -2639,6 +2638,10 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       score += requestsGuidance ? Number(contextSearchRanking.agentGuideBoost ?? 15) : -Number(contextSearchRanking.agentGuideBoost ?? 15);
       reasons.push(requestsGuidance ? 'agent guide affinity' : 'agent guide penalty for code intent');
     }
+    if (exactFileIdentity(path, query)) {
+      score = 1_000_000;
+      reasons.push('exact file identity');
+    }
     return { ...item, score, lexicalRank: Math.round(item.lexicalRank * 1_000_000) / 1_000_000, reasons };
   }).sort((left, right) => right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));
   const records = [];
@@ -2702,10 +2705,12 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       .map((value) => String(value).toLowerCase());
     const recordTypeMismatch = implementationChangeTypes.includes(changeType)
       && documentationRecordTypes.includes(String(item.recordType ?? '').toLowerCase());
-    const ambiguous = unmatchedIdentifier || (scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch;
+    const exact = exactFileIdentity(item.path, query);
+    const exactCount = records.filter(candidate => exactFileIdentity(candidate.path, query)).length;
+    const ambiguous = unmatchedIdentifier || (exact && exactCount > 1) || (!exact && ((scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch));
     const confidence = ambiguous
       ? 'low'
-      : scoreMargin === null
+      : exact ? 'high' : scoreMargin === null
         ? 'unknown'
         : scoreMargin >= highMinimumMargin
           ? 'high'
@@ -2716,7 +2721,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       scoreMargin,
       confidence,
       ambiguous,
-      ambiguityReason: unmatchedIdentifier ? 'unmatched-query-identifier' : recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
+      ambiguityReason: unmatchedIdentifier ? 'unmatched-query-identifier' : exact && exactCount > 1 ? 'multiple-exact-identities' : !exact && recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
       sameNameCandidateCount,
     };
   });
@@ -2819,9 +2824,11 @@ try {
       try {
         const completeBuild = () => {
           const buildResult = build(database, options.force === 'true', options['skip-typescript'] === 'true');
+          const ownership = inspectProjectionOwnership(database, discoverProjectOwnership(repositoryPaths()), true);
           return {
             ...buildResult,
-            graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, buildResult),
+            ownership,
+            graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, { ...buildResult, ownership }),
             recoveredFromCorruption: opened.recoveredFromCorruption,
             quarantinedPaths: opened.quarantinedPaths,
           };
@@ -2849,6 +2856,7 @@ try {
     database = openDatabase(databasePath);
   }
   if (action === 'build') { /* result was produced while holding the build lock */ }
+  else if (action === 'ownership-audit') result = inspectProjectionOwnership(database, discoverProjectOwnership(repositoryPaths()));
   else if (action === 'build-plan') result = buildPlan(database, options.force === 'true');
   else if (action === 'symbol') result = { query: options.query ?? '', symbols: findSymbols(database, options.query ?? '', Number(options.limit ?? 20)) };
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));

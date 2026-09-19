@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'search-batch', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
+    [ValidateSet('build', 'build-plan', 'status', 'ownership-audit', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'search-batch', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -41,7 +41,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'code-graph.mjs'
 $insideReadOnlySnapshot = -not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)
-if ($Action -notin @('build', 'build-plan', 'status') -and -not $SkipRefresh -and -not $insideReadOnlySnapshot) {
+if ($Action -notin @('build', 'build-plan', 'status', 'ownership-audit') -and -not $SkipRefresh -and -not $insideReadOnlySnapshot) {
     $refreshArguments = @($scriptPath, 'build')
     if ($BackendOnlyRefresh) { $refreshArguments += '--skip-typescript=true' }
     $refreshOutput = & node @refreshArguments

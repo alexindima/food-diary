@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "description": "Regression cases from the 2026-09-19 exploratory audit. These informed fixes and are NOT a blind holdout or evidence of real-user answer quality.",
+  "diagnosticLimit": 100,
+  "thresholds": { "minimumTop1Rate": 1.0, "minimumTop10Rate": 1.0, "minimumMeanReciprocalRank": 1.0 },
+  "switchCriteria": { "minimumCaseCount": 8, "minimumTop1Rate": 1.0, "minimumTop10Rate": 1.0, "minimumMeanReciprocalRank": 1.0 },
+  "cases": [
+    { "id": "exact-test-name", "changeType": "Any", "query": "RefreshTokenCommandHandlerTests", "expectedPaths": ["Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs"] },
+    { "id": "exact-test-path", "changeType": "Any", "query": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs", "expectedPaths": ["Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs"] },
+    { "id": "exact-test-filename", "changeType": "Any", "query": "RefreshTokenCommandHandlerTests.cs", "expectedPaths": ["Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs"] },
+    { "id": "exact-handler", "changeType": "Any", "query": "CreateMealCommandHandler", "expectedPaths": ["Modules/Meals/Application/Commands/CreateMeal/CreateMealCommandHandler.cs"] },
+    { "id": "exact-domain", "changeType": "Any", "query": "UserRefreshTokenSession", "expectedPaths": ["Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs"] },
+    { "id": "daily-calorie-target", "changeType": "Any", "query": "как рассчитывается дневная норма калорий", "expectedPaths": ["Modules/Tdee/Application/Services/TdeeCalculator.cs"] },
+    { "id": "resume-workspace", "changeType": "Any", "query": "как продолжить задачу после коммита", "expectedPaths": [".llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1"] },
+    { "id": "requested-tests", "changeType": "Any", "query": "какие тесты запускать после изменения RefreshTokenCommandHandler", "expectedPaths": ["Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs"] }
+  ]
+}

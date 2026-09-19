@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class SqliteWikiContextSearchTests : IDisposable {
+public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [Theory]
     [InlineData("Where are water frontend API requests sent?", "FoodDiary.Web.Client/src/app/water.service.ts", "requested frontend transport implementation")]
     [InlineData("Where does the backend water query run?", "Modules/Hydration/Application/WaterQueryHandler.cs", "application flow handler")]

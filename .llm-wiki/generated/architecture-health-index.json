@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
     "componentsWithoutDirectSpecs": 139,
-    "criticalSymbolsWithoutTestReferences": 40,
+    "criticalSymbolsWithoutTestReferences": 41,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -5389,6 +5389,16 @@
       "role": "Validator",
       "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
       "line": 2,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "Invoke-LlmWikiSelfMaintenance",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",
+      "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -1,3 +1,41 @@
+// Physical ownership is independent of a file's role and ranking aliases.
+export function contextPathOwnership(value) {
+  const path = String(value ?? '').replaceAll('\\', '/');
+  const parts = path.split('/');
+  const lower = path.toLowerCase();
+  const owner = parts[0]?.toLowerCase() === 'modules' && parts.length >= 4 ? parts[1] : parts[0];
+  const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
+  if (isTest) return { module: owner, layer: 'tests' };
+  if (parts[0]?.toLowerCase() === 'modules' && parts.length >= 4) {
+    const layers = { application: 'application', 'application.abstractions': 'abstractions',
+      domain: 'domain', 'domain.contracts': 'domain', infrastructure: 'infrastructure',
+      persistencemodel: 'persistence', presentation: 'api', 'presentation.contracts': 'api',
+      'presentation.mappings': 'api', contracts: 'contracts', 'service.contracts': 'contracts' };
+    const root = parts[2].toLowerCase();
+    const nested = parts[3].toLowerCase();
+    const layer = root === 'application' && nested === 'abstractions' ? 'abstractions'
+      : root === 'infrastructure' && nested === 'model' ? 'persistence' : layers[root] ?? 'other';
+    return { module: owner, layer };
+  }
+  const layer = lower.startsWith('.llm-wiki/') ? 'wiki'
+    : lower.startsWith('docs/') ? 'documentation'
+      : lower.startsWith('fooddiary.web.client/') ? 'frontend'
+        : /presentation|web\.api/.test(lower) ? 'api'
+          : /persistencemodel/.test(lower) ? 'persistence'
+            : /infrastructure|integrations|jobmanager/.test(lower) ? 'infrastructure'
+              : /application\.abstractions/.test(lower) ? 'abstractions'
+                : /application/.test(lower) ? 'application'
+                  : /domain/.test(lower) ? 'domain' : 'other';
+  return { module: owner, layer };
+}
+
+export function exactFileIdentity(path, query) {
+  const identity = String(query ?? '').trim().replaceAll('\\', '/').toLowerCase();
+  const normalized = String(path ?? '').replaceAll('\\', '/').toLowerCase();
+  const name = normalized.split('/').at(-1);
+  return identity === normalized || identity === name || identity === name.replace(/\.[^.]+$/, '');
+}
+
 // Ranking selectors describe architectural ownership, not a particular checkout
 // layout. Keep the real path first; aliases only bridge known layer boundaries.
 export function rankingPathIdentities(value) {

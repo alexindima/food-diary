@@ -927,12 +927,22 @@ switch ($Command) {
         Write-Host 'Strict affected verification passed. Full repository verification remains the CI gate.'
     }
     { $_ -in @('repair-verify', 'completion') } {
-        $repairPaths = @($ChangedPath)
-        if ($repairPaths.Count -eq 0) { Write-Host 'Repair verify: no task-delta paths; nothing to repair.'; break }
+        $maintenancePaths = @()
+        if ($Command -eq 'repair-verify') {
+            $maintenance = (Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ Repair = $true; BaseRef = $BaseRef; Format = 'Json' }) | ConvertFrom-Json
+            $maintenancePaths = @($maintenance.changedPages)
+            Write-Host "Wiki self-maintenance repaired $($maintenancePaths.Count) source-reference page(s); final check follows regeneration."
+        }
+        $repairPaths = @(@($ChangedPath) + $maintenancePaths | Where-Object { $_ } | Sort-Object -Unique)
+        if ($repairPaths.Count -eq 0) {
+            if ($Command -eq 'repair-verify') { Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ BaseRef = $BaseRef; FailOnInvalid = $true } }
+            Write-Host 'Repair verify: no task-delta paths; nothing to repair.'; break
+        }
         Write-Host 'Repair verify [0/3]: checking source formatting before hashing and generation.'
         Invoke-WikiTool 'Test-LlmWikiFormattingReady.ps1' @{ ChangedPath = $repairPaths }
         Write-Host 'Repair verify [1/3]: atomically updating affected indexes.'
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' @{ AffectedOnly = $true; ChangedPath = $repairPaths; BaseRef = $BaseRef; ReuseUnchangedChecks = $true }
+        if ($Command -eq 'repair-verify') { Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ Repair = $true; BaseRef = $BaseRef; FailOnInvalid = $true } }
         Write-Host 'Repair verify [2/3]: resolving source-impact reviews.'
         $impactJson = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') -ChangedPath $repairPaths -Format Json
         $impactResult = $impactJson | ConvertFrom-Json
@@ -982,6 +992,7 @@ switch ($Command) {
     }
     'context' {
         $contextArguments = @{
+            Compact = $Compact
             Module = $Module
             Query = $Query
             ChangeType = $ChangeType
@@ -2531,6 +2542,10 @@ switch ($Command) {
         }
     }
     'health' {
+        if ($QualityArea -eq 'Wiki') {
+            Invoke-WikiTool 'Invoke-LlmWikiSelfMaintenance.ps1' @{ Format = $Format; BaseRef = $BaseRef }
+            break
+        }
         Invoke-WikiTool 'Find-LlmWikiArchitectureHealth.ps1' @{
             Query = $Query
             View = $HealthView

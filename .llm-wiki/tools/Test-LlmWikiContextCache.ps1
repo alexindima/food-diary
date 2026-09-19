@@ -45,3 +45,15 @@ if ($firstStopwatch.Elapsed.TotalMilliseconds -ge $coldSlaMilliseconds -or
 }
 
 Write-Host "LLM Wiki JSON context-cache smoke passed: cold=$([Math]::Round($firstStopwatch.Elapsed.TotalMilliseconds))ms (<$coldSlaMilliseconds ms), warm=$([Math]::Round($secondStopwatch.Elapsed.TotalMilliseconds))ms (<$warmSlaMilliseconds ms)."
+
+$compactArguments = @{ Query = 'RefreshTokenCommandHandlerTests'; CompiledIndexSource = 'Sqlite'; Limit = 3; Format = 'Json'; Compact = $true }
+$uncached = & $tool @compactArguments -SkipQueryCache | ConvertFrom-Json
+$null = & $tool @compactArguments
+$warmJson = & $tool @compactArguments
+$warm = $warmJson | ConvertFrom-Json
+if (-not $warm.cache.hit -or -not $warm.cache.storedTimings) { throw 'SQLite context cache did not report reuse and stored timings.' }
+if ($warmJson.Length -gt $warm.output.characterBudget -or $warm.candidates.Count -gt 3) { throw 'Compact context exceeded its output budget.' }
+if ($warm.candidates[0].path -notlike '*/RefreshTokenCommandHandlerTests.cs' -or $warm.confidence -ne 'high') { throw 'Compact context lost exact test identity.' }
+if (($warm.candidates.path -join "`n") -cne ($uncached.candidates.path -join "`n")) { throw 'SQLite context cache changed candidate selection.' }
+if (@($warm.candidates.path | Sort-Object -Unique).Count -ne $warm.candidates.Count) { throw 'Compact context repeated a candidate.' }
+Write-Host 'LLM Wiki SQLite compact context-cache smoke passed: exact test identity, output budget, cache parity and explicit stored timings.'

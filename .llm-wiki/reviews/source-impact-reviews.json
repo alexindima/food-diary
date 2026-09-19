@@ -223,21 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "90734b5cacf0ce27a8bb645f444520582e94a2af1f596147c3e7d78ff09202ca"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "480d29c5349e81bc842478cd10cbc01fc4768a81bfce3b69cc1506a3e75838e7"
+          "sha256": "fd672c463db383e30c64fd481ecdb10952c1aafc1d4667f841776e910ea9243e"
         }
       ],
-      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
+      "reason": "Reviewed current generated-index diff and additive graph ownership repair: dependency rules, consumer filters, runtime interpretation and static-test caveats are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:34.6783675Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:26.3963857Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -245,14 +237,14 @@
       "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3c14e4a4841df3b964b0b7eb3b82e9175bd032025f4c569cab89279bbbbb2bff"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "Reviewed current generated-index diff and additive graph ownership repair: dependency rules, consumer filters, runtime interpretation and static-test caveats are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:58.5646594Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:27.4891203Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -599,13 +591,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f5954a158b3ed442bd8789add277dabc5d6b1f48cd2c9dbdcd2670dcac34949"
+          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
         }
       ],
-      "reason": "Reviewed ranking and identity candidate changes; impact simulation still consumes the same typed edges and preserves source verification requirements.",
+      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T06:43:40.4235749Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:28.6053486Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -643,14 +635,26 @@
       "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "51829acac6e157137a536eae86a756079d99f479cea2db4117fb7e04304316a7"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "48936365523a5ae3ab9c5b875966cc239e2d2bf16a3fccee17d61e36612c79f0"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "9be7b591687d5cc4dbff1a759ef6ce2260f4a50c70dea0aa3fd33a5b3e7a0893"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "d058d7a5de41ef3e27fabc35b8f23df7a93c025488b4a0b4ece8fba98881e535"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
         }
       ],
-      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
+      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:36.7517579Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:29.7347281Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -782,14 +786,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "faafce7655386fe5fcc7c4b7aeceba9339ed89222a41fa4446f87ad132a10c4e"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2c3444e045e0e8fdb9293f0e267b5704b60b3182bd806069612c4855ac0a79a6"
         }
       ],
-      "reason": "Compared changed quota scalar mapping and nutrition query consumers: user scoping, persistence values, provider payloads and authorization behavior are preserved. All 294 PostgreSQL integration tests pass; refreshed indexes remain navigation evidence as these pages require.",
+      "reason": "Reviewed retrieval-only changes and regenerated symbol-derived indexes: privacy classification, provider boundaries, source verification and security-evidence caveats are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:37.6452671Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:30.7198613Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +832,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aff9726e1ff099a634588887b456e42e79919fc2a426deffb10cf81eb50b05aa"
+          "sha256": "bd4c32025e9165261e50cab13226d2ee46635c00de87076bc7cf57df616d6fd7"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "2e2af024707f9227a99956c65262b525708dca7c06bda1db8d2bdac379e1533c"
         }
       ],
-      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
+      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
-      "reviewedAtUtc": "2026-09-19T09:46:03.5490382Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:35:44.4954914Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3412ff96a86bcd05802300b8f79b07cfe98132630b5bd1bbbe9f85cbe3c217b2"
+          "sha256": "2907d1e9de95f2e3a5ccfe707a95166fe0c11ef7448a38c3505c4c72e88f190e"
         }
       ],
-      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
+      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
-      "reviewedAtUtc": "2026-09-19T09:46:03.9016964Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:35:45.2301584Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +926,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aff9726e1ff099a634588887b456e42e79919fc2a426deffb10cf81eb50b05aa"
+          "sha256": "bd4c32025e9165261e50cab13226d2ee46635c00de87076bc7cf57df616d6fd7"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3412ff96a86bcd05802300b8f79b07cfe98132630b5bd1bbbe9f85cbe3c217b2"
+          "sha256": "2907d1e9de95f2e3a5ccfe707a95166fe0c11ef7448a38c3505c4c72e88f190e"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "1fe1c307ae3b907acd7896fded090bbd2a74bd8e5c2bd5eb4f4fd3d487a47cd8"
         }
       ],
-      "reason": "PostCommitActionQueue now checks the flush budget before dequeuing. Deterministic runtime tests cover exact dropped counts for one and three remaining callbacks and capacity reuse. Generated quality/topology indexes reflect the source change; reviewed workflow guidance still correctly treats indexes as navigation rather than runtime evidence. No topology, delivery durability, API or schema changes.",
+      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "13e430d2e7161108a53f0bc5ff77c049b228d21b",
-      "reviewedAtUtc": "2026-09-19T09:46:04.4875967Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:35:46.1024812Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1001,13 +1013,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
+          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:20.5992951Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:36.8289314Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1192,14 +1204,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "baf0e1fe7538f9ccbba13bbf4c1aa2bef13c3a22591e8d71ad4491a3c88d52ce"
         }
       ],
-      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
+      "reason": "Reviewed additive context Compact forwarding and Wiki-only health/repair routing: existing dispatch, impact simulation, source reviews and index generator contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:39.2527792Z"
+      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
+      "reviewedAtUtc": "2026-09-19T11:30:33.6156026Z"
     }
   ]
 }

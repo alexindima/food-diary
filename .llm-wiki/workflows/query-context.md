@@ -195,3 +195,25 @@ affinity. Unknown compound identifiers produce low-confidence candidates with
 MCP distinguishes how Wiki selects tests from a request to locate those tests.
 Graph-only test planning recognizes `.test.mjs` and `.test.cjs` consumers as well
 as JavaScript, TypeScript, C# and PowerShell tests. References are not execution evidence.
+
+## Compact lookup and exact identities
+
+Use `wiki.ps1 context -Query '<question>' -Compact -Format Json` for a single
+bounded list instead of repeated legacy categories. The SQL compact view has
+a 12000-character budget and reports omitted candidates; with room for more
+than one result it preserves a test lead when available. Omit `-Compact` for
+the unchanged full response schema. Cached responses mark `cache.hit` and
+`cache.storedTimings`: stored timings are not a fresh latency measurement.
+SQLite cache reuse follows freshness validation and fingerprints the graph,
+ranking policy and formatter; stale data cannot be authorized by a cache hit.
+
+Exact file paths, filenames and stems precede fuzzy ranking. Multiple exact
+names across different paths remain explicitly ambiguous. Physical module and
+layer metadata derive from current project identities, including relocated
+project folders. [Self-maintenance](self-maintenance.md) checks this projection
+and repairs deterministic drift through the existing writer.
+
+The maintenance regression corpus records audit-driven cases, not a new blind
+holdout. Keep independently collected answer-quality questions separate from
+ranking tuning. Semantic retrieval remains an experiment to evaluate against
+this lexical baseline, not an implicit provider dependency.

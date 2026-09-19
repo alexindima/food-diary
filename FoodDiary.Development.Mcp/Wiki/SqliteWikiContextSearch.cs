@@ -433,7 +433,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         bool stronglyRequestsTest = explicitlyRequestsTest &&
             (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) ||
                 (string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
-                    directTerms.Contains("tests")));
+                    directTerms.Contains("tests")) ||
+                Regex.IsMatch(query.Trim(), @"^(?:какие\s+тесты|which\s+tests|what\s+tests)(?=\s|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
         Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
             ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
             : [];
@@ -962,6 +963,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     ? "agent guide affinity"
                     : "agent guide penalty for code intent");
             }
+            if (ExactFileIdentity(candidate.Path, query)) {
+                score = 1_000_000;
+                reasons.Add("exact file identity");
+            }
             ranked.Add(new RankedCandidate(candidate, score, reasons));
         }
 
@@ -999,12 +1004,16 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)) &&
                 policy.ConfidenceCalibration.DocumentationRecordTypes.Any(recordType =>
                     string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase));
-            bool ambiguous = unmatchedIdentifier || recordTypeMismatch || (scoreMargin is not null &&
-                scoreMargin <= policy.ConfidenceCalibration.AmbiguityMaximumMargin);
+            bool exact = ExactFileIdentity(candidate.Path, query);
+            int exactCount = result.Count(item => ExactFileIdentity(item.Path, query));
+            bool ambiguous = unmatchedIdentifier || (exact && exactCount > 1) || (!exact && (recordTypeMismatch || (scoreMargin is not null &&
+                scoreMargin <= policy.ConfidenceCalibration.AmbiguityMaximumMargin)));
             string? ambiguityReason = null;
             if (unmatchedIdentifier) {
                 ambiguityReason = "unmatched-query-identifier";
-            } else if (recordTypeMismatch) {
+            } else if (exact && exactCount > 1) {
+                ambiguityReason = "multiple-exact-identities";
+            } else if (!exact && recordTypeMismatch) {
                 ambiguityReason = "record-type-change-type-mismatch";
             } else if (ambiguous) {
                 ambiguityReason = "top-score-margin";
@@ -1012,6 +1021,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string confidence;
             if (ambiguous) {
                 confidence = "low";
+            } else if (exact) {
+                confidence = "high";
             } else if (scoreMargin is null) {
                 confidence = "unknown";
             } else if (scoreMargin >= policy.ConfidenceCalibration.HighMinimumMargin) {
@@ -1032,6 +1043,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             normalizedScopes,
             limit);
         return [.. selected.Select((candidate, index) => candidate with { Rank = index + 1 })];
+    }
+
+    private static bool ExactFileIdentity(string path, string query) {
+        string identity = NormalizePath(query.Trim());
+        string normalized = NormalizePath(path);
+        string name = Path.GetFileName(normalized);
+        return string.Equals(identity, normalized, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(identity, name, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(identity, Path.GetFileNameWithoutExtension(name), StringComparison.OrdinalIgnoreCase);
     }
 
     private static List<WikiContextSearchCandidate> PreserveScopeCoverage(

@@ -98,231 +98,222 @@
     "wikiToolScore": 420
   },
   "queryTermExpansions": {
-    "administrator|administer|administration": ["admin"],
     "collaborative": ["collaboration"],
-    "login": ["authentication", "auth"],
+    "login": ["authentication","auth"],
     "reviews|identities|boundaries|calibrates|clients|receives|components|endpoints|exceptions|saves|definitions|initializes|loads|passwords|roles|tests|scenarios|sections|verified|retrying|suppressed|templates": ["@inflect"],
     "dirty": ["unsaved"],
     "create": ["factory"],
     "upstream|цепочку": ["trace"],
-    "identity|personal": ["privacy", "user"],
-    "external": ["integration", "integrations", "httpclient"],
-    "provider": ["integration", "integrations", "client"],
-    "http": ["httpclient", "integrations"],
-    "recalculate": ["calculate", "update", "updater"],
-    "change|changes": ["mutation", "update"],
+    "identity|personal": ["privacy","user"],
+    "external": ["integration","integrations","httpclient"],
+    "provider": ["integration","integrations","client"],
+    "http": ["httpclient","integrations"],
+    "recalculate": ["calculate","update","updater"],
+    "change|changes": ["mutation","update"],
     "utility": ["utils"],
-    "helper": ["utils", "util"],
+    "helper": ["utils","util"],
     "identifier|identifiers": ["id"],
-    "english|russian|language": ["i18n", "localization", "translation"],
-    "translation": ["i18n", "localization", "translate"],
+    "english|russian|language": ["i18n","localization","translation"],
+    "translation": ["i18n","localization","translate"],
     "url|urls": ["uri"],
-    "consistent": ["check", "validate"],
-    "replay": ["idempotency", "deduplication", "duplicate", "event"],
-    "pdf": ["diarypdf", "remoteimage", "export"],
-    "ssrf": ["endpoint", "url", "uri", "dns", "ipaddress", "connectcallback"],
-    "dns|rebinding": ["resolve", "ipaddress", "connectcallback", "endpoint"],
-    "csp": ["contentsecuritypolicy", "securityheaders", "xss", "browser"],
-    "xss": ["html", "sanitize", "browser", "localstorage", "csp"],
-    "tls|ssl": ["sslprotocols", "https", "certificate", "nginx"],
-    "localstorage": ["browserstorage", "tokenstorage", "browser"],
-    "revise": ["revision", "update", "recalculate"],
-    "predicts": ["predict", "prediction"],
+    "consistent": ["check","validate"],
+    "replay": ["idempotency","deduplication","duplicate","event"],
+    "pdf": ["diarypdf","remoteimage","export"],
+    "ssrf": ["endpoint","url","uri","dns","ipaddress","connectcallback"],
+    "dns|rebinding": ["resolve","ipaddress","connectcallback","endpoint"],
+    "csp": ["contentsecuritypolicy","securityheaders","xss","browser"],
+    "xss": ["html","sanitize","browser","localstorage","csp"],
+    "tls|ssl": ["sslprotocols","https","certificate","nginx"],
+    "localstorage": ["browserstorage","tokenstorage","browser"],
+    "revise": ["revision","update","recalculate"],
+    "predicts": ["predict","prediction"],
     "bounded": ["controlled"],
-    "retries": ["retry", "repair"],
-    "failed": ["failure", "repair"],
-    "purge": ["cleanup", "delete"],
+    "retries": ["retry","repair"],
+    "failed": ["failure","repair"],
+    "purge": ["cleanup","delete"],
     "undelete": ["restore"],
     "orphaned|expired|retention": ["cleanup"],
-    "presigned": ["upload", "url"],
-    "poison": ["dead", "letter"],
-    "calorie|macro": ["nutrition"],
-    "schedule": ["recurring", "job"],
-    "command": ["handler"],
-    "reader": ["read", "readservice"],
-    "load|summary": ["read"],
+    "presigned": ["upload","url"],
+    "poison": ["dead","letter"],
+    "schedule": ["recurring","job"],
+    "reader": ["read","readservice"],
     "ingest": ["ingestion"],
-    "unauthenticated": ["auth", "guard"],
-    "navigation": ["guard", "route"],
+    "unauthenticated": ["auth","guard"],
+    "navigation": ["guard","route"],
     "accepts": ["enqueue"],
     "еды": ["food"],
-    "настройки|настройке|настроек": ["options", "settings"],
-    "workers": ["runtime", "topology"],
-    "finds|search|поиска|поиск": ["find", "lookup"],
-    "searches": ["search", "find"],
-    "compile": ["get", "plan"],
-    "compiles": ["compile", "get", "plan"],
-    "adds": ["create"],
-    "checks": ["check", "test"],
+    "настройки|настройке|настроек": ["options","settings"],
+    "workers": ["runtime","topology"],
+    "finds|search|поиска|поиск": ["find","lookup"],
+    "searches": ["search","find"],
+    "compile": ["get","plan"],
+    "compiles": ["compile","get","plan"],
+    "checks": ["check","test"],
     "scheduled": ["schedule"],
-    "signed": ["auth", "logged"],
+    "signed": ["auth","logged"],
     "authentication": ["auth"],
     "token": ["jwt"],
-    "artificial|intelligence": ["ai"],
     "addresses": ["address"],
     "impersonate|impersonates|impersonated": ["impersonation"],
-    "ranked": ["context"],
-    "agents": ["instruction", "guidance"]
-    ,"autofill": ["form", "input", "login"]
-    ,"storage": ["store", "persist"]
-    ,"quota": ["usage", "limit"]
-    ,"qa": ["visual", "evidence", "verify"]
-    ,"estimate": ["cost", "forecast"]
-    ,"isolate": ["invoke", "run"]
+    "agents": ["instruction","guidance"],
+    "autofill": ["form","input","login"],
+    "quota": ["usage","limit"],
+    "qa": ["visual","evidence","verify"],
+    "estimate": ["cost","forecast"],
+    "isolate": ["invoke","run"]
   },
-  "queryContextExpansions": [{"requiredTerms": ["wiki", "background"], "terms": ["runtime", "topology"]}],
+  "queryContextExpansions": [{"requiredTerms":["wiki","background"],"terms":["runtime","topology"]},{"requiredTerms":["daily","target","calories"],"terms":["tdee","calculator"]},{"requiredTerms":["hydration","persist"],"terms":["repository","entry"]},{"requiredTerms":["task","commit"],"terms":["wiki","workflow","session"]},{"requiredTerms":["task","resume"],"terms":["wiki","workflow","session"]}],
   "queryPrefixExpansions": {
-    "сообществ": ["community", "explore"],
+    "вода$|воды$|воду$|воде$|водой$|water$|hydration$": ["hydration","water"],
+    "норма$|норму$|нормы$": ["target"],
+    "продолж|возобнов": ["resume"],
+    "коммит": ["commit"],
+    "диалог": ["dialog"],
+    "сообществ": ["community","explore"],
     "профил": ["profile"],
     "проекц": ["projection"],
     "реализац": ["implementation"],
-    "список|покуп": ["shopping", "list"],
+    "список|покуп": ["shopping","list"],
     "энергозатрат": ["tdee"],
-    "зависим": ["dependency", "graph"],
+    "зависим": ["dependency","graph"],
     "вес": ["weight"],
     "тали": ["waist"],
     "носим": ["wearable"],
     "менстру": ["menstrual"],
     "эпизод": ["episode"],
     "сводк": ["summary"],
-    "добав": ["create", "add"],
-    "несохран": ["unsaved", "dirty"],
+    "добав": ["create","add"],
+    "несохран": ["unsaved","dirty"],
     "форм": ["form"],
     "порци": ["serving"],
     "измер": ["measurement"],
-    "метрическ|имперск": ["measurement", "system"],
-    "реклам": ["marketing", "campaign"],
-    "язык": ["language", "localization"],
-    "подключен|подключить": ["connection", "connect"],
+    "метрическ|имперск": ["measurement","system"],
+    "реклам": ["marketing","campaign"],
+    "язык": ["language","localization"],
+    "подключен|подключить": ["connection","connect"],
     "отключ": ["disconnect"],
     "перехватчик": ["interceptor"],
-
-    "токен": ["token", "auth"],
-    "обновлен|обновля": ["refresh", "update"],
-    "одноврем|параллел": ["parallel", "concurrent"],
-    "калори": ["calories", "nutrition"],
-    "пояс": ["timezone", "offset"],
-    "адаптер": ["adapter", "client", "integration"],
-    "вычищ|strip$|redact$|scrub$": ["sanitize", "privacy", "sensitive"],
-    "идентификатор": ["identity", "user"],
+    "токен": ["token","auth"],
+    "обновлен|обновля": ["refresh","update"],
+    "одноврем|параллел": ["parallel","concurrent"],
+    "калори": ["calories","nutrition"],
+    "пояс": ["timezone","offset"],
+    "адаптер": ["adapter","client","integration"],
+    "вычищ|strip$|redact$|scrub$": ["sanitize","privacy","sensitive"],
+    "идентификатор": ["identity","user"],
     "пользоват": ["user"],
-    "лог": ["log", "telemetry"],
-    "внешн|интеграц": ["external", "provider", "integration"],
-    "продукт": ["product", "food"],
-    "сдела": ["write", "create"],
-    "запис": ["write", "record"],
-    "классифиц": ["classify", "classification", "measure"],
+    "лог": ["log","telemetry"],
+    "внешн|интеграц": ["external","provider","integration"],
+    "продукт": ["product","food"],
+    "сдела": ["write","create"],
+    "запис": ["record","write"],
+    "классифиц": ["classify","classification","measure"],
     "аудит": ["audit"],
     "политик": ["policy"],
-    "префикс": ["prefix", "expansion"],
-    "миграц": ["migration", "database", "schema"],
-    "модел": ["model", "data"],
+    "префикс": ["prefix","expansion"],
+    "миграц": ["migration"],
+    "модел": ["model"],
     "шаблон": ["template"],
     "промпт": ["prompt"],
-    "контракт": ["contract", "interface"],
+    "контракт": ["contract","interface"],
     "жизненн": ["lifecycle"],
-    "сущност": ["entity", "domain"],
-    "отправ": ["send", "dispatch"],
+    "сущност": ["entity"],
+    "отправ": ["send","dispatch"],
     "напоминан": ["reminder"],
     "недельн|еженедел": ["weekly"],
-    "калькулятор": ["calculator", "calculate"],
-    "времен": ["timestamp", "time"],
-    "выда": ["award", "earned"],
+    "калькулятор": ["calculator","calculate"],
+    "времен": ["timestamp","time"],
+    "выда": ["award","earned"],
     "цел": ["goal"],
-    "отста": ["behind", "progress"],
-    "контроллер": ["controller", "http", "endpoint"],
+    "отста": ["behind","progress"],
+    "контроллер": ["controller","http","endpoint"],
     "принима|принят": ["receive"],
-    "уведомлен": ["notification", "webhook"],
-    "платеж|платёж|оплат": ["billing", "payment"],
+    "уведомлен": ["notification"],
+    "платеж|платёж|оплат": ["billing","payment"],
     "провайдер|поставщик": ["provider"],
-    "пересчит": ["recalculate", "calculate", "updater"],
-    "пищев|ценност|питан": ["nutrition"],
+    "пересчит": ["recalculate","calculate","updater"],
     "рецепт": ["recipe"],
-    "измен": ["change", "update"],
+    "измен": ["change","update"],
     "ингредиент": ["ingredient"],
-    "пересматр": ["revise", "revision"],
-    "прогноз|рассчитыва": ["prediction", "calculate"],
+    "пересматр": ["revise","revision"],
+    "прогноз|рассчитыва": ["prediction","calculate"],
     "цикл": ["cycle"],
     "истори": ["history"],
-    "сохраня": ["store", "persist"],
     "входящ": ["inbound"],
-    "письм": ["email", "message"],
-    "выбира": ["select", "selector", "audience"],
-    "обработчик|обработк": ["handler"],
-    "запрос": ["request", "command"],
-    "восстановлен": ["restore", "reset", "recovery"],
+    "письм": ["email","message"],
+    "выбира": ["select","selector","audience"],
+    "запрос": ["request","command"],
+    "восстановлен": ["restore","reset","recovery"],
     "парол": ["password"],
-    "скрипт|powershell$": ["script", "tool"],
-    "провер": ["check", "validate", "verification", "verifier"],
+    "скрипт|powershell$": ["script","tool"],
+    "провер": ["check","validate","verification","verifier"],
     "принадлеж": ["ownership"],
     "состоян": ["state"],
     "фронтенд|клиентск": ["frontend"],
-    "фонов": ["background", "job"],
-    "задач": ["task", "job"],
-    "удал": ["delete", "remove"],
-    "неактив": ["inactive", "cleanup"],
-    "собира": ["assemble", "snapshot", "telemetry"],
+    "фонов": ["background","job"],
+    "задач": ["task","job"],
+    "удал": ["delete","remove"],
+    "неактив": ["inactive","cleanup"],
+    "собира": ["assemble","snapshot","telemetry"],
     "данн": ["data"],
     "главн|экран": ["dashboard"],
     "текущ": ["current"],
     "день": ["day"],
-    "период": ["periodic", "recurring", "job"],
-    "запуска": ["run", "hostedservice", "job"],
+    "период": ["periodic","recurring","job"],
+    "запуска": ["run","hostedservice","job"],
     "регистр": ["registration"],
-    "физическ": ["persistence", "store"],
+    "физическ": ["persistence","store"],
     "очеред": ["queue"],
-    "исходящ": ["outbound", "mail"],
+    "исходящ": ["outbound","mail"],
     "оберт": ["adapter"],
     "браузер": ["browser"],
     "распозна": ["recognition"],
-    "голос": ["voice", "speech"],
+    "голос": ["voice","speech"],
     "телеметр": ["telemetry"],
     "голодан": ["fasting"],
-    "политик": ["policy"],
     "экспорт": ["export"],
     "дневник": ["diary"],
     "нормализ|привод": ["normalize"],
     "диапазон": ["range"],
     "дат": ["date"],
-    "безопас": ["safe", "security", "review"],
+    "безопас": ["safe","security","review"],
     "примен": ["apply"],
     "часов": ["time"],
     "сдвиг": ["offset"],
-    "посчит": ["count", "calculate"],
+    "посчит": ["count","calculate"],
     "прогресс": ["progress"],
-    "генератор": ["build", "builder", "generate"],
+    "генератор": ["generate","generator","build"],
     "кэш|cached$": ["cache"],
-    "пакет|массов": ["batch", "bulk"],
+    "пакет|массов": ["batch","bulk"],
     "уникальн": ["unique"],
     "прием|приём": ["meal"],
     "нестандарт": ["custom"],
     "порт": ["port"],
-    "разобр|разбир|парс": ["parse", "parser"],
+    "разобр|разбир|парс": ["parse","parser"],
     "тип": ["type"],
     "жалоб|отчет|отчёт": ["report"],
     "учет": ["case"],
-    "ошиб": ["error", "failure"],
-    "валидац": ["validation", "validate"],
-    "запис": ["record", "write"],
+    "ошиб": ["error","failure"],
+    "валидац": ["validation","validate"],
     "старт": ["start"],
     "успех": ["success"],
     "отмен": ["cancel"],
     "сбой": ["failure"],
-    "длитель": ["duration", "timing"],
+    "длитель": ["duration","timing"],
     "счетчик": ["counter"],
-    "повтор": ["retry", "duplicate", "repeat"],
-    "получ": ["get", "load"],
-    "подстав": ["render", "renderer", "resource"],
-    "защищ": ["guard", "replay", "security"],
+    "повтор": ["retry","duplicate","repeat"],
+    "получ": ["get","load"],
+    "подстав": ["render","renderer","resource"],
+    "защищ": ["guard","replay","security"],
     "поведен": ["behavior"],
     "верси": ["version"],
-    "видов": ["kinds", "type"],
-    "редакт": ["edit", "update"],
-    "фот": ["photo", "image"],
-    "перевод": ["translation", "translate"],
+    "видов": ["kinds","type"],
+    "редакт": ["edit","update"],
+    "фот": ["photo","image"],
+    "перевод": ["translation","translate"],
     "назван": ["name"],
-    "определ": ["detect", "resolve", "definition"],
-    "преобраз": ["map", "mapper"],
+    "определ": ["detect","resolve","definition"],
+    "преобраз": ["map","mapper"],
     "тренд": ["trend"],
     "карточ": ["card"],
     "икон": ["icon"],
@@ -330,140 +321,132 @@
     "единиц": ["unit"],
     "постро|builder$": ["build"],
     "пункт": ["item"],
-    "админ": ["admin"],
     "диетолог": ["dietologist"],
-    "маршрут|уходит": ["route", "navigation", "guard"],
-    "заверш": ["complete", "outcome"],
-    "управл": ["manage", "governed", "controlled"],
+    "маршрут|уходит": ["route","navigation","guard"],
+    "заверш": ["complete","outcome"],
+    "управл": ["manage","governed","controlled"],
     "регрес": ["regression"],
-    "оцен": ["eval", "evaluation"],
-    "исход": ["outcome", "result"],
+    "оцен": ["eval","evaluation"],
+    "исход": ["outcome","result"],
     "нестабил": ["flaky"],
     "улучш": ["improve"],
-    "проверяем": ["verify", "verifiable"],
-    "чувствитель": ["sensitive", "privacy"],
-    "рабоч|пространств": ["workspace"]
-    ,"тест": ["test"]
-    ,"команд": ["command", "tool"]
-    ,"найт": ["find", "search"]
-    ,"вопрос": ["question"]
-    ,"исслед": ["research"]
-    ,"приоритет": ["priority"]
-    ,"стоим|density$": ["cost"]
-    ,"секунд": ["seconds", "duration"]
-    ,"калибр": ["calibrate"]
-    ,"фильтр": ["filter"]
-    ,"кроп": ["crop"]
-    ,"рамк": ["bounds"]
-    ,"столб": ["bar"]
-    ,"масштаб": ["scale"]
-    ,"позици": ["position"]
-    ,"синхрон|synchronize$|synchronized$|synchronization$": ["sync"]
-    ,"фасад": ["facade"]
-    ,"методик": ["wiki", "workflow"]
-    ,"критик": ["critique", "review"]
-    ,"сравн|сравнив": ["compare", "comparison"]
-    ,"вариант": ["strategy", "experiment"]
-    ,"наход": ["find", "resolve"]
-    ,"урок": ["lesson"]
-    ,"заглав": ["uppercase", "naming"]
-    ,"компонент": ["component"]
-    ,"событ": ["event"]
-    ,"wiki-|вики": ["wiki", "tool", "command"]
-    ,"контекст": ["context"]
-    ,"вебхук": ["webhook"]
-    ,"подпис": ["subscription"]
-    ,"валидатор": ["validator", "validation"]
-    ,"репозитор": ["repository", "store"]
-    ,"идемпотент": ["idempotency", "replay"]
-    ,"генератор": ["generate", "generator", "build"]
-    ,"индекс": ["index"]
-    ,"готовност": ["readiness", "ready", "verify"]
-    ,"миграц": ["migration"]
-    ,"стади": ["stage", "verification"]
-    ,"уведомлен": ["notification"]
-    ,"прочтен|прочитан": ["read"]
-    ,"доступ": ["access"]
-    ,"чтен": ["read", "readonly"]
-    ,"канал": ["channel"]
-    ,"freeze": ["manifest"]
-    ,"достижен": ["achievement"]
-    ,"создан|созда": ["create"]
-    ,"общ": ["common"]
-    ,"помощ": ["helper", "util", "guard"]
-    ,"обязат": ["required", "guard"]
-    ,"значен": ["value"]
-    ,"домен": ["domain", "entity"]
-    ,"хранилищ": ["repository", "store", "storage"]
-    ,"аудит": ["audit"]
-    ,"рол": ["role"]
-    ,"телеграм": ["telegram"]
-    ,"утвержд": ["assertion"]
-    ,"локализ": ["localized", "localization", "resource", "renderer"]
-    ,"текст": ["text", "resource", "renderer"]
-    ,"ресурс": ["resource", "renderer"]
-    ,"пдф": ["pdf"]
-    ,"настро": ["configured", "configuration"]
-    ,"шлюз": ["gateway"]
-    ,"картинк|изображ": ["image"]
-    ,"биндинг": ["binder", "binding"]
-    ,"модел": ["model"]
-    ,"метрик": ["metric", "metrics", "measure", "telemetry"]
-    ,"сущност": ["entity"]
-    ,"сервис|facade$": ["service"]
-    ,"исполн|выполн": ["execution"]
-    ,"помет": ["mark"]
-    ,"конфигурац": ["configuration"]
-    ,"готовност": ["readiness", "healthcheck"]
-    ,"ответ": ["response", "mapping"]
-    ,"правил": ["validation", "policy"]
-    ,"миграц": ["migration"]
-    ,"снимок": ["snapshot", "fingerprint"]
-    ,"загруз": ["load", "read", "upload"]
-    ,"страниц": ["page"]
-    ,"сесси": ["session"]
-    ,"таблиц": ["table", "configuration"]
-    ,"искусств|ии": ["ai"]
-    ,"периодич": ["recurring"]
-    ,"очист": ["cleanup", "clear"]
-    ,"заглуш": ["noop"]
-    ,"персонал": ["privacy", "personal"]
-    ,"расширен": ["extensions"]
-    ,"покрыт": ["coverage"]
-    ,"флот": ["fleet"]
-    ,"агент": ["agent"]
-    ,"архитектур": ["architecture"]
-    ,"решен": ["decision"]
-    ,"индекс": ["index"]
-    ,"потребител": ["consumer"]
-    ,"ручн|manually$": ["manual"]
-    ,"записыв": ["write", "add"]
-    ,"результат": ["result"]
-    ,"резерв": ["reservation"]
-    ,"журнал": ["audit", "log"]
-    ,"медиатор": ["mediator", "behavior"]
-    ,"диалог": ["dialog"]
-    ,"панел": ["panel"]
-    ,"доста": ["get", "extract", "resolve"]
-    ,"параметр": ["parameter"]
-    ,"анализатор": ["analyzer", "analysis"]
-    ,"пуст": ["empty", "redundant"]
-    ,"скоб": ["parameterlist"]
-    ,"квот": ["quota"]
-    ,"ежедневн": ["daily"]
-    ,"совет": ["advice"]
-    ,"атрибут": ["attribute"]
-    ,"просмотр|обзор": ["read", "overview"]
-    ,"почт": ["mail", "inbox"]
-    ,"входа": ["auth", "login"]
-    ,"любим|избран": ["favorite"]
-    ,"подтвержд": ["verification", "confirm"]
-    ,"статус": ["status"]
-    ,"контракт": ["contract", "interface"]
-    ,"качеств|сложн|пробел": ["quality", "grade"]
-    ,"упражн": ["exercise"]
-    ,"инвариант": ["invariant"]
-    ,"смен": ["change"]
+    "проверяем": ["verify","verifiable"],
+    "чувствитель": ["sensitive","privacy"],
+    "рабоч|пространств": ["workspace"],
+    "тест": ["test"],
+    "команд": ["command","tool"],
+    "найт": ["find","search"],
+    "вопрос": ["question"],
+    "исслед": ["research"],
+    "приоритет": ["priority"],
+    "стоим|density$": ["cost"],
+    "секунд": ["seconds","duration"],
+    "калибр": ["calibrate"],
+    "фильтр": ["filter"],
+    "кроп": ["crop"],
+    "рамк": ["bounds"],
+    "столб": ["bar"],
+    "масштаб": ["scale"],
+    "позици": ["position"],
+    "синхрон|synchronize$|synchronized$|synchronization$": ["sync"],
+    "фасад": ["facade"],
+    "методик": ["wiki","workflow"],
+    "критик": ["critique","review"],
+    "сравн|сравнив": ["compare","comparison"],
+    "вариант": ["strategy","experiment"],
+    "наход": ["find","resolve"],
+    "урок": ["lesson"],
+    "заглав": ["uppercase","naming"],
+    "компонент": ["component"],
+    "событ": ["event"],
+    "wiki-|вики": ["wiki","tool","command"],
+    "вебхук": ["webhook"],
+    "подпис": ["subscription"],
+    "валидатор": ["validator","validation"],
+    "репозитор": ["repository","store"],
+    "идемпотент": ["idempotency","replay"],
+    "индекс": ["index"],
+    "готовност": ["readiness","healthcheck"],
+    "стади": ["stage","verification"],
+    "доступ": ["access"],
+    "чтен": ["read","readonly"],
+    "канал": ["channel"],
+    "freeze": ["manifest"],
+    "достижен": ["achievement"],
+    "общ": ["common"],
+    "помощ": ["helper","util","guard"],
+    "обязат": ["required","guard"],
+    "значен": ["value"],
+    "домен": ["domain","entity"],
+    "хранилищ": ["repository","store","storage"],
+    "рол": ["role"],
+    "телеграм": ["telegram"],
+    "утвержд": ["assertion"],
+    "локализ": ["localized","localization","resource","renderer"],
+    "текст": ["text","resource","renderer"],
+    "ресурс": ["resource","renderer"],
+    "пдф": ["pdf"],
+    "настро": ["configured","configuration"],
+    "шлюз": ["gateway"],
+    "картинк|изображ": ["image"],
+    "биндинг": ["binder","binding"],
+    "метрик": ["metric","metrics","measure","telemetry"],
+    "сервис|facade$": ["service"],
+    "исполн|выполн": ["execution"],
+    "помет": ["mark"],
+    "конфигурац": ["configuration"],
+    "ответ": ["response","mapping"],
+    "правил": ["validation","policy"],
+    "снимок": ["snapshot","fingerprint"],
+    "загруз": ["load","read","upload"],
+    "страниц": ["page"],
+    "сесси": ["session"],
+    "таблиц": ["table","configuration"],
+    "периодич": ["recurring"],
+    "очист": ["cleanup","clear"],
+    "заглуш": ["noop"],
+    "персонал": ["privacy","personal"],
+    "расширен": ["extensions"],
+    "покрыт": ["coverage"],
+    "флот": ["fleet"],
+    "агент": ["agent"],
+    "архитектур": ["architecture"],
+    "решен": ["decision"],
+    "потребител": ["consumer"],
+    "ручн|manually$": ["manual"],
+    "записыв": ["write","add"],
+    "результат": ["result"],
+    "резерв": ["reservation"],
+    "журнал": ["audit","log"],
+    "медиатор": ["mediator","behavior"],
+    "панел": ["panel"],
+    "доста": ["get","extract","resolve"],
+    "параметр": ["parameter"],
+    "анализатор": ["analyzer","analysis"],
+    "пуст": ["empty","redundant"],
+    "скоб": ["parameterlist"],
+    "квот": ["quota"],
+    "совет": ["advice"],
+    "атрибут": ["attribute"],
+    "просмотр|обзор": ["read","overview"],
+    "почт": ["mail","inbox"],
+    "входа": ["auth","login"],
+    "любим|избран": ["favorite"],
+    "подтвержд": ["verification","confirm"],
+    "статус": ["status"],
+    "качеств|сложн|пробел": ["quality","grade"],
+    "упражн": ["exercise"],
+    "инвариант": ["invariant"],
+    "смен": ["change"],
+    "админ|administrator$|administer$|administration$": ["admin"],
+    "пищев|ценност|питан|calorie$|macro$": ["nutrition"],
+    "обработчик|обработк|command$": ["handler"],
+    "прочтен|прочитан|load$|summary$": ["read"],
+    "создан|созда|adds$": ["create"],
+    "искусств|ии|artificial$|intelligence$": ["ai"],
+    "контекст|ranked$": ["context"],
+    "сохраня|storage$": ["store","persist"],
+    "дневн|суточн|ежедневн": ["daily"]
   },
   "pathBoosts": [
     {"id": "wiki-helper-module", "queryTerms": ["wiki", "helper"], "minimumMatches": 2, "pathPrefixes": [".llm-wiki/tools/LlmWiki"], "score": 80},
@@ -916,7 +899,7 @@
       "id": "explicit-script-role",
       "queryTerms": ["script", "tool"],
       "minimumMatches": 1,
-      "identityTerms": ["scripts", ".mjs", ".js"],
+      "identityTerms": ["scripts", ".mjs", ".js", ".ps1"],
       "score": 180
     },
     {
