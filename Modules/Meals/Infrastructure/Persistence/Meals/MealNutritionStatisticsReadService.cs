@@ -59,16 +59,24 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
                 meal.MealType))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
+        // Buckets are contiguous fixed-length instant ranges, except for the final partial range.
+        // Preserve query order within each bucket so floating-point summation stays unchanged.
+        long bucketLengthTicks = TimeSpan.FromDays(quantizationDays).Ticks;
+        List<MealNutritionProjection>[] mealsByBucket = [.. buckets.Select(_ => new List<MealNutritionProjection>())];
+        foreach (MealNutritionProjection meal in meals) {
+            int bucketIndex = (int)((meal.Date.Ticks - normalizedFrom.Ticks) / bucketLengthTicks);
+            mealsByBucket[bucketIndex].Add(meal);
+        }
+
         return Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(
-            [.. buckets.Select(bucket => BuildBucket(bucket.Start, bucket.End, meals))]);
+            [.. buckets.Select((bucket, index) => BuildBucket(bucket.Start, bucket.End, mealsByBucket[index]))]);
     }
 
     private static MealNutritionStatisticsBucket BuildBucket(
         DateTime bucketStart,
         DateTime bucketEnd,
-        IReadOnlyCollection<MealNutritionProjection> meals) {
-        MealNutritionProjection[] bucketMeals = [.. meals.Where(meal => meal.Date >= bucketStart && meal.Date <= bucketEnd)];
-        if (bucketMeals.Length == 0) {
+        IReadOnlyCollection<MealNutritionProjection> bucketMeals) {
+        if (bucketMeals.Count == 0) {
             return new MealNutritionStatisticsBucket(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
         }
 
@@ -95,7 +103,7 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
             SumCalories(bucketMeals, MealType.Lunch),
             SumCalories(bucketMeals, MealType.Dinner),
             SumCalories(bucketMeals, MealType.Snack),
-            bucketMeals.Length,
+            bucketMeals.Count,
             bucketMeals.Select(meal => meal.Date.Date).Distinct().Count());
     }
 

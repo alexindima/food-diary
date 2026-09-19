@@ -2,6 +2,18 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModuleSourceCatalogTests {
+    [Theory]
+    [InlineData("Shared/FoodDiary.Audit.Infrastructure", "AuditEntryService.cs")]
+    [InlineData("Shared/FoodDiary.Email.Infrastructure", "EmailOutboxProcessor.cs")]
+    [InlineData("Shared/FoodDiary.Outbox.Infrastructure", "OutboxProcessingEngine.cs")]
+    public void InfrastructureInventory_IncludesSharedPersistenceAdapters(string relativeRoot, string sourceName) {
+        string root = Path.GetFullPath(ArchitectureTestPaths.FromRoot(relativeRoot));
+        Assert.Contains(root, ModuleSourceCatalog.InfrastructureRoots(), StringComparer.OrdinalIgnoreCase);
+        Assert.Contains(ModuleSourceCatalog.InfrastructureFiles(), path =>
+            path.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(Path.GetFileName(path), sourceName, StringComparison.Ordinal));
+    }
+
     [Fact]
     public void ApplicationInventory_CoversEveryPhysicalModule() {
         string[] physicalModules = [.. Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"))

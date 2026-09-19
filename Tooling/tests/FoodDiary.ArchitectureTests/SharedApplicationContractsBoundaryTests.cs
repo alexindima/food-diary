@@ -162,16 +162,19 @@ public sealed class SharedApplicationContractsBoundaryTests {
 
     [Fact]
     public void ApplicationSourceFiles_DoNotBuildBclMailTransportMessages() {
-        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
+        string[] applicationRoots = [.. ModuleSourceCatalog.ApplicationRoots.Values,
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Runtime")];
+        Assert.All(applicationRoots, root => Assert.NotEmpty(ModuleSourceCatalog.RequiredFiles(root)));
+        // MailAddress.TryCreate is address validation, not transport construction.
+        // Reject transport/message types rather than the namespace containing both responsibilities.
         string[] forbiddenPatterns = [
-            "System.Net.Mail",
+            "SmtpClient",
             "MailMessage",
-            "MailAddress",
             "AlternateView",
             "MediaTypeNames.Text",
         ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoots, forbiddenPatterns, requireSourceRoot: true);
 
         Assert.Empty(violations);
     }

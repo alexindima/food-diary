@@ -70,6 +70,30 @@ public partial class MealsFeatureTests {
         Assert.Equal(meal, repository.DeletedMeal);
     }
 
+    [Theory]
+    [InlineData("Product.NotAccessible")]
+    [InlineData("Recipe.NotAccessible")]
+    public async Task RepeatMealCommandHandler_WhenNutritionFails_DoesNotAddMealOrEnqueueAchievements(string errorCode) {
+        var user = User.Create("repeat-failure@example.com", "hash");
+        var sourceMeal = Meal.Create(user.Id, DateTime.UtcNow.AddDays(-1));
+        sourceMeal.AddProduct(ProductId.New(), 100);
+        var repository = new SingleMealRepository(sourceMeal);
+        IMealNutritionService nutrition = Substitute.For<IMealNutritionService>();
+        var error = new Error(errorCode, "Source is no longer accessible.");
+        nutrition.CalculateAsync(Arg.Any<Meal>(), user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<MealNutritionSummary>(error));
+        IMealAchievementEvaluationRequest outbox = Substitute.For<IMealAchievementEvaluationRequest>();
+        RepeatMealCommandHandler handler = RepeatMealHandler(repository, nutrition, CreateCurrentUserAccessService(user), outbox);
+
+        Result<MealModel> result = await handler.Handle(
+            new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, DateTime.UtcNow, MealType: null), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+        Assert.Null(repository.LastAddedMeal);
+        Assert.Empty(outbox.ReceivedCalls());
+    }
+
     [Fact]
     public async Task RepeatMealCommandHandler_WithExistingMeal_CopiesItemsAndAppliesNutrition() {
         var user = User.Create("repeat-meal@example.com", "hash");

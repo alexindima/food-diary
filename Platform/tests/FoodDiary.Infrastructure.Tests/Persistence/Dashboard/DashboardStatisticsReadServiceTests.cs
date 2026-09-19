@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Results;
@@ -13,6 +15,54 @@ namespace FoodDiary.Infrastructure.Tests.Persistence.Dashboard;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardStatisticsReadServiceTests {
+    [Theory]
+    [InlineData(1)]
+    [InlineData(7)]
+    [InlineData(366)]
+    public async Task GetStatisticsAsync_MatchesReferenceAggregationForUnorderedBoundaryMeals(int quantizationDays) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"bucket-boundaries-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        var from = new DateTime(2025, 1, 1, 13, 17, 0, DateTimeKind.Utc);
+        DateTime to = from.AddDays(365).AddHours(1);
+        DateTime[] dates = [to, from.AddTicks(-1), from.AddDays(7), from, from.AddDays(1).AddTicks(-1),
+            from.AddDays(1), to.AddTicks(1), from.AddDays(100), from.AddDays(7).AddTicks(-1)];
+        Meal[] meals = [.. dates.Select((date, index) => CreateMeal(user.Id, date, 100 + (index * 0.17), 10 + (index * 0.13), (MealType)(index % 4)))];
+        context.Meals.AddRange(meals);
+        context.Meals.Add(CreateMeal(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), from, 9999, 9999));
+        await context.SaveChangesAsync();
+        var service = new MealNutritionStatisticsReadService(context.Meals);
+
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await service.GetStatisticsAsync(user.Id, from, to, quantizationDays);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        IReadOnlyList<(DateTime Start, DateTime End)> ranges = FoodDiary.Application.Abstractions.Common.Validation.TemporalRangePolicy.BuildInstantBuckets(from, to, quantizationDays);
+        Assert.Equal(ranges.Count, result.Value.Count);
+        for (int index = 0; index < ranges.Count; index++) {
+            (DateTime start, DateTime end) = ranges[index];
+            Meal[] expected = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
+            MealNutritionStatisticsBucket actual = result.Value[index];
+            int days = Math.Max(1, (int)Math.Ceiling((end - start).TotalDays));
+            Assert.Equal(start, actual.DateFrom);
+            Assert.Equal(end, actual.DateTo);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.TotalCalories);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalProteins), 2, MidpointRounding.ToEven), actual.TotalProteins);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalProteins) / days, 2, MidpointRounding.ToEven), actual.AverageProteins);
+            Assert.Equal(expected.Sum(meal => meal.TotalFats), actual.TotalFats);
+            Assert.Equal(expected.Sum(meal => meal.TotalCarbs), actual.TotalCarbs);
+            Assert.Equal(expected.Sum(meal => meal.TotalFiber), actual.TotalFiber);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalFats) / days, 2, MidpointRounding.ToEven), actual.AverageFats);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalCarbs) / days, 2, MidpointRounding.ToEven), actual.AverageCarbs);
+            Assert.Equal(Math.Round(expected.Sum(meal => meal.TotalFiber) / days, 2, MidpointRounding.ToEven), actual.AverageFiber);
+            Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Breakfast).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.BreakfastCalories);
+            Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Lunch).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.LunchCalories);
+            Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Dinner).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.DinnerCalories);
+            Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Snack).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.SnackCalories);
+            Assert.Equal(expected.Length, actual.MealCount);
+            Assert.Equal(expected.Select(meal => meal.Date.Date).Distinct().Count(), actual.TrackedDayCount);
+        }
+    }
+
     [Fact]
     public async Task GetStatisticsAsync_ProjectsMealNutritionIntoBuckets() {
         await using FoodDiaryDbContext context = CreateContext();
@@ -139,8 +189,9 @@ public sealed class DashboardStatisticsReadServiceTests {
         FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
         DateTime date,
         double calories,
-        double proteins) {
-        var meal = Meal.Create(userId, date);
+        double proteins,
+        MealType? mealType = null) {
+        var meal = Meal.Create(userId, date, mealType);
         meal.ApplyNutrition(new MealNutritionUpdate(
             calories,
             proteins,

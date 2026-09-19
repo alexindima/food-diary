@@ -51,7 +51,10 @@ public sealed class RepeatMealCommandHandler(
         Meal newMeal = CreateRepeatedMeal(command, values);
         CopyItems(values.SourceMeal, newMeal);
         CopyAiSessions(values.SourceMeal, newMeal, command.TargetDate);
-        await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result nutritionResult = await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure<MealModel>(nutritionResult.Error);
+        }
 
         await mealWriteRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
         await achievementEvaluationOutbox.EnqueueAsync(values.UserId, cancellationToken).ConfigureAwait(false);
@@ -151,7 +154,7 @@ public sealed class RepeatMealCommandHandler(
         }
     }
 
-    private async Task ApplyNutritionAsync(
+    private async Task<Result> ApplyNutritionAsync(
         Meal sourceMeal,
         Meal newMeal,
         UserId userId,
@@ -169,7 +172,7 @@ public sealed class RepeatMealCommandHandler(
                     IsAutoCalculated: true));
             }
 
-            return;
+            return nutritionResult.IsFailure ? Result.Failure(nutritionResult.Error) : Result.Success();
         }
 
         newMeal.ApplyNutrition(new MealNutritionUpdate(
@@ -186,5 +189,6 @@ public sealed class RepeatMealCommandHandler(
             ManualCarbs: sourceMeal.ManualCarbs,
             ManualFiber: sourceMeal.ManualFiber,
             ManualAlcohol: sourceMeal.ManualAlcohol));
+        return Result.Success();
     }
 }

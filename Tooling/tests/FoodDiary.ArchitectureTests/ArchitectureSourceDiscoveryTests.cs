@@ -2,8 +2,10 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ArchitectureSourceDiscoveryTests {
-    [Fact]
-    public void ProductionRoots_ScanRelocatedModuleAndSharedSources() {
+    [Theory]
+    [InlineData("FoodDiary.MailInbox.Internal")]
+    [InlineData("System.Net.Mail")]
+    public void ProductionRoots_ScanRelocatedModuleAndSharedSources(string forbiddenNamespace) {
         DirectoryInfo root = Directory.CreateTempSubdirectory("fooddiary-roots-");
         try {
             string[] folders = ["Modules/Example/Application", "Shared/FoodDiary.Example.Contracts"];
@@ -11,15 +13,15 @@ public sealed class ArchitectureSourceDiscoveryTests {
                 string directory = Path.Combine(root.FullName, folder);
                 Directory.CreateDirectory(directory);
                 File.WriteAllText(Path.Combine(directory, Path.GetFileName(directory) + ".csproj"), "<Project />");
-                File.WriteAllText(Path.Combine(directory, "Consumer.cs"), "using FoodDiary.MailInbox.Internal;");
+                File.WriteAllText(Path.Combine(directory, "Consumer.cs"), $"using {forbiddenNamespace};");
             }
 
             IReadOnlyDictionary<string, string> roots = ProjectReferenceReader.ReadProductionProjectRoots(root.FullName);
             Assert.Equal(folders.Select(folder => Path.GetFullPath(Path.Combine(root.FullName, folder))).Order(StringComparer.Ordinal),
                 roots.Values.Order(StringComparer.Ordinal), StringComparer.Ordinal);
-            Assert.Equal(2, SourceScanner.FindLinePatternViolations(roots.Values, ["FoodDiary.MailInbox"], requireSourceRoot: true).Length);
+            Assert.Equal(2, SourceScanner.FindLinePatternViolations(roots.Values, [forbiddenNamespace], requireSourceRoot: true).Length);
             Assert.Throws<DirectoryNotFoundException>(() => SourceScanner.FindLinePatternViolations(
-                Path.Combine(root.FullName, "Missing"), ["FoodDiary.MailInbox"], requireSourceRoot: true));
+                Path.Combine(root.FullName, "Missing"), [forbiddenNamespace], requireSourceRoot: true));
         } finally {
             root.Delete(recursive: true);
         }

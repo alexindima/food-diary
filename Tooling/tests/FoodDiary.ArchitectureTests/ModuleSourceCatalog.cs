@@ -31,7 +31,12 @@ internal static class ModuleSourceCatalog {
         ApplicationRoots.Values.Select(root => Path.Combine(Path.GetDirectoryName(root)!, "Infrastructure"))
             .Concat(ApplicationRoots.Values.Select(root => Path.Combine(Path.GetDirectoryName(root)!, "PersistenceModel")))
             .Where(root => Directory.Exists(root) && Directory.EnumerateFiles(root, "*.csproj").Any())
-            .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure"))
+            .Concat(ProjectReferenceReader.ReadProductionProjectRoots()
+                .Where(project => project.Key.StartsWith("FoodDiary.", StringComparison.Ordinal)
+                    && project.Key.EndsWith(".Infrastructure", StringComparison.Ordinal)
+                    && Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, project.Value)
+                        .StartsWith($"Shared{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+                .Select(project => project.Value))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"))
             .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime"))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition"));
