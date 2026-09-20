@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 209
+    "documentationPages": 210
   },
   "dotnet": {
     "projects": [
@@ -15834,6 +15834,7 @@
       "docs/experiments/content-reports-wiki-first-extraction.md",
       "docs/experiments/images-wiki-first-extraction-report.md",
       "docs/experiments/open-food-facts-wiki-first-extraction-report.md",
+      "docs/frontend/BODY_METRICS_TEST_COVERAGE.md",
       "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
       "docs/frontend/FRONTEND_ARCHITECTURE.md",
       "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
