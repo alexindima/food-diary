@@ -312,3 +312,11 @@
 .fd-ui-input__control[type='time']::-webkit-calendar-picker-indicator {
     margin-right: calc(var(--fd-space-xxs) / -2);
 }
+
+.fd-ui-input__unit {
+    flex-shrink: 0;
+    padding-inline-start: var(--fd-space-sm);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-size);
+    line-height: var(--fd-text-body-line-height);
+}

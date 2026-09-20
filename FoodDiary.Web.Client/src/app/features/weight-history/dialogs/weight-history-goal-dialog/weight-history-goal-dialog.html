@@ -4,26 +4,38 @@
     [dismissible]="!isSaving()"
     (close)="close()"
 >
-    <div class="fd-stack fd-gap-card-content">
+    <form class="fd-stack fd-gap-lg" [formRoot]="form" (submit)="submit($event)">
         <fd-ui-input
-            type="number"
-            [step]="0.1"
-            [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate: { unit: 'weight' | measurementUnit | translate }"
-            [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
+            type="text"
+            inputMode="decimal"
+            autocomplete="off"
+            [selectOnFocus]="true"
+            [showRequiredIndicator]="false"
+            [suffixText]="'weight' | measurementUnit | translate"
+            [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate"
             [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="weightField().value() ? 'backspace' : undefined"
             [formField]="weightField"
-            (suffixButtonClicked)="weightField().value.set('')"
         />
+        @if (desiredWeightKg() !== null) {
+            <div class="fd-ui-text-muted fd-ui-body-sm">{{ 'WEIGHT_HISTORY.GOAL_HISTORY_HINT' | translate }}</div>
+        }
         <div class="fd-row fd-wrap fd-justify-end fd-gap-actions">
             @if (desiredWeightKg() !== null) {
-                <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">
-                    {{ 'WEIGHT_HISTORY.CANCEL_GOAL' | translate }}
-                </fd-ui-button>
+                <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">{{
+                    'WEIGHT_HISTORY.CANCEL_GOAL' | translate
+                }}</fd-ui-button>
+            } @else {
+                <fd-ui-button type="button" variant="secondary" fill="text" [loading]="isSaving()" (click)="close()">{{
+                    'WEIGHT_HISTORY.CANCEL_EDIT' | translate
+                }}</fd-ui-button>
             }
-            <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">
-                {{ (desiredWeightKg() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.START_NEW_GOAL') | translate }}
-            </fd-ui-button>
+            <fd-ui-button
+                type="submit"
+                [loading]="isSaving()"
+                [disabledReason]="'WEIGHT_HISTORY.GOAL_VALUE_REQUIRED' | translate"
+                [disabled]="weightField().value().trim().length === 0"
+                >{{ (desiredWeightKg() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.START_NEW_GOAL') | translate }}</fd-ui-button
+            >
         </div>
-    </div>
+    </form>
 </fd-ui-dialog>

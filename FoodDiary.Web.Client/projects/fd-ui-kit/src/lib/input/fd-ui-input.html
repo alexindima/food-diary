@@ -11,7 +11,7 @@
         @if (label()) {
             <label class="fd-ui-input__label" [attr.for]="id()">
                 <span class="fd-ui-input__label-text">{{ label() }}</span>
-                @if (required()) {
+                @if (required() && showRequiredIndicator()) {
                     <span class="fd-ui-input__required">*</span>
                 }
             </label>
@@ -26,6 +26,7 @@
             class="fd-ui-input__control"
             [id]="id()"
             [attr.type]="type()"
+            [attr.inputmode]="inputMode() ?? null"
             [attr.autocomplete]="autocomplete() ?? null"
             [value]="internalValue()"
             [required]="required()"
@@ -36,7 +37,7 @@
             [attr.maxlength]="maximumLength() ?? maxLength() ?? null"
             [attr.max]="maximum() ?? max() ?? null"
             [attr.step]="step() ?? null"
-            [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
+            [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="hasError() ? 'true' : null"
             (animationstart)="onAnimationStart($event, control.value)"
             (input)="onInput(control.value)"
@@ -44,6 +45,7 @@
             (blur)="onBlur()"
         />
 
+        <span class="fd-ui-input__unit" [hidden]="!suffixText()" [id]="`${id()}-unit`">{{ suffixText() }}</span>
         @if (suffixButtonIcon(); as suffixIconName) {
             <button
                 class="fd-ui-input__suffix"

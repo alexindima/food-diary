@@ -109,7 +109,11 @@ describe('Waist history page composition', () => {
         expect(facade.isEditing()).toBe(true);
         expect(open).toHaveBeenLastCalledWith(
             WaistHistoryEntryDialogComponent,
-            expect.objectContaining({ providers: [{ provide: WaistHistoryFacade, useValue: facade }] }),
+            expect.objectContaining({
+                size: 'sm',
+                autoFocus: 'fd-ui-input input',
+                providers: [{ provide: WaistHistoryFacade, useValue: facade }],
+            }),
         );
         closed.next(undefined);
         expect(facade.isEditing()).toBe(false);

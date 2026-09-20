@@ -1,29 +1,32 @@
-<form class="waist-history-page__form fd-stack fd-gap-card-header" [formRoot]="form()">
-    <div class="waist-history-page__form-row waist-history-page__form-row--compact fd-grid fd-gap-card-header">
+<form class="waist-history-page__form fd-stack fd-gap-lg" [formRoot]="form()">
+    <div class="waist-history-page__form-row waist-history-page__form-row--compact fd-grid fd-gap-lg">
         <fd-ui-date-input
             class="waist-history-page__form-control"
             [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
             [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
             [todayLabel]="'WAIST_HISTORY.TODAY' | translate"
             [formField]="form().date"
+            [showRequiredIndicator]="false"
         />
 
         <fd-ui-input
             class="waist-history-page__form-control"
-            type="number"
-            [step]="0.1"
-            [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate: { unit: 'length' | measurementUnit | translate }"
+            type="text"
+            inputMode="decimal"
+            autocomplete="off"
+            [selectOnFocus]="true"
+            [showRequiredIndicator]="false"
+            [suffixText]="'length' | measurementUnit | translate"
+            [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
             [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
             [formField]="form().circumference"
         />
     </div>
 
     <div class="waist-history-page__form-actions fd-row fd-wrap fd-justify-end fd-gap-actions">
-        @if (isEditing()) {
-            <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
-                {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
-            </fd-ui-button>
-        }
+        <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+            {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
+        </fd-ui-button>
         <fd-ui-button type="submit" [loading]="isSaving()">
             @if (isEditing()) {
                 {{ 'WAIST_HISTORY.UPDATE' | translate }}

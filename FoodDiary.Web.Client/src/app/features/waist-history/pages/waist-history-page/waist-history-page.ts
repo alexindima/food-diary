@@ -132,6 +132,8 @@ export class WaistHistoryPageComponent {
 
     protected openGoalDialog(): void {
         this.dialogService.open(WaistHistoryGoalDialogComponent, {
+            size: 'sm',
+            autoFocus: 'fd-ui-input input',
             preset: 'form',
             providers: [{ provide: WaistHistoryFacade, useValue: this.facade }],
         });
@@ -147,6 +149,8 @@ export class WaistHistoryPageComponent {
     protected openEntryDialog(): void {
         this.dialogService
             .open(WaistHistoryEntryDialogComponent, {
+                size: 'sm',
+                autoFocus: 'fd-ui-input input',
                 preset: 'form',
                 providers: [{ provide: WaistHistoryFacade, useValue: this.facade }],
             })

@@ -44,6 +44,14 @@ const requireInputElement = (selector: string): HTMLInputElement => {
 };
 
 describe('FdUiDateInputComponent', () => {
+    it('keeps accessible required semantics when the asterisk is hidden', () => {
+        fixture.componentRef.setInput('label', 'Date');
+        fixture.componentRef.setInput('required', true);
+        fixture.componentRef.setInput('showRequiredIndicator', false);
+        fixture.detectChanges();
+        expect(requireInputElement('input').getAttribute('aria-required')).toBe('true');
+        expect(host().querySelector('.fd-ui-date-input__required')).toBeNull();
+    });
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiDateInputComponent],

@@ -3,11 +3,11 @@
   "summary": {
     "components": 454,
     "componentsWithoutDirectSpecs": 127,
-    "inputs": 1429,
+    "inputs": 1434,
     "outputs": 474,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1829,
+    "translationKeys": 1831,
     "consumerEdges": 1110,
     "consumedComponents": 294,
     "unconsumedComponents": 159
@@ -4523,6 +4523,11 @@
           "required": false
         },
         {
+          "name": "showRequiredIndicator",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "size",
           "type": "FdUiFieldSize",
           "required": false
@@ -5197,6 +5202,26 @@
         },
         {
           "name": "required",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "showRequiredIndicator",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "suffixText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "inputMode",
+          "type": "'text' | 'decimal' | 'numeric' | 'tel' | 'email' | 'url' | 'search' | 'none'",
+          "required": false
+        },
+        {
+          "name": "selectOnFocus",
           "type": "",
           "required": false
         },
@@ -21031,10 +21056,12 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
       "keys": [
+        "WAIST_HISTORY.CANCEL_EDIT",
         "WAIST_HISTORY.CANCEL_GOAL",
         "WAIST_HISTORY.DESIRED_WAIST_LABEL",
-        "WAIST_HISTORY.GOAL_CARD_TITLE",
-        "WAIST_HISTORY.GOAL_PLACEHOLDER"
+        "WAIST_HISTORY.GOAL_HISTORY_HINT",
+        "WAIST_HISTORY.GOAL_PLACEHOLDER",
+        "WAIST_HISTORY.GOAL_VALUE_REQUIRED"
       ]
     },
     {
@@ -21266,10 +21293,12 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
       "keys": [
+        "WEIGHT_HISTORY.CANCEL_EDIT",
         "WEIGHT_HISTORY.CANCEL_GOAL",
         "WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL",
-        "WEIGHT_HISTORY.GOAL_CARD_TITLE",
-        "WEIGHT_HISTORY.GOAL_PLACEHOLDER"
+        "WEIGHT_HISTORY.GOAL_HISTORY_HINT",
+        "WEIGHT_HISTORY.GOAL_PLACEHOLDER",
+        "WEIGHT_HISTORY.GOAL_VALUE_REQUIRED"
       ]
     },
     {
@@ -27042,8 +27071,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "loading",
         "type",
@@ -27199,8 +27230,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "weight-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "loading",
         "type",
@@ -28471,6 +28504,7 @@
       "inputsUsed": [
         "label",
         "placeholder",
+        "showRequiredIndicator",
         "todayLabel"
       ],
       "outputsHandled": []
@@ -28485,6 +28519,7 @@
       "inputsUsed": [
         "label",
         "placeholder",
+        "showRequiredIndicator",
         "todayLabel"
       ],
       "outputsHandled": []
@@ -31580,9 +31615,13 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "autocomplete",
+        "inputMode",
         "label",
         "placeholder",
-        "step",
+        "selectOnFocus",
+        "showRequiredIndicator",
+        "suffixText",
         "type"
       ],
       "outputsHandled": []
@@ -31595,16 +31634,16 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "ariaLabel",
+        "autocomplete",
+        "inputMode",
         "label",
         "placeholder",
-        "step",
-        "suffixButtonIcon",
+        "selectOnFocus",
+        "showRequiredIndicator",
+        "suffixText",
         "type"
       ],
-      "outputsHandled": [
-        "suffixButtonClicked"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "FdUiInputComponent",
@@ -31614,9 +31653,13 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "autocomplete",
+        "inputMode",
         "label",
         "placeholder",
-        "step",
+        "selectOnFocus",
+        "showRequiredIndicator",
+        "suffixText",
         "type"
       ],
       "outputsHandled": []
@@ -31629,16 +31672,16 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "ariaLabel",
+        "autocomplete",
+        "inputMode",
         "label",
         "placeholder",
-        "step",
-        "suffixButtonIcon",
+        "selectOnFocus",
+        "showRequiredIndicator",
+        "suffixText",
         "type"
       ],
-      "outputsHandled": [
-        "suffixButtonClicked"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "FdUiLevelIndicatorComponent",

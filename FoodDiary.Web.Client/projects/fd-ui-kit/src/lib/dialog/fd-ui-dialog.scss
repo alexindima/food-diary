@@ -104,7 +104,7 @@
 
 .fd-ui-dialog__close-button {
     border: none;
-    background: var(--fd-bg-dialog-muted);
+    background: transparent;
     border-radius: var(--fd-radius-pill);
     width: var(--fd-dialog-close-button-size);
     height: var(--fd-dialog-close-button-size);

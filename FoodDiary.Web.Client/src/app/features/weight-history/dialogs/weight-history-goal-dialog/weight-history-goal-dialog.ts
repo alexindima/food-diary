@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -12,7 +12,7 @@ import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
 @Component({
     selector: 'fd-weight-history-goal-dialog',
-    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, MeasurementUnitPipe, TranslatePipe],
+    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, FormRoot, MeasurementUnitPipe, TranslatePipe],
     templateUrl: './weight-history-goal-dialog.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,15 +35,22 @@ export class WeightHistoryGoalDialogComponent {
         });
     }
 
+    protected submit(event: Event): void {
+        event.preventDefault();
+        this.save();
+    }
+
     protected save(): void {
-        if (this.form().invalid()) {
+        if (this.isSaving() || this.form().invalid() || this.weightField().value().trim().length === 0) {
             return;
         }
         this.facade.saveDesiredWeight();
     }
 
     protected cancelGoal(): void {
-        this.facade.cancelWeightGoal();
+        if (!this.isSaving()) {
+            this.facade.cancelWeightGoal();
+        }
     }
 
     protected close(): void {

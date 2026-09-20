@@ -3,7 +3,7 @@
         @if (label()) {
             <label class="fd-ui-date-input__label" [attr.for]="id()">
                 <span class="fd-ui-date-input__label-text">{{ label() }}</span>
-                @if (required()) {
+                @if (required() && showRequiredIndicator()) {
                     <span class="fd-ui-date-input__required">*</span>
                 }
             </label>
@@ -21,6 +21,7 @@
                 [attr.placeholder]="placeholderAttribute()"
                 [attr.aria-describedby]="error() ? `${id()}-error` : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-required]="required()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
                 [attr.aria-haspopup]="'dialog'"

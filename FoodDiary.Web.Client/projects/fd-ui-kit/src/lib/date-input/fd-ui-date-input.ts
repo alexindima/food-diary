@@ -30,6 +30,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly todayLabel = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
+    public readonly showRequiredIndicator = input(true);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly min = input<string | Date>();
     public readonly max = input<string | Date>();

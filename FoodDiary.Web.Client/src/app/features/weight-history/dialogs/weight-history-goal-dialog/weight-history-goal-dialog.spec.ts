@@ -103,3 +103,108 @@ describe('Weight goal dialog lifecycle', () => {
         expect(close).toHaveBeenCalledOnce();
     });
 });
+
+describe('Weight goal keyboard submission', () => {
+    it('preserves comma input and submits without navigation', () => {
+        const { fixture, facade } = setup();
+        const root = fixture.nativeElement as HTMLElement;
+        const value = root.querySelector<HTMLInputElement>('fd-ui-input input');
+        expect(value?.type).toBe('text');
+        expect(value?.inputMode).toBe('decimal');
+        if (value === null) {
+            throw new Error('Missing goal input');
+        }
+        value.value = '72,5';
+        value.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const event = new Event('submit', { bubbles: true, cancelable: true });
+        root.querySelector('form')?.dispatchEvent(event);
+        expect(event.defaultPrevented).toBe(true);
+        expect(facade.desiredWeightForm.weight().value()).toBe('72,5');
+        expect(facade.saveDesiredWeight).toHaveBeenCalledOnce();
+    });
+    it('does not submit an empty target or resubmit while saving', () => {
+        const { component, facade } = setup();
+        facade.desiredWeightForm.weight().value.set('');
+        component['save']();
+        expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
+        expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+        facade.desiredWeightForm.weight().value.set('72');
+        facade.isDesiredWeightSaving.set(true);
+        component['save']();
+        component['cancelGoal']();
+        expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
+        expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+    });
+});
+
+describe('Weight goal rendered controls', () => {
+    it.each(['', '   '])('disables submission for blank target %j without cancelling the goal', value => {
+        const { fixture, facade } = setup();
+        facade.desiredWeightForm.weight().value.set(value);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const submitButton = root.querySelector<HTMLButtonElement>('button[type="submit"]');
+        expect(submitButton?.disabled).toBe(true);
+        root.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
+        expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+        expect(findGoalButton(root, 'WEIGHT_HISTORY.CANCEL_GOAL').disabled).toBe(false);
+    });
+
+    it('disables saving, cancellation and dismissal while a request is pending', () => {
+        const { fixture, facade, close } = setup();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__close-button')).not.toBeNull();
+        facade.isDesiredWeightSaving.set(true);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const save = findGoalButton(root, 'WEIGHT_HISTORY.START_NEW_GOAL');
+        const cancel = findGoalButton(root, 'WEIGHT_HISTORY.CANCEL_GOAL');
+        expect(save.disabled).toBe(true);
+        expect(cancel.disabled).toBe(true);
+        expect(root.querySelector('.fd-ui-dialog__close-button')).toBeNull();
+        save.click();
+        cancel.click();
+        expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
+        expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+        expect(close).not.toHaveBeenCalled();
+    });
+
+    it('dismisses creation with Cancel without mutating a goal', () => {
+        const { fixture, facade, close } = setup();
+        facade.desiredWeightKg.set(null);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        findGoalButton(root, 'WEIGHT_HISTORY.CANCEL_EDIT').click();
+        expect(close).toHaveBeenCalledOnce();
+        expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
+        expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+        expect(root.textContent).not.toContain('WEIGHT_HISTORY.GOAL_HISTORY_HINT');
+    });
+
+    it('preserves the draft and allows retry when a request ends without success', () => {
+        const { fixture, facade, close } = setup();
+        const root = fixture.nativeElement as HTMLElement;
+        facade.desiredWeightForm.weight().value.set('72,5');
+        fixture.detectChanges();
+        findGoalButton(root, 'WEIGHT_HISTORY.START_NEW_GOAL').click();
+        facade.isDesiredWeightSaving.set(true);
+        fixture.detectChanges();
+        facade.isDesiredWeightSaving.set(false);
+        fixture.detectChanges();
+        expect(close).not.toHaveBeenCalled();
+        expect(root.querySelector<HTMLInputElement>('fd-ui-input input')?.value).toBe('72,5');
+        const retry = findGoalButton(root, 'WEIGHT_HISTORY.START_NEW_GOAL');
+        expect(retry.disabled).toBe(false);
+        retry.click();
+        expect(facade.saveDesiredWeight).toHaveBeenCalledTimes(2);
+    });
+});
+
+function findGoalButton(root: HTMLElement, text: string): HTMLButtonElement {
+    const button = Array.from(root.querySelectorAll('button')).find(item => item.textContent.includes(text));
+    if (button === undefined) {
+        throw new Error(`Missing goal button: ${text}`);
+    }
+    return button;
+}

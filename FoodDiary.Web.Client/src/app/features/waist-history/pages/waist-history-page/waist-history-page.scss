@@ -209,16 +209,8 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
-    &__form {
-        display: flex;
-        flex-direction: column;
-        gap: var(--fd-space-card-header-gap);
-    }
-
     &__form-row {
-        display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        gap: var(--fd-space-card-header-gap);
         align-items: end;
 
         @media #{variables.$media-phablet} {
@@ -230,12 +222,6 @@
     &__form-row--compact {
         grid-template-columns: 1fr;
         align-items: stretch;
-    }
-
-    &__form-actions {
-        display: flex;
-        gap: var(--fd-space-actions-gap);
-        flex-wrap: wrap;
     }
 
     &__entries {

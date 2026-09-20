@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fdcf2c53809ffa30ac9d0275e7380ad7825f1f1de11c1cea8054c239fb9126c3"
+          "sha256": "04c8ad4fe7026ddf6b7cbaf9e6f905808844ee863f365e469fe4def81609cd5a"
         }
       ],
-      "reason": "Quality index changes reflect two small facade parser guards and test references. Measured V8 coverage is recorded separately in the audit; static reference matching is not used as execution evidence.",
+      "reason": "Added 10 goal dialog control-state scenarios; regenerated static quality references remain navigation evidence, with execution independently verified by 328 passing tests. Query workflow unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:24:32.5941256Z"
+      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
+      "reviewedAtUtc": "2026-09-20T13:12:31.8702916Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fdcf2c53809ffa30ac9d0275e7380ad7825f1f1de11c1cea8054c239fb9126c3"
+          "sha256": "04c8ad4fe7026ddf6b7cbaf9e6f905808844ee863f365e469fe4def81609cd5a"
         }
       ],
-      "reason": "Quality index changes are ordinary frontend measurement parsing and added specs. No identity, authorization, logging, transport or runtime exposure changes; the workflow still correctly treats static references as navigation only.",
+      "reason": "Updated quality references concern goal UI state tests only; security evidence compiler and authorization boundaries unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:24:31.0288841Z"
+      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
+      "reviewedAtUtc": "2026-09-20T13:12:33.3751162Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b502fa8b8db145eba2bb0052daa59b5c8e9226140fd698eaf46a29b758f62864"
+          "sha256": "479c86d6a6576be2a2fcf37f4705172b8f00c246b32634d47edaaeb3340c0c94"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "8a665506fbc58cf4ff4621eedfbef29bf81cfde49f8da28d20552b3fcc3da4d2"
+          "sha256": "cc86b2654bb51f28908e5078056b868899a8e8f85030a4628655328f29188488"
         }
       ],
-      "reason": "Frontend inventories now link new weight/waist specs. Existing route, facade, API and component ownership chains are unchanged and verified in page composition tests; trace behavior and limitations remain accurate.",
+      "reason": "Refreshed frontend indexes include goal FormRoot and rendered control test references; ownership and tracing workflow remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:24:28.3265088Z"
+      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
+      "reviewedAtUtc": "2026-09-20T13:12:34.9506918Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b502fa8b8db145eba2bb0052daa59b5c8e9226140fd698eaf46a29b758f62864"
+          "sha256": "479c86d6a6576be2a2fcf37f4705172b8f00c246b32634d47edaaeb3340c0c94"
         }
       ],
-      "reason": "Reviewed generated frontend contract changes: only new spec paths for weight and waist cards, dialogs and pages. Public inputs, outputs, selectors and templates remain unchanged; real component tests verify their existing bindings.",
+      "reason": "Reviewed goal dialog contracts: decimal text suffix, FormRoot submission, blank-target guard and disabled reason. 24 rendered goal dialog tests and 328 feature tests pass; guidance unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:24:34.0125104Z"
+      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
+      "reviewedAtUtc": "2026-09-20T13:12:30.3763169Z"
     },
     {
       "pageId": "workflow.query-context",

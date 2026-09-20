@@ -57,6 +57,10 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
+    public readonly showRequiredIndicator = input(true);
+    public readonly suffixText = input<string>();
+    public readonly inputMode = input<'text' | 'decimal' | 'numeric' | 'tel' | 'email' | 'url' | 'search' | 'none'>();
+    public readonly selectOnFocus = input(false);
     public readonly readonly = input(false);
     public readonly maxLength = input<number>();
     public readonly maximumLength = input<number>();
@@ -129,6 +133,13 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     });
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 
+    protected readonly describedBy = computed(() => {
+        const ids = [(this.suffixText() ?? '') !== '' ? `${this.id()}-unit` : null, this.hasError() ? `${this.id()}-error` : null]
+            .filter(Boolean)
+            .join(' ');
+        return ids.length > 0 ? ids : null;
+    });
+
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
@@ -146,6 +157,9 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     protected onFocus(): void {
         this.syncNativeValue();
         this.isFocused.set(true);
+        if (this.selectOnFocus() && this.type() === 'text') {
+            this.control()?.nativeElement.select();
+        }
     }
 
     protected onAnimationStart(event: AnimationEvent, value: string): void {

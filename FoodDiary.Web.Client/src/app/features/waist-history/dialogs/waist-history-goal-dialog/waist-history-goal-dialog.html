@@ -4,26 +4,38 @@
     [dismissible]="!isSaving()"
     (close)="close()"
 >
-    <div class="fd-stack fd-gap-card-content">
+    <form class="fd-stack fd-gap-lg" [formRoot]="form" (submit)="submit($event)">
         <fd-ui-input
-            type="number"
-            [step]="0.1"
-            [label]="'WAIST_HISTORY.DESIRED_WAIST_LABEL' | translate: { unit: 'length' | measurementUnit | translate }"
-            [ariaLabel]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate"
+            type="text"
+            inputMode="decimal"
+            autocomplete="off"
+            [selectOnFocus]="true"
+            [showRequiredIndicator]="false"
+            [suffixText]="'length' | measurementUnit | translate"
+            [label]="'WAIST_HISTORY.DESIRED_WAIST_LABEL' | translate"
             [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
-            [suffixButtonIcon]="waistField().value() ? 'backspace' : undefined"
             [formField]="waistField"
-            (suffixButtonClicked)="waistField().value.set('')"
         />
+        @if (desiredWaistCm() !== null) {
+            <div class="fd-ui-text-muted fd-ui-body-sm">{{ 'WAIST_HISTORY.GOAL_HISTORY_HINT' | translate }}</div>
+        }
         <div class="fd-row fd-wrap fd-justify-end fd-gap-actions">
             @if (desiredWaistCm() !== null) {
                 <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">{{
                     'WAIST_HISTORY.CANCEL_GOAL' | translate
                 }}</fd-ui-button>
+            } @else {
+                <fd-ui-button type="button" variant="secondary" fill="text" [loading]="isSaving()" (click)="close()">{{
+                    'WAIST_HISTORY.CANCEL_EDIT' | translate
+                }}</fd-ui-button>
             }
-            <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">{{
-                (desiredWaistCm() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.START_NEW_GOAL') | translate
-            }}</fd-ui-button>
+            <fd-ui-button
+                type="submit"
+                [loading]="isSaving()"
+                [disabledReason]="'WAIST_HISTORY.GOAL_VALUE_REQUIRED' | translate"
+                [disabled]="waistField().value().trim().length === 0"
+                >{{ (desiredWaistCm() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.START_NEW_GOAL') | translate }}</fd-ui-button
+            >
         </div>
-    </div>
+    </form>
 </fd-ui-dialog>

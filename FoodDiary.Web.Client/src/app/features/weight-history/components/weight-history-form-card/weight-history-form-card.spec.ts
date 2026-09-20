@@ -93,3 +93,19 @@ function setupComponent(
 function getText(fixture: ComponentFixture<WeightHistoryFormCardComponent>): string {
     return (fixture.nativeElement as HTMLElement).textContent;
 }
+
+it('offers cancel in create mode and a decimal text field with a unit', () => {
+    const { fixture, component } = setupComponent(false);
+    const cancel = vi.fn();
+    component.editCancel.subscribe(cancel);
+    const root = fixture.nativeElement as HTMLElement;
+    const value = root.querySelector<HTMLInputElement>('fd-ui-input input');
+    expect(value?.type).toBe('text');
+    expect(value?.inputMode).toBe('decimal');
+    expect(root.querySelector('.fd-ui-input__unit')).not.toBeNull();
+    expect(root.querySelector('.fd-ui-input__required')).toBeNull();
+    Array.from(root.querySelectorAll('button'))
+        .find(button => button.textContent.includes('CANCEL_EDIT'))
+        ?.click();
+    expect(cancel).toHaveBeenCalledOnce();
+});

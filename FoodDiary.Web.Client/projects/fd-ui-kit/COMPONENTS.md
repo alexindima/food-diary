@@ -815,3 +815,9 @@ If the component should be available via `FdUiKitModule`, add it to:
 Standard card surfaces use the shared `--fd-bg-card-surface` token: a subtle theme-aware neutral highlight over `--fd-bg-surface`. Explicit editor and gradient tones retain their dedicated backgrounds.
 
 `fd-ui-button` supports `appearance="muted-icon"` for quiet row actions. It uses muted text at rest, normal text on hover/keyboard focus, and danger color for destructive actions on hover/keyboard focus. Supply `ariaLabel` for icon-only buttons.
+
+### Measurement form options
+
+`fd-ui-input` supports `suffixText` for noninteractive units, `inputMode` for the mobile keyboard, and opt-in `selectOnFocus` for text inputs. Use `type="text" inputMode="decimal"` when comma decimals must remain intact; validation and canonical conversion belong to the form. The unit participates in `aria-describedby` alongside any error.
+
+Both `fd-ui-input` and `fd-ui-date-input` accept `showRequiredIndicator` (default `true`). Setting it to `false` hides only the asterisk; native required/ARIA semantics remain intact. See the Input/Measurement story. Dialog close buttons keep their keyboard focus ring and show background emphasis on hover, with no permanent filled circle.

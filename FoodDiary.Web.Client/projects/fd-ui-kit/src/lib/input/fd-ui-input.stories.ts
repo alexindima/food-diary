@@ -141,3 +141,16 @@ export const AllSizes: Story = {
         `,
     }),
 };
+
+export const Measurement: Story = {
+    args: {
+        label: 'Weight',
+        type: 'text',
+        inputMode: 'decimal',
+        value: '78,2',
+        suffixText: 'kg',
+        required: true,
+        showRequiredIndicator: false,
+        selectOnFocus: true,
+    },
+};

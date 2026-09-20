@@ -109,7 +109,11 @@ describe('Weight history page composition', () => {
         expect(facade.isEditing()).toBe(true);
         expect(open).toHaveBeenLastCalledWith(
             WeightHistoryEntryDialogComponent,
-            expect.objectContaining({ providers: [{ provide: WeightHistoryFacade, useValue: facade }] }),
+            expect.objectContaining({
+                size: 'sm',
+                autoFocus: 'fd-ui-input input',
+                providers: [{ provide: WeightHistoryFacade, useValue: facade }],
+            }),
         );
         closed.next(undefined);
         expect(facade.isEditing()).toBe(false);

@@ -132,6 +132,8 @@ export class WeightHistoryPageComponent {
 
     protected openGoalDialog(): void {
         this.dialogService.open(WeightHistoryGoalDialogComponent, {
+            size: 'sm',
+            autoFocus: 'fd-ui-input input',
             preset: 'form',
             providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
         });
@@ -147,6 +149,8 @@ export class WeightHistoryPageComponent {
     protected openEntryDialog(): void {
         this.dialogService
             .open(WeightHistoryEntryDialogComponent, {
+                size: 'sm',
+                autoFocus: 'fd-ui-input input',
                 preset: 'form',
                 providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
             })

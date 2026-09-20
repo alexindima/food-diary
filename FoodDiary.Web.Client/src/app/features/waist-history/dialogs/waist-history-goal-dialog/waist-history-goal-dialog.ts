@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -12,7 +12,7 @@ import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
 @Component({
     selector: 'fd-waist-history-goal-dialog',
-    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, MeasurementUnitPipe, TranslatePipe],
+    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, FormRoot, MeasurementUnitPipe, TranslatePipe],
     templateUrl: './waist-history-goal-dialog.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,14 +34,24 @@ export class WaistHistoryGoalDialogComponent {
         });
     }
 
+    protected submit(event: Event): void {
+        event.preventDefault();
+        this.save();
+    }
+
     protected save(): void {
-        if (!this.form().invalid()) {
-            this.facade.saveDesiredWaist();
+        if (this.isSaving() || this.form().invalid() || this.waistField().value().trim().length === 0) {
+            return;
+        }
+        this.facade.saveDesiredWaist();
+    }
+
+    protected cancelGoal(): void {
+        if (!this.isSaving()) {
+            this.facade.cancelWaistGoal();
         }
     }
-    protected cancelGoal(): void {
-        this.facade.cancelWaistGoal();
-    }
+
     protected close(): void {
         this.dialogRef.close();
     }

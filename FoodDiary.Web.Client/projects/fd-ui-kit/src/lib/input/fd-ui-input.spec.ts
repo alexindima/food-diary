@@ -392,3 +392,40 @@ describe('FdUiInputComponent with TestHost', () => {
         expect(input().disabled).toBe(true);
     });
 });
+
+describe('Measurement input options', () => {
+    it('preserves comma decimals and exposes the unit as a description', async () => {
+        const { fixture, component, el, input } = await setupInputAsync();
+        fixture.componentRef.setInput('suffixText', 'kg');
+        fixture.componentRef.setInput('inputMode', 'decimal');
+        fixture.detectChanges();
+        input().value = '78,2';
+        input().dispatchEvent(new Event('input'));
+        expect(component.value()).toBe('78,2');
+        expect(input().getAttribute('inputmode')).toBe('decimal');
+        expect(input().getAttribute('aria-describedby')).toBe(`${component.id()}-unit`);
+        expect(el.querySelector('.fd-ui-input__unit')?.textContent).toBe('kg');
+    });
+    it('hides only the visual required indicator', async () => {
+        const { fixture, el, input } = await setupInputAsync();
+        fixture.componentRef.setInput('label', 'Weight');
+        fixture.componentRef.setInput('required', true);
+        fixture.componentRef.setInput('showRequiredIndicator', false);
+        fixture.detectChanges();
+        expect(input().required).toBe(true);
+        expect(el.querySelector('.fd-ui-input__required')).toBeNull();
+    });
+    it('selects an existing text value on focus only when requested', async () => {
+        const { fixture, input } = await setupInputAsync();
+        const select = vi.spyOn(input(), 'select');
+        input().dispatchEvent(new Event('focus'));
+        expect(select).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('selectOnFocus', true);
+        fixture.componentRef.setInput('value', '78.2');
+        fixture.detectChanges();
+        input().dispatchEvent(new Event('focus'));
+        expect(select).toHaveBeenCalledOnce();
+        expect(input().selectionStart).toBe(0);
+        expect(input().selectionEnd).toBe(input().value.length);
+    });
+});
