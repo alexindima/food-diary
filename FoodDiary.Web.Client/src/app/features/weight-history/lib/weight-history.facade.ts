@@ -418,10 +418,11 @@ export class WeightHistoryFacade {
         }
 
         const date = toMeasurementDateIso(rawDate);
-        if (date === null) {
+        const parsedValue = parseDecimalInput(rawWeight);
+        if (date === null || parsedValue === null) {
             return null;
         }
-        const weightKg = this.measurements.canonicalWeight(Number(rawWeight));
+        const weightKg = this.measurements.canonicalWeight(parsedValue);
 
         return {
             date,

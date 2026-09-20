@@ -413,10 +413,11 @@ export class WaistHistoryFacade {
         }
 
         const date = toMeasurementDateIso(rawDate);
-        if (date === null) {
+        const parsedValue = parseDecimalInput(rawCircumference);
+        if (date === null || parsedValue === null) {
             return null;
         }
-        const circumferenceCm = this.measurements.canonicalLength(Number(rawCircumference));
+        const circumferenceCm = this.measurements.canonicalLength(parsedValue);
 
         return {
             date,

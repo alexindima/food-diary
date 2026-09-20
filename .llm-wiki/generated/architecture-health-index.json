@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 139,
+    "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 10
   },
@@ -938,7 +938,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.spec.ts"
     },
     {
       "class": "WaistHistoryEntriesDialogComponent",
@@ -946,7 +946,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.spec.ts"
     },
     {
       "class": "WaistHistoryEntryDialogComponent",
@@ -954,7 +954,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.spec.ts"
     },
     {
       "class": "WaistHistoryGoalDialogComponent",
@@ -962,7 +962,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.spec.ts"
     },
     {
       "class": "WaistHistoryWhtCardComponent",
@@ -1034,7 +1034,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.spec.ts"
     },
     {
       "class": "WeightHistoryBmiCardComponent",
@@ -1050,7 +1050,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.spec.ts"
     },
     {
       "class": "WeightHistoryEntryDialogComponent",
@@ -1058,7 +1058,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.spec.ts"
     },
     {
       "class": "WeightHistoryGoalDialogComponent",
@@ -1066,7 +1066,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.spec.ts"
     }
   ],
   "componentsWithoutDirectSpecs": [
@@ -4803,111 +4803,6 @@
       "specPath": null
     },
     {
-      "class": "WaistGoalHistoryDialogComponent",
-      "selector": "fd-waist-goal-history-dialog",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WaistHistoryEntriesDialogComponent",
-      "selector": "fd-waist-history-entries-dialog",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WaistHistoryEntryDialogComponent",
-      "selector": "fd-waist-history-entry-dialog",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WaistHistoryGoalCardComponent",
-      "selector": "fd-waist-history-goal-card",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
-      "inputs": [
-        {
-          "name": "currentWaist",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "currentWaistDate",
-          "type": "string | null",
-          "required": true
-        },
-        {
-          "name": "desiredWaistCm",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "startWaistCm",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "startedAtUtc",
-          "type": "string | null",
-          "required": true
-        },
-        {
-          "name": "hasGoalHistory",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "lastCompletedGoal",
-          "type": "WaistGoalHistoryItem | null",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "configureGoal",
-          "type": ""
-        },
-        {
-          "name": "viewGoalHistory",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "WaistHistoryGoalDialogComponent",
-      "selector": "fd-waist-history-goal-dialog",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WaistHistoryPageComponent",
-      "selector": "fd-waist-history-page",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "WeeklyCheckInPageComponent",
       "selector": "fd-weekly-check-in-page",
       "feature": "weekly-check-in",
@@ -4923,111 +4818,6 @@
       "feature": "weekly-check-in",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeightGoalHistoryDialogComponent",
-      "selector": "fd-weight-goal-history-dialog",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryEntriesDialogComponent",
-      "selector": "fd-weight-history-entries-dialog",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryEntryDialogComponent",
-      "selector": "fd-weight-history-entry-dialog",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryGoalCardComponent",
-      "selector": "fd-weight-history-goal-card",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-      "inputs": [
-        {
-          "name": "currentWeight",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "currentWeightDate",
-          "type": "string | null",
-          "required": true
-        },
-        {
-          "name": "desiredWeightKg",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "startWeightKg",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "startedAtUtc",
-          "type": "string | null",
-          "required": true
-        },
-        {
-          "name": "hasGoalHistory",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "lastCompletedGoal",
-          "type": "WeightGoalHistoryItem | null",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "configureGoal",
-          "type": ""
-        },
-        {
-          "name": "viewGoalHistory",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryGoalDialogComponent",
-      "selector": "fd-weight-history-goal-dialog",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryPageComponent",
-      "selector": "fd-weight-history-page",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

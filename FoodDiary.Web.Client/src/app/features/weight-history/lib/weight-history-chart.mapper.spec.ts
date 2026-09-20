@@ -54,3 +54,23 @@ describe('weight history chart mapper', () => {
         ]);
     });
 });
+
+describe('Chart date boundaries', () => {
+    it('keeps malformed dates visible rather than crashing and preserves gaps', () => {
+        const entry = { id: 'invalid', userId: 'u', date: 'invalid', weightKg: 80 };
+        expect(buildWeightEntryViewModels([entry], 'ru')[0].dateLabel).toBe('invalid');
+        expect(buildWeightHistoryChartPoints([{ startDate: 'invalid', endDate: 'invalid', averageWeightKg: 0 }], 'ru')).toEqual([
+            { label: 'invalid', value: null },
+        ]);
+        expect(buildWeightHistoryChartPoints([], 'ru')).toEqual([]);
+    });
+    it.each([
+        { locale: 'en', date: '2025-09-01', expected: '01\nSep\n2025' },
+        { locale: 'ru', date: '2025-09-01', expected: '01\nсент.\n2025' },
+        { locale: 'en', date: '2025-05-01', expected: '01\nMay\n2025' },
+    ])('labels $locale dates from earlier years', ({ locale, date, expected }) => {
+        expect(
+            buildWeightHistoryChartPoints([{ startDate: date, endDate: date, averageWeightKg: 80 }], locale, CURRENT_YEAR)[0].label,
+        ).toBe(expected);
+    });
+});

@@ -35,7 +35,7 @@ describe('WeightHistoryEntriesCardComponent', () => {
 
     it('emits entry actions', () => {
         const entry = createEntry();
-        const { component } = setupComponent([entry]);
+        const { component, fixture } = setupComponent([entry]);
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
         const showAllHandler = vi.fn();
@@ -43,8 +43,9 @@ describe('WeightHistoryEntriesCardComponent', () => {
         component['removeEntry'].subscribe(removeHandler);
         component['showAllEntries'].subscribe(showAllHandler);
 
-        component['editEntry'].emit(entry);
-        component['removeEntry'].emit(entry);
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector<HTMLButtonElement>('button[aria-label="WEIGHT_HISTORY.EDIT"]')?.click();
+        root.querySelector<HTMLButtonElement>('button[aria-label="WEIGHT_HISTORY.DELETE"]')?.click();
         component['showAllEntries'].emit();
 
         expect(editHandler).toHaveBeenCalledWith(entry);
@@ -99,3 +100,33 @@ function createEntry(): WeightEntry {
         weightKg: ENTRY_WEIGHT,
     };
 }
+
+describe('Recent entries visibility and pagination', () => {
+    it.each([
+        { count: 0, visible: 0, more: false },
+        { count: 1, visible: 1, more: false },
+        { count: 5, visible: 5, more: false },
+        { count: 6, visible: 5, more: true },
+    ])('shows $visible of $count records', ({ count, visible, more }) => {
+        const entries = Array.from({ length: count }, (_, index) => ({ ...createEntry(), id: `entry-${index}`, weightKg: index + 1 }));
+        const { component, fixture } = setupComponent(entries);
+        const showAll = vi.fn();
+        component.showAllEntries.subscribe(showAll);
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelectorAll('.weight-history-page__entry')).toHaveLength(visible);
+        const toggle = root.querySelector<HTMLButtonElement>('.weight-history-page__entries-toggle button');
+        expect(toggle !== null).toBe(more);
+        toggle?.click();
+        expect(showAll).toHaveBeenCalledTimes(more ? 1 : 0);
+        if (count > 1) {
+            expect(component['items']()[0].change).toBe(-1);
+        }
+    });
+    it('hides record actions while loading', () => {
+        const { fixture } = setupComponent([createEntry()]);
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        expect(getText(fixture)).toContain('WEIGHT_HISTORY.LOADING');
+        expect((fixture.nativeElement as HTMLElement).querySelector('button')).toBeNull();
+    });
+});

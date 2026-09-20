@@ -59,3 +59,11 @@ async function setupComponentAsync(
 function getText(fixture: ComponentFixture<WaistHistoryChartCardComponent>): string {
     return (fixture.nativeElement as HTMLElement).textContent;
 }
+
+it('keeps all-null series empty and omits a missing goal reference', async () => {
+    const { component, fixture } = await setupComponentAsync([{ label: '2026-05-15', value: null }]);
+    fixture.componentRef.setInput('desiredWaistCm', null);
+    fixture.detectChanges();
+    expect(component['hasPoints']()).toBe(false);
+    expect(component['referenceLines']()).toEqual([]);
+});

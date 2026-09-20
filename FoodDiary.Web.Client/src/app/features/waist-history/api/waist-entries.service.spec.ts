@@ -1,7 +1,8 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { Observable } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { WaistEntry, WaistEntryFilters } from '../models/waist-entry.data';
@@ -135,5 +136,64 @@ describe('WaistEntriesService mutations', () => {
         const req = httpMock.expectOne(`${BASE_URL}/wa-1`);
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
+    });
+});
+
+describe('Summary and failure contracts', () => {
+    const filters = { dateFrom: '2026-01-01', dateTo: '2026-02-01', quantizationDays: 1 };
+    it('sends summary parameters and returns buckets', () => {
+        const received = vi.fn();
+        service.getSummary(filters).subscribe(received);
+        const request = httpMock.expectOne(r => r.url === `${BASE_URL}/summary`);
+        expect(request.request.method).toBe('GET');
+        expect(Object.fromEntries(request.request.params.keys().map(key => [key, request.request.params.get(key)]))).toEqual({
+            ...filters,
+            quantizationDays: '1',
+        });
+        const buckets = [{ startDate: filters.dateFrom, endDate: filters.dateTo, averageCircumferenceCm: 75 }];
+        request.flush(buckets);
+        expect(received).toHaveBeenCalledWith(buckets);
+    });
+    it('falls back to empty summary after a server error', () => {
+        const received = vi.fn();
+        service.getSummary(filters).subscribe(received);
+        httpMock.expectOne(r => r.url === `${BASE_URL}/summary`).flush({}, { status: 500, statusText: 'Failure' });
+        expect(received).toHaveBeenCalledWith([]);
+    });
+    it('preserves page data and independent recent-entry limit', () => {
+        const received = vi.fn();
+        service.getPageSummary({ ...filters, entriesLimit: 500 }).subscribe(received);
+        const request = httpMock.expectOne(r => r.url === `${BASE_URL}/page-summary`);
+        expect(request.request.params.get('entriesLimit')).toBe('500');
+        expect(request.request.params.get('dateFrom')).toBe(filters.dateFrom);
+        expect(request.request.params.get('dateTo')).toBe(filters.dateTo);
+        expect(request.request.params.get('quantizationDays')).toBe('1');
+        const page = {
+            entries: [MOCK_ENTRY],
+            summary: [],
+            heightCm: null,
+            goal: { desiredWaistCm: null, startWaistCm: null, startedAtUtc: null },
+            goalHistory: [],
+        };
+        request.flush(page);
+        expect(received).toHaveBeenCalledWith(page);
+    });
+    it.each(['create', 'update', 'remove', 'page'] as const)('propagates %s failures', operation => {
+        const next = vi.fn();
+        const error = vi.fn();
+        const payload = { date: '2026-04-01', circumferenceCm: 75 };
+        const response: Observable<unknown> =
+            operation === 'create'
+                ? service.create(payload)
+                : operation === 'update'
+                  ? service.update('id', payload)
+                  : operation === 'remove'
+                    ? service.remove('id')
+                    : service.getPageSummary({ ...filters, entriesLimit: 10 });
+        response.subscribe({ next, error });
+        const body = { error: 'Metric.AlreadyExists' };
+        httpMock.expectOne(() => true).flush(body, { status: 409, statusText: 'Conflict' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 409, error: body }));
     });
 });

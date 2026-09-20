@@ -31,3 +31,23 @@ describe('waist history chart mapper', () => {
         ]);
     });
 });
+
+describe('Chart date boundaries', () => {
+    it('keeps malformed dates visible rather than crashing and preserves gaps', () => {
+        const entry = { id: 'invalid', userId: 'u', date: 'invalid', circumferenceCm: 80 };
+        expect(buildWaistEntryViewModels([entry], 'ru')[0].dateLabel).toBe('invalid');
+        expect(buildWaistHistoryChartPoints([{ startDate: 'invalid', endDate: 'invalid', averageCircumferenceCm: 0 }], 'ru')).toEqual([
+            { label: 'invalid', value: null },
+        ]);
+        expect(buildWaistHistoryChartPoints([], 'ru')).toEqual([]);
+    });
+    it.each([
+        { locale: 'en', date: '2025-09-01', expected: '01\nSep\n2025' },
+        { locale: 'ru', date: '2025-09-01', expected: '01\nсент.\n2025' },
+        { locale: 'en', date: '2025-05-01', expected: '01\nMay\n2025' },
+    ])('labels $locale dates from earlier years', ({ locale, date, expected }) => {
+        expect(
+            buildWaistHistoryChartPoints([{ startDate: date, endDate: date, averageCircumferenceCm: 80 }], locale, CURRENT_YEAR)[0].label,
+        ).toBe(expected);
+    });
+});

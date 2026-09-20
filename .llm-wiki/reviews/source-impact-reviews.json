@@ -19,17 +19,17 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
+      "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
+          "path": "docs/README.md",
+          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "Reviewed docs/README.md: only a link to the measured body metrics frontend test audit was added; repository navigation and authority remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:57.4849631Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:23:13.6062657Z"
     },
     {
       "pageId": "module.frontend",
@@ -135,18 +135,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "febfc39db358befa0891cb5fb58b4b1b82ef8563eed70269dbddb1f31266e52d"
+          "path": "docs/README.md",
+          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed the new body metrics coverage report and docs index: measured tests remain evidence and the report explicitly separates source-review risks from executed coverage; authority and freshness rules are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:34.1013332Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:23:14.9875876Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -223,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "fd672c463db383e30c64fd481ecdb10952c1aafc1d4667f841776e910ea9243e"
+          "sha256": "068563b9d4f1bac18469cb23a148ee1b787c5cf8308e93ce02fc4f4aa9f264f5"
         }
       ],
-      "reason": "Reviewed current generated-index diff and additive graph ownership repair: dependency rules, consumer filters, runtime interpretation and static-test caveats are unchanged.",
+      "reason": "Generated architecture index now resolves direct specs for twelve body metric components previously listed without specs (139 to 127). No dependency or module graph change; removal-candidate guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:30:26.3963857Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:24:29.5790870Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -565,13 +561,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "6fe24bef82590fbe7846611eaad9e2ce7bbdeb14001dba07555301f6eb691000"
+          "sha256": "573a2657313f7a476fcb224d49464c9957253f5a331b3966cf3e4e826bea6424"
         }
       ],
-      "reason": "package.json adds only test:ci:measurement-timezones, a separate-process regression matrix; existing development and visual QA commands are unchanged, so this workflow remains accurate.",
+      "reason": "Reviewed package.json: added only test:coverage:body-metrics. This test audit changes no templates, styles or copy; the decimal payload fix is covered by facade and Signal Forms regressions. Browser evidence requirements for rendered UI changes remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T07:00:52.8253854Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:23:16.2325186Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "517f1be21c59ef00552e2cc3bd56009354882bbd9df0ee4945bb9deaab4ee3cd"
+          "sha256": "fdcf2c53809ffa30ac9d0275e7380ad7825f1f1de11c1cea8054c239fb9126c3"
         }
       ],
-      "reason": "Quality index reflects goal delta calculations and optional muted row actions. Runtime evidence is focused tests plus keyboard tooltip, delete focus color and edit-dialog checks, not index counts.",
+      "reason": "Quality index changes reflect two small facade parser guards and test references. Measured V8 coverage is recorded separately in the audit; static reference matching is not used as execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
-      "reviewedAtUtc": "2026-09-20T09:52:03.6278087Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:24:32.5941256Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "517f1be21c59ef00552e2cc3bd56009354882bbd9df0ee4945bb9deaab4ee3cd"
+          "sha256": "fdcf2c53809ffa30ac9d0275e7380ad7825f1f1de11c1cea8054c239fb9126c3"
         }
       ],
-      "reason": "Only frontend presentation and existing event handlers changed. No new auth, storage, networking or destructive action was added; repeated row buttons keep explicit accessible names.",
+      "reason": "Quality index changes are ordinary frontend measurement parsing and added specs. No identity, authorization, logging, transport or runtime exposure changes; the workflow still correctly treats static references as navigation only.",
       "baseRef": "HEAD",
-      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
-      "reviewedAtUtc": "2026-09-20T09:52:05.4134887Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:24:31.0288841Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "84550197697a406cae0249574819e2f771c465073bd6cda80c0144c9c46fcd41"
+          "sha256": "b502fa8b8db145eba2bb0052daa59b5c8e9226140fd698eaf46a29b758f62864"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "64ac39e10a5661cd65020fba9392f4277a14e23edb194fe477fb7372a7c503c3"
+          "sha256": "8a665506fbc58cf4ff4621eedfbef29bf81cfde49f8da28d20552b3fcc3da4d2"
         }
       ],
-      "reason": "Updated frontend indexes preserve the existing weight/waist component ownership and action outputs. Goal statistics and hints were verified in current templates and rendered pages; tracing mechanics are unchanged.",
+      "reason": "Frontend inventories now link new weight/waist specs. Existing route, facade, API and component ownership chains are unchanged and verified in page composition tests; trace behavior and limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
-      "reviewedAtUtc": "2026-09-20T09:52:08.1738616Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:24:28.3265088Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "84550197697a406cae0249574819e2f771c465073bd6cda80c0144c9c46fcd41"
+          "sha256": "b502fa8b8db145eba2bb0052daa59b5c8e9226140fd698eaf46a29b758f62864"
         }
       ],
-      "reason": "Reviewed additive muted-icon button appearance and shared hint consumption on weight/waist rows. Existing button variants remain unchanged. Build, 119 focused tests, localization and desktop/mobile Playwright checks pass.",
+      "reason": "Reviewed generated frontend contract changes: only new spec paths for weight and waist cards, dialogs and pages. Public inputs, outputs, selectors and templates remain unchanged; real component tests verify their existing bindings.",
       "baseRef": "HEAD",
-      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
-      "reviewedAtUtc": "2026-09-20T09:52:01.9854524Z"
+      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
+      "reviewedAtUtc": "2026-09-20T11:24:34.0125104Z"
     },
     {
       "pageId": "workflow.query-context",

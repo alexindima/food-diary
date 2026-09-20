@@ -5,6 +5,8 @@ export default {
         coverage: {
             reportOnFailure: true,
             thresholds: {
+                'src/app/features/weight-history/**/*.ts': { lines: 99, statements: 99, functions: 100, branches: 97 },
+                'src/app/features/waist-history/**/*.ts': { lines: 99, statements: 99, functions: 100, branches: 97 },
                 'src/app/features/dashboard/lib/dashboard.facade.ts': { lines: 95, statements: 95, functions: 95, branches: 95 },
                 'src/app/features/dashboard/api/dashboard.service.ts': { lines: 100, statements: 100, functions: 100, branches: 100 },
                 'src/app/features/dashboard/lib/dashboard-layout.service.ts': { lines: 95, statements: 95, functions: 95, branches: 80 },

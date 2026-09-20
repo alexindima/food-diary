@@ -31,14 +31,15 @@ describe('WaistHistoryEntriesCardComponent', () => {
 
     it('emits entry actions', () => {
         const entry = createEntry();
-        const { component } = setupComponent([entry]);
+        const { component, fixture } = setupComponent([entry]);
         const editHandler = vi.fn();
         const removeHandler = vi.fn();
         component['editEntry'].subscribe(editHandler);
         component['removeEntry'].subscribe(removeHandler);
 
-        component['editEntry'].emit(entry);
-        component['removeEntry'].emit(entry);
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector<HTMLButtonElement>('button[aria-label="WAIST_HISTORY.EDIT"]')?.click();
+        root.querySelector<HTMLButtonElement>('button[aria-label="WAIST_HISTORY.DELETE"]')?.click();
 
         expect(editHandler).toHaveBeenCalledWith(entry);
         expect(removeHandler).toHaveBeenCalledWith(entry);
@@ -78,3 +79,37 @@ function createEntry(): WaistEntry {
         circumferenceCm: ENTRY_CIRCUMFERENCE,
     };
 }
+
+describe('Recent entries visibility and pagination', () => {
+    it.each([
+        { count: 0, visible: 0, more: false },
+        { count: 1, visible: 1, more: false },
+        { count: 5, visible: 5, more: false },
+        { count: 6, visible: 5, more: true },
+    ])('shows $visible of $count records', ({ count, visible, more }) => {
+        const entries = Array.from({ length: count }, (_, index) => ({
+            ...createEntry(),
+            id: `entry-${index}`,
+            circumferenceCm: index + 1,
+        }));
+        const { component, fixture } = setupComponent(entries);
+        const showAll = vi.fn();
+        component.showAllEntries.subscribe(showAll);
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelectorAll('.waist-history-page__entry')).toHaveLength(visible);
+        const toggle = root.querySelector<HTMLButtonElement>('.waist-history-page__entries-toggle button');
+        expect(toggle !== null).toBe(more);
+        toggle?.click();
+        expect(showAll).toHaveBeenCalledTimes(more ? 1 : 0);
+        if (count > 1) {
+            expect(component['items']()[0].change).toBe(-1);
+        }
+    });
+    it('hides record actions while loading', () => {
+        const { fixture } = setupComponent([createEntry()]);
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        expect(getText(fixture)).toContain('WAIST_HISTORY.LOADING');
+        expect((fixture.nativeElement as HTMLElement).querySelector('button')).toBeNull();
+    });
+});

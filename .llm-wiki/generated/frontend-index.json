@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1690,
+    "typescriptFiles": 1704,
     "symbols": 663,
     "routes": 100,
     "features": 44,
-    "specs": 592,
+    "specs": 606,
     "localeFiles": 5,
     "roles": {
       "Component": 449,
@@ -1301,11 +1301,18 @@
         "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-wht-card/waist-history-wht-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entry-dialog/waist-history-entry-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-chart.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-range.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-wht.mapper.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/waist-history/waist-history.routes.spec.ts"
       ]
     },
     {
@@ -1383,11 +1390,18 @@
         "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-bmi.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-chart.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-progress.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-range.utils.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/weight-history/weight-history.routes.spec.ts"
       ]
     }
   ],
