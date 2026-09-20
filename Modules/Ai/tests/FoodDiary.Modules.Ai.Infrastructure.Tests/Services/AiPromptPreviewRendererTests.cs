@@ -6,6 +6,10 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiPromptPreviewRendererTests {
+    [Fact]
+    public void ResponseFormat_UnknownScenario_Throws() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => new AiPromptPreviewRenderer().GetResponseFormatJson("unknown"));
+
     [Theory]
     [InlineData("vision", "food_vision", "centerX")]
     [InlineData("text-parse", "food_vision", "nameLocal")]

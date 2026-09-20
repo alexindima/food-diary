@@ -6,6 +6,15 @@ namespace FoodDiary.Modules.DailyAdvices.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DailyAdviceInvariantTests {
     [Fact]
+    public void AssignGroup_EmptyId_RejectsWithoutChangingAdvice() {
+        var advice = DailyAdvice.Create("Advice", "en");
+        Guid original = advice.GroupId;
+        Assert.Throws<ArgumentException>(() => advice.AssignGroup(Guid.Empty));
+        Assert.Equal(original, advice.GroupId);
+        Assert.Null(advice.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void Create_NormalizesValues() {
         var advice = DailyAdvice.Create("  Drink water  ", "  ru-RU  ", tag: "  hydration  ");
         Assert.Multiple(

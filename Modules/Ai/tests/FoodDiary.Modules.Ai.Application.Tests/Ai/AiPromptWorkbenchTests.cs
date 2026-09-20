@@ -17,6 +17,65 @@ namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 [ExcludeFromCodeCoverage]
 public sealed class AiPromptWorkbenchTests {
     [Fact]
+    public void Catalog_UnknownScenarioHasNoVariables() => Assert.Empty(AiPromptCatalog.GetVariables("unknown"));
+
+    [Fact]
+    public async Task Test_InvalidDraft_DoesNotCallProviders() {
+        IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
+        IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
+        var draft = new AiPromptDraft("nutrition", "en", "Estimate", Text: null, ImageAssetId: null,
+            [new FoodVisionItemModel("apple", NameLocal: null, 0, "g", 1)]);
+        ResultAssert.Failure(await new TestAiPromptCommandHandler(service, images)
+            .Handle(new TestAiPromptCommand(Guid.NewGuid(), "request", draft), CancellationToken.None));
+        Assert.Empty(service.ReceivedCalls());
+        Assert.Empty(images.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Test_Nutrition_ForwardsSampleAndPreservesProviderOutcome(bool success) {
+        IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
+        IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
+        using var cancellation = new CancellationTokenSource();
+        var user = UserId.New();
+        FoodVisionItemModel[] items = [new("apple", NameLocal: null, 100, "g", 1)];
+        var draft = new AiPromptDraft("nutrition", "ru", "Estimate {{itemsJson}}", Text: null, ImageAssetId: null, items);
+        Error error = AiErrors.Forbidden();
+        service.CalculateNutritionAsync(items, user, "request", cancellation.Token, new AiPromptOverride(draft.PromptText, "ru"))
+            .Returns(success ? Result.Success(new FoodNutritionModel(52, 1, 2, 3, 4, 0, [])) : Result.Failure<FoodNutritionModel>(error));
+        Result<string> result = await new TestAiPromptCommandHandler(service, images)
+            .Handle(new TestAiPromptCommand(user.Value, "request", draft), cancellation.Token);
+        if (success) {
+            using var json = System.Text.Json.JsonDocument.Parse(ResultAssert.Success(result));
+            Assert.Equal(52, json.RootElement.GetProperty("calories").GetDecimal());
+        } else {
+            ResultAssert.Failure(result);
+            Assert.Equal(error, result.Error);
+        }
+        await service.Received(1).CalculateNutritionAsync(items, user, "request", cancellation.Token, new AiPromptOverride(draft.PromptText, "ru"));
+        Assert.Empty(images.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task Test_Photo_UsesAuthorizedImageAndDraft() {
+        IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
+        IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
+        using var cancellation = new CancellationTokenSource();
+        var user = UserId.New();
+        var image = ImageAssetId.New();
+        var draft = new AiPromptDraft("vision", "en", "Find foods", "plate", image.Value, Items: null);
+        images.GetDataUrlAsync(image, user, cancellation.Token).Returns(Result.Success("data:image/png;base64,sample"));
+        service.AnalyzeFoodImageAsync("data:image/png;base64,sample", user, "plate", "request", cancellation.Token,
+            new AiPromptOverride("Find foods", "en")).Returns(Result.Success(new FoodVisionModel([])));
+        string result = ResultAssert.Success(await new TestAiPromptCommandHandler(service, images)
+            .Handle(new TestAiPromptCommand(user.Value, "request", draft), cancellation.Token));
+        Assert.Contains("items", result, StringComparison.Ordinal);
+        await service.Received(1).AnalyzeFoodImageAsync("data:image/png;base64,sample", user, "plate", "request", cancellation.Token,
+            new AiPromptOverride("Find foods", "en"));
+    }
+
+    [Fact]
     public async Task Catalog_EmptyDatabase_ExposesAllSupportedScenariosAndLanguages() {
         IAiPromptTemplateReadModelRepository repository = Substitute.For<IAiPromptTemplateReadModelRepository>();
         repository.GetAllReadModelsAsync(Arg.Any<CancellationToken>()).Returns(Array.Empty<AiPromptTemplateReadModel>());
