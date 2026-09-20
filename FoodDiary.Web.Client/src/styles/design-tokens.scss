@@ -740,9 +740,7 @@ $fd-theme-design-tokens: (
             card-profile-gap: 18px,
             card-profile-padding: 20px 22px 24px,
             card-profile-padding-mobile: 16px,
-            dashboard-grid-gap: clamp(16px, 3vw, 24px),
-            dashboard-column-gap: clamp(16px, 3vw, 24px),
-            dashboard-aside-gap: clamp(16px, 3vw, 24px),
+            page-card-gap: clamp(16px, 3vw, 24px),
             actions-gap: fd-token(spacing, sm),
             page-section-gap: clamp(24px, 4vw, 40px),
             page-body-bottom-padding: clamp(12px, 2vw, 20px),
@@ -896,9 +894,7 @@ $fd-theme-design-tokens: (
             card-profile-gap: 14px,
             card-profile-padding: 16px 18px 20px,
             card-profile-padding-mobile: 14px,
-            dashboard-grid-gap: clamp(14px, 2vw, 18px),
-            dashboard-column-gap: clamp(12px, 1.8vw, 16px),
-            dashboard-aside-gap: clamp(12px, 1.8vw, 16px),
+            page-card-gap: clamp(12px, 1.8vw, 16px),
             actions-gap: fd-token(spacing, xs),
             page-section-gap: clamp(16px, 2.5vw, 24px),
             page-body-bottom-padding: clamp(8px, 1.5vw, 16px),
@@ -1078,8 +1074,7 @@ $fd-theme-design-tokens: (
         --fd-bg-surface: var(--fd-color-surface);
         --fd-bg-card-surface:
             radial-gradient(ellipse at 50% 43%, color-mix(in srgb, var(--fd-color-text) 2.5%, transparent), transparent 45%),
-            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-text) 2%, transparent), transparent 50%),
-            var(--fd-bg-surface);
+            linear-gradient(180deg, color-mix(in srgb, var(--fd-color-text) 2%, transparent), transparent 50%), var(--fd-bg-surface);
         --fd-bg-surface-raised: var(--fd-color-surface-raised);
         --fd-bg-surface-muted: var(--fd-color-surface-muted);
         --fd-bg-surface-inset: var(--fd-color-slate-50);
@@ -2072,9 +2067,10 @@ $fd-theme-design-tokens: (
         --fd-space-card-profile-gap: #{fd-ui-style-spacing-token($style, card-profile-gap)};
         --fd-space-card-profile-padding: #{fd-ui-style-spacing-token($style, card-profile-padding)};
         --fd-space-card-profile-padding-mobile: #{fd-ui-style-spacing-token($style, card-profile-padding-mobile)};
-        --fd-space-dashboard-grid-gap: #{fd-ui-style-spacing-token($style, dashboard-grid-gap)};
-        --fd-space-dashboard-column-gap: #{fd-ui-style-spacing-token($style, dashboard-column-gap)};
-        --fd-space-dashboard-aside-gap: #{fd-ui-style-spacing-token($style, dashboard-aside-gap)};
+        --fd-space-page-card-gap: #{fd-ui-style-spacing-token($style, page-card-gap)};
+        --fd-space-dashboard-grid-gap: var(--fd-space-page-card-gap);
+        --fd-space-dashboard-column-gap: var(--fd-space-page-card-gap);
+        --fd-space-dashboard-aside-gap: var(--fd-space-page-card-gap);
         --fd-space-actions-gap: #{fd-ui-style-spacing-token($style, actions-gap)};
         --fd-space-page-section-gap: #{fd-ui-style-spacing-token($style, page-section-gap)};
         --fd-space-page-body-bottom-padding: #{fd-ui-style-spacing-token($style, page-body-bottom-padding)};

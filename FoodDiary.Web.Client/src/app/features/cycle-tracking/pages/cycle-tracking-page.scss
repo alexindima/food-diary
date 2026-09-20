@@ -1,6 +1,8 @@
 @use 'variables' as variables;
 
 .cycle-tracking {
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
+
     &__header-actions {
         flex-wrap: nowrap;
     }
@@ -20,8 +22,7 @@
     &__primary-grid {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(280px, 0.8fr);
-        gap: var(--fd-space-card-content-gap);
-        margin-top: var(--fd-space-card-content-gap);
+        gap: var(--fd-space-page-card-gap);
         align-items: start;
 
         > :where(:not(template)) {
@@ -31,6 +32,7 @@
 
     &__main-column,
     &__side-column {
+        gap: var(--fd-space-page-card-gap);
         min-width: 0;
     }
 

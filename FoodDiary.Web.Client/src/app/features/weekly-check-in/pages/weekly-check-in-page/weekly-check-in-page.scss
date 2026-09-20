@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .check-in {
-    --fd-layout-page-section-spacing: var(--fd-space-md);
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
 
     &--refreshing :is(&__coverage, &__summary, &__focus, &__metric) {
         position: relative;
@@ -82,7 +82,7 @@
     &__goals-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--fd-space-md);
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__summary,

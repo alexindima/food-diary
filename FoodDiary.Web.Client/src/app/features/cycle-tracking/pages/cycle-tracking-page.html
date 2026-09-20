@@ -101,7 +101,7 @@
             }
 
             <div class="cycle-tracking__primary-grid">
-                <div class="cycle-tracking__main-column fd-stack fd-gap-card-content">
+                <div class="cycle-tracking__main-column fd-stack">
                     <fd-ui-card [title]="'CYCLE_TRACKING.PREDICTION_CARD_TITLE' | translate">
                         @if (predictionView(); as prediction) {
                             @if (prediction.hasPredictionRanges) {
@@ -192,7 +192,7 @@
                     />
                 </div>
 
-                <aside class="cycle-tracking__side-column fd-stack fd-gap-card-content">
+                <aside class="cycle-tracking__side-column fd-stack">
                     <fd-ui-card [title]="'CYCLE_TRACKING.OBSERVATIONS_TITLE' | translate">
                         @if (!observationsView().hasEnoughData) {
                             <div class="cycle-tracking__empty-state fd-stack fd-gap-sm">

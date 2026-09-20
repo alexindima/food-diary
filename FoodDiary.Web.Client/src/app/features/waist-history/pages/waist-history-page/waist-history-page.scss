@@ -1,6 +1,7 @@
 @use 'variables' as variables;
 
 .waist-history-page {
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
     margin: 0 auto;
 
     &__header {
@@ -15,7 +16,7 @@
     &__summary {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: var(--fd-space-card-content-gap);
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__metric-card {
@@ -168,6 +169,7 @@
     }
 
     &__insights {
+        gap: var(--fd-space-page-card-gap);
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: stretch;
     }

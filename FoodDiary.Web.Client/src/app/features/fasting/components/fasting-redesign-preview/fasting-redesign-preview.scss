@@ -3,7 +3,7 @@
 .fasting-redesign {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-lg);
+    gap: var(--fd-space-page-card-gap);
     margin-bottom: var(--fd-space-xxl);
 
     &__actions,
@@ -396,7 +396,7 @@
     &__lower-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        gap: var(--fd-space-lg);
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__panel {

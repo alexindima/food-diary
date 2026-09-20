@@ -6,18 +6,18 @@
 
 .goals-editor {
     display: grid;
-    gap: var(--fd-space-md);
+    gap: var(--fd-space-page-card-gap);
     padding-bottom: var(--fd-space-xl);
 
     &__content {
         display: grid;
         grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.95fr);
-        gap: var(--fd-space-md);
+        gap: var(--fd-space-page-card-gap);
         align-items: stretch;
     }
     &__side {
         display: grid;
-        gap: var(--fd-space-md);
+        gap: var(--fd-space-page-card-gap);
     }
 }
 

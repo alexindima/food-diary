@@ -129,3 +129,7 @@ rg -n --pcre2 -g "*.scss" -g "*.css" "(?:margin|padding|gap):\s*(?:-?[1-9]|0?\.\
 ```
 
 Filter out `design-tokens.scss`, `variables.scss`, `dist`, and `node_modules` when reviewing results.
+
+## Page Card Spacing
+
+Use `--fd-space-page-card-gap` for both horizontal and vertical gaps between peer cards (dashboard and body metric pages). It follows the selected UI density: 16–24px in classic and 12–16px in modern. Dashboard gap tokens alias this shared value. Keep `--fd-space-card-content-gap` for content inside cards and `--fd-space-page-section-gap` for separate page sections.
