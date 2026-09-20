@@ -24,7 +24,7 @@ export function markdownDestinations(text) {
   }
   let view = masked.join('');
   for (const match of view.matchAll(/<!--[\s\S]*?(?:-->|$)/g)) hide(match.index, match.index + match[0].length);
-  for (const match of view.matchAll(/<(pre|code|script|style)(?:\s[^>]*)?>[\s\S]*?<\/\1\s*>/gi)) hide(match.index, match.index + match[0].length);
+  for (const match of view.matchAll(/<(pre|code|script|style)(?:\s[^>]*)?>[\s\S]*?(?:<\/\1\s*>|$)/gi)) hide(match.index, match.index + match[0].length);
   view = masked.join('');
   for (let i = 0; i < view.length; i++) {
     if (view[i] === '\\') { i++; continue; }
@@ -59,9 +59,12 @@ export function markdownDestinations(text) {
   const nodes = [];
   for (const match of view.matchAll(/^ {0,3}\[(?:\\.|[^\]\\\n])+\]:[ \t]*/gm)) {
     const node = destination(match.index + match[0].length);
-    if (node) {
+    // A reference definition must end after its destination or a valid title.
+    // Inspect original text: masking inline literals must not turn garbage into whitespace.
+    const lineEnd = node ? text.indexOf('\n', node.after) : -1;
+    const tail = node ? text.slice(node.after, lineEnd < 0 ? text.length : lineEnd) : '';
+    if (node && /^(?:[ \t]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?[ \t]*\r?$/.test(tail)) {
       nodes.push(node);
-      const lineEnd = view.indexOf('\n', node.after);
       hide(match.index, lineEnd < 0 ? view.length : lineEnd);
     }
   }

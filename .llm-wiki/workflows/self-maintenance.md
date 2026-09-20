@@ -56,6 +56,13 @@ unknown architectural role as successfully repaired. Focused regressions cover
 relocated roots, unknown roles, corrupted rows, idempotence and source-link moves.
 Use `health -QualityArea Wiki -FailOnInvalid` when a caller needs a nonzero exit
 code for an invalid result, including a stale or missing projection.
+The `projectionStatus` object distinguishes `head-changed`, `working-tree-changed`,
+`projection-unavailable`, and `current`, and includes indexed/current HEAD and
+fingerprints. A HEAD change may coexist with working-tree changes; this is not
+proof that only the commit changed. Stale SQLite requests `graph-build`; a healthy
+result requests no action. Source-page findings retain their own repair guidance.
+Unterminated literal HTML containers and malformed reference definitions are
+left unchanged by Markdown repair.
 
 ## Reader and recovery contracts
 

@@ -550,3 +550,11 @@ workstations and directly executes the portable group on Linux.
 After these gates, CI publishes the compiled LLM Wiki change-review report to
 the GitHub job summary so reviewers see the same scope, risk, and readiness
 assessment.
+
+Affected smoke uses the cold-checkout time budget after expanding the legacy
+read-only group into its constituent groups. Each executed parallel smoke run
+persists `.artifacts/llm-wiki/parallel-smoke/<run-id>.timings.json`, including
+graph prewarm, total wall time, and group durations sorted by cost. Parallel
+group times overlap and must not be summed as elapsed time. Timing summaries
+survive successful sandbox cleanup; aggregate cache hits retain the prior
+receipt duration and do not execute a new run.

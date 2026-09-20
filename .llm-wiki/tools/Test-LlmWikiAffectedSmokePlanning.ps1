@@ -45,6 +45,19 @@ if ($combinedAdaptiveGroups -notcontains 'adaptive-evals' -or
 }
 
 $parallelRunner = Join-Path $PSScriptRoot 'Invoke-LlmWikiParallelSmoke.ps1'
+$wikiText = Get-Content (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
+$coldGuardLine = ($wikiText -split '\r?\n' | Where-Object { $_ -match '^\s*\$includesColdCheckoutGuard =' })
+foreach ($case in @(
+    @{ groups = @('code-graph'); expected = $false },
+    @{ groups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval'); expected = $true }
+)) {
+    $smokeGroups = $case.groups
+    Invoke-Expression $coldGuardLine
+    if ($includesColdCheckoutGuard -ne $case.expected) { throw 'Expanded cold-checkout groups lost their verification time budget.' }
+}
+foreach ($path in @('.llm-wiki/tools/wiki-markdown-links.mjs', '.llm-wiki/tools/code-graph-maintenance-recovery.test.mjs')) {
+    if (@(Get-Groups $path) -notcontains 'code-graph') { throw "Maintenance dependency has no focused coverage: $path" }
+}
 $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
 $plannerText = Get-Content -LiteralPath $planner -Raw
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path

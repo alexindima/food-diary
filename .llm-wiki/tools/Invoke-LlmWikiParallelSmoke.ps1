@@ -101,6 +101,9 @@ $runId = "$PID-$([guid]::NewGuid().ToString('N'))"
 $runRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/parallel-smoke/$runId"
 $null = New-Item -ItemType Directory -Path $runRoot -Force
 $cancelPath = Join-Path $runRoot 'cancel.requested.json'
+$stopwatch = [Diagnostics.Stopwatch]::StartNew()
+$groupTimings = [Collections.Generic.List[object]]::new()
+$prewarmSeconds = 0.0
 $worktreeBaseline = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture the pre-smoke worktree state.').Lines)
 
 function Request-SmokeCancellation([object[]]$Items, [string]$Reason) {
@@ -160,6 +163,7 @@ if (@($groups | Where-Object { $_ -in $graphDependentGroups }).Count -gt 0) {
     $graphError = [string]$graphErrorTask.GetAwaiter().GetResult()
     [IO.File]::WriteAllText($graphLogPath, ($graphOutput + $graphError), [Text.UTF8Encoding]::new($false))
     $graphExitCode = $graphProcess.ExitCode
+    $prewarmSeconds = [Math]::Round($graphStopwatch.Elapsed.TotalSeconds, 2)
     $graphProcess.Dispose()
     if ($graphExitCode -ne 0) { throw "Code graph prewarm failed with exit code $graphExitCode. Diagnostic log: $graphLogPath" }
     Write-Host "Code graph prewarm completed in $([Math]::Round($graphStopwatch.Elapsed.TotalSeconds, 2))s."
@@ -222,6 +226,7 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
             $standardOutput = [string]$item.StandardOutput.GetAwaiter().GetResult()
             $standardError = [string]$item.StandardError.GetAwaiter().GetResult()
             $duration = [Math]::Round(([DateTime]::UtcNow - $item.StartedAt).TotalSeconds, 2)
+            $groupTimings.Add([pscustomobject]@{ group = $item.Group; durationSeconds = $duration; exitCode = $exitCode })
             $item.Process.Dispose()
             $running.Remove($item) | Out-Null
             Remove-Item -LiteralPath $item.ArgumentsPath -Force -ErrorAction SilentlyContinue
@@ -237,13 +242,20 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
     }
 }
 
-$stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $completed = $false
 try {
     Wait-SmokeBatch $parallelGroups $MaxConcurrency
     foreach ($group in $serialGroups) { Wait-SmokeBatch @($group) 1 }
     $completed = $true
 } finally {
+    $timingPath = Join-Path (Split-Path -Parent $runRoot) "$runId.timings.json"
+    [IO.File]::WriteAllText($timingPath, (([ordered]@{
+        schemaVersion = 1; completed = $completed
+        durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+        prewarmSeconds = $prewarmSeconds; maxConcurrency = $MaxConcurrency
+        groups = @($groupTimings.ToArray() | Sort-Object durationSeconds -Descending)
+    } | ConvertTo-Json -Depth 5) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    Write-Host "Smoke timings (including graph prewarm): $timingPath"
     if ($completed) {
         Remove-Item -LiteralPath $runRoot -Recurse -Force -ErrorAction SilentlyContinue
     } else {

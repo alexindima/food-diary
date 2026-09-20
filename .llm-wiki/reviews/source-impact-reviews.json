@@ -287,33 +287,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "a3007a2fe1103d588ee78ca98366fe7adb4b7332b788e1a0ba738b284dc30163"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "b5b86a5e1e53732d57e63ace76ade3d43e761aa009bab59ff720e0071b8d4c97"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "8a3fa4b917513db1bcefb67d7d85d5f33a0444f52e723eb093decddd6576666a"
+          "sha256": "555f10dbf46ece2cb67adc57907c8d803084f9e0d8a56949421254d1875a83b1"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "1ed52b79b84e12648e5e2eb38d4c56f1aeaa1d26d3077e9a5eb8065b59dcd973"
+          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:14.2140957Z"
+      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
+      "reviewedAtUtc": "2026-09-20T01:16:31.7390401Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -506,13 +490,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
+          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:14.7292211Z"
+      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
+      "reviewedAtUtc": "2026-09-20T01:16:31.9245862Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -1033,13 +1017,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
+          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:16.1789852Z"
+      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
+      "reviewedAtUtc": "2026-09-20T01:16:32.3984178Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1225,13 +1209,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
+          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:15.7962206Z"
+      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
+      "reviewedAtUtc": "2026-09-20T01:16:32.1703529Z"
     }
   ]
 }

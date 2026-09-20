@@ -32,20 +32,37 @@ $ownership = if (Test-Path -LiteralPath $databasePath -PathType Leaf) {
     }) }
 }
 $projectionFresh = $false
+$graphStatus = $null
 if (Test-Path -LiteralPath $databasePath -PathType Leaf) {
     $graphStatus = & $manager -Action status -SkipRefresh -Format Json | ConvertFrom-Json
     $projectionFresh = [bool]$graphStatus.changeSetFresh
 }
+$freshnessReason = if ($projectionFresh) { 'current' }
+elseif ($null -eq $graphStatus) { 'projection-unavailable' }
+elseif ($graphStatus.changeSetGitHead -cne $graphStatus.currentChangeSetGitHead) { 'head-changed' }
+else { 'working-tree-changed' }
+$nextActions = @()
+if (-not $projectionFresh) { $nextActions += 'Run wiki.ps1 graph-build to refresh the SQLite projection, then rerun health -QualityArea Wiki.' }
+if ($ownership.unresolvedCount -gt 0) { $nextActions += 'Run repair-verify for repairable metadata; unknown project roles require source-backed ownership rules.' }
+if (@($remainingSources.findings).Count -gt 0) { $nextActions += 'Inspect sourceFindings; regenerate generated pages with update and resolve unconfirmed source moves from repository evidence.' }
 $result = [ordered]@{
     schemaVersion = 1; repaired = [bool]$Repair; changedPages = @($sources.changedPages)
     ownership = $ownership; sourceFindings = @($remainingSources.findings)
     projectionFresh = $projectionFresh
+    projectionStatus = [ordered]@{
+        reason = $freshnessReason
+        indexedHead = $(if ($null -ne $graphStatus) { $graphStatus.changeSetGitHead } else { $null })
+        currentHead = $(if ($null -ne $graphStatus) { $graphStatus.currentChangeSetGitHead } else { $null })
+        indexedFingerprint = $(if ($null -ne $graphStatus) { $graphStatus.changeSetFingerprint } else { $null })
+        currentFingerprint = $(if ($null -ne $graphStatus) { $graphStatus.currentChangeSetFingerprint } else { $null })
+    }
     valid = $projectionFresh -and $ownership.unresolvedCount -eq 0 -and @($remainingSources.findings).Count -eq 0
-    nextAction = 'Rebuild generated pages with update. Unconfirmed moves and unknown project roles require source-backed rule changes; rerun health -QualityArea Wiki afterward.'
+    nextAction = $(if ($nextActions.Count) { $nextActions -join ' ' } else { 'No action required.' })
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12 }
 else {
     Write-Host "Wiki self-maintenance: valid=$($result.valid), projection fresh=$projectionFresh, changed pages=$($result.changedPages.Count), ownership gaps=$($ownership.unresolvedCount), source gaps=$($result.sourceFindings.Count)."
+    Write-Host "Projection: $freshnessReason; indexed HEAD=$($result.projectionStatus.indexedHead); current HEAD=$($result.projectionStatus.currentHead). $($result.nextAction)"
     foreach ($finding in @($ownership.findings) + @($result.sourceFindings)) { Write-Host " - $($finding.kind): $($finding.path)" }
 }
 if ($FailOnInvalid -and -not $result.valid) { throw 'Wiki self-maintenance still has unresolved findings; inspect health -QualityArea Wiki -Format Json.' }

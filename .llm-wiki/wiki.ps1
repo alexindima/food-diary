@@ -804,7 +804,7 @@ switch ($Command) {
             $parallelSmokeArguments = @{} + $affectedSmokeArguments
             $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
             $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
-            $includesColdCheckoutGuard = $smokeGroups -contains 'read-only-guard'
+            $includesColdCheckoutGuard = $smokeGroups -contains 'read-only-guard' -or $smokeGroups -contains 'json-cold-checkout'
             $script:verifyStageExpectedSeconds['affected smoke'] = $(if ($includesColdCheckoutGuard) { 450 } else { 360 })
             $smokeStages = @([pscustomobject]@{
                 Name = 'affected smoke'

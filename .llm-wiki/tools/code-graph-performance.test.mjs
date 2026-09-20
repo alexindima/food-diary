@@ -43,6 +43,25 @@ test('Markdown repair preserves literals and formatting while repairing real des
   assert.equal(withTitles.text.split(literal).length, 3);
 });
 
+test('Markdown repair leaves unterminated HTML and malformed reference definitions untouched', () => {
+  const repair = text => repairWikiReferences(text, '.llm-wiki/system/example.md',
+    new Map([['src/Old.cs', 'src/New.cs']]), new Set(['src/New.cs']));
+  for (const tag of ['pre', 'script', 'style', 'code']) {
+    const original = `<${tag}>\r\n[example](../../src/Old.cs)\r\n`;
+    assert.equal(repair(original).text, original);
+    assert.equal(repair(original).repaired, 0);
+    assert.equal(repair(`${original}</${tag}>\n[real](../../src/Old.cs)`).repaired, 1);
+  }
+  for (const tail of [' garbage', ' "title" garbage', ' `garbage`', ' "unterminated']) {
+    const original = `[ref]: ../../src/Old.cs${tail}\r\n[ref]\r\n`;
+    assert.equal(repair(original).text, original);
+    assert.equal(repair(original).repaired, 0);
+  }
+  for (const tail of ['', ' "title"', " 'title'", ' (title)']) {
+    assert.equal(repair(`[ref]: ../../src/Old.cs${tail}\r\n[ref]\r\n`).repaired, 1);
+  }
+});
+
 test('Wiki provenance repair only follows confirmed moves and preserves narrative', () => {
   const original = '---\r\nid: example\r\nsources:\r\n  - Modules/Old.cs\r\n  - missing.cs\r\n---\r\nOld behavior is unchanged. [Source](../../Modules/Old.cs#rule)\r\n';
   const result = repairWikiReferences(original, '.llm-wiki/system/example.md',

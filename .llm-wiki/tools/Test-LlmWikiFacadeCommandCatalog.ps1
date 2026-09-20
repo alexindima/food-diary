@@ -143,4 +143,25 @@ $healthClause = $commandSwitches[0].Clauses | Where-Object { $_.Item1.Extent.Tex
         }
     }
 }
+$maintenanceText = Get-Content (Join-Path $PSScriptRoot 'Invoke-LlmWikiSelfMaintenance.ps1') -Raw
+$start = $maintenanceText.IndexOf('$freshnessReason =')
+$end = $maintenanceText.IndexOf('if ($Format -eq')
+$diagnostic = [scriptblock]::Create($maintenanceText.Substring($start, $end - $start))
+foreach ($scenario in @('current', 'head-changed', 'working-tree-changed', 'projection-unavailable')) {
+    & {
+        Set-StrictMode -Version Latest
+        $projectionFresh = $scenario -eq 'current'
+        $graphStatus = if ($scenario -eq 'projection-unavailable') { $null } else {
+            [pscustomobject]@{ changeSetGitHead = 'old'; currentChangeSetGitHead = $(if ($scenario -eq 'head-changed') { 'new' } else { 'old' }); changeSetFingerprint = 'a'; currentChangeSetFingerprint = 'b' }
+        }
+        $ownership = [pscustomobject]@{ unresolvedCount = 0 }
+        $sources = [pscustomobject]@{ changedPages = @() }
+        $remainingSources = [pscustomobject]@{ findings = @() }
+        $Repair = $false
+        . $diagnostic
+        if ($result.projectionStatus.reason -ne $scenario -or $result.valid -ne $projectionFresh) { throw "Wrong freshness diagnosis: $scenario" }
+        if ($projectionFresh -and $result.nextAction -ne 'No action required.') { throw 'Healthy wiki should not request a rebuild.' }
+        if (-not $projectionFresh -and $result.nextAction -notmatch 'graph-build') { throw 'Stale projection must recommend graph-build.' }
+    }
+}
 Write-Host "LLM Wiki facade command catalog passed: $($declaredCommands.Count) declared command(s), one route each, $($compactCommandLines.Count) primary help entries, and detailed compatibility help."
