@@ -1,10 +1,11 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
@@ -19,7 +20,7 @@ const MILLISECONDS_PER_DAY = 86_400_000;
 @Component({
     selector: 'fd-weight-history-goal-card',
     imports: [
-        DecimalPipe,
+        LocalizedNumberPipe,
         FdUiButtonComponent,
         FdUiCardComponent,
         FdUiIconComponent,
@@ -32,6 +33,7 @@ const MILLISECONDS_PER_DAY = 86_400_000;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryGoalCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
     public readonly currentWeight = input.required<number | null>();

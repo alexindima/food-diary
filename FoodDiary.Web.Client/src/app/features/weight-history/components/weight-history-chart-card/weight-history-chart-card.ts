@@ -1,19 +1,43 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiCardComponent, FdUiLineChartComponent, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
+import {
+    FdUiButtonComponent,
+    FdUiCardComponent,
+    FdUiEmptyStateComponent,
+    FdUiLineChartComponent,
+    type FdUiLineChartReferenceLine,
+} from 'fd-ui-kit';
 
-import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.mapper';
 
 @Component({
     selector: 'fd-weight-history-chart-card',
-    imports: [FdUiCardComponent, FdUiLineChartComponent, MeasurementUnitPipe, TranslatePipe],
+    imports: [
+        FdUiCardComponent,
+        FdUiLineChartComponent,
+        FdUiButtonComponent,
+        FdUiEmptyStateComponent,
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
+        LocalizedNumberPipe,
+        LocalizedDatePipe,
+        TranslatePipe,
+    ],
     templateUrl: './weight-history-chart-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryChartCardComponent {
+    protected readonly locale = injectCurrentLanguage();
+    public readonly latestValue = input<number | null>(null);
+    public readonly latestDate = input<string | null>(null);
+    public readonly addEntry = output();
+    public readonly showLatest = output();
     protected readonly measurements = inject(MeasurementSystemService);
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WeightHistoryChartPoint[]>();

@@ -3,12 +3,12 @@
   "summary": {
     "components": 454,
     "componentsWithoutDirectSpecs": 139,
-    "inputs": 1424,
-    "outputs": 470,
+    "inputs": 1429,
+    "outputs": 474,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1831,
-    "consumerEdges": 1106,
+    "translationKeys": 1825,
+    "consumerEdges": 1110,
     "consumedComponents": 294,
     "unconsumedComponents": 159
   },
@@ -5407,6 +5407,11 @@
         },
         {
           "name": "axisUnit",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "locale",
           "type": "",
           "required": false
         },
@@ -13522,6 +13527,16 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
       "inputs": [
         {
+          "name": "latestValue",
+          "type": "number | null",
+          "required": false
+        },
+        {
+          "name": "latestDate",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -13542,7 +13557,16 @@
           "required": true
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "addEntry",
+          "type": ""
+        },
+        {
+          "name": "showLatest",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.spec.ts"
     },
     {
@@ -13864,6 +13888,16 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
       "inputs": [
         {
+          "name": "latestValue",
+          "type": "number | null",
+          "required": false
+        },
+        {
+          "name": "latestDate",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -13884,7 +13918,16 @@
           "required": true
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "addEntry",
+          "type": ""
+        },
+        {
+          "name": "showLatest",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.spec.ts"
     },
     {
@@ -20902,8 +20945,10 @@
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
       "keys": [
         "WAIST_HISTORY.CHART_TITLE",
+        "WAIST_HISTORY.LAST_MEASUREMENT",
         "WAIST_HISTORY.LOADING",
-        "WAIST_HISTORY.NO_DATA_FOR_CHART"
+        "WAIST_HISTORY.QUICK_ADD",
+        "WAIST_HISTORY.SHOW_LATEST"
       ]
     },
     {
@@ -20937,10 +20982,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
       "keys": [
-        "WAIST_HISTORY.CM_PER_WEEK",
-        "WAIST_HISTORY.GOAL_AVERAGE_RATE",
         "WAIST_HISTORY.GOAL_CURRENT_WAIST",
-        "WAIST_HISTORY.GOAL_DAYS_TO_GOAL",
         "WAIST_HISTORY.GOAL_EMPTY_DESCRIPTION",
         "WAIST_HISTORY.GOAL_HISTORY",
         "WAIST_HISTORY.GOAL_NOT_SET",
@@ -20950,9 +20992,7 @@
         "WAIST_HISTORY.GOAL_START_DATE",
         "WAIST_HISTORY.GOAL_START_WAIST",
         "WAIST_HISTORY.GOAL_VALUE",
-        "WAIST_HISTORY.LAST_GOAL",
-        "WAIST_HISTORY.NO_GOAL_HISTORY_DESCRIPTION",
-        "WAIST_HISTORY.NO_GOAL_HISTORY_TITLE"
+        "WAIST_HISTORY.LAST_GOAL"
       ]
     },
     {
@@ -21004,6 +21044,7 @@
         "WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
         "WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL",
         "WAIST_HISTORY.GOAL_VALUE",
+        "WAIST_HISTORY.INSUFFICIENT_DATA",
         "WAIST_HISTORY.QUICK_ADD",
         "WAIST_HISTORY.RANGE_CHANGE",
         "WAIST_HISTORY.SUBTITLE",
@@ -21146,8 +21187,10 @@
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
       "keys": [
         "WEIGHT_HISTORY.CHART_TITLE",
+        "WEIGHT_HISTORY.LAST_MEASUREMENT",
         "WEIGHT_HISTORY.LOADING",
-        "WEIGHT_HISTORY.NO_DATA_FOR_CHART"
+        "WEIGHT_HISTORY.QUICK_ADD",
+        "WEIGHT_HISTORY.SHOW_LATEST"
       ]
     },
     {
@@ -21181,9 +21224,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
       "keys": [
-        "WEIGHT_HISTORY.GOAL_AVERAGE_RATE",
         "WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT",
-        "WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL",
         "WEIGHT_HISTORY.GOAL_EMPTY_DESCRIPTION",
         "WEIGHT_HISTORY.GOAL_HISTORY",
         "WEIGHT_HISTORY.GOAL_NOT_SET",
@@ -21193,11 +21234,8 @@
         "WEIGHT_HISTORY.GOAL_START_DATE",
         "WEIGHT_HISTORY.GOAL_START_WEIGHT",
         "WEIGHT_HISTORY.GOAL_VALUE",
-        "WEIGHT_HISTORY.KG_PER_WEEK",
         "WEIGHT_HISTORY.LAST_GOAL",
-        "WEIGHT_HISTORY.LAST_GOAL_CHANGE",
-        "WEIGHT_HISTORY.NO_GOAL_HISTORY_DESCRIPTION",
-        "WEIGHT_HISTORY.NO_GOAL_HISTORY_TITLE"
+        "WEIGHT_HISTORY.LAST_GOAL_CHANGE"
       ]
     },
     {
@@ -21240,6 +21278,7 @@
         "WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
         "WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL",
         "WEIGHT_HISTORY.GOAL_VALUE",
+        "WEIGHT_HISTORY.INSUFFICIENT_DATA",
         "WEIGHT_HISTORY.QUICK_ADD",
         "WEIGHT_HISTORY.RANGE_CHANGE",
         "WEIGHT_HISTORY.SUBTITLE",
@@ -26918,6 +26957,20 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "waist-history",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "icon",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.html",
       "occurrences": 3,
       "inputsUsed": [
@@ -27052,6 +27105,20 @@
         "icon",
         "loading",
         "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "weight-history",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "icon",
         "variant"
       ],
       "outputsHandled": []
@@ -29303,6 +29370,36 @@
       "outputsHandled": []
     },
     {
+      "component": "FdUiEmptyStateComponent",
+      "selector": "fd-ui-empty-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
+      "consumerFeature": "waist-history",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "icon",
+        "message",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiEmptyStateComponent",
+      "selector": "fd-ui-empty-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
+      "consumerFeature": "weight-history",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "icon",
+        "message",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "FdUiFormErrorComponent",
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
@@ -30414,7 +30511,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
-      "occurrences": 7,
+      "occurrences": 4,
       "inputsUsed": [
         "name",
         "size"
@@ -30501,7 +30598,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "weight-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
-      "occurrences": 7,
+      "occurrences": 4,
       "inputsUsed": [
         "name",
         "size"
@@ -31752,6 +31849,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "lineColor",
+        "locale",
         "points",
         "referenceLines",
         "showArea",
@@ -31772,6 +31870,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "lineColor",
+        "locale",
         "points",
         "referenceLines",
         "showArea",
@@ -37552,9 +37651,14 @@
         "chartPoints",
         "desiredWaistCm",
         "goalLabel",
-        "isLoading"
+        "isLoading",
+        "latestDate",
+        "latestValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "addEntry",
+        "showLatest"
+      ]
     },
     {
       "component": "WaistHistoryEntriesCardComponent",
@@ -37622,9 +37726,14 @@
         "chartPoints",
         "desiredWeightKg",
         "goalLabel",
-        "isLoading"
+        "isLoading",
+        "latestDate",
+        "latestValue"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "addEntry",
+        "showLatest"
+      ]
     },
     {
       "component": "WeightHistoryEntriesCardComponent",

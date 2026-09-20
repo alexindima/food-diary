@@ -14,7 +14,7 @@
 
 .fd-ui-line-chart__x-axis span {
     position: absolute;
-    top: 0;
+    top: var(--fd-line-chart-x-axis-label-offset);
     display: block;
     min-width: 0;
     max-width: 72px;
@@ -110,6 +110,22 @@
 @container (max-width: 380px) {
     .fd-ui-line-chart__x-axis
         span:where(:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)) {
+        display: none;
+    }
+}
+
+@container (max-width: 900px) {
+    .fd-ui-line-chart__x-axis
+        span:where(:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)) {
+        display: none;
+    }
+}
+@container (max-width: 480px) {
+    .fd-ui-line-chart__x-axis
+        span:where(:not(:nth-child(4n + 1)):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)) {
+        display: none;
+    }
+    .fd-ui-line-chart__x-axis span:where(:nth-last-child(2):not(.fd-ui-line-chart__x-axis-label--start)) {
         display: none;
     }
 }

@@ -118,18 +118,20 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `--fd-bar-chart-label-height`
 - `--fd-bar-chart-reference-label-space`
 - `--fd-bar-chart-bar-width`
-- `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` — categorical axis unit typography.
+- `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` — categorical axis unit typography. Unit style defaults to `italic`; consumers do not need to repeat it.
 - `--fd-bar-chart-group-width`
 
 #### `fd-ui-line-chart`
 
-Responsive line chart for compact trends and sparklines.
+Responsive line chart for compact trends and sparklines. With axes enabled, the plot starts next to the label column without extra horizontal inset. Units appear once above the Y axis by default; tooltips retain the unit. X labels become sparser in narrow containers without removing data points. With axes shown, out-of-range targets render a directional badge without a horizontal line at a false scale value.
+
+`locale` controls number formatting (defaults to Angular LOCALE_ID). `axisUnit` overrides the header unit; `axisValueSuffix` explicitly opts into a suffix on every tick.
 
 **Inputs**
 
 - `title?: string`
 - `points?: FdUiLineChartPoint[]` (`xPosition` optionally places a point proportionally from `0` to `1`)
-- `referenceLines?: FdUiLineChartReferenceLine[]` (horizontal solid/dashed markers; out-of-range values clamp with a small visual edge gap or can be hidden)
+- `referenceLines?: FdUiLineChartReferenceLine[]` (horizontal solid/dashed markers; out-of-range values show a directional edge badge without a line, or can be hidden)
 - `emptyLabel?: string`
 - `lineColor?: string`
 - `fillColor?: string`

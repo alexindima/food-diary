@@ -1390,7 +1390,7 @@
         "GOAL_PROGRESS_TITLE": "Прогресс к цели",
         "GOAL_REMAINING": "Ещё {{value}} {{unit}} до цели",
         "GOAL_PERIOD_CHANGE": "С начала цели",
-        "GOAL_DAYS_TO_GOAL": "До цели",
+        "GOAL_DAYS_TO_GOAL": "Прогноз, дней до цели",
         "GOAL_AVERAGE_RATE": "Средний темп",
         "GOAL_START_WEIGHT": "Старт",
         "GOAL_CURRENT_WEIGHT": "Сейчас",
@@ -1409,7 +1409,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Выберите даты",
         "CUSTOM_RANGE_FROM_LABEL": "От",
         "CUSTOM_RANGE_TO_LABEL": "До",
-        "NO_DATA_FOR_CHART": "За этот период нет измерений. Выберите другой период или добавьте запись.",
+        "NO_DATA_FOR_CHART": "Выберите другой период или добавьте новый замер.",
         "DATE_LABEL": "Дата",
         "DATE_PLACEHOLDER": "Выберите дату",
         "WEIGHT_LABEL": "Вес ({{unit}})",
@@ -1445,7 +1445,7 @@
         "CONFIGURE_GOAL": "Настроить цель",
         "START_NEW_GOAL": "Начать новую цель",
         "CANCEL_GOAL": "Отказаться от цели",
-        "GOAL_EMPTY_DESCRIPTION": "История веса продолжает сохраняться без привязки к цели.",
+        "GOAL_EMPTY_DESCRIPTION": "Установите цель, чтобы видеть прогресс здесь.",
         "LAST_GOAL": "Последняя цель",
         "LAST_GOAL_CHANGE": "Изменение: {{value}}",
         "NO_GOAL_HISTORY_TITLE": "Целей пока не было",
@@ -1492,7 +1492,13 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Подсказки всегда доступны",
             "HELP_DESCRIPTION": "Нажмите эту кнопку, когда захотите ещё раз посмотреть подсказки по странице."
-        }
+        },
+        "EMPTY_TITLE": "Пока нет измерений",
+        "EMPTY_DESCRIPTION": "Добавьте первый замер, чтобы начать отслеживать динамику.",
+        "EMPTY_PERIOD_TITLE": "Нет измерений за выбранный период",
+        "LAST_MEASUREMENT": "Последний замер",
+        "SHOW_LATEST": "Показать на графике",
+        "INSUFFICIENT_DATA": "Недостаточно данных"
     },
     "NUTRIENTS": {
         "PROTEINS": "Белки",
@@ -1531,7 +1537,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Выберите даты",
         "CUSTOM_RANGE_FROM_LABEL": "От",
         "CUSTOM_RANGE_TO_LABEL": "До",
-        "NO_DATA_FOR_CHART": "За этот период нет измерений. Выберите другой период или добавьте запись.",
+        "NO_DATA_FOR_CHART": "Выберите другой период или добавьте новый замер.",
         "DATE_LABEL": "Дата",
         "DATE_PLACEHOLDER": "Выберите дату",
         "CIRCUMFERENCE_LABEL": "Обхват талии ({{unit}})",
@@ -1548,7 +1554,7 @@
         "GOAL_REMAINING": "Ещё {{value}} {{unit}} до цели",
         "GOAL_VALUE": "Цель: {{value}} {{unit}}",
         "GOAL_PERIOD_CHANGE": "С начала цели",
-        "GOAL_DAYS_TO_GOAL": "До цели",
+        "GOAL_DAYS_TO_GOAL": "Прогноз, дней до цели",
         "GOAL_AVERAGE_RATE": "Средний темп",
         "CM_PER_WEEK": "{{unit}}/нед",
         "GOAL_START_WAIST": "Талия на старте",
@@ -1556,7 +1562,7 @@
         "GOAL_END_WAIST": "Талия в конце",
         "GOAL_START_DATE": "Дата старта",
         "GOAL_NOT_SET": "Цель не задана",
-        "GOAL_EMPTY_DESCRIPTION": "История талии продолжает сохраняться без привязки к цели.",
+        "GOAL_EMPTY_DESCRIPTION": "Установите цель, чтобы видеть прогресс здесь.",
         "LAST_GOAL": "Последняя цель",
         "NO_GOAL_HISTORY_TITLE": "Целей ещё не было",
         "NO_GOAL_HISTORY_DESCRIPTION": "Завершённые цели появятся здесь.",
@@ -1627,7 +1633,13 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Подсказки всегда доступны",
             "HELP_DESCRIPTION": "Нажмите эту кнопку, когда захотите ещё раз посмотреть подсказки по странице."
-        }
+        },
+        "EMPTY_TITLE": "Пока нет измерений",
+        "EMPTY_DESCRIPTION": "Добавьте первый замер, чтобы начать отслеживать динамику.",
+        "EMPTY_PERIOD_TITLE": "Нет измерений за выбранный период",
+        "LAST_MEASUREMENT": "Последний замер",
+        "SHOW_LATEST": "Показать на графике",
+        "INSUFFICIENT_DATA": "Недостаточно данных"
     },
     "CYCLE_TRACKING": {
         "TITLE": "Отслеживание цикла",

@@ -5,6 +5,9 @@
         }
 
         <div class="fd-ui-line-chart__y-axis-sizer">
+            @if (unit()) {
+                <span>{{ unit() }}</span>
+            }
             @for (gridLine of gridLines(); track $index) {
                 <span>{{ gridLine.label }}</span>
             }

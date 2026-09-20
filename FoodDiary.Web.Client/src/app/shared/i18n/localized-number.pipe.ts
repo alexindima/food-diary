@@ -16,6 +16,7 @@ export class LocalizedNumberPipe implements PipeTransform {
             return '';
         }
 
-        return new Intl.NumberFormat(resolveAppLocale(language), { minimumFractionDigits, maximumFractionDigits }).format(value);
+        const formatted = new Intl.NumberFormat(resolveAppLocale(language), { minimumFractionDigits, maximumFractionDigits }).format(value);
+        return formatted.replace('-', '−');
     }
 }

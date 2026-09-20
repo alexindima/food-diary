@@ -1932,7 +1932,7 @@
         "GOAL_PROGRESS_TITLE": "Progress to goal",
         "GOAL_REMAINING": "{{value}} {{unit}} to goal",
         "GOAL_PERIOD_CHANGE": "Since goal start",
-        "GOAL_DAYS_TO_GOAL": "To goal",
+        "GOAL_DAYS_TO_GOAL": "Estimated days to goal",
         "GOAL_AVERAGE_RATE": "Average rate",
         "GOAL_START_WEIGHT": "Start",
         "GOAL_CURRENT_WEIGHT": "Now",
@@ -1951,7 +1951,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
         "CUSTOM_RANGE_FROM_LABEL": "From",
         "CUSTOM_RANGE_TO_LABEL": "To",
-        "NO_DATA_FOR_CHART": "Add an entry to begin tracking.",
+        "NO_DATA_FOR_CHART": "Choose another period or add a new measurement.",
         "DATE_LABEL": "Date",
         "DATE_PLACEHOLDER": "Select a date",
         "WEIGHT_LABEL": "Weight ({{unit}})",
@@ -1968,7 +1968,7 @@
         "CONFIGURE_GOAL": "Configure goal",
         "START_NEW_GOAL": "Start new goal",
         "CANCEL_GOAL": "Give up goal",
-        "GOAL_EMPTY_DESCRIPTION": "Weight history continues to be saved without a goal.",
+        "GOAL_EMPTY_DESCRIPTION": "Set a target to see your progress here.",
         "LAST_GOAL": "Last goal",
         "LAST_GOAL_CHANGE": "Change: {{value}}",
         "NO_GOAL_HISTORY_TITLE": "No goals yet",
@@ -2034,7 +2034,13 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
-        }
+        },
+        "EMPTY_TITLE": "No measurements yet",
+        "EMPTY_DESCRIPTION": "Add your first measurement to start tracking your progress.",
+        "EMPTY_PERIOD_TITLE": "No measurements in this period",
+        "LAST_MEASUREMENT": "Latest measurement",
+        "SHOW_LATEST": "Show on chart",
+        "INSUFFICIENT_DATA": "Not enough data"
     },
     "WAIST_HISTORY": {
         "SUBTITLE": "Body measurements",
@@ -2050,7 +2056,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
         "CUSTOM_RANGE_FROM_LABEL": "From",
         "CUSTOM_RANGE_TO_LABEL": "To",
-        "NO_DATA_FOR_CHART": "No measurements for this period. Choose another period or add a measurement.",
+        "NO_DATA_FOR_CHART": "Choose another period or add a new measurement.",
         "DATE_LABEL": "Date",
         "DATE_PLACEHOLDER": "Select a date",
         "CIRCUMFERENCE_LABEL": "Waist circumference ({{unit}})",
@@ -2067,7 +2073,7 @@
         "GOAL_REMAINING": "{{value}} {{unit}} to goal",
         "GOAL_VALUE": "Goal: {{value}} {{unit}}",
         "GOAL_PERIOD_CHANGE": "Since goal started",
-        "GOAL_DAYS_TO_GOAL": "Days to goal",
+        "GOAL_DAYS_TO_GOAL": "Estimated days to goal",
         "GOAL_AVERAGE_RATE": "Average pace",
         "CM_PER_WEEK": "{{unit}}/week",
         "GOAL_START_WAIST": "Starting waist",
@@ -2075,7 +2081,7 @@
         "GOAL_END_WAIST": "Ending waist",
         "GOAL_START_DATE": "Start date",
         "GOAL_NOT_SET": "No goal set",
-        "GOAL_EMPTY_DESCRIPTION": "Waist history continues to be saved without a goal.",
+        "GOAL_EMPTY_DESCRIPTION": "Set a target to see your progress here.",
         "LAST_GOAL": "Last goal",
         "NO_GOAL_HISTORY_TITLE": "No previous goals",
         "NO_GOAL_HISTORY_DESCRIPTION": "Your completed goals will appear here.",
@@ -2146,7 +2152,13 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
-        }
+        },
+        "EMPTY_TITLE": "No measurements yet",
+        "EMPTY_DESCRIPTION": "Add your first measurement to start tracking your progress.",
+        "EMPTY_PERIOD_TITLE": "No measurements in this period",
+        "LAST_MEASUREMENT": "Latest measurement",
+        "SHOW_LATEST": "Show on chart",
+        "INSUFFICIENT_DATA": "Not enough data"
     },
     "CYCLE_TRACKING": {
         "TITLE": "Cycle tracking",

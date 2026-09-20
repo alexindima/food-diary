@@ -9,7 +9,7 @@ const ENTRY_WEIGHT = 71.5;
 const OLDER_ENTRY_WEIGHT = 74.5;
 const DEFAULT_DESIRED_WEIGHT = 70;
 const GAIN_DESIRED_WEIGHT = 90;
-const EXPECTED_WEIGHT_CHANGE = '-3';
+const EXPECTED_WEIGHT_CHANGE = '−3';
 
 describe('WeightHistoryEntriesCardComponent', () => {
     it('renders empty state when entries list is empty', () => {

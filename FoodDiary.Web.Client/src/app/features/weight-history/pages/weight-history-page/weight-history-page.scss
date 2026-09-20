@@ -497,3 +497,13 @@
         padding-block: var(--fd-space-xl);
     }
 }
+
+.weight-history-page__goal-stat-icon {
+    display: none;
+}
+.weight-history-page__empty-chart {
+    align-items: center;
+}
+.weight-history-page__empty-chart p {
+    margin: 0;
+}

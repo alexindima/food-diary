@@ -52,7 +52,7 @@
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.CURRENT_WEIGHT' | translate }}</div>
                         <div class="weight-history-page__metric-value fd-ui-metric-lg">
                             @if (latestWeight(); as value) {
-                                {{ value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                {{ value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
                                 {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
@@ -74,10 +74,13 @@
                         >
                             @if (weightChange(); as change) {
                                 {{ change.value > 0 ? '+' : ''
-                                }}{{ change.value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                }}{{
+                                    change.value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2
+                                }}
                                 {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
+                                <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.INSUFFICIENT_DATA' | translate }}</div>
                             }
                         </div>
                     </div>
@@ -91,10 +94,16 @@
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.TO_GOAL' | translate }}</div>
                         <div class="weight-history-page__metric-value fd-ui-metric-lg">
                             @if (weightToGoal(); as goal) {
-                                {{ goal.value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                {{ goal.value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
                                 {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
+                                <div class="fd-ui-caption fd-ui-text-muted">
+                                    {{
+                                        (desiredWeightKg() === null ? 'WEIGHT_HISTORY.GOAL_NOT_SET' : 'WEIGHT_HISTORY.INSUFFICIENT_DATA')
+                                            | translate
+                                    }}
+                                </div>
                             }
                         </div>
                         @if (desiredWeightKg(); as goal) {
@@ -103,7 +112,7 @@
                                     'WEIGHT_HISTORY.GOAL_VALUE'
                                         | translate
                                             : {
-                                                  value: goal | measurementValue: 'weight' | number: '1.0-2',
+                                                  value: goal | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
                                                   unit: 'weight' | measurementUnit | translate,
                                               }
                                 }}
@@ -118,7 +127,9 @@
                     <div class="weight-history-page__metric-icon"><fd-ui-icon name="accessibility_new" size="lg" /></div>
                     <div>
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate }}</div>
-                        <div class="weight-history-page__metric-value fd-ui-metric-lg">{{ bmiViewModel()?.value ?? '—' }}</div>
+                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                            {{ (bmiViewModel()?.value | localizedNumber: locale() : 0 : 2) || '—' }}
+                        </div>
                         @if (bmiViewModel(); as bmi) {
                             <div class="weight-history-page__metric-caption fd-ui-caption">{{ bmi.status.labelKey | translate }}</div>
                         }
@@ -130,17 +141,21 @@
         <div class="weight-history-page__chart-section">
             <fd-weight-history-chart-card
                 data-tour-id="weight-history-chart"
-                [isLoading]="isSummaryLoading()"
+                [isLoading]="isSummaryLoading() || isLoading()"
+                [latestValue]="latestWeight()"
+                [latestDate]="latestWeightDate()"
                 [chartPoints]="chartPoints()"
                 [desiredWeightKg]="desiredWeightKg()"
                 [goalLabel]="
                     'WEIGHT_HISTORY.GOAL_VALUE'
                         | translate
                             : {
-                                  value: desiredWeightKg() | measurementValue: 'weight' | number: '1.0-2',
+                                  value: desiredWeightKg() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
                                   unit: 'weight' | measurementUnit | translate,
                               }
                 "
+                (addEntry)="openEntryDialog()"
+                (showLatest)="showLatestMeasurement()"
             >
                 <fd-period-filter
                     chartControls

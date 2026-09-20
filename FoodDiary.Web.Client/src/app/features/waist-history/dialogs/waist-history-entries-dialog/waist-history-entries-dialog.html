@@ -9,7 +9,7 @@
                     }
                 </div>
                 <div class="waist-history-page__entry-value fd-ui-caption">
-                    {{ item.entry.circumferenceCm | measurementValue: 'length' | number: '1.0-2' }}
+                    {{ item.entry.circumferenceCm | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                     {{ 'length' | measurementUnit | translate }}
                 </div>
                 <div
@@ -20,7 +20,7 @@
                     @if (item.change === null || item.change === 0) {
                         —
                     } @else {
-                        {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'length' | number: '1.0-2' }}
+                        {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                         {{ 'length' | measurementUnit | translate }}
                     }
                 </div>

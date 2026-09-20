@@ -156,3 +156,19 @@ export const MultiSeries: Story = {
         showPoints: true,
     },
 };
+
+export const LocalizedBodyHistory: Story = {
+    args: {
+        title: 'Waist history',
+        locale: 'ru',
+        valueSuffix: 'см',
+        showAxisLabels: true,
+        showGrid: true,
+        xAxisLabelLayout: 'stacked',
+        points: [
+            { label: '01\nиюн.', value: 83.5 },
+            { label: '20\nиюн.', value: 82.1 },
+        ],
+        referenceLines: [{ value: 75, label: 'Цель: 75 см' }],
+    },
+};

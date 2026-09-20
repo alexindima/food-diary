@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WaistHistoryChartPoint } from '../../lib/waist-history-chart.mapper';
@@ -12,7 +12,19 @@ describe('WaistHistoryChartCardComponent', () => {
         const { component, fixture } = await setupComponentAsync([]);
 
         expect(component['hasPoints']()).toBe(false);
-        expect(getText(fixture)).toContain('WAIST_HISTORY.NO_DATA_FOR_CHART');
+        expect(getText(fixture)).toContain('WAIST_HISTORY.EMPTY_TITLE');
+    });
+
+    it('offers the latest measurement when the selected period is empty', async () => {
+        const { component, fixture } = await setupComponentAsync([]);
+        const showLatest = vi.fn();
+        component.showLatest.subscribe(showLatest);
+        fixture.componentRef.setInput('latestValue', CHART_VALUE);
+        fixture.componentRef.setInput('latestDate', '2026-06-20');
+        fixture.detectChanges();
+        expect(getText(fixture)).toContain('WAIST_HISTORY.EMPTY_PERIOD_TITLE');
+        (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button')?.click();
+        expect(showLatest).toHaveBeenCalledOnce();
     });
 
     it('detects chart points without a separate input', async () => {

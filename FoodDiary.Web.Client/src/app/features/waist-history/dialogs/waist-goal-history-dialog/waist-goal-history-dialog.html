@@ -10,7 +10,7 @@
                                 'WAIST_HISTORY.GOAL_VALUE'
                                     | translate
                                         : {
-                                              value: goal.targetWaistCm | measurementValue: 'length' | number: '1.0-2',
+                                              value: goal.targetWaistCm | measurementValue: 'length' | localizedNumber: locale() : 0 : 2,
                                               unit: 'length' | measurementUnit | translate,
                                           }
                             }}
@@ -20,7 +20,8 @@
                         <fd-ui-icon name="track_changes" size="lg" />
                     } @else {
                         <div class="fd-ui-stat-value">
-                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ goal.change > 0 ? '+' : ''
+                            }}{{ goal.change | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                             {{ 'length' | measurementUnit | translate }}
                         </div>
                     }
@@ -31,17 +32,17 @@
                         <div class="waist-goal-history__progress" role="progressbar" [attr.aria-valuenow]="goal.progress">
                             <div class="waist-goal-history__progress-value" [style.width.%]="goal.progress"></div>
                         </div>
-                        <div class="fd-ui-stat-value">{{ goal.progress | number: '1.0-0' }}%</div>
+                        <div class="fd-ui-stat-value">{{ goal.progress | localizedNumber: locale() : 0 : 0 }}%</div>
                     </div>
                 }
                 <div class="waist-goal-history__values fd-grid fd-ui-caption fd-ui-text-muted">
                     <span
                         >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}:
-                        {{ goal.startWaistCm | measurementValue: 'length' | number: '1.0-2' }}
+                        {{ goal.startWaistCm | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                         {{ 'length' | measurementUnit | translate }}</span
                     ><span
                         >{{ (goal.status === 'Active' ? 'WAIST_HISTORY.GOAL_CURRENT_WAIST' : 'WAIST_HISTORY.GOAL_END_WAIST') | translate }}:
-                        {{ goal.displayEndWaist | measurementValue: 'length' | number: '1.0-2' }}
+                        {{ goal.displayEndWaist | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                         {{ 'length' | measurementUnit | translate }}</span
                     >
                 </div>

@@ -8,7 +8,7 @@
                             'WAIST_HISTORY.GOAL_REMAINING'
                                 | translate
                                     : {
-                                          value: progress.remaining | measurementValue: 'length' | number: '1.0-2',
+                                          value: progress.remaining | measurementValue: 'length' | localizedNumber: locale() : 0 : 2,
                                           unit: 'length' | measurementUnit | translate,
                                       }
                         }}
@@ -18,13 +18,15 @@
                             'WAIST_HISTORY.GOAL_VALUE'
                                 | translate
                                     : {
-                                          value: desiredWaistCm() | measurementValue: 'length' | number: '1.0-2',
+                                          value: desiredWaistCm() | measurementValue: 'length' | localizedNumber: locale() : 0 : 2,
                                           unit: 'length' | measurementUnit | translate,
                                       }
                         }}
                     </div>
                 </div>
-                <div class="waist-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
+                <div class="waist-history-page__goal-percent fd-ui-stat-value">
+                    {{ progress.percent | localizedNumber: locale() : 0 : 0 }}%
+                </div>
             </div>
             <div
                 class="waist-history-page__goal-progress"
@@ -39,35 +41,19 @@
                 <div class="waist-history-page__goal-stat fd-row fd-align-center">
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
                     <div>
-                        <div class="fd-ui-stat-value">
-                            {{ progress.change | measurementValue: 'length' | number: '1.0-2' }}
+                        <div class="fd-ui-card-title">
+                            {{ progress.change | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                             {{ 'length' | measurementUnit | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
                     </div>
                 </div>
-                <div class="waist-history-page__goal-stat fd-row fd-align-center">
-                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="calendar_today" size="lg" /></div>
-                    <div>
-                        <div class="fd-ui-stat-value">{{ progress.daysToGoal ?? '—' }}</div>
-                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_DAYS_TO_GOAL' | translate }}</div>
-                    </div>
-                </div>
-                <div class="waist-history-page__goal-stat fd-row fd-align-center">
-                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
-                    <div>
-                        <div class="fd-ui-stat-value">
-                            {{ progress.weeklyRate | measurementValue: 'length' | number: '1.0-2' }}
-                            {{ 'WAIST_HISTORY.CM_PER_WEEK' | translate: { unit: 'length' | measurementUnit | translate } }}
-                        </div>
-                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
-                    </div>
-                </div>
+
                 <div class="waist-history-page__goal-stat fd-row fd-align-center">
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="hourglass_top" size="lg" /></div>
                     <div>
-                        <div class="fd-ui-stat-value">
-                            {{ progress.startWaistCm | measurementValue: 'length' | number: '1.0-2' }}
+                        <div class="fd-ui-card-title">
+                            {{ progress.startWaistCm | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                             {{ 'length' | measurementUnit | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}</div>
@@ -76,20 +62,16 @@
                 <div class="waist-history-page__goal-stat fd-row fd-align-center">
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
                     <div>
-                        <div class="fd-ui-stat-value">
-                            {{ progress.currentWaist | measurementValue: 'length' | number: '1.0-2' }}
+                        <div class="fd-ui-card-title">
+                            {{ progress.currentWaist | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                             {{ 'length' | measurementUnit | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_CURRENT_WAIST' | translate }}</div>
                     </div>
                 </div>
-                <div class="waist-history-page__goal-stat fd-row fd-align-center">
-                    <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="event" size="lg" /></div>
-                    <div>
-                        <div class="fd-ui-stat-value">{{ startDateLabel() ?? '—' }}</div>
-                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_DATE' | translate }}</div>
-                    </div>
-                </div>
+            </div>
+            <div class="fd-ui-caption fd-ui-text-muted">
+                {{ 'WAIST_HISTORY.GOAL_START_DATE' | translate }}: {{ startDateLabel() ?? '—' }}
             </div>
         </div>
     }
@@ -97,8 +79,8 @@
         <div class="waist-history-page__goal-empty fd-stack fd-gap-card-header">
             <div class="fd-ui-card-title">{{ 'WAIST_HISTORY.GOAL_NOT_SET' | translate }}</div>
             <div class="fd-ui-body-sm fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_EMPTY_DESCRIPTION' | translate }}</div>
-            <div class="waist-history-page__goal-last fd-stack fd-gap-actions">
-                @if (lastGoalSummary(); as lastGoal) {
+            @if (lastGoalSummary(); as lastGoal) {
+                <div class="waist-history-page__goal-last fd-stack fd-gap-actions">
                     <div class="fd-row fd-justify-between fd-align-start fd-gap-actions">
                         <div>
                             <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.LAST_GOAL' | translate }}</div>
@@ -107,7 +89,10 @@
                                     'WAIST_HISTORY.GOAL_VALUE'
                                         | translate
                                             : {
-                                                  value: lastGoal.targetWaistCm | measurementValue: 'length' | number: '1.0-2',
+                                                  value:
+                                                      lastGoal.targetWaistCm
+                                                      | measurementValue: 'length'
+                                                      | localizedNumber: locale() : 0 : 2,
                                                   unit: 'length' | measurementUnit | translate,
                                               }
                                 }}
@@ -116,17 +101,14 @@
                         @if (lastGoal.change !== null) {
                             <div class="fd-row fd-align-center fd-gap-xs fd-ui-stat-value">
                                 <fd-ui-icon name="trending_down" size="sm" />{{ lastGoal.change > 0 ? '+' : ''
-                                }}{{ lastGoal.change | measurementValue: 'length' | number: '1.0-2' }}
+                                }}{{ lastGoal.change | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
                                 {{ 'length' | measurementUnit | translate }}
                             </div>
                         }
                     </div>
                     <div class="fd-ui-caption fd-ui-text-muted">{{ lastGoal.startDate }} — {{ lastGoal.endDate }}</div>
-                } @else {
-                    <div class="fd-ui-card-title">{{ 'WAIST_HISTORY.NO_GOAL_HISTORY_TITLE' | translate }}</div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.NO_GOAL_HISTORY_DESCRIPTION' | translate }}</div>
-                }
-            </div>
+                </div>
+            }
         </div>
     }
     <div class="waist-history-page__goal-actions fd-row fd-wrap fd-gap-actions">

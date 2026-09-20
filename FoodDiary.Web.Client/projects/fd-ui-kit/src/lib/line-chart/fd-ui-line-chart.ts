@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, LOCALE_ID } from '@angular/core';
 
 import type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
@@ -94,6 +94,7 @@ type FdUiLineChartReferenceLineViewModel = {
     y: number;
     yPercent: string;
     edge: 'top' | 'inside' | 'bottom';
+    outsideRange: boolean;
 };
 
 type FdUiLineChartReferenceScale = {
@@ -171,7 +172,9 @@ export class FdUiLineChartComponent {
     public readonly xAxisLabelLayout = input<FdUiLineChartXAxisLabelLayout>('angled');
     public readonly valueSuffix = input('');
     public readonly axisValueSuffix = input<string | null>(null);
-    public readonly axisUnit = input('');
+    public readonly axisUnit = input<string | null>(null);
+    public readonly locale = input(inject(LOCALE_ID));
+    protected readonly resolvedAxisUnit = computed(() => this.axisUnit() ?? (this.axisValueSuffix() === null ? this.valueSuffix() : ''));
     public readonly axisDecimalPlaces = input(DEFAULT_AXIS_DECIMAL_PLACES);
     public readonly axisValueFormatter = input<((value: number) => string) | null>(null);
     public readonly density = input<FdUiLineChartDensity>('default');
@@ -180,10 +183,14 @@ export class FdUiLineChartComponent {
 
     protected readonly viewBox = `0 0 ${LINE_CHART_VIEWBOX_WIDTH} ${LINE_CHART_VIEWBOX_HEIGHT}`;
     protected readonly chartLeft = computed(() =>
-        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' ? LINE_CHART_SPARKLINE_LEFT_X : LINE_CHART_LEFT_X,
+        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' || this.showAxisLabels()
+            ? LINE_CHART_SPARKLINE_LEFT_X
+            : LINE_CHART_LEFT_X,
     );
     protected readonly chartRight = computed(() =>
-        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' ? LINE_CHART_SPARKLINE_RIGHT_X : LINE_CHART_RIGHT_X,
+        this.density() === 'sparkline' || this.horizontalEdgeInset() === 'none' || this.showAxisLabels()
+            ? LINE_CHART_SPARKLINE_RIGHT_X
+            : LINE_CHART_RIGHT_X,
     );
     protected readonly chartTop = computed(() => (this.verticalEdgeInset() === 'none' ? 0 : this.chartPadding()));
     protected readonly chartBottom = computed(() =>
@@ -463,6 +470,9 @@ export class FdUiLineChartComponent {
             .filter(referenceLine => this.shouldRenderReferenceLine(referenceLine, scale))
             .map(referenceLine => this.buildReferenceLineView(referenceLine, scale));
     });
+    protected readonly inRangeReferenceLines = computed(() =>
+        this.referenceLineViews().filter(line => !this.showAxisLabels() || !line.outsideRange),
+    );
     protected readonly visiblePoints = computed<readonly FdUiLineChartPointViewModel[]>(() => (this.showPoints() ? this.pointViews() : []));
 
     private buildReferenceLineView(
@@ -477,13 +487,24 @@ export class FdUiLineChartComponent {
         const label = referenceLine.label?.trim();
 
         return {
-            label: label !== undefined && label.length > 0 ? label : null,
+            label: this.formatReferenceLabel(label, aboveRange, belowRange),
+            outsideRange: aboveRange || belowRange,
             color: referenceLine.color ?? DEFAULT_REFERENCE_LINE_COLOR,
             lineStyle: referenceLine.lineStyle ?? 'dashed',
             y,
             yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
             edge: aboveRange || y <= REFERENCE_LABEL_TOP_THRESHOLD_Y ? 'top' : belowRange ? 'bottom' : 'inside',
         };
+    }
+
+    private formatReferenceLabel(label: string | undefined, aboveRange: boolean, belowRange: boolean): string | null {
+        if (label === undefined || label.length === 0) {
+            return null;
+        }
+        if (aboveRange) {
+            return `↑ ${label}`;
+        }
+        return belowRange ? `↓ ${label}` : label;
     }
 
     private shouldRenderReferenceLine(referenceLine: FdUiLineChartReferenceLine, scale: FdUiLineChartReferenceScale): boolean {
@@ -658,7 +679,7 @@ export class FdUiLineChartComponent {
     private formatAxisValue(value: number): string {
         const formatter = this.axisValueFormatter();
         const formatted = formatter === null ? this.formatNumericValue(value) : formatter(value);
-        return this.withSuffix(formatted, this.axisValueSuffix() ?? this.valueSuffix());
+        return this.withSuffix(formatted, this.axisValueSuffix() ?? '');
     }
 
     private formatDataValue(value: number): string {
@@ -675,7 +696,7 @@ export class FdUiLineChartComponent {
 
     private formatNumericValue(value: number): string {
         const decimals = Math.max(0, this.axisDecimalPlaces());
-        return Number.isInteger(value) ? String(value) : value.toFixed(decimals).replace(/\.?0+$/, '');
+        return new Intl.NumberFormat(this.locale(), { maximumFractionDigits: decimals }).format(value).replace('-', '−');
     }
 
     private withSuffix(formatted: string, valueSuffix: string): string {

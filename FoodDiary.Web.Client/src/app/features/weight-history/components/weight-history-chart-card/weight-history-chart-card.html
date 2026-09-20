@@ -14,6 +14,7 @@
                 [class.weight-history-page__chart--loading]="isLoading()"
                 [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
                 [points]="displayChartPoints()"
+                [locale]="locale()"
                 [referenceLines]="referenceLines()"
                 [showArea]="false"
                 [showAxisLabels]="true"
@@ -21,7 +22,28 @@
                 [valueSuffix]="'weight' | measurementUnit | translate"
             />
         } @else if (!isLoading()) {
-            <p class="weight-history-page__empty-chart fd-ui-body-sm">{{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>
+            <div class="weight-history-page__empty-chart fd-stack fd-gap-card-header">
+                <fd-ui-empty-state
+                    appearance="compact"
+                    icon="monitor_weight"
+                    [title]="(latestValue() === null ? 'WEIGHT_HISTORY.EMPTY_TITLE' : 'WEIGHT_HISTORY.EMPTY_PERIOD_TITLE') | translate"
+                    [message]="
+                        (latestValue() === null ? 'WEIGHT_HISTORY.EMPTY_DESCRIPTION' : 'WEIGHT_HISTORY.NO_DATA_FOR_CHART') | translate
+                    "
+                />
+                @if (latestValue() !== null) {
+                    <p class="fd-ui-body-sm">
+                        {{ 'WEIGHT_HISTORY.LAST_MEASUREMENT' | translate }}:
+                        {{ latestValue() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
+                        {{ 'weight' | measurementUnit | translate }} · {{ latestDate() | localizedDate: 'd MMMM y' }}
+                    </p>
+                    <fd-ui-button variant="secondary" fill="outline" (click)="showLatest.emit()">{{
+                        'WEIGHT_HISTORY.SHOW_LATEST' | translate
+                    }}</fd-ui-button>
+                } @else {
+                    <fd-ui-button icon="add" (click)="addEntry.emit()">{{ 'WEIGHT_HISTORY.QUICK_ADD' | translate }}</fd-ui-button>
+                }
+            </div>
         }
 
         @if (isLoading()) {

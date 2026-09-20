@@ -8,11 +8,18 @@ export type WaistHistoryChartPoint = {
     value: number | null;
 };
 
-export function buildWaistHistoryChartPoints(points: WaistEntrySummaryPoint[], locale: string): WaistHistoryChartPoint[] {
+export function buildWaistHistoryChartPoints(
+    points: WaistEntrySummaryPoint[],
+    locale: string,
+    currentYear = new Date().getUTCFullYear(),
+): WaistHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
+    const firstDate = parseDateValue(ordered[0]?.startDate);
+    const lastDate = parseDateValue(ordered.at(-1)?.startDate);
+    const showYear = firstDate?.getUTCFullYear() !== currentYear || lastDate?.getUTCFullYear() !== currentYear;
     return ordered.map(point => ({
-        label: formatWaistHistoryDateLabel(point.startDate, locale),
+        label: formatWaistHistoryDateLabel(point.startDate, locale, showYear),
         value: point.averageCircumferenceCm > 0 ? point.averageCircumferenceCm : null,
     }));
 }
@@ -37,7 +44,18 @@ export function formatWaistHistoryNumericDate(value: string, language: string): 
     }).format(date);
 }
 
-function formatWaistHistoryDateLabel(dateString: string, locale: string): string {
+function formatWaistHistoryDateLabel(dateString: string, locale: string, showYear: boolean): string {
     const date = parseDateValue(dateString);
-    return date !== null ? new Intl.DateTimeFormat(resolveAppLocale(locale)).format(date) : dateString;
+    if (date === null) {
+        return dateString;
+    }
+
+    const day = new Intl.DateTimeFormat(resolveAppLocale(locale), { day: '2-digit', timeZone: 'UTC' }).format(date);
+    const month = abbreviateMonth(new Intl.DateTimeFormat(resolveAppLocale(locale), { month: 'short', timeZone: 'UTC' }).format(date));
+    return showYear ? `${day}\n${month}\n${date.getUTCFullYear()}` : `${day}\n${month}`;
+}
+
+function abbreviateMonth(month: string): string {
+    const shortMonthLength = 3;
+    return month.endsWith('.') || month.length <= shortMonthLength ? month : `${month.slice(0, shortMonthLength)}.`;
 }

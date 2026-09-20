@@ -52,7 +52,7 @@
                         <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.CURRENT_WAIST' | translate }}</div>
                         <div class="waist-history-page__metric-value fd-ui-metric-lg">
                             @if (latestWaist(); as value) {
-                                {{ value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                                {{ value | measurementValue: 'length' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
                                 {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
@@ -73,10 +73,13 @@
                         >
                             @if (waistChange(); as change) {
                                 {{ change.value > 0 ? '+' : ''
-                                }}{{ change.value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                                }}{{
+                                    change.value | measurementValue: 'length' : measurements.system() | localizedNumber: locale() : 0 : 2
+                                }}
                                 {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
+                                <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.INSUFFICIENT_DATA' | translate }}</div>
                             }
                         </div>
                     </div>
@@ -88,11 +91,17 @@
                     <div>
                         <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.TO_GOAL' | translate }}</div>
                         <div class="waist-history-page__metric-value fd-ui-metric-lg">
-                            @if (waistToGoal(); as value) {
-                                {{ value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                            @if (waistToGoal() !== null) {
+                                {{ waistToGoal() | measurementValue: 'length' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
                                 {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
+                                <div class="fd-ui-caption fd-ui-text-muted">
+                                    {{
+                                        (desiredWaistCm() === null ? 'WAIST_HISTORY.GOAL_NOT_SET' : 'WAIST_HISTORY.INSUFFICIENT_DATA')
+                                            | translate
+                                    }}
+                                </div>
                             }
                         </div>
                         @if (desiredWaistCm(); as goal) {
@@ -101,7 +110,7 @@
                                     'WAIST_HISTORY.GOAL_VALUE'
                                         | translate
                                             : {
-                                                  value: goal | measurementValue: 'length' | number: '1.0-2',
+                                                  value: goal | measurementValue: 'length' | localizedNumber: locale() : 0 : 2,
                                                   unit: 'length' | measurementUnit | translate,
                                               }
                                 }}
@@ -115,7 +124,9 @@
                     <div class="waist-history-page__metric-icon"><fd-ui-icon name="monitor_heart" size="lg" /></div>
                     <div>
                         <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.WHT_CARD_TITLE' | translate }}</div>
-                        <div class="waist-history-page__metric-value fd-ui-metric-lg">{{ whtViewModel()?.value ?? '—' }}</div>
+                        <div class="waist-history-page__metric-value fd-ui-metric-lg">
+                            {{ (whtViewModel()?.value | localizedNumber: locale() : 0 : 2) || '—' }}
+                        </div>
                         @if (whtViewModel(); as wht) {
                             <div class="waist-history-page__metric-caption fd-ui-caption">{{ wht.status.labelKey | translate }}</div>
                         }
@@ -127,17 +138,21 @@
         <div class="waist-history-page__chart-section">
             <fd-waist-history-chart-card
                 data-tour-id="waist-history-chart"
-                [isLoading]="isSummaryLoading()"
+                [isLoading]="isSummaryLoading() || isLoading()"
+                [latestValue]="latestWaist()"
+                [latestDate]="latestWaistDate()"
                 [chartPoints]="chartPoints()"
                 [desiredWaistCm]="desiredWaistCm()"
                 [goalLabel]="
                     'WAIST_HISTORY.GOAL_VALUE'
                         | translate
                             : {
-                                  value: desiredWaistCm() | measurementValue: 'length' | number: '1.0-2',
+                                  value: desiredWaistCm() | measurementValue: 'length' | localizedNumber: locale() : 0 : 2,
                                   unit: 'length' | measurementUnit | translate,
                               }
                 "
+                (addEntry)="openEntryDialog()"
+                (showLatest)="showLatestMeasurement()"
             >
                 <fd-period-filter
                     chartControls

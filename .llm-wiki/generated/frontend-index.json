@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1686,
+    "typescriptFiles": 1687,
     "symbols": 663,
     "routes": 100,
     "features": 44,
@@ -1682,7 +1682,7 @@
       "role": "Component",
       "selector": "fd-ui-line-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-      "line": 155
+      "line": 156
     },
     {
       "name": "FdUiLoaderComponent",
@@ -5245,14 +5245,14 @@
       "role": "Component",
       "selector": "fd-waist-history-chart-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.ts",
-      "line": 16
+      "line": 35
     },
     {
       "name": "WaistHistoryEntriesCardComponent",
       "role": "Component",
       "selector": "fd-waist-history-entries-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.ts",
-      "line": 23
+      "line": 24
     },
     {
       "name": "WaistHistoryFormCardComponent",
@@ -5266,7 +5266,7 @@
       "role": "Component",
       "selector": "fd-waist-history-goal-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "WaistHistoryWhtCardComponent",
@@ -5280,14 +5280,14 @@
       "role": "Component",
       "selector": "fd-waist-goal-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
-      "line": 32
+      "line": 33
     },
     {
       "name": "WaistHistoryEntriesDialogComponent",
       "role": "Component",
       "selector": "fd-waist-history-entries-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.ts",
-      "line": 26
+      "line": 27
     },
     {
       "name": "WaistHistoryEntryDialogComponent",
@@ -5315,7 +5315,7 @@
       "role": "Component",
       "selector": "fd-waist-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "line": 57
+      "line": 58
     },
     {
       "name": "WearableService",
@@ -5427,14 +5427,14 @@
       "role": "Component",
       "selector": "fd-weight-history-chart-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts",
-      "line": 16
+      "line": 35
     },
     {
       "name": "WeightHistoryEntriesCardComponent",
       "role": "Component",
       "selector": "fd-weight-history-entries-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.ts",
-      "line": 24
+      "line": 25
     },
     {
       "name": "WeightHistoryFormCardComponent",
@@ -5448,21 +5448,21 @@
       "role": "Component",
       "selector": "fd-weight-history-goal-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "WeightGoalHistoryDialogComponent",
       "role": "Component",
       "selector": "fd-weight-goal-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "WeightHistoryEntriesDialogComponent",
       "role": "Component",
       "selector": "fd-weight-history-entries-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "WeightHistoryEntryDialogComponent",
@@ -5490,7 +5490,7 @@
       "role": "Component",
       "selector": "fd-weight-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "line": 59
+      "line": 60
     },
     {
       "name": "AuthInterceptor",
@@ -6539,8 +6539,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3567,
-      "russianProperties": 3567,
+      "englishProperties": 3579,
+      "russianProperties": 3579,
       "countsMatch": true
     },
     {

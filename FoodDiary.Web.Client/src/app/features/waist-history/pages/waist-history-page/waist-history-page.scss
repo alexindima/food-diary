@@ -499,3 +499,13 @@
         padding-block: var(--fd-space-xl);
     }
 }
+
+.waist-history-page__goal-stat-icon {
+    display: none;
+}
+.waist-history-page__empty-chart {
+    align-items: center;
+}
+.waist-history-page__empty-chart p {
+    margin: 0;
+}

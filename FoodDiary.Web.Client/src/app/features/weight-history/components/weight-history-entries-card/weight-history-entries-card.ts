@@ -1,9 +1,10 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
@@ -16,12 +17,13 @@ const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-weight-history-entries-card',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [LocalizedNumberPipe, FdUiButtonComponent, FdUiCardComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './weight-history-entries-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryEntriesCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
 

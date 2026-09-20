@@ -9,7 +9,7 @@
                     }
                 </div>
                 <div class="weight-history-page__entry-weight fd-ui-caption">
-                    {{ item.entry.weightKg | measurementValue: 'weight' | number: '1.0-2' }}
+                    {{ item.entry.weightKg | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
                     {{ 'weight' | measurementUnit | translate }}
                 </div>
                 <div
@@ -20,7 +20,7 @@
                     @if (item.change === null || item.change === 0) {
                         —
                     } @else {
-                        {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'weight' | number: '1.0-2' }}
+                        {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
                         {{ 'weight' | measurementUnit | translate }}
                     }
                 </div>

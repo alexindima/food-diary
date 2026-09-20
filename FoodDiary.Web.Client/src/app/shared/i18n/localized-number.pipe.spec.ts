@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { LocalizedNumberPipe } from './localized-number.pipe';
 
+const NEGATIVE_DECIMAL = -1.18;
 const VALUE = 2258;
 const pipe = new LocalizedNumberPipe();
 
@@ -13,6 +14,10 @@ describe('LocalizedNumberPipe', () => {
 
     it('uses English grouping for English', () => {
         expect(pipe.transform(VALUE, 'en')).toBe('2,258');
+    });
+
+    it('formats a negative decimal with a typographic minus', () => {
+        expect(pipe.transform(NEGATIVE_DECIMAL, 'ru', 0, 2)).toBe('−1,18');
     });
 
     it('returns an empty string for absent or non-finite values', () => {

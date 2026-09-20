@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -9,6 +8,8 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -36,7 +37,7 @@ import { WAIST_HISTORY_TOUR } from './waist-history-tour';
         MeasurementUnitPipe,
         MeasurementValuePipe,
         TranslatePipe,
-        DecimalPipe,
+        LocalizedNumberPipe,
         FdUiHintDirective,
         FdUiCardComponent,
         FdUiIconComponent,
@@ -55,6 +56,7 @@ import { WAIST_HISTORY_TOUR } from './waist-history-tour';
     providers: [WaistHistoryFacade],
 })
 export class WaistHistoryPageComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly tourService = inject(FdTourService);
@@ -169,6 +171,24 @@ export class WaistHistoryPageComponent {
                     this.deleteEntry(result.entry);
                 }
             });
+    }
+
+    protected showLatestMeasurement(): void {
+        const value = this.latestWaistDate();
+        if (value === null) {
+            return;
+        }
+        const date = new Date(value);
+        if (!Number.isFinite(date.getTime())) {
+            return;
+        }
+        this.facade.customRangeModel.set({
+            range: {
+                start: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1)),
+                end: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)),
+            },
+        });
+        this.facade.changeRange('custom');
     }
 
     protected changeRange(value: string): void {

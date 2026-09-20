@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -6,6 +5,8 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
@@ -18,12 +19,13 @@ export type WaistHistoryEntriesDialogData = { entries: WaistEntry[]; desiredWais
 
 @Component({
     selector: 'fd-waist-history-entries-dialog',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiDialogShellComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [LocalizedNumberPipe, FdUiButtonComponent, FdUiDialogShellComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-history-entries-dialog.html',
     styleUrl: '../../pages/waist-history-page/waist-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryEntriesDialogComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly data = inject<WaistHistoryEntriesDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<WaistHistoryEntriesDialogComponent, WaistHistoryEntriesDialogResult>);

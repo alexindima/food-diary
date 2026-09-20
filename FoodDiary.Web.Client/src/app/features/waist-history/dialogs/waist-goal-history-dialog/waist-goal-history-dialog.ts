@@ -1,10 +1,11 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
@@ -24,12 +25,13 @@ const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-waist-goal-history-dialog',
-    imports: [DecimalPipe, FdUiDialogComponent, FdUiIconComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [LocalizedNumberPipe, FdUiDialogComponent, FdUiIconComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-goal-history-dialog.html',
     styleUrl: './waist-goal-history-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistGoalHistoryDialogComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly translate = inject(TranslateService);

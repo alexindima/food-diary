@@ -836,17 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bd4c32025e9165261e50cab13226d2ee46635c00de87076bc7cf57df616d6fd7"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "2e2af024707f9227a99956c65262b525708dca7c06bda1db8d2bdac379e1533c"
+          "sha256": "35d5fa4f720d1803a2b1a969f84e76f1588d4527a4c1738276d4218c690a561b"
         }
       ],
-      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
+      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:35:44.4954914Z"
+      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
+      "reviewedAtUtc": "2026-09-20T05:29:43.7717721Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,21 +926,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bd4c32025e9165261e50cab13226d2ee46635c00de87076bc7cf57df616d6fd7"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2907d1e9de95f2e3a5ccfe707a95166fe0c11ef7448a38c3505c4c72e88f190e"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "1fe1c307ae3b907acd7896fded090bbd2a74bd8e5c2bd5eb4f4fd3d487a47cd8"
+          "sha256": "35d5fa4f720d1803a2b1a969f84e76f1588d4527a4c1738276d4218c690a561b"
         }
       ],
-      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
+      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:35:46.1024812Z"
+      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
+      "reviewedAtUtc": "2026-09-20T05:29:44.7105689Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1081,17 +1069,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6ff4f982db437f205d2dca77d40a6b2bc8ed9498ffa4b8fdd3aab9839f322267"
+          "sha256": "97945c7a9b612991db7494c12db77ef46d40ab0f3737b65baa636fa04df6fabd"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d3e66380771fb17b1a78c8a5e25ebf044a23bdf7c165bddd878160e6079828ca"
+          "sha256": "f574efbc904fd40c3c6f181ef6f6070c4e42c751cae0f92cac9f089f8d24c5b7"
         }
       ],
-      "reason": "Frontend indexes refresh test references and source positions; trace commands and route contracts are unchanged.",
+      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:19.6553926Z"
+      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
+      "reviewedAtUtc": "2026-09-20T05:29:45.5004032Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1179,13 +1167,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6ff4f982db437f205d2dca77d40a6b2bc8ed9498ffa4b8fdd3aab9839f322267"
+          "sha256": "97945c7a9b612991db7494c12db77ef46d40ab0f3737b65baa636fa04df6fabd"
         }
       ],
-      "reason": "Dashboard hydration busy lifetime changed without API or component contract changes; regression cases cover pending, stale, error and cancellation states.",
+      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:24.3209629Z"
+      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
+      "reviewedAtUtc": "2026-09-20T05:29:42.7547080Z"
     },
     {
       "pageId": "workflow.query-context",

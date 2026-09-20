@@ -25,7 +25,7 @@ const SMALL_MULTI_SERIES_VALUE = 24;
 const MULTI_SERIES_COUNT = 4;
 const MULTI_SERIES_POINT_COUNT = 8;
 const GAP_SEGMENT_COUNT = 2;
-const QUARTER_POSITION_X = 26;
+const QUARTER_POSITION_X = 25;
 const REFERENCE_LINE_VALUE = 75;
 const REFERENCE_SERIES_MAX_VALUE = 118;
 const CALORIE_CHART_MAX = 2500;
@@ -79,7 +79,8 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
     });
 
-    it('renders and labels reference lines without extending the data range', () => {
+    it('shows an out-of-range target as a directional label without a misleading line', () => {
+        fixture.componentRef.setInput('showAxisLabels', true);
         fixture.componentRef.setInput('points', [
             { label: 'One', value: 113 },
             { label: 'Two', value: 118 },
@@ -90,10 +91,9 @@ describe('FdUiLineChartComponent', () => {
         const referenceLine = host().querySelector('.fd-ui-line-chart__reference-line');
         const referenceLabel = host().querySelector('.fd-ui-line-chart__reference-label');
 
-        expect(referenceLine?.getAttribute('y1')).toBe(`${CHART_BOTTOM_Y}`);
-        expect(referenceLine?.classList.contains('fd-ui-line-chart__reference-line--dashed')).toBe(true);
+        expect(referenceLine).toBeNull();
         expect(referenceLabel?.classList.contains('fd-ui-line-chart__reference-label--bottom')).toBe(true);
-        expect(referenceLabel?.textContent).toContain('Goal: 75 kg');
+        expect(referenceLabel?.textContent).toContain('↓ Goal: 75 kg');
         expect(component['pointViews']()[0]?.y).toBeLessThan(CHART_BOTTOM_Y);
         expect(component['gridLines']().at(-1)?.label).not.toBe('113');
         expect(component['resolvedMaxValue']()).toBe(REFERENCE_SERIES_MAX_VALUE);
@@ -148,8 +148,21 @@ describe('FdUiLineChartComponent', () => {
 
         expect(component['pointViews']()[1]?.x).toBe(QUARTER_POSITION_X);
         expect(host().querySelectorAll('.fd-ui-line-chart__point')[1].getAttribute('title')).toBe('Jul 14: 116 kg');
-        expect((host().querySelectorAll('.fd-ui-line-chart__x-axis span')[1] as HTMLElement).style.left).toBe('26%');
+        expect((host().querySelectorAll('.fd-ui-line-chart__x-axis span')[1] as HTMLElement).style.left).toBe('25%');
         expect(component['ariaLabel']()).toContain('Aug 4 113 kg');
+    });
+
+    it('shows a localized unit once and aligns the plot with its axis', () => {
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('locale', 'ru');
+        fixture.componentRef.setInput('valueSuffix', 'см');
+        fixture.componentRef.setInput('points', [{ label: 'June', value: 82.1 }]);
+        fixture.detectChanges();
+        expect(host().querySelector('.fd-ui-line-chart__y-axis-unit')?.textContent).toBe('см');
+        expect(component['gridLines']().every(line => !line.label.includes('см'))).toBe(true);
+        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toContain('82,1 см');
+        expect(component['chartLeft']()).toBe(0);
+        expect(component['chartRight']()).toBe(SPARKLINE_CHART_RIGHT_X);
     });
 
     it('extends sparkline area below the zero line stroke', () => {
@@ -271,9 +284,9 @@ describe('FdUiLineChartComponent', () => {
 
         expect(host().querySelector('.fd-ui-line-chart__x-axis')?.textContent).toContain('Mon');
         expect(host().querySelector('.fd-ui-line-chart__x-axis')?.textContent).toContain('Wed');
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('81.5 kg');
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('81.5');
         expect(host().querySelectorAll('.fd-ui-line-chart__y-axis-label')).toHaveLength(GRID_LINE_COUNT);
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('80 kg');
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('80');
     });
 
     it('can plot against both vertical edges without an internal inset', () => {
@@ -380,8 +393,8 @@ describe('FdUiLineChartComponent', () => {
         fixture.componentRef.setInput('axisDecimalPlaces', 0);
         fixture.detectChanges();
 
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('8000 kcal');
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('7901 kcal');
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('8,000');
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('7,901');
     });
 
     it('can hide the suffix on the y-axis without removing it from point tooltips', () => {
@@ -408,7 +421,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.detectChanges();
 
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('2 000');
-        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toContain('1000');
+        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toContain('1,000');
     });
 
     it('renders a unit above the y-axis values', () => {
@@ -434,7 +447,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.componentRef.setInput('axisDecimalPlaces', 0);
         fixture.detectChanges();
 
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('60 g');
+        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('60');
     });
 
     it('does not force default max when non-zero values are present', () => {
@@ -454,7 +467,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.componentRef.setInput('defaultMaxValue', DEFAULT_MAX_VALUE);
         fixture.detectChanges();
 
-        expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toContain('100 g');
+        expect(component['resolvedMaxValue']()).toBeLessThan(DEFAULT_MAX_VALUE);
     });
 
     it('can render grid lines and use a default max for flat zero data', () => {
@@ -469,8 +482,8 @@ describe('FdUiLineChartComponent', () => {
 
         expect(host().querySelectorAll('.fd-ui-line-chart__grid-line')).toHaveLength(GRID_LINE_COUNT + GRID_POINT_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__grid-line[x1][y1="6"][y2="58"]')).toHaveLength(GRID_POINT_COUNT);
-        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="2"][x2="2"]')).not.toBeNull();
-        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="98"][x2="98"]')).not.toBeNull();
+        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="0"][x2="0"]')).not.toBeNull();
+        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="100"][x2="100"]')).not.toBeNull();
         expect(host().querySelector('.fd-ui-line-chart__y-axis')?.textContent).toContain('100');
         expect(component['pointViews']().every(point => point.y === CHART_BOTTOM_Y)).toBe(true);
     });

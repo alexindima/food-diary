@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -10,6 +9,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { NavigationService } from '../../../../services/navigation.service';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -38,7 +39,7 @@ import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
         MeasurementUnitPipe,
         MeasurementValuePipe,
         TranslatePipe,
-        DecimalPipe,
+        LocalizedNumberPipe,
         FdUiHintDirective,
         FdUiCardComponent,
         FdUiIconComponent,
@@ -57,6 +58,7 @@ import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
     providers: [WeightHistoryFacade],
 })
 export class WeightHistoryPageComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
@@ -176,6 +178,24 @@ export class WeightHistoryPageComponent {
                     this.deleteEntry(result.entry);
                 }
             });
+    }
+
+    protected showLatestMeasurement(): void {
+        const value = this.latestWeightDate();
+        if (value === null) {
+            return;
+        }
+        const date = new Date(value);
+        if (!Number.isFinite(date.getTime())) {
+            return;
+        }
+        this.facade.customRangeModel.set({
+            range: {
+                start: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1)),
+                end: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)),
+            },
+        });
+        this.facade.changeRange('custom');
     }
 
     protected changeRange(value: string): void {
