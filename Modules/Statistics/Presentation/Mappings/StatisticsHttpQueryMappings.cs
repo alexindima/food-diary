@@ -10,8 +10,11 @@ public static class StatisticsHttpQueryMappings {
             return new GetStatisticsQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays);
         }
 
+    }
+
+    extension(GetStatisticsSummaryHttpQuery query) {
         public GetStatisticsSummaryQuery ToSummaryQuery(Guid userId) {
-            return new GetStatisticsSummaryQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays);
+            return new GetStatisticsSummaryQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays, query.BodyDateFrom, query.BodyDateTo);
         }
     }
 }

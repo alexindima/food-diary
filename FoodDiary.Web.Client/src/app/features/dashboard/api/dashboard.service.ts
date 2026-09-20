@@ -12,6 +12,7 @@ import { DASHBOARD_SNAPSHOT_QUERY_DEFAULTS } from './dashboard-api.tokens';
 export type DashboardSnapshotQuery = {
     date: Date;
     timeZoneOffsetMinutes: number;
+    timeZoneId?: string;
     page?: number;
     pageSize?: number;
     locale?: string;
@@ -59,6 +60,10 @@ export class DashboardService extends ApiService {
             page,
             pageSize,
         };
+
+        if (query.timeZoneId !== undefined) {
+            params['timeZoneId'] = query.timeZoneId;
+        }
 
         if (locale !== undefined && locale.trim().length > 0) {
             params['locale'] = locale;

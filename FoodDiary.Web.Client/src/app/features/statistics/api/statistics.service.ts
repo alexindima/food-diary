@@ -3,7 +3,7 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import type { AggregatedStatistics, GetStatisticsDto, StatisticsSummary } from '../models/statistics.data';
+import type { AggregatedStatistics, GetStatisticsDto, GetStatisticsSummaryDto, StatisticsSummary } from '../models/statistics.data';
 
 @Service()
 export class StatisticsService extends ApiService {
@@ -19,7 +19,7 @@ export class StatisticsService extends ApiService {
         return this.get<AggregatedStatistics[]>('', queryParams);
     }
 
-    public getSummary(params: GetStatisticsDto): Observable<StatisticsSummary> {
+    public getSummary(params: GetStatisticsSummaryDto): Observable<StatisticsSummary> {
         const queryParams = {
             ...params,
             dateFrom: this.toIsoString(params.dateFrom),

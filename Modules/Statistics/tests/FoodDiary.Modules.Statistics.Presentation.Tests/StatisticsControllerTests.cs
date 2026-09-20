@@ -30,7 +30,7 @@ public sealed class StatisticsControllerTests {
         };
         var userId = Guid.NewGuid();
 
-        IActionResult result = await controller.GetSummary(userId, new GetStatisticsHttpQuery(from, to, 7));
+        IActionResult result = await controller.GetSummary(userId, new GetStatisticsSummaryHttpQuery(from, to, 7));
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         StatisticsSummaryHttpResponse response = Assert.IsType<StatisticsSummaryHttpResponse>(ok.Value);

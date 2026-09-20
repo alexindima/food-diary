@@ -7,6 +7,7 @@ import { finalize, firstValueFrom } from 'rxjs';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
+import { toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
@@ -23,7 +24,6 @@ import {
     calculateWaistHistoryRangeDates,
     formatWaistHistoryDateInput,
     isWaistHistoryRange,
-    normalizeStartOfDay,
 } from './waist-history-range.utils';
 import { buildWhtViewModel } from './waist-history-wht.mapper';
 
@@ -208,7 +208,7 @@ export class WaistHistoryFacade {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
         this.formModel.set({
-            date: formatWaistHistoryDateInput(new Date(entry.date)),
+            date: entry.date.split('T')[0] ?? '',
             circumference: this.formatDisplayWaist(entry.circumferenceCm),
         });
     }
@@ -412,12 +412,14 @@ export class WaistHistoryFacade {
             return null;
         }
 
-        const date = new Date(rawDate);
-        const utcDate = normalizeStartOfDay(date);
+        const date = toMeasurementDateIso(rawDate);
+        if (date === null) {
+            return null;
+        }
         const circumferenceCm = this.measurements.canonicalLength(Number(rawCircumference));
 
         return {
-            date: utcDate.toISOString(),
+            date,
             circumferenceCm,
         };
     }

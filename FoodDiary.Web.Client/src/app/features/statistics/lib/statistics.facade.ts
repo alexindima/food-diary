@@ -18,6 +18,7 @@ import type { MappedStatistics } from '../models/statistics.data';
 import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 import {
     buildBodyChartPoints,
+    buildStatisticsSummaryRequest,
     type DateRange,
     getCurrentDateRange,
     getDateRangeDayCount,
@@ -199,16 +200,8 @@ export class StatisticsFacade {
 
     private loadStatistics(range: DateRange): void {
         const requestId = this.statisticsRequest.begin();
-        const normalizedStart = normalizeStartOfDay(range.start);
-        const normalizedEnd = normalizeEndOfDay(range.end);
-        const quantizationDays = getQuantizationDays(normalizedStart, normalizedEnd);
-
         this.statisticsService
-            .getSummary({
-                dateFrom: normalizedStart,
-                dateTo: normalizedEnd,
-                quantizationDays,
-            })
+            .getSummary(buildStatisticsSummaryRequest(range))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {

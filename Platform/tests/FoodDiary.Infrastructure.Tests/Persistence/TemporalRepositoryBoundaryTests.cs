@@ -70,6 +70,25 @@ public sealed class TemporalRepositoryBoundaryTests {
             () => Assert.Equal((maximumUtc.Date, 250), Assert.Single(totals)));
     }
 
+    [Fact]
+    public async Task HydrationRepository_ExactBoundsDoNotExpandToUtcDates() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create("hydration-exact-bounds@example.com", "hash");
+        var start = new DateTime(2026, 9, 19, 20, 0, 0, DateTimeKind.Utc);
+        DateTime end = start.AddDays(1).AddTicks(-1);
+        context.Users.Add(user);
+        context.HydrationEntries.AddRange(
+            HydrationEntry.Create(user.Id, start.AddTicks(-1), 1000),
+            HydrationEntry.Create(user.Id, start, 100),
+            HydrationEntry.Create(user.Id, end, 200),
+            HydrationEntry.Create(user.Id, end.AddTicks(1), 2000));
+        await context.SaveChangesAsync();
+        var repository = new HydrationEntryRepository(context.HydrationEntries);
+        IReadOnlyList<(DateTime Date, int TotalMl)> totals = await repository.GetDailyTotalsAsync(user.Id, start, end, CancellationToken.None, useExactBounds: true);
+        Assert.Equal(300, totals.Sum(item => item.TotalMl));
+        Assert.Equal(3300, (await repository.GetDailyTotalsAsync(user.Id, start, end)).Sum(item => item.TotalMl));
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

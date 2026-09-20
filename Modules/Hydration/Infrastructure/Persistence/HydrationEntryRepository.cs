@@ -71,9 +71,9 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default) {
-        DateTime from = dateFrom.Date;
-        DateTime to = TemporalRangePolicy.GetInclusiveDayEnd(dateTo);
+        CancellationToken cancellationToken = default, bool useExactBounds = false) {
+        DateTime from = useExactBounds ? dateFrom : dateFrom.Date;
+        DateTime to = useExactBounds ? dateTo : TemporalRangePolicy.GetInclusiveDayEnd(dateTo);
 
         var results = await entries
             .AsNoTracking()

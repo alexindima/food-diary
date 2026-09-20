@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4190,
-    "symbols": 4121,
+    "sourceFiles": 4194,
+    "symbols": 4125,
     "interfaceImplementationLinks": 190,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2170,
+      "class": 2172,
       "enum": 64,
       "interface": 400,
-      "record": 1367,
+      "record": 1369,
       "record struct": 120
     },
     "roles": {
@@ -32,8 +32,8 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1705,
-      "Query": 269,
+      "Other": 1708,
+      "Query": 270,
       "QueryHandler": 197,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
@@ -8663,6 +8663,13 @@
       "role": "Other",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
       "line": 2
+    },
+    {
+      "name": "DashboardCalendarRange",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardCalendarRange.cs",
+      "line": 4
     },
     {
       "name": "DashboardMealAiItemReadModel",
@@ -18700,7 +18707,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealDailyCalorieReadService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MealNutritionStatisticsReadService",
@@ -22119,6 +22126,13 @@
       "line": 2
     },
     {
+      "name": "BodyMetricDateRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/BodyMetricDateRangePolicy.cs",
+      "line": 4
+    },
+    {
       "name": "LocalStatisticsCalendar",
       "kind": "class",
       "role": "Other",
@@ -22235,7 +22249,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "StatisticsController",
@@ -22287,6 +22301,13 @@
       "line": 4
     },
     {
+      "name": "GetStatisticsSummaryHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Statistics/Presentation/Requests/GetStatisticsSummaryHttpQuery.cs",
+      "line": 4
+    },
+    {
       "name": "AggregatedStatisticsHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -22333,7 +22354,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "line": 19
+      "line": 21
     },
     {
       "name": "GetTdeeInsightQueryValidator",
@@ -27913,6 +27934,13 @@
       "role": "Response",
       "path": "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs",
       "line": 2
+    },
+    {
+      "name": "LocalCalendar",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Validation/LocalCalendar.cs",
+      "line": 4
     },
     {
       "name": "PaginationPolicy",

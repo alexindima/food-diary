@@ -35,6 +35,23 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task GetCurrentCycleQueryHandler_UsesExplicitLocalDateInsteadOfUtcToday() {
+        var user = User.Create("cycle-local-date@example.com", "hash");
+        var start = new DateOnly(2026, 1, 1);
+        var profile = CycleProfile.Create(user.Id, start);
+        foreach (int offset in (int[])[0, 28, 56, 84]) {
+            profile.ConfirmPeriodStart(start.AddDays(offset));
+        }
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 4, 25, 21, 0, 0, TimeSpan.Zero));
+        var handler = new GetCurrentCycleQueryHandler(new InMemoryCycleRepository(profile), CreateCurrentUserAccessService(user), clock);
+        CycleModel local = Assert.IsType<CycleModel>(ResultAssert.Success(await handler.Handle(new GetCurrentCycleQuery(user.Id.Value, new DateOnly(2026, 4, 26)), CancellationToken.None)));
+        CycleModel utc = Assert.IsType<CycleModel>(ResultAssert.Success(await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None)));
+        Assert.Equal(new DateOnly(2026, 4, 25), Assert.IsType<CyclePredictionsModel>(utc.Predictions).NextPeriodStartTo);
+        Assert.Equal(new DateOnly(2026, 5, 23), Assert.IsType<CyclePredictionsModel>(local.Predictions).NextPeriodStartTo);
+    }
+
+    [Fact]
     public async Task CreateCycleCommandValidator_WithInvalidLength_Fails() {
         var validator = new CreateCycleCommandValidator();
         var command = new CreateCycleCommand(

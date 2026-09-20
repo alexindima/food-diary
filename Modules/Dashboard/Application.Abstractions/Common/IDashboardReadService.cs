@@ -14,5 +14,6 @@ public interface IDashboardReadService {
         int page,
         int pageSize,
         DashboardReadSections sections,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        DashboardCalendarRange? calendar = null);
 }

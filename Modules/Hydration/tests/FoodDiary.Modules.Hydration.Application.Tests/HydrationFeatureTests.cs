@@ -638,7 +638,7 @@ public class HydrationFeatureTests {
 
         public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken = default, bool useExactBounds = false) =>
             throw new NotSupportedException();
 
     }
@@ -728,7 +728,7 @@ public class HydrationFeatureTests {
 
         public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken = default, bool useExactBounds = false) =>
             Task.FromResult<IReadOnlyList<(DateTime, int)>>([]);
 
     }

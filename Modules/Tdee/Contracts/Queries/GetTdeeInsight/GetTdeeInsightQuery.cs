@@ -5,4 +5,4 @@ using FoodDiary.Modules.Tdee.Contracts.Models;
 namespace FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 
 public record GetTdeeInsightQuery(
-    Guid? UserId) : IQuery<Result<TdeeInsightModel>>, IUserRequest;
+    Guid? UserId, DateOnly? CurrentDate = null, string? TimeZoneId = null, int? TimeZoneOffsetMinutes = null) : IQuery<Result<TdeeInsightModel>>, IUserRequest;

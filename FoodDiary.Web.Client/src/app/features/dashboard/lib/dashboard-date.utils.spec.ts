@@ -99,14 +99,14 @@ function registerDashboardDateTests(): void {
 
 function registerHydrationDateTests(): void {
     describe('getHydrationDateUtc', () => {
-        it('should return a UTC date at noon', () => {
+        it('should return a local date at noon', () => {
             const input = new Date(YEAR, JULY, DAY_5);
             const result = getHydrationDateUtc(input);
-            expect(result.getUTCHours()).toBe(NOON_HOUR);
-            expect(result.getUTCMinutes()).toBe(0);
-            expect(result.getUTCFullYear()).toBe(YEAR);
-            expect(result.getUTCMonth()).toBe(JULY);
-            expect(result.getUTCDate()).toBe(DAY_5);
+            expect(result.getHours()).toBe(NOON_HOUR);
+            expect(result.getMinutes()).toBe(0);
+            expect(result.getFullYear()).toBe(YEAR);
+            expect(result.getMonth()).toBe(JULY);
+            expect(result.getDate()).toBe(DAY_5);
         });
     });
 }

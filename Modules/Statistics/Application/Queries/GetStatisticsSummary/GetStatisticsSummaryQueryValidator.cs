@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Modules.Statistics.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
@@ -24,6 +25,11 @@ public sealed class GetStatisticsSummaryQueryValidator : AbstractValidator<GetSt
             .When(x => x.DateFrom <= x.DateTo)
             .WithErrorCode("Validation.Invalid")
             .WithMessage($"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");
+
+        RuleFor(x => x.BodyDateFrom)
+            .Must((query, _) => BodyMetricDateRangePolicy.IsValid(query.BodyDateFrom, query.BodyDateTo))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Provide both body dates in ascending order within the allowed period.");
 
         RuleFor(x => x.QuantizationDays)
             .InclusiveBetween(1, TemporalRangePolicy.MaxQuantizationDays);

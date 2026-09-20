@@ -8,5 +8,7 @@ public sealed record GetStatisticsSummaryQuery(
     Guid? UserId,
     DateTime DateFrom,
     DateTime DateTo,
-    int QuantizationDays
+    int QuantizationDays,
+    DateOnly? BodyDateFrom = null,
+    DateOnly? BodyDateTo = null
 ) : IQuery<Result<StatisticsSummaryModel>>, IUserRequest;

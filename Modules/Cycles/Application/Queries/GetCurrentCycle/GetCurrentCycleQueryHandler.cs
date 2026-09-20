@@ -19,7 +19,7 @@ public sealed class GetCurrentCycleQueryHandler(
     public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
-        var currentDate = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
+        DateOnly currentDate = query.CurrentDate ?? DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,

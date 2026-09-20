@@ -15,4 +15,5 @@ internal sealed record DashboardBuildContext(
     int TrendDays,
     DateTime TrendStart,
     DashboardSnapshotSections Sections,
-    DashboardUserContextModel CurrentUser);
+    DashboardUserContextModel CurrentUser,
+    FoodDiary.Modules.Dashboard.Application.Abstractions.Models.DashboardCalendarRange Calendar);

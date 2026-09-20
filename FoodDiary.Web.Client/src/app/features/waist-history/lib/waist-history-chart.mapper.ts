@@ -11,7 +11,7 @@ export type WaistHistoryChartPoint = {
 export function buildWaistHistoryChartPoints(
     points: WaistEntrySummaryPoint[],
     locale: string,
-    currentYear = new Date().getUTCFullYear(),
+    currentYear = new Date().getFullYear(),
 ): WaistHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
@@ -41,6 +41,7 @@ export function formatWaistHistoryNumericDate(value: string, language: string): 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
+        timeZone: 'UTC',
     }).format(date);
 }
 

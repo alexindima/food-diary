@@ -4488,7 +4488,7 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
-      "line": 127
+      "line": 134
     },
     {
       "category": "health",

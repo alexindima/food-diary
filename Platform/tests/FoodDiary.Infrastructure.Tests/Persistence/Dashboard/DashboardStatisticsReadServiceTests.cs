@@ -170,6 +170,23 @@ public sealed class DashboardStatisticsReadServiceTests {
         Assert.Equal(DateTimeKind.Utc, normalized.Kind);
     }
 
+    [Theory]
+    [InlineData("Asia/Tbilisi")]
+    [InlineData("America/Los_Angeles")]
+    [InlineData("Pacific/Kiritimati")]
+    public async Task CalendarRangeLimit_CountsLocalDatesInsteadOfTouchedUtcDates(string zoneId) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
+        var start = new DateTime(2024, 1, 1);
+        DateTime from = TimeZoneInfo.ConvertTimeToUtc(start, zone);
+        DateTime to = TimeZoneInfo.ConvertTimeToUtc(start.AddDays(366), zone).AddTicks(-1);
+        var service = new MealNutritionStatisticsReadService(context.Meals);
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await service.GetStatisticsAsync(
+            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), from, to, 1, CancellationToken.None, zone);
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal(366, result.Value.Count);
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

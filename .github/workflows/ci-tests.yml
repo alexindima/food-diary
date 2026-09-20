@@ -764,6 +764,27 @@ jobs:
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
+      - name: Verify measurement and dashboard time zones
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/timezone-tests.log"
+          set +e
+          npm run test:ci:measurement-timezones > "$log_file" 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            tail -n 160 "$log_file"
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Verify measurement and dashboard time zones"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+          grep -E 'calendar tests:|Test Files|Tests|Duration' "$log_file" || true
+
       - name: Run fd-tour unit tests
         shell: bash
         working-directory: FoodDiary.Web.Client

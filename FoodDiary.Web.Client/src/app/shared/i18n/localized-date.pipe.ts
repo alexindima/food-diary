@@ -17,13 +17,13 @@ export class LocalizedDatePipe implements PipeTransform {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(e => (this.locale = e.lang));
     }
 
-    public transform(value: Date | string | number | null | undefined, pattern = 'mediumDate'): string | undefined {
+    public transform(value: Date | string | number | null | undefined, pattern = 'mediumDate', timezone?: string): string | undefined {
         if (value === null || value === undefined) {
             return undefined;
         }
 
         try {
-            return formatDate(value, pattern, this.locale);
+            return formatDate(value, pattern, this.locale, timezone);
         } catch {
             return undefined;
         }

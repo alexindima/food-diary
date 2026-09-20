@@ -262,6 +262,7 @@ export class DashboardFacade {
         const query = {
             date: targetDate,
             timeZoneOffsetMinutes: -selectedDate.getTimezoneOffset(),
+            timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone,
             page: 1,
             pageSize: 10,
             locale,

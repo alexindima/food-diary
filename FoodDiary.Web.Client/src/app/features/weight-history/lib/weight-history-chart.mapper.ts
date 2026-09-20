@@ -11,7 +11,7 @@ export type WeightHistoryChartPoint = {
 export function buildWeightHistoryChartPoints(
     points: WeightEntrySummaryPoint[],
     locale: string,
-    currentYear = new Date().getUTCFullYear(),
+    currentYear = new Date().getFullYear(),
 ): WeightHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
     const firstDate = parseDateValue(ordered[0]?.startDate);
@@ -41,6 +41,7 @@ export function formatWeightHistoryNumericDate(value: string, language: string):
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
+        timeZone: 'UTC',
     }).format(date);
 }
 

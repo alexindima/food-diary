@@ -15,7 +15,8 @@ internal sealed class SenderStatisticsFixture(ISender sender) : IDashboardStatis
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null) {
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await sender.Send(
             new GetStatisticsQuery(userId.Value, dateFrom, dateTo, quantizationDays),
             cancellationToken).ConfigureAwait(false);

@@ -725,7 +725,7 @@ Reusable empty/no-data placeholder for pages, cards, and compact sections.
 
 - `title?: string | null`
 - `message: string`
-- `icon?: string`
+- `icon?: string | null` — pass `null` to hide the icon and its container.
 - `appearance?: 'default' | 'compact'`
 
 #### `fd-ui-section-state`

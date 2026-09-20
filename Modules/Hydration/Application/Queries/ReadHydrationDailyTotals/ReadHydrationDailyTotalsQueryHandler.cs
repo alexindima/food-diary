@@ -6,5 +6,5 @@ namespace FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTota
 
 public sealed class ReadHydrationDailyTotalsQueryHandler(IHydrationEntryReadModelRepository hydrationEntryReadModelRepository) : IQueryHandler<ReadHydrationDailyTotalsQuery, IReadOnlyList<(DateTime Date, int TotalMl)>> {
     public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> Handle(ReadHydrationDailyTotalsQuery request, CancellationToken cancellationToken) =>
-        hydrationEntryReadModelRepository.GetDailyTotalsAsync(request.UserId, request.DateFrom, request.DateTo, cancellationToken);
+        hydrationEntryReadModelRepository.GetDailyTotalsAsync(request.UserId, request.DateFrom, request.DateTo, cancellationToken, request.UseExactBounds);
 }

@@ -7616,6 +7616,13 @@
               "Maximum": 100
             },
             {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
               "Name": "TimeZoneOffsetMinutes",
               "Location": "query",
               "Required": false,
@@ -15601,6 +15608,20 @@
             }
           ],
           "QueryParameters": [
+            {
+              "Name": "BodyDateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "BodyDateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
             {
               "Name": "DateFrom",
               "Location": "query",

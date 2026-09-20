@@ -10,5 +10,6 @@ public interface IDashboardStatisticsReadService {
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null);
 }

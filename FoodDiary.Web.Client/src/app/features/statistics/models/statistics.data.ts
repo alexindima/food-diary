@@ -24,6 +24,11 @@ export type GetStatisticsDto = {
     quantizationDays?: number;
 };
 
+export type GetStatisticsSummaryDto = GetStatisticsDto & {
+    bodyDateFrom?: string;
+    bodyDateTo?: string;
+};
+
 export type StatisticsSummary = {
     nutrition: AggregatedStatistics[];
     weight: WeightEntrySummaryPoint[];

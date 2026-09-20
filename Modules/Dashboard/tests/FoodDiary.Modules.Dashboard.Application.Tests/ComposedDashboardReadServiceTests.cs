@@ -11,6 +11,23 @@ namespace FoodDiary.Modules.Dashboard.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ComposedDashboardReadServiceTests {
+    [Fact]
+    public async Task GetSnapshotDataAsync_WhenCalendarWeekUnderflows_ReturnsFailureBeforeReadingStatistics() {
+        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
+        ComposedDashboardReadService service = CreateService(statistics);
+        // UTC day seven is representable, but the local day six cannot start a seven-day window.
+        var dayStart = new DateTime(1, 1, 7, 0, 0, 0, DateTimeKind.Utc);
+        var calendar = new DashboardCalendarRange(dayStart.AddDays(-1), dayStart.AddDays(-1), dayStart.AddDays(-1), TimeZoneInfo.Utc);
+
+        Result<DashboardReadModel> result = await service.GetSnapshotDataAsync(
+            UserId.New(), dayStart, dayStart.AddDays(1).AddTicks(-1), dayStart,
+            1, 1, 10, Sections(includeStatistics: true), CancellationToken.None, calendar);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(statistics.ReceivedCalls());
+    }
+
     [Theory]
     [InlineData(1)]
     [InlineData(7)]

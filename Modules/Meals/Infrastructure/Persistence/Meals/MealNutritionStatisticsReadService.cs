@@ -16,7 +16,8 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -25,7 +26,10 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
                 Errors.Validation.Invalid(nameof(dateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        if (!TemporalRangePolicy.IsPeriodWithinLimit(dateFrom, dateTo)) {
+        bool periodWithinLimit = timeZone is null
+            ? TemporalRangePolicy.IsPeriodWithinLimit(dateFrom, dateTo)
+            : LocalCalendar.DateAt(NormalizeUtcInstant(dateTo), timeZone).DayNumber - LocalCalendar.DateAt(NormalizeUtcInstant(dateFrom), timeZone).DayNumber < TemporalRangePolicy.MaxPeriodDays;
+        if (!periodWithinLimit) {
             return Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid(
                     nameof(dateTo),
@@ -41,10 +45,9 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
 
         DateTime normalizedFrom = NormalizeUtcInstant(dateFrom);
         DateTime normalizedTo = NormalizeUtcInstant(dateTo);
-        IReadOnlyList<(DateTime Start, DateTime End)> buckets = TemporalRangePolicy.BuildInstantBuckets(
-            normalizedFrom,
-            normalizedTo,
-            quantizationDays);
+        IReadOnlyList<(DateTime Start, DateTime End)> buckets = timeZone is null
+            ? TemporalRangePolicy.BuildInstantBuckets(normalizedFrom, normalizedTo, quantizationDays)
+            : LocalCalendar.BuildBuckets(normalizedFrom, normalizedTo, quantizationDays, timeZone);
 
         List<MealNutritionProjection> meals = await records
             .AsNoTracking()
@@ -59,23 +62,26 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
                 meal.MealType))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        // Buckets are contiguous fixed-length instant ranges, except for the final partial range.
+        // Calendar buckets may be 23 or 25 hours; locate entries using the actual boundaries.
         // Preserve query order within each bucket so floating-point summation stays unchanged.
-        long bucketLengthTicks = TimeSpan.FromDays(quantizationDays).Ticks;
+        DateTime[] bucketStarts = [.. buckets.Select(bucket => bucket.Start)];
         List<MealNutritionProjection>[] mealsByBucket = [.. buckets.Select(_ => new List<MealNutritionProjection>())];
         foreach (MealNutritionProjection meal in meals) {
-            int bucketIndex = (int)((meal.Date.Ticks - normalizedFrom.Ticks) / bucketLengthTicks);
+            int bucketIndex = Array.BinarySearch(bucketStarts, meal.Date);
+            if (bucketIndex < 0) {
+                bucketIndex = ~bucketIndex - 1;
+            }
             mealsByBucket[bucketIndex].Add(meal);
         }
 
         return Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(
-            [.. buckets.Select((bucket, index) => BuildBucket(bucket.Start, bucket.End, mealsByBucket[index]))]);
+            [.. buckets.Select((bucket, index) => BuildBucket(bucket.Start, bucket.End, mealsByBucket[index], timeZone))]);
     }
 
     private static MealNutritionStatisticsBucket BuildBucket(
         DateTime bucketStart,
         DateTime bucketEnd,
-        IReadOnlyCollection<MealNutritionProjection> bucketMeals) {
+        IReadOnlyCollection<MealNutritionProjection> bucketMeals, TimeZoneInfo? timeZone) {
         if (bucketMeals.Count == 0) {
             return new MealNutritionStatisticsBucket(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
         }
@@ -85,7 +91,8 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
         double totalFats = bucketMeals.Sum(meal => meal.TotalFats);
         double totalCarbs = bucketMeals.Sum(meal => meal.TotalCarbs);
         double totalFiber = bucketMeals.Sum(meal => meal.TotalFiber);
-        int effectiveDays = GetBucketDayCount(bucketStart, bucketEnd);
+        int effectiveDays = timeZone is null ? GetBucketDayCount(bucketStart, bucketEnd)
+            : LocalCalendar.DateAt(bucketEnd, timeZone).DayNumber - LocalCalendar.DateAt(bucketStart, timeZone).DayNumber + 1;
 
         return new MealNutritionStatisticsBucket(
             bucketStart,
@@ -104,7 +111,7 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
             SumCalories(bucketMeals, MealType.Dinner),
             SumCalories(bucketMeals, MealType.Snack),
             bucketMeals.Count,
-            bucketMeals.Select(meal => meal.Date.Date).Distinct().Count());
+            bucketMeals.Select(meal => timeZone is null ? DateOnly.FromDateTime(meal.Date) : LocalCalendar.DateAt(meal.Date, timeZone)).Distinct().Count());
     }
 
     private static double SumCalories(IEnumerable<MealNutritionProjection> meals, MealType mealType) =>

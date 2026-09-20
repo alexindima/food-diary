@@ -493,15 +493,6 @@
     }
 }
 
-.waist-history-page__card--empty {
-    min-height: 0;
-
-    .waist-history-page__chart-viewport {
-        min-height: 0;
-        padding-block: var(--fd-space-xl);
-    }
-}
-
 .waist-history-page__goal-stat-icon {
     display: none;
 }
@@ -510,4 +501,17 @@
 }
 .waist-history-page__empty-chart p {
     margin: 0;
+}
+
+.waist-history-page__empty-chart fd-ui-empty-state {
+    --fd-space-empty-state-padding: 0;
+}
+
+.waist-history-page__card--empty {
+    min-height: 0;
+
+    .waist-history-page__chart-viewport {
+        min-height: 0;
+        padding-block: var(--fd-space-lg);
+    }
 }

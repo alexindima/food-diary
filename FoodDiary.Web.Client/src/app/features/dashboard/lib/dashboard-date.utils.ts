@@ -25,10 +25,11 @@ export function getDashboardDateUtc(date: Date): Date {
     return normalizeStartOfUtcDay(date);
 }
 
-export function getHydrationDateUtc(date: Date): Date {
-    return new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), HYDRATION_DAY_HOUR, START_OF_DAY_MINUTE, START_OF_DAY_SECOND),
-    );
+export function getHydrationDateUtc(date: Date, now: Date = new Date()): Date {
+    if (normalizeDate(date).getTime() === normalizeDate(now).getTime()) {
+        return new Date(now);
+    }
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), HYDRATION_DAY_HOUR, START_OF_DAY_MINUTE, START_OF_DAY_SECOND);
 }
 
 export function normalizeStartOfDayUtc(date: Date): Date {

@@ -38,13 +38,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 26
+- Public contract files: 27
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 26
+- Public contract types: 27
 - Interfaces: 4
 - DTO/read-model/projection types: 20
 - Enums: 0
@@ -56,6 +56,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IDashboardStatisticsReadService`
 - `record DailyCaloriesModel`
 - `record DashboardBodyReadModel`
+- `record DashboardCalendarRange`
 - `record DashboardMealAiItemReadModel`
 - `record DashboardMealAiSessionReadModel`
 - `record DashboardMealItemReadModel`
@@ -81,8 +82,10 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardTimeZoneIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ApplicationDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ComposedDashboardReadServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCompositionTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs`

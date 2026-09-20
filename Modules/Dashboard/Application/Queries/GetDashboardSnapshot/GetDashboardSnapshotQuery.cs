@@ -11,4 +11,5 @@ public record GetDashboardSnapshotQuery(
     int PageSize,
     string Locale,
     int TrendDays,
-    int? TimeZoneOffsetMinutes = null) : IQuery<Result<DashboardSnapshotModel>>, IUserRequest;
+    int? TimeZoneOffsetMinutes = null,
+    string? TimeZoneId = null) : IQuery<Result<DashboardSnapshotModel>>, IUserRequest;

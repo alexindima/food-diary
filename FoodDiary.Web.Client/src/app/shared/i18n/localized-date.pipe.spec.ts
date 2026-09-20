@@ -43,6 +43,11 @@ describe('LocalizedDatePipe', () => {
         expect(result?.length).toBeGreaterThan(0);
     });
 
+    it('formats stored calendar dates in UTC when requested', () => {
+        expect(pipe.transform('2026-01-01T00:00:00Z', 'yyyy-MM-dd', 'UTC')).toBe('2026-01-01');
+        expect(pipe.transform('2024-02-29T00:00:00Z', 'yyyy-MM-dd', 'UTC')).toBe('2024-02-29');
+    });
+
     it('should return undefined for null input', () => {
         const result = pipe.transform(null);
         expect(result).toBeUndefined();

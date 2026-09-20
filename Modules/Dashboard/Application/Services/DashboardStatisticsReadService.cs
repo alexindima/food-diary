@@ -9,8 +9,9 @@ namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed class DashboardStatisticsReadService(IMealNutritionStatisticsReadService meals) : IDashboardStatisticsReadService {
     public async Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
-        UserId userId, DateTime dateFrom, DateTime dateTo, int quantizationDays, CancellationToken cancellationToken = default) {
-        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await meals.GetStatisticsAsync(userId, dateFrom, dateTo, quantizationDays, cancellationToken).ConfigureAwait(false);
+        UserId userId, DateTime dateFrom, DateTime dateTo, int quantizationDays, CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null) {
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await meals.GetStatisticsAsync(userId, dateFrom, dateTo, quantizationDays, cancellationToken, timeZone).ConfigureAwait(false);
         return result.IsFailure
             ? Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(result.Error)
             : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([.. result.Value.Select(bucket => new DashboardStatisticsBucketReadModel(

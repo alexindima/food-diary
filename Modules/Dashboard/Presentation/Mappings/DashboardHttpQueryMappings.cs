@@ -15,7 +15,8 @@ public static class DashboardHttpQueryMappings {
                 query.PageSize,
                 query.Locale,
                 query.TrendDays,
-                query.TimeZoneOffsetMinutes);
+                query.TimeZoneOffsetMinutes,
+                query.TimeZoneId);
         }
     }
 

@@ -9,5 +9,6 @@ public interface IMealDailyCalorieReadService {
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null);
 }

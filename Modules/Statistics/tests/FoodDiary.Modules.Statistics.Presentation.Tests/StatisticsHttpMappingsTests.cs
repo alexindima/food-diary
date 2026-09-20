@@ -55,7 +55,7 @@ public sealed class StatisticsHttpMappingsTests {
         var userId = Guid.NewGuid();
         var from = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc);
-        var httpQuery = new GetStatisticsHttpQuery(from, to, 7);
+        var httpQuery = new GetStatisticsSummaryHttpQuery(from, to, 7, new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31));
 
         GetStatisticsSummaryQuery query = httpQuery.ToSummaryQuery(userId);
 
@@ -63,7 +63,9 @@ public sealed class StatisticsHttpMappingsTests {
             () => Assert.Equal(userId, query.UserId),
             () => Assert.Equal(from, query.DateFrom),
             () => Assert.Equal(to, query.DateTo),
-            () => Assert.Equal(7, query.QuantizationDays));
+            () => Assert.Equal(7, query.QuantizationDays),
+            () => Assert.Equal(new DateOnly(2026, 3, 1), query.BodyDateFrom),
+            () => Assert.Equal(new DateOnly(2026, 3, 31), query.BodyDateTo));
     }
 
     [Fact]

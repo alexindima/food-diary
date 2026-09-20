@@ -28,6 +28,25 @@ namespace FoodDiary.Modules.Tdee.Application.Tests;
 public class TdeeFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
+    [Theory]
+    [InlineData("unknown/zone", 2026, 9, 20)]
+    [InlineData("UTC", 1, 1, 1)]
+    [InlineData("UTC", 9999, 12, 31)]
+    public async Task GetTdeeInsight_WithInvalidCalendar_ReturnsValidationBeforeReadingNutrition(string zoneId, int year, int month, int day) {
+        var user = User.Create("invalid-calendar@example.com", "hash");
+        IMealDailyCalorieReadService nutrition = CreateStatisticsReadService();
+        GetTdeeInsightQueryHandler handler = CreateHandler(
+            profileService: CreateProfileService(user), statisticsReadService: nutrition,
+            currentUserAccessService: CreateCurrentUserAccessService(user));
+
+        Result<TdeeInsightModel> result = await handler.Handle(
+            new GetTdeeInsightQuery(user.Id.Value, new DateOnly(year, month, day), zoneId), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(nutrition.ReceivedCalls());
+    }
+
     [Fact]
     public async Task GetTdeeInsight_WithNullUserId_ReturnsFailure() {
         GetTdeeInsightQueryHandler handler = CreateHandler();
@@ -96,6 +115,31 @@ public class TdeeFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("Asia/Tbilisi", "2026-09-20")]
+    [InlineData("Europe/Berlin", "2026-03-29")]
+    [InlineData("Europe/Berlin", "2026-10-25")]
+    [InlineData("Pacific/Kiritimati", "2026-01-01")]
+    [InlineData("America/Los_Angeles", "2026-11-01")]
+    public async Task GetTdeeInsight_AlignsNutritionInstantsWithCalendarSamples(string zoneId, string dateText) {
+        var user = User.Create("local-tdee@example.com", "hash");
+        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
+        var date = day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        DateTime from = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(-28).ToDateTime(TimeOnly.MinValue), zone);
+        DateTime to = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(1).ToDateTime(TimeOnly.MinValue), zone).AddTicks(-1);
+        ISender sender = Substitute.For<ISender>();
+        sender.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel>>([]));
+        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.Exercises.Contracts.Models.ExerciseEntryModel>>([]));
+        IMealDailyCalorieReadService nutrition = CreateStatisticsReadService();
+        var handler = new GetTdeeInsightQueryHandler(CreateProfileService(user), sender, nutrition, new StubDateTimeProvider(), CreateCurrentUserAccessService(user));
+        using var cancellation = new CancellationTokenSource();
+        ResultAssert.Success(await handler.Handle(new GetTdeeInsightQuery(user.Id.Value, day, zoneId), cancellation.Token));
+        await sender.Received(1).Send(Arg.Is<ReadWeightEntriesQuery>(q => q.DateFrom == date.AddDays(-28) && q.DateTo == date), cancellation.Token);
+        await sender.Received(1).Send(Arg.Is<ReadExerciseEntriesQuery>(q => q.DateFrom == date.AddDays(-28) && q.DateTo == date), cancellation.Token);
+        await nutrition.Received(1).GetDailyCaloriesAsync(user.Id, from, to, cancellation.Token, Arg.Is<TimeZoneInfo>(z => string.Equals(z.Id, zoneId, StringComparison.Ordinal)));
     }
 
     private static GetTdeeInsightQueryHandler CreateHandler(
@@ -169,7 +213,7 @@ public class TdeeFeatureTests {
     private static IMealDailyCalorieReadService CreateStatisticsReadService() {
         IMealDailyCalorieReadService service = Substitute.For<IMealDailyCalorieReadService>();
         service
-            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>(), Arg.Any<TimeZoneInfo>())
             .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealDailyCalories>>([])));
         return service;
     }
@@ -177,7 +221,7 @@ public class TdeeFeatureTests {
     private static IMealDailyCalorieReadService CreateFailingStatisticsReadService(Error error) {
         IMealDailyCalorieReadService service = Substitute.For<IMealDailyCalorieReadService>();
         service
-            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>(), Arg.Any<TimeZoneInfo>())
             .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealDailyCalories>>(error)));
         return service;
     }

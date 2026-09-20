@@ -17,14 +17,15 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
         bool includeWeight,
         bool includeWaist,
         bool includeHydration,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default,
+        DashboardCalendarRange? calendar = null) {
         int normalizedTrendQuantizationDays = Math.Clamp(
             trendQuantizationDays <= 0 ? 1 : trendQuantizationDays,
             1,
             TemporalRangePolicy.MaxQuantizationDays);
-        DateTime normalizedDayStart = NormalizeUtcDate(dayStart);
-        DateTime normalizedDayEndStart = NormalizeUtcDate(dayEndStart);
-        DateTime normalizedTrendStart = NormalizeUtcDate(trendStart);
+        DateTime normalizedDayStart = calendar?.Date ?? NormalizeUtcDate(dayStart);
+        DateTime normalizedDayEndStart = calendar?.DateTo ?? NormalizeUtcDate(dayEndStart);
+        DateTime normalizedTrendStart = calendar?.TrendDateFrom ?? NormalizeUtcDate(trendStart);
 
         (IReadOnlyList<DashboardWeightPointReadModel> latestWeightEntries, IReadOnlyList<DashboardWeightPointReadModel> weightTrendEntries) =
             includeWeight

@@ -553,7 +553,7 @@ public sealed class DashboardSnapshotBuilderTests {
         IDashboardReadService readService = Substitute.For<IDashboardReadService>();
         readService.GetSnapshotDataAsync(
                 user.Id, Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(),
-                Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DashboardReadSections>(), Arg.Any<CancellationToken>())
+                Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DashboardReadSections>(), Arg.Any<CancellationToken>(), Arg.Any<DashboardCalendarRange>())
             .Returns(Result.Success(readModel));
         var builder = new DashboardSnapshotBuilder(new SectionRequestSender(Substitute.For<ISender>(), Substitute.For<ISender>(), Substitute.For<ISender>()),
             new AccessibleUserContextService(user),
@@ -992,7 +992,7 @@ public sealed class DashboardSnapshotBuilderTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken = default, bool useExactBounds = false) =>
             Task.FromResult(totals ?? []);
     }
 

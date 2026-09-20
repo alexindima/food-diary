@@ -12,4 +12,5 @@ public sealed record DashboardSnapshotRequest(
     int PageSize,
     DashboardSnapshotSections? Sections = null,
     int? TimeZoneOffsetMinutes = null,
-    DashboardUserContextModel? UserContext = null);
+    DashboardUserContextModel? UserContext = null,
+    string? TimeZoneId = null);

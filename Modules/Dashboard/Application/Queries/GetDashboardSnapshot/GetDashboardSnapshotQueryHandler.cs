@@ -39,7 +39,8 @@ public sealed class GetDashboardSnapshotQueryHandler(
                 query.Page,
                 query.PageSize,
                 TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes,
-                UserContext: userResult.Value),
+                UserContext: userResult.Value,
+                TimeZoneId: query.TimeZoneId),
             cancellationToken).ConfigureAwait(false);
     }
 }

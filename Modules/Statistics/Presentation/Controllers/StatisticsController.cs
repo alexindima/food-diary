@@ -26,7 +26,7 @@ public sealed class StatisticsController(ISender mediator) : AuthorizedControlle
     [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
     [ProducesResponseType<StatisticsSummaryHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) =>
+    public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsSummaryHttpQuery query) =>
         HandleOk(query.ToSummaryQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("diary-summary")]

@@ -9,4 +9,5 @@ public sealed record GetDashboardSnapshotHttpQuery(
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int PageSize = 10,
     [Required, MaxLength(PresentationQueryLimits.MaximumLocaleLength)] string Locale = "en",
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumDashboardTrendDays)] int TrendDays = 7,
-    [OpenApiNumericRange(PresentationQueryLimits.MinimumTimeZoneOffsetMinutes, PresentationQueryLimits.MaximumTimeZoneOffsetMinutes)] int? TimeZoneOffsetMinutes = null);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumTimeZoneOffsetMinutes, PresentationQueryLimits.MaximumTimeZoneOffsetMinutes)] int? TimeZoneOffsetMinutes = null,
+    [MaxLength(100)] string? TimeZoneId = null);

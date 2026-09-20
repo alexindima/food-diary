@@ -13,5 +13,6 @@ public interface IDashboardBodyReadService {
         bool includeWeight,
         bool includeWaist,
         bool includeHydration,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        DashboardCalendarRange? calendar = null);
 }

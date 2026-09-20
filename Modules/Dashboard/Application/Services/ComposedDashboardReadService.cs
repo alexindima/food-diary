@@ -21,11 +21,21 @@ internal sealed class ComposedDashboardReadService(
         int page,
         int pageSize,
         DashboardReadSections sections,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default,
+        DashboardCalendarRange? calendar = null) {
         DateTime weeklyFrom = dayStart;
         if (periodDays == 1 && !TemporalRangePolicy.TryAddDays(dayStart, -6, out weeklyFrom)) {
             return Result.Failure<DashboardReadModel>(
                 Errors.Validation.Invalid(nameof(dayStart), "Dashboard weekly range is outside the supported date range."));
+        }
+
+        if (periodDays == 1 && calendar is not null) {
+            try {
+                weeklyFrom = FoodDiary.Application.Abstractions.Common.Validation.LocalCalendar.StartOfDayUtc(
+                    DateOnly.FromDateTime(calendar.Date).AddDays(-6), calendar.TimeZone);
+            } catch (ArgumentOutOfRangeException) {
+                return Result.Failure<DashboardReadModel>(Errors.Validation.Invalid(nameof(dayStart), "Weekly range is outside supported boundaries."));
+            }
         }
 
         var statistics =
@@ -35,7 +45,7 @@ internal sealed class ComposedDashboardReadService(
         if (sections.IncludeStatistics) {
             if (periodDays == 1) {
                 weeklyStatistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken)
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone)
                     .ConfigureAwait(false);
                 if (weeklyStatistics.IsSuccess) {
                     statistics = Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
@@ -44,14 +54,14 @@ internal sealed class ComposedDashboardReadService(
                 }
             } else {
                 statistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken)
+                    .GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken, calendar?.TimeZone)
                     .ConfigureAwait(false);
                 if (statistics.IsFailure) {
                     return Result.Failure<DashboardReadModel>(statistics.Error);
                 }
 
                 weeklyStatistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken)
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone)
                     .ConfigureAwait(false);
             }
         }
@@ -76,7 +86,7 @@ internal sealed class ComposedDashboardReadService(
             sections.IncludeWeight,
             sections.IncludeWaist,
             sections.IncludeHydration,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, calendar).ConfigureAwait(false);
 
         return Result.Success(new DashboardReadModel(statistics.Value, weeklyStatistics.Value, body, meals.Value));
     }

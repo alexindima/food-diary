@@ -85,6 +85,7 @@ describe('DashboardService snapshot', () => {
             .getSnapshot({
                 date: TEST_DATE,
                 timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES,
+                timeZoneId: 'Asia/Tbilisi',
                 page: 2,
                 pageSize: 20,
                 locale: 'en',
@@ -99,6 +100,7 @@ describe('DashboardService snapshot', () => {
                 r.url === `${BASE_URL}/` &&
                 r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
+                r.params.get('timeZoneId') === 'Asia/Tbilisi' &&
                 r.params.get('page') === '2' &&
                 r.params.get('pageSize') === '20' &&
                 r.params.get('locale') === 'en' &&

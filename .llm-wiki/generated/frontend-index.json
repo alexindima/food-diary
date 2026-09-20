@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1687,
+    "typescriptFiles": 1690,
     "symbols": 663,
     "routes": 100,
     "features": 44,
-    "specs": 590,
+    "specs": 592,
     "localeFiles": 5,
     "roles": {
       "Component": 449,
@@ -526,6 +526,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-calendar-timezone.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-date.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.spec.ts",
@@ -1240,6 +1241,7 @@
         "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/statistics/lib/measurement-calendar-timezone.spec.ts",
         "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-dashboard-card.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-data-mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-export.mapper.spec.ts",
@@ -3187,7 +3189,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "CycleSummaryCardComponent",
@@ -5175,7 +5177,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics.facade.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "StatisticsComponent",
@@ -5315,7 +5317,7 @@
       "role": "Component",
       "selector": "fd-waist-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "line": 58
+      "line": 59
     },
     {
       "name": "WearableService",
@@ -5490,7 +5492,7 @@
       "role": "Component",
       "selector": "fd-weight-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "AuthInterceptor",

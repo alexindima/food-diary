@@ -79,15 +79,19 @@ describe('StatisticsService', () => {
         const dateTo = new Date('2026-05-07T23:59:59.999Z');
         const response = { nutrition: RESPONSE, weight: [], waist: [] };
 
-        service.getSummary({ dateFrom, dateTo, quantizationDays: QUANTIZATION_DAYS }).subscribe(result => {
-            expect(result).toEqual(response);
-        });
+        service
+            .getSummary({ dateFrom, dateTo, quantizationDays: QUANTIZATION_DAYS, bodyDateFrom: '2026-05-01', bodyDateTo: '2026-05-07' })
+            .subscribe(result => {
+                expect(result).toEqual(response);
+            });
 
         const req = httpMock.expectOne(request => request.url === SUMMARY_URL);
         expect(req.request.method).toBe('GET');
         expect(req.request.params.get('dateFrom')).toBe(dateFrom.toISOString());
         expect(req.request.params.get('dateTo')).toBe(dateTo.toISOString());
         expect(req.request.params.get('quantizationDays')).toBe(String(QUANTIZATION_DAYS));
+        expect(req.request.params.get('bodyDateFrom')).toBe('2026-05-01');
+        expect(req.request.params.get('bodyDateTo')).toBe('2026-05-07');
         req.flush(response);
     });
 });

@@ -24,22 +24,22 @@
         } @else if (!isLoading()) {
             <div class="weight-history-page__empty-chart fd-stack fd-gap-card-header">
                 <fd-ui-empty-state
-                    appearance="compact"
-                    icon="monitor_weight"
+                    [icon]="null"
                     [title]="(latestValue() === null ? 'WEIGHT_HISTORY.EMPTY_TITLE' : 'WEIGHT_HISTORY.EMPTY_PERIOD_TITLE') | translate"
-                    [message]="
-                        (latestValue() === null ? 'WEIGHT_HISTORY.EMPTY_DESCRIPTION' : 'WEIGHT_HISTORY.NO_DATA_FOR_CHART') | translate
-                    "
+                    [message]="latestValue() === null ? ('WEIGHT_HISTORY.EMPTY_DESCRIPTION' | translate) : ''"
                 />
                 @if (latestValue() !== null) {
                     <p class="fd-ui-body-sm">
-                        {{ 'WEIGHT_HISTORY.LAST_MEASUREMENT' | translate }}:
-                        {{ latestValue() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
-                        {{ 'weight' | measurementUnit | translate }} · {{ latestDate() | localizedDate: 'd MMMM y' }}
+                        {{ 'WEIGHT_HISTORY.LAST_MEASUREMENT' | translate }} —
+                        <strong
+                            >{{ latestValue() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
+                            {{ 'weight' | measurementUnit | translate }}</strong
+                        >
+                        · {{ latestDate() | localizedDate: 'd MMMM y' : 'UTC' }}
                     </p>
-                    <fd-ui-button variant="secondary" fill="outline" (click)="showLatest.emit()">{{
-                        'WEIGHT_HISTORY.SHOW_LATEST' | translate
-                    }}</fd-ui-button>
+                    <fd-ui-button variant="primary" fill="text" (click)="showLatest.emit()"
+                        >{{ 'WEIGHT_HISTORY.SHOW_LATEST' | translate }} <span aria-hidden="true">→</span></fd-ui-button
+                    >
                 } @else {
                     <fd-ui-button icon="add" (click)="addEntry.emit()">{{ 'WEIGHT_HISTORY.QUICK_ADD' | translate }}</fd-ui-button>
                 }

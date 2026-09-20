@@ -38,6 +38,7 @@
         "prettier:fix": "prettier --write '**/*.{js,ts,css,scss,html,json,md}'",
         "test": "ng test",
         "test:ci": "ng test --watch=false",
+        "test:ci:measurement-timezones": "node scripts/test-measurement-timezones.mjs",
         "test:ci:app": "ng test food-diary-web-client --watch=false",
         "test:ci:ui-kit": "ng test fd-ui-kit --watch=false",
         "test:ci:tour": "ng test fd-tour --watch=false",

@@ -24,20 +24,22 @@
         } @else if (!isLoading()) {
             <div class="waist-history-page__empty-chart fd-stack fd-gap-card-header">
                 <fd-ui-empty-state
-                    appearance="compact"
-                    icon="straighten"
+                    [icon]="null"
                     [title]="(latestValue() === null ? 'WAIST_HISTORY.EMPTY_TITLE' : 'WAIST_HISTORY.EMPTY_PERIOD_TITLE') | translate"
-                    [message]="(latestValue() === null ? 'WAIST_HISTORY.EMPTY_DESCRIPTION' : 'WAIST_HISTORY.NO_DATA_FOR_CHART') | translate"
+                    [message]="latestValue() === null ? ('WAIST_HISTORY.EMPTY_DESCRIPTION' | translate) : ''"
                 />
                 @if (latestValue() !== null) {
                     <p class="fd-ui-body-sm">
-                        {{ 'WAIST_HISTORY.LAST_MEASUREMENT' | translate }}:
-                        {{ latestValue() | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
-                        {{ 'length' | measurementUnit | translate }} · {{ latestDate() | localizedDate: 'd MMMM y' }}
+                        {{ 'WAIST_HISTORY.LAST_MEASUREMENT' | translate }} —
+                        <strong
+                            >{{ latestValue() | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
+                            {{ 'length' | measurementUnit | translate }}</strong
+                        >
+                        · {{ latestDate() | localizedDate: 'd MMMM y' : 'UTC' }}
                     </p>
-                    <fd-ui-button variant="secondary" fill="outline" (click)="showLatest.emit()">{{
-                        'WAIST_HISTORY.SHOW_LATEST' | translate
-                    }}</fd-ui-button>
+                    <fd-ui-button variant="primary" fill="text" (click)="showLatest.emit()"
+                        >{{ 'WAIST_HISTORY.SHOW_LATEST' | translate }} <span aria-hidden="true">→</span></fd-ui-button
+                    >
                 } @else {
                     <fd-ui-button icon="add" (click)="addEntry.emit()">{{ 'WAIST_HISTORY.QUICK_ADD' | translate }}</fd-ui-button>
                 }

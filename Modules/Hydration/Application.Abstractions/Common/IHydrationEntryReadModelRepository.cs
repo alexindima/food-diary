@@ -18,5 +18,5 @@ public interface IHydrationEntryReadModelRepository {
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, bool useExactBounds = false);
 }

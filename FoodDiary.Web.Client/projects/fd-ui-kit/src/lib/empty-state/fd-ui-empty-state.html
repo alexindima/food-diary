@@ -1,6 +1,8 @@
-<div class="fd-ui-empty-state__icon-wrap">
-    <fd-ui-icon class="fd-ui-empty-state__icon" [name]="icon()" />
-</div>
+@if (icon(); as iconName) {
+    <div class="fd-ui-empty-state__icon-wrap">
+        <fd-ui-icon class="fd-ui-empty-state__icon" [name]="iconName" />
+    </div>
+}
 
 <div class="fd-ui-empty-state__content">
     @if (title()) {

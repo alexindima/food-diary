@@ -208,13 +208,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "e448187278cd2b953b7dbca40b1cd1ca43b437f7ea9b16a68749fabc76ab47b6"
+          "sha256": "294ebcf00a30df278cd34f0b1ae30215d84b577d2ca9c3767744a5806f03e062"
         }
       ],
-      "reason": "Added responseFormatJson to scenario response DTO and snapshot; normal full Swagger snapshot test passes. Existing endpoints and inputs unchanged, backend-before-admin rollout retained.",
+      "reason": "Reviewed the exact OpenAPI diff: optional dashboard TimeZoneId and paired optional statistics BodyDateFrom/BodyDateTo only; existing responses remain unchanged. Twenty HTTP/PostgreSQL scenarios and the snapshot comparison passed; legacy requests retain offset or UTC behavior.",
       "baseRef": "HEAD",
-      "gitHead": "48f38273190d800dbb84115e1721fc4cabdfea7e",
-      "reviewedAtUtc": "2026-09-18T08:59:00.0736333Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:13:01.6868969Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -237,14 +237,14 @@
       "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "52eb396c9bccc5e5ed632e44d2b93cb3409ad62f0e263696051148d8f069f529"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:13.9775954Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T09:31:10.9326907Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -565,13 +565,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "93be9d4601890dee1b725b7bf7ab624084e12a81e742dd15dc4bec5ab595dee5"
+          "sha256": "6fe24bef82590fbe7846611eaad9e2ce7bbdeb14001dba07555301f6eb691000"
         }
       ],
-      "reason": "package.json coverage scripts now include tour and scoped coverage configurations; browser smoke commands and visual evidence requirements remain unchanged.",
+      "reason": "package.json adds only test:ci:measurement-timezones, a separate-process regression matrix; existing development and visual QA commands are unchanged, so this workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:27:24.6592163Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T07:00:52.8253854Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -636,29 +636,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "22380cac551cb4da5362df323be19a5b5712722d7edbf418e006110b8d4768a3",
+      "pageSha256": "c6fd8e17f197e4ecc035bdded8000a48549c175f4b0f3022fdd0de74c0879df7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "a3007a2fe1103d588ee78ca98366fe7adb4b7332b788e1a0ba738b284dc30163"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "fd8bffb3ed9bd25758f39c0ab16a2e21381bffe8ca5ee686a6875fa634fb61a9"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "f438ce67ee2156aeefefd071fd9af89de9ae76f96f7d61a1b15d76797aea2e00"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1889803057f0729d1e62138ee41616badaf40e52a13d53e5901b5375326ba9d8"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "7a10391c24e59fcdbdb4ae5057301ceff917ee734f2f5326feb72b5617954b42"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "The CI diff adds only the nine-zone frontend regression step after app unit tests. Wiki job topology, index ordering, cache freshness and full audit gates are unchanged; the documented pipeline remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:15.2443647Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:13:03.4306634Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -790,14 +778,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "c107c65f42e1028e0133d9fc585a99cac328bacf96323116b09be4b036e74e5e"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Sensitive-data index changes only the source line of the existing meal TotalCalories projection. Timezone is request context, with no new persisted health fields or external transfers; user-scoped reads and cache isolation remain in place.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:15.4896603Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:14:16.2377297Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -836,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "35d5fa4f720d1803a2b1a969f84e76f1588d4527a4c1738276d4218c690a561b"
+          "sha256": "70039cc7e8a56b433bce06555b3a137155a9730c0855d02d5898de9578634aa1"
         }
       ],
-      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
+      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
       "baseRef": "HEAD",
-      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
-      "reviewedAtUtc": "2026-09-20T05:29:43.7717721Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T09:31:13.5102981Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -881,13 +869,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "9a2c67a4360a7b5aa3050b17914bf786a375797dfeda0337935109de2e311916"
+          "sha256": "7a10391c24e59fcdbdb4ae5057301ceff917ee734f2f5326feb72b5617954b42"
         }
       ],
-      "reason": "Coverage upload now uses the existing repository-pinned action SHA; review-report workflow remains unchanged.",
+      "reason": "Reviewed CI timezone regression logging: it uses the existing frontend failure metadata and log convention. Wiki report generation, publication and governance inputs are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cfa823b05c540fc817a8a1463715986a6689230b",
-      "reviewedAtUtc": "2026-09-19T04:17:02.8727354Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:13:05.2395541Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -911,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2907d1e9de95f2e3a5ccfe707a95166fe0c11ef7448a38c3505c4c72e88f190e"
+          "sha256": "d90aba6c48b51387c153c4f287bc3414b89ebf8b1a7c2e146660ab80343d2621"
         }
       ],
-      "reason": "Reviewed regenerated Wiki-tool inventory and helper complexity, plus language-neutral script ranking. Static test-reference gaps remain explicit navigation evidence; runtime boundaries, privacy classification and security verdict limitations are unchanged.",
+      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
       "baseRef": "HEAD",
-      "gitHead": "1859960b743cce99adf5f5589755bd872373bd0c",
-      "reviewedAtUtc": "2026-09-19T11:35:45.2301584Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T09:31:15.6284733Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -926,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "35d5fa4f720d1803a2b1a969f84e76f1588d4527a4c1738276d4218c690a561b"
+          "sha256": "70039cc7e8a56b433bce06555b3a137155a9730c0855d02d5898de9578634aa1"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d90aba6c48b51387c153c4f287bc3414b89ebf8b1a7c2e146660ab80343d2621"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "c107c65f42e1028e0133d9fc585a99cac328bacf96323116b09be4b036e74e5e"
         }
       ],
-      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
+      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
       "baseRef": "HEAD",
-      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
-      "reviewedAtUtc": "2026-09-20T05:29:44.7105689Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T09:31:17.6540875Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "97945c7a9b612991db7494c12db77ef46d40ab0f3737b65baa636fa04df6fabd"
+          "sha256": "975fdf704dc2411db9b5a150a1012a7eb6f01f225078c7dc3c043868f9b763d0"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f574efbc904fd40c3c6f181ef6f6070c4e42c751cae0f92cac9f089f8d24c5b7"
+          "sha256": "d43811e1d3bc772fcdd3a2303ae0f5eb16e65072e2a77e2b919049695b40fb96"
         }
       ],
-      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
+      "reason": "Frontend indexes reflect dashboard calendar helper and API query changes plus existing measurement and empty-state work. Facade to service to HTTP flow verified in source and tests; trace discovery and projection semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
-      "reviewedAtUtc": "2026-09-20T05:29:45.5004032Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:14:22.5567088Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1167,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "97945c7a9b612991db7494c12db77ef46d40ab0f3737b65baa636fa04df6fabd"
+          "sha256": "975fdf704dc2411db9b5a150a1012a7eb6f01f225078c7dc3c043868f9b763d0"
         }
       ],
-      "reason": "Reviewed the frontend contract, quality risk, security review and feature trace workflows against current line-chart consumers and refreshed indexes. Changes add optional chart inputs and local measurement history outputs, preserve axis-free dashboard targets, and only change existing health data presentation. HTTP, persistence, authorization and provider boundaries are unchanged; the navigation workflows remain accurate.",
+      "reason": "Reviewed dashboard service and facade timezone serialization plus calendar helpers; frontend build, dashboard unit tests and nine-zone matrix pass. Existing empty-state input and measurement-date changes remain compatible. No contract discovery mechanism changed.",
       "baseRef": "HEAD",
-      "gitHead": "c6e446ca94f60ba593bd6877499173e88b15d11c",
-      "reviewedAtUtc": "2026-09-20T05:29:42.7547080Z"
+      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
+      "reviewedAtUtc": "2026-09-20T08:14:14.6326589Z"
     },
     {
       "pageId": "workflow.query-context",

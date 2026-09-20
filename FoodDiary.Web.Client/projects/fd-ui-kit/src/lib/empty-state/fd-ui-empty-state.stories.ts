@@ -37,3 +37,11 @@ export const Compact: Story = {
         appearance: 'compact',
     },
 };
+
+export const WithoutIcon: Story = {
+    args: {
+        title: 'No measurements in this period',
+        message: 'Choose another period to see your measurements.',
+        icon: null,
+    },
+};

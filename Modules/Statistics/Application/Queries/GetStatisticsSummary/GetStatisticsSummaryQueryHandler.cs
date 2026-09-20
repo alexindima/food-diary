@@ -50,11 +50,18 @@ public sealed class GetStatisticsSummaryQueryHandler(
                     $"Value must be between 1 and {TemporalRangePolicy.MaxQuantizationDays}."));
         }
 
+        if (!BodyMetricDateRangePolicy.IsValid(request.BodyDateFrom, request.BodyDateTo)) {
+            return Result.Failure<StatisticsSummaryModel>(Errors.Validation.Invalid(
+                nameof(request.BodyDateFrom), "Provide both body dates in ascending order within the allowed period."));
+        }
+
         UserId userId = userIdResult.Value;
         DateTime statisticsFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
         DateTime statisticsTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
-        DateTime bodyFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateFrom);
-        DateTime bodyTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo);
+        DateTime bodyFrom = request.BodyDateFrom?.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
+            ?? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateFrom);
+        DateTime bodyTo = request.BodyDateTo?.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
+            ?? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo);
 
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> statisticsResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,

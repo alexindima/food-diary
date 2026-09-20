@@ -7,7 +7,7 @@
     "outputs": 474,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1825,
+    "translationKeys": 1827,
     "consumerEdges": 1110,
     "consumedComponents": 294,
     "unconsumedComponents": 159
@@ -4903,7 +4903,7 @@
         },
         {
           "name": "icon",
-          "type": "string",
+          "type": "string | null",
           "required": false
         },
         {
@@ -14917,7 +14917,7 @@
       "responseType": "DashboardSnapshot",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
-      "line": 51,
+      "line": 52,
       "publicMethod": "requestSnapshot",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.dashboard",
@@ -20945,6 +20945,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
       "keys": [
         "WAIST_HISTORY.CHART_TITLE",
+        "WAIST_HISTORY.EMPTY_DESCRIPTION",
         "WAIST_HISTORY.LAST_MEASUREMENT",
         "WAIST_HISTORY.LOADING",
         "WAIST_HISTORY.QUICK_ADD",
@@ -21187,6 +21188,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
       "keys": [
         "WEIGHT_HISTORY.CHART_TITLE",
+        "WEIGHT_HISTORY.EMPTY_DESCRIPTION",
         "WEIGHT_HISTORY.LAST_MEASUREMENT",
         "WEIGHT_HISTORY.LOADING",
         "WEIGHT_HISTORY.QUICK_ADD",
@@ -29377,7 +29379,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
       "occurrences": 1,
       "inputsUsed": [
-        "appearance",
         "icon",
         "message",
         "title"
@@ -29392,7 +29393,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
       "occurrences": 1,
       "inputsUsed": [
-        "appearance",
         "icon",
         "message",
         "title"

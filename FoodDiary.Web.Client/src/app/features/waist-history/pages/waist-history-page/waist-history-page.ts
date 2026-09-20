@@ -10,6 +10,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { measurementMonthRange } from '../../../../shared/lib/measurement-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -178,16 +179,11 @@ export class WaistHistoryPageComponent {
         if (value === null) {
             return;
         }
-        const date = new Date(value);
-        if (!Number.isFinite(date.getTime())) {
+        const range = measurementMonthRange(value);
+        if (range === null) {
             return;
         }
-        this.facade.customRangeModel.set({
-            range: {
-                start: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1)),
-                end: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)),
-            },
-        });
+        this.facade.customRangeModel.set({ range });
         this.facade.changeRange('custom');
     }
 

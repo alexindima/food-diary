@@ -491,15 +491,6 @@
     }
 }
 
-.weight-history-page__card--empty {
-    min-height: 0;
-
-    .weight-history-page__chart-viewport {
-        min-height: 0;
-        padding-block: var(--fd-space-xl);
-    }
-}
-
 .weight-history-page__goal-stat-icon {
     display: none;
 }
@@ -508,4 +499,17 @@
 }
 .weight-history-page__empty-chart p {
     margin: 0;
+}
+
+.weight-history-page__empty-chart fd-ui-empty-state {
+    --fd-space-empty-state-padding: 0;
+}
+
+.weight-history-page__card--empty {
+    min-height: 0;
+
+    .weight-history-page__chart-viewport {
+        min-height: 0;
+        padding-block: var(--fd-space-lg);
+    }
 }

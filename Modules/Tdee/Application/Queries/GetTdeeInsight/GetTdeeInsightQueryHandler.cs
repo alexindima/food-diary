@@ -1,4 +1,6 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Tdee.Application.Common;
@@ -45,16 +47,30 @@ public sealed class GetTdeeInsightQueryHandler(
 
         TdeeUserProfile profile = profileResult.Value;
 
-        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
-        DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
+        if (!LocalCalendar.TryResolve(query.TimeZoneId, query.TimeZoneOffsetMinutes, out TimeZoneInfo zone)) {
+            return Result.Failure<TdeeInsightModel>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Unknown time zone."));
+        }
+        DateOnly calendarDate = query.CurrentDate ?? LocalCalendar.DateAt(dateTimeProvider.GetUtcNow().UtcDateTime, zone);
+        DateTime today;
+        DateTime periodStart;
+        DateTime nutritionStart;
+        DateTime nutritionEnd;
+        try {
+            today = calendarDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+            periodStart = today.AddDays(-AnalysisPeriodDays);
+            nutritionStart = LocalCalendar.StartOfDayUtc(calendarDate.AddDays(-AnalysisPeriodDays), zone);
+            nutritionEnd = LocalCalendar.StartOfDayUtc(calendarDate.AddDays(1), zone).AddTicks(-1);
+        } catch (ArgumentOutOfRangeException) {
+            return Result.Failure<TdeeInsightModel>(Errors.Validation.Invalid(nameof(query.CurrentDate), "Date range is outside supported boundaries."));
+        }
 
         IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: periodStart, DateTo: today, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
         Result<IReadOnlyList<MealDailyCalories>> dailyCaloriesResult = await statisticsReadService.GetDailyCaloriesAsync(
             userId,
-            periodStart,
-            today,
-            cancellationToken).ConfigureAwait(false);
+            nutritionStart,
+            nutritionEnd,
+            cancellationToken, zone).ConfigureAwait(false);
         if (dailyCaloriesResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(dailyCaloriesResult.Error);
         }

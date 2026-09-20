@@ -1,7 +1,9 @@
 import type { FdUiLineChartPoint } from 'fd-ui-kit';
 
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { normalizeEndOfLocalDay, normalizeStartOfLocalDay } from '../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../shared/lib/time.constants';
+import type { GetStatisticsSummaryDto } from '../models/statistics.data';
 
 export type StatisticsRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 export type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -192,4 +194,17 @@ function interpolateMissingBodyValues(data: Array<number | null>): Array<number 
     }
 
     return result;
+}
+
+/** Keep body calendar bounds separate from the UTC instants used for meals. */
+export function buildStatisticsSummaryRequest(range: DateRange): GetStatisticsSummaryDto {
+    const dateFrom = normalizeStartOfDay(range.start);
+    const dateTo = normalizeEndOfDay(range.end);
+    return {
+        dateFrom,
+        dateTo,
+        bodyDateFrom: formatDateInputValue(range.start),
+        bodyDateTo: formatDateInputValue(range.end),
+        quantizationDays: getQuantizationDays(dateFrom, dateTo),
+    };
 }
