@@ -5254,7 +5254,7 @@
       "role": "Component",
       "selector": "fd-waist-history-entries-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.ts",
-      "line": 24
+      "line": 33
     },
     {
       "name": "WaistHistoryFormCardComponent",
@@ -5436,7 +5436,7 @@
       "role": "Component",
       "selector": "fd-weight-history-entries-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.ts",
-      "line": 25
+      "line": 34
     },
     {
       "name": "WeightHistoryFormCardComponent",
@@ -6541,8 +6541,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3579,
-      "russianProperties": 3579,
+      "englishProperties": 3581,
+      "russianProperties": 3581,
       "countsMatch": true
     },
     {

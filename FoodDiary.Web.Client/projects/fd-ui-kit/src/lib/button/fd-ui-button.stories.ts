@@ -201,3 +201,10 @@ export const AllFills: Story = {
         `,
     }),
 };
+
+export const MutedRowActions: Story = {
+    render: () => ({
+        template: `<fd-ui-button appearance="muted-icon" variant="secondary" fill="text" icon="edit" ariaLabel="Edit measurement" />
+            <fd-ui-button appearance="muted-icon" variant="danger" fill="text" icon="delete" ariaLabel="Delete measurement" />`,
+    }),
+};

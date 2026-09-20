@@ -7,7 +7,7 @@
     "outputs": 474,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1827,
+    "translationKeys": 1829,
     "consumerEdges": 1110,
     "consumedComponents": 294,
     "unconsumedComponents": 159
@@ -20956,6 +20956,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.html",
       "keys": [
+        "WAIST_HISTORY.CHANGE_HINT",
         "WAIST_HISTORY.DELETE",
         "WAIST_HISTORY.EDIT",
         "WAIST_HISTORY.LOADING",
@@ -21199,6 +21200,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.html",
       "keys": [
+        "WEIGHT_HISTORY.CHANGE_HINT",
         "WEIGHT_HISTORY.DELETE",
         "WEIGHT_HISTORY.EDIT",
         "WEIGHT_HISTORY.LOADING",

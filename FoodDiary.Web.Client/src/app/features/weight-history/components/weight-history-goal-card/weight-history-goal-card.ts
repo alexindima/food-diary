@@ -52,7 +52,7 @@ export class WeightHistoryGoalCardComponent {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-        }),
+        })?.replace(/\s*г\.$/u, ''),
     );
     protected readonly lastGoalSummary = computed(() => {
         const goal = this.lastCompletedGoal();
@@ -80,13 +80,13 @@ export class WeightHistoryGoalCardComponent {
         const completedDistance = (current - oldest) * goalDirection;
         const percent =
             totalDistance === 0 ? PERCENT_MAX : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
-        const lost = completedDistance;
+        const change = current - oldest;
         const remaining = getWeightRemainingToGoal(oldest, current, goal);
         const daysElapsed = this.daysBetweenEntries();
         const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
 
-        return { percent, lost, remaining, weeklyRate, daysToGoal, startWeightKg: oldest, currentWeight: current };
+        return { percent, change, remaining, weeklyRate, daysToGoal, startWeightKg: oldest, currentWeight: current };
     });
 
     private daysBetweenEntries(): number {

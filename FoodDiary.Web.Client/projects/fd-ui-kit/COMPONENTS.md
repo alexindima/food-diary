@@ -813,3 +813,5 @@ If the component should be available via `FdUiKitModule`, add it to:
 - `FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/fd-ui-kit.module.ts`
 
 Standard card surfaces use the shared `--fd-bg-card-surface` token: a subtle theme-aware neutral highlight over `--fd-bg-surface`. Explicit editor and gradient tones retain their dedicated backgrounds.
+
+`fd-ui-button` supports `appearance="muted-icon"` for quiet row actions. It uses muted text at rest, normal text on hover/keyboard focus, and danger color for destructive actions on hover/keyboard focus. Supply `ariaLabel` for icon-only buttons.

@@ -223,7 +223,8 @@
     --fd-button-font-weight: var(--fd-text-action-weight);
 }
 
-.fd-ui-button--appearance-plain-icon {
+.fd-ui-button--appearance-plain-icon,
+.fd-ui-button--appearance-muted-icon {
     --fd-button-width: var(--fd-size-control-compact);
     --fd-button-height-explicit: var(--fd-size-control-compact);
     --fd-button-height: var(--fd-size-control-compact);
@@ -420,4 +421,16 @@
 
 .fd-ui-button--icon-xl {
     --fd-button-icon-size: var(--fd-size-button-icon-xl);
+}
+
+.fd-ui-button--appearance-muted-icon {
+    color: var(--fd-color-text-muted);
+
+    &:where(:hover:not(:disabled), :focus-visible:not(:disabled)) {
+        color: var(--fd-color-text);
+    }
+
+    &.fd-ui-button--danger:where(:hover:not(:disabled), :focus-visible:not(:disabled)) {
+        color: var(--fd-color-danger);
+    }
 }

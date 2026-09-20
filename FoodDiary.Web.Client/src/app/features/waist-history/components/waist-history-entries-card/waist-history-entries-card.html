@@ -19,6 +19,8 @@
                     </div>
                     <div
                         class="waist-history-page__entry-change fd-ui-caption"
+                        [fdUiHint]="item.change === null ? null : ('WAIST_HISTORY.CHANGE_HINT' | translate)"
+                        [attr.tabindex]="item.change === null ? null : 0"
                         [class.waist-history-page__entry-change--loss]="item.change !== null && item.change < 0"
                         [class.waist-history-page__entry-change--gain]="item.change !== null && item.change > 0"
                     >
@@ -33,7 +35,7 @@
                     <div class="waist-history-page__entry-actions fd-row fd-gap-actions fd-justify-end">
                         <fd-ui-button
                             type="button"
-                            appearance="plain-icon"
+                            appearance="muted-icon"
                             size="xs"
                             fill="text"
                             variant="secondary"
@@ -43,7 +45,7 @@
                         />
                         <fd-ui-button
                             type="button"
-                            appearance="plain-icon"
+                            appearance="muted-icon"
                             size="xs"
                             fill="text"
                             variant="danger"

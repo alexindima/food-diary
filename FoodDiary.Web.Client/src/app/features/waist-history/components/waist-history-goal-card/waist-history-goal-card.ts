@@ -50,7 +50,7 @@ export class WaistHistoryGoalCardComponent {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-        }),
+        })?.replace(/\s*г\.$/u, ''),
     );
 
     protected readonly lastGoalSummary = computed(() => {
@@ -85,7 +85,7 @@ export class WaistHistoryGoalCardComponent {
         const daysElapsed = this.daysBetweenEntries();
         const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
-        return { percent, change: completedDistance, remaining, weeklyRate, daysToGoal, startWaistCm: start, currentWaist: current };
+        return { percent, change: current - start, remaining, weeklyRate, daysToGoal, startWaistCm: start, currentWaist: current };
     });
 
     private daysBetweenEntries(): number {

@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "70039cc7e8a56b433bce06555b3a137155a9730c0855d02d5898de9578634aa1"
+          "sha256": "517f1be21c59ef00552e2cc3bd56009354882bbd9df0ee4945bb9deaab4ee3cd"
         }
       ],
-      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
+      "reason": "Quality index reflects goal delta calculations and optional muted row actions. Runtime evidence is focused tests plus keyboard tooltip, delete focus color and edit-dialog checks, not index counts.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T09:31:13.5102981Z"
+      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
+      "reviewedAtUtc": "2026-09-20T09:52:03.6278087Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,21 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "70039cc7e8a56b433bce06555b3a137155a9730c0855d02d5898de9578634aa1"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d90aba6c48b51387c153c4f287bc3414b89ebf8b1a7c2e146660ab80343d2621"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c107c65f42e1028e0133d9fc585a99cac328bacf96323116b09be4b036e74e5e"
+          "sha256": "517f1be21c59ef00552e2cc3bd56009354882bbd9df0ee4945bb9deaab4ee3cd"
         }
       ],
-      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
+      "reason": "Only frontend presentation and existing event handlers changed. No new auth, storage, networking or destructive action was added; repeated row buttons keep explicit accessible names.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T09:31:17.6540875Z"
+      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
+      "reviewedAtUtc": "2026-09-20T09:52:05.4134887Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1057,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "975fdf704dc2411db9b5a150a1012a7eb6f01f225078c7dc3c043868f9b763d0"
+          "sha256": "84550197697a406cae0249574819e2f771c465073bd6cda80c0144c9c46fcd41"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d43811e1d3bc772fcdd3a2303ae0f5eb16e65072e2a77e2b919049695b40fb96"
+          "sha256": "64ac39e10a5661cd65020fba9392f4277a14e23edb194fe477fb7372a7c503c3"
         }
       ],
-      "reason": "Frontend indexes reflect dashboard calendar helper and API query changes plus existing measurement and empty-state work. Facade to service to HTTP flow verified in source and tests; trace discovery and projection semantics remain unchanged.",
+      "reason": "Updated frontend indexes preserve the existing weight/waist component ownership and action outputs. Goal statistics and hints were verified in current templates and rendered pages; tracing mechanics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:14:22.5567088Z"
+      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
+      "reviewedAtUtc": "2026-09-20T09:52:08.1738616Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "975fdf704dc2411db9b5a150a1012a7eb6f01f225078c7dc3c043868f9b763d0"
+          "sha256": "84550197697a406cae0249574819e2f771c465073bd6cda80c0144c9c46fcd41"
         }
       ],
-      "reason": "Reviewed dashboard service and facade timezone serialization plus calendar helpers; frontend build, dashboard unit tests and nine-zone matrix pass. Existing empty-state input and measurement-date changes remain compatible. No contract discovery mechanism changed.",
+      "reason": "Reviewed additive muted-icon button appearance and shared hint consumption on weight/waist rows. Existing button variants remain unchanged. Build, 119 focused tests, localization and desktop/mobile Playwright checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:14:14.6326589Z"
+      "gitHead": "ece90934abb6be570b088f48858dcc108d1fa2c7",
+      "reviewedAtUtc": "2026-09-20T09:52:01.9854524Z"
     },
     {
       "pageId": "workflow.query-context",

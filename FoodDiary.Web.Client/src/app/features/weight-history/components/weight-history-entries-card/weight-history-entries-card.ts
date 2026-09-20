@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
@@ -17,7 +18,15 @@ const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-weight-history-entries-card',
-    imports: [LocalizedNumberPipe, FdUiButtonComponent, FdUiCardComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [
+        FdUiHintDirective,
+        LocalizedNumberPipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
+        TranslatePipe,
+    ],
     templateUrl: './weight-history-entries-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
