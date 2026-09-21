@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "04c8ad4fe7026ddf6b7cbaf9e6f905808844ee863f365e469fe4def81609cd5a"
+          "sha256": "90df81714d7e06b0fa44a23be3289d9bdf50370e26665d8dcd837007f2b5958d"
         }
       ],
-      "reason": "Added 10 goal dialog control-state scenarios; regenerated static quality references remain navigation evidence, with execution independently verified by 328 passing tests. Query workflow unchanged.",
+      "reason": "Quality index includes shared goal-history date helper and tests for local same-day and cross-year intervals, sorting and progress semantics. 334 feature/date tests previously passed and 26 focused tests pass after visual polish. Static coverage limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
-      "reviewedAtUtc": "2026-09-20T13:12:31.8702916Z"
+      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
+      "reviewedAtUtc": "2026-09-21T01:12:57.2447871Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "04c8ad4fe7026ddf6b7cbaf9e6f905808844ee863f365e469fe4def81609cd5a"
+          "sha256": "90df81714d7e06b0fa44a23be3289d9bdf50370e26665d8dcd837007f2b5958d"
         }
       ],
-      "reason": "Updated quality references concern goal UI state tests only; security evidence compiler and authorization boundaries unchanged.",
+      "reason": "Goal history presentation and date formatting introduced no authorization, persistence or provider changes; security evidence compiler guidance remains accurate after quality refresh.",
       "baseRef": "HEAD",
-      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
-      "reviewedAtUtc": "2026-09-20T13:12:33.3751162Z"
+      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
+      "reviewedAtUtc": "2026-09-21T01:12:58.8421595Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "479c86d6a6576be2a2fcf37f4705172b8f00c246b32634d47edaaeb3340c0c94"
+          "sha256": "02055608a3be4a034b61ed1c7f9573dd72aa6ae9379f3827523b25b7363ca3b9"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cc86b2654bb51f28908e5078056b868899a8e8f85030a4628655328f29188488"
+          "sha256": "1df128a95c4d22f31cd33e5f9580c1e98b173afaf593ec13bea7c5a63c5cb0dc"
         }
       ],
-      "reason": "Refreshed frontend indexes include goal FormRoot and rendered control test references; ownership and tracing workflow remain unchanged.",
+      "reason": "Frontend indexes reflect shared goal date formatting and updated history templates. Owning feature facades and API flow remain unchanged; trace workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
-      "reviewedAtUtc": "2026-09-20T13:12:34.9506918Z"
+      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
+      "reviewedAtUtc": "2026-09-21T01:12:59.9852160Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "479c86d6a6576be2a2fcf37f4705172b8f00c246b32634d47edaaeb3340c0c94"
+          "sha256": "02055608a3be4a034b61ed1c7f9573dd72aa6ae9379f3827523b25b7363ca3b9"
         }
       ],
-      "reason": "Reviewed goal dialog contracts: decimal text suffix, FormRoot submission, blank-target guard and disabled reason. 24 rendered goal dialog tests and 328 feature tests pass; guidance unchanged.",
+      "reason": "Reviewed goal history templates, explicit status labels, signed change, active-only accessible progress and localized date ranges. Current polish separates muted goal label from primary value; desktop/mobile and keyboard focus verified. Contract review guidance unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6e7537e13aa644e85d3897496923d1be583c55dd",
-      "reviewedAtUtc": "2026-09-20T13:12:30.3763169Z"
+      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
+      "reviewedAtUtc": "2026-09-21T01:12:55.7744229Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -141,6 +141,7 @@ export class WaistHistoryPageComponent {
 
     protected openGoalHistoryDialog(): void {
         this.dialogService.open(WaistGoalHistoryDialogComponent, {
+            size: 'md',
             preset: 'form',
             providers: [{ provide: WaistHistoryFacade, useValue: this.facade }],
         });

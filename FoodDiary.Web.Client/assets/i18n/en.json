@@ -5265,11 +5265,11 @@
         "NO_GOAL_HISTORY_TITLE": "No goals yet",
         "NO_GOAL_HISTORY_DESCRIPTION": "Your first completed goal will appear here.",
         "GOAL_HISTORY": "Goal history",
-        "GOAL_NOW": "Now",
+        "GOAL_NOW": "now",
         "GOAL_END_WEIGHT": "End",
-        "GOAL_STATUS_ACTIVE": "Current goal",
-        "GOAL_STATUS_REPLACED": "Goal changed",
-        "GOAL_STATUS_CANCELLED": "Goal cancelled",
+        "GOAL_STATUS_ACTIVE": "Active",
+        "GOAL_STATUS_REPLACED": "Replaced",
+        "GOAL_STATUS_CANCELLED": "Cancelled",
         "BMI_SEGMENTS": {
             "UNDER": "Under",
             "NORMAL": "Normal",
@@ -5333,7 +5333,9 @@
         "SHOW_LATEST": "Show on chart",
         "INSUFFICIENT_DATA": "Not enough data",
         "GOAL_HISTORY_HINT": "Your current goal will stay in history if you change or cancel it.",
-        "GOAL_VALUE_REQUIRED": "Enter a target value."
+        "GOAL_VALUE_REQUIRED": "Enter a target value.",
+        "GOAL_CHANGE_LABEL": "Change",
+        "GOAL_TARGET_LABEL": "Goal:"
     },
     "WAIST_HISTORY": {
         "SUBTITLE": "Body measurements",
@@ -5370,9 +5372,9 @@
         "GOAL_DAYS_TO_GOAL": "Estimated days to goal",
         "GOAL_AVERAGE_RATE": "Average pace",
         "CM_PER_WEEK": "{{unit}}/week",
-        "GOAL_START_WAIST": "Starting waist",
+        "GOAL_START_WAIST": "Start",
         "GOAL_CURRENT_WAIST": "Current waist",
-        "GOAL_END_WAIST": "Ending waist",
+        "GOAL_END_WAIST": "Finish",
         "GOAL_START_DATE": "Goal started",
         "GOAL_NOT_SET": "No goal set",
         "GOAL_EMPTY_DESCRIPTION": "Set a target to see your progress here.",
@@ -5385,7 +5387,7 @@
         "START_NEW_GOAL": "Start new goal",
         "CANCEL_GOAL": "Cancel goal",
         "DESIRED_WAIST_LABEL": "Target waist circumference",
-        "GOAL_STATUS_ACTIVE": "Current goal",
+        "GOAL_STATUS_ACTIVE": "Active",
         "GOAL_STATUS_REPLACED": "Replaced",
         "GOAL_STATUS_CANCELLED": "Cancelled",
         "GOAL_NOW": "now",
@@ -5454,7 +5456,9 @@
         "SHOW_LATEST": "Show on chart",
         "INSUFFICIENT_DATA": "Not enough data",
         "GOAL_HISTORY_HINT": "Your current goal will stay in history if you change or cancel it.",
-        "GOAL_VALUE_REQUIRED": "Enter a target value."
+        "GOAL_VALUE_REQUIRED": "Enter a target value.",
+        "GOAL_CHANGE_LABEL": "Change",
+        "GOAL_TARGET_LABEL": "Goal:"
     },
     "CYCLE_TRACKING": {
         "TITLE": "Cycle tracking",

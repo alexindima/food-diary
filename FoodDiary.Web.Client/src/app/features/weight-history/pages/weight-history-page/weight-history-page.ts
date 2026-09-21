@@ -141,6 +141,7 @@ export class WeightHistoryPageComponent {
 
     protected openGoalHistoryDialog(): void {
         this.dialogService.open(WeightGoalHistoryDialogComponent, {
+            size: 'md',
             preset: 'form',
             providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
         });

@@ -1,51 +1,56 @@
 .weight-goal-history {
-    max-height: min(65vh, 640px);
-    overflow-y: auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
 
     &__item {
         display: flex;
         flex-direction: column;
         gap: var(--fd-space-sm);
-        padding: var(--fd-space-md);
-        border: var(--fd-border-subtle);
-        border-radius: var(--fd-radius-md);
-        background: var(--fd-bg-surface-muted);
+        padding-block: var(--fd-space-md);
 
         &--active {
-            border-color: var(--fd-color-primary-600);
+            gap: var(--fd-space-md);
+        }
+
+        &:first-child {
+            padding-top: 0;
+        }
+        &:last-child {
+            padding-bottom: 0;
+        }
+        & + & {
+            border-top: var(--fd-border-subtle);
         }
     }
 
-    &__target,
-    &__change {
+    &__target {
         color: var(--fd-color-text);
+        font-weight: inherit;
     }
 
-    &__dates {
+    &__status {
         color: var(--fd-color-text-muted);
     }
-
-    &__progress-row {
-        width: 100%;
+    &__status--active {
+        color: var(--fd-color-primary-600);
     }
 
     &__progress {
         height: var(--fd-size-progress-height-md);
+        min-width: 0;
         overflow: hidden;
         flex: 1;
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-surface-inset);
     }
-
     &__progress-value {
         height: 100%;
-        min-width: var(--fd-border-width-strong);
         border-radius: inherit;
         background: var(--fd-color-primary-600);
     }
-
-    &__weights {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    &__values {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: var(--fd-space-sm);
     }
 }

@@ -7,8 +7,8 @@
     "outputs": 474,
     "apiCalls": 264,
     "templatesWithTranslations": 313,
-    "translationKeys": 1831,
-    "consumerEdges": 1110,
+    "translationKeys": 1837,
+    "consumerEdges": 1108,
     "consumedComponents": 294,
     "unconsumedComponents": 159
   },
@@ -21036,10 +21036,12 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
       "keys": [
+        "WAIST_HISTORY.GOAL_CARD_TITLE",
+        "WAIST_HISTORY.GOAL_CHANGE_LABEL",
         "WAIST_HISTORY.GOAL_HISTORY",
         "WAIST_HISTORY.GOAL_NOW",
         "WAIST_HISTORY.GOAL_START_WAIST",
-        "WAIST_HISTORY.GOAL_VALUE"
+        "WAIST_HISTORY.GOAL_TARGET_LABEL"
       ]
     },
     {
@@ -21273,10 +21275,12 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
       "keys": [
+        "WEIGHT_HISTORY.GOAL_CARD_TITLE",
+        "WEIGHT_HISTORY.GOAL_CHANGE_LABEL",
         "WEIGHT_HISTORY.GOAL_HISTORY",
         "WEIGHT_HISTORY.GOAL_NOW",
         "WEIGHT_HISTORY.GOAL_START_WEIGHT",
-        "WEIGHT_HISTORY.GOAL_VALUE"
+        "WEIGHT_HISTORY.GOAL_TARGET_LABEL"
       ]
     },
     {
@@ -30560,19 +30564,6 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "waist-history",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "name",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
       "occurrences": 4,
       "inputsUsed": [
@@ -30636,19 +30627,6 @@
       "consumerFeature": "weight-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
       "occurrences": 4,
-      "inputsUsed": [
-        "name",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "consumerFeature": "weight-history",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
-      "occurrences": 1,
       "inputsUsed": [
         "name",
         "size"

@@ -4750,11 +4750,11 @@
         "NO_GOAL_HISTORY_TITLE": "Целей пока не было",
         "NO_GOAL_HISTORY_DESCRIPTION": "После завершения первой цели здесь появится её результат.",
         "GOAL_HISTORY": "История целей",
-        "GOAL_NOW": "Сейчас",
+        "GOAL_NOW": "сейчас",
         "GOAL_END_WEIGHT": "Финиш",
-        "GOAL_STATUS_ACTIVE": "Текущая цель",
-        "GOAL_STATUS_REPLACED": "Цель изменена",
-        "GOAL_STATUS_CANCELLED": "Цель отменена",
+        "GOAL_STATUS_ACTIVE": "Активна",
+        "GOAL_STATUS_REPLACED": "Заменена",
+        "GOAL_STATUS_CANCELLED": "Отменена",
         "BMI_SEGMENTS": {
             "UNDER": "Ниже",
             "NORMAL": "Норма",
@@ -4799,7 +4799,9 @@
         "SHOW_LATEST": "Показать на графике",
         "INSUFFICIENT_DATA": "Недостаточно данных",
         "GOAL_HISTORY_HINT": "При изменении или отмене текущая цель сохранится в истории.",
-        "GOAL_VALUE_REQUIRED": "Введите желаемое значение."
+        "GOAL_VALUE_REQUIRED": "Введите желаемое значение.",
+        "GOAL_CHANGE_LABEL": "Изменение",
+        "GOAL_TARGET_LABEL": "Цель:"
     },
     "NUTRIENTS": {
         "PROTEINS": "Белки",
@@ -4859,9 +4861,9 @@
         "GOAL_DAYS_TO_GOAL": "Прогноз, дней до цели",
         "GOAL_AVERAGE_RATE": "Средний темп",
         "CM_PER_WEEK": "{{unit}}/нед",
-        "GOAL_START_WAIST": "Талия на старте",
+        "GOAL_START_WAIST": "Старт",
         "GOAL_CURRENT_WAIST": "Сейчас",
-        "GOAL_END_WAIST": "Талия в конце",
+        "GOAL_END_WAIST": "Финиш",
         "GOAL_START_DATE": "Цель начата",
         "GOAL_NOT_SET": "Цель не задана",
         "GOAL_EMPTY_DESCRIPTION": "Установите цель, чтобы видеть прогресс здесь.",
@@ -4874,7 +4876,7 @@
         "START_NEW_GOAL": "Начать новую цель",
         "CANCEL_GOAL": "Отменить цель",
         "DESIRED_WAIST_LABEL": "Желаемый обхват талии",
-        "GOAL_STATUS_ACTIVE": "Текущая цель",
+        "GOAL_STATUS_ACTIVE": "Активна",
         "GOAL_STATUS_REPLACED": "Заменена",
         "GOAL_STATUS_CANCELLED": "Отменена",
         "GOAL_NOW": "сейчас",
@@ -4943,7 +4945,9 @@
         "SHOW_LATEST": "Показать на графике",
         "INSUFFICIENT_DATA": "Недостаточно данных",
         "GOAL_HISTORY_HINT": "При изменении или отмене текущая цель сохранится в истории.",
-        "GOAL_VALUE_REQUIRED": "Введите желаемое значение."
+        "GOAL_VALUE_REQUIRED": "Введите желаемое значение.",
+        "GOAL_CHANGE_LABEL": "Изменение",
+        "GOAL_TARGET_LABEL": "Цель:"
     },
     "CYCLE_TRACKING": {
         "TITLE": "Отслеживание цикла",

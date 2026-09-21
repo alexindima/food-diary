@@ -1,19 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { formatGoalHistoryDates } from '../../../../shared/lib/goal-history-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WaistGoalHistoryItem } from '../../../../shared/models/user.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
 type ViewModel = WaistGoalHistoryItem & {
+    dateRange: string;
     startDate: string;
     endDate: string | null;
     displayEndWaist: number;
@@ -25,7 +24,7 @@ const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-waist-goal-history-dialog',
-    imports: [LocalizedNumberPipe, FdUiDialogComponent, FdUiIconComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [LocalizedNumberPipe, FdUiDialogComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-goal-history-dialog.html',
     styleUrl: './waist-goal-history-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,26 +33,23 @@ export class WaistGoalHistoryDialogComponent {
     protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
-    private readonly translate = inject(TranslateService);
     private readonly dialogRef = inject(FdUiDialogRef<WaistGoalHistoryDialogComponent, void>);
     protected readonly goals = computed<ViewModel[]>(() => {
         const current = this.facade.latestWaist();
-        const language = resolveTranslateLanguage(this.translate);
-        return this.facade.waistGoalHistory().map(goal => {
-            const displayEndWaist = goal.status === 'Active' ? (current ?? goal.startWaistCm) : (goal.endWaistCm ?? goal.startWaistCm);
-            return {
-                ...goal,
-                startDate: formatDateValue(goal.startedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' }) ?? '',
-                endDate:
-                    goal.endedAtUtc !== null
-                        ? formatDateValue(goal.endedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' })
-                        : null,
-                displayEndWaist,
-                change: displayEndWaist - goal.startWaistCm,
-                progress: goal.status === 'Active' ? this.calculateProgress(goal, displayEndWaist) : null,
-                statusKey: `WAIST_HISTORY.GOAL_STATUS_${goal.status.toUpperCase()}`,
-            };
-        });
+        const language = this.locale();
+        return [...this.facade.waistGoalHistory()]
+            .sort((a, b) => Number(b.status === 'Active') - Number(a.status === 'Active'))
+            .map(goal => {
+                const displayEndWaist = goal.status === 'Active' ? (current ?? goal.startWaistCm) : (goal.endWaistCm ?? goal.startWaistCm);
+                return {
+                    ...goal,
+                    ...formatGoalHistoryDates(goal.startedAtUtc, goal.endedAtUtc, language),
+                    displayEndWaist,
+                    change: displayEndWaist - goal.startWaistCm,
+                    progress: goal.status === 'Active' ? this.calculateProgress(goal, displayEndWaist) : null,
+                    statusKey: `WAIST_HISTORY.GOAL_STATUS_${goal.status.toUpperCase()}`,
+                };
+            });
     });
     protected close(): void {
         this.dialogRef.close();

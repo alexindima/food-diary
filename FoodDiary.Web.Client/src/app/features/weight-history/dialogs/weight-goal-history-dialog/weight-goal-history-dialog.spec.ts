@@ -93,3 +93,17 @@ describe('Weight goal history dialog', () => {
         expect(component['goals']()[0].startDate).toBe('');
     });
 });
+
+it('places the active goal first without mutating source order and labels historical change', () => {
+    const { fixture, history } = setup();
+    const active = history()[0];
+    history.set([{ ...active, id: 'cancelled', status: 'Cancelled', endedAtUtc: active.startedAtUtc }, active]);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const entries = root.querySelectorAll('article');
+    expect(entries[0].textContent).toContain('WEIGHT_HISTORY.GOAL_STATUS_ACTIVE');
+    expect(entries[1].textContent).toContain('WEIGHT_HISTORY.GOAL_CHANGE_LABEL');
+    expect(entries[1].querySelector('[role="progressbar"]')).toBeNull();
+    expect(entries[0].querySelector('[role="progressbar"]')?.getAttribute('aria-label')).toBe('WEIGHT_HISTORY.GOAL_CARD_TITLE');
+    expect(history()[0].id).toBe('cancelled');
+});

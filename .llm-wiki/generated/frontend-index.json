@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1704,
+    "typescriptFiles": 1706,
     "symbols": 663,
     "routes": 100,
     "features": 44,
-    "specs": 606,
+    "specs": 607,
     "localeFiles": 5,
     "roles": {
       "Component": 449,
@@ -5296,7 +5296,7 @@
       "role": "Component",
       "selector": "fd-waist-goal-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
-      "line": 33
+      "line": 32
     },
     {
       "name": "WaistHistoryEntriesDialogComponent",
@@ -5471,7 +5471,7 @@
       "role": "Component",
       "selector": "fd-weight-goal-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
-      "line": 34
+      "line": 33
     },
     {
       "name": "WeightHistoryEntriesDialogComponent",
@@ -6555,8 +6555,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3585,
-      "russianProperties": 3585,
+      "englishProperties": 3589,
+      "russianProperties": 3589,
       "countsMatch": true
     },
     {
