@@ -1,7 +1,7 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
-import { describe, expect, it, type Mock,vi } from 'vitest';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import type { GoalHistoryPage } from '../models/user.data';
 import { GoalHistoryPager } from './goal-history-pager';
