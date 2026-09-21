@@ -35,7 +35,7 @@ COPY Services/MailInbox/FoodDiary.MailInbox.WebApi/ Services/MailInbox/FoodDiary
 
 RUN dotnet publish Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:6bb0fab0ef31f44f710a668c39c2263ae810f5adf868afa34cbd86815912c7fe
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:f62a272ac1b46e83f56b8ed0416572f31cd1128e2c4a5e63eb34d348e4a36095
 
 WORKDIR /app
 RUN apk add --no-cache \
