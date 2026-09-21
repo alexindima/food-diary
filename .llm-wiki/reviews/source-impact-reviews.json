@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7fb81bc458de43f0f1af6d312574a93db39ce6162943b7e12620181d58c53072"
+          "sha256": "a9f6628d6889f80aaa96e87d8425f3c12d078c6a26838eeb73a34263f0c332e3"
         }
       ],
-      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
+      "reason": "Goal history page queries now use existing request mapping extensions. Routes, payloads, cursors and response mappings are unchanged; controller surface tests correctly expect both history endpoints. All 333 presentation API tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:05.8045119Z"
+      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
+      "reviewedAtUtc": "2026-09-21T04:19:03.7135837Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c7973f584a63ad46dc52e394ab05a10bc5fffe86648434f6abac16f1e93fb5d2"
+          "sha256": "d87b305b6a56b1dd7f1201e66d1e3a1911730154b6abe06405117f9f37ad6fd2"
         }
       ],
-      "reason": "Regenerated frontend quality navigation; 367 focused tests passed, including zero/missing values and pagination errors, boundaries, lifecycle and older-entry editing. Calendar pagination was verified in nine timezones. Static test references remain discovery evidence, with no workflow changes needed.",
+      "reason": "Updated controller action counts for the previously added paginated goal history endpoints. Architecture conventions remain enforced and all 333 presentation API tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
-      "reviewedAtUtc": "2026-09-21T03:25:19.5185135Z"
+      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
+      "reviewedAtUtc": "2026-09-21T04:19:05.0257347Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7e3fa4c9fb6164ca6291a906926154d96d5e4ae228fc1c2543b11183c82b2303"
+          "sha256": "fc0062c74fead880c1c943e3e4b1c0737504040c5b61a1bcb0f662199391063c"
         }
       ],
-      "reason": "Traced both page-summary handlers and dialog-to-facade-to-UserService requests. Users retains goal ownership and scoped transaction synchronization; new reads are scalar/no-tracking. Browser GET retries preserve the cursor, pager cancellation releases requests on close, and mutations reset history. No external clients, workers, schedules or transaction ownership change.",
+      "reason": "Verified goal pagination ownership remains in Users presentation and application. Only query construction moved into the existing request mapper; public behavior is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:06.8370612Z"
+      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
+      "reviewedAtUtc": "2026-09-21T04:19:05.6962006Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c7973f584a63ad46dc52e394ab05a10bc5fffe86648434f6abac16f1e93fb5d2"
+          "sha256": "d87b305b6a56b1dd7f1201e66d1e3a1911730154b6abe06405117f9f37ad6fd2"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "fc0062c74fead880c1c943e3e4b1c0737504040c5b61a1bcb0f662199391063c"
         }
       ],
-      "reason": "Bounded measurement requests reuse current-user authorization and existing transport; no persistent health-data cache, external sharing or new backend routes. UI hint and muted-action changes preserve action semantics and accessibility. Refreshed quality index does not change security-review guidance.",
+      "reason": "Query construction moved to the existing presentation mapper and preserves authenticated user ID and opaque cursor unchanged. No authorization, logging, storage, data exposure or provider changes. Controller conventions and all 333 presentation API tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
-      "reviewedAtUtc": "2026-09-21T03:25:20.8858008Z"
+      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
+      "reviewedAtUtc": "2026-09-21T04:19:17.7214285Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

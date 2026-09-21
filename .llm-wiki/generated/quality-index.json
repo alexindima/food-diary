@@ -39954,19 +39954,19 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
+      "structuralRiskScore": 2.5
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
+      "structuralRiskScore": 2.5
     },
     {
       "path": "Modules/Users/Presentation/Extensions/UsersPresentationServiceCollectionExtensions.cs",
@@ -40018,11 +40018,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
-      "nonBlankLines": 101,
+      "nonBlankLines": 105,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.02
+      "structuralRiskScore": 2.1
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpResponseMappings.cs",
@@ -48986,7 +48986,7 @@
       "name": "WaistGoalsController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "line": 16,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
@@ -49049,7 +49049,7 @@
       "name": "WeightGoalsController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "line": 16,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",

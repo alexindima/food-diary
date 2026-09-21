@@ -51276,7 +51276,7 @@
         "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -52355,7 +52355,7 @@
         "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },

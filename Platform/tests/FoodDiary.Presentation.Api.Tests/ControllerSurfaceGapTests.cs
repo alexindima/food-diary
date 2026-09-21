@@ -12,8 +12,8 @@ public sealed class ControllerSurfaceGapTests {
         { typeof(AdminDashboardController), "api/v{version:apiVersion}/admin/dashboard", 2 },
         { typeof(FastingReadController), "api/v{version:apiVersion}/fasting", 3 },
         { typeof(UserOverviewController), "api/v{version:apiVersion}/users", 1 },
-        { typeof(WaistGoalsController), "api/v{version:apiVersion}/users/waist-goals", 1 },
-        { typeof(WeightGoalsController), "api/v{version:apiVersion}/users/weight-goals", 1 },
+        { typeof(WaistGoalsController), "api/v{version:apiVersion}/users/waist-goals", 2 },
+        { typeof(WeightGoalsController), "api/v{version:apiVersion}/users/weight-goals", 2 },
     };
 
     [Theory]

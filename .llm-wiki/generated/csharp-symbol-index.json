@@ -24748,14 +24748,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "WeightGoalsController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",
@@ -24804,7 +24804,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
-      "line": 21
+      "line": 23
     },
     {
       "name": "UserHttpResponseMappings",

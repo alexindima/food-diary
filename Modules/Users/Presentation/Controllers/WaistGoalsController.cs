@@ -1,4 +1,3 @@
-using FoodDiary.Modules.Users.Application.Queries.GetWaistGoalHistoryPage;
 using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Users.Presentation.Mappings;
 using FoodDiary.Mediator;
@@ -25,6 +24,6 @@ public sealed class WaistGoalsController(ISender mediator) : AuthorizedControlle
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] string? cursor = null) =>
-        HandleOk(new GetWaistGoalHistoryPageQuery(userId, cursor), static page => new WaistGoalHistoryPageHttpResponse(
+        HandleOk(userId.ToWaistGoalHistoryPageQuery(cursor), static page => new WaistGoalHistoryPageHttpResponse(
             page.Items.Select(static value => value.ToHttpResponse()).ToList(), page.NextCursor));
 }
