@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { formatGoalHistoryDates } from '../../../../shared/lib/goal-history-date.utils';
+import { GoalHistoryPager } from '../../../../shared/measurements/goal-history-pager';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WaistGoalHistoryItem } from '../../../../shared/models/user.data';
@@ -24,7 +26,7 @@ const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-waist-goal-history-dialog',
-    imports: [LocalizedNumberPipe, FdUiDialogComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [FdUiButtonComponent, LocalizedNumberPipe, FdUiDialogComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-goal-history-dialog.html',
     styleUrl: './waist-goal-history-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,10 +36,15 @@ export class WaistGoalHistoryDialogComponent {
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly dialogRef = inject(FdUiDialogRef<WaistGoalHistoryDialogComponent, void>);
+    protected readonly pager = new GoalHistoryPager<WaistGoalHistoryItem>(
+        cursor => this.facade.getGoalHistoryPage(cursor),
+        this.facade.desiredWaistSaveVersion,
+    );
+
     protected readonly goals = computed<ViewModel[]>(() => {
         const current = this.facade.latestWaist();
         const language = this.locale();
-        return [...this.facade.waistGoalHistory()]
+        return [...this.facade.waistGoalHistory().filter(goal => goal.status === 'Active'), ...this.pager.items()]
             .sort((a, b) => Number(b.status === 'Active') - Number(a.status === 'Active'))
             .map(goal => {
                 const displayEndWaist = goal.status === 'Active' ? (current ?? goal.startWaistCm) : (goal.endWaistCm ?? goal.startWaistCm);
@@ -51,6 +58,13 @@ export class WaistGoalHistoryDialogComponent {
                 };
             });
     });
+    protected readonly pagingMessage = computed(() => {
+        if (this.pager.failed()) {
+            return 'GOAL_HISTORY_PAGING.ERROR';
+        }
+        return this.pager.loaded() && this.goals().length === 0 ? 'GOAL_HISTORY_PAGING.EMPTY' : null;
+    });
+
     protected close(): void {
         this.dialogRef.close();
     }

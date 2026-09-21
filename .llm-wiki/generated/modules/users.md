@@ -39,15 +39,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 93
+- Public contract files: 95
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 93
-- Interfaces: 34
-- DTO/read-model/projection types: 36
+- Public contract types: 95
+- Interfaces: 35
+- DTO/read-model/projection types: 37
 - Enums: 2
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
@@ -67,6 +67,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserAuthenticationIdentityService`
 - `interface IUserAuthenticationRegistrationService`
 - `interface IUserBillingProfileReadModelRepository`
+- `interface IUserBodyMetricHistoryReadService`
 - `interface IUserCleanupService`
 - `interface IUserCommentAuthorReadService`
 - `interface IUserCredentialVerificationService`
@@ -80,12 +81,11 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
 - `interface IUserLookupRepository`
-- `interface IUserNotificationProfileService`
-- ... 63 more type(s)
+- ... 65 more type(s)
 
 ## Extraction Readiness
 
-- Abstraction-owned profile-read consumers: 12 across 3 group(s)
+- Abstraction-owned profile-read consumers: 10 across 2 group(s)
 - Implementation-owned IUserContextService consumers: 12 across 1 group(s)
 - Consumers receiving the User aggregate: 0
 - Consumers with aggregate mutation access: 10
@@ -121,6 +121,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.DesiredGoalIdempotency.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/WaistGoalHistoryPageTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/WeightGoalHistoryPageTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ActivityLevelContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/MiscDomainInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/PremiumTrialOverflowTests.cs`
@@ -129,8 +131,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserGoalValueValidationTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserHardeningInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserIdInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventPayloadTests.cs`
 
 ## Working Rule
 

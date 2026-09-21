@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { formatGoalHistoryDates } from '../../../../shared/lib/goal-history-date.utils';
+import { GoalHistoryPager } from '../../../../shared/measurements/goal-history-pager';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightGoalHistoryItem } from '../../../../shared/models/user.data';
@@ -25,7 +27,7 @@ const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-weight-goal-history-dialog',
-    imports: [LocalizedNumberPipe, FdUiDialogComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
+    imports: [FdUiButtonComponent, LocalizedNumberPipe, FdUiDialogComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './weight-goal-history-dialog.html',
     styleUrl: './weight-goal-history-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,10 +38,15 @@ export class WeightGoalHistoryDialogComponent {
     private readonly facade = inject(WeightHistoryFacade);
     private readonly dialogRef = inject(FdUiDialogRef<WeightGoalHistoryDialogComponent, void>);
 
+    protected readonly pager = new GoalHistoryPager<WeightGoalHistoryItem>(
+        cursor => this.facade.getGoalHistoryPage(cursor),
+        this.facade.desiredWeightSaveVersion,
+    );
+
     protected readonly goals = computed<WeightGoalHistoryViewModel[]>(() => {
         const currentWeight = this.facade.latestWeight();
         const language = this.locale();
-        return [...this.facade.weightGoalHistory()]
+        return [...this.facade.weightGoalHistory().filter(goal => goal.status === 'Active'), ...this.pager.items()]
             .sort((a, b) => Number(b.status === 'Active') - Number(a.status === 'Active'))
             .map(goal => {
                 const displayEndWeight =
@@ -53,6 +60,13 @@ export class WeightGoalHistoryDialogComponent {
                     statusKey: `WEIGHT_HISTORY.GOAL_STATUS_${goal.status.toUpperCase()}`,
                 };
             });
+    });
+
+    protected readonly pagingMessage = computed(() => {
+        if (this.pager.failed()) {
+            return 'GOAL_HISTORY_PAGING.ERROR';
+        }
+        return this.pager.loaded() && this.goals().length === 0 ? 'GOAL_HISTORY_PAGING.EMPTY' : null;
     });
 
     protected close(): void {

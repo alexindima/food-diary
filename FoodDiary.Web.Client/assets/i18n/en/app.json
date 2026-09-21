@@ -3850,5 +3850,11 @@
         },
         "EMPTY": "No recent recognitions",
         "BACKGROUND_HINT": "Recognition continues if you close this window. Recent results are available for 7 days."
+    },
+    "GOAL_HISTORY_PAGING": {
+        "ERROR": "Could not load goal history.",
+        "RETRY": "Retry",
+        "MORE": "Show more",
+        "EMPTY": "No goal history yet."
     }
 }

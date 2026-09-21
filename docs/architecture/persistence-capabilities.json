@@ -1706,13 +1706,17 @@
         "entity:User",
         "entity:UserRole",
         "entity:UserRoleAuditEvent",
+        "entity:WaistGoal",
+        "entity:WeightGoal",
         "tracked:Role",
         "tracked:User",
         "tracked:UserRole",
-        "tracked:UserRoleAuditEvent"
+        "tracked:UserRoleAuditEvent",
+        "tracked:WaistGoal",
+        "tracked:WeightGoal"
       ],
-      "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "dfef6efc8f97164bd89ca5395670e18e38754dd6e214ba9a647bad44a1b86526"
+      "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor. Weight/waist goal sets are passed only to the bounded no-tracking owner reader; the registration does not execute queries.",
+      "technicalSourceSha256": "7f709f5ebbee8a3154b27bd5131d1a3ef28b4059d77c30e1ce7ab0090f9a39fe"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1729,6 +1733,15 @@
       ],
       "reason": "Owner context delegates saving to EF and translates only public WeightEntries and WaistEntries UserId/Date unique constraints into concurrency conflicts. No retry or independent save; the shared unit of work retains rollback ownership.",
       "technicalSourceSha256": "168cf07ac64b6be161216e58728bd9bddc4b040d66b8f2c151f31a87e4069e07"
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserBodyMetricHistoryReadService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:User",
+        "entity:WaistGoal",
+        "entity:WeightGoal"
+      ],
+      "reason": "Owner-only no-tracking scalar profiles and bounded closed goal pages. SQL applies user/status/snapshot filters, stable ordering and limits; provider tests protect no aggregate loading, no tracking and no saves."
     }
   }
 }

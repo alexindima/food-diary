@@ -16,7 +16,7 @@ namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWais
 
 public sealed class GetWaistHistoryPageSummaryQueryHandler(
     ISender sender,
-    IUserProfileReadService userProfileReadService,
+    IUserBodyMetricHistoryReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistHistoryPageSummaryQuery, Result<WaistHistoryPageSummaryModel>> {
     public async Task<Result<WaistHistoryPageSummaryModel>> Handle(

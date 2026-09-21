@@ -16,7 +16,7 @@ namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWei
 
 public sealed class GetWeightHistoryPageSummaryQueryHandler(
     ISender sender,
-    IUserProfileReadService userProfileReadService,
+    IUserBodyMetricHistoryReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightHistoryPageSummaryQuery, Result<WeightHistoryPageSummaryModel>> {
     public async Task<Result<WeightHistoryPageSummaryModel>> Handle(

@@ -37,6 +37,9 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserHydrationProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserTdeeProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserWeeklyCheckInProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserBodyMetricHistoryReadService>(provider => new UserBodyMetricHistoryReadService(
+            provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().WeightGoals,
+            provider.GetRequiredService<UsersDbContext>().WaistGoals, CreateTransactionSynchronizer(provider)));
         services.AddScoped<UserRepository>(provider => new UserRepository(
             provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().UserRoleAuditEvents, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());

@@ -266,7 +266,7 @@ export class WaistHistoryFacade {
                 this.waistGoal.set(goal);
                 this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(goal.desiredWaistCm) });
                 this.desiredWaistSaveVersion.update(version => version + 1);
-                this.loadWaistGoalHistory();
+                this.loadPageSummary(true);
             });
     }
 
@@ -285,7 +285,7 @@ export class WaistHistoryFacade {
                 this.waistGoal.set(goal);
                 this.desiredWaistModel.set({ circumference: '' });
                 this.desiredWaistSaveVersion.update(version => version + 1);
-                this.loadWaistGoalHistory();
+                this.loadPageSummary(true);
             });
     }
 
@@ -365,13 +365,8 @@ export class WaistHistoryFacade {
             });
     }
 
-    private loadWaistGoalHistory(): void {
-        this.userService
-            .getWaistGoalHistory()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(history => {
-                this.waistGoalHistory.set(history);
-            });
+    public getGoalHistoryPage(cursor?: string): ReturnType<UserService['getWaistGoalHistoryPage']> {
+        return this.userService.getWaistGoalHistoryPage(cursor);
     }
 
     private loadSummary(filters: WaistEntrySummaryFilters, updateRollingMonth = false): void {

@@ -31,6 +31,7 @@ let waistEntriesService: {
 };
 let userService: {
     getWaistGoal: ReturnType<typeof vi.fn>;
+    getWaistGoalHistoryPage: ReturnType<typeof vi.fn>;
     getWaistGoalHistory: ReturnType<typeof vi.fn>;
     getInfo: ReturnType<typeof vi.fn>;
     updateWaistGoal: ReturnType<typeof vi.fn>;
@@ -40,6 +41,7 @@ beforeEach(() => {
     waistEntriesService = createWaistEntriesServiceMock();
     userService = {
         getWaistGoal: vi.fn().mockReturnValue(of({ desiredWaistCm: TARGET_WAIST, startWaistCm: 84, startedAtUtc: '2026-03-01T00:00:00Z' })),
+        getWaistGoalHistoryPage: vi.fn().mockReturnValue(of({ items: [], nextCursor: null })),
         getWaistGoalHistory: vi.fn().mockReturnValue(of([])),
         getInfo: vi.fn().mockReturnValue(of({ heightCm: 180 })),
         updateWaistGoal: vi
@@ -221,6 +223,12 @@ describe('WaistHistoryFacade ranges', () => {
 
 describe('WaistHistoryFacade desired waist', () => {
     it('saves desired waist after validation', () => {
+        waistEntriesService.getPageSummary.mockReturnValue(
+            of({
+                ...createWaistPageSummary(),
+                goal: { desiredWaistCm: UPDATED_TARGET_WAIST, startWaistCm: 75, startedAtUtc: '2026-01-01T00:00:00Z' },
+            }),
+        );
         facade.desiredWaistModel.set({ circumference: `${UPDATED_TARGET_WAIST}` });
 
         facade.saveDesiredWaist();
@@ -426,6 +434,9 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         TestBed.tick();
         const pending = new Subject<{ desiredWaistCm: null; startWaistCm: null; startedAtUtc: null }>();
         userService.updateWaistGoal.mockReturnValue(pending);
+        waistEntriesService.getPageSummary.mockReturnValue(
+            of({ ...createWaistPageSummary(), goal: { desiredWaistCm: null, startWaistCm: null, startedAtUtc: null } }),
+        );
         facade.cancelWaistGoal();
         expect(facade.isDesiredWaistSaving()).toBe(true);
         expect(facade.desiredWaistSaveVersion()).toBe(0);
@@ -435,7 +446,8 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(facade.desiredWaistCm()).toBeNull();
         expect(facade.desiredWaistModel().circumference).toBe('');
         expect(facade.desiredWaistSaveVersion()).toBe(1);
-        expect(userService.getWaistGoalHistory).toHaveBeenCalledOnce();
+        expect(userService.getWaistGoalHistory).not.toHaveBeenCalled();
+        expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
     });
     it('identifies completed goals without treating the active goal as completed', () => {
         const active = {
@@ -484,4 +496,11 @@ describe('Summary and display resets', () => {
         TestBed.tick();
         expect(facade.formModel().circumference).toBe('');
     });
+});
+
+it('forwards history cursors only when requested by the dialog', () => {
+    facade.initialize();
+    expect(userService.getWaistGoalHistoryPage).not.toHaveBeenCalled();
+    facade.getGoalHistoryPage('next').subscribe();
+    expect(userService.getWaistGoalHistoryPage).toHaveBeenCalledWith('next');
 });

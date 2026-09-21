@@ -71,4 +71,14 @@
             </article>
         }
     </div>
+    <div class="fd-stack fd-gap-sm" aria-live="polite">
+        @if (pagingMessage(); as message) {
+            <div [attr.role]="pager.failed() ? 'alert' : 'status'">{{ message | translate }}</div>
+        }
+        @if (pager.hasMore()) {
+            <fd-ui-button type="button" variant="secondary" fill="text" [loading]="pager.loading()" (click)="pager.loadMore()">
+                {{ (pager.failed() ? 'GOAL_HISTORY_PAGING.RETRY' : 'GOAL_HISTORY_PAGING.MORE') | translate }}
+            </fd-ui-button>
+        }
+    </div>
 </fd-ui-dialog>

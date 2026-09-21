@@ -1,6 +1,7 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { of } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -31,6 +32,7 @@ function setup({
     component: WaistGoalHistoryDialogComponent;
     history: WritableSignal<WaistGoalHistoryItem[]>;
     close: Mock;
+    revision: WritableSignal<number>;
 } {
     const history = signal<WaistGoalHistoryItem[]>([
         {
@@ -44,17 +46,26 @@ function setup({
         },
     ]);
     const close = vi.fn();
+    const revision = signal(0);
     TestBed.configureTestingModule({
         imports: [WaistGoalHistoryDialogComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: WaistHistoryFacade, useValue: { waistGoalHistory: history, latestWaist: signal(current) } },
+            {
+                provide: WaistHistoryFacade,
+                useValue: {
+                    waistGoalHistory: history,
+                    latestWaist: signal(current),
+                    desiredWaistSaveVersion: revision,
+                    getGoalHistoryPage: vi.fn(() => of({ items: history().filter(goal => goal.status !== 'Active'), nextCursor: null })),
+                },
+            },
             { provide: FdUiDialogRef, useValue: { close } },
         ],
     });
     const fixture = TestBed.createComponent(WaistGoalHistoryDialogComponent);
     fixture.detectChanges();
-    return { fixture, component: fixture.componentInstance, history, close };
+    return { fixture, component: fixture.componentInstance, history, close, revision };
 }
 describe('Waist goal history dialog', () => {
     it.each([
@@ -91,9 +102,10 @@ describe('Waist goal history dialog', () => {
 });
 
 it('places the active goal first without mutating source order and labels historical change', () => {
-    const { fixture, history } = setup();
+    const { fixture, history, revision } = setup();
     const active = history()[0];
     history.set([{ ...active, id: 'cancelled', status: 'Cancelled', endedAtUtc: active.startedAtUtc }, active]);
+    revision.update(value => value + 1);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
     const entries = root.querySelectorAll('article');

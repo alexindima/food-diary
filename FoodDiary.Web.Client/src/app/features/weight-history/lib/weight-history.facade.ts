@@ -271,7 +271,7 @@ export class WeightHistoryFacade {
                 this.weightGoal.set(goal);
                 this.desiredWeightModel.set({ weight: this.formatDisplayWeight(goal.desiredWeightKg) });
                 this.desiredWeightSaveVersion.update(version => version + 1);
-                this.loadWeightGoalHistory();
+                this.loadPageSummary(true);
             });
     }
 
@@ -290,7 +290,7 @@ export class WeightHistoryFacade {
                 this.weightGoal.set(goal);
                 this.desiredWeightModel.set({ weight: '' });
                 this.desiredWeightSaveVersion.update(version => version + 1);
-                this.loadWeightGoalHistory();
+                this.loadPageSummary(true);
             });
     }
 
@@ -370,13 +370,8 @@ export class WeightHistoryFacade {
             });
     }
 
-    private loadWeightGoalHistory(): void {
-        this.userService
-            .getWeightGoalHistory()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(history => {
-                this.weightGoalHistory.set(history);
-            });
+    public getGoalHistoryPage(cursor?: string): ReturnType<UserService['getWeightGoalHistoryPage']> {
+        return this.userService.getWeightGoalHistoryPage(cursor);
     }
 
     private loadSummary(filters: WeightEntrySummaryFilters, updateRollingMonth = false): void {

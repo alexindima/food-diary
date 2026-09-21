@@ -244,3 +244,8 @@ export enum Gender {
     Female = 'F',
     Other = 'O',
 }
+
+export interface GoalHistoryPage<T> {
+    items: T[];
+    nextCursor: string | null;
+}

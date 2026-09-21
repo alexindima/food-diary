@@ -34,6 +34,7 @@ let weightEntriesService: {
 };
 let userService: {
     getWeightGoal: ReturnType<typeof vi.fn>;
+    getWeightGoalHistoryPage: ReturnType<typeof vi.fn>;
     getWeightGoalHistory: ReturnType<typeof vi.fn>;
     getInfo: ReturnType<typeof vi.fn>;
     updateWeightGoal: ReturnType<typeof vi.fn>;
@@ -45,6 +46,7 @@ beforeEach(() => {
         getWeightGoal: vi
             .fn()
             .mockReturnValue(of({ desiredWeightKg: TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' })),
+        getWeightGoalHistoryPage: vi.fn().mockReturnValue(of({ items: [], nextCursor: null })),
         getWeightGoalHistory: vi.fn().mockReturnValue(of([])),
         getInfo: vi.fn().mockReturnValue(of({ heightCm: 180 })),
         updateWeightGoal: vi
@@ -276,6 +278,12 @@ describe('WeightHistoryFacade ranges', () => {
 
 describe('WeightHistoryFacade desired weight', () => {
     it('saves desired weight after validation', () => {
+        weightEntriesService.getPageSummary.mockReturnValue(
+            of({
+                ...createWeightPageSummary(),
+                goal: { desiredWeightKg: UPDATED_TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' },
+            }),
+        );
         facade.desiredWeightModel.set({ weight: `${UPDATED_TARGET_WEIGHT}` });
 
         facade.saveDesiredWeight();
@@ -288,6 +296,9 @@ describe('WeightHistoryFacade desired weight', () => {
     it('cancels the active goal without form validation', () => {
         userService.updateWeightGoal.mockReturnValue(of({ desiredWeightKg: null, startWeightKg: null, startedAtUtc: null }));
 
+        weightEntriesService.getPageSummary.mockReturnValue(
+            of({ ...createWeightPageSummary(), goal: { desiredWeightKg: null, startWeightKg: null, startedAtUtc: null } }),
+        );
         facade.cancelWeightGoal();
 
         expect(userService.updateWeightGoal).toHaveBeenCalledWith(null);
@@ -495,6 +506,9 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         TestBed.tick();
         const pending = new Subject<{ desiredWeightKg: null; startWeightKg: null; startedAtUtc: null }>();
         userService.updateWeightGoal.mockReturnValue(pending);
+        weightEntriesService.getPageSummary.mockReturnValue(
+            of({ ...createWeightPageSummary(), goal: { desiredWeightKg: null, startWeightKg: null, startedAtUtc: null } }),
+        );
         facade.cancelWeightGoal();
         expect(facade.isDesiredWeightSaving()).toBe(true);
         expect(facade.desiredWeightSaveVersion()).toBe(0);
@@ -504,7 +518,8 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(facade.desiredWeightKg()).toBeNull();
         expect(facade.desiredWeightModel().weight).toBe('');
         expect(facade.desiredWeightSaveVersion()).toBe(1);
-        expect(userService.getWeightGoalHistory).toHaveBeenCalledOnce();
+        expect(userService.getWeightGoalHistory).not.toHaveBeenCalled();
+        expect(weightEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
     });
     it('identifies completed goals without treating the active goal as completed', () => {
         const active = {
@@ -553,4 +568,11 @@ describe('Summary and display resets', () => {
         TestBed.tick();
         expect(facade.formModel().weight).toBe('');
     });
+});
+
+it('forwards history cursors only when requested by the dialog', () => {
+    facade.initialize();
+    expect(userService.getWeightGoalHistoryPage).not.toHaveBeenCalled();
+    facade.getGoalHistoryPage('next').subscribe();
+    expect(userService.getWeightGoalHistoryPage).toHaveBeenCalledWith('next');
 });

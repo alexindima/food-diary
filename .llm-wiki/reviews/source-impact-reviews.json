@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "294ebcf00a30df278cd34f0b1ae30215d84b577d2ca9c3767744a5806f03e062"
+          "sha256": "73cac852bb7814aed75f72c8e73867a9c58422acf4b40a48f1a55e1970bcd263"
         }
       ],
-      "reason": "Reviewed the exact OpenAPI diff: optional dashboard TimeZoneId and paired optional statistics BodyDateFrom/BodyDateTo only; existing responses remain unchanged. Twenty HTTP/PostgreSQL scenarios and the snapshot comparison passed; legacy requests retain offset or UTC behavior.",
+      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:13:01.6868969Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:05.2089997Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "52eb396c9bccc5e5ed632e44d2b93cb3409ad62f0e263696051148d8f069f529"
+          "sha256": "7fb81bc458de43f0f1af6d312574a93db39ce6162943b7e12620181d58c53072"
         }
       ],
-      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
+      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T09:31:10.9326907Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:05.8045119Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90df81714d7e06b0fa44a23be3289d9bdf50370e26665d8dcd837007f2b5958d"
+          "sha256": "2c56b087a3193eee107db1887f081a93fa6eb33d7f498d40117765d61394194c"
         }
       ],
-      "reason": "Quality index includes shared goal-history date helper and tests for local same-day and cross-year intervals, sorting and progress semantics. 334 feature/date tests previously passed and 26 focused tests pass after visual polish. Static coverage limitations remain accurate.",
+      "reason": "Executed 385 focused frontend tests across the combined runs, Users and BodyMetrics application suites, PostgreSQL provider tests, HTTP flow and OpenAPI snapshots. Architecture capability inventory was explicitly reviewed; its 25 focused guards pass after the initial inventory failure. Desktop/mobile browser scenarios verify lazy requests, retry, paging, reopen and no horizontal overflow. Generated indexes were refreshed; workflow guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
-      "reviewedAtUtc": "2026-09-21T01:12:57.2447871Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:06.5396508Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d90aba6c48b51387c153c4f287bc3414b89ebf8b1a7c2e146660ab80343d2621"
+          "sha256": "7e3fa4c9fb6164ca6291a906926154d96d5e4ae228fc1c2543b11183c82b2303"
         }
       ],
-      "reason": "Reviewed workflow against refreshed calendar contract and test-reference indexes. Runtime topology changes only freshness metadata. Workflow commands, consumer review rules and static-evidence cautions remain accurate. Dashboard, Tdee and shared contract suites passed, plus Linux calendar tests. Receipt confirms documentation currency, not a security or coverage-percentage verdict.",
+      "reason": "Traced both page-summary handlers and dialog-to-facade-to-UserService requests. Users retains goal ownership and scoped transaction synchronization; new reads are scalar/no-tracking. Browser GET retries preserve the cursor, pager cancellation releases requests on close, and mutations reset history. No external clients, workers, schedules or transaction ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T09:31:15.6284733Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:06.8370612Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90df81714d7e06b0fa44a23be3289d9bdf50370e26665d8dcd837007f2b5958d"
+          "sha256": "2c56b087a3193eee107db1887f081a93fa6eb33d7f498d40117765d61394194c"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "7e3fa4c9fb6164ca6291a906926154d96d5e4ae228fc1c2543b11183c82b2303"
         }
       ],
-      "reason": "Goal history presentation and date formatting introduced no authorization, persistence or provider changes; security evidence compiler guidance remains accurate after quality refresh.",
+      "reason": "Reviewed current-user binding, persisted active/deleted access checks, per-user goal filters and bounded scalar projections. Provider tests reject missing/inactive/deleted users and isolate another user. HTTP rejects anonymous access and invalid cursors. Dialog state is disposed locally, with no new logs, providers or persistent caches.",
       "baseRef": "HEAD",
-      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
-      "reviewedAtUtc": "2026-09-21T01:12:58.8421595Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:07.2414892Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,17 +1057,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "02055608a3be4a034b61ed1c7f9573dd72aa6ae9379f3827523b25b7363ca3b9"
+          "sha256": "8c71c6aa5bdc18ed1fa7a92dab9d53755996a4181e7de06c518ab5c655aa7c93"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "1df128a95c4d22f31cd33e5f9580c1e98b173afaf593ec13bea7c5a63c5cb0dc"
+          "sha256": "016ce190d00a2898d1bd9acae2ba8b8db763f0b3f6b23451ce9fb93a39090af5"
         }
       ],
-      "reason": "Frontend indexes reflect shared goal date formatting and updated history templates. Owning feature facades and API flow remain unchanged; trace workflow remains accurate.",
+      "reason": "Traced both page-summary handlers and dialog-to-facade-to-UserService requests. Users retains goal ownership and scoped transaction synchronization; new reads are scalar/no-tracking. Browser GET retries preserve the cursor, pager cancellation releases requests on close, and mutations reset history. No external clients, workers, schedules or transaction ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
-      "reviewedAtUtc": "2026-09-21T01:12:59.9852160Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:07.5738367Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "02055608a3be4a034b61ed1c7f9573dd72aa6ae9379f3827523b25b7363ca3b9"
+          "sha256": "8c71c6aa5bdc18ed1fa7a92dab9d53755996a4181e7de06c518ab5c655aa7c93"
         }
       ],
-      "reason": "Reviewed goal history templates, explicit status labels, signed change, active-only accessible progress and localized date ranges. Current polish separates muted goal label from primary value; desktop/mobile and keyboard focus verified. Contract review guidance unchanged.",
+      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
       "baseRef": "HEAD",
-      "gitHead": "ea8b85a052d6029a9ec3063e9f3fe06446065c63",
-      "reviewedAtUtc": "2026-09-21T01:12:55.7744229Z"
+      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
+      "reviewedAtUtc": "2026-09-21T02:09:06.1085631Z"
     },
     {
       "pageId": "workflow.query-context",

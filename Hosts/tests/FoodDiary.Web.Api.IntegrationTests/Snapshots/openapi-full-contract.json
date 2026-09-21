@@ -16573,6 +16573,58 @@
       ]
     },
     {
+      "Path": "/api/v{version}/users/waist-goals/page",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/WaistGoalHistoryPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/WaistGoalHistoryPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/WaistGoalHistoryPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "cursor",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/users/weight-goals",
       "Operations": [
         {
@@ -16605,6 +16657,58 @@
               "Type": "array",
               "Nullable": false,
               "ItemReference": "#/components/schemas/WeightGoalHistoryHttpResponse"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/users/weight-goals/page",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/WeightGoalHistoryPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/WeightGoalHistoryPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/WeightGoalHistoryPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "cursor",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
             }
           ],
           "PathParameters": [
@@ -33237,6 +33341,24 @@
       ]
     },
     {
+      "Name": "WaistGoalHistoryPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/WaistGoalHistoryHttpResponse"
+        },
+        {
+          "Name": "nextCursor",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "WaistHistoryPageSummaryHttpResponse",
       "Properties": [
         {
@@ -33817,6 +33939,24 @@
           "Type": "number",
           "Format": "double",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "WeightGoalHistoryPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/WeightGoalHistoryHttpResponse"
+        },
+        {
+          "Name": "nextCursor",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         }
       ]
     },

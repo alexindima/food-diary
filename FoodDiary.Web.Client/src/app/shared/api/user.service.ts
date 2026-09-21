@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
+import type { GoalHistoryPage } from '../models/user.data';
 import type {
     ChangePasswordRequest,
     DashboardLayoutSettings,
@@ -192,6 +193,15 @@ export class UserService extends ApiService {
         );
     }
 
+    public getWeightGoalHistoryPage(cursor?: string): Observable<GoalHistoryPage<WeightGoalHistoryItem>> {
+        return this.get<GoalHistoryPage<WeightGoalHistoryItem>>(
+            'weight-goals/page',
+            cursor === undefined ? {} : { cursor },
+            undefined,
+            this.silentLoadingContext,
+        );
+    }
+
     public getWeightGoalHistory(): Observable<WeightGoalHistoryItem[]> {
         return this.get<WeightGoalHistoryItem[]>('weight-goals').pipe(
             catchError((error: unknown) => fallbackApiError('Get weight goal history error', error, [])),
@@ -229,6 +239,15 @@ export class UserService extends ApiService {
                     startedAtUtc: null,
                 }),
             ),
+        );
+    }
+
+    public getWaistGoalHistoryPage(cursor?: string): Observable<GoalHistoryPage<WaistGoalHistoryItem>> {
+        return this.get<GoalHistoryPage<WaistGoalHistoryItem>>(
+            'waist-goals/page',
+            cursor === undefined ? {} : { cursor },
+            undefined,
+            this.silentLoadingContext,
         );
     }
 

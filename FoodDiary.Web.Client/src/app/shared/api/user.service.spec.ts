@@ -460,3 +460,31 @@ describe('UserService failure contracts', () => {
         expect(service.user()).toEqual(MOCK_USER);
     });
 });
+
+describe('UserService paged goal history', () => {
+    it.each(['weight', 'waist'] as const)('loads the first %s history page without a cursor', metric => {
+        const response = { items: [], nextCursor: 'next' };
+        const received = vi.fn();
+        const request: Observable<unknown> = metric === 'weight' ? service.getWeightGoalHistoryPage() : service.getWaistGoalHistoryPage();
+        request.subscribe(received);
+        const http = httpMock.expectOne(`${BASE_URL}/${metric}-goals/page`);
+        expect(http.request.method).toBe('GET');
+        expect(http.request.params.has('cursor')).toBe(false);
+        expect(http.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        http.flush(response);
+        expect(received).toHaveBeenCalledWith(response);
+    });
+    it.each(['weight', 'waist'] as const)('preserves the opaque %s cursor and propagates errors for retry', metric => {
+        const cursor = 'opaque+/=';
+        const failed = vi.fn();
+        const received = vi.fn();
+        const request: Observable<unknown> =
+            metric === 'weight' ? service.getWeightGoalHistoryPage(cursor) : service.getWaistGoalHistoryPage(cursor);
+        request.subscribe({ next: received, error: failed });
+        const http = httpMock.expectOne(req => req.url === `${BASE_URL}/${metric}-goals/page`);
+        expect(http.request.params.get('cursor')).toBe(cursor);
+        http.flush('offline', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(failed).toHaveBeenCalledOnce();
+        expect(received).not.toHaveBeenCalled();
+    });
+});

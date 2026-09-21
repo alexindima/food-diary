@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5500,
+    "productionFiles": 5511,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 948,
-    "criticalSymbolsWithTestReferences": 910,
+    "criticalSymbols": 950,
+    "criticalSymbolsWithTestReferences": 912,
     "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 10
   },
@@ -12162,11 +12162,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.ts",
-      "nonBlankLines": 64,
-      "decisionPoints": 3,
+      "nonBlankLines": 76,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 9.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.ts",
@@ -12234,11 +12234,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.ts",
-      "nonBlankLines": 396,
+      "nonBlankLines": 391,
       "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.42
+      "structuralRiskScore": 75.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.types.ts",
@@ -12522,11 +12522,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
-      "nonBlankLines": 64,
-      "decisionPoints": 3,
+      "nonBlankLines": 76,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 9.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",
@@ -12602,11 +12602,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
-      "nonBlankLines": 400,
+      "nonBlankLines": 395,
       "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 74
+      "structuralRiskScore": 73.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.types.ts",
@@ -12866,11 +12866,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "nonBlankLines": 228,
+      "nonBlankLines": 245,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.56
+      "structuralRiskScore": 16.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
@@ -13273,6 +13273,14 @@
       "structuralRiskScore": 60.02
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/measurements/goal-history-pager.ts",
+      "nonBlankLines": 60,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.7
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/measurements/measurement-display.pipe.ts",
       "nonBlankLines": 32,
       "decisionPoints": 6,
@@ -13370,11 +13378,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "nonBlankLines": 217,
+      "nonBlankLines": 221,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.84
+      "structuralRiskScore": 29.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/browser-notification-capability.service.ts",
@@ -38201,6 +38209,14 @@
       "structuralRiskScore": 4.88
     },
     {
+      "path": "Modules/Users/Application/Common/GoalHistoryCursor.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.56
+    },
+    {
       "path": "Modules/Users/Application/Common/IUserContextService.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -38465,6 +38481,22 @@
       "structuralRiskScore": 4
     },
     {
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.98
+    },
+    {
       "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -38479,6 +38511,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.98
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
@@ -38639,6 +38687,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Users/Contracts/Common/IUserBodyMetricHistoryReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserCommentAuthorReadService.cs",
@@ -38831,6 +38887,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Users/Contracts/Models/GoalHistoryPageModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Users/Contracts/Models/GoalsModel.cs",
@@ -39641,6 +39705,14 @@
       "structuralRiskScore": 48.26
     },
     {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserBodyMetricHistoryReadService.cs",
+      "nonBlankLines": 81,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.62
+    },
+    {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "nonBlankLines": 136,
       "decisionPoints": 17,
@@ -39698,11 +39770,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 65,
+      "nonBlankLines": 68,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.8
+      "structuralRiskScore": 2.86
     },
     {
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
@@ -39801,12 +39873,28 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Users/Presentation.Contracts/Responses/WaistGoalHistoryPageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Users/Presentation.Contracts/Responses/WeightGoalHistoryHttpResponse.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Responses/WeightGoalHistoryPageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Users/Presentation.Mappings/Mappings/UserSharedHttpResponseMappings.cs",
@@ -39850,19 +39938,19 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.36
+      "structuralRiskScore": 2.52
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.36
+      "structuralRiskScore": 2.52
     },
     {
       "path": "Modules/Users/Presentation/Extensions/UsersPresentationServiceCollectionExtensions.cs",
@@ -48882,7 +48970,7 @@
       "name": "WaistGoalsController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
@@ -48945,7 +49033,7 @@
       "name": "WeightGoalsController",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
@@ -50795,6 +50883,18 @@
       "coveredThrough": []
     },
     {
+      "name": "GetWaistGoalHistoryPageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQueryHandler.cs",
+      "line": 10,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/WaistGoalHistoryPageTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "GetWaistGoalHistoryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
@@ -50931,6 +51031,18 @@
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetWeightGoalHistoryPageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQueryHandler.cs",
+      "line": 10,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/WeightGoalHistoryPageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

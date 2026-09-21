@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4194,
-    "symbols": 4125,
-    "interfaceImplementationLinks": 190,
+    "sourceFiles": 4204,
+    "symbols": 4135,
+    "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2172,
+      "class": 2176,
       "enum": 64,
-      "interface": 400,
-      "record": 1369,
+      "interface": 401,
+      "record": 1374,
       "record struct": 120
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1708,
-      "Query": 270,
-      "QueryHandler": 197,
+      "Other": 1710,
+      "Query": 272,
+      "QueryHandler": 199,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 156,
-      "Response": 218,
-      "Service": 160,
+      "Response": 220,
+      "Service": 162,
       "Validator": 226,
       "ValueObject": 114,
       "WriteRepository": 47
@@ -23246,6 +23246,13 @@
       "line": 7
     },
     {
+      "name": "GoalHistoryCursor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/GoalHistoryCursor.cs",
+      "line": 5
+    },
+    {
       "name": "IUserContextService",
       "kind": "interface",
       "role": "Service",
@@ -23477,6 +23484,20 @@
       "line": 8
     },
     {
+      "name": "GetWaistGoalHistoryPageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWaistGoalHistoryPageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQueryHandler.cs",
+      "line": 10
+    },
+    {
       "name": "GetWeightGoalHistoryQuery",
       "kind": "record",
       "role": "Query",
@@ -23489,6 +23510,20 @@
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
       "line": 8
+    },
+    {
+      "name": "GetWeightGoalHistoryPageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeightGoalHistoryPageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQueryHandler.cs",
+      "line": 10
     },
     {
       "name": "UserAuthenticationIdentityService",
@@ -23629,6 +23664,13 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Common/IUserAuthenticationRegistrationService.cs",
       "line": 5
+    },
+    {
+      "name": "IUserBodyMetricHistoryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Common/IUserBodyMetricHistoryReadService.cs",
+      "line": 6
     },
     {
       "name": "IUserCommentAuthorReadService",
@@ -23796,6 +23838,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Users/Contracts/Models/DashboardLayoutModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GoalHistoryPageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Models/GoalHistoryPageModel.cs",
       "line": 2
     },
     {
@@ -24492,6 +24541,13 @@
       "line": 11
     },
     {
+      "name": "UserBodyMetricHistoryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserBodyMetricHistoryReadService.cs",
+      "line": 12
+    },
+    {
       "name": "UserCleanupService",
       "kind": "class",
       "role": "Service",
@@ -24632,10 +24688,24 @@
       "line": 2
     },
     {
+      "name": "WaistGoalHistoryPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Responses/WaistGoalHistoryPageHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "WeightGoalHistoryHttpResponse",
       "kind": "record",
       "role": "Response",
       "path": "Modules/Users/Presentation.Contracts/Responses/WeightGoalHistoryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightGoalHistoryPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Responses/WeightGoalHistoryPageHttpResponse.cs",
       "line": 2
     },
     {
@@ -24678,14 +24748,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "WeightGoalsController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",
@@ -30098,6 +30168,13 @@
       "interfacePath": "Modules/Users/Contracts/Common/IUserAuthenticationRegistrationService.cs",
       "implementation": "UserAuthenticationRegistrationService",
       "implementationPath": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserBodyMetricHistoryReadService",
+      "interfacePath": "Modules/Users/Contracts/Common/IUserBodyMetricHistoryReadService.cs",
+      "implementation": "UserBodyMetricHistoryReadService",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserBodyMetricHistoryReadService.cs",
       "confidence": "naming-convention"
     },
     {

@@ -86,7 +86,7 @@ public sealed class HistoryPageSummaryHandlerTests {
 
     [Fact]
     public async Task Handlers_WhenProfileReadFails_ReturnFailureWithoutReadingEntries() {
-        IUserProfileReadService profiles = CreateProfiles(fail: true);
+        IUserBodyMetricHistoryReadService profiles = CreateProfiles(fail: true);
         ISender weightEntries = Substitute.For<ISender>();
         ISender waistEntries = Substitute.For<ISender>();
 
@@ -103,7 +103,7 @@ public sealed class HistoryPageSummaryHandlerTests {
 
     [Fact]
     public async Task Handlers_WithValidQuery_ReturnAggregatedPageSummaries() {
-        IUserProfileReadService profiles = CreateProfiles(fail: false);
+        IUserBodyMetricHistoryReadService profiles = CreateProfiles(fail: false);
         ISender weightEntries = Substitute.For<ISender>();
         weightEntries.Send(new ReadWeightEntriesQuery(UserId: UserId, DateFrom: null, DateTo: null, Limit: 25, Descending: true), Arg.Any<CancellationToken>())
             .Returns([new WeightEntryModel(Guid.NewGuid(), UserId.Value, DateTo, 75)]);
@@ -133,12 +133,12 @@ public sealed class HistoryPageSummaryHandlerTests {
 
     private static GetWeightHistoryPageSummaryQueryHandler CreateWeightHandler(
         ISender? entries = null,
-        IUserProfileReadService? profiles = null) =>
+        IUserBodyMetricHistoryReadService? profiles = null) =>
         new(entries ?? Substitute.For<ISender>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
 
     private static GetWaistHistoryPageSummaryQueryHandler CreateWaistHandler(
         ISender? entries = null,
-        IUserProfileReadService? profiles = null) =>
+        IUserBodyMetricHistoryReadService? profiles = null) =>
         new(entries ?? Substitute.For<ISender>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
 
     private static ICurrentUserAccessService CreateAccess() {
@@ -147,8 +147,8 @@ public sealed class HistoryPageSummaryHandlerTests {
         return access;
     }
 
-    private static IUserProfileReadService CreateProfiles(bool fail) {
-        IUserProfileReadService profiles = Substitute.For<IUserProfileReadService>();
+    private static IUserBodyMetricHistoryReadService CreateProfiles(bool fail) {
+        IUserBodyMetricHistoryReadService profiles = Substitute.For<IUserBodyMetricHistoryReadService>();
         Result<WeightHistoryProfileModel> weight = fail
             ? Result.Failure<WeightHistoryProfileModel>(AuthenticationErrors.InvalidToken)
             : Result.Success(new WeightHistoryProfileModel(180, new UserDesiredWeightModel(72), []));
