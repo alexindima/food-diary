@@ -245,7 +245,7 @@ export enum Gender {
     Other = 'O',
 }
 
-export interface GoalHistoryPage<T> {
+export type GoalHistoryPage<T> = {
     items: T[];
     nextCursor: string | null;
-}
+};
