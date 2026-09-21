@@ -75,6 +75,7 @@ describe('WaistHistoryFacade loading', () => {
         TestBed.tick();
 
         expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(1);
+        expect(waistEntriesService.getPageSummary).toHaveBeenCalledWith(expect.objectContaining({ entriesLimit: 6 }));
         expect(waistEntriesService.getEntries).not.toHaveBeenCalled();
         expect(waistEntriesService.getLatest).not.toHaveBeenCalled();
         expect(waistEntriesService.getSummary).not.toHaveBeenCalled();
@@ -359,7 +360,7 @@ describe('Facade editing and goal boundaries', () => {
     it('converts edited canonical data and goal when units change', () => {
         facade.initialize();
         TestBed.tick();
-        const entry = facade.entries()[0];
+        const entry = { id: 'old-outside-preview', userId: 'u', date: '2020-01-01', circumferenceCm: 90 };
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();

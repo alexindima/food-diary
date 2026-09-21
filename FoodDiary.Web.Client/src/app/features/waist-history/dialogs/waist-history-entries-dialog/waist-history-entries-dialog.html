@@ -14,10 +14,12 @@
                 </div>
                 <div
                     class="waist-history-page__entry-change fd-ui-caption"
+                    [fdUiHint]="item.change === null ? null : ('WAIST_HISTORY.CHANGE_HINT' | translate)"
+                    [attr.tabindex]="item.change === null ? null : 0"
                     [class.waist-history-page__entry-change--loss]="item.change !== null && item.change < 0"
                     [class.waist-history-page__entry-change--gain]="item.change !== null && item.change > 0"
                 >
-                    @if (item.change === null || item.change === 0) {
+                    @if (item.change === null) {
                         —
                     } @else {
                         {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'length' | localizedNumber: locale() : 0 : 2 }}
@@ -27,7 +29,7 @@
                 <div class="waist-history-page__entry-actions fd-row fd-gap-actions fd-justify-end">
                     <fd-ui-button
                         type="button"
-                        appearance="plain-icon"
+                        appearance="muted-icon"
                         size="xs"
                         fill="text"
                         variant="secondary"
@@ -37,7 +39,7 @@
                     />
                     <fd-ui-button
                         type="button"
-                        appearance="plain-icon"
+                        appearance="muted-icon"
                         size="xs"
                         fill="text"
                         variant="danger"
@@ -47,6 +49,16 @@
                     />
                 </div>
             </div>
+        }
+    </div>
+    <div class="fd-stack fd-gap-sm" aria-live="polite">
+        @if (pager.message(); as message) {
+            <div [attr.role]="pager.failed() ? 'alert' : 'status'">{{ message | translate }}</div>
+        }
+        @if (pager.hasMore()) {
+            <fd-ui-button type="button" variant="secondary" fill="text" [loading]="pager.loading()" (click)="pager.loadMore()">
+                {{ (pager.failed() ? 'MEASUREMENT_HISTORY_PAGING.RETRY' : 'MEASUREMENT_HISTORY_PAGING.MORE') | translate }}
+            </fd-ui-button>
         }
     </div>
 </fd-ui-dialog-shell>

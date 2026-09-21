@@ -3856,5 +3856,11 @@
         "RETRY": "Retry",
         "MORE": "Show more",
         "EMPTY": "No goal history yet."
+    },
+    "MEASUREMENT_HISTORY_PAGING": {
+        "MORE": "Show more",
+        "RETRY": "Retry",
+        "ERROR": "Could not load measurements. Please try again.",
+        "EMPTY": "No measurements yet."
     }
 }

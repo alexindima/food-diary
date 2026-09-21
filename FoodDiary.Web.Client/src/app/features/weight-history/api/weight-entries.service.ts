@@ -1,10 +1,13 @@
+import { HttpContext } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { addOptionalNumberParam, addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
+import { MEASUREMENT_HISTORY_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import type {
     CreateWeightEntryPayload,
     UpdateWeightEntryPayload,
@@ -31,6 +34,12 @@ export class WeightEntriesService extends ApiService {
         return this.get<WeightEntry[]>('', params).pipe(
             catchError((error: unknown) => fallbackApiError('Weight entries fetch error', error, [])),
         );
+    }
+
+    public getHistoryPage(dateTo?: string): Observable<WeightEntry[]> {
+        const params: ApiQueryParams = { limit: MEASUREMENT_HISTORY_FETCH_LIMIT, sort: 'desc' };
+        addOptionalStringParam(params, 'dateTo', dateTo);
+        return this.get<WeightEntry[]>('', params, undefined, new HttpContext().set(SKIP_GLOBAL_LOADING, true));
     }
 
     public getLatest(): Observable<WeightEntry | null> {

@@ -21,6 +21,7 @@ for (const zone of zones) {
             'food-diary-web-client',
             '--watch=false',
             '--include=**/measurement-calendar-timezone.spec.ts',
+            '--include=**/measurement-history-pager.spec.ts',
             '--include=**/dashboard-calendar-timezone.spec.ts',
         ],
         { stdio: 'inherit', env: { ...process.env, TZ: zone } },

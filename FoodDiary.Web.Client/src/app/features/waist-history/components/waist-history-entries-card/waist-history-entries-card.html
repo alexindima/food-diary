@@ -24,7 +24,7 @@
                         [class.waist-history-page__entry-change--loss]="item.change !== null && item.change < 0"
                         [class.waist-history-page__entry-change--gain]="item.change !== null && item.change > 0"
                     >
-                        @if (item.change === null || item.change === 0) {
+                        @if (item.change === null) {
                             —
                         } @else {
                             {{ item.change > 0 ? '+' : ''

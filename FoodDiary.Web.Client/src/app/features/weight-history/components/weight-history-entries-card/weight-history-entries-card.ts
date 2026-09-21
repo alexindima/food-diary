@@ -9,12 +9,11 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { RECENT_MEASUREMENT_LIMIT } from '../../../../shared/measurements/measurement-history.constants';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import { getWeightChangeTone } from '../../lib/weight-history-progress.utils';
 import type { WeightEntry } from '../../models/weight-entry.data';
-
-const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-weight-history-entries-card',
@@ -53,8 +52,8 @@ export class WeightHistoryEntriesCardComponent {
             };
         });
     });
-    protected readonly visibleItems = computed(() => this.items().slice(0, RECENT_ENTRY_LIMIT));
-    protected readonly canToggleEntries = computed(() => this.items().length > RECENT_ENTRY_LIMIT);
+    protected readonly visibleItems = computed(() => this.items().slice(0, RECENT_MEASUREMENT_LIMIT));
+    protected readonly canToggleEntries = computed(() => this.items().length > RECENT_MEASUREMENT_LIMIT);
 
     public readonly editEntry = output<WeightEntry>();
     public readonly removeEntry = output<WeightEntry>();

@@ -148,7 +148,7 @@ describe('Weight history page composition', () => {
         expect(open).toHaveBeenCalledWith(
             WeightHistoryEntriesDialogComponent,
             expect.objectContaining({
-                data: expect.objectContaining<Record<string, unknown>>({ entries: [ENTRY], desiredWeightKg: 75 }) as unknown,
+                providers: [{ provide: WeightHistoryFacade, useValue: facade }],
             }),
         );
         closed.next(action === undefined ? undefined : { action, entry: ENTRY });

@@ -80,6 +80,7 @@ describe('WeightHistoryFacade loading', () => {
         TestBed.tick();
 
         expect(weightEntriesService.getPageSummary).toHaveBeenCalledTimes(1);
+        expect(weightEntriesService.getPageSummary).toHaveBeenCalledWith(expect.objectContaining({ entriesLimit: 6 }));
         expect(weightEntriesService.getEntries).not.toHaveBeenCalled();
         expect(weightEntriesService.getLatest).not.toHaveBeenCalled();
         expect(weightEntriesService.getSummary).not.toHaveBeenCalled();
@@ -434,7 +435,7 @@ describe('Facade editing and goal boundaries', () => {
     it('converts edited canonical data and goal when units change', () => {
         facade.initialize();
         TestBed.tick();
-        const entry = facade.entries()[0];
+        const entry = { id: 'old-outside-preview', userId: 'u', date: '2020-01-01', weightKg: 90 };
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();

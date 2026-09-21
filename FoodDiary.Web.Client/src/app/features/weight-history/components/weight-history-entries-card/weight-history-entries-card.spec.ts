@@ -130,3 +130,19 @@ describe('Recent entries visibility and pagination', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('button')).toBeNull();
     });
 });
+
+describe('Weight measurement change semantics', () => {
+    it('distinguishes an unchanged measurement from missing comparison and makes the hint keyboard reachable', () => {
+        const { fixture } = setupComponent([
+            { ...createEntry(), id: 'new' },
+            { ...createEntry(), id: 'old', date: '2026-05-14' },
+        ]);
+        const root = fixture.nativeElement as HTMLElement;
+        const changes = root.querySelectorAll<HTMLElement>('.weight-history-page__entry-change');
+        expect(changes[0].textContent.trim()).toMatch(/^0\s/);
+        expect(changes[0].textContent).not.toContain('\u2014');
+        expect(changes[0].getAttribute('tabindex')).toBe('0');
+        expect(changes[1].textContent.trim()).toBe('\u2014');
+        expect(changes[1].hasAttribute('tabindex')).toBe(false);
+    });
+});

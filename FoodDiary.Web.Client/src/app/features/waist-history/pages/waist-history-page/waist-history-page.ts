@@ -22,7 +22,6 @@ import { WaistHistoryGoalCardComponent } from '../../components/waist-history-go
 import { WaistGoalHistoryDialogComponent } from '../../dialogs/waist-goal-history-dialog/waist-goal-history-dialog';
 import {
     WaistHistoryEntriesDialogComponent,
-    type WaistHistoryEntriesDialogData,
     type WaistHistoryEntriesDialogResult,
 } from '../../dialogs/waist-history-entries-dialog/waist-history-entries-dialog';
 import { WaistHistoryEntryDialogComponent } from '../../dialogs/waist-history-entry-dialog/waist-history-entry-dialog';
@@ -165,10 +164,10 @@ export class WaistHistoryPageComponent {
 
     protected openEntriesDialog(): void {
         this.dialogService
-            .open<WaistHistoryEntriesDialogComponent, WaistHistoryEntriesDialogData, WaistHistoryEntriesDialogResult>(
-                WaistHistoryEntriesDialogComponent,
-                { data: { entries: this.entriesDescending(), desiredWaistCm: this.desiredWaistCm() }, preset: 'form' },
-            )
+            .open<WaistHistoryEntriesDialogComponent, undefined, WaistHistoryEntriesDialogResult>(WaistHistoryEntriesDialogComponent, {
+                providers: [{ provide: WaistHistoryFacade, useValue: this.facade }],
+                preset: 'form',
+            })
             .afterClosed()
             .subscribe(result => {
                 if (result?.action === 'edit') {

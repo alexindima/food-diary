@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c56b087a3193eee107db1887f081a93fa6eb33d7f498d40117765d61394194c"
+          "sha256": "c7973f584a63ad46dc52e394ab05a10bc5fffe86648434f6abac16f1e93fb5d2"
         }
       ],
-      "reason": "Executed 385 focused frontend tests across the combined runs, Users and BodyMetrics application suites, PostgreSQL provider tests, HTTP flow and OpenAPI snapshots. Architecture capability inventory was explicitly reviewed; its 25 focused guards pass after the initial inventory failure. Desktop/mobile browser scenarios verify lazy requests, retry, paging, reopen and no horizontal overflow. Generated indexes were refreshed; workflow guidance remains valid.",
+      "reason": "Regenerated frontend quality navigation; 367 focused tests passed, including zero/missing values and pagination errors, boundaries, lifecycle and older-entry editing. Calendar pagination was verified in nine timezones. Static test references remain discovery evidence, with no workflow changes needed.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:06.5396508Z"
+      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
+      "reviewedAtUtc": "2026-09-21T03:25:19.5185135Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,17 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c56b087a3193eee107db1887f081a93fa6eb33d7f498d40117765d61394194c"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7e3fa4c9fb6164ca6291a906926154d96d5e4ae228fc1c2543b11183c82b2303"
+          "sha256": "c7973f584a63ad46dc52e394ab05a10bc5fffe86648434f6abac16f1e93fb5d2"
         }
       ],
-      "reason": "Reviewed current-user binding, persisted active/deleted access checks, per-user goal filters and bounded scalar projections. Provider tests reject missing/inactive/deleted users and isolate another user. HTTP rejects anonymous access and invalid cursors. Dialog state is disposed locally, with no new logs, providers or persistent caches.",
+      "reason": "Bounded measurement requests reuse current-user authorization and existing transport; no persistent health-data cache, external sharing or new backend routes. UI hint and muted-action changes preserve action semantics and accessibility. Refreshed quality index does not change security-review guidance.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:07.2414892Z"
+      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
+      "reviewedAtUtc": "2026-09-21T03:25:20.8858008Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8c71c6aa5bdc18ed1fa7a92dab9d53755996a4181e7de06c518ab5c655aa7c93"
+          "sha256": "7882f01439077de1cc5a5b9f5890b3f6dcf9ec3fa6c4200c038e3ab9d73ce681"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "016ce190d00a2898d1bd9acae2ba8b8db763f0b3f6b23451ce9fb93a39090af5"
+          "sha256": "4cbcfcc791a783901b4cbf0e47e06b4efb9359da001373a455406faa82829f64"
         }
       ],
-      "reason": "Traced both page-summary handlers and dialog-to-facade-to-UserService requests. Users retains goal ownership and scoped transaction synchronization; new reads are scalar/no-tracking. Browser GET retries preserve the cursor, pager cancellation releases requests on close, and mutations reset history. No external clients, workers, schedules or transaction ownership change.",
+      "reason": "Confirmed both page/facade/API/dialog chains and the migrated dialog provider contracts in current sources. Existing list endpoint supports date-keyset pages with lookahead; entry edit/remove results are unchanged. Frontend indexes were refreshed and workflow tracing guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:07.5738367Z"
+      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
+      "reviewedAtUtc": "2026-09-21T03:25:22.2258497Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8c71c6aa5bdc18ed1fa7a92dab9d53755996a4181e7de06c518ab5c655aa7c93"
+          "sha256": "7882f01439077de1cc5a5b9f5890b3f6dcf9ec3fa6c4200c038e3ab9d73ce681"
         }
       ],
-      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
+      "reason": "Verified weight and waist dialogs and cards distinguish zero from missing delta. Dialogs reuse muted-icon controls and the translated previous-measurement hint with keyboard focus. Date pagination uses the existing authenticated API and component-owned state; direct component/API/pager tests passed and desktop/mobile browser checks cover the changed presentation.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:06.1085631Z"
+      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
+      "reviewedAtUtc": "2026-09-21T03:25:17.5386187Z"
     },
     {
       "pageId": "workflow.query-context",

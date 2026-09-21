@@ -1,9 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { of } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import type { WeightEntry } from '../../models/weight-entry.data';
 import { WeightHistoryEntriesDialogComponent } from './weight-history-entries-dialog';
 
@@ -24,6 +26,7 @@ function setup(entries: WeightEntry[]): {
         imports: [WeightHistoryEntriesDialogComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: WeightHistoryFacade, useValue: { getEntryHistoryPage: vi.fn().mockReturnValue(of(entries)) } },
             { provide: FD_UI_DIALOG_DATA, useValue: { entries, currentWeight: 80, desiredWeightKg: 75 } },
             { provide: FdUiDialogRef, useValue: { close } },
         ],
@@ -55,5 +58,21 @@ describe('Weight all entries dialog', () => {
     });
     it('handles an empty list', () => {
         expect(setup([]).component['items']()).toEqual([]);
+    });
+});
+
+describe('Weight measurement change semantics', () => {
+    it('distinguishes an unchanged measurement from missing comparison and makes the hint keyboard reachable', () => {
+        const { fixture } = setup([
+            entry('new', '2026-04-02', FIXTURE_REFERENCE_MEASUREMENT),
+            entry('old', '2026-04-01', FIXTURE_REFERENCE_MEASUREMENT),
+        ]);
+        const root = fixture.nativeElement as HTMLElement;
+        const changes = root.querySelectorAll<HTMLElement>('.weight-history-page__entry-change');
+        expect(changes[0].textContent.trim()).toMatch(/^0\s/);
+        expect(changes[0].textContent).not.toContain('\u2014');
+        expect(changes[0].getAttribute('tabindex')).toBe('0');
+        expect(changes[1].textContent.trim()).toBe('\u2014');
+        expect(changes[1].hasAttribute('tabindex')).toBe(false);
     });
 });

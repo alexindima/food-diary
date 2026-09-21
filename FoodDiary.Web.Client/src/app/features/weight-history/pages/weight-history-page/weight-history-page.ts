@@ -169,10 +169,10 @@ export class WeightHistoryPageComponent {
                 WeightHistoryEntriesDialogComponent,
                 {
                     data: {
-                        entries: this.entriesDescending(),
                         currentWeight: this.latestWeight(),
                         desiredWeightKg: this.desiredWeightKg(),
                     },
+                    providers: [{ provide: WeightHistoryFacade, useValue: this.facade }],
                     preset: 'form',
                 },
             )

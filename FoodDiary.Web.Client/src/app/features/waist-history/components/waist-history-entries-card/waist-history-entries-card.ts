@@ -9,11 +9,10 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { RECENT_MEASUREMENT_LIMIT } from '../../../../shared/measurements/measurement-history.constants';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper';
 import type { WaistEntry } from '../../models/waist-entry.data';
-
-const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-waist-history-entries-card',
@@ -48,8 +47,8 @@ export class WaistHistoryEntriesCardComponent {
             };
         });
     });
-    protected readonly visibleItems = computed(() => this.items().slice(0, RECENT_ENTRY_LIMIT));
-    protected readonly canToggleEntries = computed(() => this.items().length > RECENT_ENTRY_LIMIT);
+    protected readonly visibleItems = computed(() => this.items().slice(0, RECENT_MEASUREMENT_LIMIT));
+    protected readonly canToggleEntries = computed(() => this.items().length > RECENT_MEASUREMENT_LIMIT);
 
     public readonly editEntry = output<WaistEntry>();
     public readonly removeEntry = output<WaistEntry>();

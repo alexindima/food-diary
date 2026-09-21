@@ -10,12 +10,13 @@ import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
-import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM, WAIST_HISTORY_ENTRIES_LIMIT_MAX } from './waist-history.constants';
+import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
 import { buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 import {
@@ -50,6 +51,7 @@ export class WaistHistoryFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly defaultRange: WaistHistoryRange = 'month';
+    private readonly editingEntry = signal<WaistEntry | null>(null);
     private readonly editingEntryId = signal<string | null>(null);
     private readonly userHeightCm = signal<number | null>(null);
     private readonly initialized = signal(false);
@@ -207,6 +209,7 @@ export class WaistHistoryFacade {
     public startEdit(entry: WaistEntry): void {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
+        this.editingEntry.set(entry);
         this.formModel.set({
             date: entry.date.split('T')[0] ?? '',
             circumference: this.formatDisplayWaist(entry.circumferenceCm),
@@ -339,7 +342,7 @@ export class WaistHistoryFacade {
         this.isLoading.set(true);
         this.isSummaryLoading.set(true);
         this.waistEntriesService
-            .getPageSummary({ ...summaryParams, entriesLimit: WAIST_HISTORY_ENTRIES_LIMIT_MAX })
+            .getPageSummary({ ...summaryParams, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
@@ -363,6 +366,10 @@ export class WaistHistoryFacade {
                     this.form.circumference().value.set(this.formatDisplayWaist(latestEntry?.circumferenceCm ?? null));
                 }
             });
+    }
+
+    public getEntryHistoryPage(dateTo?: string): ReturnType<WaistEntriesService['getHistoryPage']> {
+        return this.waistEntriesService.getHistoryPage(dateTo);
     }
 
     public getGoalHistoryPage(cursor?: string): ReturnType<UserService['getWaistGoalHistoryPage']> {
@@ -423,11 +430,12 @@ export class WaistHistoryFacade {
     private resetEditingState(): void {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
+        this.editingEntry.set(null);
         this.form.date().value.set(formatWaistHistoryDateInput(new Date()));
     }
 
     private syncDisplayForms(): void {
-        const editingEntry = this.entries().find(entry => entry.id === this.editingEntryId());
+        const editingEntry = this.editingEntry();
         const circumferenceCm = editingEntry?.circumferenceCm ?? this.latestWaist();
         this.form.circumference().value.set(this.formatDisplayWaist(circumferenceCm));
         this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(this.desiredWaistCm()) });

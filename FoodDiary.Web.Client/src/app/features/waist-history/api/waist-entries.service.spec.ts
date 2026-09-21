@@ -5,6 +5,7 @@ import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 import type { WaistEntry, WaistEntryFilters } from '../models/waist-entry.data';
 import { WaistEntriesService } from './waist-entries.service';
 
@@ -195,5 +196,26 @@ describe('Summary and failure contracts', () => {
         httpMock.expectOne(() => true).flush(body, { status: 409, statusText: 'Conflict' });
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 409, error: body }));
+    });
+});
+
+describe('Measurement history page requests', () => {
+    it.each([undefined, '2026-03-01'])('requests only 21 newest rows up to %s, without global loading', dateTo => {
+        const received = vi.fn();
+        service.getHistoryPage(dateTo).subscribe(received);
+        const request = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        expect(request.request.params.get('limit')).toBe('21');
+        expect(request.request.params.get('sort')).toBe('desc');
+        expect(request.request.params.get('dateTo')).toBe(dateTo ?? null);
+        expect(request.request.params.has('dateFrom')).toBe(false);
+        expect(request.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        request.flush([MOCK_ENTRY]);
+        expect(received).toHaveBeenCalledWith([MOCK_ENTRY]);
+    });
+    it('propagates errors so the dialog can retry instead of showing empty history', () => {
+        const error = vi.fn();
+        service.getHistoryPage().subscribe({ error });
+        httpMock.expectOne(r => r.url === `${BASE_URL}/`).flush({}, { status: 503, statusText: 'Unavailable' });
+        expect(error).toHaveBeenCalledTimes(1);
     });
 });

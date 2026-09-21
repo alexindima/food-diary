@@ -10,6 +10,7 @@ import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
@@ -20,7 +21,7 @@ import type {
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
-import { MAX_WEIGHT_KG, MIN_WEIGHT_KG, WEIGHT_HISTORY_ENTRIES_LIMIT_MAX } from './weight-history.constants';
+import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 import { buildBmiViewModel } from './weight-history-bmi.mapper';
 import { buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
@@ -56,6 +57,7 @@ export class WeightHistoryFacade {
 
     private readonly userHeightCm = signal<number | null>(null);
     private readonly defaultRange: WeightHistoryRange = 'month';
+    private readonly editingEntry = signal<WeightEntry | null>(null);
     private readonly editingEntryId = signal<string | null>(null);
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
@@ -213,6 +215,7 @@ export class WeightHistoryFacade {
     public startEdit(entry: WeightEntry): void {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
+        this.editingEntry.set(entry);
         this.formModel.set({
             date: entry.date.split('T')[0] ?? '',
             weight: this.formatDisplayWeight(entry.weightKg),
@@ -344,7 +347,7 @@ export class WeightHistoryFacade {
         this.isLoading.set(true);
         this.isSummaryLoading.set(true);
         this.weightEntriesService
-            .getPageSummary({ ...summaryParams, entriesLimit: WEIGHT_HISTORY_ENTRIES_LIMIT_MAX })
+            .getPageSummary({ ...summaryParams, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT })
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
@@ -368,6 +371,10 @@ export class WeightHistoryFacade {
                     this.form.weight().value.set(this.formatDisplayWeight(latestEntry?.weightKg ?? null));
                 }
             });
+    }
+
+    public getEntryHistoryPage(dateTo?: string): ReturnType<WeightEntriesService['getHistoryPage']> {
+        return this.weightEntriesService.getHistoryPage(dateTo);
     }
 
     public getGoalHistoryPage(cursor?: string): ReturnType<UserService['getWeightGoalHistoryPage']> {
@@ -428,11 +435,12 @@ export class WeightHistoryFacade {
     private resetEditingState(): void {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
+        this.editingEntry.set(null);
         this.form.date().value.set(formatWeightHistoryDateInput(new Date()));
     }
 
     private syncDisplayForms(): void {
-        const editingEntry = this.entries().find(entry => entry.id === this.editingEntryId());
+        const editingEntry = this.editingEntry();
         const entryWeightKg = editingEntry?.weightKg ?? this.latestWeight();
         this.form.weight().value.set(this.formatDisplayWeight(entryWeightKg));
         this.desiredWeightModel.set({ weight: this.formatDisplayWeight(this.desiredWeightKg()) });

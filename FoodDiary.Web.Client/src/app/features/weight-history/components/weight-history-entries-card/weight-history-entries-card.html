@@ -28,7 +28,7 @@
                             [class.weight-history-page__entry-change--loss]="item.tone === 'positive'"
                             [class.weight-history-page__entry-change--gain]="item.tone === 'negative'"
                         >
-                            @if (item.change === null || item.change === 0) {
+                            @if (item.change === null) {
                                 —
                             } @else {
                                 {{ item.change > 0 ? '+' : ''

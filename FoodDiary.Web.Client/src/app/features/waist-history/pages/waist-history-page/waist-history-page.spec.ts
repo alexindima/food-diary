@@ -148,7 +148,7 @@ describe('Waist history page composition', () => {
         expect(open).toHaveBeenCalledWith(
             WaistHistoryEntriesDialogComponent,
             expect.objectContaining({
-                data: expect.objectContaining<Record<string, unknown>>({ entries: [ENTRY], desiredWaistCm: 75 }) as unknown,
+                providers: [{ provide: WaistHistoryFacade, useValue: facade }],
             }),
         );
         closed.next(action === undefined ? undefined : { action, entry: ENTRY });
