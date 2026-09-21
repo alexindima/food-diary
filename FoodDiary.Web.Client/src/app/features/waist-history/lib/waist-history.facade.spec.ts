@@ -23,6 +23,7 @@ let measurements: MeasurementSystemService;
 let waistEntriesService: {
     create: ReturnType<typeof vi.fn>;
     getEntries: ReturnType<typeof vi.fn>;
+    getHistoryPage: ReturnType<typeof vi.fn>;
     getLatest: ReturnType<typeof vi.fn>;
     getPageSummary: ReturnType<typeof vi.fn>;
     getSummary: ReturnType<typeof vi.fn>;
@@ -67,6 +68,36 @@ beforeEach(() => {
     facade = TestBed.inject(WaistHistoryFacade);
     measurements = TestBed.inject(MeasurementSystemService);
     measurements.setSystem('metric');
+});
+
+describe('WaistHistoryFacade entry history pagination', () => {
+    it.each([undefined, '2026-03-29'])('loads entry history only on demand with date cursor %s', dateTo => {
+        facade.initialize();
+        TestBed.tick();
+        expect(waistEntriesService.getHistoryPage).not.toHaveBeenCalled();
+        const recentEntries = facade.entries();
+        const historyEntries = [{ id: 'older-entry', userId: 'user-1', date: '2026-03-01T00:00:00Z', circumferenceCm: 80 }];
+        waistEntriesService.getHistoryPage.mockReturnValueOnce(of(historyEntries));
+        const next = vi.fn();
+
+        facade.getEntryHistoryPage(dateTo).subscribe(next);
+
+        expect(waistEntriesService.getHistoryPage).toHaveBeenCalledExactlyOnceWith(dateTo);
+        expect(next).toHaveBeenCalledExactlyOnceWith(historyEntries);
+        expect(facade.entries()).toEqual(recentEntries);
+    });
+
+    it('propagates history loading errors so the dialog can offer a retry', () => {
+        const failure = new Error('History request failed');
+        waistEntriesService.getHistoryPage.mockReturnValueOnce(throwError(() => failure));
+        const next = vi.fn();
+        const error = vi.fn();
+
+        facade.getEntryHistoryPage('2026-03-29').subscribe({ next, error });
+
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledExactlyOnceWith(failure);
+    });
 });
 
 describe('WaistHistoryFacade loading', () => {
@@ -243,6 +274,7 @@ describe('WaistHistoryFacade desired waist', () => {
 function createWaistEntriesServiceMock(): typeof waistEntriesService {
     return {
         getPageSummary: vi.fn().mockReturnValue(of(createWaistPageSummary())),
+        getHistoryPage: vi.fn().mockReturnValue(of([])),
         getEntries: vi.fn().mockReturnValue(
             of([
                 { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 },
