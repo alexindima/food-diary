@@ -809,6 +809,9 @@ public partial class MealsFeatureTests {
         public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<FavoriteMeal?>(null);
 
+        public Task<FavoriteMeal?> GetForRestoreAsync(FavoriteMealId id, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_favorites.FirstOrDefault(x => x.Id == id && x.UserId == userId));
+
         public Task<FavoriteMeal?> GetByMealIdAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_favorites.FirstOrDefault(x => x.MealId == mealId));
 
