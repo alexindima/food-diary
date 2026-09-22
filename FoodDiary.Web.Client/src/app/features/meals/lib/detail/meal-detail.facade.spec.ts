@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -197,5 +197,48 @@ describe('MealDetailFacade actions', () => {
         facade.delete(meal);
 
         expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+});
+
+describe('MealDetailFacade removal failures', () => {
+    it.each(['known', 'lookup', 'lookup-remove'])('preserves the favorite and allows retry after %s failure', mode => {
+        favoriteMealService.isFavorite.mockReturnValue(of(true));
+        facade.initialize({ ...meal, isFavorite: true, favoriteMealId: mode === 'known' ? favoriteMeal.id : null });
+        if (mode === 'lookup') {
+            favoriteMealService.getAll.mockReturnValueOnce(throwError(() => new Error('offline')));
+        } else {
+            favoriteMealService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
+        }
+        facade.toggleFavorite(meal);
+        expect(facade.isFavorite()).toBe(true);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        facade.toggleFavorite(meal);
+        expect(facade.isFavorite()).toBe(false);
+        expect(facade.isFavoriteLoading()).toBe(false);
+    });
+});
+
+describe('MealDetailFacade delayed favorite initialization', () => {
+    it('does not let an older status response overwrite a successful user action', () => {
+        const status = new Subject<boolean>();
+        favoriteMealService.isFavorite.mockReturnValue(status);
+        facade.initialize(meal);
+        facade.toggleFavorite(meal);
+        status.next(false);
+        expect(facade.isFavorite()).toBe(true);
+        expect(status.observed).toBe(false);
+    });
+    it('keeps the meal snapshot when status lookup fails', () => {
+        favoriteMealService.isFavorite.mockReturnValue(throwError(() => new Error('offline')));
+        facade.initialize({ ...meal, isFavorite: true });
+        expect(facade.isFavorite()).toBe(true);
+    });
+    it('cancels pending mutations when the dialog scope is destroyed', () => {
+        const response = new Subject<FavoriteMeal>();
+        favoriteMealService.add.mockReturnValue(response);
+        facade.initialize(meal);
+        facade.toggleFavorite(meal);
+        TestBed.resetTestingModule();
+        expect(response.observed).toBe(false);
     });
 });

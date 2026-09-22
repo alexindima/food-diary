@@ -5,7 +5,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { type Observable, of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -122,6 +122,7 @@ const mockBreakpointObserver = {
 };
 
 const mockFavoriteMealService = {
+    restore: vi.fn().mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' })),
     add: vi.fn().mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' })),
     getPage: vi.fn().mockReturnValue(of({ totalItems: 0 })),
     remove: vi.fn().mockReturnValue(of(void 0)),
@@ -142,6 +143,7 @@ describe('MealListComponent', () => {
 
     beforeEach(async () => {
         vi.clearAllMocks();
+        mockDialogRef.afterClosed.mockReturnValue(of(void 0));
         mockMealService.create.mockReturnValue(of(createMockMeal()));
         mockMealService.queryOverview.mockReturnValue(of(createOverview([])));
         mockMealService.repeat.mockReturnValue(of(createMockMeal()));
@@ -212,6 +214,8 @@ describe('MealListComponent', () => {
     registerRangeTests(context);
     registerFavoriteTests(context);
     registerDialogTests(context);
+    registerFilterInteractionTests(context);
+    registerFavoritesPickerWiringTests(context);
 });
 
 function registerLoadingTests(context: TestContext): void {
@@ -226,7 +230,7 @@ function registerLoadingTests(context: TestContext): void {
                 1,
                 PAGE_LIMIT,
                 { dateFrom: undefined, dateTo: undefined },
-                { limit: 0 },
+                { limit: 0, include: true },
             );
         });
 
@@ -337,7 +341,6 @@ function registerGroupingTests(context: TestContext): void {
             expect(grouped[1].date.getDate()).toBe(MAY_4);
             expect(grouped[1].items).toEqual([lateMeal]);
         });
-
     });
 }
 
@@ -513,4 +516,116 @@ function createFavorite(overrides: Partial<FavoriteMeal> = {}): FavoriteMeal {
         itemCount: 1,
         ...overrides,
     };
+}
+
+function registerFilterInteractionTests(context: TestContext): void {
+    it('applies changed filters, resets to page one, and removes individual chips', () => {
+        const component = context.component();
+        const filters = {
+            dateRange: { start: new Date('2026-01-01T00:00:00'), end: new Date('2026-01-02T00:00:00') },
+            mealTypes: ['Dinner'],
+            caloriesFrom: 0,
+            caloriesTo: 500,
+            hasImage: false,
+            hasAiSession: true,
+        };
+        context.mockFdDialogService.open.mockReturnValue({ afterClosed: () => of(filters) });
+        component['openFilters']();
+        expect(component['searchModel']()).toMatchObject(filters);
+        expect(component['activeFilterChips']().length).toBeGreaterThan(0);
+        expect(component['hasActiveFilters']()).toBe(true);
+        expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
+            1,
+            expect.any(Number),
+            expect.objectContaining({ caloriesFrom: 0, hasImage: false }),
+            expect.anything(),
+        );
+        component['removeFilter']('hasImage');
+        component['resetFilters']();
+        expect(component['hasActiveFilters']()).toBe(false);
+    });
+    it.each([null, undefined])('does not reload after cancelling filters: %s', result => {
+        context.mockFdDialogService.open.mockReturnValue({ afterClosed: () => of(result) });
+        const previousCalls = context.mockMealService.queryOverview.mock.calls.length;
+        context.component()['openFilters']();
+        expect(context.mockMealService.queryOverview).toHaveBeenCalledTimes(previousCalls);
+    });
+    it('ignores equivalent filters including reordered meal types', () => {
+        const component = context.component();
+        component['searchModel'].update(value => ({ ...value, mealTypes: ['Dinner', 'Snack'] }));
+        const filters = { ...component['searchModel'](), mealTypes: ['Snack', 'Dinner'] };
+        context.mockFdDialogService.open.mockReturnValue({ afterClosed: () => of(filters) });
+        const previousCalls = context.mockMealService.queryOverview.mock.calls.length;
+        component['openFilters']();
+        expect(context.mockMealService.queryOverview).toHaveBeenCalledTimes(previousCalls);
+    });
+    it('retries both the unfiltered overview and filtered results', () => {
+        context.component()['retryLoad']();
+        expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
+            1,
+            expect.any(Number),
+            expect.anything(),
+            expect.objectContaining({ include: true }),
+        );
+        context.component()['searchModel'].update(value => ({ ...value, hasImage: true }));
+        context.component()['retryLoad']();
+        expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
+            1,
+            expect.any(Number),
+            expect.objectContaining({ hasImage: true }),
+            expect.objectContaining({ include: false }),
+        );
+    });
+}
+
+function registerFavoritesPickerWiringTests(context: TestContext): void {
+    it('wires remove, restore and repeat to the current diary filters', async () => {
+        const component = context.component();
+        context.fixture().detectChanges();
+        const favorite: FavoriteMeal = {
+            id: 'favorite-1',
+            mealId: 'meal-1',
+            name: null,
+            createdAtUtc: '',
+            mealDate: '',
+            mealType: null,
+            totalCalories: 0,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            itemCount: 0,
+        };
+        context.mockFdDialogService.open.mockReturnValue(mockDialogRef);
+        await component['openFavoritesAsync']();
+        const options = context.mockFdDialogService.open.mock.calls.at(-1)?.[1] as {
+            data: {
+                remove: (item: FavoriteMeal) => Observable<boolean>;
+                restore: (item: FavoriteMeal) => Observable<boolean>;
+                repeat: (item: FavoriteMeal) => Observable<boolean>;
+            };
+        };
+        options.data.remove(favorite).subscribe();
+        options.data.restore(favorite).subscribe();
+        options.data.repeat(favorite).subscribe();
+        expect(context.mockFavoriteMealService.remove).toHaveBeenCalledWith('favorite-1');
+        expect(context.mockFavoriteMealService.restore).toHaveBeenCalledWith('favorite-1');
+        expect(context.mockMealService.repeat).toHaveBeenCalledWith('meal-1', expect.any(String), expect.any(String));
+    });
+    it('refreshes the current page after creating a meal and toggles sections independently', () => {
+        const component = context.component();
+        context.fixture().detectChanges();
+        component['toggleFavorites']();
+        component['toggleFavorites']();
+        component['togglePlanned']();
+        component['loadFavorites']();
+        component['container']().nativeElement.scrollIntoView = vi.fn();
+        component['onMealCreated']();
+        expect(context.mockFavoriteMealService.getPage).toHaveBeenCalledWith(1, 1);
+        expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
+            1,
+            expect.any(Number),
+            expect.anything(),
+            expect.objectContaining({ include: false }),
+        );
+    });
 }

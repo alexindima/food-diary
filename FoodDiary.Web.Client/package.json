@@ -45,6 +45,7 @@
         "test:ci:admin": "ng test fooddiary-admin --watch=false",
         "test:mcp": "node scripts/test-angular-mcp.mjs",
         "test:coverage": "npm run test:coverage:app && npm run test:coverage:ui-kit && npm run test:coverage:tour && npm run test:coverage:admin",
+        "test:coverage:meals": "ng test food-diary-web-client --watch=false --coverage --coverage-include=src/app/features/meals/**/*.ts --include=**/meals/**/*.spec.ts --include=**/ai-food.facade.spec.ts --include=**/ai-nutrition-edit.utils.spec.ts",
         "test:coverage:body-metrics": "ng test food-diary-web-client --watch=false --coverage --coverage-include=src/app/features/weight-history/**/*.ts --coverage-include=src/app/features/waist-history/**/*.ts --include=**/weight-history/**/*.spec.ts --include=**/waist-history/**/*.spec.ts",
         "test:coverage:app": "ng test food-diary-web-client --watch=false --configuration=coverage",
         "test:coverage:ui-kit": "ng test fd-ui-kit --watch=false --configuration=coverage",

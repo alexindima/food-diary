@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -87,6 +87,7 @@ const AI_RECOGNITION_SESSIONS: MealAiSessionManageDto[] = [
         ],
     },
 ];
+const DECIMAL_MANUAL_CALORIES = 12.5;
 const MANUAL_CALORIES = 100;
 const MANUAL_PROTEINS = 20;
 const MANUAL_FATS = 10;
@@ -103,7 +104,11 @@ let navigationService: {
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn> };
-let recipeWeightService: { loadServingWeight: ReturnType<typeof vi.fn>; convertGramsToServings: ReturnType<typeof vi.fn> };
+let recipeWeightService: {
+    loadServingWeight: ReturnType<typeof vi.fn>;
+    convertGramsToServings: ReturnType<typeof vi.fn>;
+    convertServingsToGrams: ReturnType<typeof vi.fn>;
+};
 
 const meal: Meal = {
     id: 'c1',
@@ -146,6 +151,7 @@ describe('MealManageFacade', () => {
         recipeWeightService = {
             loadServingWeight: vi.fn(),
             convertGramsToServings: vi.fn(),
+            convertServingsToGrams: vi.fn((_recipe: unknown, amount: number) => amount * RECIPE_SERVING_WEIGHT),
         };
 
         mealService.create.mockReturnValue(of(meal));
@@ -178,6 +184,8 @@ describe('MealManageFacade', () => {
     registerAiSessionTests();
     registerItemSelectionTests();
     registerNutritionSummaryTests();
+    registerManageDialogTests();
+    registerManageBoundaryTests();
 });
 
 function registerSubmitAndNavigationTests(): void {
@@ -387,4 +395,101 @@ function createNutritionFormValue(isAuto: boolean): MealFormValues {
         preMealSatietyLevel: null,
         postMealSatietyLevel: null,
     };
+}
+
+function registerManageDialogTests(): void {
+    it.each([true, false, undefined])('only confirms discard for explicit true: %s', async result => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(result) });
+        expect(
+            await facade.confirmDiscardChangesAsync({ title: 'Discard', message: 'Unsaved', confirmLabel: 'Yes', cancelLabel: 'No' }),
+        ).toBe(result === true);
+    });
+    it.each([true, false, undefined])('offers premium access without granting it: %s', result => {
+        authService.isPremium.mockReturnValue(false);
+        dialogService.open.mockReturnValue({ afterClosed: () => of(result) });
+        expect(facade.ensurePremiumAccess()).toBe(false);
+        expect(navigationService.navigateToPremiumAccessAsync).toHaveBeenCalledTimes(result === true ? 1 : 0);
+    });
+    it('does not show premium prompt for an eligible user', () => {
+        expect(facade.ensurePremiumAccess()).toBe(true);
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+    it.each(['/photo', null])('opens an existing AI session with image %s and preserves cancellation', async imageUrl => {
+        const session = { imageUrl, imageAssetId: 'asset', items: [] };
+        dialogService.open.mockReturnValue({ afterClosed: () => of(undefined) });
+        expect(await facade.openEditAiPhotoSessionDialogAsync(session)).toBeNull();
+        expect(dialogService.open).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                data: {
+                    initialSelection: imageUrl === null ? null : { url: imageUrl, assetId: 'asset' },
+                    initialSession: session,
+                    mode: 'edit',
+                },
+            }),
+        );
+    });
+    it('returns the modified AI session', async () => {
+        const session = AI_RECOGNITION_SESSIONS[0];
+        dialogService.open.mockReturnValue({ afterClosed: () => of(session) });
+        expect(await facade.openEditAiPhotoSessionDialogAsync(session)).toBe(session);
+    });
+    it.each([null, undefined])('cancelling product selection returns null: %s', async selection => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(selection) });
+        expect(await facade.openItemSelectionDialogAsync('Product')).toBeNull();
+    });
+}
+
+function registerManageBoundaryTests(): void {
+    it.each([null, meal])('does not invalidate nutrition on failed save: %s', async original => {
+        const invalidation = vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
+        mealService.create.mockReturnValue(throwError(() => new Error('offline')));
+        mealService.update.mockReturnValue(throwError(() => new Error('offline')));
+        await expect(facade.submitMealAsync(original, mealData)).rejects.toThrow('offline');
+        expect(invalidation).not.toHaveBeenCalled();
+    });
+    it('clears only incompatible selections when changing item type', () => {
+        const product = createNutritionProduct();
+        const recipe = createNutritionRecipe();
+        const item = facade.createMealItemValue(product, recipe, PRODUCT_AMOUNT);
+        expect(facade.configureItemType(item, MealSourceType.Recipe, true)).toEqual({
+            sourceType: MealSourceType.Recipe,
+            recipe,
+            product: null,
+            amount: null,
+        });
+        expect(facade.configureItemType(item, MealSourceType.Product, true)).toEqual({
+            sourceType: MealSourceType.Product,
+            product,
+            recipe: null,
+            amount: null,
+        });
+        expect(facade.configureItemType(item, MealSourceType.Product)).toEqual(item);
+        expect(facade.createMealItemValue()).toEqual({ sourceType: MealSourceType.Product, product: null, recipe: null, amount: null });
+    });
+    it('uses the same serving conversion in both directions', () => {
+        const recipe = createNutritionRecipe();
+        expect(facade.convertRecipeGramsToServings(recipe, EXPECTED_RECIPE_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
+        expect(facade.convertRecipeServingsToGrams(recipe, RECIPE_SERVING_AMOUNT)).toBe(EXPECTED_RECIPE_AMOUNT);
+    });
+    it.each([null, 0, -1])('falls back to input servings when weight is unavailable: %s', async weight => {
+        recipeWeightService.loadServingWeight.mockReturnValue(of(weight));
+        expect(await facade.resolveRecipeServingsToGramsAsync(null, RECIPE_SERVING_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
+    });
+    it('copies all automatic nutrients into a manual patch', () => {
+        expect(facade.buildManualNutritionPatchFromTotals(EXPECTED_AUTO_TOTALS)).toEqual({
+            manualCalories: 1160,
+            manualProteins: 53,
+            manualFats: 31,
+            manualCarbs: 97,
+            manualFiber: 15,
+            manualAlcohol: 2,
+        });
+    });
+    it.each([null, '', 'invalid', Number.NaN, Number.POSITIVE_INFINITY, -1, '12,5'])('normalizes manual nutrient input %s', value => {
+        const values = { ...createNutritionFormValue(false), manualCalories: value };
+        expect(facade.getManualNutritionTotalsFromValue(values as unknown as MealFormValues).calories).toBe(
+            value === '12,5' ? DECIMAL_MANUAL_CALORIES : 0,
+        );
+    });
 }

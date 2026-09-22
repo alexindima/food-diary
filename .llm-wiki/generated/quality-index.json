@@ -247,20 +247,20 @@
       "structuralRiskScore": 130.9
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
+      "nonBlankLines": 603,
+      "decisionPoints": 77,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 127.56
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextExperiment.ps1",
       "nonBlankLines": 319,
       "decisionPoints": 79,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 126.88
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "nonBlankLines": 591,
-      "decisionPoints": 75,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 124.32
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
@@ -10058,11 +10058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts",
-      "nonBlankLines": 200,
-      "decisionPoints": 29,
+      "nonBlankLines": 211,
+      "decisionPoints": 34,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 47.5
+      "structuralRiskScore": 55.22
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.ts",
@@ -10122,11 +10122,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "nonBlankLines": 591,
-      "decisionPoints": 75,
+      "nonBlankLines": 603,
+      "decisionPoints": 77,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 124.32
+      "structuralRiskScore": 127.56
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-actions/meal-photo-result-actions.ts",
@@ -10186,11 +10186,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/detail/meal-detail.facade.ts",
-      "nonBlankLines": 126,
+      "nonBlankLines": 146,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.52
+      "structuralRiskScore": 17.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/favorites/meal-favorites-picker.facade.ts",
@@ -10218,11 +10218,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.ts",
-      "nonBlankLines": 287,
-      "decisionPoints": 19,
+      "nonBlankLines": 284,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.24
+      "structuralRiskScore": 35.68
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.config.ts",
@@ -10258,11 +10258,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/quick/quick-meal.service.ts",
-      "nonBlankLines": 250,
-      "decisionPoints": 21,
+      "nonBlankLines": 289,
+      "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.5
+      "structuralRiskScore": 46.28
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/recipe-serving/recipe-serving-weight.service.ts",
@@ -13042,11 +13042,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-nutrition-edit.utils.ts",
-      "nonBlankLines": 67,
-      "decisionPoints": 8,
+      "nonBlankLines": 72,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.34
+      "structuralRiskScore": 14.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-photo-edit.utils.ts",

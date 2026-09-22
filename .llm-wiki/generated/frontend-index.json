@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1723,
+    "typescriptFiles": 1725,
     "symbols": 668,
     "routes": 100,
     "features": 44,
-    "specs": 617,
+    "specs": 619,
     "localeFiles": 5,
     "roles": {
       "Component": 451,
@@ -890,6 +890,7 @@
         "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list-filter-chips.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/lib/meal-calendar-timezone.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/meal-date-input.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/quick/quick-meal.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/recipe-serving/recipe-serving-weight.service.spec.ts",
@@ -4159,7 +4160,7 @@
       "role": "Component",
       "selector": "fd-meal-manual-item-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts",
-      "line": 50
+      "line": 51
     },
     {
       "name": "MealNutritionSidebarComponent",
@@ -4257,7 +4258,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/detail/meal-detail.facade.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "MealFavoritesPickerFacade",
@@ -4285,7 +4286,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/quick/quick-meal.service.ts",
-      "line": 35
+      "line": 37
     },
     {
       "name": "RecipeServingWeightService",

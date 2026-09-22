@@ -143,6 +143,17 @@ public sealed class TelemetrySecurityGuardrailTests {
     }
 
     [Fact]
+    public void GrafanaReverseProxy_StreamsResponsesWithoutTemporaryFiles() {
+        string nginx = ReadSource("nginx/sites-enabled/grafana.fooddiary.club");
+        int proxyLocationStart = nginx.IndexOf("location / {", StringComparison.Ordinal);
+        int liveLocationStart = nginx.IndexOf("location /api/live/ {", StringComparison.Ordinal);
+
+        Assert.True(proxyLocationStart >= 0, "The Grafana proxy location is missing.");
+        Assert.True(liveLocationStart > proxyLocationStart, "The Grafana live location is missing.");
+        Assert.Contains("proxy_buffering off;", nginx[proxyLocationStart..liveLocationStart], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void PrimaryReverseProxy_RejectsUnknownHostsAndCanonicalizesForwardedHost() {
         string nginx = ReadSource("nginx/sites-enabled/fooddiary.club");
 

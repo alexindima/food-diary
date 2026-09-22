@@ -9,6 +9,7 @@ import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { FavoriteMeal } from '../../models/meal.data';
 import { MealFavoritesPickerComponent } from './meal-favorites-picker';
 
+const SEARCH_DELAY_MS = 300;
 const PAGE_SIZE = 10;
 const LAST_PAGE = 3;
 const SINGLE_LAST_PAGE_TOTAL = 21;
@@ -54,6 +55,7 @@ describe('MealFavoritesPickerComponent', () => {
     registerUndoTests();
     registerUndoRenderingTests();
     registerUndoPositionTests();
+    registerPickerAsyncTests();
 });
 
 function registerUndoPositionTests(): void {
@@ -231,5 +233,66 @@ function registerUndoRenderingTests(): void {
         expect(rows[0].querySelector('.favorite-row__undo')).toBeNull();
         expect(rows[1].querySelector('.favorite-row__undo')).not.toBeNull();
         expect(restore).toHaveBeenCalledExactlyOnceWith(favorite);
+    });
+}
+
+function registerPickerAsyncTests(): void {
+    it('debounces and trims searches, skips duplicates, and drops old undo rows', async () => {
+        vi.useFakeTimers();
+        try {
+            const component = TestBed.createComponent(MealFavoritesPickerComponent).componentInstance;
+            component['remove'](favorite);
+            component['search'](' r');
+            component['search'](' rice ');
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'rice');
+            expect(component['facade'].removedIds().size).toBe(0);
+            component['search']('rice');
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            expect(api.getPage).toHaveBeenCalledTimes(2);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+    it.each([true, false])('ignores stale restoration responses, success=%s', success => {
+        const component = TestBed.createComponent(MealFavoritesPickerComponent).componentInstance;
+        component['remove'](favorite);
+        const pending = new Subject<boolean>();
+        restore.mockReturnValue(pending);
+        component['undoRemoval'](favorite);
+        component['load'](1, 'changed');
+        pending.next(success);
+        pending.complete();
+        expect(component['restoreErrors']().size).toBe(0);
+        expect(component['facade'].total()).toBe(1);
+    });
+    it('ignores late restoration and removal errors after a search changed', () => {
+        const component = TestBed.createComponent(MealFavoritesPickerComponent).componentInstance;
+        component['remove'](favorite);
+        const pendingRestore = new Subject<boolean>();
+        restore.mockReturnValue(pendingRestore);
+        component['undoRemoval'](favorite);
+        component['load'](1, 'changed');
+        pendingRestore.error(new Error('offline'));
+        expect(component['restoreErrors']().size).toBe(0);
+        const pendingRemove = new Subject<boolean>();
+        remove.mockReturnValue(pendingRemove);
+        component['remove'](favorite);
+        component['load'](1, 'again');
+        pendingRemove.error(new Error('offline'));
+        expect(component['removeFailed']()).toBe(false);
+    });
+    it('surfaces thrown add and removal errors, allowing retry', () => {
+        const component = TestBed.createComponent(MealFavoritesPickerComponent).componentInstance;
+        repeat.mockReturnValueOnce(throwError(() => new Error('offline')));
+        component['add'](favorite);
+        expect(component['operationErrorKey']()).toBe('MEAL_FAVORITES.ADD_ERROR');
+        component['load'](1);
+        remove.mockReturnValueOnce(throwError(() => new Error('offline')));
+        component['remove'](favorite);
+        expect(component['operationErrorKey']()).toBe('MEAL_FAVORITES.REMOVE_ERROR');
+        expect(component['busy']()).toBe(false);
+        component['changePage'](2);
+        expect(api.getPage).toHaveBeenLastCalledWith(2, PAGE_SIZE, '');
     });
 }

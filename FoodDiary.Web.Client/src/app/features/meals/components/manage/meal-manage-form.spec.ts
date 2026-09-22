@@ -11,6 +11,7 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     createEmptyProductSnapshot,
+    createEmptyRecipeSnapshot,
     type Meal,
     type MealAiSessionManageDto,
     type MealManageDto,
@@ -477,3 +478,68 @@ function createMeal(overrides: Partial<Meal> = {}): Meal {
         ...overrides,
     };
 }
+
+describe('MealManageForm existing meal editing', () => {
+    it.each([false, true])('submits an existing product meal and preserves entered values on failure=%s', async fail => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const product = { ...createEmptyProductSnapshot(), id: 'p', name: 'Apple' };
+        const original = createMeal({
+            items: [{ id: 'i', mealId: 'meal-1', amount: PRODUCT_AMOUNT, sourceType: MealSourceType.Product, product }],
+        });
+        mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
+        fixture.componentRef.setInput('meal', original);
+        fixture.detectChanges();
+        expect(component['mealFormModel']().items[0]).toMatchObject({ product, amount: PRODUCT_AMOUNT });
+        component['patchMealFormModel']({ comment: 'Edited note' });
+        if (fail) {
+            mealManageFacade.submitMealAsync.mockRejectedValue(new Error('offline'));
+        } else {
+            mealManageFacade.submitMealAsync.mockResolvedValue(original);
+        }
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledWith(
+            original,
+            expect.objectContaining({
+                comment: 'Edited note',
+                items: [expect.objectContaining({ productId: 'p', amount: PRODUCT_AMOUNT })],
+            }),
+        );
+        expect(component['mealFormModel']().comment).toBe('Edited note');
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledTimes(fail ? 0 : 1);
+    });
+    it('converts saved recipe servings into editable grams and back into the update payload', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r', name: 'Soup' };
+        const original = createMeal({ items: [{ id: 'i', mealId: 'meal-1', amount: 2, sourceType: MealSourceType.Recipe, recipe }] });
+        mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
+        mealManageFacade.convertRecipeServingsToGrams.mockReturnValue(PRODUCT_AMOUNT);
+        mealManageFacade.convertRecipeGramsToServings.mockReturnValue(2);
+        fixture.componentRef.setInput('meal', original);
+        fixture.detectChanges();
+        expect(component['mealFormModel']().items[0].amount).toBe(PRODUCT_AMOUNT);
+        mealManageFacade.submitMealAsync.mockResolvedValue(original);
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledWith(
+            original,
+            expect.objectContaining({ items: [expect.objectContaining({ recipeId: 'r', amount: 2 })] }),
+        );
+    });
+});
+
+describe('MealManageForm manual item dialog', () => {
+    it.each([true, false])('updates an item only when selection is accepted=%s', async accepted => {
+        const { component } = await setupComponentAsync();
+        const original = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'original' }, null, PRODUCT_AMOUNT);
+        const selected = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'new' }, null, PRODUCT_AMOUNT);
+        component['patchMealFormModel']({ items: [original] });
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => of(accepted ? selected : null) } as unknown as ReturnType<
+            typeof dialogs.open
+        >);
+        component['onItemSourceClick'](0);
+        await waitForAsyncTasksAsync();
+        expect(component['mealFormModel']().items).toEqual([accepted ? selected : original]);
+        component['removeItem'](0);
+        expect(component['mealFormModel']().items).toEqual([]);
+    });
+});

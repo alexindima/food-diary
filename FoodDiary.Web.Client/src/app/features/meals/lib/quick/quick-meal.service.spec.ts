@@ -5,6 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
@@ -271,6 +272,103 @@ describe('QuickMealService saving', () => {
         pendingCreate$.next(createdMeal);
         pendingCreate$.complete();
 
+        expect(service.isSaving()).toBe(false);
+    });
+});
+
+describe('QuickMealService asynchronous ownership', () => {
+    it('retains only additional portions of the same product after saving the original portion', () => {
+        const pending = new Subject<Meal>();
+        mealService.create.mockReturnValue(pending);
+        service.addProduct(product);
+        service.saveDraft();
+        service.addProduct(product);
+        pending.next(createdMeal);
+        pending.complete();
+        expect(service.items()).toEqual([expect.objectContaining({ product, amount: DEFAULT_PORTION_AMOUNT })]);
+    });
+
+    it('does not clear the next session draft when an old save completes', () => {
+        const pending = new Subject<Meal>();
+        mealService.create.mockReturnValue(pending);
+        service.addProduct(product);
+        service.saveDraft();
+        sessionEvents.notifySessionEnded();
+        service.addRecipe(recipe);
+        pending.next(createdMeal);
+        pending.complete();
+        expect(service.items()).toEqual([expect.objectContaining({ recipe, amount: 1 })]);
+        expect(service.isSaving()).toBe(false);
+        expect(pending.observed).toBe(false);
+    });
+    it('retains items added while an existing draft is being saved', () => {
+        const pending = new Subject<Meal>();
+        mealService.create.mockReturnValue(pending);
+        service.addProduct(product);
+        service.saveDraft();
+        service.addRecipe(recipe);
+        pending.next(createdMeal);
+        pending.complete();
+        expect(service.items()).toEqual([expect.objectContaining({ recipe, amount: 1 })]);
+    });
+    it('invalidates dependent nutrition after a successful quick save', () => {
+        const invalidation = vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
+        service.addProduct(product);
+        service.saveDraft();
+        expect(invalidation).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('QuickMealService draft boundaries', () => {
+    it('removes only the requested item and ignores unknown keys', () => {
+        service.addProduct(product);
+        service.addRecipe(recipe);
+        service.removeItem('unknown');
+        service.removeItem('product-product-1');
+        expect(service.items()).toEqual([expect.objectContaining({ recipe })]);
+    });
+    it('does not save empty or preview drafts and resets preview on exit', () => {
+        service.saveDraft();
+        service.setPreviewItems([{ key: 'preview', type: 'product', product, amount: 1 }]);
+        service.saveDraft();
+        expect(mealService.create).not.toHaveBeenCalled();
+        service.exitPreview();
+        expect(service.hasItems()).toBe(false);
+        service.exitPreview();
+        service.addRecipe(recipe);
+        service.saveDraft();
+        expect(mealService.create).toHaveBeenCalledTimes(1);
+    });
+    it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])('falls back from invalid preferred amount %s', amount => {
+        service.addProduct(product, amount);
+        expect(service.items()[0].amount).toBe(DEFAULT_PORTION_AMOUNT);
+    });
+    it('ignores sources with empty IDs', () => {
+        service.addProduct({ ...product, id: '' });
+        service.addRecipe({ ...recipe, id: '' });
+        expect(service.hasItems()).toBe(false);
+    });
+});
+
+describe('QuickMealService pending draft replacements', () => {
+    it('retains a removed and re-added product as a new draft item', () => {
+        const pending = new Subject<Meal>();
+        mealService.create.mockReturnValue(pending);
+        service.addProduct(product);
+        service.saveDraft();
+        service.removeItem('product-product-1');
+        service.addProduct(product);
+        pending.next(createdMeal);
+        expect(service.items()).toEqual([expect.objectContaining({ product, amount: DEFAULT_PORTION_AMOUNT })]);
+    });
+    it('preserves both original and added portions if save fails', () => {
+        const pending = new Subject<Meal>();
+        mealService.create.mockReturnValue(pending);
+        service.addProduct(product);
+        service.saveDraft();
+        service.addProduct(product);
+        pending.error(new Error('offline'));
+        expect(service.items()[0].amount).toBe(DEFAULT_PORTION_AMOUNT + DEFAULT_PORTION_AMOUNT);
         expect(service.isSaving()).toBe(false);
     });
 });

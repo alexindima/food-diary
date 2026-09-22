@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -55,6 +55,7 @@ const nutrition: FoodNutritionResponse = {
 };
 
 let aiFoodService: {
+    resumeRecognition: ReturnType<typeof vi.fn>;
     analyzeFoodImage: ReturnType<typeof vi.fn>;
     calculateNutrition: ReturnType<typeof vi.fn>;
 };
@@ -266,8 +267,9 @@ async function setupComponentAsync(
     };
 }
 
-function createAiFoodServiceMock(): { analyzeFoodImage: ReturnType<typeof vi.fn>; calculateNutrition: ReturnType<typeof vi.fn> } {
+function createAiFoodServiceMock(): typeof aiFoodService {
     return {
+        resumeRecognition: vi.fn().mockReturnValue(of({ items: [visionItem], recognition: { nutrition, errorCode: null } })),
         analyzeFoodImage: vi.fn().mockReturnValue(of({ items: [visionItem] })),
         calculateNutrition: vi.fn().mockReturnValue(of(nutrition)),
     };
@@ -296,3 +298,141 @@ function createSession(): MealAiSessionManageDto {
         ],
     };
 }
+
+describe('Meal photo asynchronous requests', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+    it('cancels obsolete analysis and nutrition requests when changing the image', async () => {
+        const analysis = new Subject<{ items: FoodVisionItem[] }>();
+        const calculation = new Subject<FoodNutritionResponse>();
+        aiFoodService.analyzeFoodImage.mockReturnValueOnce(analysis);
+        aiFoodService.calculateNutrition.mockReturnValueOnce(calculation);
+        const { component, fixture } = await setupComponentAsync();
+        component['onImageChanged']({ assetId: 'first', url: null });
+        expect(component['isLoading']()).toBe(true);
+        analysis.next({ items: [visionItem] });
+        expect(component['isNutritionLoading']()).toBe(true);
+        component['onImageChanged']({ assetId: 'second', url: null });
+        expect(analysis.observed).toBe(false);
+        expect(calculation.observed).toBe(false);
+        calculation.next({ ...nutrition, calories: 999 });
+        expect(component['nutrition']()?.calories).toBe(BASE_CALORIES);
+        fixture.destroy();
+    });
+    it('cancels in-flight analysis on destruction', async () => {
+        const pending = new Subject<{ items: FoodVisionItem[] }>();
+        aiFoodService.analyzeFoodImage.mockReturnValue(pending);
+        const { component, fixture } = await setupComponentAsync();
+        component['onImageChanged']({ assetId: 'first', url: null });
+        fixture.destroy();
+        expect(pending.observed).toBe(false);
+    });
+    it('does not reuse review items from the previous image after clearing selection', async () => {
+        const { component } = await setupComponentAsync();
+        component['onImageChanged']({ assetId: 'first', url: null });
+        expect(component['reviewItems']().length).toBe(1);
+        component['onImageChanged'](null);
+        expect(component['reviewItems']()).toEqual([]);
+        component['addToMeal']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+    it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.InternalServerError])(
+        'clears loading and supports retry after HTTP %s',
+        async status => {
+            aiFoodService.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status })));
+            const { component } = await setupComponentAsync();
+            component['onImageChanged']({ assetId: 'first', url: null });
+            expect(component['isLoading']()).toBe(false);
+            expect(component['errorKey']()).toContain(status === HttpStatusCode.TooManyRequests ? 'ERROR_QUOTA' : 'ERROR_GENERIC');
+            component['onReanalyze']();
+            expect(component['errorKey']()).toBeNull();
+            expect(component['nutrition']()).toEqual(nutrition);
+        },
+    );
+    it('handles an empty recognition without calling nutrition', async () => {
+        aiFoodService.analyzeFoodImage.mockReturnValue(of({ items: [] }));
+        const { component } = await setupComponentAsync();
+        component['onImageChanged']({ assetId: 'empty', url: null });
+        expect(component['hasAnalyzed']()).toBe(true);
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        component['onImageChanged'](null);
+        component['onReanalyze']();
+        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('Meal photo recovered jobs and editor controls', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+    it.each([null, 'Ai.QuotaExceeded', 'Other'])('resumes a job with nutrition outcome %s without a duplicate request', async errorCode => {
+        aiFoodService.resumeRecognition.mockReturnValue(of({ items: [visionItem], recognition: { nutrition, errorCode } }));
+        const { component } = await setupComponentAsync();
+        component['onResumeRecognition']({
+            id: 'job-1',
+            imageAssetId: 'asset-1',
+            imageUrl: '/image.jpg',
+            status: 'Succeeded',
+            description: null,
+            createdOnUtc: '2026-01-01T12:00:00Z',
+            updatedOnUtc: '2026-01-01T12:01:00Z',
+            vision: null,
+            nutrition,
+            errorCode: null,
+            nutritionErrorCode: errorCode,
+        });
+        expect(aiFoodService.resumeRecognition).toHaveBeenCalledWith('job-1');
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(component['nutrition']()).toEqual(nutrition);
+        expect(component['nutritionErrorKey']()).toBe(
+            errorCode === null
+                ? null
+                : errorCode === 'Ai.QuotaExceeded'
+                  ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA'
+                  : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+        );
+    });
+    it('applies editor events to the saved session and scales nutrition locally', async () => {
+        const { component } = await setupComponentAsync({ initialSession: createSession(), mode: 'edit' });
+        component['applyEditAction']();
+        component['updateEditItemFromView']({ index: 0, field: 'amount', value: String(EDITED_AMOUNT) });
+        component['applyEditAction']();
+        component['addToMeal']();
+        expect(dialogRef.close).toHaveBeenCalledWith(
+            expect.objectContaining({
+                items: [expect.objectContaining({ amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES })],
+            }),
+        );
+    });
+    it('allows retry after a nutrition network failure', async () => {
+        aiFoodService.calculateNutrition.mockReturnValueOnce(throwError(() => new Error('offline')));
+        const { component } = await setupComponentAsync();
+        component['onImageChanged']({ assetId: 'asset-1', url: '/image.jpg' });
+        expect(component['nutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
+        component['onReanalyze']();
+        expect(component['nutrition']()).toEqual(nutrition);
+        expect(component['nutritionErrorKey']()).toBeNull();
+    });
+});
+
+describe('Meal photo nutrition-only session mapping', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+    it.each(['Apple', 'Яблоко', 'Unmatched', ''])('preserves nutrition and resolves the vision name %s', async name => {
+        const { component } = await setupComponentAsync();
+        component['results'].set([visionItem]);
+        component['nutrition'].set({ ...nutrition, items: [{ ...nutrition.items[0], name }] });
+        component['addToMeal']();
+        expect(dialogRef.close).toHaveBeenCalledWith(
+            expect.objectContaining({
+                items: [expect.objectContaining({ nameEn: ['Apple', 'Яблоко'].includes(name) ? 'Apple' : name, amount: SOURCE_AMOUNT })],
+            }),
+        );
+    });
+});

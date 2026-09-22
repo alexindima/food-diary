@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, switchMap } from 'rxjs';
+import { catchError, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -15,6 +16,8 @@ import type { Meal } from '../../models/meal.data';
 
 @Injectable()
 export class MealDetailFacade {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly favoriteStatusRequests = new Subject<void>();
     private readonly dialogRef = inject(FdUiDialogRef<unknown, MealDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly datePipe = inject(DatePipe);
@@ -30,14 +33,22 @@ export class MealDetailFacade {
     private favoriteMealId: string | null = null;
 
     public initialize(meal: Meal): void {
+        this.favoriteStatusRequests.next();
         this.initialFavoriteState = meal.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteMealId = meal.favoriteMealId ?? null;
 
-        this.favoriteMealService.isFavorite(meal.id).subscribe(isFavorite => {
-            this.initialFavoriteState = isFavorite;
-            this.isFavorite.set(isFavorite);
-        });
+        this.favoriteMealService
+            .isFavorite(meal.id)
+            .pipe(
+                catchError(() => of(this.initialFavoriteState)),
+                takeUntil(this.favoriteStatusRequests),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(isFavorite => {
+                this.initialFavoriteState = isFavorite;
+                this.isFavorite.set(isFavorite);
+            });
     }
 
     public close(meal: Meal): void {
@@ -73,6 +84,7 @@ export class MealDetailFacade {
         this.fdDialogService
             .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirm => {
                 if (confirm === true) {
                     this.dialogRef.close(new MealDetailActionResult(meal.id, 'Delete', this.hasFavoriteChanged()));
@@ -85,6 +97,7 @@ export class MealDetailFacade {
             return;
         }
 
+        this.favoriteStatusRequests.next();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
@@ -92,30 +105,36 @@ export class MealDetailFacade {
             return;
         }
 
-        this.favoriteMealService.add(meal.id).subscribe({
-            next: favorite => {
-                this.isFavorite.set(true);
-                this.favoriteMealId = favorite.id;
-                this.isFavoriteLoading.set(false);
-            },
-            error: () => {
-                this.isFavoriteLoading.set(false);
-            },
-        });
-    }
-
-    private removeFavorite(meal: Meal): void {
-        if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
-            this.favoriteMealService.remove(this.favoriteMealId).subscribe({
-                next: () => {
-                    this.isFavorite.set(false);
-                    this.favoriteMealId = null;
+        this.favoriteMealService
+            .add(meal.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: favorite => {
+                    this.isFavorite.set(true);
+                    this.favoriteMealId = favorite.id;
                     this.isFavoriteLoading.set(false);
                 },
                 error: () => {
                     this.isFavoriteLoading.set(false);
                 },
             });
+    }
+
+    private removeFavorite(meal: Meal): void {
+        if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
+            this.favoriteMealService
+                .remove(this.favoriteMealId)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: () => {
+                        this.isFavorite.set(false);
+                        this.favoriteMealId = null;
+                        this.isFavoriteLoading.set(false);
+                    },
+                    error: () => {
+                        this.isFavoriteLoading.set(false);
+                    },
+                });
             return;
         }
 
@@ -126,6 +145,7 @@ export class MealDetailFacade {
                     const match = favorites.find(favorite => favorite.mealId === meal.id);
                     return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
                 }),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: () => {

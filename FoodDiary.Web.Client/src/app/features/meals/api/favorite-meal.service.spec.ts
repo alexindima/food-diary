@@ -154,3 +154,22 @@ describe('FavoriteMealService mutations and legacy reads', () => {
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
+
+describe('FavoriteMealService restore failures', () => {
+    it.each([HttpStatusCode.Forbidden, HttpStatusCode.NotFound, HttpStatusCode.Conflict, HttpStatusCode.InternalServerError])(
+        'propagates HTTP %s without inventing a restored favorite',
+        status => {
+            let errorStatus: number | undefined;
+            service.restore('removed').subscribe({
+                next: () => {
+                    throw new Error('must fail');
+                },
+                error: (error: unknown) => {
+                    errorStatus = getNumberProperty(error, 'status');
+                },
+            });
+            httpMock.expectOne(`${BASE_URL}/removed/restore`).flush({}, { status, statusText: 'failure' });
+            expect(errorStatus).toBe(status);
+        },
+    );
+});

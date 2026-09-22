@@ -76,3 +76,30 @@ describe('ai nutrition edit utils', () => {
         expect(result).toBeNull();
     });
 });
+
+describe('localized AI nutrition edits', () => {
+    it.each(['Apple', 'Яблоко', ' ЯБЛОКО '])('matches stored nutrition under %s and preserves all macros', name => {
+        const source = { id: '1', name: 'Яблоко', nameEn: 'Apple', amount: SOURCE_AMOUNT, unit: 'g' };
+        const result = recalculateEditedAiNutrition(
+            { ...nutrition, items: [{ ...nutrition.items[0], name }] },
+            [source],
+            [{ ...source, amount: EDITED_AMOUNT }],
+        );
+        expect(result).toEqual(expect.objectContaining({ calories: 150, protein: 15, fat: 7.5, carbs: 30, fiber: 3, alcohol: 0 }));
+    });
+    it('returns null before nutrition is available', () => {
+        expect(recalculateEditedAiNutrition(null, [], [])).toBeNull();
+    });
+    it('clears totals when all recognized items were removed', () => {
+        expect(recalculateEditedAiNutrition(nutrition, [], [])).toEqual({
+            calories: 0,
+            protein: 0,
+            fat: 0,
+            carbs: 0,
+            fiber: 0,
+            alcohol: 0,
+            items: [],
+            notes: 'base',
+        });
+    });
+});

@@ -1562,3 +1562,102 @@ test.describe('dashboard TDEE accessibility regression', () => {
         });
     }
 });
+
+const FAVORITES_MOBILE_WIDTH = 390;
+const FAVORITES_DESKTOP_WIDTH = 1280;
+const FAVORITES_PAGE_SIZE = 10;
+const FAVORITES_SEARCH_MATCHES = 4;
+const RESTORE_PATH_OFFSET = -2;
+
+test.describe('meal favorites regression', () => {
+    for (const width of [FAVORITES_MOBILE_WIDTH, FAVORITES_DESKTOP_WIDTH]) {
+        test(`independent inline undo, retry and pagination at ${width}px`, async ({ page }) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await mockFavoritePickerJourneyAsync(page);
+            await page.goto('/meals');
+            await page.getByRole('button', { name: /Add from favorites/ }).click();
+            const dialog = page.getByRole('dialog', { name: 'Add from favorites', exact: true });
+            const rows = dialog.locator('fd-favorite-meal-row');
+            await expect(rows).toHaveCount(FAVORITES_PAGE_SIZE);
+            await rows.nth(0).getByRole('button', { name: 'Remove from favorites', exact: true }).click();
+            await expect(rows.nth(0).getByRole('button', { name: 'Undo: Favorite 1' })).toBeFocused();
+            await rows.nth(1).getByRole('button', { name: 'Remove from favorites', exact: true }).click();
+            await expect(dialog.locator('.favorite-row__undo')).toHaveCount(2);
+            await rows.nth(0).getByRole('button', { name: 'Undo: Favorite 1' }).click();
+            await expect(rows.nth(0)).toContainText('Could not restore the meal');
+            await rows.nth(0).getByRole('button', { name: 'Undo: Favorite 1' }).click();
+            await expect(rows.nth(0).getByRole('button', { name: 'Remove from favorites', exact: true })).toBeFocused();
+            await expect(dialog.locator('.favorite-row__undo')).toHaveCount(1);
+            await dialog.getByRole('button', { name: '2', exact: true }).click();
+            await expect(dialog.locator('.favorite-row__undo')).toHaveCount(0);
+            await expect(rows).toHaveCount(1);
+            await dialog.getByRole('textbox').fill('Favorite 1');
+            await expect(rows).toHaveCount(FAVORITES_SEARCH_MATCHES);
+            await expect(rows.first()).toContainText('Favorite 1');
+            expect(await dialog.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(false);
+            await dialog.getByRole('button', { name: 'Close', exact: true }).click();
+            await page.getByRole('button', { name: /Add from favorites/ }).click();
+            await expect(dialog.locator('.favorite-row__undo')).toHaveCount(0);
+            await expect(rows).toHaveCount(FAVORITES_PAGE_SIZE);
+        });
+    }
+});
+
+async function mockFavoritePickerJourneyAsync(page: Page): Promise<void> {
+    const favorites = Array.from({ length: 12 }, (_, index) => ({
+        id: `f${index + 1}`,
+        mealId: `m${index + 1}`,
+        name: `Favorite ${index + 1}`,
+        itemNames: ['Rice', 'Chicken'],
+        createdAtUtc: '2026-01-01T00:00:00Z',
+        mealDate: '2026-01-01T00:00:00Z',
+        mealType: 'Lunch',
+        totalCalories: 500,
+        totalProteins: 30,
+        totalFats: 20,
+        totalCarbs: 50,
+        totalFiber: 5,
+        itemCount: 2,
+    }));
+    const removed = new Set<string>();
+    let failRestore = true;
+    await page.route('**/api/v1/meals/overview**', async route =>
+        route.fulfill({ json: { ...createMealsOverview(), favoriteTotalCount: favorites.length - removed.size } }),
+    );
+    await page.route('**/api/v1/favorite-meals/**', async route => {
+        const url = new URL(route.request().url());
+        if (url.pathname.endsWith('/page')) {
+            const pageNumber = Number(url.searchParams.get('page'));
+            const limit = Number(url.searchParams.get('limit'));
+            const search = url.searchParams.get('search')?.toLowerCase() ?? '';
+            const active = favorites.filter(item => !removed.has(item.id) && item.name.toLowerCase().includes(search));
+            await route.fulfill({
+                json: {
+                    data: active.slice((pageNumber - 1) * limit, pageNumber * limit),
+                    page: pageNumber,
+                    limit,
+                    totalItems: active.length,
+                    totalPages: Math.ceil(active.length / limit),
+                },
+            });
+            return;
+        }
+        const segments = url.pathname.split('/');
+        const restoring = url.pathname.endsWith('/restore');
+        const id = segments.at(restoring ? RESTORE_PATH_OFFSET : -1) ?? '';
+        if (restoring) {
+            if (failRestore) {
+                failRestore = false;
+                await route.fulfill({ status: 500, json: { message: 'Retry' } });
+                return;
+            }
+            removed.delete(id);
+            await route.fulfill({ json: favorites.find(item => item.id === id) });
+        } else {
+            removed.add(id);
+            await route.fulfill({ status: 204 });
+        }
+    });
+}

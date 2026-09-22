@@ -561,13 +561,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "573a2657313f7a476fcb224d49464c9957253f5a331b3966cf3e4e826bea6424"
+          "sha256": "e24387d80d23263e5628b8e2525238293f3f526e409e79331673839119f54a94"
         }
       ],
-      "reason": "Reviewed package.json: added only test:coverage:body-metrics. This test audit changes no templates, styles or copy; the decimal payload fix is covered by facade and Signal Forms regressions. Browser evidence requirements for rendered UI changes remain accurate.",
+      "reason": "Reviewed refreshed frontend/test indexes and unchanged workflow guidance against meals hardening. Focused V8 suite: 441 passing tests; browser favorites regression passed at 390px and 1280px; nine timezone suites passed. Package change adds a test script only; no dependencies, API or security boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:23:16.2325186Z"
+      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
+      "reviewedAtUtc": "2026-09-22T21:33:18.4554799Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "14bd024bb895487604506754c389fb185f10b99331ab0ab86e3dae109095c5dd"
+          "sha256": "b7d10d8a275b5eeb659ea674ae591602ae089554c24fe856b6813c867080560f"
         }
       ],
-      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
+      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T20:39:36.3062011Z"
+      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
+      "reviewedAtUtc": "2026-09-22T21:41:16.0221208Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "14bd024bb895487604506754c389fb185f10b99331ab0ab86e3dae109095c5dd"
+          "sha256": "b7d10d8a275b5eeb659ea674ae591602ae089554c24fe856b6813c867080560f"
         }
       ],
-      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
+      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T20:39:37.8172281Z"
+      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
+      "reviewedAtUtc": "2026-09-22T21:41:17.6088893Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1052,18 +1052,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b01a8c3c697753dca2698e141970eb7764f08e9ae2c4d45dccb36aebc2462639"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "65e6283cf7b069cdd7d6d037beec16bb0cd34b0eb451fbce1a7a12d4e8413819"
+          "sha256": "15e0b3de0b400ba2b2a8326d4478ceb4c399d8d13bb1ed55be454553393ed82b"
         }
       ],
-      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
+      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T20:39:39.0826514Z"
+      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
+      "reviewedAtUtc": "2026-09-22T21:41:19.3622742Z"
     },
     {
       "pageId": "workflow-verification-planner",

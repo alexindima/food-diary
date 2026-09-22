@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -173,3 +173,65 @@ function createRecipe(): Recipe {
         steps: [],
     };
 }
+
+describe('MealManualItemDialogComponent asynchronous serving weight', () => {
+    it.each(['product', 'amount', 'destroy'] as const)('does not overwrite newer state after %s', async action => {
+        const { component, fdDialogService, fixture } = await setupComponentAsync();
+        const weight = new Subject<number | null>();
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(weight);
+        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe: createRecipe() }) });
+        await component['chooseItemAsync']();
+        if (action === 'product') {
+            component['onSourceTypeChange']('Product');
+            fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product: createProduct() }) });
+            await component['chooseItemAsync']();
+        } else if (action === 'amount') {
+            component['amount']().value.set(PRODUCT_DEFAULT_PORTION_AMOUNT);
+        } else {
+            fixture.destroy();
+        }
+        const expected = component['amountModel']();
+        weight.next(RECIPE_SERVING_WEIGHT);
+        expect(component['amountModel']()).toBe(expected);
+        if (action !== 'amount') {
+            expect(weight.observed).toBe(false);
+        }
+    });
+});
+
+describe('MealManualItemDialogComponent validation and selection boundaries', () => {
+    it.each([null, 0, -1])('rejects invalid amount %s and exposes an error', async amount => {
+        const { component, dialogRef } = await setupComponentAsync({ product: createProduct() });
+        component['amount']().value.set(amount);
+        component['save']();
+        expect(component['canSave']()).toBe(false);
+        expect(component['amountError']()).not.toBeNull();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+    it('preserves the selection when choosing the same type and clears it on a type change', async () => {
+        const product = createProduct();
+        const { component } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
+        component['onSourceTypeChange']('Product');
+        expect(component['product']()).toBe(product);
+        component['onSourceTypeChange']('Recipe');
+        expect(component['product']()).toBeNull();
+        expect(component['amountModel']()).toBeNull();
+        expect(component['sourceError']()).toBeNull();
+        expect(component['sourceActionLabelKey']()).toBe('MEAL_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE');
+        expect(component['sourceTypeLabelKey']()).toBe('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe');
+    });
+    it('keeps the current item when selection is cancelled', async () => {
+        const product = createProduct();
+        const { component } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
+        await component['chooseItemAsync']();
+        expect(component['product']()).toBe(product);
+        expect(component['amountModel']()).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+    });
+    it.each([null, 0, -1])('keeps the fallback amount when serving weight is %s', async weight => {
+        const { component, fdDialogService } = await setupComponentAsync();
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(of(weight));
+        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe: createRecipe() }) });
+        await component['chooseItemAsync']();
+        expect(component['amountModel']()).toBe(1);
+    });
+});

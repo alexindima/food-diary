@@ -210,6 +210,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.selection.set(selection);
         this.errorKey.set(null);
         this.results.set([]);
+        this.clearReviewState();
         this.hasAnalyzed.set(false);
         this.isNutritionLoading.set(false);
         this.nutrition.set(null);
@@ -231,6 +232,7 @@ export class MealPhotoRecognitionDialogComponent {
 
         this.errorKey.set(null);
         this.results.set([]);
+        this.clearReviewState();
         this.hasAnalyzed.set(false);
         this.isNutritionLoading.set(false);
         this.nutrition.set(null);
@@ -283,7 +285,10 @@ export class MealPhotoRecognitionDialogComponent {
         item: EditableAiItem,
         nutritionByName: ReadonlyMap<string, FoodNutritionResponse['items'][number]>,
     ): MealAiSessionManageDto['items'][number] {
-        const nutritionItem = nutritionByName.get(this.normalizeItemName(item.name));
+        const nutritionItem =
+            nutritionByName.get(this.normalizeItemName(item.name)) ??
+            nutritionByName.get(this.normalizeItemName(item.nameEn)) ??
+            nutritionByName.get(this.normalizeItemName(item.nameLocal));
         const isRejected = item.resolution === 'Rejected';
         return {
             nameEn: item.nameEn,
@@ -363,6 +368,13 @@ export class MealPhotoRecognitionDialogComponent {
         this.subscribeToAnalysis(assetId, jobId);
     }
 
+    private clearReviewState(): void {
+        this.reviewItems.set([]);
+        this.editItems.set([]);
+        this.sourceItems.set([]);
+        this.isEditing.set(false);
+    }
+
     private resetAnalysisState(): void {
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
@@ -371,6 +383,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.isEditing.set(false);
         this.errorKey.set(null);
         this.results.set([]);
+        this.clearReviewState();
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
     }

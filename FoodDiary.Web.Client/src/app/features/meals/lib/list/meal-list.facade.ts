@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, firstValueFrom, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { NavigationService } from '../../../../services/navigation.service';
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/local-date.utils';
@@ -37,6 +37,8 @@ export class MealListFacade {
     private readonly navigationService = inject(NavigationService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
 
+    private readonly overviewRequests = new Subject<void>();
+
     public readonly daySummaries = signal<MealDaySummary[]>([]);
     public readonly pageSize = MEAL_LIST_PAGE_SIZE;
     public readonly mealData = new PagedData<Meal>();
@@ -62,30 +64,7 @@ export class MealListFacade {
     }
 
     public loadMeals(page: number, filtersModel: MealListStructuredFilters): Observable<void> {
-        this.mealData.setLoading(true);
-        const filters = this.buildFilters(filtersModel);
-
-        return this.mealService
-            .queryOverview(page, this.pageSize, filters, { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, include: false })
-            .pipe(
-                tap(data => {
-                    const pageData = data.allMeals;
-                    this.daySummaries.set(data.daySummaries ?? []);
-                    this.mealData.setData(pageData);
-                    this.currentPageIndex.set(pageData.page - 1);
-                    this.clearError();
-                }),
-                map(() => void 0),
-                catchError((_error: unknown) => {
-                    this.mealData.clearData();
-                    this.daySummaries.set([]);
-                    this.showLoadError();
-                    return of(void 0);
-                }),
-                finalize(() => {
-                    this.mealData.setLoading(false);
-                }),
-            );
+        return this.loadOverview(page, filtersModel, false);
     }
 
     public async handleMealDetailsAsync(meal: Meal, filters: MealListStructuredFilters): Promise<boolean> {
@@ -103,7 +82,7 @@ export class MealListFacade {
         }
         if (result.action === 'FavoriteChanged') {
             this.loadFavorites();
-            await firstValueFrom(this.loadMeals(this.currentPageIndex() + 1, filters));
+            await firstValueFrom(this.loadMeals(this.currentPageIndex() + 1, filters), { defaultValue: undefined });
             return false;
         }
         if (result.action === 'Edit') {
@@ -112,37 +91,55 @@ export class MealListFacade {
         }
         if (result.action === 'Repeat') {
             const targetDate = new Date();
-            return firstValueFrom(this.repeatMeal(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), filters));
+            return firstValueFrom(this.repeatMeal(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), filters), {
+                defaultValue: false,
+            });
         }
-        return firstValueFrom(this.deleteMeal(result.id, filters));
+        return firstValueFrom(this.deleteMeal(result.id, filters), { defaultValue: false });
     }
 
     public loadInitialOverview(filtersModel: MealListStructuredFilters): Observable<void> {
-        this.mealData.setLoading(true);
-        const filters = this.buildFilters(filtersModel);
+        return this.loadOverview(1, filtersModel, true);
+    }
 
-        return this.mealService.queryOverview(1, this.pageSize, filters, { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT }).pipe(
-            tap(data => {
-                this.mealData.setData(data.allMeals);
-                this.daySummaries.set(data.daySummaries ?? []);
-                this.favorites.set(data.favoriteItems);
-                this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.currentPageIndex.set(data.allMeals.page - 1);
-                this.clearError();
-            }),
-            map(() => void 0),
-            catchError((_error: unknown) => {
-                this.mealData.clearData();
-                this.daySummaries.set([]);
-                this.favorites.set([]);
-                this.favoriteTotalCount.set(0);
-                this.showLoadError();
-                return of(void 0);
-            }),
-            finalize(() => {
-                this.mealData.setLoading(false);
-            }),
-        );
+    private loadOverview(page: number, filtersModel: MealListStructuredFilters, includeFavorites: boolean): Observable<void> {
+        return defer(() => {
+            this.overviewRequests.next();
+            this.mealData.setLoading(true);
+            return this.mealService
+                .queryOverview(page, this.pageSize, this.buildFilters(filtersModel), {
+                    limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT,
+                    include: includeFavorites,
+                })
+                .pipe(
+                    tap(data => {
+                        this.mealData.setData(data.allMeals);
+                        this.daySummaries.set(data.daySummaries ?? []);
+                        this.currentPageIndex.set(data.allMeals.page - 1);
+                        if (includeFavorites) {
+                            this.favorites.set(data.favoriteItems);
+                            this.favoriteTotalCount.set(data.favoriteTotalCount);
+                        }
+                        this.clearError();
+                    }),
+                    map(() => void 0),
+                    catchError(() => {
+                        this.mealData.clearData();
+                        this.daySummaries.set([]);
+                        if (includeFavorites) {
+                            this.favorites.set([]);
+                            this.favoriteTotalCount.set(0);
+                        }
+                        this.showLoadError();
+                        return of(void 0);
+                    }),
+                    finalize(() => {
+                        this.mealData.setLoading(false);
+                    }),
+                    takeUntil(this.overviewRequests),
+                    takeUntilDestroyed(this.destroyRef),
+                );
+        });
     }
 
     public repeatMeal(mealId: string, targetDate: string, mealType: string, filtersModel: MealListStructuredFilters): Observable<boolean> {

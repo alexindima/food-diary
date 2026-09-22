@@ -37,8 +37,7 @@ export function recalculateEditedAiNutrition(
     const updatedItems = editedItems
         .map(item => {
             const base = sourceItems.find(sourceItem => sourceItem.id === item.id);
-            const originalName = base?.nameEn ?? base?.name ?? item.name;
-            const originalNutrition = nutritionByName.get(normalizeAiNutritionItemName(originalName));
+            const originalNutrition = findOriginalNutrition(nutritionByName, base ?? item);
             if (originalNutrition === undefined) {
                 return null;
             }
@@ -75,4 +74,11 @@ export function recalculateEditedAiNutrition(
     );
 
     return { ...totals, items: updatedItems, notes: nutrition.notes ?? null };
+}
+
+function findOriginalNutrition(
+    byName: ReadonlyMap<string, FoodNutritionResponse['items'][number]>,
+    item: AiNutritionEditableItem,
+): FoodNutritionResponse['items'][number] | undefined {
+    return byName.get(normalizeAiNutritionItemName(item.nameEn ?? item.name)) ?? byName.get(normalizeAiNutritionItemName(item.name));
 }

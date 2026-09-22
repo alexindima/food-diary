@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,7 +11,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Subscription } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type {
@@ -48,6 +49,8 @@ export type MealManualItemDialogData = {
     ],
 })
 export class MealManualItemDialogComponent {
+    private readonly destroyRef = inject(DestroyRef);
+    private servingWeightSubscription?: Subscription;
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, MealItemFormValues | null>);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -150,6 +153,7 @@ export class MealManualItemDialogComponent {
             return;
         }
 
+        this.servingWeightSubscription?.unsubscribe();
         this.sourceType.set(nextSourceType);
         this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
         this.sourceTouched.set(false);
@@ -169,10 +173,11 @@ export class MealManualItemDialogComponent {
                 .afterClosed(),
         );
 
-        if (selection === null || selection === undefined) {
+        if (selection === null || selection === undefined || this.destroyRef.destroyed) {
             return;
         }
 
+        this.servingWeightSubscription?.unsubscribe();
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);
             this.sourceTypeValue.set(PRODUCT_SOURCE_VALUE);
@@ -187,11 +192,18 @@ export class MealManualItemDialogComponent {
         this.recipe.set(selection.recipe);
         this.product.set(null);
         this.amount().value.set(1);
-        this.recipeWeight.loadServingWeight(selection.recipe).subscribe(servingWeight => {
-            if (servingWeight !== null && servingWeight > 0) {
-                this.amount().value.set(servingWeight);
-            }
-        });
+        this.loadRecipeAmount(selection.recipe);
+    }
+
+    private loadRecipeAmount(recipe: Recipe): void {
+        this.servingWeightSubscription = this.recipeWeight
+            .loadServingWeight(recipe)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(servingWeight => {
+                if (servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0 && this.amountModel() === 1) {
+                    this.amount().value.set(servingWeight);
+                }
+            });
     }
 
     protected save(): void {
@@ -219,11 +231,11 @@ export class MealManualItemDialogComponent {
     }
 
     private resolveProductAmount(product: Product): number {
-        if (product.defaultPortionAmount > 0) {
+        if (Number.isFinite(product.defaultPortionAmount) && product.defaultPortionAmount > 0) {
             return product.defaultPortionAmount;
         }
 
-        if (product.baseAmount > 0) {
+        if (Number.isFinite(product.baseAmount) && product.baseAmount > 0) {
             return product.baseAmount;
         }
 

@@ -1,10 +1,12 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
@@ -33,6 +35,9 @@ export type QuickMealDetails = {
 
 @Service()
 export class QuickMealService {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly invalidation = inject(NutritionDataInvalidationService);
+    private readonly resetDraft = new Subject<void>();
     private readonly mealService = inject(MealService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly toastService = inject(FdUiToastService);
@@ -42,6 +47,7 @@ export class QuickMealService {
     private readonly detailsSignal = signal<QuickMealDetails>(this.createDefaultDetails());
     private readonly isSavingSignal = signal(false);
     private nextFlashId = 0;
+    private submittedAmounts = new WeakMap<QuickMealItem, number>();
     private isPreviewMode = false;
 
     public readonly items = computed(() => this.itemsSignal());
@@ -133,6 +139,7 @@ export class QuickMealService {
     }
 
     public clear(): void {
+        this.resetDraft.next();
         this.itemsSignal.set([]);
         this.detailsSignal.set(this.createDefaultDetails());
     }
@@ -160,18 +167,32 @@ export class QuickMealService {
             return;
         }
 
+        this.submittedAmounts = new WeakMap(items.map(item => [item, item.amount]));
         this.isSavingSignal.set(true);
-        this.mealService.create(payload).subscribe({
-            next: () => {
-                this.isSavingSignal.set(false);
-                this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'));
-                this.clear();
-            },
-            error: () => {
-                this.isSavingSignal.set(false);
-                this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
-            },
-        });
+        this.mealService
+            .create(payload)
+            .pipe(
+                takeUntil(this.resetDraft),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.isSavingSignal.set(false);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.isSavingSignal.set(false);
+                    this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'));
+                    this.invalidation.reportMealMutation();
+                    this.removeSubmittedAmounts();
+                    if (this.itemsSignal().length === 0) {
+                        this.detailsSignal.set(this.createDefaultDetails());
+                    }
+                },
+                error: () => {
+                    this.isSavingSignal.set(false);
+                    this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
+                },
+            });
     }
 
     public setPreviewItems(items: QuickMealItem[]): void {
@@ -197,15 +218,15 @@ export class QuickMealService {
     }
 
     private resolveProductAmount(product: Product, preferredAmount?: number): number {
-        if (preferredAmount !== undefined && preferredAmount > 0) {
+        if (preferredAmount !== undefined && Number.isFinite(preferredAmount) && preferredAmount > 0) {
             return preferredAmount;
         }
 
-        if (product.defaultPortionAmount > 0) {
+        if (Number.isFinite(product.defaultPortionAmount) && product.defaultPortionAmount > 0) {
             return product.defaultPortionAmount;
         }
 
-        if (product.baseAmount > 0) {
+        if (Number.isFinite(product.baseAmount) && product.baseAmount > 0) {
             return product.baseAmount;
         }
 
@@ -229,11 +250,30 @@ export class QuickMealService {
                     amount: updated[existingIndex].amount + newItem.amount,
                     flashId,
                 };
+                const submitted = this.submittedAmounts.get(items[existingIndex]);
+                if (submitted !== undefined) {
+                    this.submittedAmounts.set(updated[existingIndex], submitted);
+                }
                 return updated;
             }
 
             return [...items, { ...newItem, flashId }];
         });
+    }
+
+    private removeSubmittedAmounts(): void {
+        // New or edited entries belong to the next draft; merged additions retain only their unsaved portion.
+        this.itemsSignal.update(items =>
+            items.flatMap(item => {
+                const submitted = this.submittedAmounts.get(item);
+                if (submitted === undefined) {
+                    return [item];
+                }
+                const amount = item.amount - submitted;
+                return amount > 0 ? [{ ...item, amount }] : [];
+            }),
+        );
+        this.submittedAmounts = new WeakMap<QuickMealItem, number>();
     }
 
     private toMealDto(items: QuickMealItem[]): MealManageDto {
