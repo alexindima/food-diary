@@ -1661,3 +1661,111 @@ async function mockFavoritePickerJourneyAsync(page: Page): Promise<void> {
         }
     });
 }
+
+const MEAL_EDIT_MOBILE_WIDTH = 390;
+const MEAL_EDIT_DESKTOP_WIDTH = 1280;
+const MEAL_EDIT_VIEWPORTS = [MEAL_EDIT_MOBILE_WIDTH, MEAL_EDIT_DESKTOP_WIDTH] as const;
+
+test.describe('meal editing regression', () => {
+    for (const width of MEAL_EDIT_VIEWPORTS) {
+        test(`failed save preserves edits and retry round-trips the meal at ${width}px`, async ({ page }) => {
+            await page.setViewportSize({ width, height: 900 });
+            const state = await mockEditableMealAsync(page);
+            await page.goto('/meals/meal-1/edit');
+            await editMealAmountAsync(page, '175.5');
+            await expect(page.getByRole('textbox', { name: 'Calories, kcal', exact: true })).toHaveValue('175.5');
+            await page.getByText('Photo and comment (optional)', { exact: true }).click();
+            await page.getByRole('textbox', { name: 'Comment', exact: true }).fill('Lunch after training');
+            const save = page.locator('fd-meal-nutrition-sidebar').getByRole('button', { name: 'Save', exact: true });
+            await save.click();
+            await expect(page.getByText('Temporary meal save failure', { exact: true })).toBeVisible();
+            await expect(page).toHaveURL(/\/meals\/meal-1\/edit$/);
+            await expect(page.getByRole('textbox', { name: 'Comment', exact: true })).toHaveValue('Lunch after training');
+            await save.click();
+            await expect.poll(() => state.writes.length).toBe(2);
+            await expect(save).toBeDisabled();
+            await expect(page.locator('fd-page-header').getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+            state.releaseSave();
+            await expect(page).toHaveURL(/\/meals$/);
+            expect(state.writes).toHaveLength(2);
+            expect(state.writes[0]).toEqual(state.writes[1]);
+            expect(state.writes[1]).toMatchObject({
+                comment: 'Lunch after training',
+                date: '2026-04-19T18:00:00.000Z',
+                isNutritionAutoCalculated: true,
+                items: [{ productId: 'editable-product', amount: 175.5, origin: 'Manual' }],
+            });
+            await page.goto('/meals/meal-1/edit');
+            await page.getByText('Photo and comment (optional)', { exact: true }).click();
+            await expect(page.getByRole('textbox', { name: 'Comment', exact: true })).toHaveValue('Lunch after training');
+            await page.getByRole('button', { name: /Edit manual item/ }).click();
+            await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Amount' })).toHaveValue('175.5');
+            await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
+            await page.locator('fd-page-header').getByRole('button', { name: 'Cancel', exact: true }).click();
+            await expect(page).toHaveURL(/\/meals$/);
+            expect(state.writes).toHaveLength(2);
+        });
+
+        test(`cancel protects item-dialog edits and discard does not save at ${width}px`, async ({ page }) => {
+            await page.setViewportSize({ width, height: 900 });
+            const state = await mockEditableMealAsync(page);
+            await page.goto('/meals/meal-1/edit');
+            await editMealAmountAsync(page, '250');
+            const cancel = page.locator('fd-page-header').getByRole('button', { name: 'Cancel', exact: true });
+            await cancel.click();
+            const confirmation = page.getByRole('dialog', { name: 'Unsaved changes', exact: true });
+            await expect(confirmation).toContainText('Unsaved changes');
+            await confirmation.getByRole('button', { name: 'Stay on page', exact: true }).click();
+            await expect(page).toHaveURL(/\/meals\/meal-1\/edit$/);
+            await page.getByRole('button', { name: /Edit manual item/ }).click();
+            await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Amount' })).toHaveValue('250');
+            await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
+            await cancel.click();
+            await confirmation.getByRole('button', { name: "Don't save", exact: true }).click();
+            await expect(page).toHaveURL(/\/meals$/);
+            expect(state.writes).toEqual([]);
+            await page.goto('/meals/meal-1/edit');
+            await page.getByRole('button', { name: /Edit manual item/ }).click();
+            await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Amount' })).toHaveValue('100');
+        });
+    }
+});
+
+async function editMealAmountAsync(page: Page, amount: string): Promise<void> {
+    await page.getByRole('button', { name: /Edit manual item/ }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByRole('spinbutton', { name: 'Amount' }).fill('0');
+    await expect(dialog.getByRole('button', { name: 'Save item', exact: true })).toBeDisabled();
+    await dialog.getByRole('spinbutton', { name: 'Amount' }).fill(amount);
+    await dialog.getByRole('button', { name: 'Save item', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+}
+
+async function mockEditableMealAsync(page: Page): Promise<{ writes: unknown[]; releaseSave: () => void }> {
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    let releaseSave = (): void => {
+        /* Assigned by the pending save promise below. */
+    };
+    const pendingSave = new Promise<void>(resolve => {
+        releaseSave = resolve;
+    });
+    const state = { writes: [] as unknown[], releaseSave };
+    let item = createMealItem('editable', 'meal-1', 'Carrots', TEST_IMAGE_URLS[0]);
+    let meal = createMeal('meal-1', '2026-04-19T18:00:00Z', [item]);
+    await page.route('**/api/v1/meals/meal-1', async route => {
+        if (route.request().method() === 'PATCH') {
+            const body = route.request().postDataJSON() as { comment: string; items: Array<{ amount: number }> };
+            state.writes.push(body);
+            if (state.writes.length === 1) {
+                await route.fulfill({ status: 500, json: { message: 'Temporary meal save failure' } });
+                return;
+            }
+            await pendingSave;
+            item = { ...item, amount: body.items[0].amount };
+            meal = { ...meal, comment: body.comment, items: [item] };
+        }
+        await route.fulfill({ json: meal });
+    });
+    return state;
+}

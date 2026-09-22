@@ -13,7 +13,7 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, max, required } from '@angular/forms/signals';
+import { form, FormRoot, max, min, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -74,6 +74,7 @@ import { MealManualItemDialogComponent, type MealManualItemDialogData } from './
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
 
+const MANUAL_NUTRITION_FIELDS = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const;
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
 @Component({
     selector: 'fd-meal-manage-form',
@@ -150,6 +151,12 @@ export class MealManageFormComponent {
         path => {
             required(path.date);
             required(path.time);
+            for (const field of MANUAL_NUTRITION_FIELDS) {
+                min(path[field], 0);
+                validate(path[field], ({ value }) =>
+                    value() === null || Number.isFinite(value()) ? undefined : { kind: 'invalidNumber' },
+                );
+            }
             max(path.manualCalories, MANUAL_NUTRITION_MAX_CALORIES);
             max(path.manualProteins, MANUAL_NUTRITION_MAX_NUTRIENT);
             max(path.manualFats, MANUAL_NUTRITION_MAX_NUTRIENT);
@@ -308,6 +315,10 @@ export class MealManageFormComponent {
     }
 
     protected removeItem(index: number): void {
+        if (index < 0 || index >= this.items.length) {
+            return;
+        }
+        this.mealSignalForm.items().markAsDirty();
         this.patchMealFormModel({
             items: this.items.filter((_, currentIndex) => currentIndex !== index),
         });
@@ -325,14 +336,21 @@ export class MealManageFormComponent {
                     preset: 'form',
                     data: { item },
                 })
-                .afterClosed(),
+                .afterClosed()
+                .pipe(takeUntilDestroyed(this.destroyRef)),
+            { defaultValue: null },
         ).then(selectedItem => {
-            if (selectedItem === null || selectedItem === undefined) {
+            if (selectedItem === null || selectedItem === undefined || this.destroyRef.destroyed) {
                 return;
             }
 
-            this.replaceMealItem(index, this.mealManageFacade.configureItemType(selectedItem, selectedItem.sourceType));
+            const currentIndex = this.items.indexOf(item);
+            if (currentIndex === -1) {
+                return;
+            }
+            this.replaceMealItem(currentIndex, this.mealManageFacade.configureItemType(selectedItem, selectedItem.sourceType));
             this.itemsTouchedState.markTouched();
+            this.mealSignalForm.items().markAsDirty();
             this.updateSummary();
         });
     }
@@ -340,6 +358,7 @@ export class MealManageFormComponent {
     // --- AI session management ---
 
     protected onAiMealRecognized(result: AiInputBarResult): void {
+        this.mealSignalForm().markAsDirty();
         this.aiSessions.update(current =>
             this.mealManageFacade.addAiSession(current, {
                 source: result.source,
@@ -354,6 +373,10 @@ export class MealManageFormComponent {
     }
 
     protected onDeleteAiSession(index: number): void {
+        if (index < 0 || index >= this.aiSessions().length) {
+            return;
+        }
+        this.mealSignalForm().markAsDirty();
         this.aiSessions.update(current => this.mealManageFacade.removeAiSession(current, index));
         this.updateSummary();
     }
@@ -369,10 +392,15 @@ export class MealManageFormComponent {
         }
 
         void this.mealManageFacade.openEditAiPhotoSessionDialogAsync(session).then(updated => {
-            if (updated === null) {
+            if (updated === null || this.destroyRef.destroyed) {
                 return;
             }
-            this.aiSessions.update(current => this.mealManageFacade.replaceAiSession(current, index, updated));
+            const currentIndex = this.aiSessions().indexOf(session);
+            if (currentIndex === -1) {
+                return;
+            }
+            this.mealSignalForm().markAsDirty();
+            this.aiSessions.update(current => this.mealManageFacade.replaceAiSession(current, currentIndex, updated));
             this.updateSummary();
         });
     }
@@ -385,6 +413,7 @@ export class MealManageFormComponent {
             return;
         }
 
+        this.mealSignalForm.isNutritionAutoCalculated().markAsDirty();
         this.nutritionMode.set(resolvedMode);
         const isAuto = resolvedMode === 'auto';
         this.patchMealFormModel({ isNutritionAutoCalculated: isAuto });
@@ -423,6 +452,7 @@ export class MealManageFormComponent {
 
     protected onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
         const normalizedValue = normalizeSatietyLevel(value);
+        this.mealSignalForm[controlName]().markAsDirty();
         this.patchMealFormModel({ [controlName]: normalizedValue });
 
         if (controlName === 'preMealSatietyLevel') {
@@ -453,7 +483,7 @@ export class MealManageFormComponent {
         this.mealSignalForm().markAsTouched();
         this.itemsTouchedState.markTouched();
 
-        if (this.macrosError() !== null) {
+        if (this.caloriesError() !== null || this.macrosError() !== null) {
             return;
         }
 
@@ -462,13 +492,14 @@ export class MealManageFormComponent {
             return;
         }
 
-        if (this.mealSignalForm().invalid()) {
+        if (this.mealSignalForm().invalid() || this.itemListItems().some(item => item.amountError !== null)) {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
 
         const mealData = this.buildMealManageDto();
         const meal = this.meal();
+        this.globalError.set(null);
         this.isSubmitting.set(true);
         try {
             await (meal !== null ? this.updateMealAsync(mealData) : this.addMealAsync(mealData));
@@ -642,6 +673,7 @@ export class MealManageFormComponent {
                     ...createMealManageFormValue(),
                     ...resetValue,
                 });
+                this.mealSignalForm().reset(this.mealFormModel());
                 this.aiSessions.set([]);
                 this.itemsTouchedState.reset();
                 this.updateSummary();
@@ -742,7 +774,7 @@ export class MealManageFormComponent {
             return this.translateService.instant('FORM_ERRORS.REQUIRED');
         }
 
-        if (item.amount < MEAL_MANAGE_MIN_ITEM_AMOUNT) {
+        if (!Number.isFinite(item.amount) || item.amount < MEAL_MANAGE_MIN_ITEM_AMOUNT) {
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
                 min: MEAL_MANAGE_MIN_ITEM_AMOUNT,
             });

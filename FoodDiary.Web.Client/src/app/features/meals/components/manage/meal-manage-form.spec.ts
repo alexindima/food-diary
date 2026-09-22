@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -541,5 +541,206 @@ describe('MealManageForm manual item dialog', () => {
         expect(component['mealFormModel']().items).toEqual([accepted ? selected : original]);
         component['removeItem'](0);
         expect(component['mealFormModel']().items).toEqual([]);
+    });
+});
+
+describe('Meal form manual nutrition validation', () => {
+    it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not submit invalid manual calories %s', async manualCalories => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({ manualCalories });
+        fixture.detectChanges();
+        await component['onSubmitAsync']();
+        expect(component['caloriesError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+    it.each(['manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const)(
+        'rejects a negative %s',
+        async field => {
+            const { component, fixture, mealManageFacade } = await setupComponentAsync();
+            setValidManualMeal(component);
+            component['patchMealFormModel']({ [field]: -1, manualCalories: TOTAL_CALORIES, manualCarbs: PRODUCT_AMOUNT });
+            if (field === 'manualCarbs') {
+                component['patchMealFormModel']({ manualCarbs: -1 });
+            }
+            fixture.detectChanges();
+            await component['onSubmitAsync']();
+            expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+            expect(component['globalError']()).not.toBeNull();
+        },
+    );
+    it('shows macro validation and preserves the draft when all macros are zero', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({ manualProteins: 0 });
+        await component['onSubmitAsync']();
+        expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        expect(component['mealFormModel']().items).toHaveLength(1);
+    });
+});
+
+describe('Meal form selected amount validation', () => {
+    it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not send an item with amount %s', async amount => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({ items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, amount)] });
+        fixture.detectChanges();
+        await component['onSubmitAsync']();
+        expect(component['itemListItems']()[0].amountError).not.toBeNull();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+    it('allows an unused empty placeholder alongside valid items', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({ items: [...component['items'], createMealItemValue()] });
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
+    });
+    it('shows general field errors on invalid native form submission', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({ date: '', time: '' });
+        fixture.detectChanges();
+        (fixture.nativeElement as HTMLElement)
+            .querySelector('form')
+            ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+        expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
+        expect(component['generalFieldErrors']().date).not.toBeNull();
+        expect(component['generalFieldErrors']().time).not.toBeNull();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+});
+
+function setValidManualMeal(component: MealManageFormComponent): void {
+    component['patchMealFormModel']({
+        date: '2026-09-23',
+        time: '01:00',
+        mealType: 'Dinner',
+        isNutritionAutoCalculated: false,
+        manualCalories: TOTAL_CALORIES,
+        manualProteins: PRODUCT_AMOUNT,
+        manualFats: 0,
+        manualCarbs: 0,
+        manualFiber: 0,
+        manualAlcohol: 0,
+        items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, PRODUCT_AMOUNT)],
+    });
+}
+
+describe('Meal form delayed item dialog', () => {
+    it('does not overwrite another row when the edited item was removed while its dialog was open', async () => {
+        const { component } = await setupComponentAsync();
+        const original = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'original' }, null, PRODUCT_AMOUNT);
+        const other = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'other' }, null, PRODUCT_AMOUNT);
+        const selected = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'selected' }, null, PRODUCT_AMOUNT);
+        component['patchMealFormModel']({ items: [original, other] });
+        const response = new Subject<MealItemFormValues | null>();
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => response } as unknown as ReturnType<typeof dialogs.open>);
+        component['onItemSourceClick'](0);
+        component['removeItem'](0);
+        response.next(selected);
+        await waitForAsyncTasksAsync();
+        expect(component['items']).toEqual([other]);
+    });
+});
+
+describe('Meal form custom controls preserve unsaved changes', () => {
+    it.each(['satiety', 'nutrition', 'remove', 'ai'] as const)('asks before discarding a %s change', async action => {
+        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        mealManageFacade.confirmDiscardChangesAsync.mockResolvedValue(false);
+        if (action === 'satiety') {
+            component['onSatietyLevelChange']('postMealSatietyLevel', NORMALIZED_SATIETY_LEVEL);
+        }
+        if (action === 'nutrition') {
+            component['onNutritionModeChange']('manual');
+        }
+        if (action === 'remove') {
+            component['removeItem'](0);
+        }
+        if (action === 'ai') {
+            component['onAiMealRecognized']({
+                source: 'Photo',
+                imageAssetId: null,
+                imageUrl: null,
+                recognizedAtUtc: '2026-09-23T00:00:00Z',
+                items: [],
+            });
+        }
+        await component['onCancelAsync']();
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToMealListAsync).not.toHaveBeenCalled();
+    });
+    it('asks before discarding an item accepted from the dialog', async () => {
+        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        mealManageFacade.confirmDiscardChangesAsync.mockResolvedValue(false);
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.spyOn(dialogs, 'open').mockReturnValue({
+            afterClosed: () => of(createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, PRODUCT_AMOUNT)),
+        } as unknown as ReturnType<typeof dialogs.open>);
+        component['onItemSourceClick'](0);
+        await waitForAsyncTasksAsync();
+        await component['onCancelAsync']();
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToMealListAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal form detached dialog results', () => {
+    it('unsubscribes a manual selection on destruction', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        const response = new Subject<MealItemFormValues | null>();
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => response } as unknown as ReturnType<typeof dialogs.open>);
+        component['onItemSourceClick'](0);
+        fixture.destroy();
+        await waitForAsyncTasksAsync();
+        expect(response.observed).toBe(false);
+    });
+    it('ignores a photo session editor result when its original session was removed', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        const original = { notes: 'old', items: [] };
+        const other = { notes: 'other', items: [] };
+        component['aiSessions'].set([original, other]);
+        let complete: ((value: MealAiSessionManageDto) => void) | undefined;
+        mealManageFacade.openEditAiPhotoSessionDialogAsync.mockReturnValue(
+            new Promise<MealAiSessionManageDto>(resolve => {
+                complete = resolve;
+            }),
+        );
+        component['onEditAiSession'](0);
+        component['onDeleteAiSession'](0);
+        complete?.({ notes: 'edited', items: [] });
+        await waitForAsyncTasksAsync();
+        expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
+        expect(component['aiSessions']()).toEqual([other]);
+    });
+});
+
+describe('Meal form save retry preserves draft state', () => {
+    it('keeps dirty values after failure, retries the same payload and clears dirty state only after success', async () => {
+        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['onSatietyLevelChange']('preMealSatietyLevel', NORMALIZED_SATIETY_LEVEL);
+        mealManageFacade.submitMealAsync
+            .mockRejectedValueOnce(new HttpErrorResponse({ status: 500 }))
+            .mockResolvedValueOnce(createMeal({ totalCalories: TOTAL_CALORIES }));
+        const draft = component['mealFormModel']();
+        await component['onSubmitAsync']();
+        expect(component['mealFormModel']()).toEqual(draft);
+        expect(component['mealSignalForm']().dirty()).toBe(true);
+        expect(component['isSubmitting']()).toBe(false);
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledTimes(2);
+        expect(mealManageFacade.submitMealAsync.mock.calls[0]).toEqual(mealManageFacade.submitMealAsync.mock.calls[1]);
+        expect(component['mealSignalForm']().dirty()).toBe(false);
+        expect(component['globalError']()).toBeNull();
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledOnce();
+        await component['onCancelAsync']();
+        expect(mealManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(navigationService.navigateToMealListAsync).toHaveBeenCalledOnce();
     });
 });

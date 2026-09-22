@@ -185,7 +185,9 @@ export class MealManageFacade {
 
     public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
         const servingWeight = await firstValueFrom(this.recipeWeight.loadServingWeight(recipe));
-        return servingWeight !== null && servingWeight > 0 ? servingsAmount * servingWeight : servingsAmount;
+        return servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0
+            ? servingsAmount * servingWeight
+            : servingsAmount;
     }
 
     public convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
@@ -233,11 +235,11 @@ export class MealManageFacade {
     }
 
     private resolveProductAmount(product: Product): number {
-        if (product.defaultPortionAmount > 0) {
+        if (Number.isFinite(product.defaultPortionAmount) && product.defaultPortionAmount > 0) {
             return product.defaultPortionAmount;
         }
 
-        if (product.baseAmount > 0) {
+        if (Number.isFinite(product.baseAmount) && product.baseAmount > 0) {
             return product.baseAmount;
         }
 
@@ -251,6 +253,9 @@ export class MealManageFacade {
 
     private addItemNutritionTotalsFromValue(totals: NutritionTotals, item: MealItemFormValues): NutritionTotals {
         const amount = item.amount ?? 0;
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return totals;
+        }
 
         if (item.sourceType === MealSourceType.Product) {
             return this.addProductNutritionTotals(totals, item.product, amount);
@@ -260,7 +265,7 @@ export class MealManageFacade {
     }
 
     private addProductNutritionTotals(totals: NutritionTotals, food: Product | null, amount: number): NutritionTotals {
-        if (food === null || food.baseAmount <= 0) {
+        if (food === null || !Number.isFinite(food.baseAmount) || food.baseAmount <= 0) {
             return totals;
         }
 
@@ -275,7 +280,7 @@ export class MealManageFacade {
     }
 
     private addRecipeNutritionTotals(totals: NutritionTotals, recipe: Recipe | null, amount: number): NutritionTotals {
-        if (recipe === null || recipe.servings <= 0) {
+        if (recipe === null || !Number.isFinite(recipe.servings) || recipe.servings <= 0) {
             return totals;
         }
 
@@ -299,17 +304,19 @@ export class MealManageFacade {
     private getAiNutritionTotals(aiSessions: MealAiSessionManageDto[]): NutritionTotals {
         return aiSessions.reduce(
             (totals, session) =>
-                session.items.reduce(
-                    (sessionTotals, item) => ({
-                        calories: sessionTotals.calories + item.calories,
-                        proteins: sessionTotals.proteins + item.proteins,
-                        fats: sessionTotals.fats + item.fats,
-                        carbs: sessionTotals.carbs + item.carbs,
-                        fiber: sessionTotals.fiber + item.fiber,
-                        alcohol: sessionTotals.alcohol + item.alcohol,
-                    }),
-                    totals,
-                ),
+                session.items
+                    .filter(item => item.resolution !== 'Rejected')
+                    .reduce(
+                        (sessionTotals, item) => ({
+                            calories: sessionTotals.calories + item.calories,
+                            proteins: sessionTotals.proteins + item.proteins,
+                            fats: sessionTotals.fats + item.fats,
+                            carbs: sessionTotals.carbs + item.carbs,
+                            fiber: sessionTotals.fiber + item.fiber,
+                            alcohol: sessionTotals.alcohol + item.alcohol,
+                        }),
+                        totals,
+                    ),
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );
     }

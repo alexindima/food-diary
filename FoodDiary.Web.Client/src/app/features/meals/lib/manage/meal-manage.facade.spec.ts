@@ -184,6 +184,8 @@ describe('MealManageFacade', () => {
     registerAiSessionTests();
     registerItemSelectionTests();
     registerNutritionSummaryTests();
+    registerNutritionBoundaryTests();
+    registerProductPortionBoundaryTests();
     registerManageDialogTests();
     registerManageBoundaryTests();
 });
@@ -491,5 +493,80 @@ function registerManageBoundaryTests(): void {
         expect(facade.getManualNutritionTotalsFromValue(values as unknown as MealFormValues).calories).toBe(
             value === '12,5' ? DECIMAL_MANUAL_CALORIES : 0,
         );
+    });
+}
+
+function registerNutritionBoundaryTests(): void {
+    it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('ignores invalid item amount %s in the preview', amount => {
+        const formValue = createNutritionFormValue(true);
+        formValue.items = [
+            { sourceType: MealSourceType.Product, product: createNutritionProduct(), recipe: null, amount },
+            { sourceType: MealSourceType.Recipe, product: null, recipe: createNutritionRecipe(), amount },
+        ];
+        const result = facade.buildNutritionSummaryStateFromValues(formValue, [], CALORIE_MISMATCH_THRESHOLD);
+        expect(Object.values(result.autoTotals).every(value => value === 0)).toBe(true);
+    });
+    it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])('ignores unusable product base and recipe servings %s', value => {
+        const formValue = createNutritionFormValue(true);
+        formValue.items = [
+            {
+                sourceType: MealSourceType.Product,
+                product: { ...createNutritionProduct(), baseAmount: value },
+                recipe: null,
+                amount: PRODUCT_AMOUNT,
+            },
+            {
+                sourceType: MealSourceType.Recipe,
+                product: null,
+                recipe: { ...createNutritionRecipe(), servings: value },
+                amount: RECIPE_AMOUNT,
+            },
+        ];
+        expect(
+            Object.values(facade.buildNutritionSummaryStateFromValues(formValue, [], CALORIE_MISMATCH_THRESHOLD).autoTotals).every(
+                total => total === 0,
+            ),
+        ).toBe(true);
+    });
+    it('excludes rejected AI items even if a prior result retained nonzero nutrition', () => {
+        const formValue = createNutritionFormValue(true);
+        formValue.items = [];
+        const session = { items: AI_RECOGNITION_SESSIONS[0].items.map(item => ({ ...item, resolution: 'Rejected' as const })) };
+        expect(
+            Object.values(facade.buildNutritionSummaryStateFromValues(formValue, [session], CALORIE_MISMATCH_THRESHOLD).autoTotals).every(
+                value => value === 0,
+            ),
+        ).toBe(true);
+    });
+    it('treats recipes without calculated totals as zero and ignores missing references', () => {
+        const formValue = createNutritionFormValue(true);
+        formValue.items = [
+            { sourceType: MealSourceType.Product, product: null, recipe: null, amount: PRODUCT_AMOUNT },
+            { sourceType: MealSourceType.Recipe, product: null, recipe: null, amount: RECIPE_AMOUNT },
+            { sourceType: MealSourceType.Recipe, product: null, recipe: createEmptyRecipeSnapshot(), amount: RECIPE_AMOUNT },
+        ];
+        expect(
+            Object.values(facade.buildNutritionSummaryStateFromValues(formValue, [], CALORIE_MISMATCH_THRESHOLD).autoTotals).every(
+                value => value === 0,
+            ),
+        ).toBe(true);
+    });
+}
+
+function registerProductPortionBoundaryTests(): void {
+    it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(
+        'falls back from an invalid default product portion %s',
+        async defaultPortionAmount => {
+            const product = { ...createNutritionProduct(), defaultPortionAmount };
+            dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
+            const selected = await facade.openItemSelectionDialogAsync('Product');
+            expect(selected?.amount).toBe(product.baseAmount);
+        },
+    );
+    it('uses one unit when both product amounts are unusable', async () => {
+        const product = { ...createNutritionProduct(), defaultPortionAmount: 0, baseAmount: 0 };
+        dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
+        const selected = await facade.openItemSelectionDialogAsync('Product');
+        expect(selected?.amount).toBe(1);
     });
 }

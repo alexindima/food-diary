@@ -146,7 +146,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         }
 
         this.internalValue.set(value);
-        this.value.set(value);
+        this.value.set(this.toModelValue(value));
     }
 
     protected onBlur(): void {
@@ -209,8 +209,16 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         this.internalValue.set(value);
 
         if (!this.disabled()) {
-            this.value.set(value);
+            this.value.set(this.toModelValue(value));
         }
+    }
+
+    private toModelValue(value: string): string | number | null {
+        if (this.type() !== 'number') {
+            return value;
+        }
+        const numberValue = Number(value);
+        return value.trim() !== '' && Number.isFinite(numberValue) ? numberValue : null;
     }
 
     private monitorAutofill(): void {

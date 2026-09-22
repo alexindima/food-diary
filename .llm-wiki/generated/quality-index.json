@@ -279,6 +279,14 @@
       "structuralRiskScore": 122.3
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+      "nonBlankLines": 683,
+      "decisionPoints": 71,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 120.16
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
       "nonBlankLines": 354,
       "decisionPoints": 74,
@@ -517,14 +525,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 100.58
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "nonBlankLines": 651,
-      "decisionPoints": 58,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.02
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
@@ -5522,11 +5522,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "nonBlankLines": 197,
-      "decisionPoints": 26,
+      "nonBlankLines": 204,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.94
+      "structuralRiskScore": 46.08
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.stories.ts",
@@ -10010,11 +10010,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "nonBlankLines": 651,
-      "decisionPoints": 58,
+      "nonBlankLines": 683,
+      "decisionPoints": 71,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.02
+      "structuralRiskScore": 120.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-lib/meal-manage-form.mapper.ts",
@@ -10234,11 +10234,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.ts",
-      "nonBlankLines": 310,
-      "decisionPoints": 31,
+      "nonBlankLines": 317,
+      "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 52.7
+      "structuralRiskScore": 63.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/meal-date-input.utils.ts",

@@ -429,3 +429,57 @@ describe('Measurement input options', () => {
         expect(input().selectionEnd).toBe(input().value.length);
     });
 });
+
+@Component({
+    template: '<fd-ui-input type="number" [formField]="amount" />',
+    imports: [FdUiInputComponent, FormField],
+})
+class NumericInputHostComponent {
+    public readonly amountModel = signal<number | null>(null);
+    public readonly amount = form(this.amountModel);
+}
+
+describe('FdUiInput numeric model contract', () => {
+    it.each([
+        { raw: '175.5', expected: 175.5 },
+        { raw: '0', expected: 0 },
+        { raw: '-2', expected: -2 },
+        { raw: '1e2', expected: 100 },
+        { raw: '', expected: null },
+    ])('emits $expected for native numeric input $raw', async ({ raw, expected }) => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.detectChanges();
+        input().value = raw;
+        input().dispatchEvent(new Event('input', { bubbles: true }));
+        expect(component.value()).toBe(expected);
+    });
+
+    it('synchronizes numeric autofill as a number and an empty value as null', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.detectChanges();
+        input().value = '175.5';
+        input().dispatchEvent(new Event('focus'));
+        expect(component.value()).toBe(Number('175.5'));
+        input().value = '';
+        input().dispatchEvent(new Event('focus'));
+        expect(component.value()).toBeNull();
+    });
+
+    it('keeps the bound Signal Form numeric and marks it dirty through the native input', async () => {
+        await TestBed.configureTestingModule({ imports: [NumericInputHostComponent] }).compileComponents();
+        const fixture = TestBed.createComponent(NumericInputHostComponent);
+        fixture.detectChanges();
+        const input = requireInput(fixture.nativeElement as HTMLElement);
+        input.value = '175.5';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(fixture.componentInstance.amountModel()).toBe(Number('175.5'));
+        expect(fixture.componentInstance.amount().dirty()).toBe(true);
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(fixture.componentInstance.amountModel()).toBeNull();
+    });
+});

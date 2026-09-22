@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b7d10d8a275b5eeb659ea674ae591602ae089554c24fe856b6813c867080560f"
+          "sha256": "6b034f313be552ea2c34ec400263d66036485b4666572c6adb12c40d666b0c66"
         }
       ],
-      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
+      "reason": "Added browser save retry and discard regressions at mobile and desktop widths. Six browser cases, 487 meals tests and 416 UI kit tests passed; production build and ESLint passed.",
       "baseRef": "HEAD",
-      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
-      "reviewedAtUtc": "2026-09-22T21:41:16.0221208Z"
+      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
+      "reviewedAtUtc": "2026-09-22T22:19:16.8815002Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b7d10d8a275b5eeb659ea674ae591602ae089554c24fe856b6813c867080560f"
+          "sha256": "6b034f313be552ea2c34ec400263d66036485b4666572c6adb12c40d666b0c66"
         }
       ],
-      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
+      "reason": "Numeric input normalization and form validation only; no new data transport, logging, persistence, credentials or API surface. Browser fixtures contain synthetic data.",
       "baseRef": "HEAD",
-      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
-      "reviewedAtUtc": "2026-09-22T21:41:17.6088893Z"
+      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
+      "reviewedAtUtc": "2026-09-22T22:19:17.4632926Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,13 +1053,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "15e0b3de0b400ba2b2a8326d4478ceb4c399d8d13bb1ed55be454553393ed82b"
+          "sha256": "cb48075842be84f73a81a3bfc1dc75e1f4eabbb487bf8b712c9bb286ae10f59e"
         }
       ],
-      "reason": "Reviewed final meals frontend source and refreshed generated indexes. Executed 444 focused tests, 3419 full-app tests, nine timezone suites and two browser regressions. No dependency/API/security boundary change; workflow guidance remains accurate.",
+      "reason": "Reviewed meals source changes: existing feature ownership and component contracts remain unchanged; generated projections refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
-      "reviewedAtUtc": "2026-09-22T21:41:19.3622742Z"
+      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
+      "reviewedAtUtc": "2026-09-22T21:59:38.9081393Z"
     },
     {
       "pageId": "workflow-verification-planner",
