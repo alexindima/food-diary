@@ -19,7 +19,8 @@ public sealed class GetFavoriteMealPageTests {
         IFavoriteMealQuery repository = Substitute.For<IFavoriteMealQuery>();
         var item = new FavoriteMealReadModel(Guid.NewGuid(), Guid.NewGuid(), "Lunch", DateTime.UtcNow, DateTime.UtcNow, MealType: null, 500, 20, 10, 30, 1) {
             AiImageUrls = ["https://example.com/rice.jpg", "https://example.com/ai.jpg"],
-            ItemImageUrls = ["https://example.com/rice.jpg"], ImageUrl = "https://example.com/meal.jpg",
+            ItemImageUrls = ["https://example.com/rice.jpg"],
+            ImageUrl = "https://example.com/meal.jpg",
             TotalFiber = 7.5,
             ItemNames = ["Rice"],
             AiItemNames = ["Rice", "Coffee"],
