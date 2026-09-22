@@ -13149,14 +13149,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "line": 16
+      "line": 14
     },
     {
       "name": "FavoriteMealHttpMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "AddFavoriteMealHttpRequest",

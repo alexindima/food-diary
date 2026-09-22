@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RestoreFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
@@ -14,7 +16,14 @@ public static class FavoriteMealHttpMappings {
                 new(userId, request.MealId, request.Name);
     }
 
+    extension(GetFavoriteMealPageHttpQuery query) {
+        public GetFavoriteMealPageQuery ToQuery(Guid userId) =>
+            new(userId, query.Page, query.Limit, query.Search);
+    }
+
     extension(Guid id) {
+        public RestoreFavoriteMealCommand ToRestoreCommand(Guid userId) =>
+            new(userId, id);
         public RemoveFavoriteMealCommand ToDeleteCommand(Guid userId) =>
             new(userId, id);
         public GetFavoriteMealsQuery ToQuery() =>

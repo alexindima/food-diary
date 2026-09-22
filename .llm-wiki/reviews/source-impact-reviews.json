@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "776c0c4e2b49ded38b09e1ebeebb7baf7405ab0457298a4a43771c7be1ebd6a1"
+          "sha256": "55d98da708ad3abea6a0d63746d946b4598eb83088802b5e4a0e86da6b489caa"
         }
       ],
-      "reason": "Restore command uses current-user access, source visibility and existing FavoriteMeal response; six handler tests cover idempotency, missing/foreign source, invalid ID and active favorite conflict.",
+      "reason": "Request and response HTTP signatures are unchanged; generated contract index now resolves the existing application messages through mappings.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T16:15:33.0356460Z"
+      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
+      "reviewedAtUtc": "2026-09-22T23:27:11.1510904Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6b034f313be552ea2c34ec400263d66036485b4666572c6adb12c40d666b0c66"
+          "sha256": "eb24c573eadb045b6add4d63ae0322144aad05952b7ac94e767fe6f838142f95"
         }
       ],
-      "reason": "Added browser save retry and discard regressions at mobile and desktop widths. Six browser cases, 487 meals tests and 416 UI kit tests passed; production build and ESLint passed.",
+      "reason": "24 Favorites presentation tests and 39 controller convention tests pass after moving message construction into mappings. All 2107 architecture tests passed in the full hook.",
       "baseRef": "HEAD",
-      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
-      "reviewedAtUtc": "2026-09-22T22:19:16.8815002Z"
+      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
+      "reviewedAtUtc": "2026-09-22T23:27:11.5670279Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "db3c518c78e09735c8f4e6e868e0b7f868dcdc37deb82fe23a53e114605d4571"
+          "sha256": "14279e7ba8c11dee7e5d4645999299c677cb7bc01b71cd70aac9b61ec4e4b9e8"
         }
       ],
-      "reason": "Nullable removal column and filtered index migration applied locally before API restart. Old API must be replaced before using soft removal. Rollback removes hidden rows before restoring uniqueness; no new jobs or service dependencies.",
+      "reason": "Existing controller-mapping-mediator convention restored; generated references reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T16:15:35.5536895Z"
+      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
+      "reviewedAtUtc": "2026-09-22T23:27:11.8441504Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6b034f313be552ea2c34ec400263d66036485b4666572c6adb12c40d666b0c66"
+          "sha256": "eb24c573eadb045b6add4d63ae0322144aad05952b7ac94e767fe6f838142f95"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "14279e7ba8c11dee7e5d4645999299c677cb7bc01b71cd70aac9b61ec4e4b9e8"
         }
       ],
-      "reason": "Numeric input normalization and form validation only; no new data transport, logging, persistence, credentials or API surface. Browser fixtures contain synthetic data.",
+      "reason": "Owner and favorite ID forwarding unchanged and covered by tests; no authentication or persistence behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
-      "reviewedAtUtc": "2026-09-22T22:19:17.4632926Z"
+      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
+      "reviewedAtUtc": "2026-09-22T23:27:12.3512467Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RestoreFavoriteMeal;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Mappings;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
@@ -11,6 +13,28 @@ namespace FoodDiary.Modules.Favorites.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteMealHttpMappingsTests {
+    [Fact]
+    public void ToRestoreCommand_MapsOwnerAndFavoriteId() {
+        var userId = Guid.NewGuid();
+        var favoriteId = Guid.NewGuid();
+        RestoreFavoriteMealCommand command = favoriteId.ToRestoreCommand(userId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(favoriteId, command.FavoriteMealId));
+    }
+
+    [Fact]
+    public void PageQuery_ToQuery_PreservesOwnerPagingAndSearch() {
+        var userId = Guid.NewGuid();
+        var request = new GetFavoriteMealPageHttpQuery { Page = 2, Limit = 10, Search = " rice " };
+        GetFavoriteMealPageQuery query = request.ToQuery(userId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(request.Page, query.Page),
+            () => Assert.Equal(request.Limit, query.Limit),
+            () => Assert.Equal(request.Search, query.Search));
+    }
+
     [Fact]
     public void AddFavoriteMealRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();

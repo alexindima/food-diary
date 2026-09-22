@@ -4,10 +4,8 @@ using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Requests;
 using FoodDiary.Modules.Favorites.Presentation.Contracts.Features.FavoriteMeals.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RestoreFavoriteMeal;
 
 namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Controllers;
 
@@ -23,7 +21,7 @@ public sealed class FavoriteMealsController(ISender mediator) : AuthorizedContro
     [ProducesResponseType<PagedHttpResponse<FavoriteMealHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetFavoriteMealPageHttpQuery query) =>
-        HandleOk(new GetFavoriteMealPageQuery(userId, query.Page, query.Limit, query.Search),
+        HandleOk(query.ToQuery(userId),
             static value => new PagedHttpResponse<FavoriteMealHttpResponse>(value.Data.Select(item => item.ToHttpResponse()).ToArray(),
                 value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
@@ -45,7 +43,7 @@ public sealed class FavoriteMealsController(ISender mediator) : AuthorizedContro
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> Restore(Guid id, [FromCurrentUser] Guid userId) =>
-        HandleOk(new RestoreFavoriteMealCommand(userId, id), static value => value.ToHttpResponse());
+        HandleOk(id.ToRestoreCommand(userId), static value => value.ToHttpResponse());
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

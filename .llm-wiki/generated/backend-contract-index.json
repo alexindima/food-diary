@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1263,
     "ambiguousContracts": 2,
-    "consumerEdges": 9880,
-    "productionConsumerEdges": 5639,
-    "testConsumerEdges": 4241,
+    "consumerEdges": 9884,
+    "productionConsumerEdges": 5640,
+    "testConsumerEdges": 4244,
     "consumedContracts": 1263,
     "unconsumedContracts": 0
   },
@@ -45343,6 +45343,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetFavoriteMealPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/GetFavoriteMealPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteMealPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/GetFavoriteMealPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetFavoriteMealPageQuery",
       "roles": [
         "Query"
@@ -45377,7 +45403,7 @@
         "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45393,6 +45419,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "GetFavoriteMealPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetFavoriteMealsQuery",
@@ -138482,7 +138521,7 @@
         "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -138498,6 +138537,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RestoreFavoriteMealCommand",

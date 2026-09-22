@@ -26466,19 +26466,19 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "nonBlankLines": 48,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.96
+      "structuralRiskScore": 2.92
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 45,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.9
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/AddFavoriteMealHttpRequest.cs",
@@ -48491,7 +48491,7 @@
       "name": "FavoriteMealsController",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "line": 16,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
