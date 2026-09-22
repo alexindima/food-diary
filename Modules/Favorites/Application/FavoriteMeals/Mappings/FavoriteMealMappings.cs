@@ -31,5 +31,5 @@ public static class FavoriteMealMappings {
             favorite.TotalProteins,
             favorite.TotalFats,
             favorite.TotalCarbs,
-            favorite.ItemCount);
+            favorite.ItemCount) { ItemImageUrls = favorite.ItemImageUrls.Concat(favorite.AiImageUrls).Distinct(StringComparer.Ordinal).Take(4).ToArray(), ImageUrl = favorite.ImageUrl, TotalFiber = favorite.TotalFiber, ItemNames = favorite.ItemNames.Concat(favorite.AiItemNames).Distinct(StringComparer.Ordinal).Take(4).ToArray() };
 }

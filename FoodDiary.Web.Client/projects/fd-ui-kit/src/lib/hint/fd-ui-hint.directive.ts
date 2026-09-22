@@ -153,7 +153,8 @@ export class FdUiHintDirective {
 
     private isKeyboardVisibleFocus(): boolean {
         const host: HTMLElement = this.elementRef.nativeElement;
-        return host.matches(':focus-visible');
+        const focused = this.document.activeElement;
+        return host.matches(':focus-visible') || (focused !== null && host.contains(focused) && focused.matches(':focus-visible'));
     }
 
     private queueShow(delay: number): void {

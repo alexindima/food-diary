@@ -1,0 +1,25 @@
+:host {
+    display: block;
+}
+
+.favorites-picker__undo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fd-space-md);
+    width: 100%;
+}
+.favorites-picker__undo[hidden] {
+    display: none;
+}
+.favorites-picker__undo-copy {
+    min-width: 0;
+}
+.favorites-picker__undo-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.favorites-picker__undo > fd-ui-button {
+    flex-shrink: 0;
+}

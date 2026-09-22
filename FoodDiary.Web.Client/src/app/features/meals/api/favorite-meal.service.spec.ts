@@ -7,6 +7,7 @@ import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FavoriteMeal } from '../models/meal.data';
 import { FavoriteMealService } from './favorite-meal.service';
 
+const PAGE_SIZE = 10;
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-meals';
 
 const favoriteMeal: FavoriteMeal = {
@@ -39,6 +40,27 @@ afterEach(() => {
 });
 
 describe('FavoriteMealService', () => {
+    it('requests a bounded server page and passes a trimmed search', () => {
+        service.getPage(2, PAGE_SIZE, ' rice ').subscribe();
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page`);
+        expect(req.request.params.get('page')).toBe('2');
+        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('search')).toBe('rice');
+        req.flush({ data: [favoriteMeal], page: 2, limit: 10, totalPages: 2, totalItems: 11 });
+    });
+    it('propagates page errors instead of disguising them as an empty favorite list', () => {
+        let failed = false;
+        service.getPage(1).subscribe({
+            error: () => {
+                failed = true;
+            },
+        });
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page`).flush('offline', { status: 500, statusText: 'Error' });
+        expect(failed).toBe(true);
+    });
+});
+
+describe('FavoriteMealService mutations and legacy reads', () => {
     it('should get all favorite meals', () => {
         service.getAll().subscribe(result => {
             expect(result).toEqual([favoriteMeal]);

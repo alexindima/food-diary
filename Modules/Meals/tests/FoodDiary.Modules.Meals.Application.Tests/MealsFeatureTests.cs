@@ -347,6 +347,10 @@ public partial class MealsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+            UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
             int page,
@@ -433,6 +437,10 @@ public partial class MealsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+            UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
             int page,
@@ -518,6 +526,10 @@ public partial class MealsFeatureTests {
             int limit,
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+            UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
@@ -607,6 +619,10 @@ public partial class MealsFeatureTests {
             LastMealTypes = filters.MealTypes;
             return Task.FromResult((_items, totalItems));
         }
+
+        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+            UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,

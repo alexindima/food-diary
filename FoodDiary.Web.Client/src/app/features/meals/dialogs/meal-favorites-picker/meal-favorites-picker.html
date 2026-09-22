@@ -1,0 +1,69 @@
+<fd-ui-dialog-shell size="md" [title]="'MEAL_FAVORITES.TITLE' | translate" [dismissible]="!busy()">
+    <div class="fd-stack fd-gap-md">
+        <fd-ui-input
+            #searchInput
+            [label]="'MEAL_FAVORITES.SEARCH' | translate"
+            [maxLength]="200"
+            [disabled]="busy()"
+            (valueChange)="search($event)"
+        />
+        <div aria-live="polite" [hidden]="!facade.loading() && !facade.failed() && facade.items().length > 0">
+            @if (facade.loading()) {
+                <p class="fd-ui-meta-text">{{ 'MEAL_FAVORITES.LOADING' | translate }}</p>
+            } @else if (facade.failed()) {
+                <p role="alert">{{ 'MEAL_FAVORITES.LOAD_ERROR' | translate }}</p>
+                <fd-ui-button fill="text" variant="secondary" (click)="facade.load(facade.page())">{{
+                    'MEAL_FAVORITES.RETRY' | translate
+                }}</fd-ui-button>
+            } @else if (facade.items().length === 0) {
+                <p class="fd-ui-meta-text">{{ (facade.search() ? 'MEAL_FAVORITES.NO_RESULTS' : 'MEAL_FAVORITES.EMPTY') | translate }}</p>
+            }
+        </div>
+        <div class="favorites-picker__list" [hidden]="facade.items().length === 0">
+            @for (item of facade.items(); track item.id) {
+                <fd-favorite-meal-row
+                    [meal]="item"
+                    [loading]="savingId() === item.id"
+                    [disabled]="busy()"
+                    [removing]="removingId() === item.id"
+                    (remove)="remove($event)"
+                    (add)="add($event)"
+                />
+            }
+        </div>
+        @if (operationErrorKey(); as errorKey) {
+            <p role="alert">{{ errorKey | translate }}</p>
+        }
+        @if (!facade.failed() && facade.total() > facade.pageSize) {
+            <fd-ui-pagination
+                [length]="facade.total()"
+                [pageSize]="facade.pageSize"
+                [pageIndex]="facade.page() - 1"
+                (pageIndexChange)="facade.load($event + 1)"
+            />
+        }
+    </div>
+    <ng-container ngProjectAs="[fdUiDialogFooter]">
+        @if (undoItem()) {
+            <div fdUiDialogFooter class="favorites-picker__undo">
+                <div class="favorites-picker__undo-copy fd-stack fd-gap-xs" role="status" aria-live="polite">
+                    <span>{{ undoMessageKey() | translate }}</span>
+                    <span class="fd-ui-meta-text favorites-picker__undo-description" [title]="undoDescription()">{{
+                        undoDescription()
+                    }}</span>
+                </div>
+                <fd-ui-button
+                    #undoButton
+                    variant="secondary"
+                    fill="text"
+                    [loading]="restoring()"
+                    [disabled]="busy()"
+                    [disabledReason]="'MEAL_FAVORITES.BUSY' | translate"
+                    (click)="undoRemoval()"
+                >
+                    {{ 'MEAL_FAVORITES.UNDO' | translate }}
+                </fd-ui-button>
+            </div>
+        }
+    </ng-container>
+</fd-ui-dialog-shell>

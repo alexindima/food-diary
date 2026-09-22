@@ -803,6 +803,11 @@
         "CANCEL": "Cancel"
     },
     "MEAL_LIST": {
+        "KCAL": "kcal",
+        "TODAY": "Today",
+        "RESET_ALL": "Clear all",
+        "REMOVE_FILTER": "Remove filter",
+        "DAY_TOTAL": "Day total",
         "TITLE": "Meals",
         "SUBTITLE": "Manage your logged meals and snacks",
         "ADD_MEAL_BUTTON": "Add Meal",
@@ -819,7 +824,7 @@
         "FILTER_NO": "No",
         "FILTER_MEAL_TYPES": "Meal types",
         "FILTER_MEAL_TYPES_ACTIVE": "Meal types",
-        "FILTER_NUTRITION": "Nutrition",
+        "FILTER_NUTRITION": "Calories",
         "FILTER_CALORIES_FROM": "Calories from",
         "FILTER_CALORIES_TO": "Calories to",
         "FILTER_CALORIES_ACTIVE": "Calories range",
@@ -827,7 +832,7 @@
         "FILTER_HAS_IMAGE": "Has photo",
         "FILTER_IMAGE_WITH": "With photo",
         "FILTER_IMAGE_WITHOUT": "Without photo",
-        "FILTER_AI": "AI",
+        "FILTER_AI": "Added with AI",
         "FILTER_HAS_AI": "Has AI recognition",
         "FILTER_AI_WITH": "With AI",
         "FILTER_AI_WITHOUT": "Without AI",
@@ -843,8 +848,8 @@
         "ITEM_COUNT": "Item count",
         "MEAL_TYPE": "Meal type",
         "CHOOSE_DATES": "Choose dates",
-        "DATE_FILTER_FROM_LABEL": "Filter from",
-        "DATE_FILTER_TO_LABEL": "Filter to",
+        "DATE_FILTER_FROM_LABEL": "Date from",
+        "DATE_FILTER_TO_LABEL": "Date to",
         "DATE_FROM_PLACEHOLDER": "From date",
         "DATE_TO_PLACEHOLDER": "To date",
         "TOTAL_CALORIES": "Total Calories",
@@ -877,7 +882,8 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the meals tour whenever you need a reminder."
-        }
+        },
+        "FILTERS_ALREADY_EMPTY": "No filters to reset"
     },
     "AI_INPUT_BAR": {
         "SHORT_PLACEHOLDER": "What did you eat?",
@@ -3862,5 +3868,25 @@
         "RETRY": "Retry",
         "ERROR": "Could not load measurements. Please try again.",
         "EMPTY": "No measurements yet."
+    },
+    "MEAL_FAVORITES": {
+        "REMOVED": "Removed from favorites",
+        "UNDO": "Undo",
+        "RESTORE_ERROR": "Could not restore the meal. Try again.",
+        "REMOVE_ERROR": "Could not remove the meal from favorites. Please try again.",
+        "BUSY": "Wait for the current action to finish",
+        "NUTRITION_LABEL": "Proteins: {{proteins}} g; fats: {{fats}} g; carbs: {{carbs}} g; fiber: {{fiber}} g",
+        "TITLE": "Add from favorites",
+        "OPEN": "Add from favorites",
+        "SEARCH": "Search by name or ingredients",
+        "LOADING": "Loading favorites…",
+        "LOAD_ERROR": "Could not load favorites.",
+        "RETRY": "Retry",
+        "NO_RESULTS": "No matches. Try another search.",
+        "EMPTY": "Meals you star in your diary will appear here.",
+        "KCAL": "kcal",
+        "ADD": "Add",
+        "ADDING": "Adding meal…",
+        "ADD_ERROR": "Could not add the meal. Please try again."
     }
 }

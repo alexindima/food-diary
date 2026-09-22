@@ -63,60 +63,49 @@
             <fd-ai-input-action-bar
                 data-tour-id="meal-list-create"
                 mode="create"
+                [showManualPrefix]="false"
                 [isProcessing]="isAiMealSaving()"
                 [clearToken]="aiMealClearToken()"
                 (mealCreateRequested)="onAiMealCreateRequested($event)"
                 (manualAction)="goToMealAddAsync()"
-            />
+            >
+                <fd-ui-button
+                    data-tour-id="meal-list-favorites"
+                    manualActions
+                    variant="secondary"
+                    fill="text"
+                    icon="star"
+                    (click)="openFavoritesAsync()"
+                >
+                    {{ 'MEAL_FAVORITES.OPEN' | translate }} · {{ favoriteTotalCount() }}
+                </fd-ui-button>
+            </fd-ai-input-action-bar>
         } @placeholder {
             <div class="meal-list__ai-placeholder" aria-hidden="true"></div>
         }
 
         @if (hasActiveFilters()) {
             <section class="meal-list__active-filters" [attr.aria-label]="'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate">
-                <span class="meal-list__active-filters-label">{{ 'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
+                <span class="meal-list__active-filters-label"
+                    >{{ 'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate }} · {{ activeFilterChips().length }}</span
+                >
                 <div class="meal-list__active-filter-chips">
-                    @if (activeDateFilterStart(); as startDate) {
-                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
-                            {{ 'MEAL_LIST.DATE_FILTER_FROM_LABEL' | translate }}: {{ startDate }}
-                        </button>
-                    }
-                    @if (activeDateFilterEnd(); as endDate) {
-                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
-                            {{ 'MEAL_LIST.DATE_FILTER_TO_LABEL' | translate }}: {{ endDate }}
-                        </button>
-                    }
-                    @for (filterKey of activeFilterKeys(); track filterKey) {
-                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
-                            {{ filterKey | translate }}
+                    @for (chip of activeFilterChips(); track chip.id) {
+                        <button
+                            type="button"
+                            class="meal-list__active-filter-chip"
+                            [attr.aria-label]="`${('MEAL_LIST.REMOVE_FILTER' | translate)}: ${chip.label}`"
+                            (click)="removeFilter(chip.id)"
+                        >
+                            {{ chip.label }} <span aria-hidden="true">&#215;</span>
                         </button>
                     }
                 </div>
-                <fd-ui-button
-                    class="meal-list__active-filters-edit"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="tune"
-                    [fdUiHint]="'MEAL_LIST.ACTIVE_FILTERS_EDIT' | translate"
-                    [ariaLabel]="'MEAL_LIST.ACTIVE_FILTERS_EDIT' | translate"
-                    (click)="openFilters()"
-                />
+                <fd-ui-button variant="secondary" fill="text" (click)="resetFilters()">{{
+                    'MEAL_LIST.RESET_ALL' | translate
+                }}</fd-ui-button>
             </section>
         }
-
-        <fd-meal-list-favorites
-            [favoriteViews]="favoriteViews()"
-            [count]="favoriteTotalCount()"
-            [isOpen]="isFavoritesOpen()"
-            [showLoadMore]="hasMoreFavorites()"
-            [isLoadingMore]="isFavoritesLoadingMore()"
-            [favoriteLoadingIds]="favoriteLoadingIds()"
-            (toggleRequested)="toggleFavorites()"
-            (loadMore)="loadFavorites()"
-            (favoriteRepeated)="repeatFavorite($event)"
-            (favoriteRemoved)="removeFavorite($event)"
-        />
 
         <fd-meal-list-content
             data-tour-id="meal-list-results"

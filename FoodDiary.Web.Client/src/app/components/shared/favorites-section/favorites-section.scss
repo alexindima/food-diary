@@ -47,3 +47,18 @@
 .fd-favorites-section__load-more {
     align-self: flex-start;
 }
+
+.fd-favorites-section--quiet {
+    --fd-surface-border: none;
+    background: transparent;
+    box-shadow: var(--fd-shadow-none);
+    .fd-favorites-section__header {
+        width: auto;
+        padding: var(--fd-space-xs) 0;
+        gap: var(--fd-space-sm);
+    }
+    .fd-favorites-section__body {
+        padding: var(--fd-space-sm) 0 0;
+        border-top: none;
+    }
+}

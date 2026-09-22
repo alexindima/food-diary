@@ -11,4 +11,11 @@ public sealed record FavoriteMealReadModel(
     double TotalProteins,
     double TotalFats,
     double TotalCarbs,
-    int ItemCount);
+    int ItemCount) {
+    public IReadOnlyList<string> AiImageUrls { get; init; } = [];
+    public IReadOnlyList<string> AiItemNames { get; init; } = [];
+    public IReadOnlyList<string> ItemImageUrls { get; init; } = [];
+    public string? ImageUrl { get; init; }
+    public double TotalFiber { get; init; }
+    public IReadOnlyList<string> ItemNames { get; init; } = [];
+}

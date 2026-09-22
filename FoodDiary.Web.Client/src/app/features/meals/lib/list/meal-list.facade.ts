@@ -14,7 +14,7 @@ import { NutritionDataInvalidationService } from '../../../../shared/state/nutri
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
-import type { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
+import type { FavoriteMeal, Meal, MealDaySummary, MealFilters } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 
 export type MealListStructuredFilters = {
@@ -37,6 +37,7 @@ export class MealListFacade {
     private readonly navigationService = inject(NavigationService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
 
+    public readonly daySummaries = signal<MealDaySummary[]>([]);
     public readonly pageSize = MEAL_LIST_PAGE_SIZE;
     public readonly mealData = new PagedData<Meal>();
     public readonly currentPageIndex = signal(0);
@@ -47,22 +48,16 @@ export class MealListFacade {
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
     public loadFavorites(): void {
-        this.isFavoritesLoadingMore.set(true);
         this.favoriteMealService
-            .getAll()
-            .pipe(
-                catchError(() => {
+            .getPage(1, 1)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: page => {
+                    this.favoriteTotalCount.set(page.totalItems);
+                },
+                error: () => {
                     this.showOperationError();
-                    return of([]);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isFavoritesLoadingMore.set(false);
-                }),
-            )
-            .subscribe(favorites => {
-                this.favorites.set(favorites);
-                this.favoriteTotalCount.set(favorites.length);
+                },
             });
     }
 
@@ -70,22 +65,27 @@ export class MealListFacade {
         this.mealData.setLoading(true);
         const filters = this.buildFilters(filtersModel);
 
-        return this.mealService.query(page, this.pageSize, filters).pipe(
-            tap(pageData => {
-                this.mealData.setData(pageData);
-                this.currentPageIndex.set(pageData.page - 1);
-                this.clearError();
-            }),
-            map(() => void 0),
-            catchError((_error: unknown) => {
-                this.mealData.clearData();
-                this.showLoadError();
-                return of(void 0);
-            }),
-            finalize(() => {
-                this.mealData.setLoading(false);
-            }),
-        );
+        return this.mealService
+            .queryOverview(page, this.pageSize, filters, { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, include: false })
+            .pipe(
+                tap(data => {
+                    const pageData = data.allMeals;
+                    this.daySummaries.set(data.daySummaries ?? []);
+                    this.mealData.setData(pageData);
+                    this.currentPageIndex.set(pageData.page - 1);
+                    this.clearError();
+                }),
+                map(() => void 0),
+                catchError((_error: unknown) => {
+                    this.mealData.clearData();
+                    this.daySummaries.set([]);
+                    this.showLoadError();
+                    return of(void 0);
+                }),
+                finalize(() => {
+                    this.mealData.setLoading(false);
+                }),
+            );
     }
 
     public async handleMealDetailsAsync(meal: Meal, filters: MealListStructuredFilters): Promise<boolean> {
@@ -121,9 +121,10 @@ export class MealListFacade {
         this.mealData.setLoading(true);
         const filters = this.buildFilters(filtersModel);
 
-        return this.mealService.queryOverview(1, this.pageSize, filters, MEAL_LIST_OVERVIEW_FAVORITES_LIMIT).pipe(
+        return this.mealService.queryOverview(1, this.pageSize, filters, { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT }).pipe(
             tap(data => {
                 this.mealData.setData(data.allMeals);
+                this.daySummaries.set(data.daySummaries ?? []);
                 this.favorites.set(data.favoriteItems);
                 this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.currentPageIndex.set(data.allMeals.page - 1);
@@ -132,6 +133,7 @@ export class MealListFacade {
             map(() => void 0),
             catchError((_error: unknown) => {
                 this.mealData.clearData();
+                this.daySummaries.set([]);
                 this.favorites.set([]);
                 this.favoriteTotalCount.set(0);
                 this.showLoadError();
@@ -172,19 +174,33 @@ export class MealListFacade {
     }
 
     public removeFavorite(favorite: FavoriteMeal): void {
-        this.favoriteMealService
-            .remove(favorite.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.favorites.update(list => list.filter(item => item.id !== favorite.id));
-                    this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                    this.syncMealFavoriteState(favorite.mealId, false, null);
-                },
-                error: () => {
-                    this.showOperationError();
-                },
-            });
+        this.removeFavoriteRequest(favorite).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    }
+
+    public removeFavoriteRequest(favorite: FavoriteMeal): Observable<boolean> {
+        return this.favoriteMealService.remove(favorite.id).pipe(
+            tap(() => {
+                this.favorites.update(list => list.filter(item => item.id !== favorite.id));
+                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                this.syncMealFavoriteState(favorite.mealId, false, null);
+            }),
+            map(() => true),
+            catchError(() => {
+                this.showOperationError();
+                return of(false);
+            }),
+        );
+    }
+
+    public restoreFavoriteRequest(favorite: FavoriteMeal): Observable<boolean> {
+        return this.favoriteMealService.add(favorite.mealId, favorite.name ?? undefined).pipe(
+            tap(restored => {
+                this.syncMealFavoriteState(favorite.mealId, true, restored.id);
+                this.loadFavorites();
+            }),
+            map(() => true),
+            catchError(() => of(false)),
+        );
     }
 
     public toggleMealFavorite(meal: Meal): void {
@@ -224,15 +240,12 @@ export class MealListFacade {
 
     private removeMealFavorite(meal: Meal): void {
         const favoriteId = meal.favoriteMealId;
-        const request$ =
-            favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
-                ? this.favoriteMealService.remove(favoriteId)
-                : this.favoriteMealService.getAll().pipe(
-                      switchMap(favorites => {
-                          const match = favorites.find(favorite => favorite.mealId === meal.id);
-                          return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
-                      }),
-                  );
+        if (favoriteId === null || favoriteId === undefined || favoriteId.length === 0) {
+            this.setFavoriteLoading(meal.id, false);
+            this.showOperationError();
+            return;
+        }
+        const request$ = this.favoriteMealService.remove(favoriteId);
 
         request$
             .pipe(

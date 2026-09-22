@@ -10423,6 +10423,78 @@
       ]
     },
     {
+      "Path": "/api/v{version}/favorite-meals/page",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 200
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/favorite-meals/{id}",
       "Operations": [
         {
@@ -12195,7 +12267,7 @@
               "Type": "integer",
               "Format": "int32",
               "Default": "10",
-              "Minimum": 1,
+              "Minimum": 0,
               "Maximum": 50
             },
             {
@@ -12209,6 +12281,13 @@
               "Location": "query",
               "Required": false,
               "Type": "boolean"
+            },
+            {
+              "Name": "IncludeFavorites",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean",
+              "Default": "true"
             },
             {
               "Name": "Limit",
@@ -12236,6 +12315,22 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 10000
+            },
+            {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
+              "Name": "TimeZoneOffsetMinutes",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Minimum": -840,
+              "Maximum": 840
             }
           ],
           "PathParameters": [
@@ -26137,11 +26232,31 @@
           "Nullable": false
         },
         {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "itemCount",
           "Required": false,
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "itemImageUrls",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "itemNames",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         },
         {
           "Name": "mealDate",
@@ -26191,10 +26306,57 @@
           "Nullable": false
         },
         {
+          "Name": "totalFiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
           "Name": "totalProteins",
           "Required": false,
           "Type": "number",
           "Format": "double",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "FavoriteMealHttpResponsePagedHttpResponse",
+      "Properties": [
+        {
+          "Name": "data",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/FavoriteMealHttpResponse"
+        },
+        {
+          "Name": "limit",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "page",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalPages",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
           "Nullable": false
         }
       ]
@@ -28140,6 +28302,32 @@
       ]
     },
     {
+      "Name": "MealDaySummaryHttpResponse",
+      "Properties": [
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date",
+          "Nullable": false
+        },
+        {
+          "Name": "mealCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalCalories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "MealHttpResponse",
       "Properties": [
         {
@@ -28608,6 +28796,13 @@
           "Required": false,
           "Reference": "#/components/schemas/MealHttpResponsePagedHttpResponse",
           "Nullable": false
+        },
+        {
+          "Name": "daySummaries",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/MealDaySummaryHttpResponse"
         },
         {
           "Name": "favoriteItems",

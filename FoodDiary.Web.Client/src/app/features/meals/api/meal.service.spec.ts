@@ -327,3 +327,25 @@ function createAiOnlyMeal(totalCalories: number): MealResponseDto {
         ],
     };
 }
+
+describe('MealService daily overview', () => {
+    it('sends local timezone and favorites options and preserves server day totals', () => {
+        const summaries = [{ date: '2026-03-28', totalCalories: 2500, mealCount: 8 }];
+        service.queryOverview(1, DEFAULT_LIMIT, DEFAULT_FILTERS, { limit: 3, include: false }).subscribe(result => {
+            expect(result.daySummaries).toEqual(summaries);
+            expect(result.allMeals.data[0].id).toBe('m1');
+        });
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview`);
+        expect(req.request.params.get('timeZoneId')).toBe(new Intl.DateTimeFormat().resolvedOptions().timeZone);
+        expect(req.request.params.get('timeZoneOffsetMinutes')).toBe(String(-new Date().getTimezoneOffset()));
+        expect(req.request.params.get('includeFavorites')).toBe('false');
+        expect(req.request.params.get('favoriteLimit')).toBe('3');
+        req.flush({ allMeals: MOCK_PAGE_DTO, favoriteItems: [], favoriteTotalCount: 0, daySummaries: summaries });
+    });
+    it('requests favorites by default and tolerates older responses without totals', () => {
+        service.queryOverview(1, DEFAULT_LIMIT, {}).subscribe(result => { expect(result.daySummaries).toEqual([]); });
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview`);
+        expect(req.request.params.get('includeFavorites')).toBe('true');
+        req.flush({ allMeals: MOCK_PAGE_DTO, favoriteItems: [], favoriteTotalCount: 0 });
+    });
+});

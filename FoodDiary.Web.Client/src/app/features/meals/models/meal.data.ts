@@ -102,7 +102,10 @@ export type MealResponseDto = {
     aiSessions?: MealAiSessionResponseDto[];
 };
 
+export type MealDaySummary = { date: string; totalCalories: number; mealCount: number };
+
 export type MealOverview = {
+    daySummaries?: MealDaySummary[];
     allMeals: PageOf<Meal>;
     favoriteItems: FavoriteMeal[];
     favoriteTotalCount: number;
@@ -269,6 +272,10 @@ export const createEmptyRecipeSnapshot = (): Recipe => ({
 });
 
 export type FavoriteMeal = {
+    itemImageUrls?: string[];
+    imageUrl?: string | null;
+    totalFiber?: number;
+    itemNames?: string[];
     id: string;
     mealId: string;
     name: string | null;

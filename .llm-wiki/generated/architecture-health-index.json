@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 96,
+    "selectorUnreferencedComponents": 98,
     "routedStandaloneComponents": 63,
     "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 38,
@@ -651,6 +651,22 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.spec.ts"
+    },
+    {
+      "class": "MealFavoritesPickerComponent",
+      "selector": "fd-meal-favorites-picker",
+      "feature": "meals",
+      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.spec.ts"
+    },
+    {
+      "class": "MealListFavoritesComponent",
+      "selector": "fd-meal-list-favorites",
+      "feature": "meals",
+      "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-favorites/meal-list-favorites.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-favorites/meal-list-favorites.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-favorites/meal-list-favorites.spec.ts"
     },
     {
       "class": "MealListFiltersDialogComponent",
@@ -4614,6 +4630,11 @@
         },
         {
           "name": "clearToken",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "showManualPrefix",
           "type": "",
           "required": false
         },

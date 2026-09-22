@@ -1,0 +1,69 @@
+<div class="favorite-row__media" [class.favorite-row__media--collage]="images().length > 1">
+    @for (url of images(); track url) {
+        <img class="favorite-row__image" alt="" width="64" height="64" loading="lazy" [src]="url" (error)="imageFailed(url)" />
+    } @empty {
+        <img class="favorite-row__image favorite-row__image--placeholder" alt="" width="64" height="64" [src]="placeholder()" />
+    }
+</div>
+<div class="favorite-row__content fd-stack fd-gap-xs">
+    <div class="favorite-row__heading">
+        <strong>{{ name() || (typeKey() | translate) }}</strong>
+        <span class="favorite-row__calories"
+            >{{ meal().totalCalories | localizedNumber: locale() : 0 : 0 }} {{ 'MEAL_FAVORITES.KCAL' | translate }}</span
+        >
+    </div>
+    @if (composition()) {
+        <span class="favorite-row__composition fd-ui-meta-text" [title]="composition()">{{ composition() }}</span>
+    }
+    <div class="favorite-row__footer">
+        <div
+            class="favorite-row__nutrition"
+            role="img"
+            [attr.aria-label]="
+                'MEAL_FAVORITES.NUTRITION_LABEL'
+                    | translate
+                        : {
+                              proteins: meal().totalProteins,
+                              fats: meal().totalFats,
+                              carbs: meal().totalCarbs,
+                              fiber: meal().totalFiber ?? 0,
+                          }
+            "
+        >
+            <fd-nutrient-badges
+                aria-hidden="true"
+                [proteins]="meal().totalProteins"
+                [fats]="meal().totalFats"
+                [carbs]="meal().totalCarbs"
+                [fiber]="meal().totalFiber ?? 0"
+                [alcohol]="0"
+            />
+        </div>
+        <div class="favorite-row__actions">
+            <fd-ui-button
+                class="favorite-row__star fd-favorite-button--active"
+                variant="secondary"
+                fill="text"
+                icon="star"
+                [fdUiHint]="'MEAL_DETAIL.REMOVE_FAVORITE' | translate"
+                [ariaPressed]="true"
+                [ariaLabel]="'MEAL_DETAIL.REMOVE_FAVORITE' | translate"
+                [loading]="removing()"
+                [disabled]="disabled()"
+                [disabledReason]="'MEAL_FAVORITES.BUSY' | translate"
+                (click)="remove.emit(meal())"
+            />
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                icon="add"
+                [loading]="loading()"
+                [disabled]="disabled()"
+                [disabledReason]="'MEAL_FAVORITES.ADDING' | translate"
+                (click)="add.emit(meal())"
+            >
+                {{ 'MEAL_FAVORITES.ADD' | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</div>

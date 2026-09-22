@@ -37,7 +37,7 @@ public sealed class GetMealsOverviewQueryHandler(
         UserId userId = userIdResult.Value;
         int sanitizedPage = PaginationPolicy.NormalizePage(request.Page);
         int sanitizedLimit = PaginationPolicy.NormalizePageSize(request.Limit, defaultPageSize: 1);
-        int favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
+        int favoriteLimit = Math.Clamp(request.FavoriteLimit, 0, 50);
         DateTime? normalizedFrom = request.DateFrom.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom.Value)
             : null;
@@ -45,13 +45,16 @@ public sealed class GetMealsOverviewQueryHandler(
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
         MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
+        if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
+            return Result.Failure<MealOverviewModel>(FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Validation.Invalid(nameof(request.TimeZoneId), "Invalid time zone."));
+        }
 
         MealOverviewModel overview = await GetOverviewAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
             favoriteLimit,
-            filters,
+            filters, timeZone, request.IncludeFavorites,
             cancellationToken).ConfigureAwait(false);
 
         return Result.Success(overview);
@@ -77,7 +80,7 @@ public sealed class GetMealsOverviewQueryHandler(
         int page,
         int limit,
         int favoriteLimit,
-        MealQueryFilters filters,
+        MealQueryFilters filters, TimeZoneInfo timeZone, bool includeFavorites,
         CancellationToken cancellationToken) {
         (IReadOnlyList<MealProjectionReadModel> items, int totalItems) = await mealRepository.GetPagedMealProjectionsAsync(
             userId,
@@ -87,7 +90,9 @@ public sealed class GetMealsOverviewQueryHandler(
             cancellationToken).ConfigureAwait(false);
 
         (IReadOnlyList<MealFavoriteMealModel> favoriteItems, int favoriteCount) =
-            await sender.Send(new ReadMealFavoritesOverviewQuery(userId, favoriteLimit), cancellationToken).ConfigureAwait(false);
+            includeFavorites
+                ? await sender.Send(new ReadMealFavoritesOverviewQuery(userId, favoriteLimit), cancellationToken).ConfigureAwait(false)
+                : (Array.Empty<MealFavoriteMealModel>(), 0);
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await MealReadSupport.GetFavoritesByMealIdAsync(sender,
             userId,
             items,
@@ -95,6 +100,8 @@ public sealed class GetMealsOverviewQueryHandler(
 
         var allMeals = MealReadSupport.ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
 
-        return new MealOverviewModel(allMeals, favoriteItems, favoriteCount);
+        DateOnly[] dates = [.. items.Select(item => LocalCalendar.DateAt(item.Date, timeZone)).Distinct()];
+        IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary> summaries = dates.Length == 0 ? [] : await mealRepository.GetDaySummariesAsync(userId, dates, timeZone, cancellationToken).ConfigureAwait(false);
+        return new MealOverviewModel(allMeals, favoriteItems, favoriteCount) { DaySummaries = summaries };
     }
 }

@@ -23,7 +23,7 @@ public static class MealHttpResponseMappings {
                 model.AllMeals.ToHttpResponse(),
                 model.FavoriteItems.Select(ToHttpResponse).ToList(),
                 model.FavoriteTotalCount
-            );
+            ) { DaySummaries = model.DaySummaries.Select(day => new MealDaySummaryHttpResponse(day.Date, day.TotalCalories, day.MealCount)).ToList() };
         }
     }
 

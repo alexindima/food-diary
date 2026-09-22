@@ -62,11 +62,15 @@ public sealed class FavoriteMealHttpMappingsTests {
         var mealId = Guid.NewGuid();
         DateTime createdAt = DateTime.UtcNow;
         DateTime mealDate = DateTime.UtcNow.Date;
-        var model = new FavoriteMealModel(id, mealId, "Breakfast", createdAt, mealDate, "Breakfast", 450, 30, 15, 55, 3);
+        var model = new FavoriteMealModel(id, mealId, "Breakfast", createdAt, mealDate, "Breakfast", 450, 30, 15, 55, 3) { ItemImageUrls = ["https://example.com/rice.jpg"], ImageUrl = "https://example.com/meal.jpg", TotalFiber = 7.5, ItemNames = ["Rice"] };
 
         FavoriteMealHttpResponse response = model.ToHttpResponse();
 
         Assert.Multiple(
+            () => Assert.Equal(new[] { "https://example.com/rice.jpg" }, response.ItemImageUrls),
+            () => Assert.Equal("https://example.com/meal.jpg", response.ImageUrl),
+            () => Assert.Equal(7.5, response.TotalFiber),
+            () => Assert.Equal(new[] { "Rice" }, response.ItemNames),
             () => Assert.Equal(id, response.Id),
             () => Assert.Equal(mealId, response.MealId),
             () => Assert.Equal("Breakfast", response.Name),

@@ -72,6 +72,19 @@ export class MealListFiltersDialogComponent {
     protected imageValue: 'any' | 'yes' | 'no' = this.toBinaryValue(this.data.hasImage ?? null);
     protected aiValue: 'any' | 'yes' | 'no' = this.toBinaryValue(this.data.hasAiSession ?? null);
 
+    protected get canReset(): boolean {
+        const range = this.formModel().dateRange;
+        return [
+            Boolean(range?.start),
+            Boolean(range?.end),
+            this.selectedMealTypes().length > 0,
+            this.caloriesFromValue !== null && this.caloriesFromValue !== '',
+            this.caloriesToValue !== null && this.caloriesToValue !== '',
+            this.imageValue !== 'any',
+            this.aiValue !== 'any',
+        ].includes(true);
+    }
+
     protected onReset(): void {
         this.form.dateRange().value.set(null);
         this.selectedMealTypes.set([]);

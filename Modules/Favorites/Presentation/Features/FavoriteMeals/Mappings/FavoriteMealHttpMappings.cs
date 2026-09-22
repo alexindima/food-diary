@@ -36,6 +36,6 @@ public static class FavoriteMealHttpMappings {
                     model.TotalProteins,
                     model.TotalFats,
                     model.TotalCarbs,
-                    model.ItemCount);
+                    model.ItemCount) { ItemImageUrls = model.ItemImageUrls, ImageUrl = model.ImageUrl, TotalFiber = model.TotalFiber, ItemNames = model.ItemNames };
     }
 }

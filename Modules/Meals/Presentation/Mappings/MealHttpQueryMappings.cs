@@ -30,12 +30,12 @@ public static class MealHttpQueryMappings {
                 Math.Clamp(query.Limit, 1, 100),
                 query.DateFrom,
                 query.DateTo,
-                Math.Clamp(query.FavoriteLimit, 1, 50),
+                Math.Clamp(query.FavoriteLimit, 0, 50),
                 ParseCsv(query.MealTypes),
                 NormalizeNonNegative(query.CaloriesFrom),
                 NormalizeNonNegative(query.CaloriesTo),
                 query.HasImage,
-                query.HasAiSession);
+                query.HasAiSession, query.TimeZoneId, query.TimeZoneOffsetMinutes, query.IncludeFavorites);
         }
     }
 

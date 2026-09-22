@@ -13,10 +13,42 @@ using FoodDiary.Modules.Products.Contracts.Common;
 using Product = FoodDiary.Modules.Products.Contracts.Models.ProductSnapshotReadModel;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
 public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQuery nutritionQueries, IProductSnapshotReadService products, IMealSourceSnapshotQuery sourceSnapshots, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IMealRepository {
+    public async Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
+        UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone,
+        CancellationToken cancellationToken = default) {
+        if (dates.Count == 0) {
+            return [];
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        // Restrict the aggregate to the page's local dates, never to its meal filters or page limit.
+        ParameterExpression meal = Expression.Parameter(typeof(Meal), "meal");
+        MemberExpression timestamp = Expression.Property(meal, nameof(Meal.Date));
+        Expression included = Expression.Constant(false);
+        Expression day = Expression.Constant(DateOnly.MinValue);
+        foreach (DateOnly date in dates.Distinct().Order()) {
+            DateTime start = LocalCalendar.StartOfDayUtc(date, timeZone);
+            DateTime end = LocalCalendar.StartOfDayUtc(date.AddDays(1), timeZone);
+            Expression inDay = Expression.AndAlso(
+                Expression.GreaterThanOrEqual(timestamp, Expression.Constant(start)),
+                Expression.LessThan(timestamp, Expression.Constant(end)));
+            included = Expression.OrElse(included, inDay);
+            day = Expression.Condition(inDay, Expression.Constant(date), day);
+        }
+        return await records.AsNoTracking().Where(value => value.UserId == userId)
+            .Where(Expression.Lambda<Func<Meal, bool>>(included, meal))
+            .GroupBy(Expression.Lambda<Func<Meal, DateOnly>>(day, meal))
+            .OrderByDescending(group => group.Key)
+            .Select(group => new MealDaySummary(group.Key, group.Sum(value => value.TotalCalories), group.Count()))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private static DateTime StartOfUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
 

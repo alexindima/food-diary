@@ -60,6 +60,12 @@ class StaticDescriptionHostComponent {}
 })
 class TemplateHintHostComponent {}
 
+@Component({
+    imports: [FdUiHintDirective],
+    template: '<span fdUiHint="Remove favorite"><button type="button">Star</button></span>',
+})
+class NestedFocusHostComponent {}
+
 type HintTestContext<TComponent> = {
     fixture: ComponentFixture<TComponent>;
     overlayRoot: HTMLElement;
@@ -128,6 +134,7 @@ describe('FdUiHintDirective', () => {
     });
 
     registerDisplayTests();
+    registerNestedFocusTests();
     registerContentTests();
     registerDismissTests();
 });
@@ -288,5 +295,26 @@ function registerDismissTests(): void {
             expect(context.trigger.getAttribute('aria-describedby')).toBeNull();
             expect(queryTooltip(context.overlayRoot)).toBeNull();
         });
+    });
+}
+
+function registerNestedFocusTests(): void {
+    it('shows a hint for a keyboard-focused control inside a component host but not mouse focus', async () => {
+        const context = await createContextAsync(NestedFocusHostComponent);
+        const matches = vi.spyOn(context.trigger, 'matches').mockReturnValue(false);
+        context.trigger.focus();
+        context.fixture.detectChanges();
+        vi.advanceTimersByTime(ZERO_DELAY_MS);
+        expect(queryTooltip(context.overlayRoot)).toBeNull();
+        matches.mockReturnValue(true);
+        dispatchTriggerEvent(context.trigger, new FocusEvent('focusin', { bubbles: true }));
+        context.fixture.detectChanges();
+        vi.advanceTimersByTime(ZERO_DELAY_MS);
+        context.fixture.detectChanges();
+        expect(tooltipText(context.overlayRoot)).toBe('Remove favorite');
+        context.trigger.blur();
+        vi.advanceTimersByTime(ZERO_DELAY_MS);
+        context.fixture.detectChanges();
+        expect(queryTooltip(context.overlayRoot)).toBeNull();
     });
 }

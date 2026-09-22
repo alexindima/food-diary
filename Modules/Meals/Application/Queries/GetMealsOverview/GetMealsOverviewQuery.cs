@@ -15,5 +15,8 @@ public sealed record GetMealsOverviewQuery(
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
     bool? HasImage = null,
-    bool? HasAiSession = null)
+    bool? HasAiSession = null,
+    string? TimeZoneId = null,
+    int? TimeZoneOffsetMinutes = null,
+    bool IncludeFavorites = true)
     : IQuery<Result<MealOverviewModel>>, IUserRequest;

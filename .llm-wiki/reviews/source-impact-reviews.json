@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "73cac852bb7814aed75f72c8e73867a9c58422acf4b40a48f1a55e1970bcd263"
+          "sha256": "a1506945b9407a537f37774cb7009c4ea70345258b20977516ecd697fb0111b6"
         }
       ],
-      "reason": "Reviewed added weight/waist page endpoints, optional cursor and nullable nextCursor against current controllers and updated OpenAPI snapshot. HTTP/PostgreSQL flow and schema tests pass. Page-summary goalHistory is intentionally bounded; both frontend consumers move to paged endpoints in the same change. Legacy full-history routes remain available; deploy the rebuilt API with the matching frontend.",
+      "reason": "Photo URLs, bounded collage URLs and fiber are additive response fields; 16 Swagger snapshot tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "fadede7346b0f3ad2b3ed5c8844688bd88ffd9d3",
-      "reviewedAtUtc": "2026-09-21T02:09:05.2089997Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:09:10.9768699Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "068563b9d4f1bac18469cb23a148ee1b787c5cf8308e93ce02fc4f4aa9f264f5"
+          "sha256": "a4be9d5698ea916e23db2531e64ec8a7df5b6cc4b19969a9b2a2cf371fc96e57"
         }
       ],
-      "reason": "Generated architecture index now resolves direct specs for twelve body metric components previously listed without specs (139 to 127). No dependency or module graph change; removal-candidate guidance remains accurate.",
+      "reason": "No new project references or ownership changes; architecture suite passed 2107 tests.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:24:29.5790870Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T12:39:26.8958943Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a9f6628d6889f80aaa96e87d8425f3c12d078c6a26838eeb73a34263f0c332e3"
+          "sha256": "f228d6ba072d59bca16de5c692abf5117c4fbf55a573c2f44a5911ebc8bcbed0"
         }
       ],
-      "reason": "Goal history page queries now use existing request mapping extensions. Routes, payloads, cursors and response mappings are unchanged; controller surface tests correctly expect both history endpoints. All 333 presentation API tests pass.",
+      "reason": "Paged favorites route and optional itemNames are additive; consumer mapping and HTTP snapshot tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
-      "reviewedAtUtc": "2026-09-21T04:19:03.7135837Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T12:39:30.3705839Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -775,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c107c65f42e1028e0133d9fc585a99cac328bacf96323116b09be4b036e74e5e"
+          "sha256": "47c00feb2a548da3d3467ded8af55830a3e4cfd862397e20cd9ec7ca1886eb76"
         }
       ],
-      "reason": "Sensitive-data index changes only the source line of the existing meal TotalCalories projection. Timezone is request context, with no new persisted health fields or external transfers; user-scoped reads and cache isolation remain in place.",
+      "reason": "Favorites remain scoped to authenticated owner; photo lookup uses only linked meal and item IDs with no logging or provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:14:16.2377297Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:09:16.4985666Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d87b305b6a56b1dd7f1201e66d1e3a1911730154b6abe06405117f9f37ad6fd2"
+          "sha256": "e1932da3426ee311fdffb50bfb3343513f88474dd3fc4a2364b15543758beb3d"
         }
       ],
-      "reason": "Updated controller action counts for the previously added paginated goal history endpoints. Architecture conventions remain enforced and all 333 presentation API tests pass.",
+      "reason": "268 meals tests and 12 hint tests pass, including restore retry, multiple removals, search preservation, pending operation guards and rendered footer. Frontend production build passed.",
       "baseRef": "HEAD",
-      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
-      "reviewedAtUtc": "2026-09-21T04:19:05.0257347Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:31:40.3445173Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fc0062c74fead880c1c943e3e4b1c0737504040c5b61a1bcb0f662199391063c"
+          "sha256": "e933045314ed00d94c14598c6764df212b2aabad9e4c3089db3e84565b10293d"
         }
       ],
-      "reason": "Verified goal pagination ownership remains in Users presentation and application. Only query construction moved into the existing request mapper; public behavior is unchanged.",
+      "reason": "No migrations, new dependencies, jobs or deployment changes. Read projections remain bounded and no-tracking.",
       "baseRef": "HEAD",
-      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
-      "reviewedAtUtc": "2026-09-21T04:19:05.6962006Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:09:09.6418816Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d87b305b6a56b1dd7f1201e66d1e3a1911730154b6abe06405117f9f37ad6fd2"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fc0062c74fead880c1c943e3e4b1c0737504040c5b61a1bcb0f662199391063c"
+          "sha256": "e1932da3426ee311fdffb50bfb3343513f88474dd3fc4a2364b15543758beb3d"
         }
       ],
-      "reason": "Query construction moved to the existing presentation mapper and preserves authenticated user ID and opaque cursor unchanged. No authorization, logging, storage, data exposure or provider changes. Controller conventions and all 333 presentation API tests pass.",
+      "reason": "Undo reuses authenticated favorite creation for the same meal; no new endpoints, credential handling, logging or data exposure. Temporary browser QA favorite removed.",
       "baseRef": "HEAD",
-      "gitHead": "8caf8a6d12d0a6293d85654f353a84db825c834e",
-      "reviewedAtUtc": "2026-09-21T04:19:17.7214285Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:31:41.8272030Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7882f01439077de1cc5a5b9f5890b3f6dcf9ec3fa6c4200c038e3ab9d73ce681"
+          "sha256": "f0243ce5617ebd75da12e7ddbf3c981bf4a77dd0d6fd3d348c336660e140db66"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4cbcfcc791a783901b4cbf0e47e06b4efb9359da001373a455406faa82829f64"
+          "sha256": "42fc5499659450d97235b4e2a3ed602a3c4f36a8b3bc8f7b33ac4ec06362cada"
         }
       ],
-      "reason": "Confirmed both page/facade/API/dialog chains and the migrated dialog provider contracts in current sources. Existing list endpoint supports date-keyset pages with lookahead; entry edit/remove results are unchanged. Frontend indexes were refreshed and workflow tracing guidance remains valid.",
+      "reason": "Traced picker remove to local undo stack, restore callback to meal list facade and existing FavoriteMealService.add; list reload retains search and updates favorite count. Hint focus now resolves nested native controls.",
       "baseRef": "HEAD",
-      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
-      "reviewedAtUtc": "2026-09-21T03:25:22.2258497Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:31:43.4438111Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7882f01439077de1cc5a5b9f5890b3f6dcf9ec3fa6c4200c038e3ab9d73ce681"
+          "sha256": "f0243ce5617ebd75da12e7ddbf3c981bf4a77dd0d6fd3d348c336660e140db66"
         }
       ],
-      "reason": "Verified weight and waist dialogs and cards distinguish zero from missing delta. Dialogs reuse muted-icon controls and the translated previous-measurement hint with keyboard focus. Date pagination uses the existing authenticated API and component-owned state; direct component/API/pager tests passed and desktop/mobile browser checks cover the changed presentation.",
+      "reason": "Favorites picker adds an optional conditional footer with undo; existing add/remove service contracts are reused. Russian and English labels updated. Desktop and mobile browser checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "3bb7a5bcbf31574e9eb09fef5f2d88cebe0833d3",
-      "reviewedAtUtc": "2026-09-21T03:25:17.5386187Z"
+      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
+      "reviewedAtUtc": "2026-09-22T13:31:38.5279294Z"
     },
     {
       "pageId": "workflow.query-context",

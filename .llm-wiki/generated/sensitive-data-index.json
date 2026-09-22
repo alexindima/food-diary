@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1492,
+    "candidateFields": 1501,
     "credential": 156,
     "identity": 174,
-    "health": 696,
+    "health": 698,
     "financial": 129,
-    "privateContent": 337,
-    "boundaryFiles": 196,
+    "privateContent": 344,
+    "boundaryFiles": 197,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -4171,6 +4171,13 @@
     {
       "category": "health",
       "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Application.Abstractions/Models/MealDaySummary.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Meals/Application.Abstractions/Models/MealRecipeSourceReadModel.cs",
       "line": 7
@@ -4552,6 +4559,13 @@
       "type": "double",
       "path": "Modules/Meals/Presentation/Requests/MealAiItemHttpRequest.cs",
       "line": 8
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Presentation/Responses/MealDaySummaryHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "health",
@@ -9014,6 +9028,27 @@
     },
     {
       "category": "privateContent",
+      "name": "AiImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ItemImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "line": 17
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "line": 18
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
@@ -9032,6 +9067,20 @@
       "type": "string?",
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ItemImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 16
     },
     {
       "category": "privateContent",
@@ -9074,6 +9123,20 @@
       "type": "string?",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
       "line": 5
+    },
+    {
+      "category": "privateContent",
+      "name": "ItemImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "line": 16
     },
     {
       "category": "privateContent",
@@ -11101,9 +11164,10 @@
     {
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
       "categories": [
-        "health"
+        "health",
+        "privateContent"
       ],
-      "fieldCount": 1
+      "fieldCount": 3
     },
     {
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
@@ -11384,6 +11448,13 @@
         "privateContent"
       ],
       "fieldCount": 3
+    },
+    {
+      "path": "Modules/Meals/Presentation/Responses/MealDaySummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs",

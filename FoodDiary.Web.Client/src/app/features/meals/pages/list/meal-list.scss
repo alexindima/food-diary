@@ -40,11 +40,7 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--fd-space-sm);
-        padding: var(--fd-space-sm);
-        border: var(--fd-border-muted);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-surface-raised);
-        box-shadow: var(--fd-shadow-sm);
+        flex-wrap: wrap;
     }
 
     &__active-filters-label {
@@ -241,4 +237,21 @@
         display: block;
         margin-bottom: var(--fd-space-card-profile-gap);
     }
+}
+
+.meal-list__day-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding-block: var(--fd-space-xs);
+    background: var(--fd-bg-page);
+    flex-wrap: wrap;
+}
+.meal-list__day-line {
+    flex: 1;
+}
+.meal-list__day-total {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+    white-space: nowrap;
 }

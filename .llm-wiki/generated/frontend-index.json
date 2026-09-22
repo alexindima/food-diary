@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1715,
-    "symbols": 665,
+    "typescriptFiles": 1723,
+    "symbols": 668,
     "routes": 100,
     "features": 44,
-    "specs": 613,
+    "specs": 617,
     "localeFiles": 5,
     "roles": {
-      "Component": 449,
+      "Component": 451,
       "Directive": 12,
-      "Facade": 62,
+      "Facade": 63,
       "Other": 19,
       "Pipe": 4,
       "Service": 119
@@ -810,6 +810,7 @@
       "symbols": [
         "AiMealCreateFacade",
         "AiMealCreateService",
+        "FavoriteMealRowComponent",
         "FavoriteMealService",
         "MealAddComponent",
         "MealAiSessionsComponent",
@@ -820,6 +821,8 @@
         "MealDetailItemPreviewComponent",
         "MealDetailSummaryComponent",
         "MealEditComponent",
+        "MealFavoritesPickerComponent",
+        "MealFavoritesPickerFacade",
         "MealGeneralInfoComponent",
         "MealItemsListComponent",
         "MealItemsSectionComponent",
@@ -858,6 +861,7 @@
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-list/meal-items-list.spec.ts",
@@ -870,6 +874,7 @@
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-satiety-card/meal-satiety-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-nutrition-summary/meal-photo-nutrition-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.spec.ts",
@@ -881,6 +886,8 @@
         "FoodDiary.Web.Client/src/app/features/meals/lib/ai/ai-meal-create.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/ai/ai-meal-result.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/detail/meal-detail.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/lib/favorites/meal-favorites-picker.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list-filter-chips.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/lib/meal-date-input.utils.spec.ts",
@@ -4068,7 +4075,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "MealService",
@@ -4104,6 +4111,13 @@
       "selector": "fd-meal-detail",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
       "line": 44
+    },
+    {
+      "name": "FavoriteMealRowComponent",
+      "role": "Component",
+      "selector": "fd-favorite-meal-row",
+      "path": "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.ts",
+      "line": 20
     },
     {
       "name": "MealAiSessionsComponent",
@@ -4167,6 +4181,13 @@
       "selector": "fd-quick-meal-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
       "line": 41
+    },
+    {
+      "name": "MealFavoritesPickerComponent",
+      "role": "Component",
+      "selector": "fd-meal-favorites-picker",
+      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.ts",
+      "line": 48
     },
     {
       "name": "MealPhotoEditListComponent",
@@ -4239,6 +4260,13 @@
       "line": 17
     },
     {
+      "name": "MealFavoritesPickerFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/meals/lib/favorites/meal-favorites-picker.facade.ts",
+      "line": 9
+    },
+    {
       "name": "MealListFacade",
       "role": "Facade",
       "selector": null,
@@ -4306,7 +4334,7 @@
       "role": "Component",
       "selector": "fd-meal-list",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
-      "line": 49
+      "line": 48
     },
     {
       "name": "MealAddComponent",
@@ -6573,8 +6601,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3599,
-      "russianProperties": 3599,
+      "englishProperties": 3624,
+      "russianProperties": 3624,
       "countsMatch": true
     },
     {

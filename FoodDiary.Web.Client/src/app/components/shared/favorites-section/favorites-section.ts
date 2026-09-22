@@ -9,6 +9,7 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
     imports: [FdUiIconComponent, FdUiButtonComponent],
 })
 export class FavoritesSectionComponent {
+    public readonly quiet = input(false);
     public readonly title = input.required<string>();
     public readonly count = input<number>(0);
     public readonly icon = input('star');

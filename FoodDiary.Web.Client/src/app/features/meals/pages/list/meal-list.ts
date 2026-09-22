@@ -21,11 +21,11 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
+import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/list/meal-list-filter-chips';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
 import { MealListContentComponent, type MealListEmptyState } from './meal-list-sections/meal-list-content/meal-list-content';
-import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favorites/meal-list-favorites';
 import { MEAL_LIST_TOUR } from './meal-list-tour';
 
 @Component({
@@ -42,7 +42,6 @@ import { MEAL_LIST_TOUR } from './meal-list-tour';
         FdPageContainerDirective,
         AiInputActionBarComponent,
         MealListContentComponent,
-        MealListFavoritesComponent,
     ],
     providers: [AiMealCreateFacade, MealListFacade],
 })
@@ -107,33 +106,15 @@ export class MealListComponent {
             this.searchModel().hasImage !== null ||
             this.searchModel().hasAiSession !== null,
     );
-    protected readonly hasActiveFilters = computed(() => this.hasDateFilter() || this.hasStructuredFilters());
-    protected readonly activeFilterKeys = computed(() => {
-        const model = this.searchModel();
-        const keys: string[] = [];
-        if (model.mealTypes.length > 0) {
-            keys.push('MEAL_LIST.FILTER_MEAL_TYPES_ACTIVE');
-        }
-        if (model.caloriesFrom !== null || model.caloriesTo !== null) {
-            keys.push('MEAL_LIST.FILTER_CALORIES_ACTIVE');
-        }
-        if (model.hasImage === true) {
-            keys.push('MEAL_LIST.FILTER_IMAGE_WITH');
-        }
-        if (model.hasImage === false) {
-            keys.push('MEAL_LIST.FILTER_IMAGE_WITHOUT');
-        }
-        if (model.hasAiSession === true) {
-            keys.push('MEAL_LIST.FILTER_AI_WITH');
-        }
-        if (model.hasAiSession === false) {
-            keys.push('MEAL_LIST.FILTER_AI_WITHOUT');
-        }
-
-        return keys;
+    protected readonly activeFilterChips = computed(() => {
+        this.languageVersion();
+        return mealFilterChips(
+            this.searchModel(),
+            key => this.translateService.instant(key),
+            resolveAppLocale(this.translateService.getCurrentLang()),
+        );
     });
-    protected readonly activeDateFilterStart = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.start));
-    protected readonly activeDateFilterEnd = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.end));
+    protected readonly hasActiveFilters = computed(() => this.hasDateFilter() || this.hasStructuredFilters());
     protected readonly emptyState = computed<MealListEmptyState | null>(() => {
         if (this.mealData.items().length > 0) {
             return null;
@@ -150,6 +131,35 @@ export class MealListComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
+    }
+
+    protected async openFavoritesAsync(): Promise<void> {
+        const { MealFavoritesPickerComponent } = await import('../../dialogs/meal-favorites-picker/meal-favorites-picker');
+        this.fdDialogService
+            .open(MealFavoritesPickerComponent, {
+                preset: 'list',
+                size: 'md',
+                data: {
+                    remove: (favorite: FavoriteMeal) => this.mealListFacade.removeFavoriteRequest(favorite),
+                    restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
+                    repeat: (favorite: FavoriteMeal) => {
+                        const date = new Date();
+                        return this.mealListFacade.repeatMeal(
+                            favorite.mealId,
+                            date.toISOString(),
+                            resolveMealTypeByTime(date),
+                            this.structuredFilters,
+                        );
+                    },
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(added => {
+                if (added === true) {
+                    this.scrollToTop();
+                }
+            });
     }
 
     protected loadFavorites(): void {
@@ -230,6 +240,16 @@ export class MealListComponent {
         await this.navigationService.navigateToMealAddAsync();
     }
 
+    protected removeFilter(id: string): void {
+        this.searchModel.update(model => removeMealFilter(model, id));
+        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    }
+
+    protected resetFilters(): void {
+        this.searchModel.set(emptyMealFilters());
+        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    }
+
     protected openFilters(): void {
         const currentDateRange = this.searchModel().dateRange;
         const currentFilters = this.structuredFilters;
@@ -288,10 +308,6 @@ export class MealListComponent {
 
     private getDateRangeTimestamp(value: FdUiDateRangeValue | null, key: keyof FdUiDateRangeValue): number | null {
         return getDateTimestamp(value?.[key]);
-    }
-
-    private formatDateFilterValue(value: Date | null | undefined): string | null {
-        return value !== null && value !== undefined ? formatDateInputValue(value) : null;
     }
 
     protected scrollToTop(): void {
@@ -353,7 +369,14 @@ export class MealListComponent {
             const key = formatDateInputValue(date);
             if (!buckets.has(key)) {
                 const groupDate = normalizeStartOfLocalDay(date);
-                buckets.set(key, { date: groupDate, dateLabel: this.formatGroupDate(groupDate), items: [] });
+                const summary = this.mealListFacade.daySummaries().find(day => day.date === key);
+                const totalCalories =
+                    summary === undefined
+                        ? undefined
+                        : new Intl.NumberFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
+                              maximumFractionDigits: 0,
+                          }).format(summary.totalCalories);
+                buckets.set(key, { date: groupDate, dateLabel: this.formatGroupDate(groupDate), totalCalories, items: [] });
             }
             buckets.get(key)?.items.push(item);
         }
@@ -375,11 +398,17 @@ export class MealListComponent {
     }
 
     private formatGroupDate(date: Date): string {
-        return new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
+        const formatted = new Intl.DateTimeFormat(resolveAppLocale(this.translateService.getCurrentLang()), {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-        }).format(date);
+        })
+            .formatToParts(date)
+            .map(part => (part.type === 'literal' ? part.value.replace('г.', '') : part.value))
+            .join('')
+            .trim();
+        const isToday = normalizeStartOfLocalDay(date).getTime() === normalizeStartOfLocalDay(new Date()).getTime();
+        return isToday ? `${this.translateService.instant('MEAL_LIST.TODAY')} · ${formatted}` : formatted;
     }
 }
 

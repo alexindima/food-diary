@@ -9,5 +9,6 @@ export type FavoriteMealView = {
 export type MealDateGroupView = {
     date: Date;
     dateLabel: string;
+    totalCalories?: string;
     items: Meal[];
 };

@@ -6,6 +6,10 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Meals.Application.Abstractions.Common;
 
 public interface IMealProjectionReadRepository {
+    Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+        UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone,
+        CancellationToken cancellationToken = default);
+
     Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
         UserId userId,
         int page,

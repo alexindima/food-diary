@@ -276,7 +276,7 @@ public sealed class MealHttpMappingsTests {
             () => Assert.Equal(100, query.Limit),
             () => Assert.Equal(from, query.DateFrom),
             () => Assert.Equal(to, query.DateTo),
-            () => Assert.Equal(1, query.FavoriteLimit));
+            () => Assert.Equal(0, query.FavoriteLimit));
     }
 
     [Fact]

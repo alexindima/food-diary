@@ -4478,6 +4478,11 @@
         "CANCEL": "Отмена"
     },
     "MEAL_LIST": {
+        "KCAL": "ккал",
+        "TODAY": "Сегодня",
+        "RESET_ALL": "Сбросить всё",
+        "REMOVE_FILTER": "Убрать фильтр",
+        "DAY_TOTAL": "За день",
         "TITLE": "Приёмы пищи",
         "SUBTITLE": "Управляйте записанными приёмами и перекусами",
         "ADD_MEAL_BUTTON": "Добавить",
@@ -4495,8 +4500,8 @@
         "ITEM_COUNT": "Количество позиций",
         "MEAL_TYPE": "Тип приёма пищи",
         "CHOOSE_DATES": "Выберите даты",
-        "DATE_FILTER_FROM_LABEL": "Фильтр от",
-        "DATE_FILTER_TO_LABEL": "Фильтр до",
+        "DATE_FILTER_FROM_LABEL": "Дата от",
+        "DATE_FILTER_TO_LABEL": "Дата до",
         "DATE_FROM_PLACEHOLDER": "От даты",
         "DATE_TO_PLACEHOLDER": "До даты",
         "TOTAL_CALORIES": "Всего калорий",
@@ -4508,12 +4513,12 @@
         "FILTERS_TITLE": "Фильтры",
         "FILTER_APPLY_BUTTON": "Применить",
         "FILTER_RESET_BUTTON": "Сбросить",
-        "FILTER_ANY": "Любые",
+        "FILTER_ANY": "Неважно",
         "FILTER_YES": "Да",
         "FILTER_NO": "Нет",
         "FILTER_MEAL_TYPES": "Типы приёма пищи",
         "FILTER_MEAL_TYPES_ACTIVE": "Типы приёма",
-        "FILTER_NUTRITION": "Питание",
+        "FILTER_NUTRITION": "Калорийность",
         "FILTER_CALORIES_FROM": "Калории от",
         "FILTER_CALORIES_TO": "Калории до",
         "FILTER_CALORIES_ACTIVE": "Диапазон калорий",
@@ -4521,7 +4526,7 @@
         "FILTER_HAS_IMAGE": "Есть фото",
         "FILTER_IMAGE_WITH": "С фото",
         "FILTER_IMAGE_WITHOUT": "Без фото",
-        "FILTER_AI": "ИИ",
+        "FILTER_AI": "Добавлено с ИИ",
         "FILTER_HAS_AI": "Есть распознавание ИИ",
         "FILTER_AI_WITH": "С ИИ",
         "FILTER_AI_WITHOUT": "Без ИИ",
@@ -4552,7 +4557,8 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Тур можно повторить",
             "HELP_TEXT": "Эта кнопка запускает тур по приёмам пищи заново, когда нужно быстро вспомнить страницу."
-        }
+        },
+        "FILTERS_ALREADY_EMPTY": "Фильтры не заданы"
     },
     "AI_INPUT_BAR": {
         "SHORT_PLACEHOLDER": "Что вы съели?",
@@ -7121,5 +7127,25 @@
         "RETRY": "Повторить",
         "ERROR": "Не удалось загрузить измерения. Попробуйте ещё раз.",
         "EMPTY": "Измерений пока нет."
+    },
+    "MEAL_FAVORITES": {
+        "REMOVED": "Убрано из избранного",
+        "UNDO": "Вернуть",
+        "RESTORE_ERROR": "Не удалось вернуть приём пищи. Попробуйте ещё раз.",
+        "REMOVE_ERROR": "Не удалось убрать приём пищи из избранного. Попробуйте ещё раз.",
+        "BUSY": "Дождитесь завершения текущего действия",
+        "NUTRITION_LABEL": "Белки: {{proteins}} г; жиры: {{fats}} г; углеводы: {{carbs}} г; клетчатка: {{fiber}} г",
+        "TITLE": "Добавить из избранного",
+        "OPEN": "Добавить из избранного",
+        "SEARCH": "Поиск по названию или составу",
+        "LOADING": "Загружаем избранное…",
+        "LOAD_ERROR": "Не удалось загрузить избранное.",
+        "RETRY": "Повторить",
+        "NO_RESULTS": "Ничего не найдено. Попробуйте другой запрос.",
+        "EMPTY": "Здесь появятся приёмы пищи, которые вы отметите звёздочкой в дневнике.",
+        "KCAL": "ккал",
+        "ADD": "Добавить",
+        "ADDING": "Добавляем приём пищи…",
+        "ADD_ERROR": "Не удалось добавить приём пищи. Попробуйте ещё раз."
     }
 }

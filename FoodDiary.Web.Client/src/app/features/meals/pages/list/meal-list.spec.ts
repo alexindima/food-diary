@@ -78,15 +78,15 @@ function createPageOf(meals: Meal[], page = 1): PageOf<Meal> {
     return {
         data: meals,
         page,
-        limit: PAGE_LIMIT,
+        limit: 0,
         totalPages: 1,
         totalItems: meals.length,
     };
 }
 
-function createOverview(meals: Meal[]): MealOverview {
+function createOverview(meals: Meal[], page = 1): MealOverview {
     return {
-        allMeals: createPageOf(meals),
+        allMeals: createPageOf(meals, page),
         favoriteItems: [],
         favoriteTotalCount: 0,
     };
@@ -123,7 +123,7 @@ const mockBreakpointObserver = {
 
 const mockFavoriteMealService = {
     add: vi.fn().mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' })),
-    getAll: vi.fn().mockReturnValue(of([])),
+    getPage: vi.fn().mockReturnValue(of({ totalItems: 0 })),
     remove: vi.fn().mockReturnValue(of(void 0)),
 };
 
@@ -144,10 +144,9 @@ describe('MealListComponent', () => {
         vi.clearAllMocks();
         mockMealService.create.mockReturnValue(of(createMockMeal()));
         mockMealService.queryOverview.mockReturnValue(of(createOverview([])));
-        mockMealService.query.mockReturnValue(of(createPageOf([])));
         mockMealService.repeat.mockReturnValue(of(createMockMeal()));
         mockMealService.deleteById.mockReturnValue(of(void 0));
-        mockFavoriteMealService.getAll.mockReturnValue(of([]));
+        mockFavoriteMealService.getPage.mockReturnValue(of({ totalItems: 0 }));
         mockFavoriteMealService.add.mockReturnValue(of({ id: 'favorite-1', mealId: 'meal-1' }));
         mockFavoriteMealService.remove.mockReturnValue(of(void 0));
         mockToastService.error.mockClear();
@@ -209,6 +208,7 @@ describe('MealListComponent', () => {
     registerLoadingTests(context);
     registerNavigationTests(context);
     registerGroupingTests(context);
+    registerPlannedGroupingTests(context);
     registerRangeTests(context);
     registerFavoriteTests(context);
     registerDialogTests(context);
@@ -226,12 +226,12 @@ function registerLoadingTests(context: TestContext): void {
                 1,
                 PAGE_LIMIT,
                 { dateFrom: undefined, dateTo: undefined },
-                PAGE_LIMIT,
+                { limit: 0 },
             );
         });
 
         it('should expose load errors for retry state', () => {
-            context.mockMealService.query.mockReturnValue(throwError(() => new Error('Network error')));
+            context.mockMealService.queryOverview.mockReturnValue(throwError(() => new Error('Network error')));
 
             context.component()['loadMeals'](1).subscribe();
 
@@ -255,12 +255,15 @@ function registerNavigationTests(context: TestContext): void {
             setPageContainerScrollMock(context.fixture());
 
             const meals = [createMockMeal()];
-            context.mockMealService.query.mockReturnValue(of(createPageOf(meals, NEXT_PAGE_NUMBER)));
+            context.mockMealService.queryOverview.mockReturnValue(of(createOverview(meals, NEXT_PAGE_NUMBER)));
 
             context.component()['onPageChange'](NEXT_PAGE_INDEX);
 
             expect(context.component()['currentPageIndex']()).toBe(NEXT_PAGE_INDEX);
-            expect(context.mockMealService.query).toHaveBeenCalledWith(NEXT_PAGE_NUMBER, PAGE_LIMIT, expect.any(Object));
+            expect(context.mockMealService.queryOverview).toHaveBeenCalledWith(NEXT_PAGE_NUMBER, PAGE_LIMIT, expect.any(Object), {
+                limit: 0,
+                include: false,
+            });
         });
     });
 }
@@ -281,7 +284,12 @@ function registerGroupingTests(context: TestContext): void {
                 date: new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_16, MORNING_HOUR).toISOString(),
             });
 
-            context.mockMealService.query.mockReturnValue(of(createPageOf([meal1, meal2, meal3])));
+            context.mockMealService.queryOverview.mockReturnValue(
+                of({
+                    ...createOverview([meal1, meal2, meal3]),
+                    daySummaries: [{ date: '2024-03-15', totalCalories: 2500, mealCount: 8 }],
+                }),
+            );
             context.component()['loadMeals'](1).subscribe();
 
             const grouped = context.component()['groupedMeals']();
@@ -302,6 +310,8 @@ function registerGroupingTests(context: TestContext): void {
             expect(march16Group).toBeDefined();
             expect(march15Group).toBeDefined();
             expect(march15Group?.items.length).toBe(NEXT_PAGE_NUMBER);
+            expect(march15Group?.totalCalories?.replaceAll(/\D/g, '')).toBe('2500');
+            expect(march16Group?.totalCalories).toBeUndefined();
             expect(march16Group?.items.length).toBe(1);
         });
 
@@ -315,7 +325,7 @@ function registerGroupingTests(context: TestContext): void {
                 date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, HALF_PAST_MIDNIGHT_MINUTES).toISOString(),
             });
 
-            context.mockMealService.query.mockReturnValue(of(createPageOf([afterMidnightMeal, lateMeal])));
+            context.mockMealService.queryOverview.mockReturnValue(of(createOverview([afterMidnightMeal, lateMeal])));
             context.component()['loadMeals'](1).subscribe();
 
             const grouped = context.component()['groupedMeals']();
@@ -328,6 +338,11 @@ function registerGroupingTests(context: TestContext): void {
             expect(grouped[1].items).toEqual([lateMeal]);
         });
 
+    });
+}
+
+function registerPlannedGroupingTests(context: TestContext): void {
+    describe('planned grouping', () => {
         it('should separate future meals from current diary groups', () => {
             vi.useFakeTimers();
             vi.setSystemTime(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, MORNING_HOUR));
@@ -344,7 +359,7 @@ function registerGroupingTests(context: TestContext): void {
                 date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, MORNING_HOUR).toISOString(),
             });
 
-            context.mockMealService.query.mockReturnValue(of(createPageOf([laterFutureMeal, currentMeal, nearerFutureMeal])));
+            context.mockMealService.queryOverview.mockReturnValue(of(createOverview([laterFutureMeal, currentMeal, nearerFutureMeal])));
             context.component()['loadMeals'](1).subscribe();
 
             expect(context.component()['groupedMeals']()).toHaveLength(1);
@@ -362,22 +377,27 @@ function registerRangeTests(context: TestContext): void {
             const end = new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6);
 
             context.component()['searchModel'].update(value => ({ ...value, dateRange: { start, end } }));
-            context.mockMealService.query.mockClear();
+            context.mockMealService.queryOverview.mockClear();
 
             context.component()['loadMeals'](1).subscribe();
 
-            expect(context.mockMealService.query).toHaveBeenCalledWith(1, PAGE_LIMIT, {
-                dateFrom: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, 0, 0, 0).toISOString(),
-                dateTo: new Date(
-                    CURRENT_YEAR,
-                    MAY_MONTH_INDEX,
-                    MAY_6,
-                    END_OF_DAY_HOURS,
-                    END_OF_DAY_MINUTES,
-                    END_OF_DAY_SECONDS,
-                    END_OF_DAY_MS,
-                ).toISOString(),
-            });
+            expect(context.mockMealService.queryOverview).toHaveBeenCalledWith(
+                1,
+                PAGE_LIMIT,
+                {
+                    dateFrom: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, 0, 0, 0).toISOString(),
+                    dateTo: new Date(
+                        CURRENT_YEAR,
+                        MAY_MONTH_INDEX,
+                        MAY_6,
+                        END_OF_DAY_HOURS,
+                        END_OF_DAY_MINUTES,
+                        END_OF_DAY_SECONDS,
+                        END_OF_DAY_MS,
+                    ).toISOString(),
+                },
+                { limit: 0, include: false },
+            );
         });
     });
 }
@@ -432,7 +452,7 @@ function registerFavoriteTests(context: TestContext): void {
 
             expect(context.mockFavoriteMealService.add).toHaveBeenCalledWith('meal-1');
             expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
-            expect(context.mockFavoriteMealService.getAll).toHaveBeenCalled();
+            expect(context.mockFavoriteMealService.getPage).toHaveBeenCalled();
         });
 
         it('should normalize favorite meal type translation keys', () => {

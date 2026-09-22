@@ -43,6 +43,10 @@
         <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
             <h3 class="meal-list-filters-dialog__section-title">{{ 'MEAL_LIST.FILTER_MEDIA' | translate }}</h3>
             <fd-ui-segmented-toggle
+                appearance="soft"
+                [fitContent]="true"
+                [shrinkItems]="true"
+                [stackOnNarrow]="false"
                 [options]="binaryOptions"
                 [selectedValue]="imageValue"
                 [ariaLabel]="'MEAL_LIST.FILTER_HAS_IMAGE' | translate"
@@ -53,6 +57,10 @@
         <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
             <h3 class="meal-list-filters-dialog__section-title">{{ 'MEAL_LIST.FILTER_AI' | translate }}</h3>
             <fd-ui-segmented-toggle
+                appearance="soft"
+                [fitContent]="true"
+                [shrinkItems]="true"
+                [stackOnNarrow]="false"
                 [options]="binaryOptions"
                 [selectedValue]="aiValue"
                 [ariaLabel]="'MEAL_LIST.FILTER_HAS_AI' | translate"
@@ -61,7 +69,14 @@
         </section>
 
         <div fdUiDialogFooter class="meal-list-filters-dialog__footer">
-            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onReset()">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="ghost"
+                [disabled]="!canReset"
+                [disabledReason]="'MEAL_LIST.FILTERS_ALREADY_EMPTY' | translate"
+                (click)="onReset()"
+            >
                 {{ 'MEAL_LIST.FILTER_RESET_BUTTON' | translate }}
             </fd-ui-button>
             <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()">

@@ -39,6 +39,9 @@
                 <div class="meal-list__day-header fd-row fd-gap-sm">
                     <span class="meal-list__day-label"> {{ group.dateLabel }} </span>
                     <span class="meal-list__day-line"></span>
+                    <span class="meal-list__day-total" [hidden]="group.totalCalories === undefined"
+                        >{{ 'MEAL_LIST.DAY_TOTAL' | translate }}: {{ group.totalCalories }} {{ 'MEAL_LIST.KCAL' | translate }}</span
+                    >
                 </div>
                 <div class="meal-list__grid fd-grid fd-gap-card-profile">
                     @for (meal of group.items; track meal.id) {

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4204,
-    "symbols": 4135,
+    "sourceFiles": 4210,
+    "symbols": 4141,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2176,
+      "class": 2178,
       "enum": 64,
       "interface": 401,
-      "record": 1374,
+      "record": 1378,
       "record struct": 120
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1710,
-      "Query": 272,
-      "QueryHandler": 199,
+      "Other": 1711,
+      "Query": 274,
+      "QueryHandler": 200,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 156,
-      "Response": 220,
+      "Response": 221,
       "Service": 162,
-      "Validator": 226,
+      "Validator": 227,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -12592,6 +12592,27 @@
       "line": 6
     },
     {
+      "name": "GetFavoriteMealPageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetFavoriteMealPageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetFavoriteMealPageQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQueryValidator.cs",
+      "line": 5
+    },
+    {
       "name": "GetFavoriteMealsQuery",
       "kind": "record",
       "role": "Query",
@@ -13114,7 +13135,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "FavoriteMealHttpMappings",
@@ -13129,6 +13150,13 @@
       "role": "Request",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/AddFavoriteMealHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "GetFavoriteMealPageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/GetFavoriteMealPageHttpQuery.cs",
+      "line": 5
     },
     {
       "name": "FavoriteProductsController",
@@ -17975,6 +18003,13 @@
       "line": 4
     },
     {
+      "name": "MealDaySummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Application.Abstractions/Models/MealDaySummary.cs",
+      "line": 2
+    },
+    {
       "name": "MealRecipeSourceReadModel",
       "kind": "record",
       "role": "Other",
@@ -18728,7 +18763,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "MealsDbContext",
@@ -18938,6 +18973,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MealDaySummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation/Responses/MealDaySummaryHttpResponse.cs",
       "line": 2
     },
     {

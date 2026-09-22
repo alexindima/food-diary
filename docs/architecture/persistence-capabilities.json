@@ -1443,9 +1443,12 @@
       "module": "ReadModelComposition",
       "capabilities": [
         "entity:FavoriteMeal",
-        "entity:Meal"
+        "entity:ImageAsset",
+        "entity:Meal",
+        "entity:Product",
+        "entity:Recipe"
       ],
-      "reason": "ADR 0038: extracted unchanged no-tracking SQL projection; owner writes stay in the module."
+      "reason": "User-scoped favorite meal paging with bounded no-tracking composition and photo projections from owned meals, source snapshots, legacy products/recipes and linked image assets; no aggregate writes."
     },
     "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs": {
       "module": "ReadModelComposition",

@@ -55,9 +55,16 @@ export class MealService extends ApiService {
         page: number,
         limit: number,
         filters: MealFilters,
-        favoriteLimit = MEAL_API_DEFAULT_FAVORITE_LIMIT,
+        favorites: { limit?: number; include?: boolean } = {},
     ): Observable<MealOverview> {
-        const params: Record<string, string | number | boolean> = { page, limit, favoriteLimit };
+        const params: Record<string, string | number | boolean> = {
+            page,
+            limit,
+            favoriteLimit: favorites.limit ?? MEAL_API_DEFAULT_FAVORITE_LIMIT,
+            includeFavorites: favorites.include ?? true,
+            timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+            timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+        };
         this.applyMealFilters(params, filters);
         return this.get<MealOverview>('overview', params).pipe(
             map(response => ({
@@ -65,6 +72,7 @@ export class MealService extends ApiService {
                     ...response.allMeals,
                     data: response.allMeals.data.map(item => this.mapMeal(item)),
                 },
+                daySummaries: response.daySummaries ?? [],
                 favoriteItems: response.favoriteItems,
                 favoriteTotalCount: response.favoriteTotalCount,
             })),

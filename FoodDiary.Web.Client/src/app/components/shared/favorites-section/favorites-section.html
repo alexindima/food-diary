@@ -1,5 +1,10 @@
-<div class="fd-favorites-section fd-ui-surface">
-    <button type="button" class="fd-favorites-section__header fd-row fd-justify-between fd-gap-sm" (click)="onToggle()">
+<div class="fd-favorites-section fd-ui-surface" [class.fd-favorites-section--quiet]="quiet()">
+    <button
+        type="button"
+        class="fd-favorites-section__header fd-row fd-justify-between fd-gap-sm"
+        [attr.aria-expanded]="isOpen()"
+        (click)="onToggle()"
+    >
         <span class="fd-favorites-section__title-group fd-inline-center fd-gap-xs fd-ui-card-title">
             <fd-ui-icon class="fd-favorites-section__icon" [name]="icon()" />
             <span>{{ title() }} ({{ count() }})</span>

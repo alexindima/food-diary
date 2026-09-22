@@ -635,6 +635,9 @@ Compact boolean switch for settings and permission rows.
 
 #### `fdUiHint`
 
+Keyboard focus on a nested native control (for example inside `fd-ui-button`) also shows the hint; mouse focus does not.
+
+
 Tooltip directive for short helper text attached to an existing element.
 
 Use for:

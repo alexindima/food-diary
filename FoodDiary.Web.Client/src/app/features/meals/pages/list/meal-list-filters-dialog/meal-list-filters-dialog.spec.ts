@@ -13,6 +13,19 @@ const dateRange: FdUiDateRangeValue = {
 };
 
 describe('MealListFiltersDialogComponent', () => {
+    it('enables reset for zero calories and negative binary filters and disables it after reset', async () => {
+        const { component } = await setupComponentAsync(null);
+        expect(component['canReset']).toBe(false);
+        component['caloriesFromValue'] = 0;
+        expect(component['canReset']).toBe(true);
+        component['onReset']();
+        expect(component['canReset']).toBe(false);
+        component['onImageChange']('no');
+        expect(component['canReset']).toBe(true);
+        component['onReset']();
+        expect(component['canReset']).toBe(false);
+    });
+
     it('should initialize date range from dialog data', async () => {
         const { component } = await setupComponentAsync(dateRange);
 
