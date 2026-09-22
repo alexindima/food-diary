@@ -15,9 +15,14 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
     }
 
     public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {
-        favorites.Remove(favorite);
+        favorite.Remove();
         return Task.CompletedTask;
     }
+
+    public Task<FavoriteMeal?> GetForRestoreAsync(
+        FavoriteMealId id, UserId userId, CancellationToken cancellationToken = default) =>
+        favorites.IgnoreQueryFilters().AsTracking()
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId, cancellationToken);
 
     public async Task<FavoriteMeal?> GetByIdAsync(
         FavoriteMealId id,

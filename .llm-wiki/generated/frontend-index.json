@@ -4187,7 +4187,7 @@
       "role": "Component",
       "selector": "fd-meal-favorites-picker",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.ts",
-      "line": 48
+      "line": 36
     },
     {
       "name": "MealPhotoEditListComponent",

@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "a1506945b9407a537f37774cb7009c4ea70345258b20977516ecd697fb0111b6"
+          "sha256": "50c2bf0a8ae1883883165d68d655ea4e57d445ea81cdc677b9f309f284f53e72"
         }
       ],
-      "reason": "Photo URLs, bounded collage URLs and fiber are additive response fields; 16 Swagger snapshot tests passed.",
+      "reason": "New owner-authorized POST favorite-meals/{id}/restore is additive; 15 Swagger tests passed and full-contract snapshot updated.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:09:10.9768699Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T16:15:41.2766116Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "f228d6ba072d59bca16de5c692abf5117c4fbf55a573c2f44a5911ebc8bcbed0"
+          "sha256": "776c0c4e2b49ded38b09e1ebeebb7baf7405ab0457298a4a43771c7be1ebd6a1"
         }
       ],
-      "reason": "Paged favorites route and optional itemNames are additive; consumer mapping and HTTP snapshot tests passed.",
+      "reason": "Restore command uses current-user access, source visibility and existing FavoriteMeal response; six handler tests cover idempotency, missing/foreign source, invalid ID and active favorite conflict.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T12:39:30.3705839Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T16:15:33.0356460Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -501,13 +501,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "4d8fd46bd84178bc355ab1367c0b0520477710d4fb5fef8db92ca22871a66f0d"
+          "sha256": "d1700041b577879e3e2aae92f22198ffadc4a6b32b10aecf75c862b3092c0ed5"
         }
       ],
-      "reason": "Regenerated domain index; WeeklyGoals read projection preserves user/week predicates and no tracking, verified by PostgreSQL tests. No migration or aggregate ownership change in this fix.",
+      "reason": "RemovedAtUtc hides removed favorites through owner query filter. Filtered unique index preserves one active favorite per user/meal. Original ID/date/name remain unchanged. PostgreSQL 5 tests and local migration/model checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "c487f53a8f24e30bdc39399ab32e291fdf974396",
-      "reviewedAtUtc": "2026-09-15T23:43:26.4363843Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T16:15:37.9432023Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e1932da3426ee311fdffb50bfb3343513f88474dd3fc4a2364b15543758beb3d"
+          "sha256": "14bd024bb895487604506754c389fb185f10b99331ab0ab86e3dae109095c5dd"
         }
       ],
-      "reason": "268 meals tests and 12 hint tests pass, including restore retry, multiple removals, search preservation, pending operation guards and rendered footer. Frontend production build passed.",
+      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:31:40.3445173Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T20:39:36.3062011Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e933045314ed00d94c14598c6764df212b2aabad9e4c3089db3e84565b10293d"
+          "sha256": "db3c518c78e09735c8f4e6e868e0b7f868dcdc37deb82fe23a53e114605d4571"
         }
       ],
-      "reason": "No migrations, new dependencies, jobs or deployment changes. Read projections remain bounded and no-tracking.",
+      "reason": "Nullable removal column and filtered index migration applied locally before API restart. Old API must be replaced before using soft removal. Rollback removes hidden rows before restoring uniqueness; no new jobs or service dependencies.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:09:09.6418816Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T16:15:35.5536895Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e1932da3426ee311fdffb50bfb3343513f88474dd3fc4a2364b15543758beb3d"
+          "sha256": "14bd024bb895487604506754c389fb185f10b99331ab0ab86e3dae109095c5dd"
         }
       ],
-      "reason": "Undo reuses authenticated favorite creation for the same meal; no new endpoints, credential handling, logging or data exposure. Temporary browser QA favorite removed.",
+      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:31:41.8272030Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T20:39:37.8172281Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f0243ce5617ebd75da12e7ddbf3c981bf4a77dd0d6fd3d348c336660e140db66"
+          "sha256": "b01a8c3c697753dca2698e141970eb7764f08e9ae2c4d45dccb36aebc2462639"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "42fc5499659450d97235b4e2a3ed602a3c4f36a8b3bc8f7b33ac4ec06362cada"
+          "sha256": "65e6283cf7b069cdd7d6d037beec16bb0cd34b0eb451fbce1a7a12d4e8413819"
         }
       ],
-      "reason": "Traced picker remove to local undo stack, restore callback to meal list facade and existing FavoriteMealService.add; list reload retains search and updates favorite count. Hint focus now resolves nested native controls.",
+      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:31:43.4438111Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T20:39:39.0826514Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f0243ce5617ebd75da12e7ddbf3c981bf4a77dd0d6fd3d348c336660e140db66"
+          "sha256": "b01a8c3c697753dca2698e141970eb7764f08e9ae2c4d45dccb36aebc2462639"
         }
       ],
-      "reason": "Favorites picker adds an optional conditional footer with undo; existing add/remove service contracts are reused. Russian and English labels updated. Desktop and mobile browser checks passed.",
+      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:31:38.5279294Z"
+      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
+      "reviewedAtUtc": "2026-09-22T20:39:34.8962645Z"
     },
     {
       "pageId": "workflow.query-context",

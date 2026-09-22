@@ -33,6 +33,58 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task RemovedMealsDisappearFromAllReadsAndRestoreOriginalPagedOrderAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        var owner = User.Create("restore-owner@example.com", "hash");
+        var other = User.Create("restore-other@example.com", "hash");
+        context.Users.AddRange(owner, other);
+        for (int index = 0; index < 21; index++) {
+            var meal = Meal.Create(owner.Id, DateTime.UtcNow);
+            context.Meals.Add(meal);
+            context.FavoriteMeals.Add(FavoriteMeal.Create(owner.Id, meal.Id, "Lunch"));
+        }
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        IFavoriteMealQuery query = provider.GetRequiredService<IFavoriteMealQuery>();
+        IFavoriteMealWriteRepository repository = provider.GetRequiredService<IFavoriteMealWriteRepository>();
+        IFavoriteMealReadRepository reads = provider.GetRequiredService<IFavoriteMealReadRepository>();
+        IUnitOfWork unit = provider.GetRequiredService<IUnitOfWork>();
+        (IReadOnlyList<FavoriteMealReadModel> before, _) = await query.GetPageReadModelsAsync(owner.Id, 2, 10, "Lunch");
+        FavoriteMealReadModel original = before[4];
+        var id = new FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids.FavoriteMealId(original.Id);
+        var mealId = new FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids.MealId(original.MealId);
+        FavoriteMeal favorite = Assert.IsType<FavoriteMeal>(await repository.GetByIdAsync(id, owner.Id, asTracking: true));
+        await repository.DeleteAsync(favorite);
+        await unit.SaveChangesAsync();
+        Assert.Null(await repository.GetByIdAsync(id, owner.Id));
+        Assert.Null(await repository.GetByMealIdAsync(mealId, owner.Id));
+        Assert.False(await reads.ExistsByMealIdAsync(mealId, owner.Id));
+        Assert.Empty(await reads.GetFavoriteIdsByMealIdsAsync(owner.Id, [mealId]));
+        Assert.Equal(20, (await query.GetOverviewReadModelsAsync(owner.Id, 0)).TotalItems);
+        Assert.DoesNotContain(await query.GetAllReadModelsAsync(owner.Id), item => item.Id == original.Id);
+        Assert.Null(await repository.GetForRestoreAsync(id, other.Id));
+        FavoriteMeal removed = Assert.IsType<FavoriteMeal>(await repository.GetForRestoreAsync(id, owner.Id));
+        Assert.NotNull(removed.RemovedAtUtc);
+        removed.Restore();
+        await unit.SaveChangesAsync();
+        (IReadOnlyList<FavoriteMealReadModel> after, int total) = await query.GetPageReadModelsAsync(owner.Id, 2, 10, "Lunch");
+        Assert.Equal(before.Select(item => item.Id), after.Select(item => item.Id));
+        Assert.Equal(original.CreatedAtUtc, after[4].CreatedAtUtc);
+        Assert.Equal(21, total);
+        Assert.Empty(context.ChangeTracker.Entries());
+
+        await repository.DeleteAsync(removed);
+        await unit.SaveChangesAsync();
+        var replacement = FavoriteMeal.Create(owner.Id, mealId, "Added again");
+        await repository.AddAsync(replacement);
+        await unit.SaveChangesAsync();
+        Assert.Equal(replacement.Id, (await repository.GetByMealIdAsync(mealId, owner.Id))!.Id);
+        removed.Restore();
+        await Assert.ThrowsAsync<DbUpdateException>(() => unit.SaveChangesAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task MealPickerPagesSearchesSnapshotsAndIsolatesUsersAsync() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         await using ServiceProvider provider = CreateProvider(context);

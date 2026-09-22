@@ -35,6 +35,12 @@ export class FavoriteMealService extends ApiService {
         );
     }
 
+    public restore(id: string): Observable<FavoriteMeal> {
+        return this.post<FavoriteMeal>(`${id}/restore`, {}).pipe(
+            catchError((error: unknown) => rethrowApiError('Restore favorite meal error', error)),
+        );
+    }
+
     public remove(id: string): Observable<void> {
         return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Remove favorite meal error', error)));
     }

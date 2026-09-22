@@ -1,19 +1,8 @@
-import {
-    afterRenderEffect,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    ElementRef,
-    inject,
-    signal,
-    viewChild,
-} from '@angular/core';
+import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
 
@@ -35,7 +24,6 @@ export type MealFavoritesPickerData = {
         TranslatePipe,
         FdUiButtonComponent,
         FdUiDialogShellComponent,
-        FdUiDialogFooterDirective,
         FdUiInputComponent,
         FdUiPaginationComponent,
         FavoriteMealRowComponent,
@@ -50,19 +38,11 @@ export class MealFavoritesPickerComponent {
     protected readonly savingId = signal<string | null>(null);
     protected readonly removingId = signal<string | null>(null);
     protected readonly removeFailed = signal(false);
-    protected readonly restoring = signal(false);
-    protected readonly restoreFailed = signal(false);
-    protected readonly undoMessageKey = computed(() => (this.restoreFailed() ? 'MEAL_FAVORITES.RESTORE_ERROR' : 'MEAL_FAVORITES.REMOVED'));
-    private readonly removedItems = signal<FavoriteMeal[]>([]);
-    protected readonly undoItem = computed(() => this.removedItems().at(-1));
-    protected readonly undoDescription = computed(() => {
-        const name = this.undoItem()?.name?.trim() ?? '';
-        return name.length > 0 ? name : (this.undoItem()?.itemNames?.join(', ') ?? '');
-    });
-    protected readonly busy = computed(() => this.savingId() !== null || this.removingId() !== null || this.restoring());
-    private readonly undoButton = viewChild<FdUiButtonComponent, ElementRef<HTMLElement>>('undoButton', { read: ElementRef });
-    private readonly searchInput = viewChild<FdUiInputComponent, ElementRef<HTMLElement>>('searchInput', { read: ElementRef });
-    private readonly focusTarget = signal<'undo' | 'search' | null>(null);
+    protected readonly restoringId = signal<string | null>(null);
+    protected readonly restoreErrors = signal<ReadonlySet<string>>(new Set());
+    protected readonly busy = computed(() => this.savingId() !== null || this.removingId() !== null || this.restoringId() !== null);
+    private readonly rows = viewChildren(FavoriteMealRowComponent);
+    private readonly focusTarget = signal<string | null>(null);
     protected readonly saveFailed = signal(false);
     protected readonly operationErrorKey = computed(() => {
         if (this.saveFailed()) {
@@ -82,8 +62,11 @@ export class MealFavoritesPickerComponent {
             if (target === null || this.busy()) {
                 return;
             }
-            const host = target === 'undo' ? this.undoButton() : this.searchInput();
-            host?.nativeElement.querySelector<HTMLElement>('button, input')?.focus();
+            this.rows()
+                .find(row => row.meal().id === target)
+                ?.action()
+                ?.nativeElement.querySelector<HTMLButtonElement>('button')
+                ?.focus();
             this.focusTarget.set(null);
         });
         this.searches
@@ -94,7 +77,7 @@ export class MealFavoritesPickerComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(search => {
-                this.facade.load(1, search);
+                this.load(1, search);
             });
     }
 
@@ -102,12 +85,27 @@ export class MealFavoritesPickerComponent {
         this.searches.next(String(value ?? ''));
     }
 
+    protected load(page: number, search = this.facade.search()): void {
+        this.restoreErrors.set(new Set());
+        this.removeFailed.set(false);
+        this.saveFailed.set(false);
+        this.focusTarget.set(null);
+        this.facade.load(page, search);
+    }
+
+    protected changePage(page: number): void {
+        if (!this.busy()) {
+            this.load(page);
+        }
+    }
+
     protected remove(item: FavoriteMeal): void {
-        if (this.busy()) {
+        if (this.busy() || this.facade.removedIds().has(item.id)) {
             return;
         }
         this.removingId.set(item.id);
         this.removeFailed.set(false);
+        const revision = this.facade.revision();
         this.data
             .remove(item)
             .pipe(
@@ -118,48 +116,55 @@ export class MealFavoritesPickerComponent {
             )
             .subscribe({
                 next: removed => {
+                    if (revision !== this.facade.revision()) {
+                        return;
+                    }
                     if (removed) {
-                        this.removedItems.update(items => [...items, item]);
-                        this.restoreFailed.set(false);
-                        this.focusTarget.set('undo');
-                        this.facade.reloadAfterRemoval();
+                        this.focusTarget.set(item.id);
+                        this.facade.markRemoved(item.id);
                     } else {
                         this.removeFailed.set(true);
                     }
                 },
                 error: () => {
-                    this.removeFailed.set(true);
+                    if (revision === this.facade.revision()) {
+                        this.removeFailed.set(true);
+                    }
                 },
             });
     }
 
-    protected undoRemoval(): void {
-        const item = this.undoItem();
-        if (item === undefined || this.busy()) {
+    protected undoRemoval(item: FavoriteMeal): void {
+        if (!this.facade.removedIds().has(item.id) || this.busy()) {
             return;
         }
-        this.restoring.set(true);
-        this.restoreFailed.set(false);
+        const revision = this.facade.revision();
+        this.restoringId.set(item.id);
+        this.restoreErrors.update(ids => new Set([...ids].filter(id => id !== item.id)));
         this.data
             .restore(item)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
-                    this.restoring.set(false);
+                    this.restoringId.set(null);
                 }),
             )
             .subscribe({
                 next: restored => {
-                    if (!restored) {
-                        this.restoreFailed.set(true);
+                    if (revision !== this.facade.revision()) {
                         return;
                     }
-                    this.removedItems.update(items => items.slice(0, -1));
-                    this.focusTarget.set(this.undoItem() === undefined ? 'search' : 'undo');
-                    this.facade.load(1);
+                    if (restored) {
+                        this.facade.markRestored(item.id);
+                        this.focusTarget.set(item.id);
+                    } else {
+                        this.restoreErrors.update(ids => new Set([...ids, item.id]));
+                    }
                 },
                 error: () => {
-                    this.restoreFailed.set(true);
+                    if (revision === this.facade.revision()) {
+                        this.restoreErrors.update(ids => new Set([...ids, item.id]));
+                    }
                 },
             });
     }

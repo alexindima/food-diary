@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
@@ -20,6 +20,13 @@ const MAX_IMAGES = 4;
 export class FavoriteMealRowComponent {
     public readonly meal = input.required<FavoriteMeal>();
     public readonly remove = output<FavoriteMeal>();
+    public readonly removed = input(false);
+    public readonly restoring = input(false);
+    public readonly restoreFailed = input(false);
+    public readonly restore = output<FavoriteMeal>();
+    protected readonly undoMessageKey = computed(() => (this.restoreFailed() ? 'MEAL_FAVORITES.RESTORE_ERROR' : 'MEAL_FAVORITES.REMOVED'));
+    public readonly action = viewChild<FdUiButtonComponent, ElementRef<HTMLElement>>('action', { read: ElementRef });
+
     public readonly removing = input(false);
     public readonly loading = input(false);
     public readonly disabled = input(false);

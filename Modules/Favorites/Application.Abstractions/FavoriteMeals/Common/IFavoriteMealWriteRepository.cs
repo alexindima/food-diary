@@ -6,6 +6,9 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 
 public interface IFavoriteMealWriteRepository {
+    Task<FavoriteMeal?> GetForRestoreAsync(
+        FavoriteMealId id, UserId userId, CancellationToken cancellationToken = default);
+
     Task<FavoriteMeal?> GetByIdAsync(
         FavoriteMealId id,
         UserId userId,

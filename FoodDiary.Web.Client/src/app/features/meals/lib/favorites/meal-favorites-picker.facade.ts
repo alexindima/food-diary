@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
 
@@ -17,6 +17,9 @@ export class MealFavoritesPickerFacade {
     public readonly total = signal(0);
     public readonly search = signal('');
     public readonly pageSize = 10;
+    public readonly revision = signal(0);
+    public readonly removedIds = signal<ReadonlySet<string>>(new Set());
+    public readonly paginationTotal = computed(() => this.total() + this.removedIds().size);
 
     public constructor() {
         this.requests
@@ -44,12 +47,28 @@ export class MealFavoritesPickerFacade {
             .subscribe();
     }
 
-    public reloadAfterRemoval(): void {
-        const lastPage = Math.max(1, Math.ceil((this.total() - 1) / this.pageSize));
-        this.load(Math.min(this.page(), lastPage));
+    public markRemoved(id: string): void {
+        if (this.removedIds().has(id) || !this.items().some(item => item.id === id)) {
+            return;
+        }
+        this.removedIds.update(ids => new Set([...ids, id]));
+        this.total.update(total => Math.max(0, total - 1));
+    }
+
+    public markRestored(id: string): void {
+        if (!this.removedIds().has(id)) {
+            return;
+        }
+        this.removedIds.update(ids => new Set([...ids].filter(value => value !== id)));
+        this.total.update(total => total + 1);
     }
 
     public load(page = 1, search = this.search()): void {
+        if (search.trim() === this.search() && this.removedIds().size > 0) {
+            page = Math.min(page, Math.max(1, Math.ceil(this.total() / this.pageSize)));
+        }
+        this.revision.update(value => value + 1);
+        this.removedIds.set(new Set());
         this.search.set(search.trim());
         this.page.set(page);
         this.requests.next({ page, search: this.search() });

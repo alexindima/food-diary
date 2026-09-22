@@ -40,6 +40,14 @@ afterEach(() => {
 });
 
 describe('FavoriteMealService', () => {
+    it('restores the original favorite by ID without creating a replacement', () => {
+        service.restore(favoriteMeal.id).subscribe(result => {
+            expect(result).toEqual(favoriteMeal);
+        });
+        const request = httpMock.expectOne(`${BASE_URL}/${favoriteMeal.id}/restore`);
+        expect(request.request.method).toBe('POST');
+        request.flush(favoriteMeal);
+    });
     it('requests a bounded server page and passes a trimmed search', () => {
         service.getPage(2, PAGE_SIZE, ' rice ').subscribe();
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page`);

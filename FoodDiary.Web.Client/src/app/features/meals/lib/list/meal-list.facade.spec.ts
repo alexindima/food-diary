@@ -39,6 +39,7 @@ let mealService: {
     deleteById: ReturnType<typeof vi.fn>;
 };
 let favoriteMealService: {
+    restore: ReturnType<typeof vi.fn>;
     add: ReturnType<typeof vi.fn>;
     getPage: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
@@ -125,6 +126,7 @@ describe('MealListFacade', () => {
         };
         favoriteMealService = {
             add: vi.fn().mockReturnValue(of(createFavorite())),
+            restore: vi.fn().mockReturnValue(of(createFavorite())),
             getPage: vi.fn().mockReturnValue(of({ totalItems: 0 })),
             remove: vi.fn().mockReturnValue(of(void 0)),
         };
@@ -304,30 +306,30 @@ function registerUndoTests(): void {
     describe('restoring favorites', () => {
         it('preserves the saved name and refreshes the count and meal favorite identifier', () => {
             const favorite = createFavorite({ name: 'My saved lunch' });
-            const restored = { ...favorite, id: 'new-favorite-id' };
+            const restored = favorite;
             facade.mealData.items.set([createMeal({ id: favorite.mealId, isFavorite: false })]);
-            favoriteMealService.add.mockReturnValue(of(restored));
+            favoriteMealService.restore.mockReturnValue(of(restored));
             favoriteMealService.getPage.mockReturnValue(of({ totalItems: NEXT_PAGE }));
             let result: boolean | undefined;
             facade.restoreFavoriteRequest(favorite).subscribe(value => {
                 result = value;
             });
             expect(result).toBe(true);
-            expect(favoriteMealService.add).toHaveBeenCalledWith(favorite.mealId, favorite.name);
+            expect(favoriteMealService.restore).toHaveBeenCalledWith(favorite.id);
             expect(facade.favoriteTotalCount()).toBe(NEXT_PAGE);
             expect(facade.mealData.items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: restored.id });
         });
         it('does not invent a name for unnamed favorites', () => {
             const favorite = createFavorite({ name: null });
             facade.restoreFavoriteRequest(favorite).subscribe();
-            expect(favoriteMealService.add).toHaveBeenCalledWith(favorite.mealId, undefined);
+            expect(favoriteMealService.restore).toHaveBeenCalledWith(favorite.id);
         });
         it('keeps diary state unchanged when restoration fails', () => {
             const favorite = createFavorite();
             const meal = createMeal({ isFavorite: false });
             facade.mealData.items.set([meal]);
             facade.favoriteTotalCount.set(NEXT_PAGE);
-            favoriteMealService.add.mockReturnValue(throwError(() => new Error('offline')));
+            favoriteMealService.restore.mockReturnValue(throwError(() => new Error('offline')));
             let result: boolean | undefined;
             facade.restoreFavoriteRequest(favorite).subscribe(value => {
                 result = value;

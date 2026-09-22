@@ -193,7 +193,7 @@ export class MealListFacade {
     }
 
     public restoreFavoriteRequest(favorite: FavoriteMeal): Observable<boolean> {
-        return this.favoriteMealService.add(favorite.mealId, favorite.name ?? undefined).pipe(
+        return this.favoriteMealService.restore(favorite.id).pipe(
             tap(restored => {
                 this.syncMealFavoriteState(favorite.mealId, true, restored.id);
                 this.loadFavorites();

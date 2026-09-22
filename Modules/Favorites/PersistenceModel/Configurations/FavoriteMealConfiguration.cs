@@ -30,7 +30,10 @@ internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<Favor
             .HasColumnType("timestamp with time zone");
 
         builder.HasIndex(e => new { e.UserId, e.MealId })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("\"RemovedAtUtc\" IS NULL");
+
+        builder.HasQueryFilter(e => e.RemovedAtUtc == null);
 
         builder.HasIndex(e => e.UserId);
     }

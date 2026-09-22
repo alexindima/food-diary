@@ -3,9 +3,9 @@
   "summary": {
     "components": 456,
     "componentsWithoutDirectSpecs": 127,
-    "inputs": 1440,
-    "outputs": 476,
-    "apiCalls": 266,
+    "inputs": 1443,
+    "outputs": 477,
+    "apiCalls": 267,
     "templatesWithTranslations": 315,
     "translationKeys": 1854,
     "consumerEdges": 1116,
@@ -7621,6 +7621,21 @@
           "required": true
         },
         {
+          "name": "removed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoring",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoreFailed",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "removing",
           "type": "",
           "required": false
@@ -7639,6 +7654,10 @@
       "outputs": [
         {
           "name": "remove",
+          "type": "FavoriteMeal"
+        },
+        {
+          "name": "restore",
           "type": "FavoriteMeal"
         },
         {
@@ -15574,11 +15593,23 @@
     },
     {
       "feature": "meals",
+      "method": "POST",
+      "responseType": "FavoriteMeal",
+      "urlExpression": "`${id}/restore`",
+      "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
+      "line": 39,
+      "publicMethod": "restore",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "environment.apiUrls.favoriteMeals",
+      "resolvedUrlExpression": "environment.apiUrls.favoriteMeals/`${id}/restore`"
+    },
+    {
+      "feature": "meals",
       "method": "DELETE",
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 39,
+      "line": 45,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteMeals",
@@ -19357,7 +19388,8 @@
         "MEAL_FAVORITES.ADDING",
         "MEAL_FAVORITES.BUSY",
         "MEAL_FAVORITES.KCAL",
-        "MEAL_FAVORITES.NUTRITION_LABEL"
+        "MEAL_FAVORITES.NUTRITION_LABEL",
+        "MEAL_FAVORITES.UNDO"
       ]
     },
     {
@@ -19477,13 +19509,11 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.html",
       "keys": [
-        "MEAL_FAVORITES.BUSY",
         "MEAL_FAVORITES.LOADING",
         "MEAL_FAVORITES.LOAD_ERROR",
         "MEAL_FAVORITES.RETRY",
         "MEAL_FAVORITES.SEARCH",
-        "MEAL_FAVORITES.TITLE",
-        "MEAL_FAVORITES.UNDO"
+        "MEAL_FAVORITES.TITLE"
       ]
     },
     {
@@ -23844,11 +23874,15 @@
         "disabled",
         "loading",
         "meal",
-        "removing"
+        "removed",
+        "removing",
+        "restoreFailed",
+        "restoring"
       ],
       "outputsHandled": [
         "add",
-        "remove"
+        "remove",
+        "restore"
       ]
     },
     {
@@ -26043,7 +26077,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "ariaLabel",
         "ariaPressed",
@@ -26168,12 +26202,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "fill",
-        "loading",
         "variant"
       ],
       "outputsHandled": []

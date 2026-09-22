@@ -86,3 +86,19 @@
     --fd-button-min-width: var(--fd-size-control-md);
     --fd-button-padding-x: 0;
 }
+
+.favorite-row__undo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fd-space-md);
+    width: 100%;
+}
+
+.favorite-row__undo-copy {
+    min-width: 0;
+}
+
+.favorite-row__undo fd-ui-button {
+    flex-shrink: 0;
+}

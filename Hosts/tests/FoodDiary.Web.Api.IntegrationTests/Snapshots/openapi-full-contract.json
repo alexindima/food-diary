@@ -10526,6 +10526,59 @@
       ]
     },
     {
+      "Path": "/api/v{version}/favorite-meals/{id}/restore",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "409",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/FavoriteMealHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/favorite-products",
       "Operations": [
         {

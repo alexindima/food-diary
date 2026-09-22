@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5523,
+    "productionFiles": 5525,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 952,
-    "criticalSymbolsWithTestReferences": 914,
+    "criticalSymbols": 953,
+    "criticalSymbolsWithTestReferences": 915,
     "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 10
   },
@@ -9898,11 +9898,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "nonBlankLines": 33,
+      "nonBlankLines": 38,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/meal-api.config.ts",
@@ -9970,11 +9970,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.ts",
-      "nonBlankLines": 44,
+      "nonBlankLines": 50,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.38
+      "structuralRiskScore": 11.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.ts",
@@ -10090,11 +10090,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.ts",
-      "nonBlankLines": 185,
-      "decisionPoints": 15,
+      "nonBlankLines": 188,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.2
+      "structuralRiskScore": 32.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.ts",
@@ -10194,11 +10194,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/favorites/meal-favorites-picker.facade.ts",
-      "nonBlankLines": 52,
-      "decisionPoints": 0,
+      "nonBlankLines": 70,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 8.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list-filter-chips.ts",
@@ -10219,10 +10219,10 @@
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.ts",
       "nonBlankLines": 287,
-      "decisionPoints": 20,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.74
+      "structuralRiskScore": 34.24
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.config.ts",
@@ -25634,11 +25634,11 @@
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
@@ -25815,6 +25815,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 7.32
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.86
     },
     {
       "path": "Modules/Favorites/Application/FavoriteMeals/Mappings/FavoriteMealMappings.cs",
@@ -26306,11 +26322,11 @@
     },
     {
       "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "nonBlankLines": 48,
-      "decisionPoints": 4,
+      "nonBlankLines": 63,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.96
+      "structuralRiskScore": 10.26
     },
     {
       "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
@@ -26338,11 +26354,11 @@
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "nonBlankLines": 96,
-      "decisionPoints": 8,
+      "nonBlankLines": 100,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.92
+      "structuralRiskScore": 15.5
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
@@ -26370,11 +26386,11 @@
     },
     {
       "path": "Modules/Favorites/PersistenceModel/Configurations/FavoriteMealConfiguration.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 0.62
     },
     {
       "path": "Modules/Favorites/PersistenceModel/Configurations/FavoriteProductConfiguration.cs",
@@ -26450,11 +26466,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.8
+      "structuralRiskScore": 2.96
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -46813,6 +46829,18 @@
       "coveredThrough": []
     },
     {
+      "name": "RestoreFavoriteMealCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "line": 14,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ReviewContentReportCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
@@ -48463,9 +48491,10 @@
       "name": "FavoriteMealsController",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "line": 15,
-      "testReferenceCount": 1,
+      "line": 16,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -48747,9 +48776,10 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealsController.cs",
       "line": 19,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndMealsFlowTests.cs",
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",

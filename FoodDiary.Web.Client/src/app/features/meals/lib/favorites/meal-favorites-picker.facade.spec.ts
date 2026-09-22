@@ -57,16 +57,12 @@ describe('MealFavoritesPickerFacade', () => {
         TestBed.resetTestingModule();
         expect(request.observed).toBe(false);
     });
-    it('returns to the previous page after removing the last item and preserves the search', () => {
-        api.getPage.mockReturnValue(of(page(PAGE_SIZE + 1)));
-        facade.load(2, 'rice');
-        facade.reloadAfterRemoval();
-        expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'rice');
-    });
-    it('keeps page one when removing the only favorite', () => {
-        api.getPage.mockReturnValue(of(page(1)));
+    it('ignores mutations for unknown rows', () => {
         facade.load();
-        facade.reloadAfterRemoval();
-        expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, '');
+        facade.markRemoved('unknown');
+        facade.markRestored('unknown');
+        expect(facade.total()).toBe(TOTAL_ITEMS);
+        expect(facade.removedIds().size).toBe(0);
+        expect(api.getPage).toHaveBeenCalledTimes(1);
     });
 });

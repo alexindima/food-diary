@@ -9,6 +9,8 @@
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Favorites records are private user-associated data keyed by `UserId`; do not broaden access or logging during boundary changes.
 
+Meal favorites use `RemovedAtUtc` for reversible removal. The owner mapping filters removed records from normal reads, including composition queries and counts. Only the owner-scoped restore lookup bypasses this filter; it must retain the explicit `UserId` predicate. Restore preserves the original ID, name and creation timestamp, checks source access, and refuses to replace another active favorite for the same meal. The unique user/meal index applies only to active rows. Source/user cascade deletion still physically removes the retained records. Apply the `PreserveRemovedMealFavorites` migration before deploying the new API; its rollback discards removed records before reinstating the unfiltered unique index.
+
 ## Verification
 
 - `dotnet test Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FoodDiary.Modules.Favorites.Application.Tests.csproj`

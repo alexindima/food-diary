@@ -11,6 +11,7 @@ public sealed class FavoriteMeal : Entity<FavoriteMealId> {
     public MealId MealId { get; private set; }
     public string? Name { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
+    public DateTime? RemovedAtUtc { get; private set; }
 
     private FavoriteMeal() {
     }
@@ -34,6 +35,22 @@ public sealed class FavoriteMeal : Entity<FavoriteMealId> {
 
         favorite.SetCreated();
         return favorite;
+    }
+
+    public void Remove() {
+        if (RemovedAtUtc is not null) {
+            return;
+        }
+        RemovedAtUtc = DomainTime.UtcNow;
+        SetModified();
+    }
+
+    public void Restore() {
+        if (RemovedAtUtc is null) {
+            return;
+        }
+        RemovedAtUtc = null;
+        SetModified();
     }
 
     public void UpdateName(string? name) {

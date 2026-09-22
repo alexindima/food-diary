@@ -688,11 +688,12 @@
     "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs": {
       "module": "Favorites",
       "capabilities": [
+        "call:FavoriteMeal.Remove",
         "entity:FavoriteMeal",
         "tracked:FavoriteMeal",
         "write:FavoriteMeal"
       ],
-      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed. Composed reads delegate to an explicit read-only port (ADR 0038)."
+      "reason": "Favorites-owned adapter persists/projects only FavoriteMeal. Removal calls the owner aggregate to set RemovedAtUtc; restore lookup bypasses that filter only with an explicit owner predicate. Shared unit of work retains SaveChanges and commit. Composed reads delegate to the read-only port (ADR 0038)."
     },
     "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs": {
       "module": "Favorites",

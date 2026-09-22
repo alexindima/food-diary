@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1262,
+    "contracts": 1263,
     "ambiguousContracts": 2,
-    "consumerEdges": 9862,
-    "productionConsumerEdges": 5631,
-    "testConsumerEdges": 4231,
-    "consumedContracts": 1262,
+    "consumerEdges": 9880,
+    "productionConsumerEdges": 5639,
+    "testConsumerEdges": 4241,
+    "consumedContracts": 1263,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -18576,6 +18576,23 @@
       ],
       "definitionPaths": [
         "Modules/Identity/Presentation/Features/Auth/Requests/RestoreAccountHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -39070,7 +39087,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "FavoriteMealHttpResponse",
@@ -39123,6 +39140,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteMealHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "FavoriteMealHttpResponse",
@@ -60310,6 +60340,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -62521,6 +62564,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65614,6 +65670,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67307,6 +67376,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -76328,7 +76410,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IFavoriteMealReadModelRepository",
@@ -76508,6 +76590,19 @@
         "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFavoriteMealReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -76651,6 +76746,19 @@
         "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -76680,6 +76788,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IFavoriteMealSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IFavoriteMealSourceReadService",
@@ -76768,6 +76889,19 @@
         "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -76782,6 +76916,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFavoriteMealWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFavoriteMealWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -104535,6 +104695,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -110424,6 +110597,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -114625,7 +114811,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "IUnitOfWork",
@@ -120760,6 +120946,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -138260,6 +138459,58 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "RestoreFavoriteMealCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ReviewContentReportCommand",

@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4210,
-    "symbols": 4141,
+    "sourceFiles": 4212,
+    "symbols": 4143,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2178,
+      "class": 2179,
       "enum": 64,
       "interface": 401,
-      "record": 1378,
+      "record": 1379,
       "record struct": 120
     },
     "roles": {
-      "Command": 221,
-      "CommandHandler": 216,
+      "Command": 222,
+      "CommandHandler": 217,
       "Configuration": 95,
       "Controller": 105,
       "Entity": 97,
@@ -12585,6 +12585,20 @@
       "line": 11
     },
     {
+      "name": "RestoreFavoriteMealCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "RestoreFavoriteMealCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RestoreFavoriteMeal/RestoreFavoriteMealCommandHandler.cs",
+      "line": 14
+    },
+    {
       "name": "FavoriteMealMappings",
       "kind": "class",
       "role": "Other",
@@ -13135,7 +13149,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "FavoriteMealHttpMappings",
