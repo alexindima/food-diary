@@ -1218,11 +1218,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-      "nonBlankLines": 279,
-      "decisionPoints": 37,
+      "nonBlankLines": 282,
+      "decisionPoints": 38,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 63.08
+      "structuralRiskScore": 64.64
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExperience.ps1",

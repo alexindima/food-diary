@@ -21,6 +21,9 @@ $now = $AsOfUtc.ToUniversalTime()
 $cutoff = $now.AddDays(-$effectiveWindowDays)
 
 function Convert-ToUtc([object]$Value) {
+    if ($Value -is [DateTime] -or $Value -is [DateTimeOffset]) {
+        return $Value.ToUniversalTime()
+    }
     $parsed = [DateTime]::MinValue
     if (-not [DateTime]::TryParse(
         [string]$Value,

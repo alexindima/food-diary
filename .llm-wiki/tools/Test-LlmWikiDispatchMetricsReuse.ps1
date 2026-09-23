@@ -42,6 +42,29 @@ Get-Content (Join-Path $PSScriptRoot 'registry.json') -Raw
     $registry | ConvertTo-Json -Depth 10 | Set-Content $registryPath
     $fresh = & $tool @arguments -IncludeDispatchRegistry | ConvertFrom-Json
     Assert-Condition ($fresh.dispatchRegistry.invalidCount -eq 2 -and $fresh.attentionCount -eq 2) 'A later invocation reused stale registry state.'
+    # Terminal dates, not start dates or local offsets, determine the UTC daily buckets.
+    $registry.dispatches = @(
+        @{ dispatchId = 'before-midnight'; state = 'failed'; valid = $true }
+        @{ dispatchId = 'after-midnight'; state = 'completed'; valid = $true }
+    )
+    $registry.invalidCount = 0
+    $registry | ConvertTo-Json -Depth 10 | Set-Content $registryPath
+    foreach ($sample in @(
+        @{ id = 'before-midnight'; at = '2026-09-10T03:59:00+04:00'; type = 'failed' }
+        @{ id = 'after-midnight'; at = '2026-09-09T20:01:00-04:00'; type = 'completed' }
+    )) {
+        @{
+            dispatchId = $sample.id; owner = 'midnight-agent'; workspace = 'fixture'
+            agentId = ''; agentCapabilities = @(); requiredCapabilities = @(); lane = 1
+            startedAtUtc = '2026-09-09T23:50:00Z'
+            events = @(@{ type = $sample.type; atUtc = $sample.at; details = @{ result = 'Fixture result' } })
+        } | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $dispatchRoot ($sample.id + '.json'))
+    }
+    $midnight = & $tool -AsOfUtc ([DateTime]'2026-09-10T00:02:00Z') -Format Json | ConvertFrom-Json
+    Assert-Condition ($midnight.dispatchCount -eq 2 -and @($midnight.owners).Count -eq 1) 'Midnight grouping lost dispatches or split their owner.'
+    Assert-Condition (@($midnight.daily).Count -eq 2) 'Terminal events across UTC midnight must produce two daily buckets.'
+    Assert-Condition ($midnight.daily[0].date -eq '2026-09-09' -and $midnight.daily[0].failedCount -eq 1 -and $midnight.daily[0].completedCount -eq 0 -and $midnight.daily[0].terminalCount -eq 1) 'Previous UTC day has incorrect terminal outcomes.'
+    Assert-Condition ($midnight.daily[1].date -eq '2026-09-10' -and $midnight.daily[1].completedCount -eq 1 -and $midnight.daily[1].failedCount -eq 0 -and $midnight.daily[1].terminalCount -eq 1) 'Next UTC day has incorrect terminal outcomes.'
     $scheduler = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiTaskSchedule.ps1'))
     Assert-Condition ($scheduler.Contains('-IncludeDispatchRegistry') -and -not $scheduler.Contains("'Manage-LlmWikiTaskDispatch.ps1'")) 'Scheduler must consume the full validated registry without a second scan.'
     Write-Host 'Dispatch metrics reuse passed: unchanged metrics, invalid and out-of-window dispatches retained, one fresh validation per invocation.'

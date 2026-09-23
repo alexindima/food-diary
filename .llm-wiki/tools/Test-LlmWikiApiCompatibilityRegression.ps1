@@ -81,6 +81,28 @@ Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'changed-response-s
 Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'added-response-media-type') 'Additional response media types were omitted from compatibility comparison.'
 Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'added-response-header') 'Additional response headers were omitted from compatibility comparison.'
 
+foreach ($case in @(
+    @{ Minimum = 0; Maximum = 100; Breaking = $false }
+    @{ Minimum = 1; Maximum = 200; Breaking = $false }
+    @{ Minimum = $null; Maximum = $null; Breaking = $false }
+    @{ Minimum = 2; Maximum = 100; Breaking = $true }
+    @{ Minimum = 0; Maximum = 50; Breaking = $true }
+    @{ Minimum = 0; Maximum = 100; Type = 'string'; Breaking = $true }
+    @{ Minimum = 0; Maximum = 100; Default = '30'; Breaking = $true }
+)) {
+    $rangeContract = $detailedBaseContract | ConvertFrom-Json
+    $parameter = $rangeContract.Endpoints[0].Operations[0].QueryParameters[0]
+    $parameter.Minimum = $case.Minimum
+    $parameter.Maximum = $case.Maximum
+    if ($case.ContainsKey('Type')) { $parameter.Type = $case.Type }
+    if ($case.ContainsKey('Default')) { $parameter.Default = $case.Default }
+    $rangeResult = & $tool -BaseSnapshotContent $detailedBaseContract -CurrentSnapshotContent ($rangeContract | ConvertTo-Json -Depth 14) -Format Json | ConvertFrom-Json
+    Assert-ApiCompatibility (($rangeResult.breakingCount -gt 0) -eq $case.Breaking) "Incorrect numeric parameter compatibility: $($case | ConvertTo-Json -Compress)"
+    if (-not $case.Breaking) {
+        Assert-ApiCompatibility (@($rangeResult.changes.kind) -contains 'widened-parameter-range') 'Widened numeric range must remain visible as an additive change.'
+    }
+}
+
 $emptyEndpointBase = @{
     OpenApi = '3.0.4'
     Endpoints = @()

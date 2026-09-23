@@ -12,9 +12,11 @@ $expected = @{
     # Compared with ca6ae5b5e: only BillingController and architecture-test paths
     # changed inside assertions after their moves. Every assertion is preserved.
     Core = @{ count = 333; hash = '3c8768a5fd7976a6c8a62d5148dabb55b75cc17d3578fdae534163ce869293fb' }
-    Governed = @{ count = 376; hash = '284b24a587071a8314562e9aacf9cc3dc37ad772806ce24cff28061fe3c6078d' }
+    # Daily metrics assertion now verifies the exact UTC dates and total across midnight;
+    # no assertions were removed or relaxed.
+    Governed = @{ count = 376; hash = '9a0737e2c64b6e66529ce281c5e186137475102dbb50a6de9b537d372051b221' }
     Workspace = @{ count = 279; hash = 'ba880a6e89141db9d594badfdd783734b187785ad3281d1c4cf755ae336fffd4' }
-    Orchestration = @{ count = 97; hash = '3aeed905ee4fd448d167168544359a407ba47b4af347add97351f53c411a35e7' }
+    Orchestration = @{ count = 97; hash = 'd22a4de6aae3709be895115af15f25a04555712c818dca2c04e3a6b393b58105' }
     Common = @{ count = 1; hash = '43c752083d5bd294ccf4a8efb8bdf4cd9831a14bc33acdbaa06de6659838f6bd' }
 }
 $groups = @{ Core = @(); Governed = @(); Workspace = @(); Orchestration = @(); Common = @() }

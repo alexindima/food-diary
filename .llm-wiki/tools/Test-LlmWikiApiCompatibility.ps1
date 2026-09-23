@@ -478,7 +478,26 @@ foreach ($pathProperty in Get-Properties $before.paths) {
             $beforeShape = Get-SchemaShapeText $beforeParameter.schema
             $afterShape = Get-SchemaShapeText $afterParameter.schema
             if ($beforeShape -ne $afterShape) {
-                Add-Change $changes 'breaking' 'changed-parameter' $location "Parameter shape changed from '$beforeShape' to '$afterShape'."
+                $beforeBounds = $(if ($beforeShape) { $beforeShape | ConvertFrom-Json -AsHashtable } else { @{} })
+                $afterBounds = $(if ($afterShape) { $afterShape | ConvertFrom-Json -AsHashtable } else { @{} })
+                $onlyWidenedBounds = $beforeBounds['type'] -in @('integer', 'number')
+                foreach ($bound in @('minimum', 'maximum')) {
+                    if ($afterBounds.ContainsKey($bound) -and (
+                        -not $beforeBounds.ContainsKey($bound) -or
+                        ($bound -eq 'minimum' -and $afterBounds[$bound] -gt $beforeBounds[$bound]) -or
+                        ($bound -eq 'maximum' -and $afterBounds[$bound] -lt $beforeBounds[$bound]))) {
+                        $onlyWidenedBounds = $false
+                    }
+                    $beforeBounds.Remove($bound)
+                    $afterBounds.Remove($bound)
+                }
+                $onlyWidenedBounds = $onlyWidenedBounds -and
+                    (($beforeBounds | ConvertTo-Json -Depth 30 -Compress) -eq ($afterBounds | ConvertTo-Json -Depth 30 -Compress))
+                if ($onlyWidenedBounds) {
+                    Add-Change $changes 'additive' 'widened-parameter-range' $location 'Numeric parameter accepts a wider range without changing its other constraints.'
+                } else {
+                    Add-Change $changes 'breaking' 'changed-parameter' $location "Parameter shape changed from '$beforeShape' to '$afterShape'."
+                }
             }
         }
         foreach ($beforeParameter in $beforeParameters) {

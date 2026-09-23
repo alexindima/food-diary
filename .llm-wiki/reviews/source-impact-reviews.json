@@ -200,17 +200,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "eb7098f5c5a1c836f9c847d2327794f11a3cb71d9e6d9dccafe12b395cb2d03f",
+      "pageSha256": "8355451e34b29f0dcf610d559bb6b62b936c7f7af9702361767d3876e53a5795",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "50c2bf0a8ae1883883165d68d655ea4e57d445ea81cdc677b9f309f284f53e72"
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+          "sha256": "01dc2cdac73c60116a3cdce575b45ea025fbe3696f356daad538d19a37f0d063"
         }
       ],
-      "reason": "New owner-authorized POST favorite-meals/{id}/restore is additive; 15 Swagger tests passed and full-contract snapshot updated.",
+      "reason": "Documented numeric input range widening as additive; regression covers lower minimum, higher maximum, removed bounds, narrowing, mixed changes, type and default changes. CI base comparison now has zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T16:15:41.2766116Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:34.6941455Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -635,14 +635,18 @@
       "pageSha256": "c6fd8e17f197e4ecc035bdded8000a48549c175f4b0f3022fdd0de74c0879df7",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "7a10391c24e59fcdbdb4ae5057301ceff917ee734f2f5326feb72b5617954b42"
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "9b9e8195be03d712248f8d3bbd7a09cb4729ad8dd53789af0cba2e9b6595e159"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "5cc398461638a8b2730a5a37e5caf97d3ca2639c805e318086fb0628ac651cc8"
         }
       ],
-      "reason": "The CI diff adds only the nine-zone frontend regression step after app unit tests. Wiki job topology, index ordering, cache freshness and full audit gates are unchanged; the documented pipeline remains accurate.",
+      "reason": "Full Orchestration audit passed. Exact UTC daily date assertion replaces wall-clock-dependent single-day expectation; all 710 assertions remain with reviewed updated inventory hashes.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:13:03.4306634Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:35.6700541Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -820,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb24c573eadb045b6add4d63ae0322144aad05952b7ac94e767fe6f838142f95"
+          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
         }
       ],
-      "reason": "24 Favorites presentation tests and 39 controller convention tests pass after moving message construction into mappings. All 2107 architecture tests passed in the full hook.",
+      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
-      "reviewedAtUtc": "2026-09-22T23:27:11.5670279Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:52.7397224Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,17 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb24c573eadb045b6add4d63ae0322144aad05952b7ac94e767fe6f838142f95"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "14279e7ba8c11dee7e5d4645999299c677cb7bc01b71cd70aac9b61ec4e4b9e8"
+          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
         }
       ],
-      "reason": "Owner and favorite ID forwarding unchanged and covered by tests; no authentication or persistence behavior changed.",
+      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
-      "reviewedAtUtc": "2026-09-22T23:27:12.3512467Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:53.9585868Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -992,29 +992,37 @@
       "pageSha256": "70d6be88b293deccf4d573fc9bede72453bc9e17b6a0215335058e6e7746afc3",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
+          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
+          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:32.3984178Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:54.9929254Z"
     },
     {
       "pageId": "workflow-task-scheduler",
       "pagePath": ".llm-wiki/workflows/task-scheduler.md",
-      "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
+      "pageSha256": "b202a96ec11daaeb6c19f06965768c28baf9b143f2a3264db07c52d6039f6768",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
-          "sha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3"
+          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
+          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
+          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:36.6527749Z"
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:56.0026213Z"
     },
     {
       "pageId": "workflow-task-workspace",

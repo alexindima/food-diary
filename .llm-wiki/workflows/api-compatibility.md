@@ -38,7 +38,10 @@ value shape, nullability, and documented response headers. Snapshot equality
 keeps all of those details review-visible, and the semantic compatibility guard
 classifies changes across those shapes and documented response codes. The guard classifies
 removed parameters, newly required parameters, requiredness increases, and
-shape changes as breaking; new optional parameters are additive. It also compares serialized key sets in
+shape changes as breaking; new optional parameters are additive. Widening or
+removing an integer/number parameter's minimum or maximum is additive when every
+other schema constraint stays unchanged. Narrower bounds, changed types or
+defaults, and mixed widening/narrowing remain breaking. It also compares serialized key sets in
 `payload-contract-snapshots.json`, so response-field additions remain visible
 when the compact endpoint snapshot has no component schemas. It reports removed
 paths, operations, documented responses, and incompatible parameter,

@@ -4797,10 +4797,13 @@ try {
                 @($dispatchMetrics.slo.violations.id) -contains 'heartbeat-coverage' -and
                 @($dispatchMetrics.slo.violations.id) -contains 'reconciliation-rate'
             ) 'Task dispatch SLO did not report the expected policy violations.'
+            $expectedDailyDates = @($leaseNow.AddMinutes(7), $leaseNow.AddMinutes(9) | ForEach-Object { $_.ToString('yyyy-MM-dd') } | Sort-Object -Unique)
             Assert-Wiki (
                 @($dispatchMetrics.owners).Count -eq 1 -and
                 $dispatchMetrics.owners[0].owner -eq 'smoke-dispatch-agent' -and
-                @($dispatchMetrics.daily).Count -eq 1
+                @($dispatchMetrics.daily).Count -eq $expectedDailyDates.Count -and
+                (@($dispatchMetrics.daily.date) -join ',') -eq ($expectedDailyDates -join ',') -and
+                ($dispatchMetrics.daily | Measure-Object terminalCount -Sum).Sum -eq 2
             ) 'Task dispatch metrics did not produce deterministic owner and daily aggregates.'
             $healthyBaselineMetrics = $dispatchMetrics | ConvertTo-Json -Depth 20 | ConvertFrom-Json
             $healthyBaselineMetrics.successRatePercent = 100
