@@ -1769,3 +1769,71 @@ async function mockEditableMealAsync(page: Page): Promise<{ writes: unknown[]; r
     });
     return state;
 }
+
+const MEAL_DIALOG_VIEWPORTS = [MEAL_EDIT_MOBILE_WIDTH, MEAL_EDIT_DESKTOP_WIDTH];
+const MEAL_DIALOG_ITEM_COUNT = 7;
+const MEAL_DIALOG_PREVIEW_COUNT = 5;
+const MEAL_DIALOG_MACRO_COUNT = 4;
+
+test.describe('meal detail and gallery regression', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`separate photo navigation and expandable details at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const meal = createMeal(
+                'meal-1',
+                '2026-05-07T20:40:00Z',
+                Array.from({ length: MEAL_DIALOG_ITEM_COUNT }, (_, i) =>
+                    createMealItem(`item-${i}`, 'meal-1', `Ingredient ${i + 1}`, TEST_IMAGE_URLS[i % TEST_IMAGE_URLS.length]),
+                ),
+            );
+            await page.route('**/api/v1/meals/meal-1', async route => route.fulfill({ json: meal }));
+            await page.route('**/api/v1/meals/overview**', async route =>
+                route.fulfill({
+                    json: {
+                        allMeals: { data: [meal], page: 1, limit: 20, totalPages: 1, totalItems: 1 },
+                        favoriteItems: [],
+                        favoriteTotalCount: 0,
+                    },
+                }),
+            );
+            await page.goto('/meals');
+            const card = page.locator('fd-meal-card').first();
+            await card.locator('.entity-card__thumb').press('Enter');
+            const gallery = page.locator('fd-ui-image-preview-dialog');
+            await expect(gallery).toBeVisible();
+            await expect(page.locator('fd-meal-detail')).toHaveCount(0);
+            await expect(gallery.locator('img')).toHaveCount(1);
+            await gallery.getByRole('button', { name: 'Next photo' }).click();
+            await expect(gallery).toContainText('2 / 4');
+            await gallery.press('ArrowLeft');
+            await expect(gallery).toContainText('1 / 4');
+            await expect(gallery.locator('img')).toBeVisible();
+            await expect
+                .poll(async () => gallery.locator('img').evaluate(image => (image as HTMLImageElement).naturalWidth))
+                .toBeGreaterThan(0);
+            expect(await gallery.locator('.fd-ui-dialog__body').evaluate(el => el.scrollHeight <= el.clientHeight + 1)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`gallery-${width}.png`) });
+            await page.keyboard.press('Escape');
+            await expect(gallery).toHaveCount(0);
+            await card.locator('.entity-card__open-button').click();
+            const detail = page.locator('fd-meal-detail');
+            await expect(detail).toBeVisible();
+            await expect(detail.locator('.meal-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
+            const expand = detail.getByRole('button', { name: /Show 2 more/ });
+            await expand.click();
+            await expect(detail.locator('.meal-detail__list-row')).toHaveCount(MEAL_DIALOG_ITEM_COUNT);
+            await detail.getByRole('button', { name: /^Hide/ }).click();
+            await expect(detail.locator('.meal-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
+            await page.screenshot({ path: testInfo.outputPath(`summary-${width}.png`) });
+            await expect(detail.getByRole('tab')).toHaveCount(0);
+            await expect(detail.locator('.meal-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT);
+            await expect(detail.locator('input')).toHaveCount(0);
+            expect(await detail.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`nutrients-${width}.png`) });
+            await page.keyboard.press('Escape');
+            await expect(detail).toHaveCount(0);
+        });
+    }
+});

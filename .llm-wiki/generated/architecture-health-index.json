@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 98,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 10
   },
@@ -594,7 +594,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.spec.ts"
     },
     {
       "class": "FdUiRadioGroupComponent",
@@ -3421,16 +3421,6 @@
           "required": false
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FdUiImagePreviewDialogComponent",
-      "selector": "fd-ui-image-preview-dialog",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },

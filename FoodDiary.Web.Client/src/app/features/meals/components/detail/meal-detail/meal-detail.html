@@ -29,30 +29,27 @@
                     }
                 </div>
             </div>
-            <button type="button" class="meal-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
-                <span class="material-icons" aria-hidden="true">close</span>
-            </button>
+            <fd-ui-button
+                appearance="plain-icon"
+                variant="secondary"
+                fill="text"
+                icon="close"
+                [ariaLabel]="'COMMON.CLOSE' | translate"
+                (click)="close()"
+            />
         </div>
-        <fd-ui-tabs class="meal-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
     </header>
 
     <div class="meal-detail fd-stack fd-gap-lg">
-        @switch (activeTab) {
-            @case ('summary') {
-                <fd-meal-detail-summary
-                    [meal]="meal"
-                    [macroSummaryBlocks]="macroSummaryBlocks()"
-                    [preMealSatietyMeta]="preMealSatietyMeta"
-                    [postMealSatietyMeta]="postMealSatietyMeta"
-                    [itemPreview]="itemPreview"
-                    [isItemPreviewExpanded]="isItemPreviewExpanded()"
-                    (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
-                />
-            }
-            @case ('nutrients') {
-                <fd-nutrition-editor class="meal-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
-            }
-        }
+        <fd-meal-detail-summary
+            [meal]="meal"
+            [macroSummaryBlocks]="macroSummaryBlocks()"
+            [preMealSatietyMeta]="preMealSatietyMeta"
+            [postMealSatietyMeta]="postMealSatietyMeta"
+            [itemPreview]="itemPreview"
+            [isItemPreviewExpanded]="isItemPreviewExpanded()"
+            (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
+        />
     </div>
 
     <div fdUiDialogFooter class="meal-detail__footer fd-stack fd-gap-sm">

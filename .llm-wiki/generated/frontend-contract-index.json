@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 456,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 126,
     "inputs": 1443,
     "outputs": 477,
     "apiCalls": 267,
-    "templatesWithTranslations": 315,
-    "translationKeys": 1854,
-    "consumerEdges": 1116,
+    "templatesWithTranslations": 316,
+    "translationKeys": 1855,
+    "consumerEdges": 1115,
     "consumedComponents": 294,
     "unconsumedComponents": 161
   },
@@ -5067,7 +5067,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.spec.ts"
     },
     {
       "class": "FdUiInlineAlertActionsComponent",
@@ -19069,6 +19069,14 @@
     },
     {
       "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
+      "keys": [
+        "IMAGE_PREVIEW.NEXT",
+        "IMAGE_PREVIEW.PREVIOUS"
+      ]
+    },
+    {
+      "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.html",
       "keys": [
         "PAGINATION.LABEL",
@@ -19361,7 +19369,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.html",
       "keys": [
         "GENERAL.UNITS.KCAL",
-        "MEAL_DETAIL.SUMMARY.CALORIES",
         "MEAL_DETAIL.SUMMARY.COMMENT",
         "MEAL_DETAIL.SUMMARY.HUNGER_BEFORE",
         "MEAL_DETAIL.SUMMARY.SATIETY_AFTER",
@@ -24123,6 +24130,22 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "fd-ui-kit",
+      "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fill",
+        "icon",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "fd-ui-kit",
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-error-state.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -26058,7 +26081,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -28850,6 +28873,8 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "bodyScrollInset",
+        "size",
         "title"
       ],
       "outputsHandled": []
@@ -30115,7 +30140,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-thumb/entity-card-thumb.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "name",
         "size"
@@ -33973,21 +33998,6 @@
       "component": "FdUiTabsComponent",
       "selector": "fd-ui-tabs",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-      "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "selectedValue",
-        "tabs"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiTabsComponent",
-      "selector": "fd-ui-tabs",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
       "occurrences": 1,
@@ -35614,20 +35624,6 @@
         "pieSegments",
         "showBarChart",
         "showPieChart"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "NutritionEditorComponent",
-      "selector": "fd-nutrition-editor",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts",
-      "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "form",
-        "macroState",
-        "readonly"
       ],
       "outputsHandled": []
     },

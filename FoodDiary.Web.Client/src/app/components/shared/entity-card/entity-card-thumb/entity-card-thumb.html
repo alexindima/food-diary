@@ -12,6 +12,9 @@
     (keydown.enter)="previewCardImage($event)"
     (keydown.space)="previewCardImage($event); $event.preventDefault()"
 >
+    @if (hasPreviewImage()) {
+        <span class="entity-card__zoom" aria-hidden="true"><fd-ui-icon name="zoom_in" size="sm" /></span>
+    }
     @if (imageUrl(); as imageSrc) {
         <img width="96" height="96" [attr.src]="imageSrc" [alt]="imageAlt()" />
     } @else if (collage().hasImages) {

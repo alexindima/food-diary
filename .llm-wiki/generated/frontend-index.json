@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1725,
+    "typescriptFiles": 1726,
     "symbols": 668,
     "routes": 100,
     "features": 44,
-    "specs": 619,
+    "specs": 620,
     "localeFiles": 5,
     "roles": {
       "Component": 451,
@@ -1654,7 +1654,7 @@
       "role": "Component",
       "selector": "fd-ui-image-preview-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
-      "line": 29
+      "line": 31
     },
     {
       "name": "FdUiInlineAlertActionsComponent",
@@ -4104,14 +4104,14 @@
       "role": "Component",
       "selector": "fd-meal-detail-summary",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.ts",
-      "line": 20
+      "line": 19
     },
     {
       "name": "MealDetailComponent",
       "role": "Component",
       "selector": "fd-meal-detail",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
-      "line": 44
+      "line": 34
     },
     {
       "name": "FavoriteMealRowComponent",
@@ -6602,16 +6602,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3624,
-      "russianProperties": 3624,
+      "englishProperties": 3626,
+      "russianProperties": 3626,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1019,
-      "russianProperties": 1019,
+      "englishProperties": 1021,
+      "russianProperties": 1021,
       "countsMatch": true
     },
     {

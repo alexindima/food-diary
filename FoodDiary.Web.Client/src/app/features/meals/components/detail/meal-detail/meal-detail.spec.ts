@@ -16,7 +16,8 @@ const TOTAL_PROTEINS = 30;
 const TOTAL_FATS = 20;
 const TOTAL_CARBS = 50;
 const TOTAL_FIBER = 5;
-const EXPECTED_TAB_COUNT = 2;
+const EXPECTED_SUMMARY_COUNT = 4;
+const TOTAL_ALCOHOL = 2.5;
 const EXPECTED_MACRO_BLOCK_COUNT = 5;
 const SECOND_ITEM_AMOUNT = 120;
 const THIRD_ITEM_AMOUNT = 140;
@@ -118,25 +119,18 @@ describe('MealDetailComponent summary state', () => {
         expect(component['alcohol']).toBe(0);
     });
 
-    it('should have summary and nutrients tabs', () => {
-        expect(component['tabs'].length).toBe(EXPECTED_TAB_COUNT);
-        expect(component['tabs'][0].value).toBe('summary');
-        expect(component['tabs'][1].value).toBe('nutrients');
+    it('should show all core nutrients and omit zero alcohol', () => {
+        expect(component['macroSummaryBlocks']()).toHaveLength(EXPECTED_SUMMARY_COUNT);
+        expect(component['macroSummaryBlocks']().map(macro => macro.value)).toEqual([TOTAL_PROTEINS, TOTAL_FATS, TOTAL_CARBS, TOTAL_FIBER]);
     });
 
-    it('should change active tab', () => {
-        expect(component['activeTab']).toBe('summary');
-
-        component['onTabChange']('nutrients');
-        expect(component['activeTab']).toBe('nutrients');
-
-        component['onTabChange']('summary');
-        expect(component['activeTab']).toBe('summary');
-    });
-
-    it('should not change tab for invalid value', () => {
-        component['onTabChange']('invalid');
-        expect(component['activeTab']).toBe('summary');
+    it('should retain nonzero alcohol in the single summary', async () => {
+        await createComponentAsync({ ...mockMeal, totalAlcohol: TOTAL_ALCOHOL });
+        expect(component['macroSummaryBlocks']()).toHaveLength(EXPECTED_MACRO_BLOCK_COUNT);
+        expect(component['macroSummaryBlocks']().at(-1)).toMatchObject({
+            labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
+            value: TOTAL_ALCOHOL,
+        });
     });
 });
 

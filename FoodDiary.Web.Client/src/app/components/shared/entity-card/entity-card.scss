@@ -47,6 +47,7 @@ fd-entity-card-actions {
 }
 
 .entity-card__thumb {
+    position: relative;
     width: 100%;
     height: 100%;
     background: var(--fd-bg-surface-muted);
@@ -473,4 +474,23 @@ fd-entity-card-actions {
     .entity-card__summary-row {
         padding-top: var(--fd-space-sm);
     }
+}
+
+.entity-card__zoom {
+    position: absolute;
+    inset-inline-end: var(--fd-space-xs);
+    inset-block-end: var(--fd-space-xs);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    padding: var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-dialog);
+    color: var(--fd-color-text);
+    opacity: 0;
+    pointer-events: none;
+}
+.entity-card__thumb:hover .entity-card__zoom,
+.entity-card__thumb:focus-visible .entity-card__zoom {
+    opacity: 1;
 }

@@ -824,3 +824,11 @@ Standard card surfaces use the shared `--fd-bg-card-surface` token: a subtle the
 `fd-ui-input` supports `suffixText` for noninteractive units, `inputMode` for the mobile keyboard, and opt-in `selectOnFocus` for text inputs. Use `type="text" inputMode="decimal"` when comma decimals must remain intact; validation and canonical conversion belong to the form. The unit participates in `aria-describedby` alongside any error.
 
 Both `fd-ui-input` and `fd-ui-date-input` accept `showRequiredIndicator` (default `true`). Setting it to `false` hides only the asterisk; native required/ARIA semantics remain intact. See the Input/Measurement story. Dialog close buttons keep their keyboard focus ring and show background emphasis on hover, with no permanent filled circle.
+
+## Image preview gallery
+
+`FdUiImagePreviewDialogComponent` uses the standard dialog header and close action.
+An `imageUrl` displays a single original. When only `collageImages` is supplied,
+images appear individually with previous/next controls, an announced position,
+Left/Right keyboard navigation and horizontal swipe. Blank URLs are ignored;
+vertical gestures and pinch zoom are reserved for the browser.

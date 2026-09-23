@@ -25,9 +25,10 @@
                 (click)="itemPreviewExpandedToggle.emit()"
             >
                 @if (isItemPreviewExpanded()) {
-                    {{ 'MEAL_DETAIL.SUMMARY.ITEMS_HIDE' | translate }}
+                    {{ 'MEAL_DETAIL.SUMMARY.ITEMS_HIDE' | translate }} <span aria-hidden="true">↑</span>
                 } @else {
                     {{ 'MEAL_DETAIL.SUMMARY.ITEMS_MORE' | translate: { count: hiddenItemPreviewCount() } }}
+                    <span aria-hidden="true">↓</span>
                 }
             </button>
         }

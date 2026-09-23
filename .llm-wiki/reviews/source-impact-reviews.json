@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a4be9d5698ea916e23db2531e64ec8a7df5b6cc4b19969a9b2a2cf371fc96e57"
+          "sha256": "ecf103822edb19a302b0999d0d16d470b1ece3f12c5c953621f78a0bf2465844"
         }
       ],
-      "reason": "No new project references or ownership changes; architecture suite passed 2107 tests.",
+      "reason": "Regenerated frontend and quality navigation indexes after meal dialog cleanup and gallery tests. No backend dependencies, authentication, HTTP or persistence changes; source claims remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T12:39:26.8958943Z"
+      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
+      "reviewedAtUtc": "2026-09-23T15:16:35.4184475Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
+          "sha256": "d9059bf08608a1e94fb755837cdd83f01b76344d16f158952bbd43fedfaba5ef"
         }
       ],
-      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
+      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:52.7397224Z"
+      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
+      "reviewedAtUtc": "2026-09-23T17:05:19.0603194Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
+          "sha256": "d9059bf08608a1e94fb755837cdd83f01b76344d16f158952bbd43fedfaba5ef"
         }
       ],
-      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
+      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:53.9585868Z"
+      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
+      "reviewedAtUtc": "2026-09-23T17:05:19.7513204Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1064,14 +1064,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "c31bf2cd0658b9272a0ad98088997e2aa57c1dfa5f816900129df87019dee813"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cb48075842be84f73a81a3bfc1dc75e1f4eabbb487bf8b712c9bb286ae10f59e"
+          "sha256": "acfcaf86ba24537b4d8ae14f6515c840c17c067eda64d3340d2ec2914fdc18a9"
         }
       ],
-      "reason": "Reviewed meals source changes: existing feature ownership and component contracts remain unchanged; generated projections refreshed.",
+      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
       "baseRef": "HEAD",
-      "gitHead": "e4580f2ba30d8c1a3e5fd77efbf24438f8e79080",
-      "reviewedAtUtc": "2026-09-22T21:59:38.9081393Z"
+      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
+      "reviewedAtUtc": "2026-09-23T17:05:20.3786339Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1159,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b01a8c3c697753dca2698e141970eb7764f08e9ae2c4d45dccb36aebc2462639"
+          "sha256": "c31bf2cd0658b9272a0ad98088997e2aa57c1dfa5f816900129df87019dee813"
         }
       ],
-      "reason": "Reviewed inline favorites undo against picker, row and scoped facade: default-false inputs, FavoriteMeal restore output, escaped text, no new API boundary. Stable slots, independent retry, navigation reset, stale response and destruction tested. 272 meal tests, build, lint and desktop/mobile browser restoration passed; workflow remains accurate.",
+      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T20:39:34.8962645Z"
+      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
+      "reviewedAtUtc": "2026-09-23T17:05:18.3933833Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -632,6 +632,8 @@
         "RED": "Calorie-dense"
     },
     "IMAGE_PREVIEW": {
+        "PREVIOUS": "Previous photo",
+        "NEXT": "Next photo",
         "OPEN": "Open image preview",
         "ALT": "Preview of {{name}}"
     },

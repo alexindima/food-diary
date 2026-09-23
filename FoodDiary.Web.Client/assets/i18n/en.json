@@ -678,6 +678,8 @@
         "RED": "Calorie-dense"
     },
     "IMAGE_PREVIEW": {
+        "PREVIOUS": "Previous photo",
+        "NEXT": "Next photo",
         "OPEN": "Open image preview",
         "ALT": "Preview of {{name}}"
     },
@@ -4641,7 +4643,7 @@
             "SATIETY_AFTER": "Satiety after",
             "UNKNOWN_MEAL": "Not specified",
             "UNKNOWN_ITEM": "Item",
-            "ITEMS_MORE": "+ {{count}} more",
+            "ITEMS_MORE": "Show {{count}} more",
             "ITEMS_HIDE": "Hide"
         }
     },

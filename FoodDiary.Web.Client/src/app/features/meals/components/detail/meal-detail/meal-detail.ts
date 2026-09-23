@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { type FieldTree, form } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -8,17 +7,10 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
-import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
-import {
-    NutritionEditorComponent,
-    type NutritionFormModel,
-    type NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
 import type { Meal } from '../../../models/meal.data';
-import { MEAL_DETAIL_MACRO_SUMMARY_LIMIT } from '../meal-detail-lib/meal-detail.config';
 import { buildMealDetailViewModel } from '../meal-detail-lib/meal-detail.mapper';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
 import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-summary';
@@ -36,8 +28,6 @@ import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-s
         FdUiDialogFooterDirective,
         FdUiDialogHeaderDirective,
         FdUiButtonComponent,
-        FdUiTabsComponent,
-        NutritionEditorComponent,
         MealDetailSummaryComponent,
     ],
 })
@@ -62,21 +52,22 @@ export class MealDetailComponent {
     protected readonly mealTypeLabel: string | null;
     protected readonly preMealSatietyMeta: MealSatietyMeta;
     protected readonly postMealSatietyMeta: MealSatietyMeta;
-    protected readonly tabs: FdUiTab[] = [
-        { value: 'summary', labelKey: 'MEAL_DETAIL.TABS.SUMMARY' },
-        { value: 'nutrients', labelKey: 'MEAL_DETAIL.TABS.NUTRIENTS' },
-    ];
-    protected activeTab: 'summary' | 'nutrients' = 'summary';
     protected readonly isItemPreviewExpanded = signal(false);
     protected readonly macroBlocks: MealMacroBlock[];
-    protected readonly macroSummaryBlocks = computed(() => this.macroBlocks.slice(0, MEAL_DETAIL_MACRO_SUMMARY_LIMIT));
+    protected readonly macroSummaryBlocks = computed(() =>
+        this.macroBlocks.filter(macro => macro.labelKey !== 'GENERAL.NUTRIENTS.ALCOHOL' || macro.value !== 0),
+    );
     protected readonly itemPreview: MealDetailItemPreview[];
-    protected readonly nutritionForm: FieldTree<NutritionFormModel>;
-    protected readonly macroBarState: NutritionMacroState;
 
     public constructor() {
         const meal = inject<Meal>(FD_UI_DIALOG_DATA);
-        const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key), inject(ChartColorsService).palette);
+        const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key), {
+            ...inject(ChartColorsService).palette,
+            proteins: 'var(--fd-color-primary-600)',
+            fats: 'var(--fd-color-orange-500)',
+            carbs: 'var(--fd-color-sky-500)',
+            fiber: 'var(--fd-color-rose-500)',
+        });
 
         this.meal = meal;
         this.calories = viewModel.calories;
@@ -91,8 +82,6 @@ export class MealDetailComponent {
         this.postMealSatietyMeta = viewModel.postMealSatietyMeta;
         this.itemPreview = viewModel.itemPreview;
         this.macroBlocks = viewModel.macroBlocks;
-        this.nutritionForm = form(signal(viewModel.nutritionModel));
-        this.macroBarState = viewModel.macroBarState;
 
         this.mealDetailFacade.initialize(meal);
     }
@@ -103,12 +92,6 @@ export class MealDetailComponent {
 
     protected toggleFavorite(): void {
         this.mealDetailFacade.toggleFavorite(this.meal);
-    }
-
-    protected onTabChange(tab: string): void {
-        if (tab === 'summary' || tab === 'nutrients') {
-            this.activeTab = tab;
-        }
     }
 
     protected toggleItemPreviewExpanded(): void {

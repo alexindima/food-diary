@@ -1,37 +1,28 @@
-<fd-ui-dialog class="fd-ui-image-preview-dialog" [title]="title || undefined">
-    <div
-        class="fd-ui-image-preview-dialog__viewport"
-        tabindex="0"
-        (click)="close()"
-        (keydown.enter)="close()"
-        (keydown.space)="close(); $event.preventDefault()"
-    >
-        <figure
-            class="fd-ui-image-preview-dialog__figure"
-            tabindex="-1"
-            (click)="$event.stopPropagation()"
-            (keydown.enter)="$event.stopPropagation()"
-            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
-        >
-            @if (imageUrl) {
-                <img class="fd-ui-image-preview-dialog__image" width="1200" height="800" [ngSrc]="imageUrl" [alt]="alt" />
-            } @else if (collageImages.length) {
-                <div
-                    role="img"
-                    [class]="`fd-ui-image-preview-dialog__collage fd-ui-image-preview-dialog__collage--count-${collageImages.length}`"
-                    [attr.aria-label]="alt"
-                >
-                    @for (image of collageImages; track image.url) {
-                        <img
-                            class="fd-ui-image-preview-dialog__collage-image"
-                            width="512"
-                            height="512"
-                            [ngSrc]="image.url"
-                            [alt]="image.alt ?? ''"
-                        />
-                    }
-                </div>
-            }
-        </figure>
+<fd-ui-dialog class="fd-ui-image-preview-dialog" size="lg" bodyScrollInset="edge" [title]="title || undefined">
+    <div class="fd-ui-image-preview-dialog__viewport" (touchstart)="startSwipe($event)" (touchend)="endSwipe($event)">
+        @if (activeImage(); as image) {
+            <img class="fd-ui-image-preview-dialog__image" width="1200" height="800" [src]="image.url" [alt]="image.alt || alt" />
+        }
     </div>
+    @if (images.length > 1) {
+        <div class="fd-ui-image-preview-dialog__navigation">
+            <fd-ui-button
+                appearance="plain-icon"
+                variant="secondary"
+                fill="text"
+                icon="chevron_left"
+                [ariaLabel]="'IMAGE_PREVIEW.PREVIOUS' | translate"
+                (click)="navigate(-1)"
+            />
+            <span aria-live="polite" aria-atomic="true">{{ activeIndex() + 1 }} / {{ images.length }}</span>
+            <fd-ui-button
+                appearance="plain-icon"
+                variant="secondary"
+                fill="text"
+                icon="chevron_right"
+                [ariaLabel]="'IMAGE_PREVIEW.NEXT' | translate"
+                (click)="navigate(1)"
+            />
+        </div>
+    }
 </fd-ui-dialog>

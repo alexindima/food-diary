@@ -111,7 +111,7 @@ export class MealCardComponent {
         }
 
         const itemImages = this.resolveItemImages();
-        return itemImages.length > 1 ? itemImages : [];
+        return itemImages.length > 1 ? itemImages.slice(0, COLLAGE_IMAGE_LIMIT) : [];
     });
     protected readonly hasPreviewImage = computed(() => this.resolvePreviewImage() !== undefined || this.collageImages().length > 0);
 
@@ -153,14 +153,14 @@ export class MealCardComponent {
 
     protected previewCardImage(): void {
         const imageUrl = this.resolvePreviewImage();
-        const collageImages = imageUrl !== undefined ? [] : this.collageImages();
+        const collageImages = imageUrl !== undefined ? [] : this.resolveItemImages();
         if (imageUrl === undefined && collageImages.length === 0) {
             return;
         }
 
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
-            width: 'var(--fd-size-dialog-media-width)',
+            width: 'var(--fd-dialog-panel-width-lg)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
             data: {
                 imageUrl,
@@ -224,10 +224,6 @@ export class MealCardComponent {
     }
 
     private appendAiSessionImages(result: EntityCardCollageImage[], seen: Set<string>): void {
-        if (result.length === COLLAGE_IMAGE_LIMIT) {
-            return;
-        }
-
         for (const session of this.meal().aiSessions ?? []) {
             if (!this.appendCollageImage(result, seen, session?.imageUrl?.trim(), session?.notes?.trim())) {
                 break;
@@ -251,7 +247,7 @@ export class MealCardComponent {
             alt: alt ?? this.mealTitle(),
         });
 
-        return result.length < COLLAGE_IMAGE_LIMIT;
+        return true;
     }
 
     private resolveMealItemCollageImage(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): {

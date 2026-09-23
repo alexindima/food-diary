@@ -5474,11 +5474,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
-      "nonBlankLines": 34,
-      "decisionPoints": 4,
+      "nonBlankLines": 61,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.68
+      "structuralRiskScore": 16.22
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/index.ts",
@@ -7546,11 +7546,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-card/meal-card.ts",
-      "nonBlankLines": 247,
-      "decisionPoints": 45,
+      "nonBlankLines": 244,
+      "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 72.44
+      "structuralRiskScore": 70.88
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.ts",
@@ -9930,11 +9930,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.config.ts",
-      "nonBlankLines": 5,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.mapper.ts",
@@ -9954,19 +9954,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.ts",
-      "nonBlankLines": 30,
+      "nonBlankLines": 29,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.1
+      "structuralRiskScore": 2.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
-      "nonBlankLines": 115,
-      "decisionPoints": 2,
+      "nonBlankLines": 99,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.3
+      "structuralRiskScore": 3.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.ts",
