@@ -64,6 +64,8 @@ export class EntityCardComponent {
     public readonly calories = input.required<number>();
 
     public readonly showAction = input(false);
+    public readonly compactAction = input(false);
+    public readonly actionLabel = input<string | null>(null);
     public readonly actionIcon = input('add');
     public readonly actionAriaLabel = input<string | null>(null);
 

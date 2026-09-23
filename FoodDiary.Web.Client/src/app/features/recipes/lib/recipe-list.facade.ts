@@ -75,11 +75,12 @@ export class RecipeListFacade {
         this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
 
-        return this.recipeService.query(page, limit, filters, includePublic).pipe(
+        return this.recipeService.queryOverview({ page, limit, filters, includePublic, recentLimit: 1, favoriteLimit: 0 }).pipe(
             tap(data => {
-                this.recipeData.setData(data);
+                this.recipeData.setData(data.allRecipes);
+                this.favoriteTotalCount.set(data.favoriteTotalCount);
                 this.recentRecipes.set([]);
-                this.currentPageIndex.set(data.page - 1);
+                this.currentPageIndex.set(data.allRecipes.page - 1);
                 this.errorKey.set(null);
             }),
             map(() => void 0),
@@ -195,12 +196,12 @@ export class RecipeListFacade {
     public loadFavorites(): Observable<void> {
         this.isFavoritesLoadingMore.set(true);
 
-        return this.favoriteRecipeService.getAll().pipe(
-            tap(favorites => {
-                this.favoriteRecipes.set(favorites);
-                this.favoriteTotalCount.set(favorites.length);
+        return this.favoriteRecipeService.getPage(1, 1).pipe(
+            tap(result => {
+                this.favoriteTotalCount.set(result.totalItems);
             }),
             map(() => void 0),
+            catchError(() => of(void 0)),
             finalize(() => {
                 this.isFavoritesLoadingMore.set(false);
             }),
@@ -241,6 +242,38 @@ export class RecipeListFacade {
                 this.syncRecipeFavoriteState(favorite.recipeId, false, null);
             }),
             map(() => void 0),
+        );
+    }
+
+    public addFavoriteToMeal(favorite: FavoriteRecipe): Observable<boolean> {
+        return this.recipeService.getById(favorite.recipeId).pipe(
+            map(recipe => {
+                if (recipe === null) {
+                    return false;
+                }
+                this.addToMeal(recipe);
+                return true;
+            }),
+            catchError(() => of(false)),
+        );
+    }
+
+    public removePickerFavorite(favorite: FavoriteRecipe): Observable<boolean> {
+        return this.removeFavorite(favorite).pipe(
+            map(() => true),
+            catchError(() => of(false)),
+        );
+    }
+
+    public restorePickerFavorite(favorite: FavoriteRecipe): Observable<boolean> {
+        return this.favoriteRecipeService.add(favorite.recipeId, favorite.name ?? undefined).pipe(
+            tap(restored => {
+                favorite.id = restored.id;
+                this.syncRecipeFavoriteState(favorite.recipeId, true, restored.id);
+                this.favoriteTotalCount.update(count => count + 1);
+            }),
+            map(() => true),
+            catchError(() => of(false)),
         );
     }
 

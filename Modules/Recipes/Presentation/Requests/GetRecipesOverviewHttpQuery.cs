@@ -7,7 +7,7 @@ public sealed record GetRecipesOverviewHttpQuery(
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 10,
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumRecentItems)] int RecentLimit = 10,
-    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumRecentItems)] int FavoriteLimit = 10,
+    [OpenApiNumericRange(0, PresentationQueryLimits.MaximumRecentItems)] int FavoriteLimit = 10,
     [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null,
     bool IncludePublic = true,
     [MaxLength(PresentationQueryLimits.MaximumCategoryLength)] string? Category = null,

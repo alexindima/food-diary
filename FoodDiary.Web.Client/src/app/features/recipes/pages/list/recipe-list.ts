@@ -30,11 +30,11 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
-import { RecipeListFavoritesComponent } from '../../components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites';
 import {
     type RecipeListEmptyState,
     RecipeListResultsComponent,
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
+import { RecipeFavoritesPickerComponent } from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../models/recipe.data';
@@ -59,7 +59,6 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        RecipeListFavoritesComponent,
         RecipeListResultsComponent,
     ],
     providers: [RecipeListFacade],
@@ -206,14 +205,13 @@ export class RecipeListComponent {
             })
             .afterClosed()
             .subscribe(result => {
+                this.reloadCurrentPage();
                 if (!(result instanceof RecipeDetailActionResult)) {
                     return;
                 }
 
                 const actionResult = result;
                 if (actionResult.action === 'FavoriteChanged') {
-                    this.loadFavorites();
-                    this.reloadCurrentPage();
                     return;
                 }
 
@@ -293,7 +291,14 @@ export class RecipeListComponent {
     }
 
     protected toggleFavorites(): void {
-        this.isFavoritesOpen.update(value => !value);
+        this.fdDialogService.open(RecipeFavoritesPickerComponent, {
+            size: 'md',
+            data: {
+                repeat: (favorite: FavoriteRecipe) => this.recipeListFacade.addFavoriteToMeal(favorite),
+                remove: (favorite: FavoriteRecipe) => this.recipeListFacade.removePickerFavorite(favorite),
+                restore: (favorite: FavoriteRecipe) => this.recipeListFacade.restorePickerFavorite(favorite),
+            },
+        });
     }
 
     protected openFavoriteRecipe(favorite: FavoriteRecipe): void {

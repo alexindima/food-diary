@@ -73,15 +73,15 @@ describe('RecipeListComponent initial loading and filters', () => {
 });
 
 describe('RecipeListComponent detail actions', () => {
-    it('reloads favorites and current page after favorite change in detail dialog', async () => {
+    it('reloads the overview including favorite state after a detail change', async () => {
         const { component } = setupComponent({
             detailResult: new RecipeDetailActionResult('recipe-1', 'FavoriteChanged'),
         });
 
         component['onRecipeClick'](createRecipe());
-        await waitForAsync(() => facade.loadFavorites.mock.calls.length > 0);
+        await waitForAsync(() => facade.loadRecipes.mock.calls.length > 0);
 
-        expect(facade.loadFavorites).toHaveBeenCalled();
+        expect(facade.loadFavorites).not.toHaveBeenCalled();
         expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
     });
 

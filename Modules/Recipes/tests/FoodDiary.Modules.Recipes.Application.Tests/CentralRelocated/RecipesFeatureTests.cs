@@ -6,7 +6,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
-using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipeOverview;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
@@ -114,7 +114,7 @@ public partial class RecipesFeatureTests {
         new(
             overviewReadService,
             new RecentRecipeLoader(RequestTestSender.Create(new ReadRecentRecipesQueryHandler(recentRepository)), overviewReadService),
-            RequestTestSender.Create(new ReadFavoriteRecipesQueryHandler(favoriteRepository), new ReadRecipeFavoriteStatusQueryHandler(favoriteRepository)),
+            RequestTestSender.Create(new ReadFavoriteRecipeOverviewQueryHandler(favoriteRepository), new ReadRecipeFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentRecipesQueryHandler CreateRecentRecipesHandler(
@@ -454,7 +454,7 @@ public partial class RecipesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites, Recipe? source = null) : IFavoriteRecipeRepository {
+    private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites, Recipe? source = null) : IFavoriteRecipeRepository, IFavoriteRecipeQuery {
         public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByIdAsync(FavoriteRecipeId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -466,6 +466,12 @@ public partial class RecipesFeatureTests {
             Task.FromResult(favorites);
         public Task<IReadOnlyList<FavoriteRecipeReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>([.. favorites.Select(ToReadModel)]);
+
+        public Task<(IReadOnlyList<FavoriteRecipeReadModel> Items, int Total)> GetPageReadModelsAsync(UserId userId, int page, int limit, string? search, CancellationToken cancellationToken = default) =>
+            Task.FromResult<(IReadOnlyList<FavoriteRecipeReadModel>, int)>((favorites.Skip((page - 1) * limit).Take(limit).Select(ToReadModel).ToArray(), favorites.Count));
+        public Task<IReadOnlyList<FavoriteRecipeReadModel>> GetByRecipeIdsReadModelsAsync(UserId userId, IReadOnlyCollection<RecipeId> recipeIds, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>(favorites.Where(item => recipeIds.Contains(item.RecipeId)).Select(ToReadModel).ToArray());
+        public Task<IReadOnlyList<FavoriteRecipeId>> GetAccessibleIdsAsync(UserId userId, FavoriteRecipeId? favoriteId = null, IReadOnlyCollection<RecipeId>? sourceIds = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         private FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
             new(

@@ -4,11 +4,7 @@ import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../sha
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
 import type { Recipe } from '../../../models/recipe.data';
-import {
-    RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT,
-    RECIPE_DETAIL_MACRO_SUMMARY_LIMIT,
-    RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT,
-} from './recipe-detail.config';
+import { RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT } from './recipe-detail.config';
 import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
 
 const MIN_MACRO_REFERENCE_VALUE = 1;
@@ -55,7 +51,7 @@ export function buildRecipeDetailViewModel(
         qualityScore: normalizeQualityScore(recipe.qualityScore),
         qualityGrade: recipe.qualityGrade ?? 'yellow',
         macroBlocks,
-        macroSummaryBlocks: macroBlocks.slice(0, RECIPE_DETAIL_MACRO_SUMMARY_LIMIT),
+        macroSummaryBlocks: macroBlocks.filter(macro => macro.labelKey !== 'GENERAL.NUTRIENTS.ALCOHOL' || macro.value !== 0),
         ingredientPreview: buildIngredientPreview(recipe, unknownIngredientName),
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: calculateMacroBarState(proteins, fats, carbs),
@@ -114,7 +110,6 @@ function resolveMacroPercent(value: number, values: number[]): number {
 function buildIngredientPreview(recipe: Recipe, unknownIngredientName: string): IngredientPreviewItem[] {
     return recipe.steps
         .flatMap(step => step.ingredients)
-        .slice(0, RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT)
         .map(ingredient => ({
             name: ingredient.productName ?? ingredient.nestedRecipeName ?? unknownIngredientName,
             amount: ingredient.amount,

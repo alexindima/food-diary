@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4212,
-    "symbols": 4143,
+    "sourceFiles": 4219,
+    "symbols": 4150,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2179,
+      "class": 2182,
       "enum": 64,
       "interface": 401,
-      "record": 1379,
+      "record": 1383,
       "record struct": 120
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1711,
-      "Query": 274,
-      "QueryHandler": 200,
+      "Other": 1712,
+      "Query": 277,
+      "QueryHandler": 202,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 156,
       "Response": 221,
       "Service": 162,
-      "Validator": 227,
+      "Validator": 228,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -12830,6 +12830,27 @@
       "line": 6
     },
     {
+      "name": "GetFavoriteRecipePageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetFavoriteRecipePageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetFavoriteRecipePageQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryValidator.cs",
+      "line": 5
+    },
+    {
       "name": "GetFavoriteRecipesQuery",
       "kind": "record",
       "role": "Query",
@@ -12856,6 +12877,13 @@
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
       "line": 10
+    },
+    {
+      "name": "ReadFavoriteRecipeOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "ReadFavoriteRecipesQueryHandler",
@@ -12982,6 +13010,20 @@
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
       "line": 2
+    },
+    {
+      "name": "FavoriteRecipeOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/FavoriteRecipeOverviewModel.cs",
+      "line": 4
+    },
+    {
+      "name": "ReadFavoriteRecipeOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs",
+      "line": 8
     },
     {
       "name": "ReadFavoriteRecipesQuery",
@@ -13212,7 +13254,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AddFavoriteRecipeHttpRequest",
@@ -13220,6 +13262,13 @@
       "role": "Request",
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/AddFavoriteRecipeHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "GetFavoriteRecipePageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs",
+      "line": 5
     },
     {
       "name": "AchievementDefinitionErrors",

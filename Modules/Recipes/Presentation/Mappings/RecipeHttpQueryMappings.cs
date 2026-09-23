@@ -33,7 +33,7 @@ public static class RecipeHttpQueryMappings {
                 SanitizeText(query.Search),
                 query.IncludePublic,
                 Math.Clamp(query.RecentLimit, 1, 50),
-                Math.Clamp(query.FavoriteLimit, 1, 50),
+                Math.Clamp(query.FavoriteLimit, 0, 50),
                 SanitizeText(query.Category),
                 NormalizePositive(query.MaxTotalTime),
                 NormalizeNonNegative(query.CaloriesFrom),

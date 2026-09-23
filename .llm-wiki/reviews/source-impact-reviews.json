@@ -203,14 +203,14 @@
       "pageSha256": "8355451e34b29f0dcf610d559bb6b62b936c7f7af9702361767d3876e53a5795",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "01dc2cdac73c60116a3cdce575b45ea025fbe3696f356daad538d19a37f0d063"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "ec666f947d9dd7685d136f3e08dc8d5c1bdf38bf2bbd2f8a2f3d953453135f7c"
         }
       ],
-      "reason": "Documented numeric input range widening as additive; regression covers lower minimum, higher maximum, removed bounds, narrowing, mixed changes, type and default changes. CI base comparison now has zero breaking changes.",
+      "reason": "Recipe favorites adds a bounded page endpoint, optional nutrition and ingredient fields, and widens FavoriteLimit minimum to zero. Existing routes remain. The full snapshot exactly matches Swagger generated from current API registrations plus the test controller; PostgreSQL-backed HTTP execution remains pending because Docker is unavailable. Workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:34.6941455Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:57:19.0090195Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ecf103822edb19a302b0999d0d16d470b1ece3f12c5c953621f78a0bf2465844"
+          "sha256": "33dd3e91fc711696c3f32f9167cd5a03a3c77ff847c8c4782c30c9d6c3a65eb3"
         }
       ],
-      "reason": "Regenerated frontend and quality navigation indexes after meal dialog cleanup and gallery tests. No backend dependencies, authentication, HTTP or persistence changes; source claims remain valid.",
+      "reason": "Recipe overview uses the Favorites trusted read contract and composition gains only no-tracking Product reads. Reviewed persistence capability updated; architecture guard rechecks passed. No new production project or cycle. Workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
-      "reviewedAtUtc": "2026-09-23T15:16:35.4184475Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:00.2524952Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "55d98da708ad3abea6a0d63746d946b4598eb83088802b5e4a0e86da6b489caa"
+          "sha256": "16102248faf337fbaae1e6784ad6cea3d64eb05267758af04b99b9d9a84fcf49"
         }
       ],
-      "reason": "Request and response HTTP signatures are unchanged; generated contract index now resolves the existing application messages through mappings.",
+      "reason": "Reviewed FavoriteRecipe DTO mapping through the new page query and Recipes overview consumer; optional fields and route are additive, cancellation is forwarded. Generated contract equals Swagger. Workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
-      "reviewedAtUtc": "2026-09-22T23:27:11.1510904Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:05.8583568Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d9059bf08608a1e94fb755837cdd83f01b76344d16f158952bbd43fedfaba5ef"
+          "sha256": "85a5e45106a1a8079d11929ea615ab5387e9d810d3627234c4b67fc20a3ff5b7"
         }
       ],
-      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
+      "reason": "Generated test references were used only as navigation. Actual focused unit and browser runs are recorded separately, and PostgreSQL execution is explicitly pending Docker availability. Risk workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
-      "reviewedAtUtc": "2026-09-23T17:05:19.0603194Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:01.8768105Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "14279e7ba8c11dee7e5d4645999299c677cb7bc01b71cd70aac9b61ec4e4b9e8"
+          "sha256": "0545206a29dc627d6dae9da381d4948e104f14f40c499c36809ddadd8a6d65ba"
         }
       ],
-      "reason": "Existing controller-mapping-mediator convention restored; generated references reviewed.",
+      "reason": "Only in-process Favorites read queries and existing HTTP consumers changed; no jobs, external clients, deployment settings or retry infrastructure changed. Runtime topology regeneration preserves workflow guidance.",
       "baseRef": "HEAD",
-      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
-      "reviewedAtUtc": "2026-09-22T23:27:11.8441504Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:04.4654365Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,13 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d9059bf08608a1e94fb755837cdd83f01b76344d16f158952bbd43fedfaba5ef"
+          "sha256": "85a5e45106a1a8079d11929ea615ab5387e9d810d3627234c4b67fc20a3ff5b7"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "0545206a29dc627d6dae9da381d4948e104f14f40c499c36809ddadd8a6d65ba"
         }
       ],
-      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
+      "reason": "Owner/public visibility predicates include ingredient names and escaped search; denied-owner unit coverage passes. Provider-backed privacy regression is added but skipped without Docker, so no stronger runtime security claim is made. Workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
-      "reviewedAtUtc": "2026-09-23T17:05:19.7513204Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:07.1403980Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1069,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c31bf2cd0658b9272a0ad98088997e2aa57c1dfa5f816900129df87019dee813"
+          "sha256": "91a7eb15f34873c02e10f295e4198d0c9b7fb80027f0c70e24f58a3b0994f8af"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "acfcaf86ba24537b4d8ae14f6515c840c17c067eda64d3340d2ec2914fdc18a9"
+          "sha256": "d83d445d388c144c00d28c8dc28302f150b30f823f1af6db278ba773612f97eb"
         }
       ],
-      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
+      "reason": "Verified recipe page to facade/API and FavoriteRecipe page/overview handler mappings in current sources. New symbols change navigation data only; source-tracing workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
-      "reviewedAtUtc": "2026-09-23T17:05:20.3786339Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:03.2794664Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1167,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c31bf2cd0658b9272a0ad98088997e2aa57c1dfa5f816900129df87019dee813"
+          "sha256": "91a7eb15f34873c02e10f295e4198d0c9b7fb80027f0c70e24f58a3b0994f8af"
         }
       ],
-      "reason": "Reviewed bounded frontend-only meal detail change: no API, persistence, identity or transport changes. Single summary retains core nutrients and nonzero alcohol; duplicate tabs removed and existing danger style restored. 25 component tests, 2 responsive browser tests, production build and lint passed.",
+      "reason": "Recipe list, picker facade, row bindings and shared recipe card were checked with 240 focused unit tests and desktop/mobile browser scenarios. Loading, error, undo and keyboard behavior are covered. Workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "341b9c974edd9a1e1d0780edbaf689f6bd224d37",
-      "reviewedAtUtc": "2026-09-23T17:05:18.3933833Z"
+      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
+      "reviewedAtUtc": "2026-09-23T17:59:08.2919471Z"
     },
     {
       "pageId": "workflow.query-context",

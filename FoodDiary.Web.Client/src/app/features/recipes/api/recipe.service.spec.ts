@@ -309,25 +309,20 @@ describe('RecipeService overview', () => {
         });
     });
 
-    it('should omit blank overview search and return fallback overview on failure', () => {
-        service
-            .queryOverview({
-                page: 1,
-                limit: DEFAULT_PAGE_LIMIT,
-                filters: { search: '   ' },
-            })
-            .subscribe(result => {
-                expect(result).toEqual({
-                    recentItems: [],
-                    favoriteItems: [],
-                    favoriteTotalCount: 0,
-                    allRecipes: { data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 },
-                });
-            });
-
+    it('omits blank overview search and propagates failures to the page error state', () => {
+        let failed = false;
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT, filters: { search: '   ' } }).subscribe({
+            next: () => {
+                throw new Error('Failed overview must not be an empty result');
+            },
+            error: () => {
+                failed = true;
+            },
+        });
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview` && r.method === 'GET');
         expect(req.request.params.has('search')).toBe(false);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(failed).toBe(true);
     });
 });
 

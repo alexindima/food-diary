@@ -510,7 +510,12 @@
         "QUALITY_SCORE": "Healthiness"
     },
     "RECIPE_CARD": {
-        "ADD_TO_MEAL": "Add to meal"
+        "ADD_TO_MEAL": "Add to meal",
+        "INGREDIENTS_ONE": "{{count}} ingredient",
+        "INGREDIENTS_FEW": "{{count}} ingredients",
+        "INGREDIENTS_MANY": "{{count}} ingredients",
+        "INGREDIENTS_OTHER": "{{count}} ingredients",
+        "TO_DIARY": "To diary"
     },
     "RECIPE_LIST": {
         "TITLE": "Recipes",
@@ -578,7 +583,7 @@
             "SEARCH_TITLE": "Find saved recipes",
             "SEARCH_TEXT": "Search by recipe name to quickly return to meals you reuse often.",
             "FAVORITES_TITLE": "Favorite recipes",
-            "FAVORITES_TEXT": "Favorites keep your regular dishes available for quick repeat use or adding to meals.",
+            "FAVORITES_TEXT": "Open favorites to search saved recipes and add them to a meal.",
             "RESULTS_TITLE": "Recipe catalogue",
             "RESULTS_TEXT": "Open a recipe for details, add it to a meal, or mark it as a favorite from the results.",
             "BALANCE_LEFT": "remaining",
@@ -614,7 +619,7 @@
             "COOK": "Cook"
         },
         "SUMMARY": {
-            "CALORIES": "Calories",
+            "CALORIES": "Nutrition for the whole recipe",
             "SERVINGS": "Servings",
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
@@ -622,7 +627,9 @@
             "COMMENT": "Comment",
             "SERVINGS_ONE": "serving",
             "SERVINGS_FEW": "servings",
-            "SERVINGS_MANY": "servings"
+            "SERVINGS_MANY": "servings",
+            "ITEMS_MORE": "Show {{count}} more",
+            "ITEMS_HIDE": "Hide"
         },
         "COOK_MODE": {
             "EMPTY": "No cooking steps yet.",
@@ -7149,5 +7156,25 @@
         "ADD": "Add",
         "ADDING": "Adding meal…",
         "ADD_ERROR": "Could not add the meal. Please try again."
+    },
+    "RECIPE_FAVORITES": {
+        "REMOVED": "Removed from favorites",
+        "UNDO": "Undo",
+        "RESTORE_ERROR": "Could not restore the recipe. Try again.",
+        "REMOVE_ERROR": "Could not remove the recipe from favorites. Please try again.",
+        "BUSY": "Wait for the current action to finish",
+        "NUTRITION_LABEL": "Proteins: {{proteins}} g; fats: {{fats}} g; carbs: {{carbs}} g; fiber: {{fiber}} g",
+        "TITLE": "Favorite recipes",
+        "OPEN": "Favorites",
+        "SEARCH": "Search by name or ingredients",
+        "LOADING": "Loading favorites…",
+        "LOAD_ERROR": "Could not load favorites.",
+        "RETRY": "Retry",
+        "NO_RESULTS": "No matches. Try another search.",
+        "EMPTY": "No favorite recipes yet",
+        "KCAL": "kcal",
+        "ADD": "Add",
+        "ADDING": "Adding recipe…",
+        "ADD_ERROR": "Could not add the recipe. Please try again."
     }
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -321,6 +322,54 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         Assert.NotNull(byId);
         Assert.Equal(favorite.Id, Assert.Single(all).Id);
+    }
+
+    [RequiresDockerFact]
+    public async Task FavoriteRecipePage_PreservesVisibilitySearchPagingAndStepImages() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"favorite-page-{Guid.NewGuid():N}@example.com", "hash");
+        var other = User.Create($"favorite-other-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(owner.Id, "Rice_100%", MeasurementUnit.G, 100, 100, 130, 2.7, 0.3, 28, 0.4, 0);
+        var first = Recipe.Create(owner.Id, "First bowl", 2);
+        first.SetManualNutrition(500, 20, 10, 30, 7.5, 0);
+        first.AddStep(2, "Serve", imageUrl: "https://example.com/second.jpg");
+        first.AddStep(1, "Cook", imageUrl: "https://example.com/first.jpg").AddProductIngredient(product.Id, 100);
+        var second = Recipe.Create(other.Id, "Public bowl", 1, visibility: Visibility.Public);
+        var hidden = Recipe.Create(other.Id, "Private bowl", 1, visibility: Visibility.Private);
+        var privateProduct = Product.Create(other.Id, "Hidden ingredient", MeasurementUnit.G, 100, 100, 100, 1, 1, 1, 1, 0, visibility: Visibility.Private);
+        second.AddStep(1, "Mix").AddProductIngredient(privateProduct.Id, 100);
+        context.Products.Add(privateProduct);
+        context.Users.AddRange(owner, other);
+        context.Products.Add(product);
+        context.Recipes.AddRange(first, second, hidden);
+        context.FavoriteRecipes.AddRange(FavoriteRecipe.Create(owner.Id, first.Id, "Dinner"),
+            FavoriteRecipe.Create(owner.Id, second.Id), FavoriteRecipe.Create(owner.Id, hidden.Id), FavoriteRecipe.Create(other.Id, first.Id));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var query = new FavoriteRecipeQuery(context);
+        (IReadOnlyList<FavoriteRecipeReadModel> pageOne, int total) = await query.GetPageReadModelsAsync(owner.Id, 1, 1, search: null);
+        (IReadOnlyList<FavoriteRecipeReadModel> pageTwo, _) = await query.GetPageReadModelsAsync(owner.Id, 2, 1, search: null);
+        Assert.Equal(2, total);
+        Assert.NotEqual(Assert.Single(pageOne).Id, Assert.Single(pageTwo).Id);
+        (IReadOnlyList<FavoriteRecipeReadModel> matched, int matchedTotal) = await query.GetPageReadModelsAsync(owner.Id, 1, 10, " rice_100% ");
+        FavoriteRecipeReadModel match = Assert.Single(matched);
+        Assert.Equal(1, matchedTotal);
+        Assert.Equal(first.Id.Value, match.RecipeId);
+        Assert.Equal("https://example.com/first.jpg", match.ImageUrl);
+        Assert.Equal(7.5, match.TotalFiber);
+        Assert.Equal(new[] { "Rice_100%" }, match.IngredientNames);
+        (IReadOnlyList<FavoriteRecipeReadModel> empty, _) = await query.GetPageReadModelsAsync(owner.Id, 1, 10, "missing%");
+        Assert.Empty(empty);
+        (IReadOnlyList<FavoriteRecipeReadModel> preview, int countOnly) = await query.GetPageReadModelsAsync(owner.Id, 1, 0, search: null);
+        Assert.Empty(preview);
+        Assert.Equal(2, countOnly);
+        IReadOnlyList<FavoriteRecipeReadModel> selected = await query.GetByRecipeIdsReadModelsAsync(owner.Id, [first.Id, hidden.Id]);
+        Assert.Equal(first.Id.Value, Assert.Single(selected).RecipeId);
+        (IReadOnlyList<FavoriteRecipeReadModel> hiddenIngredient, _) = await query.GetPageReadModelsAsync(owner.Id, 1, 10, "Hidden ingredient");
+        Assert.Empty(hiddenIngredient);
+        IReadOnlyList<FavoriteRecipeReadModel> publicRecipe = await query.GetByRecipeIdsReadModelsAsync(owner.Id, [second.Id]);
+        Assert.Empty(Assert.Single(publicRecipe).IngredientNames);
+        Assert.Empty(context.ChangeTracker.Entries());
     }
 
     private static async Task<IReadOnlyList<RecipeId>> GetRecipeIdsAsync(

@@ -34,6 +34,12 @@ public static class FavoriteRecipeMappings {
             favorite.TotalCalories,
             favorite.Servings,
             totalTime > 0 ? totalTime : null,
-            favorite.IngredientCount);
+            favorite.IngredientCount) {
+            TotalProteins = favorite.TotalProteins,
+            TotalFats = favorite.TotalFats,
+            TotalCarbs = favorite.TotalCarbs,
+            TotalFiber = favorite.TotalFiber,
+            IngredientNames = favorite.IngredientNames,
+        };
     }
 }

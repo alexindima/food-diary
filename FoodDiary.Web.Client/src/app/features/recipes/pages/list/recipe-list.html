@@ -83,37 +83,42 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (!isMobileView()) {
-            <div class="recipe-list__desktop-search" data-tour-id="recipe-list-search">
-                <form class="recipe-list__search-form recipe-list__search-form--desktop" [formRoot]="searchForm">
-                    <fd-ui-input
-                        class="recipe-list__search-input"
-                        prefixIcon="search"
-                        [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
-                        [formField]="searchForm.search"
-                        [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                        [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
-                        [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                        (suffixButtonClicked)="clearSearch()"
-                    />
-                </form>
-            </div>
-        } @else {
-            <div class="recipe-list__mobile-search recipe-list__mobile-search--open" data-tour-id="recipe-list-search">
-                <form class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
-                    <fd-ui-input
-                        class="recipe-list__search-input"
-                        prefixIcon="search"
-                        [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
-                        [formField]="searchForm.search"
-                        [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                        [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
-                        [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                        (suffixButtonClicked)="clearSearch()"
-                    />
-                </form>
-            </div>
-        }
+        <div class="recipe-list__search-toolbar">
+            @if (!isMobileView()) {
+                <div class="recipe-list__desktop-search" data-tour-id="recipe-list-search">
+                    <form class="recipe-list__search-form recipe-list__search-form--desktop" [formRoot]="searchForm">
+                        <fd-ui-input
+                            class="recipe-list__search-input"
+                            prefixIcon="search"
+                            [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
+                            [formField]="searchForm.search"
+                            [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
+                            [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
+                            [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                            (suffixButtonClicked)="clearSearch()"
+                        />
+                    </form>
+                </div>
+            } @else {
+                <div class="recipe-list__mobile-search recipe-list__mobile-search--open" data-tour-id="recipe-list-search">
+                    <form class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
+                        <fd-ui-input
+                            class="recipe-list__search-input"
+                            prefixIcon="search"
+                            [suffixButtonIcon]="searchModel().search?.length ? 'close' : undefined"
+                            [formField]="searchForm.search"
+                            [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
+                            [suffixButtonAriaLabel]="'RECIPE_LIST.SEARCH_CLEAR' | translate"
+                            [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                            (suffixButtonClicked)="clearSearch()"
+                        />
+                    </form>
+                </div>
+            }
+            <fd-ui-button data-tour-id="recipe-list-favorites" variant="secondary" fill="outline" icon="star" (click)="toggleFavorites()">
+                {{ 'RECIPE_FAVORITES.OPEN' | translate }} · {{ favoriteTotalCount() }}
+            </fd-ui-button>
+        </div>
         @if (hasActiveFilters()) {
             <section class="recipe-list__active-filters" [attr.aria-label]="'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate">
                 <span class="recipe-list__active-filters-label">{{ 'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
@@ -145,19 +150,6 @@
                 <fd-skeleton-card />
             </div>
         } @else {
-            <fd-recipe-list-favorites
-                [favorites]="favorites()"
-                [favoriteTotalCount]="favoriteTotalCount()"
-                [isFavoritesOpen]="isFavoritesOpen()"
-                [isFavoritesLoadingMore]="isFavoritesLoadingMore()"
-                [favoriteLoadingIds]="favoriteLoadingIds()"
-                (favoritesToggle)="toggleFavorites()"
-                (favoritesLoadMore)="loadFavorites()"
-                (favoriteOpen)="openFavoriteRecipe($event)"
-                (favoriteAddToMeal)="addFavoriteRecipeToMeal($event)"
-                (favoriteRemove)="removeFavorite($event)"
-            />
-
             <fd-recipe-list-results
                 data-tour-id="recipe-list-results"
                 [recentRecipeItems]="recentRecipeItems()"

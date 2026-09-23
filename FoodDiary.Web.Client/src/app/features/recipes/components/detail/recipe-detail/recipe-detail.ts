@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { type FieldTree, form } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -9,11 +8,6 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
-import {
-    NutritionEditorComponent,
-    type NutritionFormModel,
-    type NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import type { Recipe } from '../../../models/recipe.data';
@@ -36,7 +30,6 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
         FdUiDialogHeaderDirective,
         FdUiButtonComponent,
         FdUiTabsComponent,
-        NutritionEditorComponent,
         RecipeDetailSummaryComponent,
         RecipeCookModeComponent,
     ],
@@ -63,14 +56,11 @@ export class RecipeDetailComponent {
     protected readonly macroBlocks: MacroBlock[];
     protected readonly macroSummaryBlocks: MacroBlock[];
     protected readonly ingredientPreview: IngredientPreviewItem[];
-    protected readonly nutritionForm: FieldTree<NutritionFormModel>;
-    protected readonly macroBarState: NutritionMacroState;
     protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
         { value: 'cook', labelKey: 'RECIPE_DETAIL.TABS.COOK' },
-        { value: 'nutrients', labelKey: 'RECIPE_DETAIL.TABS.NUTRIENTS' },
     ];
-    protected activeTab: 'summary' | 'cook' | 'nutrients' = 'summary';
+    protected activeTab: 'summary' | 'cook' = 'summary';
     protected readonly totalTime: number | null;
     protected readonly ingredientCount: number;
     protected readonly isDeleteDisabled: boolean;
@@ -83,11 +73,13 @@ export class RecipeDetailComponent {
     public constructor() {
         const recipe = inject<Recipe>(FD_UI_DIALOG_DATA);
         const translateService = inject(TranslateService);
-        const viewModel = buildRecipeDetailViewModel(
-            recipe,
-            translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'),
-            inject(ChartColorsService).palette,
-        );
+        const viewModel = buildRecipeDetailViewModel(recipe, translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'), {
+            ...inject(ChartColorsService).palette,
+            proteins: 'var(--fd-color-primary-600)',
+            fats: 'var(--fd-color-orange-500)',
+            carbs: 'var(--fd-color-sky-500)',
+            fiber: 'var(--fd-color-rose-500)',
+        });
 
         this.recipe = recipe;
         this.calories = viewModel.calories;
@@ -101,8 +93,6 @@ export class RecipeDetailComponent {
         this.macroBlocks = viewModel.macroBlocks;
         this.macroSummaryBlocks = viewModel.macroSummaryBlocks;
         this.ingredientPreview = viewModel.ingredientPreview;
-        this.nutritionForm = form(signal(viewModel.nutritionModel));
-        this.macroBarState = viewModel.macroBarState;
         this.totalTime = viewModel.totalTime;
         this.ingredientCount = viewModel.ingredientCount;
         this.isDeleteDisabled = !recipe.isOwnedByCurrentUser || recipe.usageCount > 0;
@@ -118,7 +108,7 @@ export class RecipeDetailComponent {
     }
 
     protected onTabChange(tab: string): void {
-        if (tab === 'summary' || tab === 'cook' || tab === 'nutrients') {
+        if (tab === 'summary' || tab === 'cook') {
             this.activeTab = tab;
         }
     }

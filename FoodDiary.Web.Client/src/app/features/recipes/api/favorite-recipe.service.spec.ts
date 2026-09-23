@@ -28,6 +28,35 @@ afterEach(() => {
 });
 
 describe('FavoriteRecipeService', () => {
+    it('requests a trimmed search and preserves pagination and nutrition metadata', () => {
+        const data = [{ ...createFavoriteRecipe(), totalFiber: 8, ingredientNames: ['Rice'] }];
+        const expected = { data, page: 2, limit: 10, totalItems: 12, totalPages: 2 };
+        service.getPage(2, undefined, '  Rice  ').subscribe(result => {
+            expect(result).toEqual(expected);
+        });
+        const request = httpMock.expectOne(req => req.url === `${BASE_URL}/page`);
+        expect(request.request.params.get('page')).toBe('2');
+        expect(request.request.params.get('limit')).toBe('10');
+        expect(request.request.params.get('search')).toBe('Rice');
+        request.flush(expected);
+    });
+
+    it('propagates page errors instead of presenting an empty favorites list', () => {
+        let failed = false;
+        service.getPage(1).subscribe({
+            next: () => {
+                throw new Error('An HTTP failure must not become an empty page');
+            },
+            error: () => {
+                failed = true;
+            },
+        });
+        httpMock
+            .expectOne(req => req.url === `${BASE_URL}/page`)
+            .flush('Unavailable', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        expect(failed).toBe(true);
+    });
+
     it('gets all favorite recipes', () => {
         const favorites = [createFavoriteRecipe()];
 

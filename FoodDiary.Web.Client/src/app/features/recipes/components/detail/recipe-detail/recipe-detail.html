@@ -18,14 +18,19 @@
                 />
                 <h2 class="recipe-detail__title">{{ recipe.name }}</h2>
             </div>
-            <button type="button" class="recipe-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
-                <span class="material-icons" aria-hidden="true">close</span>
-            </button>
+            <fd-ui-button
+                appearance="plain-icon"
+                variant="secondary"
+                fill="text"
+                icon="close"
+                [ariaLabel]="'COMMON.CLOSE' | translate"
+                (click)="close()"
+            />
         </div>
-        <fd-ui-tabs class="recipe-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
     </header>
 
     <div class="recipe-detail fd-stack fd-gap-lg">
+        <fd-ui-tabs [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
         @switch (activeTab) {
             @case ('summary') {
                 <fd-recipe-detail-summary
@@ -39,14 +44,6 @@
                     [ingredientPreview]="ingredientPreview"
                 />
             }
-            @case ('nutrients') {
-                <fd-nutrition-editor
-                    class="recipe-detail__nutrients"
-                    [form]="nutritionForm"
-                    [macroState]="macroBarState"
-                    [readonly]="true"
-                />
-            }
             @case ('cook') {
                 <fd-recipe-cook-mode [recipe]="recipe" (addToMeal)="onAddToMeal()" />
             }
@@ -58,6 +55,9 @@
             <span class="recipe-detail__warning fd-ui-body-sm">{{ warningMessage | translate }}</span>
         }
         <div class="recipe-detail__actions fd-ui-actions fd-ui-actions--end">
+            <fd-ui-button size="md" variant="secondary" icon="restaurant" (click)="onAddToMeal()">{{
+                'RECIPE_CARD.ADD_TO_MEAL' | translate
+            }}</fd-ui-button>
             @if (canModify) {
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
@@ -65,6 +65,7 @@
                 <fd-ui-button
                     size="md"
                     variant="danger"
+                    fill="text"
                     icon="delete"
                     [disabled]="isDeleteDisabled"
                     [disabledReason]="isDeleteDisabled && warningMessage ? (warningMessage | translate) : null"

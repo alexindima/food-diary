@@ -1,7 +1,7 @@
 <fd-entity-card
     imageIcon="restaurant_menu"
     [backgroundKey]="recipe().id ?? ''"
-    [imageUrl]="imageUrl()"
+    [imageUrl]="displayImage()"
     [imageAlt]="recipe().name"
     [previewable]="hasPreviewImage()"
     [showFavorite]="canToggleFavorite()"
@@ -16,6 +16,8 @@
     [quality]="quality()"
     [calories]="recipe().totalCalories ?? 0"
     [showAction]="true"
+    [compactAction]="true"
+    [actionLabel]="'RECIPE_CARD.TO_DIARY' | translate"
     [actionAriaLabel]="'RECIPE_CARD.ADD_TO_MEAL' | translate"
     (open)="openCard()"
     (preview)="previewCardImage()"

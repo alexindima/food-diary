@@ -72,14 +72,7 @@ export class RecipeService extends ApiService {
         this.applyRecipeFilters(params, filters);
 
         return this.get<RecipeOverview>('overview', params).pipe(
-            catchError((error: unknown) =>
-                fallbackApiError('Query recipe overview error', error, {
-                    recentItems: [],
-                    favoriteItems: [],
-                    favoriteTotalCount: 0,
-                    allRecipes: { data: [], page, limit, totalPages: 0, totalItems: 0 },
-                }),
-            ),
+            catchError((error: unknown) => rethrowApiError('Query recipe overview error', error)),
         );
     }
 

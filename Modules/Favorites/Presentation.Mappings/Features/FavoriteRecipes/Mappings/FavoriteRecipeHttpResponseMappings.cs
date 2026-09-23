@@ -16,6 +16,12 @@ public static class FavoriteRecipeHttpResponseMappings {
                     model.TotalCalories,
                     model.Servings,
                     model.TotalTimeMinutes,
-                    model.IngredientCount);
+                    model.IngredientCount) {
+                    TotalProteins = model.TotalProteins,
+                    TotalFats = model.TotalFats,
+                    TotalCarbs = model.TotalCarbs,
+                    TotalFiber = model.TotalFiber,
+                    IngredientNames = model.IngredientNames,
+                };
     }
 }

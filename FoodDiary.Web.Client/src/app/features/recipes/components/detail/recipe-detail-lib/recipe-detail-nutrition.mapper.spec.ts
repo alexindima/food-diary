@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
-import { RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT, RECIPE_DETAIL_MACRO_SUMMARY_LIMIT } from './recipe-detail.config';
+const RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT = 5;
+const RECIPE_DETAIL_MACRO_SUMMARY_LIMIT = 4;
 import { buildRecipeDetailViewModel } from './recipe-detail-nutrition.mapper';
 
 const TOTAL_CALORIES = 500;
@@ -80,7 +81,7 @@ describe('buildRecipeDetailViewModel nutrition', () => {
 });
 
 describe('buildRecipeDetailViewModel preview', () => {
-    it('builds ingredient preview with limits, units, and unknown fallback', () => {
+    it('keeps every ingredient for expandable preview with units and unknown fallback', () => {
         const recipe = createRecipe({
             steps: [
                 {
@@ -103,7 +104,7 @@ describe('buildRecipeDetailViewModel preview', () => {
 
         const viewModel = buildRecipeDetailViewModel(recipe, 'Unknown ingredient');
 
-        expect(viewModel.ingredientPreview).toHaveLength(RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT);
+        expect(viewModel.ingredientPreview).toHaveLength(RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT + 1);
         expect(viewModel.ingredientPreview[0]).toEqual({
             name: 'Unknown ingredient',
             amount: 1,

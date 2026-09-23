@@ -272,3 +272,22 @@
         }
     }
 }
+
+.recipe-list__search-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+    > :first-child {
+        flex: 1;
+        min-width: 0;
+    }
+    > fd-ui-button {
+        flex-shrink: 0;
+    }
+    @media #{variables.$media-compact} {
+        flex-wrap: wrap;
+        > :first-child {
+            flex-basis: 100%;
+        }
+    }
+}

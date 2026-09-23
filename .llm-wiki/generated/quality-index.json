@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5525,
+    "productionFiles": 5535,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 953,
-    "criticalSymbolsWithTestReferences": 915,
+    "criticalSymbols": 956,
+    "criticalSymbolsWithTestReferences": 918,
     "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 10
   },
@@ -4266,11 +4266,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 9,
+      "nonBlankLines": 75,
+      "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.44
+      "structuralRiskScore": 55.5
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
@@ -7746,11 +7746,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "nonBlankLines": 137,
-      "decisionPoints": 26,
+      "nonBlankLines": 153,
+      "decisionPoints": 30,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.74
+      "structuralRiskScore": 48.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/skeleton-card/skeleton-card.ts",
@@ -11394,11 +11394,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "nonBlankLines": 28,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe-api.tokens.ts",
@@ -11410,11 +11410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "nonBlankLines": 110,
+      "nonBlankLines": 103,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.7
+      "structuralRiskScore": 15.56
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
@@ -11426,27 +11426,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.ts",
-      "nonBlankLines": 13,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail-nutrition.mapper.ts",
-      "nonBlankLines": 177,
-      "decisionPoints": 29,
+      "nonBlankLines": 172,
+      "decisionPoints": 30,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 47.04
+      "structuralRiskScore": 48.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail.config.ts",
-      "nonBlankLines": 3,
+      "nonBlankLines": 1,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail.types.ts",
@@ -11466,11 +11466,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
-      "nonBlankLines": 142,
-      "decisionPoints": 9,
+      "nonBlankLines": 132,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.34
+      "structuralRiskScore": 14.64
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
+      "nonBlankLines": 50,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
@@ -11609,6 +11617,14 @@
       "structuralRiskScore": 3.42
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
+      "nonBlankLines": 189,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 32.28
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.ts",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -11649,6 +11665,14 @@
       "structuralRiskScore": 14.84
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade.ts",
+      "nonBlankLines": 70,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.9
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-image.util.ts",
       "nonBlankLines": 6,
       "decisionPoints": 3,
@@ -11658,11 +11682,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
-      "nonBlankLines": 285,
-      "decisionPoints": 26,
+      "nonBlankLines": 315,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 44.7
+      "structuralRiskScore": 48.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.ts",
@@ -11682,11 +11706,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/models/recipe.data.ts",
-      "nonBlankLines": 133,
+      "nonBlankLines": 138,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.66
+      "structuralRiskScore": 2.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.ts",
@@ -11706,11 +11730,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts",
-      "nonBlankLines": 338,
+      "nonBlankLines": 343,
       "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 62.26
+      "structuralRiskScore": 62.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.types.ts",
@@ -25714,11 +25738,11 @@
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
@@ -25754,11 +25778,11 @@
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Favorites/Application/Common/RequiredIdParser.cs",
@@ -26090,11 +26114,35 @@
     },
     {
       "path": "Modules/Favorites/Application/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 40,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.18
+      "structuralRiskScore": 8.3
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.94
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
     },
     {
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
@@ -26127,6 +26175,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.72
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQueryHandler.cs",
@@ -26266,11 +26322,11 @@
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
@@ -26279,6 +26335,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/FavoriteRecipeOverviewModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQuery.cs",
@@ -26434,11 +26506,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteProducts/Mappings/FavoriteProductHttpResponseMappings.cs",
@@ -26450,11 +26522,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpResponseMappings.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Favorites/Presentation/Extensions/FavoritesPresentationServiceCollectionExtensions.cs",
@@ -26530,19 +26602,19 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.66
+      "structuralRiskScore": 2.78
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.48
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/AddFavoriteRecipeHttpRequest.cs",
@@ -26551,6 +26623,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
@@ -36466,11 +36546,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "nonBlankLines": 138,
+      "nonBlankLines": 133,
       "decisionPoints": 17,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.26
+      "structuralRiskScore": 30.16
     },
     {
       "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
@@ -50151,6 +50231,18 @@
       "coveredThrough": []
     },
     {
+      "name": "GetFavoriteRecipePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "line": 12,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "GetFavoriteRecipesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
@@ -51420,14 +51512,26 @@
       "coveredThrough": []
     },
     {
+      "name": "ReadFavoriteRecipeOverviewQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/ReadFavoriteRecipeOverviewTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ReadFavoriteRecipesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 4,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
-        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
@@ -52890,6 +52994,18 @@
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetFavoriteRecipePageQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryValidator.cs",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

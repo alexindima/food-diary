@@ -1,4 +1,4 @@
-<fd-media-card class="entity-card" (click)="openCard()">
+<fd-media-card class="entity-card" [class.entity-card--compact-action]="compactAction()" (click)="openCard()">
     <span fdMediaCardContent class="entity-card__background" aria-hidden="true" [style.mask-image]="backgroundImage()"></span>
     <button fdMediaCardContent type="button" class="entity-card__open-button" [attr.aria-label]="title()"></button>
     @let previewInteraction = previewInteractionState();
@@ -49,7 +49,23 @@
         [quality]="normalizedQuality()"
     />
 
-    @if (showAction()) {
+    @if (showAction() && compactAction()) {
+        <button
+            fdMediaCardContent
+            type="button"
+            class="entity-card__compact-action fd-ui-body-sm"
+            [attr.aria-label]="actionAriaLabel()"
+            [fdUiHint]="actionAriaLabel()"
+            (click)="$event.stopPropagation(); emitCardAction()"
+            (keydown.enter)="stopCardKeyboardEvent($event)"
+            (keydown.space)="stopCardKeyboardEvent($event)"
+        >
+            <fd-ui-icon [name]="actionIcon()" />
+            @if (actionLabel()) {
+                <span>{{ actionLabel() }}</span>
+            }
+        </button>
+    } @else if (showAction()) {
         <fd-entity-card-actions
             fdMediaCardActions
             [actionIcon]="actionIcon()"

@@ -6,7 +6,7 @@ using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipes;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipeOverview;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
@@ -54,12 +54,6 @@ public sealed class GetRecipesOverviewQueryHandler(
             cancellationToken).ConfigureAwait(false);
 
         var allRecipes = items.ToList();
-        IReadOnlyList<FavoriteRecipeModel> allFavorites = await sender.Send(new ReadFavoriteRecipesQuery(options.UserId), cancellationToken).ConfigureAwait(false);
-        var favoriteItems = allFavorites
-            .Take(options.FavoriteLimit)
-            .ToList();
-        var favoriteLookup = allFavorites.ToDictionary(ToFavoriteRecipeId);
-
         IReadOnlyList<RecipeOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
             options.UserId,
             options.RecentLimit,
@@ -70,9 +64,9 @@ public sealed class GetRecipesOverviewQueryHandler(
             .Select(x => x.Id)
             .Concat(recentItems.Select(x => x.Id))
             .Distinct()];
-        var favoritesByRecipeId = favoriteLookup
-            .Where(pair => favoriteRecipeIds.Contains(pair.Key))
-            .ToDictionary();
+        FavoriteRecipeOverviewModel favorites = await sender.Send(new ReadFavoriteRecipeOverviewQuery(options.UserId,
+            favoriteRecipeIds, options.FavoriteLimit), cancellationToken).ConfigureAwait(false);
+        var favoritesByRecipeId = favorites.Items.ToDictionary(ToFavoriteRecipeId);
 
         PagedResponse<RecipeModel> allPaged = CreatePagedRecipes(
             allRecipes,
@@ -81,7 +75,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             totalItems);
         RecipeModel[] recentResponses = ToRecipeModels(recentItems, favoritesByRecipeId);
 
-        return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
+        return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favorites.Preview, favorites.Total));
     }
 
     private static RecipeId ToFavoriteRecipeId(FavoriteRecipeModel favorite) =>
@@ -93,7 +87,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             PaginationPolicy.NormalizePage(query.Page),
             PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1),
             Math.Clamp(query.RecentLimit, 1, 50),
-            Math.Clamp(query.FavoriteLimit, 1, 50),
+            Math.Clamp(query.FavoriteLimit, 0, 50),
             new RecipeQueryFilters(
                 query.Search,
                 query.Category,

@@ -1837,3 +1837,124 @@ test.describe('meal detail and gallery regression', () => {
         });
     }
 });
+
+function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favorite: Record<string, unknown> } {
+    const recipe = {
+        ...createOwnedRecipe(),
+        imageUrl: TEST_IMAGE_URLS[0],
+        isFavorite: true,
+        favoriteRecipeId: 'favorite-1',
+        steps: [
+            {
+                id: 'step-1',
+                stepNumber: 1,
+                instruction: 'Mix and roast.',
+                imageUrl: TEST_IMAGE_URLS[1],
+                ingredients: Array.from({ length: MEAL_DIALOG_ITEM_COUNT }, (_, index) => ({
+                    id: `i-${index}`,
+                    amount: 100,
+                    productName: `Ingredient ${index + 1}`,
+                    productBaseUnit: 'G',
+                })),
+            },
+        ],
+    };
+    const favorite = {
+        id: 'favorite-1',
+        recipeId: 'recipe-1',
+        recipeName: 'Roasted vegetable bowl',
+        name: null,
+        createdAtUtc: '',
+        imageUrl: TEST_IMAGE_URLS[0],
+        servings: 2,
+        totalCalories: 640,
+        totalProteins: 24,
+        totalFats: 18,
+        totalCarbs: 92,
+        totalFiber: 16,
+        ingredientCount: 7,
+        ingredientNames: ['Rice', 'Carrots'],
+    };
+    return { recipe, favorite };
+}
+
+test.describe('recipe redesign regression', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`recipe summary, cooking, photos and favorite undo at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const fixtures = createRecipeRedesignFixtures();
+            const recipe = fixtures.recipe;
+            let favorite = fixtures.favorite;
+            let removed = false;
+            let pageRequests = 0;
+            await page.route('**/api/v1/recipes/overview**', async route =>
+                route.fulfill({
+                    json: {
+                        recentItems: [],
+                        allRecipes: { data: [recipe], page: 1, limit: 10, totalPages: 1, totalItems: 1 },
+                        favoriteItems: [],
+                        favoriteTotalCount: removed ? 0 : 1,
+                    },
+                }),
+            );
+            await page.route('**/api/v1/recipes/recipe-1', async route => route.fulfill({ json: recipe }));
+            await page.route('**/api/v1/favorite-recipes**', async route => {
+                const url = new URL(route.request().url());
+                if (url.pathname.endsWith('/page')) {
+                    pageRequests++;
+                    await route.fulfill({
+                        json: { data: removed ? [] : [favorite], page: 1, limit: 10, totalPages: 1, totalItems: removed ? 0 : 1 },
+                    });
+                } else if (route.request().method() === 'DELETE') {
+                    removed = true;
+                    await route.fulfill({ status: 204 });
+                } else if (route.request().method() === 'POST') {
+                    removed = false;
+                    favorite = { ...favorite, id: 'favorite-restored' };
+                    await route.fulfill({ json: favorite });
+                } else {
+                    await route.fulfill({ json: true });
+                }
+            });
+            await page.goto('/recipes');
+            const card = page.locator('fd-recipe-card').first();
+            await expect(card).toContainText('Ingredient 1');
+            expect(pageRequests).toBe(0);
+            await card.locator('.entity-card__thumb').press('Enter');
+            const gallery = page.locator('fd-ui-image-preview-dialog');
+            await expect(gallery).toContainText('1 / 2');
+            await gallery.press('ArrowRight');
+            await expect(gallery).toContainText('2 / 2');
+            await page.keyboard.press('Escape');
+            await card.locator('.entity-card__open-button').click();
+            const detail = page.locator('fd-recipe-detail');
+            await expect(detail.getByRole('tab')).toHaveCount(2);
+            await expect(detail.locator('.recipe-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT);
+            await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
+            await detail.getByRole('button', { name: /Show 2 more/ }).click();
+            await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_ITEM_COUNT);
+            await page.screenshot({ path: testInfo.outputPath(`recipe-summary-${width}.png`) });
+            await detail.getByRole('tab').nth(1).click();
+            await expect(detail).toContainText('Mix and roast.');
+            await page.keyboard.press('Escape');
+            await page.getByRole('button', { name: /Favorites ·/ }).click();
+            const picker = page.locator('fd-recipe-favorites-picker');
+            await expect(picker).toContainText('Rice, Carrots');
+            const row = picker.locator('fd-favorite-recipe-row');
+            await expect(row.locator('img')).toHaveAttribute('src', TEST_IMAGE_URLS[0]);
+            await row.getByRole('button', { name: 'Remove from favorites', exact: true }).click();
+            await expect(row.getByRole('button', { name: /Undo/ })).toBeVisible();
+            await row.getByRole('button', { name: /Undo/ }).click();
+            await expect(row.getByRole('button', { name: 'Remove from favorites', exact: true })).toBeVisible();
+            await row.getByRole('button', { name: 'Remove from favorites', exact: true }).click();
+            await expect(row.getByRole('button', { name: /Undo/ })).toBeVisible();
+            await row.getByRole('button', { name: /Undo/ }).click();
+            expect(pageRequests).toBe(1);
+            expect(await picker.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`recipe-favorites-${width}.png`) });
+            await page.keyboard.press('Escape');
+        });
+    }
+});

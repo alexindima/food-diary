@@ -154,7 +154,7 @@ fd-entity-card-actions {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--fd-space-xs) var(--fd-space-sm);
     width: 100%;
-    padding: 0 var(--fd-size-control-sm) 0 0;
+    padding: 0 calc(var(--fd-size-control-sm) * var(--entity-card-action-count, 1)) 0 0;
 }
 
 .entity-card__name-row {
@@ -355,7 +355,7 @@ fd-entity-card-actions {
 
     .entity-card__title-block {
         padding-inline-end: var(--fd-size-control-sm);
-        padding: 0 var(--fd-size-control-sm) 0 0;
+        padding: 0 calc(var(--fd-size-control-sm) * var(--entity-card-action-count, 1)) 0 0;
     }
 
     .entity-card__favorite-button {
@@ -493,4 +493,62 @@ fd-entity-card-actions {
 .entity-card__thumb:hover .entity-card__zoom,
 .entity-card__thumb:focus-visible .entity-card__zoom {
     opacity: 1;
+}
+
+.entity-card--compact-action {
+    --entity-card-action-count: 5;
+    .entity-card__favorite-button {
+        right: calc(var(--fd-space-md) + var(--fd-size-control-sm) * 4);
+    }
+}
+.entity-card__compact-action {
+    position: absolute;
+    top: calc(var(--fd-space-md) + (max(24px, var(--fd-size-control-xs)) - var(--fd-size-control-md)) / 2);
+    right: var(--fd-space-md);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--fd-size-control-sm) * 4);
+    height: var(--fd-size-control-md);
+    gap: var(--fd-space-xs);
+    padding: 0;
+    font-family: inherit;
+    white-space: nowrap;
+    border: 0;
+    border-radius: var(--fd-radius-pill);
+    color: var(--fd-color-text);
+    background: transparent;
+    cursor: pointer;
+    fd-ui-icon {
+        color: var(--fd-color-primary-600);
+    }
+    &:hover {
+        color: var(--fd-color-primary-600);
+        background: var(--fd-bg-surface-raised);
+    }
+    &:focus-visible {
+        outline: var(--fd-outline-focus);
+    }
+}
+
+@container (max-width: 760px) {
+    .entity-card--compact-action fd-entity-card-body {
+        --entity-card-action-count: 1;
+    }
+    .entity-card--compact-action .entity-card__favorite-button {
+        right: var(--fd-space-md);
+    }
+    .entity-card__compact-action {
+        position: relative;
+        top: auto;
+        right: auto;
+        grid-column: 1 / -1;
+        justify-self: end;
+    }
+}
+
+.entity-card__placeholder-icon {
+    --fd-icon-size: var(--entity-card-placeholder-size, var(--fd-size-icon-lg));
+    color: var(--fd-color-text-muted);
 }

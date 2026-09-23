@@ -10988,6 +10988,78 @@
       ]
     },
     {
+      "Path": "/api/v{version}/favorite-recipes/page",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/FavoriteRecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/FavoriteRecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/FavoriteRecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 200
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/favorite-recipes/{id}",
       "Operations": [
         {
@@ -14313,7 +14385,7 @@
               "Type": "integer",
               "Format": "int32",
               "Default": "10",
-              "Minimum": 1,
+              "Minimum": 0,
               "Maximum": 50
             },
             {
@@ -26588,6 +26660,13 @@
           "Nullable": false
         },
         {
+          "Name": "ingredientNames",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
           "Name": "name",
           "Required": false,
           "Type": "string",
@@ -26621,11 +26700,79 @@
           "Nullable": true
         },
         {
+          "Name": "totalCarbs",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "totalFats",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "totalFiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "totalProteins",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
           "Name": "totalTimeMinutes",
           "Required": false,
           "Type": "integer",
           "Format": "int32",
           "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "FavoriteRecipeHttpResponsePagedHttpResponse",
+      "Properties": [
+        {
+          "Name": "data",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/FavoriteRecipeHttpResponse"
+        },
+        {
+          "Name": "limit",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "page",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalPages",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
         }
       ]
     },

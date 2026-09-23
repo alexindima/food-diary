@@ -11,4 +11,10 @@ public sealed record FavoriteRecipeReadModel(
     int Servings,
     int? PrepTime,
     int? CookTime,
-    int IngredientCount);
+    int IngredientCount) {
+    public double TotalProteins { get; init; }
+    public double TotalFats { get; init; }
+    public double TotalCarbs { get; init; }
+    public double TotalFiber { get; init; }
+    public IReadOnlyList<string> IngredientNames { get; init; } = [];
+}

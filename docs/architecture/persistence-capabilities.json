@@ -1520,9 +1520,10 @@
       "module": "ReadModelComposition",
       "capabilities": [
         "entity:FavoriteRecipe",
+        "entity:Product",
         "entity:Recipe"
       ],
-      "reason": "Read-only SQL visibility predicates return authorized favorite IDs and existing bounded immutable DTOs; no aggregate tracking."
+      "reason": "Read-only owner/public visibility predicates, SQL paging and ingredient-name search compose FavoriteRecipe, Recipe and Product into bounded immutable DTOs; no aggregate tracking or writes."
     },
     "Modules/Favorites/Infrastructure/ModuleRegistration.cs": {
       "module": "Favorites",

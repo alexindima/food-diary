@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 98,
+    "selectorUnreferencedComponents": 100,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 10
   },
@@ -779,6 +779,22 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.spec.ts"
+    },
+    {
+      "class": "RecipeFavoritesPickerComponent",
+      "selector": "fd-recipe-favorites-picker",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts"
+    },
+    {
+      "class": "RecipeListFavoritesComponent",
+      "selector": "fd-recipe-list-favorites",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.spec.ts"
     },
     {
       "class": "RecipeListFiltersDialogComponent",
@@ -4604,6 +4620,65 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
       "inputs": [],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "FavoriteRecipeRowComponent",
+      "selector": "fd-favorite-recipe-row",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "FavoriteRecipe",
+          "required": true
+        },
+        {
+          "name": "removed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoring",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoreFailed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "removing",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "remove",
+          "type": "FavoriteRecipe"
+        },
+        {
+          "name": "restore",
+          "type": "FavoriteRecipe"
+        },
+        {
+          "name": "add",
+          "type": "FavoriteRecipe"
+        }
+      ],
       "specPath": null
     },
     {

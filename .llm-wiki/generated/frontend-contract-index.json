@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 456,
-    "componentsWithoutDirectSpecs": 126,
-    "inputs": 1443,
-    "outputs": 477,
+    "components": 458,
+    "componentsWithoutDirectSpecs": 127,
+    "inputs": 1450,
+    "outputs": 480,
     "apiCalls": 267,
-    "templatesWithTranslations": 316,
-    "translationKeys": 1855,
-    "consumerEdges": 1115,
+    "templatesWithTranslations": 318,
+    "translationKeys": 1868,
+    "consumerEdges": 1120,
     "consumedComponents": 294,
-    "unconsumedComponents": 161
+    "unconsumedComponents": 163
   },
   "components": [
     {
@@ -10023,6 +10023,65 @@
       "specPath": null
     },
     {
+      "class": "FavoriteRecipeRowComponent",
+      "selector": "fd-favorite-recipe-row",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "FavoriteRecipe",
+          "required": true
+        },
+        {
+          "name": "removed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoring",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoreFailed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "removing",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "remove",
+          "type": "FavoriteRecipe"
+        },
+        {
+          "name": "restore",
+          "type": "FavoriteRecipe"
+        },
+        {
+          "name": "add",
+          "type": "FavoriteRecipe"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "RecipeAddComponent",
       "selector": "app-recipe-add",
       "feature": "recipes",
@@ -10171,6 +10230,16 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-edit/recipe-edit.spec.ts"
+    },
+    {
+      "class": "RecipeFavoritesPickerComponent",
+      "selector": "fd-recipe-favorites-picker",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts"
     },
     {
       "class": "RecipeListComponent",
@@ -15981,7 +16050,7 @@
       "responseType": "FavoriteRecipe[]",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 14,
+      "line": 23,
       "publicMethod": "getAll",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -15993,7 +16062,7 @@
       "responseType": "boolean",
       "urlExpression": "`check/${recipeId}`",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 20,
+      "line": 29,
       "publicMethod": "isFavorite",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16005,7 +16074,7 @@
       "responseType": "FavoriteRecipe",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 26,
+      "line": 35,
       "publicMethod": "add",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16017,7 +16086,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 32,
+      "line": 41,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16065,7 +16134,7 @@
       "responseType": "Recipe",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 87,
+      "line": 80,
       "publicMethod": "create",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16077,7 +16146,7 @@
       "responseType": "Recipe",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 116,
+      "line": 109,
       "publicMethod": "update",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16089,7 +16158,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 120,
+      "line": 113,
       "publicMethod": "deleteById",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16101,7 +16170,7 @@
       "responseType": "Recipe",
       "urlExpression": "`${id}/duplicate`",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 124,
+      "line": 117,
       "publicMethod": "duplicate",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -20335,10 +20404,7 @@
         "PRODUCT_CARD.QUALITY_SCORE",
         "RECIPE_DETAIL.MIN",
         "RECIPE_DETAIL.SUMMARY.CALORIES",
-        "RECIPE_DETAIL.SUMMARY.COMMENT",
-        "RECIPE_DETAIL.SUMMARY.INGREDIENTS",
-        "RECIPE_DETAIL.SUMMARY.SERVINGS",
-        "RECIPE_DETAIL.SUMMARY.TOTAL_TIME"
+        "RECIPE_DETAIL.SUMMARY.COMMENT"
       ]
     },
     {
@@ -20347,9 +20413,25 @@
       "keys": [
         "COMMON.CLOSE",
         "DISABLED_HINTS.OPERATION_BUSY",
+        "RECIPE_CARD.ADD_TO_MEAL",
         "RECIPE_DETAIL.DELETE_BUTTON",
         "RECIPE_DETAIL.DUPLICATE_BUTTON",
         "RECIPE_DETAIL.EDIT_BUTTON"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
+      "keys": [
+        "RECIPE_DETAIL.REMOVE_FAVORITE",
+        "RECIPE_FAVORITES.ADD",
+        "RECIPE_FAVORITES.ADDING",
+        "RECIPE_FAVORITES.BUSY",
+        "RECIPE_FAVORITES.KCAL",
+        "RECIPE_FAVORITES.NUTRITION_LABEL",
+        "RECIPE_FAVORITES.UNDO",
+        "RECIPE_LIST.FAVORITE_MINUTES",
+        "RECIPE_LIST.FAVORITE_SERVINGS"
       ]
     },
     {
@@ -20470,6 +20552,17 @@
     },
     {
       "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "keys": [
+        "RECIPE_FAVORITES.LOADING",
+        "RECIPE_FAVORITES.LOAD_ERROR",
+        "RECIPE_FAVORITES.RETRY",
+        "RECIPE_FAVORITES.SEARCH",
+        "RECIPE_FAVORITES.TITLE"
+      ]
+    },
+    {
+      "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "keys": [
         "COMMON.ADD",
@@ -20493,6 +20586,7 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
       "keys": [
+        "RECIPE_FAVORITES.OPEN",
         "RECIPE_LIST.ACTIVE_FILTERS_EDIT",
         "RECIPE_LIST.ACTIVE_FILTERS_LABEL",
         "RECIPE_LIST.ADD_RECIPE_BUTTON",
@@ -23893,6 +23987,28 @@
       ]
     },
     {
+      "component": "FavoriteRecipeRowComponent",
+      "selector": "fd-favorite-recipe-row",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "loading",
+        "recipe",
+        "removed",
+        "removing",
+        "restoreFailed",
+        "restoring"
+      ],
+      "outputsHandled": [
+        "add",
+        "remove",
+        "restore"
+      ]
+    },
+    {
       "component": "FavoritesSectionComponent",
       "selector": "fd-favorites-section",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/favorites-section/favorites-section.ts",
@@ -26937,7 +27053,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
-      "occurrences": 4,
+      "occurrences": 6,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -26947,6 +27063,25 @@
         "icon",
         "iconSize",
         "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "ariaLabel",
+        "ariaPressed",
+        "disabled",
+        "disabledReason",
+        "fill",
+        "icon",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -27040,6 +27175,19 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -27072,7 +27220,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
-      "occurrences": 7,
+      "occurrences": 8,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29587,6 +29735,20 @@
       "component": "FdUiDialogShellComponent",
       "selector": "fd-ui-dialog-shell",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "dismissible",
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogShellComponent",
+      "selector": "fd-ui-dialog-shell",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
       "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
       "occurrences": 1,
@@ -31814,6 +31976,22 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "maxLength"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -32816,6 +32994,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",
@@ -35609,6 +35803,22 @@
       "outputsHandled": []
     },
     {
+      "component": "NutrientBadgesComponent",
+      "selector": "fd-nutrient-badges",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "alcohol",
+        "carbs",
+        "fats",
+        "fiber",
+        "proteins"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "NutrientsSummaryChartsComponent",
       "selector": "fd-nutrients-summary-charts",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary-charts/nutrients-summary-charts.ts",
@@ -35679,20 +35889,6 @@
         "maxCalories",
         "maxNutrient",
         "warning"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "NutritionEditorComponent",
-      "selector": "fd-nutrition-editor",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "form",
-        "macroState",
-        "readonly"
       ],
       "outputsHandled": []
     },
@@ -37006,28 +37202,6 @@
         "totalTime"
       ],
       "outputsHandled": []
-    },
-    {
-      "component": "RecipeListFavoritesComponent",
-      "selector": "fd-recipe-list-favorites",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "favoriteLoadingIds",
-        "favoriteTotalCount",
-        "favorites",
-        "isFavoritesLoadingMore",
-        "isFavoritesOpen"
-      ],
-      "outputsHandled": [
-        "favoriteAddToMeal",
-        "favoriteOpen",
-        "favoriteRemove",
-        "favoritesLoadMore",
-        "favoritesToggle"
-      ]
     },
     {
       "component": "RecipeListResultsComponent",

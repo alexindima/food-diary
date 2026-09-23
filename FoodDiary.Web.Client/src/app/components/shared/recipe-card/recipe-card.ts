@@ -4,12 +4,14 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
 import { AuthService } from '../../../services/auth.service';
+import { injectCurrentLanguage } from '../../../shared/i18n/inject-current-language';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card';
 
 export type RecipeCardStep = {
-    ingredients?: unknown[] | null;
+    ingredients?: Array<{ productName?: string | null; nestedRecipeName?: string | null }> | null;
+    imageUrl?: string | null;
 };
 
 export type RecipeCardItem = {
@@ -85,7 +87,15 @@ export class RecipeCardComponent {
 
         return normalizeQualityScore(score);
     });
-    protected readonly hasPreviewImage = computed(() => (this.imageUrl()?.trim().length ?? 0) > 0);
+    protected readonly galleryImages = computed(() => [
+        ...new Set(
+            [this.recipe().imageUrl, ...(this.recipe().steps ?? []).map(step => step.imageUrl)].filter(
+                (url): url is string => typeof url === 'string' && url.trim().length > 0,
+            ),
+        ),
+    ]);
+    protected readonly hasPreviewImage = computed(() => this.galleryImages().length > 0);
+    protected readonly displayImage = computed(() => this.galleryImages()[0] ?? this.imageUrl());
     protected readonly totalTime = computed(() => {
         const recipe = this.recipe();
         const prep = recipe.prepTime ?? 0;
@@ -101,14 +111,20 @@ export class RecipeCardComponent {
 
         return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     });
+    private readonly language = injectCurrentLanguage();
     protected readonly description = computed(() => {
-        const ingredients = `${this.translateService.instant('RECIPE_LIST.INGREDIENTS_COUNT')}: ${this.ingredientCount()}`;
-        const totalTime = this.totalTime();
-        if (totalTime === null || totalTime <= 0) {
-            return ingredients;
-        }
-
-        return `${ingredients} - ${totalTime} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+        const names = (this.recipe().steps ?? [])
+            .flatMap(step => step.ingredients ?? [])
+            .map(item => item.productName ?? item.nestedRecipeName)
+            .filter(Boolean);
+        const count = this.ingredientCount();
+        const category = new Intl.PluralRules(this.language()).select(count).toUpperCase();
+        const ingredients = this.translateService.instant(`RECIPE_CARD.INGREDIENTS_${category}`, { count });
+        const metadata =
+            this.totalTime() === null
+                ? ingredients
+                : `${ingredients} · ${this.totalTime()} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+        return names.length > 0 ? `${metadata} · ${[...new Set(names)].join(', ')}` : metadata;
     });
     protected openCard(): void {
         this.open.emit();
@@ -119,17 +135,17 @@ export class RecipeCardComponent {
     }
 
     protected previewCardImage(): void {
-        const imageUrl = this.imageUrl()?.trim();
-        if (imageUrl === undefined || imageUrl.length === 0) {
+        const images = this.galleryImages();
+        if (images.length === 0) {
             return;
         }
 
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
-            width: 'var(--fd-size-dialog-media-width)',
+            width: 'var(--fd-dialog-panel-width-lg)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
             data: {
-                imageUrl,
+                collageImages: images.map(url => ({ url, alt: this.recipe().name })),
                 alt: this.translateService.instant('IMAGE_PREVIEW.ALT', { name: this.recipe().name }),
                 title: this.recipe().name,
             },

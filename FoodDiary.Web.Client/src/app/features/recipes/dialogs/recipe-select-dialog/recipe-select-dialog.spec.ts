@@ -22,7 +22,7 @@ describe('RecipeSelectDialogComponent', () => {
         const { component, recipeService } = setupComponent([recipe]);
 
         expect(recipeService.query).toHaveBeenCalledWith(1, PAGE_SIZE, { search: undefined }, true);
-        expect(readRecipeItems(component)).toEqual([{ recipe, imageUrl: 'assets/images/stubs/receipt.png' }]);
+        expect(readRecipeItems(component)).toEqual([{ recipe, imageUrl: undefined }]);
     });
 
     it('excludes the current recipe from selectable items', () => {
@@ -33,7 +33,7 @@ describe('RecipeSelectDialogComponent', () => {
         fixture.componentRef.setInput('excludedRecipeId', currentRecipe.id);
         fixture.detectChanges();
 
-        expect(readRecipeItems(component)).toEqual([{ recipe: nestedRecipe, imageUrl: 'assets/images/stubs/receipt.png' }]);
+        expect(readRecipeItems(component)).toEqual([{ recipe: nestedRecipe, imageUrl: undefined }]);
     });
 
     it('closes dialog with selected recipe when used as dialog', () => {

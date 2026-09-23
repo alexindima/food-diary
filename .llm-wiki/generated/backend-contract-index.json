@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1263,
+    "contracts": 1266,
     "ambiguousContracts": 2,
-    "consumerEdges": 9884,
-    "productionConsumerEdges": 5640,
-    "testConsumerEdges": 4244,
-    "consumedContracts": 1263,
+    "consumerEdges": 9908,
+    "productionConsumerEdges": 5657,
+    "testConsumerEdges": 4251,
+    "consumedContracts": 1266,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -6569,6 +6569,40 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetFavoriteRecipePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17352,6 +17386,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ReadFavoriteRecipeOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -39308,7 +39359,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "FavoriteRecipeHttpResponse",
@@ -39386,7 +39437,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "FertilitySignalHttpResponse",
@@ -45562,6 +45613,84 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetFavoriteRecipePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteRecipePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "GetFavoriteRecipesQuery",
@@ -65852,6 +65981,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67454,6 +67596,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -77578,6 +77733,32 @@
         "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -77593,6 +77774,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/ReadFavoriteRecipeOverviewTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -96115,6 +96335,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96207,6 +96440,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadProductFavoriteStatus/ReadProductFavoriteStatusQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98143,6 +98389,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -98157,6 +98416,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -121140,6 +121412,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -130474,6 +130759,19 @@
         "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Controllers/MealsController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -131085,6 +131383,32 @@
         "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Common/MealReadSupport.cs",
       "isTest": false,
       "referenceCount": 2
@@ -131489,6 +131813,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -132936,6 +133273,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "ReadFavoriteRecipeOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ReadFavoriteRecipeOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadFavoriteRecipeOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipeOverview/ReadFavoriteRecipeOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/ReadFavoriteRecipeOverviewTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ReadFavoriteRecipesQuery",
       "roles": [
         "Query"
@@ -132960,19 +133336,6 @@
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
-    },
-    {
-      "contract": "ReadFavoriteRecipesQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Favorites/Contracts/FavoriteRecipes/Queries/ReadFavoriteRecipes/ReadFavoriteRecipesQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
     },
     {
       "contract": "ReadFavoriteRecipesQuery",

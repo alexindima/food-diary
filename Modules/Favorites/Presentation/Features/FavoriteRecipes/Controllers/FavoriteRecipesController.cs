@@ -18,6 +18,13 @@ public sealed class FavoriteRecipesController(ISender mediator) : AuthorizedCont
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
+    [HttpGet("page")]
+    [ProducesResponseType<PagedHttpResponse<FavoriteRecipeHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetFavoriteRecipePageHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => new PagedHttpResponse<FavoriteRecipeHttpResponse>(
+            value.Data.Select(item => item.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
+
     [HttpGet("check/{recipeId:guid}")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
     public Task<IActionResult> IsFavorite(Guid recipeId, [FromCurrentUser] Guid userId) =>

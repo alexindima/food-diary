@@ -125,6 +125,22 @@ describe('RecipeCardComponent content', () => {
 });
 
 describe('RecipeCardComponent events', () => {
+    it('uses a compact action without opening details and an icon for a missing photo', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        const add = vi.fn();
+        const open = vi.fn();
+        component.addToMeal.subscribe(add);
+        component.open.subscribe(open);
+        fixture.detectChanges();
+        const button = el.querySelector<HTMLButtonElement>('.entity-card__compact-action');
+        expect(button).not.toBeNull();
+        button?.click();
+        expect(add).toHaveBeenCalledOnce();
+        expect(open).not.toHaveBeenCalled();
+        expect(el.querySelector('fd-entity-card-actions')).toBeNull();
+        expect(el.querySelector('.entity-card__thumb img')).toBeNull();
+    });
+
     it('should emit open on card click', async () => {
         const { component, el, fixture } = await setupRecipeCardAsync();
         fixture.detectChanges();

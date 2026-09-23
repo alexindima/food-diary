@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
@@ -35,7 +35,12 @@ let recipeService: {
     getById: ReturnType<typeof vi.fn>;
     deleteById: ReturnType<typeof vi.fn>;
 };
-let favoriteRecipeService: { getAll: ReturnType<typeof vi.fn>; add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
+let favoriteRecipeService: {
+    getPage: ReturnType<typeof vi.fn>;
+    getAll: ReturnType<typeof vi.fn>;
+    add: ReturnType<typeof vi.fn>;
+    remove: ReturnType<typeof vi.fn>;
+};
 let navigationService: {
     navigateToRecipeAddAsync: ReturnType<typeof vi.fn>;
     navigateToRecipeEditAsync: ReturnType<typeof vi.fn>;
@@ -73,6 +78,7 @@ beforeEach(() => {
     };
 
     favoriteRecipeService = {
+        getPage: vi.fn().mockReturnValue(of({ data: [createFavoriteRecipe()], page: 1, limit: 1, totalItems: 1, totalPages: 1 })),
         getAll: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
         add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
         remove: vi.fn().mockReturnValue(of(null)),
@@ -117,8 +123,8 @@ describe('RecipeListFacade favorites', () => {
     it('loads favorites and updates counters', () => {
         facade.loadFavorites().subscribe();
 
-        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
-        expect(facade.favoriteRecipes()).toEqual([createFavoriteRecipe()]);
+        expect(favoriteRecipeService.getPage).toHaveBeenCalledWith(1, 1);
+        expect(facade.favoriteRecipes()).toEqual([]);
         expect(facade.favoriteTotalCount()).toBe(1);
         expect(facade.isFavoritesLoadingMore()).toBe(false);
     });
@@ -136,7 +142,7 @@ describe('RecipeListFacade favorites', () => {
         facade.toggleRecipeFavorite(notFavoriteRecipe).subscribe();
 
         expect(favoriteRecipeService.add).toHaveBeenCalledWith('recipe-1', 'Recipe');
-        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(favoriteRecipeService.getPage).toHaveBeenCalledWith(1, 1);
         expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: true, favoriteRecipeId: 'favorite-1' }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
     });
@@ -153,7 +159,7 @@ describe('RecipeListFacade favorites', () => {
 
         facade.toggleRecipeFavorite(favoriteRecipe).subscribe();
 
-        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(favoriteRecipeService.getPage).toHaveBeenCalledWith(1, 1);
         expect(favoriteRecipeService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteRecipeId: null }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
@@ -190,7 +196,7 @@ describe('RecipeListFacade overview', () => {
             filters: { search: null },
             includePublic: true,
             recentLimit: PAGE_LIMIT,
-            favoriteLimit: PAGE_LIMIT,
+            favoriteLimit: 0,
         });
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
@@ -227,7 +233,14 @@ describe('RecipeListFacade actions', () => {
         facade.deleteRecipe(recipe, 'soup', true).subscribe();
 
         expect(recipeService.deleteById).toHaveBeenCalledWith('recipe-1');
-        expect(recipeService.query).toHaveBeenCalledWith(1, PAGE_LIMIT, { search: 'soup' }, false);
+        expect(recipeService.queryOverview).toHaveBeenCalledWith({
+            page: 1,
+            limit: PAGE_LIMIT,
+            filters: { search: 'soup' },
+            includePublic: false,
+            recentLimit: 1,
+            favoriteLimit: 0,
+        });
         expect(facade.isDeleting()).toBe(false);
     });
 
@@ -250,5 +263,40 @@ describe('RecipeListFacade actions', () => {
         await facade.handleDetailActionAsync(new RecipeDetailActionResult(recipe.id, 'AddToMeal'), recipe, null, false);
 
         expect(quickMealService.addRecipe).toHaveBeenCalledWith(recipe);
+    });
+});
+
+describe('RecipeListFacade favorite picker', () => {
+    it('restores the new server identity and uses it for the next removal', async () => {
+        const favorite = createFavoriteRecipe();
+        favoriteRecipeService.add.mockReturnValueOnce(of({ ...favorite, id: 'restored-id' }));
+        facade.recentRecipes.set([{ ...recipe, isFavorite: false }]);
+        expect(await firstValueFrom(facade.restorePickerFavorite(favorite))).toBe(true);
+        expect(favorite.id).toBe('restored-id');
+        expect(facade.favoriteTotalCount()).toBe(1);
+        expect(facade.recentRecipes()[0]).toMatchObject({ isFavorite: true, favoriteRecipeId: 'restored-id' });
+        expect(await firstValueFrom(facade.removePickerFavorite(favorite))).toBe(true);
+        expect(favoriteRecipeService.remove).toHaveBeenCalledWith('restored-id');
+        expect(facade.favoriteTotalCount()).toBe(0);
+    });
+
+    it('keeps identity and counts intact when restore or removal fails', async () => {
+        const favorite = createFavoriteRecipe();
+        facade.favoriteTotalCount.set(1);
+        favoriteRecipeService.add.mockReturnValueOnce(throwError(() => new Error('offline')));
+        favoriteRecipeService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
+        expect(await firstValueFrom(facade.restorePickerFavorite(favorite))).toBe(false);
+        expect(await firstValueFrom(facade.removePickerFavorite(favorite))).toBe(false);
+        expect(favorite.id).toBe('favorite-1');
+        expect(facade.favoriteTotalCount()).toBe(1);
+    });
+
+    it('adds only an accessible recipe and permits retry after lookup failure', async () => {
+        const favorite = createFavoriteRecipe();
+        recipeService.getById.mockReturnValueOnce(of(null));
+        expect(await firstValueFrom(facade.addFavoriteToMeal(favorite))).toBe(false);
+        expect(quickMealService.addRecipe).not.toHaveBeenCalled();
+        expect(await firstValueFrom(facade.addFavoriteToMeal(favorite))).toBe(true);
+        expect(quickMealService.addRecipe).toHaveBeenCalledExactlyOnceWith(recipe);
     });
 });

@@ -17,7 +17,7 @@ const COOK_TIME_MINUTES = 20;
 const SERVINGS_COUNT = 4;
 const TOTAL_TIME_MINUTES = 30;
 const INGREDIENT_COUNT = 2;
-const EXPECTED_TAB_COUNT = 3;
+const EXPECTED_TAB_COUNT = 2;
 const EXPECTED_MACRO_BLOCK_COUNT = 5;
 const TOTAL_CALORIES = 800;
 const TOTAL_PROTEINS = 40;
@@ -149,18 +149,14 @@ describe('RecipeDetailComponent summary state', () => {
         expect(component['ingredientCount']).toBe(INGREDIENT_COUNT);
     });
 
-    it('should have summary, cook, and nutrients tabs', () => {
+    it('should have summary and cooking tabs', () => {
         expect(component['tabs'].length).toBe(EXPECTED_TAB_COUNT);
         expect(component['tabs'][0].value).toBe('summary');
         expect(component['tabs'][1].value).toBe('cook');
-        expect(component['tabs'][2].value).toBe('nutrients');
     });
 
     it('should change active tab', () => {
         expect(component['activeTab']).toBe('summary');
-
-        component['onTabChange']('nutrients');
-        expect(component['activeTab']).toBe('nutrients');
 
         component['onTabChange']('cook');
         expect(component['activeTab']).toBe('cook');

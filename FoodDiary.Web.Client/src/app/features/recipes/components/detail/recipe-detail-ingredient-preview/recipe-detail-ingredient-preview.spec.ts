@@ -20,6 +20,33 @@ describe('RecipeDetailIngredientPreviewComponent', () => {
         expect(text).toContain('Starter');
     });
 
+    it('expands all ingredients and collapses back without losing the last item', async () => {
+        const count = 7;
+        const previewCount = 5;
+        const fixture = await setupComponentAsync(
+            Array.from({ length: count }, (_, index) => ({
+                name: `Ingredient ${index}`,
+                amount: 1,
+                unitKey: null,
+            })),
+        );
+        const element = fixture.nativeElement as HTMLElement;
+        const button = element.querySelector('button');
+        if (button === null) {
+            throw new Error('Missing ingredient expansion control');
+        }
+        expect(element.querySelectorAll('.recipe-detail__list-row')).toHaveLength(previewCount);
+        expect(button.getAttribute('aria-expanded')).toBe('false');
+        button.click();
+        fixture.detectChanges();
+        expect(element.querySelectorAll('.recipe-detail__list-row')).toHaveLength(count);
+        expect(element.textContent).toContain('Ingredient 6');
+        expect(button.getAttribute('aria-expanded')).toBe('true');
+        button.click();
+        fixture.detectChanges();
+        expect(element.querySelectorAll('.recipe-detail__list-row')).toHaveLength(previewCount);
+    });
+
     it('renders nothing when ingredient list is empty', async () => {
         const fixture = await setupComponentAsync([]);
 

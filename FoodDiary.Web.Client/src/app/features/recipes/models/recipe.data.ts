@@ -105,6 +105,11 @@ export type FavoriteRecipe = {
     servings: number;
     totalTimeMinutes?: number | null;
     ingredientCount: number;
+    ingredientNames?: string[];
+    totalProteins?: number;
+    totalFats?: number;
+    totalCarbs?: number;
+    totalFiber?: number;
 };
 
 export type RecipeDto = {

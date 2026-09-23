@@ -1,7 +1,7 @@
 @if (ingredients().length) {
     <section class="recipe-detail__list fd-stack fd-gap-xs">
         <h3 class="recipe-detail__list-title fd-ui-card-title">{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</h3>
-        @for (ingredient of ingredients(); track $index) {
+        @for (ingredient of visibleIngredients(); track $index) {
             <div class="recipe-detail__list-row">
                 <span class="fd-ui-body-sm">{{ ingredient.name }}</span>
                 <strong class="fd-ui-body-sm">
@@ -11,6 +11,15 @@
                     }
                 </strong>
             </div>
+        }
+        @if (ingredients().length > previewLimit) {
+            <button type="button" class="recipe-detail__list-more" [attr.aria-expanded]="expanded()" (click)="expanded.set(!expanded())">
+                {{
+                    (expanded() ? 'RECIPE_DETAIL.SUMMARY.ITEMS_HIDE' : 'RECIPE_DETAIL.SUMMARY.ITEMS_MORE')
+                        | translate: { count: ingredients().length - previewLimit }
+                }}
+                <span aria-hidden="true">{{ expanded() ? '↑' : '↓' }}</span>
+            </button>
         }
     </section>
 }

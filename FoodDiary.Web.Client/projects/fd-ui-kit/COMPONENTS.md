@@ -445,6 +445,8 @@ Header slot for `fd-ui-entity-card`.
 
 ### Dialogs
 
+`--fd-dialog-header-border` controls the header separator (default: `--fd-border-strong`). Set it to `var(--fd-border-none)` when content tabs already provide the separator.
+
 #### `fd-ui-dialog`
 
 Dialog wrapper used with `FdUiDialogService`.

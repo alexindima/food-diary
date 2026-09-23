@@ -1,7 +1,7 @@
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface';
 
 import { resolveRussianPluralCategory } from '../../../../../shared/i18n/russian-plural.utils';
 import type { Recipe } from '../../../models/recipe.data';
@@ -10,7 +10,7 @@ import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/rec
 
 @Component({
     selector: 'fd-recipe-detail-summary',
-    imports: [TranslatePipe, FdUiHintDirective, FdUiAccentSurfaceComponent, RecipeDetailIngredientPreviewComponent],
+    imports: [TranslatePipe, FdUiHintDirective, DecimalPipe, RecipeDetailIngredientPreviewComponent],
     templateUrl: './recipe-detail-summary.html',
     styleUrl: '../recipe-detail/recipe-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,98 @@
+@if (removed()) {
+    <div class="favorite-row__undo">
+        <div class="favorite-row__undo-copy fd-stack fd-gap-xs" role="status" aria-live="polite">
+            <span>{{ undoMessageKey() | translate }}</span>
+            <span class="favorite-row__composition fd-ui-meta-text">{{ name() }} &middot; {{ composition() }}</span>
+        </div>
+        <fd-ui-button
+            #action
+            variant="secondary"
+            fill="text"
+            icon="undo"
+            [loading]="restoring()"
+            [disabled]="disabled()"
+            [disabledReason]="'RECIPE_FAVORITES.BUSY' | translate"
+            [ariaLabel]="`${('RECIPE_FAVORITES.UNDO' | translate)}: ${name()}`"
+            (click)="restore.emit(recipe())"
+        >
+            {{ 'RECIPE_FAVORITES.UNDO' | translate }}
+        </fd-ui-button>
+    </div>
+} @else {
+    <div class="favorite-row__media" [class.favorite-row__media--collage]="images().length > 1">
+        @for (url of images(); track url) {
+            <img class="favorite-row__image" alt="" width="64" height="64" loading="lazy" [src]="url" (error)="imageFailed(url)" />
+        } @empty {
+            <fd-ui-icon name="restaurant_menu" size="lg" aria-hidden="true" />
+        }
+    </div>
+    <div class="favorite-row__content fd-stack fd-gap-xs">
+        <div class="favorite-row__heading">
+            <strong>{{ name() }}</strong>
+            <span class="favorite-row__calories"
+                >{{ recipe().totalCalories ?? 0 | localizedNumber: locale() : 0 : 0 }} {{ 'RECIPE_FAVORITES.KCAL' | translate }}</span
+            >
+        </div>
+        @if (composition()) {
+            <span class="favorite-row__composition fd-ui-meta-text" [title]="composition()">{{ composition() }}</span>
+        }
+        <span class="fd-ui-meta-text">
+            {{ recipe().servings }} {{ 'RECIPE_LIST.FAVORITE_SERVINGS' | translate }}
+            @if (recipe().totalTimeMinutes; as minutes) {
+                &middot; {{ minutes }} {{ 'RECIPE_LIST.FAVORITE_MINUTES' | translate }}
+            }
+        </span>
+        <div class="favorite-row__footer">
+            <div
+                class="favorite-row__nutrition"
+                role="img"
+                [attr.aria-label]="
+                    'RECIPE_FAVORITES.NUTRITION_LABEL'
+                        | translate
+                            : {
+                                  proteins: recipe().totalProteins,
+                                  fats: recipe().totalFats,
+                                  carbs: recipe().totalCarbs,
+                                  fiber: recipe().totalFiber ?? 0,
+                              }
+                "
+            >
+                <fd-nutrient-badges
+                    aria-hidden="true"
+                    [proteins]="recipe().totalProteins ?? 0"
+                    [fats]="recipe().totalFats ?? 0"
+                    [carbs]="recipe().totalCarbs ?? 0"
+                    [fiber]="recipe().totalFiber ?? 0"
+                    [alcohol]="0"
+                />
+            </div>
+            <div class="favorite-row__actions">
+                <fd-ui-button
+                    #action
+                    class="favorite-row__star fd-favorite-button--active"
+                    variant="secondary"
+                    fill="text"
+                    icon="star"
+                    [fdUiHint]="'RECIPE_DETAIL.REMOVE_FAVORITE' | translate"
+                    [ariaPressed]="true"
+                    [ariaLabel]="'RECIPE_DETAIL.REMOVE_FAVORITE' | translate"
+                    [loading]="removing()"
+                    [disabled]="disabled()"
+                    [disabledReason]="'RECIPE_FAVORITES.BUSY' | translate"
+                    (click)="remove.emit(recipe())"
+                />
+                <fd-ui-button
+                    variant="secondary"
+                    fill="text"
+                    icon="add"
+                    [loading]="loading()"
+                    [disabled]="disabled()"
+                    [disabledReason]="'RECIPE_FAVORITES.ADDING' | translate"
+                    (click)="add.emit(recipe())"
+                >
+                    {{ 'RECIPE_FAVORITES.ADD' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    </div>
+}

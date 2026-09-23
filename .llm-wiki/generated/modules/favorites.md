@@ -42,15 +42,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
-- Public contract files: 39
+- Public contract files: 41
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 39
+- Public contract types: 41
 - Interfaces: 18
-- DTO/read-model/projection types: 10
+- DTO/read-model/projection types: 11
 - Enums: 0
 - Exported repository-shaped contracts: 12
 - Contracts referencing domain entities: 0
@@ -82,9 +82,9 @@ No literal attribute-routed controller was associated with this module.
 - `record FavoriteProductReadModel`
 - `record FavoriteProductSourceModel`
 - `record FavoriteRecipeModel`
+- `record FavoriteRecipeOverviewModel`
 - `record FavoriteRecipeReadModel`
-- `record FavoriteRecipeSourceModel`
-- ... 9 more type(s)
+- ... 11 more type(s)
 
 ## Focused Tests
 
@@ -98,6 +98,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/ReadFavoriteRecipeOverviewTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteWriteContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Support/ResultAssert.cs`
