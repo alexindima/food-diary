@@ -42,15 +42,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
-- Public contract files: 41
+- Public contract files: 43
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 41
+- Public contract types: 43
 - Interfaces: 18
-- DTO/read-model/projection types: 11
+- DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 12
 - Contracts referencing domain entities: 0
@@ -79,12 +79,12 @@ No literal attribute-routed controller was associated with this module.
 - `record FavoriteMealReadModel`
 - `record FavoriteMealSourceModel`
 - `record FavoriteProductModel`
+- `record FavoriteProductOverviewModel`
 - `record FavoriteProductReadModel`
 - `record FavoriteProductSourceModel`
 - `record FavoriteRecipeModel`
 - `record FavoriteRecipeOverviewModel`
-- `record FavoriteRecipeReadModel`
-- ... 11 more type(s)
+- ... 13 more type(s)
 
 ## Focused Tests
 
@@ -97,6 +97,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/ReadFavoriteProductOverviewTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/ReadFavoriteRecipeOverviewTests.cs`
@@ -118,7 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipeHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/FavoritesModuleExtractionTests.cs`
 
 ## Working Rule
 

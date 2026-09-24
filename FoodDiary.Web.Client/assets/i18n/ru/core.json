@@ -507,7 +507,8 @@
     "PRODUCT_CARD": {
         "ADD_TO_MEAL": "Добавить к приёму",
         "NO_BARCODE": "Без штрихкода",
-        "QUALITY_SCORE": "Полезность"
+        "QUALITY_SCORE": "Полезность",
+        "TO_DIARY": "В дневник"
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Добавить в приём пищи",

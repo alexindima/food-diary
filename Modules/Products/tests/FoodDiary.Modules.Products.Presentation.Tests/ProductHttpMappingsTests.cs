@@ -184,7 +184,7 @@ public sealed class ProductHttpMappingsTests {
             () => Assert.Equal("bar", query.Search),
             () => Assert.True(query.IncludePublic),
             () => Assert.Equal(50, query.RecentLimit),
-            () => Assert.Equal(1, query.FavoriteLimit),
+            () => Assert.Equal(0, query.FavoriteLimit),
             () => Assert.Equal(["Custom", "Food"], query.ProductTypes));
     }
 

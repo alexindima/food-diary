@@ -8,12 +8,12 @@ describe('resolveProductImageUrl', () => {
         expect(resolveProductImageUrl('https://cdn.example.com/apple.png', ProductType.Fruit)).toBe('https://cdn.example.com/apple.png');
     });
 
-    it('should fall back to product type stub when image url is empty', () => {
-        expect(resolveProductImageUrl('   ', ProductType.Meat)).toBe('assets/images/stubs/products/meat.png');
+    it('should leave the icon placeholder when image url is empty', () => {
+        expect(resolveProductImageUrl('   ', ProductType.Meat)).toBeUndefined();
     });
 
-    it('should use unknown stub when product type is missing', () => {
-        expect(resolveProductImageUrl(null, null)).toBe('assets/images/stubs/products/other.png');
-        expect(resolveProductImageUrl(void 0, void 0)).toBe('assets/images/stubs/products/other.png');
+    it('should leave the icon placeholder when product type is missing', () => {
+        expect(resolveProductImageUrl(null, null)).toBeUndefined();
+        expect(resolveProductImageUrl(void 0, void 0)).toBeUndefined();
     });
 });

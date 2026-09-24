@@ -24,14 +24,47 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
     }
 
     public async Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        return await context.FavoriteProducts
-            .AsNoTracking()
-            .Where(f => f.UserId == userId &&
-                context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)))
-            .OrderByDescending(f => f.CreatedAtUtc)
-            .Take(PaginationPolicy.MaxCollectionSize)
+        UserId userId, CancellationToken cancellationToken = default) =>
+        await Project(userId, BuildFavoritesQuery(userId, search: null).AsNoTracking().OrderByDescending(row => row.CreatedAtUtc).ThenByDescending(row => row.Id)
+            .Take(PaginationPolicy.MaxCollectionSize)).ToListAsync(cancellationToken).ConfigureAwait(false);
+
+    public async Task<(IReadOnlyList<FavoriteProductReadModel> Items, int Total)> GetPageReadModelsAsync(
+        UserId userId, int page, int limit, string? search, CancellationToken cancellationToken = default) {
+        IQueryable<FavoriteProduct> query = BuildFavoritesQuery(userId, search);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        if (limit == 0) { return ([], total); }
+        List<FavoriteProductReadModel> items = await Project(userId, query.AsNoTracking().OrderByDescending(row => row.CreatedAtUtc).ThenByDescending(row => row.Id)
+            .Skip((page - 1) * limit).Take(limit)).ToListAsync(cancellationToken).ConfigureAwait(false);
+        return (items, total);
+    }
+
+    public async Task<IReadOnlyList<FavoriteProductReadModel>> GetByProductIdsReadModelsAsync(UserId userId,
+        IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default) {
+        if (productIds.Count == 0) { return []; }
+        ProductId[] ids = [.. productIds];
+        return await Project(userId, BuildFavoritesQuery(userId, search: null).AsNoTracking().Where(row => Enumerable.Contains(ids, row.ProductId)))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private IQueryable<FavoriteProduct> BuildFavoritesQuery(UserId userId, string? search) {
+        var query = context.FavoriteProducts.AsNoTracking()
+            .Where(favorite => favorite.UserId == userId)
+            .Join(context.Products.AsNoTracking().Where(source => source.UserId == userId || source.Visibility == Visibility.Public),
+                favorite => favorite.ProductId, source => source.Id, (favorite, source) => new { Favorite = favorite, Source = source });
+        if (!string.IsNullOrWhiteSpace(search)) {
+            string term = "%" + search.Trim().Replace("\\", "\\\\", StringComparison.Ordinal)
+                .Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
+            query = query.Where(row => (row.Favorite.Name != null && EF.Functions.ILike(row.Favorite.Name, term, "\\")) ||
+                EF.Functions.ILike(row.Source.Name, term, "\\") ||
+                (row.Source.Brand != null && EF.Functions.ILike(row.Source.Brand, term, "\\")) ||
+                (row.Source.Barcode != null && EF.Functions.ILike(row.Source.Barcode, term, "\\")));
+
+        }
+        return query.AsNoTracking().Select(row => row.Favorite);
+    }
+
+    private IQueryable<FavoriteProductReadModel> Project(UserId userId, IQueryable<FavoriteProduct> favorites) =>
+        favorites.AsNoTracking()
             .Join(context.Products.AsNoTracking(), favorite => favorite.ProductId, source => source.Id, (favorite, source) => new { Favorite = favorite, Source = source })
             .Select(row => new FavoriteProductReadModel(
                 row.Favorite.Id.Value,
@@ -54,8 +87,5 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
                 row.Source.BaseUnit,
                 row.Favorite.PreferredPortionAmount,
                 row.Source.DefaultPortionAmount,
-                row.Source.UserId.Value))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
+                row.Source.UserId.Value));
 }

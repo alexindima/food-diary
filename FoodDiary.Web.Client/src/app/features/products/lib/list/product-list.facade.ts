@@ -15,8 +15,10 @@ import {
     type Observable,
     of,
     skip,
+    Subject,
     switchMap,
     take,
+    takeUntil,
     tap,
 } from 'rxjs';
 
@@ -40,6 +42,10 @@ import {
 import type { ProductCardViewModel } from '../../components/list/product-list.types';
 import { ProductListFiltersDialogComponent } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
+import {
+    ProductFavoritesPickerComponent,
+    type ProductFavoritesPickerData,
+} from '../../dialogs/product-favorites-picker/product-favorites-picker';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
 import { resolveProductImageUrl } from '../product-image.util';
@@ -64,6 +70,7 @@ export class ProductListFacade {
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
     private isDeleteInProgress = false;
+    private readonly cancelLoad = new Subject<void>();
 
     public readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
     public readonly searchModel = signal<ProductSearchFormValues>({
@@ -268,6 +275,7 @@ export class ProductListFacade {
     }
 
     public loadProducts(page: number, limit: number, search: string | null): Observable<void> {
+        this.cancelLoad.next();
         this.productData.setLoading(true);
         this.offProducts.set([]);
         const filters = new ProductFilters({
@@ -282,6 +290,8 @@ export class ProductListFacade {
         this.searchOpenFoodFacts(search);
 
         return this.productService.query(page, limit, filters, includePublic).pipe(
+            takeUntil(this.cancelLoad),
+            takeUntilDestroyed(this.destroyRef),
             tap(data => {
                 this.productData.setData(data);
                 this.recentProducts.set([]);
@@ -302,6 +312,7 @@ export class ProductListFacade {
     }
 
     public loadInitialOverview(): Observable<void> {
+        this.cancelLoad.next();
         this.productData.setLoading(true);
         this.offProducts.set([]);
         this.searchOpenFoodFacts(this.searchValue());
@@ -315,6 +326,8 @@ export class ProductListFacade {
                 favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
             })
             .pipe(
+                takeUntil(this.cancelLoad),
+                takeUntilDestroyed(this.destroyRef),
                 tap(data => {
                     this.productData.setData(data.allProducts);
                     this.recentProducts.set(data.recentItems);
@@ -352,19 +365,50 @@ export class ProductListFacade {
     }
 
     public loadFavorites(): void {
-        this.isFavoritesLoadingMore.set(true);
         this.favoriteProductService
-            .getAll()
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isFavoritesLoadingMore.set(false);
-                }),
-            )
-            .subscribe(favorites => {
-                this.favorites.set(favorites);
-                this.favoriteTotalCount.set(favorites.length);
+            .getPage(1, 1)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: result => {
+                    this.favoriteTotalCount.set(result.totalItems);
+                },
+                error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.LOAD_ERROR')),
             });
+    }
+
+    public openFavorites(): void {
+        this.fdDialogService.open<ProductFavoritesPickerComponent, ProductFavoritesPickerData, boolean>(ProductFavoritesPickerComponent, {
+            size: 'md',
+            data: {
+                repeat: favorite =>
+                    this.productService.getById(favorite.productId).pipe(
+                        map(product => {
+                            if (product === null) {
+                                return false;
+                            }
+                            this.quickMealService.addProduct(product, favorite.preferredPortionAmount);
+                            return true;
+                        }),
+                    ),
+                remove: favorite =>
+                    this.favoriteProductService.remove(favorite.id).pipe(
+                        tap(() => {
+                            this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                            this.syncProductFavoriteState(favorite.productId, false, null);
+                        }),
+                        map(() => true),
+                    ),
+                restore: favorite =>
+                    this.favoriteProductService.add(favorite.productId, favorite.name ?? undefined, favorite.preferredPortionAmount).pipe(
+                        tap(restored => {
+                            favorite.id = restored.id;
+                            this.favoriteTotalCount.update(count => count + 1);
+                            this.syncProductFavoriteState(favorite.productId, true, restored.id);
+                        }),
+                        map(() => true),
+                    ),
+            },
+        });
     }
 
     public onProductFavoriteToggle(product: Product): void {
@@ -387,9 +431,12 @@ export class ProductListFacade {
                     this.setFavoriteLoading(product.id, false);
                 }),
             )
-            .subscribe(favorite => {
-                this.syncProductFavoriteState(product.id, true, favorite.id);
-                this.loadFavorites();
+            .subscribe({
+                next: favorite => {
+                    this.syncProductFavoriteState(product.id, true, favorite.id);
+                    this.favoriteTotalCount.update(count => count + 1);
+                },
+                error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.ADD_ERROR')),
             });
     }
 
@@ -409,7 +456,7 @@ export class ProductListFacade {
     }
 
     public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.quickMealService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
+        this.quickMealService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.preferredPortionAmount);
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {
@@ -562,9 +609,12 @@ export class ProductListFacade {
                     this.setFavoriteLoading(product.id, false);
                 }),
             )
-            .subscribe(() => {
-                this.syncProductFavoriteState(product.id, false, null);
-                this.loadFavorites();
+            .subscribe({
+                next: () => {
+                    this.syncProductFavoriteState(product.id, false, null);
+                    this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                },
+                error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.REMOVE_ERROR')),
             });
     }
 

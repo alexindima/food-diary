@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5535,
+    "productionFiles": 5545,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 956,
-    "criticalSymbolsWithTestReferences": 918,
+    "criticalSymbols": 959,
+    "criticalSymbolsWithTestReferences": 921,
     "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 10
   },
@@ -4258,11 +4258,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 8,
+      "nonBlankLines": 83,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.14
+      "structuralRiskScore": 24.16
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
@@ -10498,11 +10498,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "nonBlankLines": 33,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
@@ -10530,11 +10530,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-actions/product-detail-actions.ts",
-      "nonBlankLines": 19,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-lib/product-detail-nutrition.mapper.ts",
@@ -10554,27 +10554,35 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-summary/product-detail-summary.ts",
-      "nonBlankLines": 23,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts",
-      "nonBlankLines": 116,
-      "decisionPoints": 10,
+      "nonBlankLines": 104,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.32
+      "structuralRiskScore": 14.08
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "nonBlankLines": 175,
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.ts",
+      "nonBlankLines": 48,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.5
+      "structuralRiskScore": 9.96
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
+      "nonBlankLines": 176,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-tour.ts",
@@ -10769,6 +10777,14 @@
       "structuralRiskScore": 2.44
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
+      "nonBlankLines": 189,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 32.28
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog-content.ts",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -10801,12 +10817,20 @@
       "structuralRiskScore": 14.78
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 528,
-      "decisionPoints": 40,
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/favorites/product-favorites-picker.facade.ts",
+      "nonBlankLines": 70,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.56
+      "structuralRiskScore": 8.9
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
+      "nonBlankLines": 577,
+      "decisionPoints": 42,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 74.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.ts",
@@ -10850,11 +10874,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/product-image.util.ts",
-      "nonBlankLines": 23,
-      "decisionPoints": 5,
+      "nonBlankLines": 5,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.96
+      "structuralRiskScore": 1.6
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/product-manage.constants.ts",
@@ -10914,11 +10938,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 54,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
+      "structuralRiskScore": 2.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-add/product-add.ts",
@@ -25682,11 +25706,11 @@
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
@@ -26025,6 +26049,30 @@
       "structuralRiskScore": 4.28
     },
     {
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.94
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -26055,6 +26103,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.72
+    },
+    {
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs",
@@ -26295,6 +26351,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/FavoriteProductOverviewModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQuery.cs",
@@ -26570,19 +26642,19 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 45,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.78
+      "structuralRiskScore": 2.9
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/AddFavoriteProductHttpRequest.cs",
@@ -26591,6 +26663,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/UpdateFavoriteProductHttpRequest.cs",
@@ -35074,11 +35154,11 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "nonBlankLines": 143,
+      "nonBlankLines": 137,
       "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.36
+      "structuralRiskScore": 18.24
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
@@ -50219,6 +50299,18 @@
       "coveredThrough": []
     },
     {
+      "name": "GetFavoriteProductPageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "line": 12,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "GetFavoriteProductsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
@@ -51497,14 +51589,26 @@
       "coveredThrough": []
     },
     {
+      "name": "ReadFavoriteProductOverviewQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/ReadFavoriteProductOverviewTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ReadFavoriteProductsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 4,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
-        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
@@ -52994,6 +53098,18 @@
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetFavoriteProductPageQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryValidator.cs",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

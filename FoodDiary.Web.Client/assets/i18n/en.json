@@ -507,7 +507,8 @@
     "PRODUCT_CARD": {
         "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
-        "QUALITY_SCORE": "Healthiness"
+        "QUALITY_SCORE": "Healthiness",
+        "TO_DIARY": "To diary"
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal",
@@ -7177,5 +7178,26 @@
         "ADD": "Add",
         "ADDING": "Adding recipe…",
         "ADD_ERROR": "Could not add the recipe. Please try again."
+    },
+    "PRODUCT_FAVORITES": {
+        "REMOVED": "Removed from favorites",
+        "UNDO": "Undo",
+        "RESTORE_ERROR": "Could not restore the product. Try again.",
+        "REMOVE_ERROR": "Could not remove the product from favorites. Please try again.",
+        "BUSY": "Wait for the current action to finish",
+        "NUTRITION_LABEL": "Proteins: {{proteins}} g; fats: {{fats}} g; carbs: {{carbs}} g; fiber: {{fiber}} g",
+        "TITLE": "Favorite products",
+        "OPEN": "Favorites",
+        "SEARCH": "Search by name, brand or barcode",
+        "LOADING": "Loading favorites…",
+        "LOAD_ERROR": "Could not load favorites.",
+        "RETRY": "Retry",
+        "NO_RESULTS": "No matches. Try another search.",
+        "EMPTY": "No favorite products yet",
+        "KCAL": "kcal",
+        "ADD": "Add",
+        "ADDING": "Adding product…",
+        "ADD_ERROR": "Could not add the product. Please try again.",
+        "NUTRITION_BASE": "Per"
     }
 }

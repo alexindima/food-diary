@@ -1958,3 +1958,72 @@ test.describe('recipe redesign regression', () => {
         });
     }
 });
+
+test.describe('product redesign regression', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`product details and favorite undo at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const product = { ...createOwnedProduct(), isFavorite: true, favoriteProductId: 'pf1' };
+            let favorite = { ...product, id: 'pf1', productId: 'p1', productName: 'Greek yogurt', name: null, preferredPortionAmount: 150 };
+            let removed = false;
+            let requests = 0;
+            await page.route('**/api/v1/products/overview**', async route => {
+                expect(new URL(route.request().url()).searchParams.get('favoriteLimit')).toBe('0');
+                await route.fulfill({
+                    json: {
+                        recentItems: [],
+                        allProducts: { data: [product], page: 1, limit: 10, totalPages: 1, totalItems: 1 },
+                        favoriteItems: [],
+                        favoriteTotalCount: 1,
+                    },
+                });
+            });
+            await page.route('**/api/v1/products/p1', async route => route.fulfill({ json: product }));
+            await page.route('**/api/v1/favorite-products**', async route => {
+                const url = new URL(route.request().url());
+                if (url.pathname.endsWith('/page')) {
+                    requests++;
+                    expect(url.searchParams.get('limit')).toBe('10');
+                    await route.fulfill({
+                        json: { data: removed ? [] : [favorite], page: 1, limit: 10, totalPages: 1, totalItems: removed ? 0 : 1 },
+                    });
+                } else if (route.request().method() === 'DELETE') {
+                    removed = true;
+                    await route.fulfill({ status: 204 });
+                } else if (route.request().method() === 'POST') {
+                    removed = false;
+                    favorite = { ...favorite, id: 'pf2' };
+                    await route.fulfill({ json: favorite });
+                } else {
+                    await route.fulfill({ json: true });
+                }
+            });
+            await page.goto('/products');
+            const card = page.locator('fd-product-card').first();
+            await expect(card).toContainText('To diary');
+            expect(requests).toBe(0);
+            await expect(card.locator('.entity-card__placeholder-icon')).toBeVisible();
+            await page.screenshot({ path: testInfo.outputPath(`products-${width}.png`) });
+            await card.locator('.entity-card__open-button').click();
+            const detail = page.locator('fd-product-detail');
+            await expect(detail.getByRole('tab')).toHaveCount(0);
+            await expect(detail.locator('.product-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT + 1);
+            await expect(detail).toContainText('100');
+            await page.screenshot({ path: testInfo.outputPath(`product-detail-${width}.png`) });
+            await page.keyboard.press('Escape');
+            await page.getByRole('button', { name: /Favorites ·/ }).click();
+            const picker = page.locator('fd-product-favorites-picker');
+            const row = picker.locator('fd-favorite-product-row');
+            await expect(row).toContainText('Greek yogurt');
+            await row.getByRole('button', { name: 'Remove from favorites', exact: true }).click();
+            await expect(row.getByRole('button', { name: /Undo/ })).toBeVisible();
+            await row.getByRole('button', { name: /Undo/ }).click();
+            await expect(row.getByRole('button', { name: 'Remove from favorites', exact: true })).toBeVisible();
+            expect(requests).toBe(1);
+            expect(await picker.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`product-favorites-${width}.png`) });
+        });
+    }
+});

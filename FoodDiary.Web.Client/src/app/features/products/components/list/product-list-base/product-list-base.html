@@ -83,59 +83,64 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (!isMobileView()) {
-            <div class="product-list__desktop-search" data-tour-id="product-list-search">
-                <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
-                    <div class="product-list__search-control">
-                        <fd-ui-input
-                            class="product-list__search-input"
-                            size="md"
-                            prefixIcon="search"
-                            [suffixButtonIcon]="searchSuffixIcon()"
-                            [formField]="searchForm.search"
-                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
-                            (suffixButtonClicked)="clearSearch()"
-                        />
-                        <fd-ui-button
-                            appearance="toolbar"
-                            fill="outline"
-                            size="md"
-                            icon="qr_code_scanner"
-                            [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                            (click)="openBarcodeScanner()"
-                        />
-                    </div>
-                </form>
-            </div>
-        } @else {
-            <div class="product-list__mobile-search product-list__mobile-search--open" data-tour-id="product-list-search">
-                <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
-                    <div class="product-list__search-control">
-                        <fd-ui-input
-                            class="product-list__search-input"
-                            size="md"
-                            prefixIcon="search"
-                            [suffixButtonIcon]="searchSuffixIcon()"
-                            [formField]="searchForm.search"
-                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
-                            (suffixButtonClicked)="clearSearch()"
-                        />
-                        <fd-ui-button
-                            appearance="toolbar"
-                            fill="outline"
-                            size="md"
-                            icon="qr_code_scanner"
-                            [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                            (click)="openBarcodeScanner()"
-                        />
-                    </div>
-                </form>
-            </div>
-        }
+        <div class="product-list__search-toolbar">
+            @if (!isMobileView()) {
+                <div class="product-list__desktop-search" data-tour-id="product-list-search">
+                    <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
+                        <div class="product-list__search-control">
+                            <fd-ui-input
+                                class="product-list__search-input"
+                                size="md"
+                                prefixIcon="search"
+                                [suffixButtonIcon]="searchSuffixIcon()"
+                                [formField]="searchForm.search"
+                                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                                [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
+                                (suffixButtonClicked)="clearSearch()"
+                            />
+                            <fd-ui-button
+                                appearance="toolbar"
+                                fill="outline"
+                                size="md"
+                                icon="qr_code_scanner"
+                                [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                                (click)="openBarcodeScanner()"
+                            />
+                        </div>
+                    </form>
+                </div>
+            } @else {
+                <div class="product-list__mobile-search product-list__mobile-search--open" data-tour-id="product-list-search">
+                    <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
+                        <div class="product-list__search-control">
+                            <fd-ui-input
+                                class="product-list__search-input"
+                                size="md"
+                                prefixIcon="search"
+                                [suffixButtonIcon]="searchSuffixIcon()"
+                                [formField]="searchForm.search"
+                                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                                [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
+                                (suffixButtonClicked)="clearSearch()"
+                            />
+                            <fd-ui-button
+                                appearance="toolbar"
+                                fill="outline"
+                                size="md"
+                                icon="qr_code_scanner"
+                                [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                                (click)="openBarcodeScanner()"
+                            />
+                        </div>
+                    </form>
+                </div>
+            }
+            <fd-ui-button variant="secondary" fill="outline" icon="star" data-tour-id="product-list-favorites" (click)="openFavorites()">
+                {{ 'PRODUCT_LIST.FAVORITES_TITLE' | translate }} · {{ favoriteTotalCount() }}
+            </fd-ui-button>
+        </div>
         <fd-product-list-active-filters
             [hidden]="!hasActiveFilters()"
             [attr.aria-hidden]="!hasActiveFilters()"
@@ -151,21 +156,6 @@
                 <fd-skeleton-card />
             </div>
         } @else {
-            @if (favorites().length > 0) {
-                <fd-product-list-favorites
-                    data-tour-id="product-list-favorites"
-                    [favorites]="favorites()"
-                    [totalCount]="favoriteTotalCount()"
-                    [isOpen]="isFavoritesOpen()"
-                    [isLoadingMore]="isFavoritesLoadingMore()"
-                    [favoriteLoadingIds]="favoriteLoadingIds()"
-                    (favoritesToggle)="toggleFavorites()"
-                    (loadMore)="loadFavorites()"
-                    (openProduct)="openFavoriteProduct($event)"
-                    (addToMeal)="addFavoriteProductToMeal($event)"
-                    (favoriteRemove)="removeFavorite($event)"
-                />
-            }
             @if (hasVisibleProducts()) {
                 <fd-product-list-groups
                     data-tour-id="product-list-results"

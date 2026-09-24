@@ -34,6 +34,27 @@ afterEach(() => {
 });
 
 describe('FavoriteProductService', () => {
+    it('requests a bounded page with normalized search and retains server totals', () => {
+        const page = { data: [createFavoriteProduct()], page: 2, limit: 10, totalItems: 21, totalPages: 3 };
+        service.getPage(2, page.limit, ' yogurt ').subscribe(result => {
+            expect(result).toEqual(page);
+        });
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page`);
+        expect(req.request.params.get('page')).toBe('2');
+        expect(req.request.params.get('limit')).toBe('10');
+        expect(req.request.params.get('search')).toBe('yogurt');
+        req.flush(page);
+    });
+    it('propagates paging errors instead of showing an empty favorites list', () => {
+        let failed = false;
+        service.getPage(1).subscribe({
+            error: () => {
+                failed = true;
+            },
+        });
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page`).flush({}, { status: 500, statusText: 'Failure' });
+        expect(failed).toBe(true);
+    });
     it('should get all favorite products', () => {
         const favorites = [createFavoriteProduct()];
 

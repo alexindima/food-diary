@@ -31,7 +31,7 @@ public static class ProductHttpQueryMappings {
                 SanitizeSearch(query.Search),
                 query.IncludePublic,
                 Math.Clamp(query.RecentLimit, 1, 50),
-                Math.Clamp(query.FavoriteLimit, 1, 50),
+                Math.Clamp(query.FavoriteLimit, 0, 50),
                 ParseCsv(query.ProductTypes),
                 NormalizeNonNegative(query.CaloriesFrom),
                 NormalizeNonNegative(query.CaloriesTo),

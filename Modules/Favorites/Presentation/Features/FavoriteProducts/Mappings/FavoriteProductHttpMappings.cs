@@ -8,6 +8,10 @@ using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Request
 namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Mappings;
 
 public static class FavoriteProductHttpMappings {
+    extension(GetFavoriteProductPageHttpQuery query) {
+        public FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProductPage.GetFavoriteProductPageQuery ToQuery(Guid userId) => new(userId, query.Page, query.Limit, query.Search);
+    }
+
     extension(AddFavoriteProductHttpRequest request) {
         public AddFavoriteProductCommand ToCommand(Guid userId) =>
                 new(userId, request.ProductId, request.Name, request.PreferredPortionAmount);

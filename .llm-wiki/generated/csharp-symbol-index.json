@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4219,
-    "symbols": 4150,
+    "sourceFiles": 4226,
+    "symbols": 4157,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2182,
+      "class": 2185,
       "enum": 64,
       "interface": 401,
-      "record": 1383,
+      "record": 1387,
       "record struct": 120
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1712,
-      "Query": 277,
-      "QueryHandler": 202,
+      "Other": 1713,
+      "Query": 280,
+      "QueryHandler": 204,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 156,
       "Response": 221,
       "Service": 162,
-      "Validator": 228,
+      "Validator": 229,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -12746,6 +12746,27 @@
       "line": 7
     },
     {
+      "name": "GetFavoriteProductPageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetFavoriteProductPageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetFavoriteProductPageQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryValidator.cs",
+      "line": 5
+    },
+    {
       "name": "GetFavoriteProductsQuery",
       "kind": "record",
       "role": "Query",
@@ -12772,6 +12793,13 @@
       "role": "QueryHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
       "line": 10
+    },
+    {
+      "name": "ReadFavoriteProductOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "ReadFavoriteProductsQueryHandler",
@@ -12975,6 +13003,20 @@
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
       "line": 4
+    },
+    {
+      "name": "FavoriteProductOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/FavoriteProductOverviewModel.cs",
+      "line": 4
+    },
+    {
+      "name": "ReadFavoriteProductOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs",
+      "line": 8
     },
     {
       "name": "ReadFavoriteProductsQuery",
@@ -13234,6 +13276,13 @@
       "role": "Request",
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/AddFavoriteProductHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "GetFavoriteProductPageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs",
+      "line": 5
     },
     {
       "name": "UpdateFavoriteProductHttpRequest",

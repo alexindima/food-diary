@@ -6,6 +6,9 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
 
 public interface IFavoriteProductQuery {
+    Task<(IReadOnlyList<FavoriteProductReadModel> Items, int Total)> GetPageReadModelsAsync(UserId userId, int page, int limit, string? search, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<FavoriteProductReadModel>> GetByProductIdsReadModelsAsync(UserId userId, IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<FavoriteProductId>> GetAccessibleIdsAsync(

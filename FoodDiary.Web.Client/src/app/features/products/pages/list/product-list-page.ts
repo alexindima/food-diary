@@ -13,7 +13,6 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
 import { ProductListActiveFiltersComponent } from '../../components/list/product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state';
-import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites';
 import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../../components/list/product-list-sections/product-list-off-section/product-list-off-section';
 import { ProductListPaginationComponent } from '../../components/list/product-list-sections/product-list-pagination/product-list-pagination';
@@ -39,7 +38,6 @@ import type { Product } from '../../models/product.data';
         PageBodyComponent,
         FdPageContainerDirective,
         ProductListActiveFiltersComponent,
-        ProductListFavoritesComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,
         ProductListOffSectionComponent,

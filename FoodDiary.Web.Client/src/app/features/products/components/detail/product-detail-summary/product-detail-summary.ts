@@ -1,19 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface';
 
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
 import type { Product } from '../../../models/product.data';
 import type { ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 
 @Component({
     selector: 'fd-product-detail-summary',
-    imports: [TranslatePipe, FdUiHintDirective, FdUiAccentSurfaceComponent],
+    imports: [TranslatePipe, FdUiHintDirective, LocalizedNumberPipe],
     templateUrl: './product-detail-summary.html',
     styleUrl: '../product-detail/product-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailSummaryComponent {
+    protected readonly locale = injectCurrentLanguage();
     public readonly product = input.required<Product>();
     public readonly calories = input.required<number>();
     public readonly baseUnitKey = input.required<string>();

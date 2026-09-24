@@ -6,20 +6,15 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
-import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
-import {
-    NutritionEditorComponent,
-    type NutritionFormModel,
-    type NutritionMacroState,
-} from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
+import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
 import { ProductDetailFacade } from '../../../lib/detail/product-detail.facade';
 import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import type { Product } from '../../../models/product.data';
 import { ProductDetailActionsComponent } from '../product-detail-actions/product-detail-actions';
-import type { ProductDetailTab } from '../product-detail-lib/product-detail.types';
 import { buildProductDetailNutritionViewModel, type ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 import { ProductDetailSummaryComponent } from '../product-detail-summary/product-detail-summary';
 
@@ -35,14 +30,18 @@ import { ProductDetailSummaryComponent } from '../product-detail-summary/product
         FdUiDialogComponent,
         FdUiDialogHeaderDirective,
         FdUiButtonComponent,
-        FdUiTabsComponent,
-        NutritionEditorComponent,
+
         ProductDetailSummaryComponent,
         ProductDetailActionsComponent,
     ],
 })
 export class ProductDetailComponent {
     private readonly productDetailFacade = inject(ProductDetailFacade);
+    private readonly quickMeal = inject(QuickMealService);
+    protected addToMeal(): void {
+        this.quickMeal.addProduct(this.product);
+        this.close();
+    }
 
     protected readonly isFavorite = this.productDetailFacade.isFavorite;
     protected readonly isFavoriteLoading = this.productDetailFacade.isFavoriteLoading;
@@ -51,16 +50,6 @@ export class ProductDetailComponent {
     protected product: Product;
     protected readonly productTypeKey: string;
     protected readonly baseUnitKey: string;
-    protected readonly tabs: FdUiTab[] = [
-        { value: 'summary', labelKey: 'PRODUCT_DETAIL.TABS.SUMMARY' },
-        { value: 'nutrients', labelKey: 'PRODUCT_DETAIL.TABS.NUTRIENTS' },
-    ];
-    protected readonly activeTab = signal<ProductDetailTab>('summary');
-    protected readonly onTabChange = (tab: string): void => {
-        if (tab === 'summary' || tab === 'nutrients') {
-            this.activeTab.set(tab);
-        }
-    };
 
     protected calories: number;
     protected readonly qualityScore: number;

@@ -4,11 +4,20 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteProduct } from '../models/product.data';
+
+const FAVORITE_PAGE_SIZE = 10;
 
 @Service()
 export class FavoriteProductService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.favoriteProducts;
+
+    public getPage(page: number, limit = FAVORITE_PAGE_SIZE, search = ''): Observable<PageOf<FavoriteProduct>> {
+        return this.get<PageOf<FavoriteProduct>>('page', { page, limit, search: search.trim() }).pipe(
+            catchError((error: unknown) => rethrowApiError('Get favorite product page error', error)),
+        );
+    }
 
     public getAll(): Observable<FavoriteProduct[]> {
         return this.get<FavoriteProduct[]>('').pipe(

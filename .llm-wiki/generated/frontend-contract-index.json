@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 458,
-    "componentsWithoutDirectSpecs": 126,
-    "inputs": 1452,
-    "outputs": 480,
+    "components": 460,
+    "componentsWithoutDirectSpecs": 127,
+    "inputs": 1459,
+    "outputs": 484,
     "apiCalls": 267,
-    "templatesWithTranslations": 318,
-    "translationKeys": 1869,
-    "consumerEdges": 1121,
+    "templatesWithTranslations": 320,
+    "translationKeys": 1882,
+    "consumerEdges": 1126,
     "consumedComponents": 294,
-    "unconsumedComponents": 163
+    "unconsumedComponents": 165
   },
   "components": [
     {
@@ -8618,6 +8618,65 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.spec.ts"
     },
     {
+      "class": "FavoriteProductRowComponent",
+      "selector": "fd-favorite-product-row",
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "inputs": [
+        {
+          "name": "product",
+          "type": "FavoriteProduct",
+          "required": true
+        },
+        {
+          "name": "removed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoring",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "restoreFailed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "removing",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "remove",
+          "type": "FavoriteProduct"
+        },
+        {
+          "name": "restore",
+          "type": "FavoriteProduct"
+        },
+        {
+          "name": "add",
+          "type": "FavoriteProduct"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "ProductAddComponent",
       "selector": "fd-product-add",
       "feature": "products",
@@ -8786,6 +8845,10 @@
       ],
       "outputs": [
         {
+          "name": "addToMeal",
+          "type": ""
+        },
+        {
           "name": "edit",
           "type": ""
         },
@@ -8871,6 +8934,16 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-edit/product-edit.spec.ts"
+    },
+    {
+      "class": "ProductFavoritesPickerComponent",
+      "selector": "fd-product-favorites-picker",
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.spec.ts"
     },
     {
       "class": "ProductListActiveFiltersComponent",
@@ -15820,7 +15893,7 @@
       "responseType": "FavoriteProduct[]",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 14,
+      "line": 23,
       "publicMethod": "getAll",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -15832,7 +15905,7 @@
       "responseType": "boolean",
       "urlExpression": "`check/${productId}`",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 20,
+      "line": 29,
       "publicMethod": "isFavorite",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -15844,7 +15917,7 @@
       "responseType": "FavoriteProduct",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 26,
+      "line": 35,
       "publicMethod": "add",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -15856,7 +15929,7 @@
       "responseType": "FavoriteProduct",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 32,
+      "line": 41,
       "publicMethod": "update",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -15868,7 +15941,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 38,
+      "line": 47,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -19792,6 +19865,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-actions/product-detail-actions.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
+        "PRODUCT_CARD.ADD_TO_MEAL",
         "PRODUCT_DETAIL.DELETE_BUTTON",
         "PRODUCT_DETAIL.DUPLICATE_BUTTON",
         "PRODUCT_DETAIL.EDIT_BUTTON"
@@ -19804,9 +19878,9 @@
         "GENERAL.UNITS.KCAL",
         "PRODUCT_CARD.QUALITY_SCORE",
         "PRODUCT_DETAIL.SUMMARY.BARCODE",
-        "PRODUCT_DETAIL.SUMMARY.CALORIES",
         "PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION",
-        "PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE"
+        "PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE",
+        "PRODUCT_FAVORITES.NUTRITION_BASE"
       ]
     },
     {
@@ -19818,9 +19892,24 @@
     },
     {
       "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "keys": [
+        "PRODUCT_DETAIL.REMOVE_FAVORITE",
+        "PRODUCT_FAVORITES.ADD",
+        "PRODUCT_FAVORITES.ADDING",
+        "PRODUCT_FAVORITES.BUSY",
+        "PRODUCT_FAVORITES.KCAL",
+        "PRODUCT_FAVORITES.NUTRITION_BASE",
+        "PRODUCT_FAVORITES.NUTRITION_LABEL",
+        "PRODUCT_FAVORITES.UNDO"
+      ]
+    },
+    {
+      "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
       "keys": [
         "PRODUCT_LIST.ADD_PRODUCT_BUTTON",
+        "PRODUCT_LIST.FAVORITES_TITLE",
         "PRODUCT_LIST.FILTERS_BUTTON",
         "PRODUCT_LIST.SCAN_BARCODE",
         "PRODUCT_LIST.SEARCH_CLEAR",
@@ -19981,6 +20070,17 @@
         "PRODUCT_MANAGE.FATS",
         "PRODUCT_MANAGE.FIBER",
         "PRODUCT_MANAGE.PROTEINS"
+      ]
+    },
+    {
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "keys": [
+        "PRODUCT_FAVORITES.LOADING",
+        "PRODUCT_FAVORITES.LOAD_ERROR",
+        "PRODUCT_FAVORITES.RETRY",
+        "PRODUCT_FAVORITES.SEARCH",
+        "PRODUCT_FAVORITES.TITLE"
       ]
     },
     {
@@ -20929,7 +21029,8 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.html",
       "keys": [
-        "PRODUCT_CARD.ADD_TO_MEAL"
+        "PRODUCT_CARD.ADD_TO_MEAL",
+        "PRODUCT_CARD.TO_DIARY"
       ]
     },
     {
@@ -23514,9 +23615,11 @@
       "occurrences": 1,
       "inputsUsed": [
         "actionAriaLabel",
+        "actionLabel",
         "backgroundKey",
         "calories",
         "comment",
+        "compactAction",
         "description",
         "favoriteAriaLabel",
         "favoriteLoading",
@@ -23988,6 +24091,28 @@
         "disabled",
         "loading",
         "meal",
+        "removed",
+        "removing",
+        "restoreFailed",
+        "restoring"
+      ],
+      "outputsHandled": [
+        "add",
+        "remove",
+        "restore"
+      ]
+    },
+    {
+      "component": "FavoriteProductRowComponent",
+      "selector": "fd-favorite-product-row",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "loading",
+        "product",
         "removed",
         "removing",
         "restoreFailed",
@@ -26523,7 +26648,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-actions/product-detail-actions.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "disabled",
         "disabledReason",
@@ -26540,7 +26665,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -26557,8 +26682,27 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "ariaLabel",
+        "ariaPressed",
+        "disabled",
+        "disabledReason",
+        "fill",
+        "icon",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "occurrences": 8,
+      "occurrences": 9,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -26682,6 +26826,19 @@
         "fill",
         "icon",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -29748,6 +29905,20 @@
       "component": "FdUiDialogShellComponent",
       "selector": "fd-ui-dialog-shell",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "dismissible",
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogShellComponent",
+      "selector": "fd-ui-dialog-shell",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "occurrences": 1,
@@ -30737,6 +30908,19 @@
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-content/meal-list-content.html",
       "occurrences": 2,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "occurrences": 1,
       "inputsUsed": [
         "name",
         "size"
@@ -31824,6 +32008,22 @@
         "type"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "maxLength"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -33004,6 +33204,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-pagination/product-list-pagination.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",
@@ -34205,21 +34421,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "selectedValue",
-        "tabs"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiTabsComponent",
-      "selector": "fd-ui-tabs",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-      "consumerFeature": "products",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
       "occurrences": 1,
       "inputsUsed": [
         "selectedValue",
@@ -35832,6 +36033,22 @@
       "component": "NutrientBadgesComponent",
       "selector": "fd-nutrient-badges",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "alcohol",
+        "carbs",
+        "fats",
+        "fiber",
+        "proteins"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "NutrientBadgesComponent",
+      "selector": "fd-nutrient-badges",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
       "occurrences": 1,
@@ -35882,20 +36099,6 @@
         "readonly",
         "showManualHint",
         "warning"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "NutritionEditorComponent",
-      "selector": "fd-nutrition-editor",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts",
-      "consumerFeature": "products",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "form",
-        "macroState",
-        "readonly"
       ],
       "outputsHandled": []
     },
@@ -36839,6 +37042,7 @@
         "warningMessage"
       ],
       "outputsHandled": [
+        "addToMeal",
         "delete",
         "duplicate",
         "edit"
@@ -36917,28 +37121,6 @@
       ],
       "outputsHandled": [
         "addProduct"
-      ]
-    },
-    {
-      "component": "ProductListFavoritesComponent",
-      "selector": "fd-product-list-favorites",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-favorites/product-list-favorites.ts",
-      "consumerFeature": "products",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "favoriteLoadingIds",
-        "favorites",
-        "isLoadingMore",
-        "isOpen",
-        "totalCount"
-      ],
-      "outputsHandled": [
-        "addToMeal",
-        "favoriteRemove",
-        "favoritesToggle",
-        "loadMore",
-        "openProduct"
       ]
     },
     {

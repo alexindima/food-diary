@@ -18,7 +18,6 @@ import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data'
 import type { FavoriteProduct, Product } from '../../../models/product.data';
 import { ProductListActiveFiltersComponent } from '../product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state';
-import { ProductListFavoritesComponent } from '../product-list-sections/product-list-favorites/product-list-favorites';
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../product-list-sections/product-list-off-section/product-list-off-section';
 import { ProductListPaginationComponent } from '../product-list-sections/product-list-pagination/product-list-pagination';
@@ -43,7 +42,6 @@ import { PRODUCT_LIST_TOUR } from './product-list-tour';
         PageBodyComponent,
         FdPageContainerDirective,
         ProductListActiveFiltersComponent,
-        ProductListFavoritesComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,
         ProductListOffSectionComponent,
@@ -176,6 +174,10 @@ export class ProductListBaseComponent {
 
     protected onProductFavoriteToggle(product: Product): void {
         this.productListFacade.onProductFavoriteToggle(product);
+    }
+
+    protected openFavorites(): void {
+        this.productListFacade.openFavorites();
     }
 
     protected toggleFavorites(): void {

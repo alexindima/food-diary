@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1732,
-    "symbols": 671,
+    "typescriptFiles": 1737,
+    "symbols": 674,
     "routes": 100,
     "features": 44,
-    "specs": 623,
+    "specs": 625,
     "localeFiles": 5,
     "roles": {
-      "Component": 453,
+      "Component": 455,
       "Directive": 12,
-      "Facade": 64,
+      "Facade": 65,
       "Other": 19,
       "Pipe": 4,
       "Service": 119
@@ -937,6 +937,7 @@
       "name": "products",
       "root": "FoodDiary.Web.Client/src/app/features/products",
       "symbols": [
+        "FavoriteProductRowComponent",
         "FavoriteProductService",
         "OpenFoodFactsService",
         "ProductAddComponent",
@@ -954,6 +955,8 @@
         "ProductDetailSummaryComponent",
         "ProductEditComponent",
         "ProductExternalFoodFacade",
+        "ProductFavoritesPickerComponent",
+        "ProductFavoritesPickerFacade",
         "ProductFilters",
         "ProductListActiveFiltersComponent",
         "ProductListBaseComponent",
@@ -1002,9 +1005,11 @@
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-lib/product-ai-recognition.helpers.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog-content.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/detail/product-detail.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/products/lib/favorites/product-favorites-picker.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/manage/product-name-search.facade.spec.ts",
@@ -4418,7 +4423,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "OpenFoodFactsService",
@@ -4453,21 +4458,28 @@
       "role": "Component",
       "selector": "fd-product-detail-summary",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-summary/product-detail-summary.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "ProductDetailComponent",
       "role": "Component",
       "selector": "fd-product-detail",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts",
-      "line": 44
+      "line": 38
+    },
+    {
+      "name": "FavoriteProductRowComponent",
+      "role": "Component",
+      "selector": "fd-favorite-product-row",
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.ts",
+      "line": 17
     },
     {
       "name": "ProductListBaseComponent",
       "role": "Component",
       "selector": "fd-product-list-base",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "line": 53
+      "line": 51
     },
     {
       "name": "ProductListFiltersDialogComponent",
@@ -4568,6 +4580,13 @@
       "line": 19
     },
     {
+      "name": "ProductFavoritesPickerComponent",
+      "role": "Component",
+      "selector": "fd-product-favorites-picker",
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
+      "line": 36
+    },
+    {
       "name": "ProductListDialogContentComponent",
       "role": "Component",
       "selector": "fd-product-list-dialog-content",
@@ -4589,11 +4608,18 @@
       "line": 18
     },
     {
+      "name": "ProductFavoritesPickerFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/favorites/product-favorites-picker.facade.ts",
+      "line": 9
+    },
+    {
       "name": "ProductListFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "line": 54
+      "line": 60
     },
     {
       "name": "ProductExternalFoodFacade",
@@ -4642,7 +4668,7 @@
       "role": "Component",
       "selector": "fd-product-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.ts",
-      "line": 49
+      "line": 47
     },
     {
       "name": "ProductAddComponent",
@@ -6629,16 +6655,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3653,
-      "russianProperties": 3653,
+      "englishProperties": 3668,
+      "russianProperties": 3668,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1021,
-      "russianProperties": 1021,
+      "englishProperties": 1027,
+      "russianProperties": 1027,
       "countsMatch": true
     },
     {

@@ -6,7 +6,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
-using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProductOverview;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProductFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
@@ -48,7 +48,7 @@ public partial class ProductsFeatureTests {
         new(
             overviewReadService,
             new RecentProductLoader(RequestTestSender.Create(new ReadRecentProductsQueryHandler(recentRepository)), overviewReadService),
-            RequestTestSender.Create(new ReadFavoriteProductsQueryHandler(favoriteRepository), new ReadProductFavoriteStatusQueryHandler(favoriteRepository)),
+            RequestTestSender.Create(new ReadFavoriteProductOverviewQueryHandler(favoriteRepository), new ReadProductFavoriteStatusQueryHandler(favoriteRepository)),
             currentUserAccessService);
 
     private static GetRecentProductsQueryHandler CreateRecentProductsHandler(
@@ -291,7 +291,12 @@ public partial class ProductsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites, Product? source = null) : IFavoriteProductRepository {
+    private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites, Product? source = null) : IFavoriteProductRepository, IFavoriteProductQuery {
+        public Task<(IReadOnlyList<FavoriteProductReadModel> Items, int Total)> GetPageReadModelsAsync(UserId userId, int page, int limit, string? search, CancellationToken cancellationToken = default) =>
+            Task.FromResult<(IReadOnlyList<FavoriteProductReadModel>, int)>((favorites.Skip((page - 1) * limit).Take(limit).Select(ToReadModel).ToArray(), favorites.Count));
+        public Task<IReadOnlyList<FavoriteProductReadModel>> GetByProductIdsReadModelsAsync(UserId userId, IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>(favorites.Where(f => productIds.Contains(f.ProductId)).Select(ToReadModel).ToArray());
+        public Task<IReadOnlyList<FavoriteProductId>> GetAccessibleIdsAsync(UserId userId, FavoriteProductId? favoriteId = null, IReadOnlyCollection<ProductId>? sourceIds = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();

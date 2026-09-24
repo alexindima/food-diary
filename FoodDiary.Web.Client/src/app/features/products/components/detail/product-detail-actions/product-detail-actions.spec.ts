@@ -18,8 +18,8 @@ describe('ProductDetailActionsComponent', () => {
         });
 
         const buttons = fixture.debugElement.queryAll(By.css('fd-ui-button'));
-        buttons[0].triggerEventHandler('click');
         buttons[1].triggerEventHandler('click');
+        buttons[2].triggerEventHandler('click');
 
         expect(getText(fixture)).toContain('PRODUCT_DETAIL.EDIT_BUTTON');
         expect(getText(fixture)).toContain('PRODUCT_DETAIL.DELETE_BUTTON');
@@ -34,7 +34,7 @@ describe('ProductDetailActionsComponent', () => {
             duplicateCount += 1;
         });
 
-        fixture.debugElement.query(By.css('fd-ui-button')).triggerEventHandler('click');
+        fixture.debugElement.queryAll(By.css('fd-ui-button'))[1].triggerEventHandler('click');
 
         expect(getText(fixture)).toContain('PRODUCT_DETAIL.DUPLICATE_BUTTON');
         expect(duplicateCount).toBe(1);

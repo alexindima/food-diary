@@ -18,6 +18,13 @@ public sealed class FavoriteProductsController(ISender mediator) : AuthorizedCon
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
+    [HttpGet("page")]
+    [ProducesResponseType<PagedHttpResponse<FavoriteProductHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetFavoriteProductPageHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => new PagedHttpResponse<FavoriteProductHttpResponse>(
+            value.Data.Select(item => item.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
+
     [HttpGet("check/{productId:guid}")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
     public Task<IActionResult> IsFavorite(Guid productId, [FromCurrentUser] Guid userId) =>

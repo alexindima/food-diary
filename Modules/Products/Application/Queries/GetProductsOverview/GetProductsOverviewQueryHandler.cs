@@ -8,7 +8,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Services;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProducts;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProductOverview;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -61,12 +61,6 @@ public sealed class GetProductsOverviewQueryHandler(
             cancellationToken).ConfigureAwait(false);
 
         var allProducts = items.ToList();
-        IReadOnlyList<FavoriteProductModel> allFavorites = await sender.Send(new ReadFavoriteProductsQuery(options.UserId), cancellationToken).ConfigureAwait(false);
-        var favoriteItems = allFavorites
-            .Take(options.FavoriteLimit)
-            .ToList();
-        var favoriteLookup = allFavorites.ToDictionary(ToFavoriteProductId);
-
         IReadOnlyList<ProductOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
             options.UserId,
             options.RecentLimit,
@@ -77,9 +71,8 @@ public sealed class GetProductsOverviewQueryHandler(
             .Select(x => x.Id)
             .Concat(recentItems.Select(x => x.Id))
             .Distinct()];
-        var favoritesByProductId = favoriteLookup
-            .Where(pair => favoriteProductIds.Contains(pair.Key))
-            .ToDictionary();
+        FavoriteProductOverviewModel favorites = await sender.Send(new ReadFavoriteProductOverviewQuery(options.UserId, favoriteProductIds, options.FavoriteLimit), cancellationToken).ConfigureAwait(false);
+        var favoritesByProductId = favorites.Items.ToDictionary(ToFavoriteProductId);
 
         PagedResponse<ProductModel> allPaged = CreatePagedProducts(
             allProducts,
@@ -88,7 +81,7 @@ public sealed class GetProductsOverviewQueryHandler(
             totalItems);
         ProductModel[] recentResponses = ToProductModels(recentItems, favoritesByProductId);
 
-        return Result.Success(new ProductOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
+        return Result.Success(new ProductOverviewModel(recentResponses, allPaged, favorites.Preview, favorites.Total));
     }
 
     private static ProductId ToFavoriteProductId(FavoriteProductModel favorite) =>
@@ -102,7 +95,7 @@ public sealed class GetProductsOverviewQueryHandler(
             PaginationPolicy.NormalizePage(query.Page),
             PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1),
             Math.Clamp(query.RecentLimit, 1, 50),
-            Math.Clamp(query.FavoriteLimit, 1, 50),
+            Math.Clamp(query.FavoriteLimit, 0, 50),
             productTypes is { Length: > 0 } ? productTypes : null,
             query.CaloriesFrom,
             query.CaloriesTo,

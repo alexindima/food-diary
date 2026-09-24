@@ -353,3 +353,17 @@
         }
     }
 }
+
+.product-list__search-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+    flex-wrap: wrap;
+    > .product-list__desktop-search {
+        flex: 1;
+        min-width: 0;
+    }
+    > .product-list__mobile-search {
+        width: 100%;
+    }
+}

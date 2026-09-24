@@ -18,41 +18,34 @@
                 />
                 <h2 class="product-detail__title">{{ product.name }}</h2>
             </div>
-            <button type="button" class="product-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
-                <span class="material-icons" aria-hidden="true">close</span>
-            </button>
+            <fd-ui-button
+                appearance="plain-icon"
+                variant="secondary"
+                fill="text"
+                icon="close"
+                [ariaLabel]="'COMMON.CLOSE' | translate"
+                (click)="close()"
+            />
         </div>
-        <fd-ui-tabs class="product-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab()" (selectedValueChange)="onTabChange($event)" />
     </header>
 
     <div class="product-detail fd-stack fd-gap-lg">
-        @switch (activeTab()) {
-            @case ('summary') {
-                <fd-product-detail-summary
-                    [product]="product"
-                    [calories]="calories"
-                    [baseUnitKey]="baseUnitKey"
-                    [productTypeKey]="productTypeKey"
-                    [qualityScore]="qualityScore"
-                    [qualityGrade]="qualityGrade"
-                    [macroSummaryBlocks]="macroSummaryBlocks"
-                />
-            }
-            @case ('nutrients') {
-                <fd-nutrition-editor
-                    class="product-detail__nutrients"
-                    [form]="nutritionForm"
-                    [macroState]="macroBarState"
-                    [readonly]="true"
-                />
-            }
-        }
+        <fd-product-detail-summary
+            [product]="product"
+            [calories]="calories"
+            [baseUnitKey]="baseUnitKey"
+            [productTypeKey]="productTypeKey"
+            [qualityScore]="qualityScore"
+            [qualityGrade]="qualityGrade"
+            [macroSummaryBlocks]="macroBlocks"
+        />
     </div>
 
     <fd-product-detail-actions
         [canModify]="canModify()"
         [warningMessage]="warningMessage()"
         [isDuplicateInProgress]="isDuplicateInProgress()"
+        (addToMeal)="addToMeal()"
         (edit)="onEdit()"
         (delete)="onDelete()"
         (duplicate)="onDuplicate()"

@@ -15,6 +15,7 @@ export class ProductDetailActionsComponent {
     public readonly warningMessage = input.required<string | null>();
     public readonly isDuplicateInProgress = input.required<boolean>();
 
+    public readonly addToMeal = output();
     public readonly edit = output();
     public readonly delete = output();
     public readonly duplicate = output();

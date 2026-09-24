@@ -507,7 +507,8 @@
     "PRODUCT_CARD": {
         "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
-        "QUALITY_SCORE": "Healthiness"
+        "QUALITY_SCORE": "Healthiness",
+        "TO_DIARY": "To diary"
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal",

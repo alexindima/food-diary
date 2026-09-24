@@ -24,7 +24,7 @@ public sealed class GetProductsOverviewQueryValidator : AbstractValidator<GetPro
             .InclusiveBetween(1, 50)
             .WithErrorCode("Validation.Invalid");
         RuleFor(x => x.FavoriteLimit)
-            .InclusiveBetween(1, 50)
+            .InclusiveBetween(0, 50)
             .WithErrorCode("Validation.Invalid");
     }
 }

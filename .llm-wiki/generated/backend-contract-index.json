@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1266,
+    "contracts": 1269,
     "ambiguousContracts": 2,
-    "consumerEdges": 9908,
-    "productionConsumerEdges": 5657,
-    "testConsumerEdges": 4251,
-    "consumedContracts": 1266,
+    "consumerEdges": 9933,
+    "productionConsumerEdges": 5674,
+    "testConsumerEdges": 4259,
+    "consumedContracts": 1269,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -6552,6 +6552,40 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetFavoriteProductPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17369,6 +17403,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadFavoriteMeals/ReadFavoriteMealsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ReadFavoriteProductOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -39268,7 +39319,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "FavoriteProductHttpResponse",
@@ -39320,6 +39371,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/FavoriteProductPageIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -45548,6 +45612,84 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteProductPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteProductPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "GetFavoriteProductsQuery",
@@ -65929,6 +66071,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67583,6 +67738,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -77200,6 +77368,32 @@
         "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -77215,6 +77409,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/ReadFavoriteProductOverviewTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application.Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -96309,6 +96542,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96414,6 +96660,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Contracts/FavoriteMeals/Queries/ReadMealFavoriteStatus/ReadMealFavoriteStatusQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98337,6 +98596,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -98351,6 +98623,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -121360,6 +121645,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -130759,6 +131057,19 @@
         "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
       "isTest": false,
       "referenceCount": 2
@@ -131383,6 +131694,32 @@
         "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -131813,6 +132150,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/GetFavoriteMealPageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -133221,6 +133571,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "ReadFavoriteProductOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ReadFavoriteProductOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadFavoriteProductOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/ReadFavoriteProductOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/ReadFavoriteProductOverviewTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ReadFavoriteProductsQuery",
       "roles": [
         "Query"
@@ -133245,19 +133634,6 @@
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
-    },
-    {
-      "contract": "ReadFavoriteProductsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProducts/ReadFavoriteProductsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
     },
     {
       "contract": "ReadFavoriteProductsQuery",

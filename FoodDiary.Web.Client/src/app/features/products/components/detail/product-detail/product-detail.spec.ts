@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { ProductService } from '../../../api/product.service';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../models/product.data';
@@ -93,6 +94,7 @@ async function createComponentAsync(product: Product = mockProduct): Promise<Pro
             imports: [ProductDetailComponent],
             providers: [
                 provideTranslateTesting(),
+                { provide: QuickMealService, useValue: { addProduct: vi.fn() } },
                 { provide: FD_UI_DIALOG_DATA, useValue: product },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
@@ -142,20 +144,15 @@ describe('ProductDetailComponent summary state', () => {
         expect(component['macroBarState'].segments.map(segment => segment.key)).toEqual(['proteins', 'fats']);
     });
 
-    it('should have summary and nutrients tabs', () => {
-        expect(component['tabs'].length).toBe(2);
-        expect(component['tabs'][0].value).toBe('summary');
-        expect(component['tabs'][1].value).toBe('nutrients');
-    });
-
-    it('should change active tab', () => {
-        expect(component['activeTab']()).toBe('summary');
-
-        component['onTabChange']('nutrients');
-        expect(component['activeTab']()).toBe('nutrients');
-
-        component['onTabChange']('summary');
-        expect(component['activeTab']()).toBe('summary');
+    it('shows all nutrients without duplicate tabs and adds the product to the diary', () => {
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-ui-tabs')).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.product-detail__macro-summary dd').length).toBe(
+            USED_PRODUCT_USAGE_COUNT,
+        );
+        const add = vi.spyOn(TestBed.inject(QuickMealService), 'addProduct');
+        component['addToMeal']();
+        expect(add).toHaveBeenCalledWith(mockProduct);
+        expect(mockDialogRef.close).toHaveBeenCalled();
     });
 });
 

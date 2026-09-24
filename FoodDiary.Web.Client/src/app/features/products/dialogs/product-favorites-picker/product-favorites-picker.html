@@ -1,0 +1,51 @@
+<fd-ui-dialog-shell size="md" [title]="'PRODUCT_FAVORITES.TITLE' | translate" [dismissible]="!busy()">
+    <div class="fd-stack fd-gap-md">
+        <fd-ui-input
+            [label]="'PRODUCT_FAVORITES.SEARCH' | translate"
+            [maxLength]="200"
+            [disabled]="busy()"
+            (valueChange)="search($event)"
+        />
+        <div aria-live="polite" [hidden]="!facade.loading() && !facade.failed() && facade.items().length > 0">
+            @if (facade.loading()) {
+                <p class="fd-ui-meta-text">{{ 'PRODUCT_FAVORITES.LOADING' | translate }}</p>
+            } @else if (facade.failed()) {
+                <p role="alert">{{ 'PRODUCT_FAVORITES.LOAD_ERROR' | translate }}</p>
+                <fd-ui-button fill="text" variant="secondary" (click)="load(facade.page())">{{
+                    'PRODUCT_FAVORITES.RETRY' | translate
+                }}</fd-ui-button>
+            } @else if (facade.items().length === 0) {
+                <p class="fd-ui-meta-text">
+                    {{ (facade.search() ? 'PRODUCT_FAVORITES.NO_RESULTS' : 'PRODUCT_FAVORITES.EMPTY') | translate }}
+                </p>
+            }
+        </div>
+        <div class="favorites-picker__list" [hidden]="facade.items().length === 0">
+            @for (item of facade.items(); track item.productId) {
+                <fd-favorite-product-row
+                    [product]="item"
+                    [removed]="facade.removedIds().has(item.id)"
+                    [restoring]="restoringId() === item.id"
+                    [restoreFailed]="restoreErrors().has(item.id)"
+                    [loading]="savingId() === item.id"
+                    [disabled]="busy()"
+                    [removing]="removingId() === item.id"
+                    (restore)="undoRemoval($event)"
+                    (remove)="remove($event)"
+                    (add)="add($event)"
+                />
+            }
+        </div>
+        @if (operationErrorKey(); as errorKey) {
+            <p role="alert">{{ errorKey | translate }}</p>
+        }
+        @if (!facade.failed() && facade.paginationTotal() > facade.pageSize) {
+            <fd-ui-pagination
+                [length]="facade.paginationTotal()"
+                [pageSize]="facade.pageSize"
+                [pageIndex]="facade.page() - 1"
+                (pageIndexChange)="changePage($event + 1)"
+            />
+        }
+    </div>
+</fd-ui-dialog-shell>

@@ -45,6 +45,7 @@ let productService: {
 };
 let favoriteProductService: {
     getAll: ReturnType<typeof vi.fn>;
+    getPage: ReturnType<typeof vi.fn>;
     add: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
@@ -69,6 +70,7 @@ beforeEach(() => {
     };
     favoriteProductService = {
         getAll: vi.fn(),
+        getPage: vi.fn().mockReturnValue(of({ data: [], totalItems: 1 })),
         add: vi.fn(),
         update: vi.fn(),
         remove: vi.fn(),
@@ -288,7 +290,7 @@ describe('ProductListFacade favorites', () => {
         facade.onProductFavoriteToggle(product);
 
         expect(favoriteProductService.add).toHaveBeenCalledWith('product-1', 'Test product', DEFAULT_PORTION_AMOUNT);
-        expect(favoriteProductService.getAll).toHaveBeenCalled();
+        expect(favoriteProductService.getPage).not.toHaveBeenCalled();
         expect(facade.productData.items()[0]).toEqual(expect.objectContaining({ isFavorite: true, favoriteProductId: 'favorite-1' }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
     });
@@ -299,7 +301,7 @@ describe('ProductListFacade favorites', () => {
 
         facade.onProductFavoriteToggle(product);
 
-        expect(favoriteProductService.getAll).toHaveBeenCalled();
+        expect(favoriteProductService.getPage).not.toHaveBeenCalled();
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.productData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteProductId: null }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
@@ -321,7 +323,7 @@ describe('ProductListFacade favorites', () => {
                 isFavorite: true,
                 favoriteProductId: favorite.id,
             }),
-            FAVORITE_DEFAULT_PORTION_AMOUNT,
+            favorite.preferredPortionAmount,
         );
     });
 });
@@ -435,3 +437,37 @@ function createOpenFoodFactsProduct(overrides: Partial<OpenFoodFactsProduct> = {
         ...overrides,
     };
 }
+
+describe('ProductListFacade request lifecycle', () => {
+    it('cancels an obsolete overview when a search starts', () => {
+        const old = new Subject<unknown>();
+        productService.queryOverview.mockReturnValue(old);
+        facade.loadInitialOverview().subscribe();
+        facade.loadProducts(1, PRODUCT_LIST_PAGE_SIZE, 'rice').subscribe();
+        expect(old.observed).toBe(false);
+        expect(facade.productData.items()[0].id).toBe('query-product');
+        expect(facade.productData.isLoading()).toBe(false);
+    });
+    it('preserves the star and releases the busy state when adding fails', () => {
+        const product = createProduct({ isFavorite: false });
+        facade.productData.setData(createPage([product]));
+        favoriteProductService.add.mockReturnValue(throwError(() => new Error('offline')));
+        facade.onProductFavoriteToggle(product);
+        expect(facade.productData.items()[0].isFavorite).toBe(false);
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+        expect(toastService.error).toHaveBeenCalledWith('PRODUCT_FAVORITES.ADD_ERROR');
+    });
+    it('opens favorites without fetching the full collection', () => {
+        facade.openFavorites();
+        expect(favoriteProductService.getAll).not.toHaveBeenCalled();
+        expect(favoriteProductService.getPage).not.toHaveBeenCalled();
+        const options = dialogService.open.mock.calls[0][1] as {
+            size: string;
+            data: { repeat: unknown; remove: unknown; restore: unknown };
+        };
+        expect(options.size).toBe('md');
+        expect(typeof options.data.repeat).toBe('function');
+        expect(typeof options.data.remove).toBe('function');
+        expect(typeof options.data.restore).toBe('function');
+    });
+});
