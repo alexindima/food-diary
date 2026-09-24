@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -238,12 +239,47 @@ public sealed class TelemetryActionFilterTests {
     }
 
     [Fact]
-    public async Task OnResourceExecutionAsync_WithUnrelatedCancellationToken_RecordsUnhandledFailure() {
+    public async Task OnResourceExecutionAsync_WithLateClientCancellation_RecordsCancelledFinalOutcome() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
         var logger = new RecordingLogger<TelemetryActionFilter>();
         var filter = new TelemetryActionFilter(logger);
         ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+        var responseFeature = new CompletingResponseFeature();
+        context.HttpContext.Features.Set<IHttpResponseFeature>(responseFeature);
+        using var requestCancellation = new CancellationTokenSource();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+
+        await filter.OnResourceExecutionAsync(context, () => Task.FromResult(
+            new ResourceExecutedContext(context, []) {
+                Exception = new OperationCanceledException(),
+            }));
+
+        Assert.Empty(metrics.Operations);
+        await requestCancellation.CancelAsync();
+        context.HttpContext.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
+        await responseFeature.CompleteAsync();
+
+        MetricMeasurement operation = Assert.Single(metrics.Operations);
+        Activity activity = Assert.Single(activities.Completed);
+        Assert.Multiple(
+            () => Assert.Equal("cancelled", operation.Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, activity.Status),
+            () => Assert.Null(activity.GetTagItem("error.type")),
+            () => Assert.Equal(StatusCodes.Status499ClientClosedRequest, activity.GetTagItem("http.response.status_code")));
+    }
+
+    [Fact]
+    public async Task OnResourceExecutionAsync_WithUnrelatedCancellationToken_RecordsUnhandledFinalFailure() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+        var responseFeature = new CompletingResponseFeature();
+        context.HttpContext.Features.Set<IHttpResponseFeature>(responseFeature);
         using var requestCancellation = new CancellationTokenSource();
         using var unrelatedCancellation = new CancellationTokenSource();
         context.HttpContext.RequestAborted = requestCancellation.Token;
@@ -252,6 +288,10 @@ public sealed class TelemetryActionFilterTests {
             new ResourceExecutedContext(context, []) {
                 Exception = new OperationCanceledException(unrelatedCancellation.Token),
             }));
+
+        Assert.Empty(metrics.Operations);
+        context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await responseFeature.CompleteAsync();
 
         Assert.Multiple(
             () => Assert.Equal("failure", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
@@ -477,6 +517,33 @@ public sealed class TelemetryActionFilterTests {
         public List<Activity> Completed { get; } = [];
 
         public void Dispose() => _listener.Dispose();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CompletingResponseFeature : IHttpResponseFeature {
+        private readonly List<(Func<object, Task> Callback, object State)> _callbacks = [];
+
+        public int StatusCode { get; set; } = StatusCodes.Status200OK;
+
+        public string? ReasonPhrase { get; set; }
+
+        public IHeaderDictionary Headers { get; set; } = new HeaderDictionary();
+
+        public Stream Body { get; set; } = new MemoryStream();
+
+        public bool HasStarted => false;
+
+        public void OnStarting(Func<object, Task> callback, object state) {
+        }
+
+        public void OnCompleted(Func<object, Task> callback, object state) => _callbacks.Add((callback, state));
+
+        public async Task CompleteAsync() {
+            for (int index = _callbacks.Count - 1; index >= 0; index--) {
+                (Func<object, Task> callback, object state) = _callbacks[index];
+                await callback(state);
+            }
+        }
     }
 
     [ExcludeFromCodeCoverage]

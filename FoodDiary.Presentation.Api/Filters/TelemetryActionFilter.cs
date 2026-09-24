@@ -28,6 +28,11 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                 return;
             }
 
+            if (exception is OperationCanceledException cancellationException) {
+                DeferCancellationObservation(executedContext.HttpContext, observation, cancellationException);
+                return;
+            }
+
             CompleteObservation(
                 observation,
                 ResolveStatusCode(
@@ -36,6 +41,9 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                 exception);
         } catch (OperationCanceledException exception) when (IsClientCancellation(context.HttpContext, exception)) {
             CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
+            throw;
+        } catch (OperationCanceledException exception) {
+            DeferCancellationObservation(context.HttpContext, observation, exception);
             throw;
         } catch (Exception exception) {
             CompleteObservation(observation, StatusCodes.Status500InternalServerError, exception);
@@ -62,6 +70,11 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                 return;
             }
 
+            if (exception is OperationCanceledException cancellationException) {
+                DeferCancellationObservation(executedContext.HttpContext, observation, cancellationException);
+                return;
+            }
+
             CompleteObservation(
                 observation,
                 ResolveStatusCode(
@@ -71,10 +84,42 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         } catch (OperationCanceledException exception) when (IsClientCancellation(context.HttpContext, exception)) {
             CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
             throw;
+        } catch (OperationCanceledException exception) {
+            DeferCancellationObservation(context.HttpContext, observation, exception);
+            throw;
         } catch (Exception exception) {
             CompleteObservation(observation, StatusCodes.Status500InternalServerError, exception);
             throw;
         }
+    }
+
+    private void DeferCancellationObservation(
+        HttpContext context,
+        PresentationOperationObservation observation,
+        OperationCanceledException exception) {
+        context.Response.OnCompleted(static state => {
+            var deferred = (DeferredCancellationObservation)state;
+            deferred.Filter.CompleteDeferredCancellationObservation(
+                deferred.Context,
+                deferred.Observation,
+                deferred.Exception);
+            return Task.CompletedTask;
+        }, new DeferredCancellationObservation(this, context, observation, exception));
+    }
+
+    private void CompleteDeferredCancellationObservation(
+        HttpContext context,
+        PresentationOperationObservation observation,
+        OperationCanceledException exception) {
+        int finalStatusCode = context.Response.StatusCode;
+        bool isCancelled = finalStatusCode == StatusCodes.Status499ClientClosedRequest ||
+                           (finalStatusCode < StatusCodes.Status500InternalServerError &&
+                            IsClientCancellation(context, exception));
+        CompleteObservation(
+            observation,
+            isCancelled ? StatusCodes.Status499ClientClosedRequest : ResolveStatusCode(finalStatusCode, exception),
+            isCancelled ? null : exception,
+            isCancelled);
     }
 
     private static PresentationOperationObservation BeginObservation(FilterContext context) {
@@ -238,4 +283,10 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         string OperationName,
         Stopwatch Stopwatch,
         Activity? Activity);
+
+    private sealed record DeferredCancellationObservation(
+        TelemetryActionFilter Filter,
+        HttpContext Context,
+        PresentationOperationObservation Observation,
+        OperationCanceledException Exception);
 }

@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "85a5e45106a1a8079d11929ea615ab5387e9d810d3627234c4b67fc20a3ff5b7"
+          "sha256": "908c13d1a05d26f516705e1c774e6781f75531949169b5092d3d8fb1cf36bca9"
         }
       ],
-      "reason": "Generated test references were used only as navigation. Actual focused unit and browser runs are recorded separately, and PostgreSQL execution is explicitly pending Docker availability. Risk workflow remains accurate.",
+      "reason": "Regenerated the quality index after merging the tested telemetry cancellation fix; no policy violation or new untested runtime path remains.",
       "baseRef": "HEAD",
-      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
-      "reviewedAtUtc": "2026-09-23T17:59:01.8768105Z"
+      "gitHead": "9aa0e2e2fe4ddef5542bdcbb08456a91401d368c",
+      "reviewedAtUtc": "2026-09-24T09:51:57.6612978Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0545206a29dc627d6dae9da381d4948e104f14f40c499c36809ddadd8a6d65ba"
+          "sha256": "8f630ca2ed9cf979a4895359086311ac1eeeafb0dbd09b493b384b3552c9f259"
         }
       ],
-      "reason": "Only in-process Favorites read queries and existing HTTP consumers changed; no jobs, external clients, deployment settings or retry infrastructure changed. Runtime topology regeneration preserves workflow guidance.",
+      "reason": "Regenerated runtime topology from the combined source tree; the merge changes no service boundary, dependency edge, or deployment topology.",
       "baseRef": "HEAD",
-      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
-      "reviewedAtUtc": "2026-09-23T17:59:04.4654365Z"
+      "gitHead": "9aa0e2e2fe4ddef5542bdcbb08456a91401d368c",
+      "reviewedAtUtc": "2026-09-24T09:51:58.3069466Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "85a5e45106a1a8079d11929ea615ab5387e9d810d3627234c4b67fc20a3ff5b7"
+          "sha256": "908c13d1a05d26f516705e1c774e6781f75531949169b5092d3d8fb1cf36bca9"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0545206a29dc627d6dae9da381d4948e104f14f40c499c36809ddadd8a6d65ba"
+          "sha256": "8f630ca2ed9cf979a4895359086311ac1eeeafb0dbd09b493b384b3552c9f259"
         }
       ],
-      "reason": "Owner/public visibility predicates include ingredient names and escaped search; denied-owner unit coverage passes. Provider-backed privacy regression is added but skipped without Docker, so no stronger runtime security claim is made. Workflow remains accurate.",
+      "reason": "The telemetry change records only status and outcome, adds no payload, token, identity, or user data, and preserves internal cancellation failures.",
       "baseRef": "HEAD",
-      "gitHead": "5b543b538e31b3150fbcc084ac2c43bbb570ab04",
-      "reviewedAtUtc": "2026-09-23T17:59:07.1403980Z"
+      "gitHead": "9aa0e2e2fe4ddef5542bdcbb08456a91401d368c",
+      "reviewedAtUtc": "2026-09-24T09:51:59.2229553Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
