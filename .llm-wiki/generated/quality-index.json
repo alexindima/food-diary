@@ -3930,11 +3930,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
-      "nonBlankLines": 211,
-      "decisionPoints": 25,
+      "nonBlankLines": 257,
+      "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.72
+      "structuralRiskScore": 51.64
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/AllowedQueryValuesAttribute.cs",
