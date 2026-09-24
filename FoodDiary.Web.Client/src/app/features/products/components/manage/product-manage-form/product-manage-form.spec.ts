@@ -530,6 +530,62 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
     });
 });
 
+describe('Product recognition integration', () => {
+    it('applies recognized portion values and asks before discarding them', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.detectChanges();
+        component['applyAiResult']({
+            name: 'Recognized product',
+            image: null,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: PORTION_AMOUNT,
+            caloriesPerBase: PORTION_CALORIES,
+            proteinsPerBase: 1,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        });
+        expect(component['nutritionMode']).toBe('portion');
+        expect(productValues(component).defaultPortionAmount).toBe(PORTION_AMOUNT);
+        expect(productValues(component).caloriesPerBase).toBe(PORTION_CALORIES);
+        await component['onCancelAsync']();
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Product creation numeric validation', () => {
+    it('allows an explicitly zero calorie product with empty optional nutrients', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Water', caloriesPerBase: 0 });
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledOnce();
+    });
+
+    it.each([
+        'caloriesPerBase',
+        'proteinsPerBase',
+        'fatsPerBase',
+        'carbsPerBase',
+        'fiberPerBase',
+        'alcoholPerBase',
+        'defaultPortionAmount',
+    ] as const)('blocks non-finite %s instead of silently saving zero', async field => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, { [field]: Number.NaN });
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('still requires an explicit calorie value', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Water' });
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+});
+
 async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const externalFoodFacade = createProductExternalFoodFacadeMock();

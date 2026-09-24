@@ -9,12 +9,13 @@
                         floatLabel="always"
                         type="number"
                         placeholder="0"
+                        [localizedNumber]="true"
                         [class]="`nutrition-editor__input nutrition-editor__input--${field.key}`"
                         [formField]="signalForm[field.key]"
                         [label]="`NUTRITION_EDITOR.FIELD_LABELS.${field.label}` | translate"
                         [prefixIcon]="field.icon"
                         [suffixText]="`GENERAL.UNITS.${field.unit}` | translate"
-                        [error]="field.key === 'calories' ? caloriesError() : fieldErrors()[field.key]"
+                        [error]="field.key === 'calories' ? (caloriesError() ?? fieldErrors().calories) : fieldErrors()[field.key]"
                         [maximum]="field.key === 'calories' ? maxCalories() : maxNutrient()"
                     />
                 }

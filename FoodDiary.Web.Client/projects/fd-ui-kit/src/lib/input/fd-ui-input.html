@@ -25,8 +25,8 @@
             #control
             class="fd-ui-input__control"
             [id]="id()"
-            [attr.type]="type()"
-            [attr.inputmode]="inputMode() ?? null"
+            [attr.type]="localizedNumber() && type() === 'number' ? 'text' : type()"
+            [attr.inputmode]="inputMode() ?? (localizedNumber() ? 'decimal' : null)"
             [attr.autocomplete]="autocomplete() ?? null"
             [value]="internalValue()"
             [required]="required()"

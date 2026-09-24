@@ -15,7 +15,6 @@ import type { ConfirmDeleteDialogData } from '../../../../../components/shared/c
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../../services/navigation.service';
-import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
@@ -367,7 +366,7 @@ export class ProductManageFormComponent {
 
         this.productForm().markAsTouched();
 
-        if (this.hasMacrosError() || this.hasCurrentPortionNutritionWarning() || this.productForm().invalid()) {
+        if (this.hasCurrentPortionNutritionWarning() || this.productForm().invalid()) {
             return null;
         }
 
@@ -453,17 +452,6 @@ export class ProductManageFormComponent {
         this.nameSearch.setSelectedSuggestion(suggestion);
     }
 
-    private hasMacrosError(): boolean {
-        const controls = [
-            this.getNutritionControlState('proteinsPerBase'),
-            this.getNutritionControlState('fatsPerBase'),
-            this.getNutritionControlState('carbsPerBase'),
-            this.getNutritionControlState('alcoholPerBase'),
-        ];
-
-        return checkMacrosError(controls);
-    }
-
     private convertNutritionControls(factor: number): void {
         const patch = buildConvertedNutritionPatch(this.productFormModel(), factor);
 
@@ -479,6 +467,7 @@ export class ProductManageFormComponent {
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
         this.patchProductForm(buildAiResultPatch(this.productFormModel(), result));
+        this.productForm().markAsDirty();
         this.nutritionMode = 'portion';
     }
 
@@ -556,21 +545,6 @@ export class ProductManageFormComponent {
         patchSignalFormModel(this.productFormModel, patch);
     }
 
-    private getNutritionControlState(
-        field: keyof Pick<ProductFormValues, 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'alcoholPerBase'>,
-    ): {
-        value: number | null;
-        touched: boolean;
-        dirty: boolean;
-    } {
-        const state = this.productForm[field]();
-        return {
-            value: this.productFormModel()[field],
-            touched: state.touched(),
-            dirty: state.dirty(),
-        };
-    }
-
     private getCurrentMaxCalories(): number {
         return this.getAllowedNutritionMax(getProductMaxCaloriesPerBaseForUnit(this.productFormModel().baseUnit));
     }
@@ -633,17 +607,22 @@ function validateNullableMaxLength(value: string | null, maximumLength: number):
 function validateProductAmountMax(
     value: number | string | null,
     unit: ProductFormValues['baseUnit'],
-): { kind: 'max'; max: number } | undefined {
+): { kind: 'max'; max: number } | { kind: 'invalid' } | undefined {
     const maximumAmount = getProductMaxAmountForUnit(unit);
     const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
-    return numericValue !== null && Number.isFinite(numericValue) && numericValue > maximumAmount
-        ? { kind: 'max', max: maximumAmount }
-        : undefined;
+    if (numericValue !== null && !Number.isFinite(numericValue)) {
+        return { kind: 'invalid' };
+    }
+    return numericValue !== null && numericValue > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
 }
 
-function validateProductNutritionMax(value: number | string | null, maximumAmount: number): { kind: 'max'; max: number } | undefined {
+function validateProductNutritionMax(
+    value: number | string | null,
+    maximumAmount: number,
+): { kind: 'max'; max: number } | { kind: 'invalid' } | undefined {
     const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
-    return numericValue !== null && Number.isFinite(numericValue) && numericValue > maximumAmount
-        ? { kind: 'max', max: maximumAmount }
-        : undefined;
+    if (numericValue !== null && !Number.isFinite(numericValue)) {
+        return { kind: 'invalid' };
+    }
+    return numericValue !== null && numericValue > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
 }

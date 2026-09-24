@@ -145,7 +145,7 @@ describe('ProductNutritionEditorComponent validation messages', () => {
         expect(component['caloriesError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED');
     });
 
-    it('returns macros required error when macro controls are empty and touched', () => {
+    it('allows zero calories and empty optional macros', () => {
         const productForm = createProductSignalForm();
         setRequiredInputs(productForm);
         fixture.detectChanges();
@@ -155,7 +155,10 @@ describe('ProductNutritionEditorComponent validation messages', () => {
         productForm.carbsPerBase().markAsTouched();
         productForm.alcoholPerBase().markAsTouched();
 
-        expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
+        productForm.caloriesPerBase().value.set(0);
+        productForm.caloriesPerBase().markAsTouched();
+        expect(component['caloriesError']()).toBeNull();
+        expect(component['nutritionFieldErrors']().proteins).toBeNull();
     });
 
     it('returns nutrition max errors for individual nutrient fields', () => {

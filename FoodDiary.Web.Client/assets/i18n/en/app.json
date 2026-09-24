@@ -687,7 +687,7 @@
             "HINT": "Specifies the quantity the nutrition values refer to."
         },
         "NUTRITION_ERRORS": {
-            "CALORIES_REQUIRED": "Calories must be greater than 0.",
+            "CALORIES_REQUIRED": "Enter calories (0 or greater).",
             "MACROS_REQUIRED": "Set at least one macro (proteins, fats, carbs, or alcohol)."
         },
         "NUTRITION_WARNINGS": {

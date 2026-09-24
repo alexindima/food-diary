@@ -1,6 +1,6 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, untracked } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormValueControl } from '@angular/forms/signals';
@@ -55,6 +55,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'>('text');
+    public readonly localizedNumber = input(false);
     public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
@@ -87,7 +88,12 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     public constructor() {
         effect(() => {
-            this.internalValue.set(this.value() ?? '');
+            const value = this.value();
+            const raw = untracked(this.internalValue);
+            if (this.localizedNumber() && this.type() === 'number' && Object.is(this.toModelValue(String(raw)), value)) {
+                return;
+            }
+            this.internalValue.set(value ?? '');
         });
 
         afterNextRender(() => {
@@ -218,8 +224,21 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         if (this.type() !== 'number') {
             return value;
         }
+        if (this.localizedNumber()) {
+            return this.parseLocalizedNumber(value);
+        }
         const numberValue = Number(value);
         return value.trim() !== '' && Number.isFinite(numberValue) ? numberValue : null;
+    }
+
+    private parseLocalizedNumber(value: string): number | null {
+        const text = value.trim();
+        if (text === '') {
+            return null;
+        }
+        const isDecimal = /^[+-]?\d*[.,]?\d*$/u.test(text) && /\d/u.test(text);
+        const numberValue = isDecimal ? Number(text.replace(',', '.')) : Number.NaN;
+        return Number.isFinite(numberValue) ? numberValue : Number.NaN;
     }
 
     private monitorAutofill(): void {

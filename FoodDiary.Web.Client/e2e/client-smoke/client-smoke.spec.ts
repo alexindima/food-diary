@@ -2073,3 +2073,92 @@ test.describe('product form visual regression', () => {
         });
     }
 });
+
+test.describe('product creation behavior', () => {
+    test('saves comma decimals in portion mode as normalized base values', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        const payloads: Array<Record<string, unknown>> = [];
+        await page.route(/\/api\/v1\/products\/?(?:\?|$)/u, async route => {
+            if (route.request().method() !== 'POST') {
+                await route.fallback();
+                return;
+            }
+            const payload = route.request().postDataJSON() as Record<string, unknown>;
+            payloads.push(payload);
+            await route.fulfill({ json: { ...createOwnedProduct(), ...payload } });
+        });
+        await page.goto('/products/add');
+        await page.getByRole('combobox', { name: 'Name *', exact: true }).fill('QA decimal product');
+        await page.keyboard.press('Escape');
+        const calories = page.locator('.nutrition-editor__input--calories input');
+        const protein = page.locator('.nutrition-editor__input--proteins input');
+        await calories.fill('120');
+        await protein.pressSequentially('10,5');
+        await expect(protein).toHaveValue('10,5');
+        await page.getByRole('textbox', { name: 'Default portion', exact: true }).fill('250');
+        await page.getByRole('radio', { name: 'Per serving', exact: true }).click();
+        await expect(calories).toHaveValue('300');
+        await protein.fill('25,5');
+        await page.locator('details summary').click();
+        await page.getByRole('textbox', { name: 'Comment', exact: true }).fill('Keep this comment');
+        await page.getByRole('button', { name: 'Create product', exact: true }).click();
+        await expect(page).toHaveURL(/\/products$/u);
+        expect(payloads).toHaveLength(1);
+        expect(payloads[0]).toMatchObject({
+            baseAmount: 100,
+            defaultPortionAmount: 250,
+            caloriesPerBase: 120,
+            proteinsPerBase: 10.2,
+            comment: 'Keep this comment',
+            visibility: 'Private',
+        });
+    });
+});
+
+test.describe('product creation behavior', () => {
+    test('blocks invalid values, saves zero nutrition and retries after a server error', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        let attempts = 0;
+        await page.route(/\/api\/v1\/products\/?(?:\?|$)/u, async route => {
+            if (route.request().method() !== 'POST') {
+                await route.fallback();
+                return;
+            }
+            attempts += 1;
+            if (attempts === 1) {
+                await route.fulfill({ status: 500, json: { message: 'Test failure' } });
+                return;
+            }
+            await route.fulfill({ json: { ...createOwnedProduct(), ...(route.request().postDataJSON() as Record<string, unknown>) } });
+        });
+        await page.goto('/products/add');
+        const submit = page.getByRole('button', { name: 'Create product', exact: true });
+        await expect(submit).toBeDisabled();
+        await page.getByRole('combobox', { name: 'Name *', exact: true }).fill('QA water');
+        await page.keyboard.press('Escape');
+        const calories = page.locator('.nutrition-editor__input--calories input');
+        const protein = page.locator('.nutrition-editor__input--proteins input');
+        await calories.fill('0');
+        await protein.fill('1,2,3');
+        await protein.blur();
+        await expect(submit).toBeDisabled();
+        await protein.fill('-1');
+        await expect(submit).toBeDisabled();
+        await protein.fill('101');
+        await expect(submit).toBeDisabled();
+        await protein.fill('');
+        await calories.fill('-1');
+        await expect(submit).toBeDisabled();
+        await calories.fill('0');
+        await expect(submit).toBeEnabled();
+        await submit.click();
+        await expect(page.locator('.product-manage__footer-error')).toBeVisible();
+        await expect(page.getByRole('combobox', { name: 'Name *', exact: true })).toHaveValue('QA water');
+        await expect(calories).toHaveValue('0');
+        await submit.click();
+        await expect(page).toHaveURL(/\/products$/u);
+        expect(attempts).toBe(2);
+    });
+});

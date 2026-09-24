@@ -3,7 +3,7 @@
   "summary": {
     "components": 460,
     "componentsWithoutDirectSpecs": 127,
-    "inputs": 1465,
+    "inputs": 1466,
     "outputs": 484,
     "apiCalls": 267,
     "templatesWithTranslations": 320,
@@ -5193,6 +5193,11 @@
         {
           "name": "type",
           "type": "'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'",
+          "required": false
+        },
+        {
+          "name": "localizedNumber",
+          "type": "",
           "required": false
         },
         {
@@ -31677,6 +31682,7 @@
         "error",
         "floatLabel",
         "label",
+        "localizedNumber",
         "maximum",
         "placeholder",
         "prefixIcon",
@@ -32032,6 +32038,7 @@
       "inputsUsed": [
         "error",
         "label",
+        "localizedNumber",
         "maximum",
         "maximumLength",
         "placeholder",
@@ -36166,7 +36173,6 @@
         "form",
         "hideEmptyMacroBar",
         "macroState",
-        "macrosError",
         "maxCalories",
         "maxNutrient",
         "warning"

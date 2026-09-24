@@ -497,3 +497,57 @@ it('shows an empty placeholder without focus when floatLabel is always and does 
     fixture.detectChanges();
     expect(input().getAttribute('placeholder')).toBeNull();
 });
+
+const LOCALIZED_POSITIVE = 10.5;
+const LOCALIZED_NEGATIVE = -2.5;
+const CONVERTED_VALUE = 3;
+
+describe('FdUiInputComponent localized numbers', () => {
+    it.each([
+        ['10,5', LOCALIZED_POSITIVE],
+        ['10.5', LOCALIZED_POSITIVE],
+        ['0', 0],
+        ['-2,5', LOCALIZED_NEGATIVE],
+        ['', null],
+    ])('parses %s without losing the entered text', async (raw, expected) => {
+        const { fixture, input, component } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('localizedNumber', true);
+        fixture.detectChanges();
+        input().value = raw;
+        input().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.value()).toBe(expected);
+        expect(input().value).toBe(raw);
+        expect(input().type).toBe('text');
+        expect(input().inputMode).toBe('decimal');
+    });
+
+    it.each(['abc', '1,2,3', 'Infinity', '0x10'])('keeps invalid %s distinguishable from an empty optional field', async raw => {
+        const { fixture, input, component } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('localizedNumber', true);
+        fixture.detectChanges();
+        input().value = raw;
+        input().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.value()).toBeNaN();
+        expect(input().value).toBe(raw);
+    });
+
+    it('preserves a trailing comma while typing and still applies programmatic conversions', async () => {
+        const { fixture, input, component } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('localizedNumber', true);
+        fixture.detectChanges();
+        for (const raw of ['1', '1,', '1,5']) {
+            input().value = raw;
+            input().dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(input().value).toBe(raw);
+        }
+        component.value.set(CONVERTED_VALUE);
+        fixture.detectChanges();
+        expect(input().value).toBe('3');
+    });
+});

@@ -837,3 +837,5 @@ vertical gestures and pinch zoom are reserved for the browser.
 `FdUiInputComponent.floatLabel`: `auto` (default) floats the label on focus or when filled; `always` keeps the label above the field and shows its placeholder while empty, without changing the form value.
 
 `fd-ui-textarea` supports opt-in `[autosize]="true"`. It grows and shrinks with content, including programmatic updates, using `rows` as its minimum height. The default remains a manually resizable textarea.
+
+For numeric forms, `fd-ui-input type="number" [localizedNumber]="true"` accepts comma and dot decimals using a text input with decimal keyboard. It emits numbers, null for empty input and NaN for invalid input; consumers must validate finite values. The default native number input is unchanged.

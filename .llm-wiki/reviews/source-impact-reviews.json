@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "064de3308c4fab75764d9fb6814693f2caaa4e22bae8a0b4e03bf5db728d642a"
+          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
         }
       ],
-      "reason": "Reviewed quality changes against 53 passing form tests plus browser disclosure, summary, input resizing and create-action checks. Static index references remain navigation evidence only.",
+      "reason": "Reviewed refreshed quality index with executed 300 product tests, localized input cases, browser normalization and HTTP 500 retry scenarios. AI discard regression reproduced before fix. Live image success remains blocked by unavailable local storage, not inferred from unit coverage.",
       "baseRef": "HEAD",
-      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
-      "reviewedAtUtc": "2026-09-24T12:39:36.5146016Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:46.3274451Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "064de3308c4fab75764d9fb6814693f2caaa4e22bae8a0b4e03bf5db728d642a"
+          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
         }
       ],
-      "reason": "Reviewed disclosure change: current visibility remains visible when collapsed and its underlying value and validation are unchanged. No authorization or sharing behavior changed; security workflow guidance remains accurate.",
+      "reason": "Reviewed input parsing and validation boundary: malformed/nonfinite numeric input is rejected before API submission; no auth or visibility defaults changed. Local QA created only explicitly named test products. No production or secret configuration changed.",
       "baseRef": "HEAD",
-      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
-      "reviewedAtUtc": "2026-09-24T12:39:38.1209759Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:47.5112871Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e9221eef8728ab0015d784717416c0a921411a77df0b556dd7e776280230b43"
+          "sha256": "fce6ef1f677b48b6344bbb2e8cc260e01b9ece63b20c8f12fec2f3913e2b32ce"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6b91d843fefaa61e3fb4a2ff2b4818a334df31524905291787b6628ad65af3a7"
+          "sha256": "d7f21e767ab12cf177e38358d89d0a1607b44ec81df267b357db1082cb12a2f3"
         }
       ],
-      "reason": "Reviewed frontend index refresh after final product form translations and hint binding. No route, service, API or form value changes; existing tracing guidance remains accurate.",
+      "reason": "Verified product create validator permits zero nutrition; aligned frontend and tested real local API creation of normal and zero-calorie products. AI result marks form dirty for discard confirmation. Routes and backend contracts unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
-      "reviewedAtUtc": "2026-09-24T13:44:42.0659842Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:45.0065294Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e9221eef8728ab0015d784717416c0a921411a77df0b556dd7e776280230b43"
+          "sha256": "fce6ef1f677b48b6344bbb2e8cc260e01b9ece63b20c8f12fec2f3913e2b32ce"
         }
       ],
-      "reason": "Reviewed final copy-only change: nutrition basis hint explains the quantity, accessible group name remains unchanged, measurement unit label shortened in both locales. Existing component bindings preserved; i18n and template lint pass.",
+      "reason": "Reviewed localizedNumber opt-in input API, raw comma preservation, finite-number validation by product consumers, and visible calorie field errors. Default native number behavior remains unchanged. Product browser request tests cover normalization and retry; shared input tests cover parsing.",
       "baseRef": "HEAD",
-      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
-      "reviewedAtUtc": "2026-09-24T13:44:40.8213860Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:43.6988730Z"
     },
     {
       "pageId": "workflow.query-context",

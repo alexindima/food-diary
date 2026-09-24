@@ -4542,14 +4542,14 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 88
+      "line": 87
     },
     {
       "name": "ProductNutritionEditorComponent",
       "role": "Component",
       "selector": "fd-product-nutrition-editor",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.ts",
-      "line": 48
+      "line": 43
     },
     {
       "name": "ProductAddDialogComponent",

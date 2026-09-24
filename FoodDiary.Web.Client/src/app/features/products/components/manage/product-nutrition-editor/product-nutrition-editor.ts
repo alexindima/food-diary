@@ -17,12 +17,7 @@ import {
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
-import {
-    calculateCalorieMismatchWarning,
-    calculateMacroBarState,
-    checkCaloriesError,
-    checkMacrosError,
-} from '../../../../../shared/lib/nutrition-form.utils';
+import { calculateCalorieMismatchWarning, calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import {
     getProductMaxCaloriesPerBaseForUnit,
     getProductMaxNutrientPerBaseForUnit,
@@ -111,18 +106,9 @@ export class ProductNutritionEditorComponent {
         }
 
         const control = this.getControlState('caloriesPerBase');
-        return checkCaloriesError(control) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED') : null;
-    }
-
-    protected macrosError(): string | null {
-        const controls = [
-            this.getControlState('proteinsPerBase'),
-            this.getControlState('fatsPerBase'),
-            this.getControlState('carbsPerBase'),
-            this.getControlState('alcoholPerBase'),
-        ];
-
-        return checkMacrosError(controls) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED') : null;
+        return (control.touched || control.dirty) && control.value === null
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
+            : null;
     }
 
     private buildNutritionModeOptions(): void {
