@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1737,
+    "typescriptFiles": 1738,
     "symbols": 674,
     "routes": 100,
     "features": 44,
@@ -4423,7 +4423,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "OpenFoodFactsService",
@@ -4437,7 +4437,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 28
+      "line": 29
     },
     {
       "name": "ProductDetailActionsComponent",

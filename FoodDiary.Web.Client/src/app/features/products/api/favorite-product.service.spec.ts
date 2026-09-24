@@ -180,3 +180,29 @@ describe('Favorite product mutation errors', () => {
         expect(received).toMatchObject({ status: 503 });
     });
 });
+
+describe('FavoriteProductService API measurement units', () => {
+    it.each(['Ml', 'Pcs'])('normalizes %s in favorite pages and lists', wireUnit => {
+        let page: unknown;
+        let all: unknown;
+        const item = { ...createFavoriteProduct(), baseUnit: wireUnit };
+        service.getPage(1).subscribe(value => {
+            page = value;
+        });
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/page`)
+            .flush({
+                data: [item],
+                page: 1,
+                limit: 10,
+                totalItems: 1,
+                totalPages: 1,
+            });
+        service.getAll().subscribe(value => {
+            all = value;
+        });
+        httpMock.expectOne(`${BASE_URL}/`).flush([item]);
+        expect(page).toMatchObject({ data: [{ baseUnit: wireUnit.toUpperCase() }] });
+        expect(all).toMatchObject([{ baseUnit: wireUnit.toUpperCase() }]);
+    });
+});

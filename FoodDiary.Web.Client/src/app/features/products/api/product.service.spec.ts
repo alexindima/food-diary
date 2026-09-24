@@ -368,3 +368,58 @@ describe('Product mutation failures', () => {
         });
     });
 });
+
+describe('ProductService API measurement units', () => {
+    it.each([
+        ['G', MeasurementUnit.G],
+        ['Ml', MeasurementUnit.ML],
+        ['Pcs', MeasurementUnit.PCS],
+    ])('normalizes %s when reopening a saved product', (wireUnit, expected) => {
+        let received: Product | null = null;
+        service.getById('p1').subscribe(value => {
+            received = value;
+        });
+        httpMock.expectOne(`${BASE_URL}/p1`).flush({ ...MOCK_PRODUCT, baseUnit: wireUnit });
+        expect(received).toEqual({ ...MOCK_PRODUCT, baseUnit: expected });
+    });
+
+    it('normalizes units in every overview section', () => {
+        let received: unknown;
+        service.queryOverview({ page: 1, limit: DEFAULT_PAGE_LIMIT }).subscribe(value => {
+            received = value;
+        });
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/overview`)
+            .flush({
+                recentItems: [{ ...MOCK_PRODUCT, baseUnit: 'Ml' }],
+                favoriteItems: [{ ...MOCK_PRODUCT, baseUnit: 'Pcs' }],
+                favoriteTotalCount: 1,
+                allProducts: { ...MOCK_PAGE, data: [{ ...MOCK_PRODUCT, baseUnit: 'Ml' }] },
+            });
+        expect(received).toMatchObject({
+            recentItems: [{ baseUnit: MeasurementUnit.ML }],
+            favoriteItems: [{ baseUnit: MeasurementUnit.PCS }],
+            allProducts: { data: [{ baseUnit: MeasurementUnit.ML }] },
+        });
+    });
+
+    it('normalizes search results and recent products', () => {
+        let page: unknown;
+        let recent: unknown;
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(value => {
+            page = value;
+        });
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/`)
+            .flush({
+                ...MOCK_PAGE,
+                data: [{ ...MOCK_PRODUCT, baseUnit: 'Pcs' }],
+            });
+        service.getRecent().subscribe(value => {
+            recent = value;
+        });
+        httpMock.expectOne(request => request.url === `${BASE_URL}/recent`).flush([{ ...MOCK_PRODUCT, baseUnit: 'Ml' }]);
+        expect(page).toMatchObject({ data: [{ baseUnit: MeasurementUnit.PCS }] });
+        expect(recent).toMatchObject([{ baseUnit: MeasurementUnit.ML }]);
+    });
+});

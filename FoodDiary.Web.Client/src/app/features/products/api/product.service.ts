@@ -1,5 +1,5 @@
 import { inject, Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -14,6 +14,7 @@ import type {
     UpdateProductRequest,
 } from '../models/product.data';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
+import { normalizeProductUnit } from './product-unit.mapper';
 
 export type ProductOverviewQuery = {
     page: number;
@@ -35,6 +36,7 @@ export class ProductService extends ApiService {
         this.applyProductFilters(params, filters);
 
         return this.get<PageOf<Product>>('', params).pipe(
+            map(result => ({ ...result, data: result.data.map(normalizeProductUnit) })),
             catchError((error: unknown) =>
                 fallbackApiError('Query products error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
@@ -42,7 +44,10 @@ export class ProductService extends ApiService {
     }
 
     public getById(id: string): Observable<Product | null> {
-        return this.get<Product>(id).pipe(catchError((error: unknown) => fallbackApiError('Get product error', error, null)));
+        return this.get<Product>(id).pipe(
+            map(normalizeProductUnit),
+            catchError((error: unknown) => fallbackApiError('Get product error', error, null)),
+        );
     }
 
     public queryOverview(query: ProductOverviewQuery): Observable<ProductOverview> {
@@ -58,6 +63,12 @@ export class ProductService extends ApiService {
         this.applyProductFilters(params, filters);
 
         return this.get<ProductOverview>('overview', params).pipe(
+            map(overview => ({
+                ...overview,
+                recentItems: overview.recentItems.map(normalizeProductUnit),
+                favoriteItems: overview.favoriteItems.map(normalizeProductUnit),
+                allProducts: { ...overview.allProducts, data: overview.allProducts.data.map(normalizeProductUnit) },
+            })),
             catchError((error: unknown) =>
                 fallbackApiError('Query product overview error', error, {
                     recentItems: [],
@@ -99,6 +110,7 @@ export class ProductService extends ApiService {
     public getRecent(limit?: number, includePublic = true): Observable<Product[]> {
         const params: Record<string, string | number | boolean> = { limit: limit ?? this.defaultLimits.recent, includePublic };
         return this.get<Product[]>('recent', params).pipe(
+            map(products => products.map(normalizeProductUnit)),
             catchError((error: unknown) => fallbackApiError('Get recent products error', error, [])),
         );
     }
@@ -110,11 +122,17 @@ export class ProductService extends ApiService {
     }
 
     public create(data: CreateProductRequest): Observable<Product> {
-        return this.post<Product>('', data).pipe(catchError((error: unknown) => rethrowApiError('Create product error', error)));
+        return this.post<Product>('', data).pipe(
+            map(normalizeProductUnit),
+            catchError((error: unknown) => rethrowApiError('Create product error', error)),
+        );
     }
 
     public update(id: string, data: UpdateProductRequest): Observable<Product> {
-        return this.patch<Product>(id, data).pipe(catchError((error: unknown) => rethrowApiError('Update product error', error)));
+        return this.patch<Product>(id, data).pipe(
+            map(normalizeProductUnit),
+            catchError((error: unknown) => rethrowApiError('Update product error', error)),
+        );
     }
 
     public deleteById(id: string): Observable<void> {
@@ -123,6 +141,7 @@ export class ProductService extends ApiService {
 
     public duplicate(id: string): Observable<Product> {
         return this.post<Product>(`${id}/duplicate`, {}).pipe(
+            map(normalizeProductUnit),
             catchError((error: unknown) => rethrowApiError('Duplicate product error', error)),
         );
     }
