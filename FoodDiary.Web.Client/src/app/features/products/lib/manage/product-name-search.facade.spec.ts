@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
@@ -122,5 +122,31 @@ describe('ProductNameSearchFacade selection', () => {
                 data: suggestion,
             },
         ]);
+    });
+});
+
+describe('Product name search lifecycle', () => {
+    it('cancels the previous request when a newer query is dispatched', async () => {
+        const old = new Subject<ProductSearchSuggestion[]>();
+        const current = new Subject<ProductSearchSuggestion[]>();
+        productService.searchSuggestions.mockReturnValueOnce(old).mockReturnValueOnce(current);
+        facade.search('apple');
+        await flushDebounceAsync();
+        facade.search('banana');
+        await flushDebounceAsync();
+        expect(old.observed).toBe(false);
+        current.next([{ source: 'usda', name: 'Banana', usdaFdcId: 7 }]);
+        old.next([{ source: 'usda', name: 'Apple', usdaFdcId: 8 }]);
+        expect(facade.options()[0].label).toBe('Banana');
+        expect(facade.isLoading()).toBe(false);
+    });
+    it('cancels a pending lookup when the form scope is destroyed', async () => {
+        const pending = new Subject<ProductSearchSuggestion[]>();
+        productService.searchSuggestions.mockReturnValue(pending);
+        facade.search('apple');
+        await flushDebounceAsync();
+        expect(pending.observed).toBe(true);
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
     });
 });

@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
@@ -317,3 +318,53 @@ function createProductRequest(): CreateProductRequest {
         visibility: ProductVisibility.Private,
     };
 }
+
+describe('Product mutation failures', () => {
+    it.each(['create', 'update', 'delete', 'duplicate'] as const)('propagates %s failure to the caller', action => {
+        const payload: CreateProductRequest = { ...MOCK_PRODUCT, productType: ProductType.Meat };
+        const result: Observable<unknown> =
+            action === 'create'
+                ? service.create(payload)
+                : action === 'update'
+                  ? service.update('p1', payload)
+                  : action === 'delete'
+                    ? service.deleteById('p1')
+                    : service.duplicate('p1');
+        let received: unknown;
+        let emitted = false;
+        result.subscribe({
+            next: () => {
+                emitted = true;
+            },
+            error: (error: unknown) => {
+                received = error;
+            },
+        });
+        httpMock.expectOne(r => r.url.startsWith(BASE_URL)).flush({ message: 'rejected' }, { status: 409, statusText: 'Conflict' });
+        expect(emitted).toBe(false);
+        expect(received).toMatchObject({ status: 409, error: { message: 'rejected' } });
+    });
+    it('returns empty suggestions after a request failure', () => {
+        let received: unknown;
+        service.searchSuggestions('rice').subscribe(value => {
+            received = value;
+        });
+        httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions`).flush({}, { status: 503, statusText: 'Unavailable' });
+        expect(received).toEqual([]);
+    });
+    it('retains requested pagination in the overview fallback', () => {
+        let received: unknown;
+        service.queryOverview({ page: 3, limit: 7, favoriteLimit: 0 }).subscribe(value => {
+            received = value;
+        });
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview`);
+        expect(req.request.params.get('favoriteLimit')).toBe('0');
+        req.flush({}, { status: 503, statusText: 'Unavailable' });
+        expect(received).toEqual({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allProducts: { data: [], page: 3, limit: 7, totalPages: 0, totalItems: 0 },
+        });
+    });
+});

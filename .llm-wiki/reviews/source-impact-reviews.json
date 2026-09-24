@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4d8d28e70751933eca485a5bbbab94d16d10b0404de4c00531eeae95df95ec6a"
+          "sha256": "33f9a24737e8dc2eae3e7dd3778ad668990738309cb7fce89090a4d86f4ece3e"
         }
       ],
-      "reason": "New product picker, paging and lifecycle tests ran successfully. Static index changes are navigation only; PostgreSQL integration remained skipped without Docker. Existing test-gap interpretation remains valid.",
+      "reason": "Reviewed regenerated products test references against measured V8 coverage: 298 tests pass, 89.41 percent lines. New regressions reproduce and protect late favorite lookup and dialog destruction; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:08.7841161Z"
+      "gitHead": "fc08e4405bcf945b89a355e17dc96f7c3edb718c",
+      "reviewedAtUtc": "2026-09-24T10:52:49.5866543Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,17 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4d8d28e70751933eca485a5bbbab94d16d10b0404de4c00531eeae95df95ec6a"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e00873e67e7f73eda143b4da94704f885f83bd35143d4a4886a1af4bf74555cb"
+          "sha256": "33f9a24737e8dc2eae3e7dd3778ad668990738309cb7fce89090a4d86f4ece3e"
         }
       ],
-      "reason": "Product favorites queries retain user and source visibility predicates and private comment masking; search escapes SQL wildcard characters. Added provider integration regression but Docker prevented local execution. Index refresh does not establish a security verdict; workflow remains current.",
+      "reason": "Quality index changed from frontend product test additions and subscription cancellation only. No authentication, authorization, provider, storage or network contract changes; security navigation workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:13.2060444Z"
+      "gitHead": "fc08e4405bcf945b89a355e17dc96f7c3edb718c",
+      "reviewedAtUtc": "2026-09-24T10:52:50.6700868Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

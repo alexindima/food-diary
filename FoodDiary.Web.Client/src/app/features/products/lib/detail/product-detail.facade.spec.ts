@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FavoriteProductService } from '../../api/favorite-product.service';
@@ -230,3 +230,49 @@ function createFavoriteProduct(): FavoriteProduct {
         defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
     };
 }
+
+describe('Product detail pending requests', () => {
+    it('does not overwrite a favorite change with a late initial lookup', () => {
+        const lookup = new Subject<boolean>();
+        favoriteProductService.isFavorite.mockReturnValue(lookup);
+        const product = createProduct({ isFavorite: false });
+        facade.initialize(product);
+        facade.toggleFavorite(product);
+        lookup.next(false);
+        expect(facade.isFavorite()).toBe(true);
+        expect(facade.hasFavoriteChanged()).toBe(true);
+    });
+    it('cancels duplication when the dialog scope is destroyed', () => {
+        const pending = new Subject<Product>();
+        productService.duplicate.mockReturnValue(pending);
+        facade.duplicate(createProduct());
+        facade.duplicate(createProduct());
+        expect(productService.duplicate).toHaveBeenCalledTimes(1);
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
+        pending.next(createProduct());
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+    it('keeps favorite state and permits retry after removal fails', () => {
+        favoriteProductService.isFavorite.mockReturnValue(of(true));
+        const product = createProduct({ isFavorite: true, favoriteProductId: 'favorite-1' });
+        facade.initialize(product);
+        favoriteProductService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.toggleFavorite(product);
+        expect(facade.isFavorite()).toBe(true);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        facade.toggleFavorite(product);
+        expect(facade.isFavorite()).toBe(false);
+    });
+    it('ignores repeated favorite clicks until the request completes', () => {
+        const pending = new Subject<FavoriteProduct>();
+        favoriteProductService.add.mockReturnValue(pending);
+        const product = createProduct();
+        facade.initialize(product);
+        facade.toggleFavorite(product);
+        facade.toggleFavorite(product);
+        expect(favoriteProductService.add).toHaveBeenCalledTimes(1);
+        pending.next(createFavoriteProduct());
+        expect(facade.isFavoriteLoading()).toBe(false);
+    });
+});

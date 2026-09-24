@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import type { Observable } from 'rxjs';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -469,5 +470,64 @@ describe('ProductListFacade request lifecycle', () => {
         expect(typeof options.data.repeat).toBe('function');
         expect(typeof options.data.remove).toBe('function');
         expect(typeof options.data.restore).toBe('function');
+    });
+});
+
+describe('Product favorites picker callbacks', () => {
+    function actions(): {
+        repeat: (favorite: FavoriteProduct) => Observable<boolean>;
+        remove: (favorite: FavoriteProduct) => Observable<boolean>;
+        restore: (favorite: FavoriteProduct) => Observable<boolean>;
+    } {
+        facade.openFavorites();
+        return (
+            dialogService.open.mock.calls.at(-1)?.[1] as {
+                data: {
+                    repeat: (favorite: FavoriteProduct) => Observable<boolean>;
+                    remove: (favorite: FavoriteProduct) => Observable<boolean>;
+                    restore: (favorite: FavoriteProduct) => Observable<boolean>;
+                };
+            }
+        ).data;
+    }
+    it('adds the current product with the saved portion amount', () => {
+        const favorite = createFavoriteProduct({ preferredPortionAmount: DEFAULT_PORTION_AMOUNT });
+        const product = createProduct();
+        productService.getById.mockReturnValue(of(product));
+        let result: boolean | undefined;
+        actions()
+            .repeat(favorite)
+            .subscribe(value => {
+                result = value;
+            });
+        expect(result).toBe(true);
+        expect(quickMealService.addProduct).toHaveBeenCalledWith(product, DEFAULT_PORTION_AMOUNT);
+    });
+    it('does not add a product that is no longer accessible', () => {
+        productService.getById.mockReturnValue(of(null));
+        let result: boolean | undefined;
+        actions()
+            .repeat(createFavoriteProduct())
+            .subscribe(value => {
+                result = value;
+            });
+        expect(result).toBe(false);
+        expect(quickMealService.addProduct).not.toHaveBeenCalled();
+    });
+    it('synchronizes the count and card and uses the new favorite id after undo', () => {
+        const favorite = createFavoriteProduct();
+        facade.favoriteTotalCount.set(1);
+        facade.productData.setData(createPage([createProduct({ isFavorite: true, favoriteProductId: favorite.id })]));
+        const callbacks = actions();
+        callbacks.remove(favorite).subscribe();
+        expect(facade.favoriteTotalCount()).toBe(0);
+        expect(facade.productData.items()[0].isFavorite).toBe(false);
+        favoriteProductService.add.mockReturnValue(of(createFavoriteProduct({ id: 'restored-id' })));
+        callbacks.restore(favorite).subscribe();
+        expect(facade.favoriteTotalCount()).toBe(1);
+        expect(favorite.id).toBe('restored-id');
+        expect(facade.productData.items()[0].favoriteProductId).toBe('restored-id');
+        callbacks.remove(favorite).subscribe();
+        expect(favoriteProductService.remove).toHaveBeenLastCalledWith('restored-id');
     });
 });

@@ -57,3 +57,34 @@ describe('OpenFoodFactsService', () => {
         req.flush([]);
     });
 });
+
+describe('Open Food Facts failures and barcode lookup', () => {
+    it('preserves leading zeroes in a barcode lookup', () => {
+        let received: unknown;
+        service.searchByBarcode('0012345678905').subscribe(value => {
+            received = value;
+        });
+        const req = httpMock.expectOne(`${BASE_URL}/products/0012345678905`);
+        expect(req.request.method).toBe('GET');
+        req.flush(null);
+        expect(received).toBeNull();
+    });
+    it('returns null when barcode lookup fails', () => {
+        let received: unknown;
+        service.searchByBarcode('00123').subscribe(value => {
+            received = value;
+        });
+        httpMock.expectOne(`${BASE_URL}/products/00123`).flush({}, { status: 503, statusText: 'Unavailable' });
+        expect(received).toBeNull();
+    });
+    it('returns an empty search result on failure and honors explicit limit', () => {
+        let received: unknown;
+        service.search('milk', 2).subscribe(value => {
+            received = value;
+        });
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/products`);
+        expect(req.request.params.get('limit')).toBe('2');
+        req.flush({}, { status: 503, statusText: 'Unavailable' });
+        expect(received).toEqual([]);
+    });
+});

@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, switchMap, take } from 'rxjs';
+import { of, Subject, switchMap, take, takeUntil } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -27,6 +27,7 @@ export class ProductDetailFacade {
     public readonly isFavoriteLoading = signal(false);
     public readonly isDuplicateInProgress = signal(false);
 
+    private readonly favoriteChanges = new Subject<void>();
     private initialFavoriteState = false;
     private favoriteProductId: string | null = null;
 
@@ -37,7 +38,7 @@ export class ProductDetailFacade {
 
         this.favoriteProductService
             .isFavorite(product.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.favoriteChanges), takeUntilDestroyed(this.destroyRef))
             .subscribe(isFav => {
                 this.initialFavoriteState = isFav;
                 this.isFavorite.set(isFav);
@@ -63,7 +64,7 @@ export class ProductDetailFacade {
         this.fdDialogService
             .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
             .afterClosed()
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(confirm => {
                 if (confirm === true) {
                     this.dialogRef.close(new ProductDetailActionResult(product.id, 'Delete', this.hasFavoriteChanged()));
@@ -79,7 +80,7 @@ export class ProductDetailFacade {
         this.isDuplicateInProgress.set(true);
         this.productService
             .duplicate(product.id)
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: duplicated => {
                     this.dialogRef.close(new ProductDetailActionResult(duplicated.id, 'Duplicate', this.hasFavoriteChanged()));
@@ -95,6 +96,7 @@ export class ProductDetailFacade {
             return;
         }
 
+        this.favoriteChanges.next();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
@@ -104,7 +106,7 @@ export class ProductDetailFacade {
 
         this.favoriteProductService
             .add(product.id, undefined, product.defaultPortionAmount)
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: favorite => {
                     this.isFavorite.set(true);
@@ -133,7 +135,7 @@ export class ProductDetailFacade {
                       }),
                   );
 
-        request$.pipe(take(1)).subscribe({
+        request$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {
                 this.isFavorite.set(false);
                 this.favoriteProductId = null;

@@ -10810,11 +10810,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/detail/product-detail.facade.ts",
-      "nonBlankLines": 139,
+      "nonBlankLines": 141,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.78
+      "structuralRiskScore": 14.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/favorites/product-favorites-picker.facade.ts",

@@ -217,3 +217,47 @@ describe('ProductManageFacade delete', () => {
         expect(result).toBe('deleted');
     });
 });
+
+describe('Product management decision boundaries', () => {
+    it.each([false, undefined])('does not delete or navigate for confirmation %s', async confirmed => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(confirmed) });
+        expect(await facade.deleteProductAsync(product, { title: 'Delete', message: 'Confirm' })).toBe('cancelled');
+        expect(productService.deleteById).not.toHaveBeenCalled();
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+    });
+    it('keeps the editor open when deleting fails', async () => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
+        productService.deleteById.mockReturnValue(throwError(() => new Error('offline')));
+        expect(await facade.deleteProductAsync(product, { title: 'Delete', message: 'Confirm' })).toBe('error');
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+    });
+    it.each([true, false, undefined])('requires explicit discard confirmation: %s', async confirmed => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(confirmed) });
+        expect(await facade.confirmDiscardChangesAsync({ title: 'Discard', message: 'Confirm' })).toBe(confirmed === true);
+    });
+    it('allows premium users without opening an upsell', () => {
+        expect(facade.ensurePremiumAccess()).toBe(true);
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+    it.each([true, false, undefined])('opens premium navigation only when accepted: %s', confirmed => {
+        authService.isPremium.mockReturnValue(false);
+        dialogService.open.mockReturnValue({ afterClosed: () => of(confirmed) });
+        expect(facade.ensurePremiumAccess()).toBe(false);
+        expect(navigationService.navigateToPremiumAccessAsync).toHaveBeenCalledTimes(confirmed === true ? 1 : 0);
+    });
+    it('explicitly clears nullable fields when editing', async () => {
+        await facade.submitProductAsync(product, request, true);
+        expect(productService.update).toHaveBeenCalledWith(
+            product.id,
+            expect.objectContaining({
+                clearBarcode: true,
+                clearBrand: true,
+                clearCategory: true,
+                clearDescription: true,
+                clearComment: true,
+                clearImageUrl: true,
+                clearImageAssetId: true,
+            }),
+        );
+    });
+});

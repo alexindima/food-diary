@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { FavoriteProduct } from '../models/product.data';
@@ -155,3 +156,27 @@ function createFavoriteProduct(): FavoriteProduct {
         defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
     };
 }
+
+describe('Favorite product mutation errors', () => {
+    it.each(['add', 'update', 'remove'] as const)('propagates %s failure without emitting success', action => {
+        const result: Observable<unknown> =
+            action === 'add'
+                ? service.add('p1')
+                : action === 'update'
+                  ? service.update('f1', null, DEFAULT_PORTION_AMOUNT)
+                  : service.remove('f1');
+        let received: unknown;
+        let emitted = false;
+        result.subscribe({
+            next: () => {
+                emitted = true;
+            },
+            error: (error: unknown) => {
+                received = error;
+            },
+        });
+        httpMock.expectOne(r => r.url.startsWith(BASE_URL)).flush({ message: 'offline' }, { status: 503, statusText: 'Unavailable' });
+        expect(emitted).toBe(false);
+        expect(received).toMatchObject({ status: 503 });
+    });
+});
