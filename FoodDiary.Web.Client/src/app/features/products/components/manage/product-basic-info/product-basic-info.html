@@ -4,9 +4,8 @@
     class="product-manage__card product-manage__card--basic"
     appearance="entry"
     tone="editor-white"
-    density="relaxed"
-    headerAlign="center"
-    accent="primary"
+    density="default"
+    headerAlign="start"
     data-tour-id="product-manage-basic"
     [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
 >
@@ -39,25 +38,36 @@
                 [maximumLength]="brandMaxLength"
             />
         </div>
-        <div class="product-manage__hero-field fd-stack fd-gap-xs">
-            <fd-ui-input
-                size="lg"
-                suffixButtonIcon="qr_code_scanner"
-                [formField]="form().barcode"
-                [label]="'PRODUCT_MANAGE.BARCODE' | translate"
-                [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
-                [error]="errors.barcode"
-                [maximumLength]="barcodeMaxLength"
-                [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
-                (suffixButtonClicked)="openBarcodeScanner.emit()"
-            />
+        <div class="product-manage__identity-row fd-grid fd-gap-md">
+            <div class="product-manage__hero-field fd-stack fd-gap-xs">
+                <fd-ui-select
+                    size="lg"
+                    [formField]="form().productType"
+                    [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
+                    [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
+                    [options]="productTypeOptions()"
+                    [error]="errors.productType"
+                />
+            </div>
+            <div class="product-manage__hero-field fd-stack fd-gap-xs">
+                <fd-ui-input
+                    size="lg"
+                    suffixButtonIcon="qr_code_scanner"
+                    [formField]="form().barcode"
+                    [label]="'PRODUCT_MANAGE.BARCODE' | translate"
+                    [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
+                    [error]="errors.barcode"
+                    [maximumLength]="barcodeMaxLength"
+                    [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
+                    (suffixButtonClicked)="openBarcodeScanner.emit()"
+                />
+            </div>
         </div>
         <div class="product-manage__image fd-row">
             <fd-image-upload-field
                 appearance="compact"
-                recommendedSize="512 x 512"
+                [showRecommendation]="false"
                 [formField]="form().imageUrl"
-                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
                 [cropEnabled]="true"
                 [cropSize]="512"
                 [cropAspectRatio]="1"
@@ -66,23 +76,14 @@
     </div>
     <div class="product-manage__basic-grid fd-grid fd-gap-lg">
         <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
-            <fd-ui-select
-                size="lg"
-                [formField]="form().productType"
-                [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
-                [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
-                [options]="productTypeOptions()"
-                [error]="errors.productType"
-            />
-        </div>
-        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-textarea
                 [formField]="form().description"
                 [label]="'PRODUCT_MANAGE.DESCRIPTION' | translate"
                 [placeholder]="'PRODUCT_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
                 [error]="errors.description"
                 [maximumLength]="descriptionMaxLength"
-                [rows]="3"
+                [rows]="2"
+                [autosize]="true"
             />
         </div>
         <div class="product-manage__serving-row product-manage__field--full fd-row fd-wrap fd-gap-lg">
@@ -108,36 +109,30 @@
             </div>
         </div>
     </div>
-</fd-ui-card>
-
-<fd-ui-card
-    class="product-manage__card product-manage__card--basic product-manage__card--tracking"
-    appearance="entry"
-    tone="editor-white"
-    density="relaxed"
-    headerAlign="center"
-    data-tour-id="product-manage-tracking"
-    [title]="'PRODUCT_MANAGE.TRACKING_PREFERENCES' | translate"
->
-    <div class="product-manage__basic-grid fd-grid fd-gap-lg">
-        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
-            <fd-ui-select
-                size="lg"
-                [formField]="form().visibility"
-                [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
-                [options]="visibilityOptions()"
-                [error]="errors.visibility"
-            />
+    <p class="fd-ui-helper-text">{{ 'PRODUCT_MANAGE.DEFAULT_PORTION_HINT' | translate }}</p>
+    <details class="product-manage__additional" data-tour-id="product-manage-tracking" [open]="additionalOpen()">
+        <summary class="fd-ui-body-sm">{{ 'PRODUCT_MANAGE.ADDITIONAL' | translate }} · {{ selectedVisibilityLabel() }}</summary>
+        <div class="product-manage__basic-grid fd-grid fd-gap-lg">
+            <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
+                <fd-ui-select
+                    size="lg"
+                    [formField]="form().visibility"
+                    [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
+                    [options]="visibilityOptions()"
+                    [error]="errors.visibility"
+                />
+            </div>
+            <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
+                <fd-ui-textarea
+                    [formField]="form().comment"
+                    [label]="'PRODUCT_MANAGE.COMMENT' | translate"
+                    [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                    [error]="errors.comment"
+                    [maximumLength]="commentMaxLength"
+                    [rows]="3"
+                    [autosize]="true"
+                />
+            </div>
         </div>
-        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
-            <fd-ui-textarea
-                [formField]="form().comment"
-                [label]="'PRODUCT_MANAGE.COMMENT' | translate"
-                [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
-                [error]="errors.comment"
-                [maximumLength]="commentMaxLength"
-                [rows]="4"
-            />
-        </div>
-    </div>
+    </details>
 </fd-ui-card>

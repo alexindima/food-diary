@@ -1,3 +1,4 @@
+const PRODUCT_NUTRIENT_FIELD_COUNT = 6;
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, type Request, type Route, test } from '@playwright/test';
 
@@ -2024,6 +2025,51 @@ test.describe('product redesign regression', () => {
             expect(requests).toBe(1);
             expect(await picker.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
             await page.screenshot({ path: testInfo.outputPath(`product-favorites-${width}.png`) });
+        });
+    }
+});
+
+test.describe('product form visual regression', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`nutrition entry at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const errors: string[] = [];
+            page.on('pageerror', error => errors.push(error.message));
+            await page.goto('/products/add');
+            const form = page.locator('fd-product-manage-form');
+            await expect(form).toBeVisible();
+            await expect(form.locator('fd-nutrition-editor fd-ui-input')).toHaveCount(PRODUCT_NUTRIENT_FIELD_COUNT);
+            await expect(form.locator('.nutrition-editor__macro-bar')).toBeHidden();
+            await expect(form.locator('.image-upload-field__hint')).toBeHidden();
+            const additional = form.locator('details.product-manage__additional');
+            await expect(additional).not.toHaveAttribute('open');
+            await expect(additional.locator('summary')).toContainText('Only me');
+            await additional.locator('summary').click();
+            await expect(additional.locator('textarea')).toBeVisible();
+            await additional.locator('summary').click();
+            await expect(form.locator('fd-page-header fd-ui-button[icon="save"]')).toHaveCount(0);
+            const description = form.locator('fd-ui-textarea textarea').first();
+            const initialHeight = await description.evaluate(element => element.clientHeight);
+            const twoLineHeight = await description.evaluate(
+                element => Math.ceil(Number.parseFloat(getComputedStyle(element).lineHeight)) * 2,
+            );
+            expect(initialHeight).toBeLessThanOrEqual(twoLineHeight + 1);
+            await description.fill(Array.from({ length: 12 }, () => 'Product description').join('\n'));
+            await expect.poll(async () => description.evaluate(element => element.clientHeight)).toBeGreaterThan(initialHeight);
+            await description.fill('');
+            await expect.poll(async () => description.evaluate(element => element.clientHeight)).toBe(initialHeight);
+            const calories = form.locator('.nutrition-editor__input--calories input');
+            await expect(calories).toHaveAttribute('placeholder', '0');
+            await expect(calories).toHaveValue('');
+            await calories.fill('0');
+            await calories.blur();
+            await form.locator('.nutrition-editor__input--proteins input').fill('10');
+            await expect(form.locator('.nutrition-editor__macro-bar')).toBeVisible();
+            await page.screenshot({ path: testInfo.outputPath(`product-form-${width}.png`), fullPage: true });
+            expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+            expect(errors).toEqual([]);
         });
     }
 });

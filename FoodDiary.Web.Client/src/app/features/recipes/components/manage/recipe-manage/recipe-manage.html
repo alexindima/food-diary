@@ -45,7 +45,7 @@
                 </div>
             }
 
-            <div class="recipe-manage__grid fd-grid fd-gap-lg">
+            <div class="recipe-manage__grid fd-grid">
                 <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
                     @if (isImportPanelVisible()) {
                         <details class="recipe-manage__import-card">
@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
-                    <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
+                    <div class="recipe-manage__sticky-stack fd-stack">
                         <fd-recipe-nutrition-editor
                             data-tour-id="recipe-manage-nutrition"
                             [form]="recipeSignalForm"

@@ -59,6 +59,27 @@ beforeEach(() => {
     component = fixture.componentInstance;
 });
 
+describe('ProductBasicInfoComponent additional fields', () => {
+    it('starts collapsed and opens for an existing comment', () => {
+        setRequiredInputs();
+        fixture.detectChanges();
+        expect(component['additionalOpen']()).toBe(false);
+        fixture.componentRef.setInput('expandAdditional', true);
+        fixture.detectChanges();
+        expect(component['additionalOpen']()).toBe(true);
+    });
+
+    it('keeps the collapsed summary in sync with visibility', () => {
+        const productForm = createProductSignalForm();
+        setRequiredInputs(productForm);
+        fixture.detectChanges();
+        for (const visibility of Object.values(ProductVisibility)) {
+            productForm.visibility().value.set(visibility);
+            expect(component['selectedVisibilityLabel']()).toBe(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
+        }
+    });
+});
+
 describe('ProductBasicInfoComponent options', () => {
     it('builds select options inside the component', () => {
         setRequiredInputs();

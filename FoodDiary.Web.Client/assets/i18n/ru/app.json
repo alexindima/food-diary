@@ -611,7 +611,9 @@
         "BARCODE_PLACEHOLDER": "Введите штрихкод",
         "CATEGORY": "Категория",
         "CATEGORY_PLACEHOLDER": "Введите категорию",
-        "DEFAULT_PORTION_AMOUNT": "Вес упаковки / порция",
+        "DEFAULT_PORTION_AMOUNT": "Порция по умолчанию",
+        "DEFAULT_PORTION_HINT": "Используется при добавлении продукта в дневник.",
+        "ADDITIONAL": "Дополнительно",
         "DEFAULT_PORTION_PLACEHOLDER": "например 300",
         "PRODUCT_TYPE": "Тип продукта",
         "PRODUCT_TYPE_PLACEHOLDER": "Выберите тип продукта",
@@ -645,7 +647,8 @@
         "NUTRITION_MODE": {
             "BASE": "На {{amount}} {{unit}}",
             "PORTION": "На порцию",
-            "ARIA": "Основа пищевой ценности"
+            "ARIA": "Основа пищевой ценности",
+            "HINT": "Определяет, для какого количества указана пищевая ценность."
         },
         "NUTRITION_ERRORS": {
             "CALORIES_REQUIRED": "Калорийность должна быть больше 0.",
@@ -657,7 +660,7 @@
         "NAME_NO_SUGGESTIONS": "Подходящие продукты не найдены",
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",
-        "DEFAULT_SERVING_UNIT": "Единица измерения порции",
+        "DEFAULT_SERVING_UNIT": "Единица измерения",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Выберите единицу измерения",
         "DEFAULT_SERVING_UNITS": {
             "G": "граммы",
@@ -674,7 +677,7 @@
         "SUMMARY_TITLE": "Сводка",
         "SUMMARY_CALORIES_LABEL": "Калории",
         "SAVE_BUTTON": "Сохранить",
-        "ADD_BUTTON": "Создать",
+        "ADD_BUTTON": "Создать продукт",
         "CANCEL_BUTTON": "Отмена",
         "LEAVE_CONFIRM_TITLE": "Несохранённые изменения",
         "LEAVE_CONFIRM_MESSAGE": "Внесённые данные будут потеряны. Точно уйти?",
@@ -741,7 +744,7 @@
         "ANNOTATIONS_LABEL": "Распознанные продукты на фотографии"
     },
     "IMAGE_UPLOAD_FIELD": {
-        "SELECT_FILE": "Выберите файл",
+        "SELECT_FILE": "Добавить фото",
         "DROP_HERE": "или перетащите его сюда",
         "DEFAULT_DESCRIPTION": "JPG, PNG, GIF, WebP до {{maxSizeMb}} МБ",
         "RECOMMENDED": "Рекомендуемый размер: {{size}}.",

@@ -51,6 +51,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly floatLabel = input<'auto' | 'always'>('auto');
     public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'>('text');
@@ -125,11 +126,11 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         const label = this.label();
         const text = String(this.internalValue()).trim();
 
-        return label !== undefined && label.trim().length > 0 && (this.isFocused() || text.length > 0);
+        return label !== undefined && label.trim().length > 0 && (this.floatLabel() === 'always' || this.isFocused() || text.length > 0);
     });
     protected readonly shouldShowPlaceholder = computed(() => {
         const text = String(this.internalValue()).trim();
-        return this.isFocused() && text.length === 0;
+        return (this.floatLabel() === 'always' || this.isFocused()) && text.length === 0;
     });
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
 

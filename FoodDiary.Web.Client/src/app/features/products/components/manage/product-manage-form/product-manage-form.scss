@@ -106,3 +106,9 @@
         }
     }
 }
+
+.product-manage__grid,
+.product-manage__column,
+.product-manage__sticky-stack {
+    gap: var(--fd-space-page-card-gap);
+}

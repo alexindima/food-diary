@@ -1,3 +1,4 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, model, signal } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
@@ -9,7 +10,7 @@ const DEFAULT_ROWS = 4;
 
 @Component({
     selector: 'fd-ui-textarea',
-    imports: [CommonModule],
+    imports: [CommonModule, CdkTextareaAutosize],
     templateUrl: './fd-ui-textarea.html',
     styleUrls: ['./fd-ui-textarea.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +23,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly required = input(false);
     public readonly readonly = input(false);
     public readonly rows = input(DEFAULT_ROWS);
+    public readonly autosize = input(false);
     public readonly maxLength = input<number>();
     public readonly maximumLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');

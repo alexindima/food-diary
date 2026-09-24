@@ -98,3 +98,8 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+.fd-ui-textarea__control--autosize {
+    min-height: 0;
+    resize: none;
+}

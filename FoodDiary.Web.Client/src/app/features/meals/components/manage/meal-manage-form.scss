@@ -433,3 +433,9 @@
     height: 144px;
     margin-bottom: var(--fd-space-md);
 }
+
+.meal-manage__grid,
+.meal-manage__column,
+.meal-manage__sticky-stack {
+    gap: var(--fd-space-page-card-gap);
+}

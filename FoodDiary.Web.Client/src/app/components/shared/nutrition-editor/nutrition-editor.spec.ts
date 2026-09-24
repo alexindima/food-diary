@@ -140,3 +140,19 @@ describe('NutritionEditorComponent', () => {
         ]);
     });
 });
+
+describe('Nutrition editor outline appearance', () => {
+    it('hides an empty macro bar and reveals it when nutrients are entered', async () => {
+        const { el, fixture } = await setupNutritionEditorAsync();
+        fixture.componentRef.setInput('appearance', 'plain');
+        fixture.componentRef.setInput('hideEmptyMacroBar', true);
+        fixture.detectChanges();
+        expect(el.querySelector('.nutrition-editor__macro-bar')?.hasAttribute('hidden')).toBe(true);
+        expect(el.querySelectorAll('fd-ui-input')).toHaveLength(
+            Object.keys({ calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }).length,
+        );
+        fixture.componentRef.setInput('macroState', { isEmpty: false, segments: [{ key: 'proteins', percent: 100 }] });
+        fixture.detectChanges();
+        expect(el.querySelector('.nutrition-editor__macro-bar')).not.toBeNull();
+    });
+});

@@ -338,8 +338,8 @@ html[data-theme='dark'] {
     --fd-color-nutrition-alcohol-fill: color-mix(in srgb, var(--fd-color-nutrition-alcohol) 10%, transparent);
     --fd-color-nutrition-macro-bar-bg: var(--fd-bg-muted-tint-strong);
     --fd-color-nutrition-error-border: color-mix(in srgb, var(--fd-color-danger) 20%, transparent);
-    --fd-color-nutrition-error-bg: color-mix(in srgb, var(--fd-color-danger) 14%, var(--fd-color-white));
-    --fd-color-nutrition-error-text: var(--fd-color-red-700);
+    --fd-color-nutrition-error-bg: color-mix(in srgb, var(--fd-color-danger) 12%, var(--fd-bg-surface));
+    --fd-color-nutrition-error-text: var(--fd-color-danger);
     --fd-color-nutrition-warning-border: color-mix(in srgb, var(--fd-color-amber-500) 30%, transparent);
     --fd-color-nutrition-warning-bg: color-mix(in srgb, var(--fd-color-amber-500) 10%, var(--fd-color-white));
     --fd-color-nutrition-warning-text: var(--fd-color-orange-700);

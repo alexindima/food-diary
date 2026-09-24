@@ -65,7 +65,7 @@
                 <div class="image-upload-field__sub-text fd-ui-caption">
                     {{ description() || ('IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate: { maxSizeMb: maxSizeMb() }) }}
                 </div>
-                <div class="image-upload-field__hint fd-ui-helper-text">
+                <div class="image-upload-field__hint fd-ui-helper-text" [hidden]="!showRecommendation()">
                     {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate: { size: recommendedSize() } }}
                 </div>
             </div>

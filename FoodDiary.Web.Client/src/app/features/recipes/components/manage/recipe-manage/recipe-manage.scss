@@ -30,7 +30,7 @@
 
     &__grid {
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: var(--fd-space-xl);
+        gap: var(--fd-space-page-card-gap);
         align-items: stretch;
 
         @media #{variables.$media-desktop} {
@@ -43,7 +43,7 @@
     }
 
     &__column {
-        gap: var(--fd-space-xl);
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__import-title,
@@ -122,4 +122,10 @@
 .recipe-manage__import-card > summary:focus-visible {
     outline: var(--fd-outline-focus);
     outline-offset: var(--fd-outline-offset);
+}
+
+.recipe-manage__grid,
+.recipe-manage__column,
+.recipe-manage__sticky-stack {
+    gap: var(--fd-space-page-card-gap);
 }

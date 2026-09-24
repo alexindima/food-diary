@@ -3,12 +3,12 @@
   "summary": {
     "components": 460,
     "componentsWithoutDirectSpecs": 127,
-    "inputs": 1459,
+    "inputs": 1465,
     "outputs": 484,
     "apiCalls": 267,
     "templatesWithTranslations": 320,
-    "translationKeys": 1882,
-    "consumerEdges": 1126,
+    "translationKeys": 1883,
+    "consumerEdges": 1127,
     "consumedComponents": 294,
     "unconsumedComponents": 165
   },
@@ -5176,6 +5176,11 @@
           "required": false
         },
         {
+          "name": "floatLabel",
+          "type": "'auto' | 'always'",
+          "required": false
+        },
+        {
           "name": "ariaLabel",
           "type": "string",
           "required": false
@@ -6616,6 +6621,11 @@
         },
         {
           "name": "rows",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "autosize",
           "type": "",
           "required": false
         },
@@ -8778,6 +8788,11 @@
           "name": "form",
           "type": "FieldTree<ProductFormValues>",
           "required": true
+        },
+        {
+          "name": "expandAdditional",
+          "type": "",
+          "required": false
         },
         {
           "name": "nameOptions",
@@ -11868,6 +11883,11 @@
           "required": false
         },
         {
+          "name": "showRecommendation",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "recommendedSize",
           "type": "string",
           "required": false
@@ -12582,6 +12602,16 @@
         },
         {
           "name": "readonly",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "appearance",
+          "type": "'tinted' | 'plain'",
+          "required": false
+        },
+        {
+          "name": "hideEmptyMacroBar",
           "type": "",
           "required": false
         },
@@ -19981,6 +20011,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
       "keys": [
         "COMMON.CLEAR",
+        "PRODUCT_MANAGE.ADDITIONAL",
         "PRODUCT_MANAGE.BARCODE",
         "PRODUCT_MANAGE.BARCODE_PLACEHOLDER",
         "PRODUCT_MANAGE.BASIC_INFO",
@@ -19989,18 +20020,17 @@
         "PRODUCT_MANAGE.COMMENT",
         "PRODUCT_MANAGE.COMMENT_PLACEHOLDER",
         "PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT",
+        "PRODUCT_MANAGE.DEFAULT_PORTION_HINT",
         "PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER",
         "PRODUCT_MANAGE.DEFAULT_SERVING_UNIT",
         "PRODUCT_MANAGE.DESCRIPTION",
         "PRODUCT_MANAGE.DESCRIPTION_PLACEHOLDER",
-        "PRODUCT_MANAGE.IMAGE_DESCRIPTION",
         "PRODUCT_MANAGE.NAME",
         "PRODUCT_MANAGE.NAME_NO_SUGGESTIONS",
         "PRODUCT_MANAGE.NAME_PLACEHOLDER",
         "PRODUCT_MANAGE.PRODUCT_TYPE",
         "PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER",
         "PRODUCT_MANAGE.SCAN_BARCODE",
-        "PRODUCT_MANAGE.TRACKING_PREFERENCES",
         "PRODUCT_MANAGE.VISIBILITY"
       ]
     },
@@ -20023,6 +20053,7 @@
         "PRODUCT_MANAGE.AI_SUBTITLE",
         "PRODUCT_MANAGE.AI_TITLE",
         "PRODUCT_MANAGE.NUTRITION_MODE.ARIA",
+        "PRODUCT_MANAGE.NUTRITION_MODE.HINT",
         "PRODUCT_MANAGE.NUTRITION_VALUE"
       ]
     },
@@ -26786,9 +26817,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html",
       "occurrences": 1,
       "inputsUsed": [
-        "appearance",
         "fill",
-        "fullWidth",
         "icon",
         "type",
         "variant"
@@ -28429,9 +28458,8 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
-        "accent",
         "appearance",
         "density",
         "headerAlign",
@@ -28448,7 +28476,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html",
       "occurrences": 1,
       "inputsUsed": [
-        "accent",
         "appearance",
         "density",
         "headerAlign",
@@ -31555,6 +31582,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "occurrences": 4,
       "inputsUsed": [
+        "floatLabel",
         "label",
         "type"
       ],
@@ -31568,6 +31596,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
+        "floatLabel",
         "label",
         "placeholder",
         "type"
@@ -31636,6 +31665,25 @@
       "outputsHandled": [
         "valueChange"
       ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error",
+        "floatLabel",
+        "label",
+        "maximum",
+        "placeholder",
+        "prefixIcon",
+        "suffixText",
+        "type"
+      ],
+      "outputsHandled": []
     },
     {
       "component": "FdUiInputComponent",
@@ -31718,6 +31766,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
       "occurrences": 3,
       "inputsUsed": [
+        "floatLabel",
         "label",
         "type"
       ],
@@ -32048,6 +32097,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html",
       "occurrences": 3,
       "inputsUsed": [
+        "floatLabel",
         "label",
         "placeholder",
         "type"
@@ -34691,6 +34741,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
       "occurrences": 2,
       "inputsUsed": [
+        "autosize",
         "error",
         "label",
         "maximumLength",
@@ -35117,8 +35168,7 @@
         "cropAspectRatio",
         "cropEnabled",
         "cropSize",
-        "description",
-        "recommendedSize"
+        "showRecommendation"
       ],
       "outputsHandled": []
     },
@@ -36110,9 +36160,11 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html",
       "occurrences": 1,
       "inputsUsed": [
+        "appearance",
         "caloriesError",
         "fieldErrors",
         "form",
+        "hideEmptyMacroBar",
         "macroState",
         "macrosError",
         "maxCalories",
@@ -36965,6 +37017,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.html",
       "occurrences": 1,
       "inputsUsed": [
+        "expandAdditional",
         "form",
         "isNameSearchLoading",
         "nameOptions"

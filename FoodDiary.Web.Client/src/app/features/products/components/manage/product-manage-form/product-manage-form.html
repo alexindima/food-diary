@@ -7,18 +7,20 @@
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
     >
-        <fd-ui-button
-            appearance="toolbar"
-            variant="primary"
-            icon="save"
-            data-fd-overflow-primary
-            [ariaLabel]="manageHeaderState().submitLabelKey | translate"
-            [fdUiHint]="manageHeaderState().submitLabelKey | translate"
-            [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
-            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
-            [loading]="isSubmitting()"
-            (click)="manageForm.requestSubmit()"
-        />
+        @if (product()) {
+            <fd-ui-button
+                appearance="toolbar"
+                variant="primary"
+                icon="save"
+                data-fd-overflow-primary
+                [ariaLabel]="manageHeaderState().submitLabelKey | translate"
+                [fdUiHint]="manageHeaderState().submitLabelKey | translate"
+                [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
+                [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
+                [loading]="isSubmitting()"
+                (click)="manageForm.requestSubmit()"
+            />
+        }
         <fd-ui-button
             class="product-manage__tour-action"
             data-tour-id="product-manage-tour-help"
@@ -39,10 +41,11 @@
             [formRoot]="productForm"
             [attr.aria-busy]="isSubmitting() || isDeleting()"
         >
-            <div class="product-manage__grid fd-grid fd-gap-xl">
-                <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
+            <div class="product-manage__grid fd-grid">
+                <div class="product-manage__column product-manage__column--primary fd-stack">
                     <fd-product-basic-info
                         [form]="productForm"
+                        [expandAdditional]="!!product()?.comment?.trim()"
                         [nameOptions]="nameSearch.options()"
                         [isNameSearchLoading]="nameSearch.isLoading()"
                         (openBarcodeScanner)="openBarcodeScanner()"
@@ -52,8 +55,8 @@
                     />
                 </div>
 
-                <div class="product-manage__column product-manage__column--secondary fd-stack fd-gap-xl">
-                    <div class="product-manage__sticky-stack fd-stack fd-gap-lg">
+                <div class="product-manage__column product-manage__column--secondary fd-stack">
+                    <div class="product-manage__sticky-stack fd-stack">
                         <fd-product-nutrition-editor
                             [form]="productForm"
                             [nutritionMode]="nutritionMode"
@@ -66,9 +69,8 @@
                                 <fd-ui-button
                                     type="button"
                                     class="product-manage__cancel-button"
-                                    fill="outline"
-                                    variant="primary"
-                                    icon="arrow_back"
+                                    fill="text"
+                                    variant="secondary"
                                     (click)="onCancelAsync()"
                                 >
                                     {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}

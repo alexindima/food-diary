@@ -72,3 +72,25 @@
         grid-column: auto;
     }
 }
+
+.product-manage__identity-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media #{variables.$media-mobile} {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Native details provides disclosure semantics; the UI kit has no disclosure primitive.
+.product-manage__additional {
+    border-top: var(--fd-border-default);
+    padding-top: var(--fd-space-md);
+
+    summary {
+        cursor: pointer;
+        color: var(--fd-color-text-muted);
+    }
+
+    &[open] summary {
+        margin-bottom: var(--fd-space-lg);
+    }
+}

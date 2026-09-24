@@ -1889,7 +1889,7 @@
       "role": "Component",
       "selector": "fd-ui-textarea",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "FdUiTimeInputComponent",
@@ -2876,7 +2876,7 @@
       "role": "Component",
       "selector": "fd-nutrition-editor",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor.ts",
-      "line": 56
+      "line": 57
     },
     {
       "name": "NutritionWeeklyTrendCardComponent",
@@ -6655,8 +6655,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3668,
-      "russianProperties": 3668,
+      "englishProperties": 3671,
+      "russianProperties": 3671,
       "countsMatch": true
     },
     {

@@ -647,7 +647,9 @@
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "Enter category",
-        "DEFAULT_PORTION_AMOUNT": "Package weight / portion",
+        "DEFAULT_PORTION_AMOUNT": "Default portion",
+        "DEFAULT_PORTION_HINT": "Used when adding this product to your diary.",
+        "ADDITIONAL": "Additional",
         "DEFAULT_PORTION_PLACEHOLDER": "e.g. 300",
         "PRODUCT_TYPE": "Product type",
         "PRODUCT_TYPE_PLACEHOLDER": "Select product type",
@@ -681,7 +683,8 @@
         "NUTRITION_MODE": {
             "BASE": "Per {{amount}} {{unit}}",
             "PORTION": "Per serving",
-            "ARIA": "Nutrition basis"
+            "ARIA": "Nutrition basis",
+            "HINT": "Specifies the quantity the nutrition values refer to."
         },
         "NUTRITION_ERRORS": {
             "CALORIES_REQUIRED": "Calories must be greater than 0.",
@@ -700,7 +703,7 @@
         "NAME_NO_SUGGESTIONS": "No matching products found",
         "DEFAULT_SERVING": "Default Serving",
         "DEFAULT_SERVING_WITH_UNIT": "Default Serving ({{unit}})",
-        "DEFAULT_SERVING_UNIT": "Serving Unit",
+        "DEFAULT_SERVING_UNIT": "Measurement unit",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Select serving unit",
         "DEFAULT_SERVING_UNITS": {
             "G": "grams",
@@ -718,7 +721,7 @@
         "SUMMARY_CALORIES_LABEL": "Calories",
         "STEPS_TITLE": "Ingredients & Steps",
         "SAVE_BUTTON": "Save",
-        "ADD_BUTTON": "Create",
+        "ADD_BUTTON": "Create product",
         "CANCEL_BUTTON": "Cancel",
         "LEAVE_CONFIRM_TITLE": "Unsaved changes",
         "LEAVE_CONFIRM_MESSAGE": "Entered data will be lost. Leave this page?",
@@ -777,7 +780,7 @@
         "ANNOTATIONS_LABEL": "Recognized products on the photo"
     },
     "IMAGE_UPLOAD_FIELD": {
-        "SELECT_FILE": "Select a file",
+        "SELECT_FILE": "Add photo",
         "DROP_HERE": "or drop it here",
         "DEFAULT_DESCRIPTION": "JPG, PNG, GIF, WebP up to {{maxSizeMb}} MB",
         "RECOMMENDED": "Recommended: {{size}}.",

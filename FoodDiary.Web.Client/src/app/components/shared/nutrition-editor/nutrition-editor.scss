@@ -31,3 +31,29 @@
         grid-template-columns: 1fr;
     }
 }
+
+.nutrition-editor__plain-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.nutrition-editor__macro-bar[hidden] {
+    display: none;
+}
+
+.nutrition-editor__macro-bar {
+    order: 1;
+}
+
+.nutrition-editor__grid--secondary {
+    order: 2;
+}
+
+fd-nutrition-editor-messages {
+    order: 3;
+}
+
+@container (max-width: 350px) {
+    .nutrition-editor__plain-grid .nutrition-editor__input--calories {
+        grid-column: 1 / -1;
+    }
+}

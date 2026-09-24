@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input';
 
 import { NutritionEditorMessagesComponent } from './nutrition-editor-messages';
@@ -48,7 +49,7 @@ export type NutritionEditorFieldErrors = Partial<Record<keyof NutritionFormModel
 
 @Component({
     selector: 'fd-nutrition-editor',
-    imports: [CommonModule, FormField, TranslatePipe, FdUiNutrientInputComponent, NutritionEditorMessagesComponent],
+    imports: [CommonModule, FormField, TranslatePipe, FdUiInputComponent, FdUiNutrientInputComponent, NutritionEditorMessagesComponent],
     templateUrl: './nutrition-editor.html',
     styleUrls: ['./nutrition-editor.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +58,8 @@ export class NutritionEditorComponent {
     public readonly form = input<NutritionEditorSignalForm | null>(null);
     public readonly macroState = input.required<NutritionMacroState>();
     public readonly readonly = input(false);
+    public readonly appearance = input<'tinted' | 'plain'>('tinted');
+    public readonly hideEmptyMacroBar = input(false);
     public readonly caloriesError = input<string | null>(null);
     public readonly fieldErrors = input<NutritionEditorFieldErrors>({});
     public readonly macrosError = input<string | null>(null);
@@ -65,6 +68,15 @@ export class NutritionEditorComponent {
     public readonly showManualHint = input(false);
     public readonly manualHintKey = input('');
     public readonly warning = input<NutritionEditorWarning | null>(null);
+    protected readonly usePlainEditor = computed(() => this.appearance() === 'plain' && !this.readonly());
+    protected readonly fields = [
+        { key: 'calories', label: 'CALORIES', icon: 'local_fire_department', unit: 'KCAL' },
+        { key: 'proteins', label: 'PROTEINS', icon: 'fitness_center', unit: 'G' },
+        { key: 'fats', label: 'FATS', icon: 'opacity', unit: 'G' },
+        { key: 'carbs', label: 'CARBS', icon: 'grain', unit: 'G' },
+        { key: 'fiber', label: 'FIBER', icon: 'spa', unit: 'G' },
+        { key: 'alcohol', label: 'ALCOHOL', icon: 'wine_bar', unit: 'G' },
+    ] as const;
     protected readonly hasCaloriesError = computed(() => this.hasText(this.caloriesError()));
 
     protected readonly nutrientFillColors = {

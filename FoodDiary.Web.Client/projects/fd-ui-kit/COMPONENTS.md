@@ -639,7 +639,6 @@ Compact boolean switch for settings and permission rows.
 
 Keyboard focus on a nested native control (for example inside `fd-ui-button`) also shows the hint; mouse focus does not.
 
-
 Tooltip directive for short helper text attached to an existing element.
 
 Use for:
@@ -834,3 +833,7 @@ An `imageUrl` displays a single original. When only `collageImages` is supplied,
 images appear individually with previous/next controls, an announced position,
 Left/Right keyboard navigation and horizontal swipe. Blank URLs are ignored;
 vertical gestures and pinch zoom are reserved for the browser.
+
+`FdUiInputComponent.floatLabel`: `auto` (default) floats the label on focus or when filled; `always` keeps the label above the field and shows its placeholder while empty, without changing the form value.
+
+`fd-ui-textarea` supports opt-in `[autosize]="true"`. It grows and shrinks with content, including programmatic updates, using `rows` as its minimum height. The default remains a manually resizable textarea.

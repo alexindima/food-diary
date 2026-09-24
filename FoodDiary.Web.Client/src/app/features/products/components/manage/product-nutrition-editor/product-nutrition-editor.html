@@ -2,31 +2,24 @@
     class="product-manage__card product-manage__card--nutrition"
     appearance="entry"
     tone="editor-white"
-    density="relaxed"
-    headerAlign="center"
-    accent="success"
+    density="default"
+    headerAlign="start"
     data-tour-id="product-manage-nutrition"
     [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
 >
     <div class="product-manage__nutrition fd-stack fd-gap-lg">
-        <div class="product-manage__ai fd-stack fd-gap-md">
+        <div class="product-manage__ai fd-row fd-gap-md">
             <div class="product-manage__ai-text fd-stack fd-gap-xxs">
                 <div class="product-manage__ai-title">{{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}</div>
                 <div class="product-manage__ai-subtitle">{{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}</div>
             </div>
-            <fd-ui-button
-                type="button"
-                appearance="ai-action"
-                variant="primary"
-                fill="solid"
-                icon="auto_awesome"
-                [fullWidth]="true"
-                (click)="openAiRecognition.emit()"
-            >
+            <fd-ui-button type="button" variant="secondary" fill="outline" icon="auto_awesome" (click)="openAiRecognition.emit()">
                 {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
             </fd-ui-button>
         </div>
         <fd-nutrition-editor
+            appearance="plain"
+            [hideEmptyMacroBar]="true"
             [form]="nutritionForm()"
             [macroState]="macroBarState()"
             [caloriesError]="caloriesError()"
@@ -44,7 +37,7 @@
                 [stackOnNarrow]="false"
                 [options]="nutritionModeOptions()"
                 [selectedValue]="nutritionMode()"
-                [fdUiHint]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                [fdUiHint]="'PRODUCT_MANAGE.NUTRITION_MODE.HINT' | translate"
                 [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
                 (selectedValueChange)="nutritionModeChange.emit($event)"
             />

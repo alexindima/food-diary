@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33f9a24737e8dc2eae3e7dd3778ad668990738309cb7fce89090a4d86f4ece3e"
+          "sha256": "064de3308c4fab75764d9fb6814693f2caaa4e22bae8a0b4e03bf5db728d642a"
         }
       ],
-      "reason": "Reviewed regenerated products test references against measured V8 coverage: 298 tests pass, 89.41 percent lines. New regressions reproduce and protect late favorite lookup and dialog destruction; workflow guidance remains accurate.",
+      "reason": "Reviewed quality changes against 53 passing form tests plus browser disclosure, summary, input resizing and create-action checks. Static index references remain navigation evidence only.",
       "baseRef": "HEAD",
-      "gitHead": "fc08e4405bcf945b89a355e17dc96f7c3edb718c",
-      "reviewedAtUtc": "2026-09-24T10:52:49.5866543Z"
+      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
+      "reviewedAtUtc": "2026-09-24T12:39:36.5146016Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33f9a24737e8dc2eae3e7dd3778ad668990738309cb7fce89090a4d86f4ece3e"
+          "sha256": "064de3308c4fab75764d9fb6814693f2caaa4e22bae8a0b4e03bf5db728d642a"
         }
       ],
-      "reason": "Quality index changed from frontend product test additions and subscription cancellation only. No authentication, authorization, provider, storage or network contract changes; security navigation workflow remains accurate.",
+      "reason": "Reviewed disclosure change: current visibility remains visible when collapsed and its underlying value and validation are unchanged. No authorization or sharing behavior changed; security workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "fc08e4405bcf945b89a355e17dc96f7c3edb718c",
-      "reviewedAtUtc": "2026-09-24T10:52:50.6700868Z"
+      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
+      "reviewedAtUtc": "2026-09-24T12:39:38.1209759Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "df068a187cd8bb93f88a9b67dcac6a76655fda77d2c9d5eaf734af5f4179f746"
+          "sha256": "8e9221eef8728ab0015d784717416c0a921411a77df0b556dd7e776280230b43"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "df356ae0340131c11f665767de421b708ecccf66345b3a08159d75f521ecc22d"
+          "sha256": "6b91d843fefaa61e3fb4a2ff2b4818a334df31524905291787b6628ad65af3a7"
         }
       ],
-      "reason": "New product picker routes through ProductListFacade and FavoriteProductService to the Favorites paging handler and composition reader. Existing tracing mechanisms and instructions are unchanged.",
+      "reason": "Reviewed frontend index refresh after final product form translations and hint binding. No route, service, API or form value changes; existing tracing guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:11.3510758Z"
+      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
+      "reviewedAtUtc": "2026-09-24T13:44:42.0659842Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "df068a187cd8bb93f88a9b67dcac6a76655fda77d2c9d5eaf734af5f4179f746"
+          "sha256": "8e9221eef8728ab0015d784717416c0a921411a77df0b556dd7e776280230b43"
         }
       ],
-      "reason": "Reviewed product card, list, picker and detail contracts; added diary output and paged API client with translations in both locales. 266 frontend tests and two viewport browser scenarios passed; workflow guidance remains current.",
+      "reason": "Reviewed final copy-only change: nutrition basis hint explains the quantity, accessible group name remains unchanged, measurement unit label shortened in both locales. Existing component bindings preserved; i18n and template lint pass.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:07.5850604Z"
+      "gitHead": "fd4d7ef8de54d0f25b49715e0536ccd107ac6a7d",
+      "reviewedAtUtc": "2026-09-24T13:44:40.8213860Z"
     },
     {
       "pageId": "workflow.query-context",

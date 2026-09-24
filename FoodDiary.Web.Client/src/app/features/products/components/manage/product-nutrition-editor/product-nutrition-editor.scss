@@ -15,12 +15,16 @@
 }
 
 .product-manage__ai {
-    align-items: stretch;
-    justify-content: flex-start;
-    padding: var(--fd-space-sm) var(--fd-space-md);
-    border-radius: var(--fd-radius-card);
-    border: var(--fd-border-width) solid var(--fd-color-border-ai-button);
-    background: var(--fd-bg-ai-result-surface);
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom: var(--fd-space-md);
+    border-bottom: var(--fd-border-subtle);
+}
+
+.product-manage__ai-text {
+    flex: 1;
+    min-width: 0;
 }
 
 .product-manage__ai-title {

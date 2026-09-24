@@ -483,3 +483,17 @@ describe('FdUiInput numeric model contract', () => {
         expect(fixture.componentInstance.amountModel()).toBeNull();
     });
 });
+
+it('shows an empty placeholder without focus when floatLabel is always and does not write a value', async () => {
+    const { fixture, input, component } = await setupInputAsync();
+    fixture.componentRef.setInput('label', 'Calories');
+    fixture.componentRef.setInput('placeholder', '0');
+    fixture.componentRef.setInput('floatLabel', 'always');
+    fixture.detectChanges();
+    expect(input().placeholder).toBe('0');
+    expect(input().value).toBe('');
+    expect(component.value()).not.toBe(0);
+    fixture.componentRef.setInput('floatLabel', 'auto');
+    fixture.detectChanges();
+    expect(input().getAttribute('placeholder')).toBeNull();
+});

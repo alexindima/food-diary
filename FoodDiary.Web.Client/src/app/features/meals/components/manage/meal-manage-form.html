@@ -34,8 +34,8 @@
     <fd-page-body>
         <form #manageForm class="meal-manage__form fd-stack fd-gap-lg" [formRoot]="mealSignalForm" [attr.aria-busy]="isSubmitting()">
             @let generalErrors = generalFieldErrors();
-            <div class="meal-manage__grid fd-grid fd-gap-xl">
-                <div class="meal-manage__column meal-manage__column--primary fd-stack fd-gap-lg">
+            <div class="meal-manage__grid fd-grid">
+                <div class="meal-manage__column meal-manage__column--primary fd-stack">
                     <fd-meal-items-section
                         data-tour-id="meal-manage-items"
                         [items]="itemListItems()"
@@ -69,7 +69,7 @@
                     />
                 </div>
 
-                <div class="meal-manage__column meal-manage__column--secondary fd-stack fd-gap-lg">
+                <div class="meal-manage__column meal-manage__column--secondary fd-stack">
                     <fd-meal-nutrition-sidebar
                         data-tour-id="meal-manage-nutrition"
                         [mealForm]="mealSignalForm"

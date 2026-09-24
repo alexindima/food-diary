@@ -75,6 +75,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
+    public readonly showRecommendation = input(true);
     public readonly recommendedSize = input<string>('2160 x 1080');
     public readonly maxSizeMb = input<number>(DEFAULT_MAX_SIZE_MB);
     public readonly acceptedTypes = input<string>('image/jpeg,image/png,image/webp,image/gif');

@@ -59,6 +59,13 @@ export class ProductBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
+    public readonly expandAdditional = input(false);
+    protected readonly additionalOpen = computed(
+        () => this.expandAdditional() || Boolean(this.fieldErrors().visibility) || Boolean(this.fieldErrors().comment),
+    );
+    protected readonly selectedVisibilityLabel = computed(
+        () => this.visibilityOptions().find(option => option.value === this.form().visibility().value())?.label ?? '',
+    );
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
     protected readonly fieldErrors = computed<FieldErrors>(() => {
