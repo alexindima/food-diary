@@ -7482,11 +7482,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card.ts",
-      "nonBlankLines": 141,
+      "nonBlankLines": 143,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.32
+      "structuralRiskScore": 13.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.ts",
@@ -7746,11 +7746,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "nonBlankLines": 153,
-      "decisionPoints": 30,
+      "nonBlankLines": 154,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 48.06
+      "structuralRiskScore": 45.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/skeleton-card/skeleton-card.ts",
@@ -11474,11 +11474,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
-      "nonBlankLines": 50,
+      "nonBlankLines": 48,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.5
+      "structuralRiskScore": 8.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
@@ -11658,11 +11658,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/detail/recipe-detail.facade.ts",
-      "nonBlankLines": 142,
+      "nonBlankLines": 145,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.84
+      "structuralRiskScore": 14.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade.ts",
@@ -11682,11 +11682,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
-      "nonBlankLines": 315,
+      "nonBlankLines": 332,
       "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 48.3
+      "structuralRiskScore": 48.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.ts",

@@ -1,6 +1,8 @@
+import { Injector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -382,3 +384,126 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
         ...overrides,
     };
 }
+
+describe('RecipeManageFacade nutrition boundaries', () => {
+    it.each([
+        { value: TOTAL_NUTRIENT, mode: 'recipe', servings: SERVING_COUNT, portion: TOTAL_NUTRIENT, total: TOTAL_NUTRIENT },
+        { value: TOTAL_NUTRIENT, mode: 'portion', servings: SERVING_COUNT, portion: PORTION_NUTRIENT, total: SCALED_NUTRIENT },
+        { value: null, mode: 'portion', servings: SERVING_COUNT, portion: 0, total: 0 },
+        { value: undefined, mode: 'portion', servings: SERVING_COUNT, portion: 0, total: 0 },
+        { value: Number.NaN, mode: 'recipe', servings: SERVING_COUNT, portion: 0, total: 0 },
+        { value: Number.POSITIVE_INFINITY, mode: 'portion', servings: SERVING_COUNT, portion: 0, total: 0 },
+        { value: TOTAL_NUTRIENT, mode: 'portion', servings: 0, portion: TOTAL_NUTRIENT, total: TOTAL_NUTRIENT },
+        { value: TOTAL_NUTRIENT, mode: 'portion', servings: -1, portion: TOTAL_NUTRIENT, total: TOTAL_NUTRIENT },
+        { value: TOTAL_NUTRIENT, mode: 'portion', servings: Number.NaN, portion: TOTAL_NUTRIENT, total: TOTAL_NUTRIENT },
+        { value: TOTAL_NUTRIENT, mode: 'portion', servings: Number.POSITIVE_INFINITY, portion: TOTAL_NUTRIENT, total: TOTAL_NUTRIENT },
+    ] as const)('scales $value in $mode mode with $servings servings', ({ value, mode, servings, portion, total }) => {
+        expect(facade.fromRecipeTotal(value, mode, servings)).toBe(portion);
+        expect(facade.toRecipeTotal(value, mode, servings)).toBe(total);
+    });
+
+    it('preserves explicit zero totals and falls back only for missing nutrients', () => {
+        const fallback = { calories: 120, proteins: 4, fats: 3, carbs: 2, fiber: 1, alcohol: 0 };
+        expect(facade.getSummaryFromRecipe(createRecipe({ totalCalories: 0 }), fallback)).toEqual({ ...fallback, calories: 0 });
+        expect(facade.getSummaryFromRecipe(null, fallback)).toEqual({ calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 });
+    });
+
+    it('ignores empty and nonpositive ingredients without poisoning the total', () => {
+        const empty = { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
+        expect(facade.calculateAutoSummary([])).toEqual(empty);
+        const steps = createStepsNutritionState([
+            [null, 0, -1].map(amount => ({ food: createNutritionProduct(), nestedRecipe: null, amount })),
+        ]);
+        expect(facade.calculateAutoSummary(steps)).toEqual(empty);
+        expect(facade.calculateAutoSummary(createStepsNutritionState([[{ food: null, nestedRecipe: null, amount: 1 }]]))).toEqual(empty);
+    });
+
+    it('replaces a product with a nested recipe without retaining product identity', () => {
+        const patchValue = vi.fn();
+        const nested = createRecipe();
+        facade.applyItemSelection({ patchValue }, { type: 'Recipe', recipe: nested });
+        expect(patchValue).toHaveBeenCalledWith({
+            food: null,
+            productId: null,
+            foodName: nested.name,
+            nestedRecipe: nested,
+            nestedRecipeId: nested.id,
+            nestedRecipeName: nested.name,
+            amount: 1,
+        });
+    });
+
+    it.each([true, false, null, undefined])('requires explicit confirmation to discard changes: %s', async result => {
+        dialogService.open.mockReturnValue({ afterClosed: () => of(result) });
+        expect(await facade.confirmDiscardChangesAsync({ title: 'Discard', message: 'Unsaved changes' })).toBe(result === true);
+    });
+
+    it('returns to the recipe list on cancel outside a dialog', async () => {
+        await facade.cancelManageAsync();
+        expect(navigationService.navigateToRecipeListAsync).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('RecipeManageFacade submission recovery', () => {
+    const dto = {
+        name: 'Recipe',
+        steps: [],
+        servings: 1,
+        cookTime: 1,
+        prepTime: 0,
+        visibility: RecipeVisibility.Public,
+        calculateNutritionAutomatically: true,
+    };
+
+    it.each([null, undefined, 'offline', [], { error: {} }])('uses a safe fallback error and permits update retry: %s', error => {
+        recipeService.update.mockReturnValueOnce(throwError(() => error));
+        facade.updateRecipe('r1', dto);
+        expect(facade.isSubmitting()).toBe(false);
+        expect(facade.globalError()).toBe('FORM_ERRORS.UNKNOWN');
+        facade.updateRecipe('r1', dto);
+        expect(facade.globalError()).toBeNull();
+        expect(recipeService.update).toHaveBeenCalledTimes(2);
+    });
+
+    it('prevents a duplicate update', () => {
+        facade.isSubmitting.set(true);
+        facade.updateRecipe('r1', dto);
+        expect(recipeService.update).not.toHaveBeenCalled();
+    });
+
+    it('returns a saved recipe to the caller when used in a dialog', async () => {
+        const close = vi.fn();
+        const scoped = TestBed.runInInjectionContext(() => {
+            const injector = Injector.create({
+                providers: [RecipeManageFacade, { provide: FdUiDialogRef, useValue: { close } }],
+                parent: TestBed.inject(Injector),
+            });
+            return injector.get(RecipeManageFacade);
+        });
+        scoped.addRecipe(dto);
+        await waitForAsyncTasksAsync();
+        expect(close).toHaveBeenCalledWith({ id: 'recipe-1', name: 'Recipe' });
+        expect(navigationService.navigateToRecipeListAsync).not.toHaveBeenCalled();
+        await scoped.cancelManageAsync();
+        expect(close).toHaveBeenLastCalledWith(null);
+    });
+});
+
+const TOTAL_NUTRIENT = 120;
+const SCALED_NUTRIENT = 360;
+const PORTION_NUTRIENT = 40;
+const SERVING_COUNT = 3;
+
+describe('RecipeManageFacade nutrition fallback', () => {
+    it('rounds nutrition without introducing floating-point tails', () => {
+        const input = 1.234;
+        const rounded = 1.23;
+        expect(facade.roundNutritionValue(input)).toBe(rounded);
+    });
+
+    it('normalizes invalid nested-recipe servings and absent totals', () => {
+        const nestedRecipe = createRecipe({ servings: 0, totalCalories: 120 });
+        const summary = facade.calculateAutoSummary(createStepsNutritionState([[{ food: null, nestedRecipe, amount: 2 }]]));
+        expect(summary).toEqual({ calories: 240, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 });
+    });
+});

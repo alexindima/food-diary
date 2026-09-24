@@ -5,6 +5,8 @@ export default {
         coverage: {
             reportOnFailure: true,
             thresholds: {
+                'src/app/features/recipes/**/*.ts': { lines: 94, statements: 94, functions: 92, branches: 85 },
+                'src/app/features/recipes/api/*.service.ts': { lines: 100, statements: 100, functions: 100, branches: 100 },
                 'src/app/features/meals/**/*.ts': { lines: 93, statements: 93, functions: 93, branches: 84 },
                 'src/app/features/weight-history/**/*.ts': { lines: 99, statements: 99, functions: 100, branches: 97 },
                 'src/app/features/waist-history/**/*.ts': { lines: 99, statements: 99, functions: 100, branches: 97 },

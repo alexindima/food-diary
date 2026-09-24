@@ -1,8 +1,9 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, map, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
@@ -21,6 +22,8 @@ import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.dat
 
 @Injectable()
 export class RecipeListFacade {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly cancelLoad = new Subject<void>();
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
@@ -71,11 +74,14 @@ export class RecipeListFacade {
     }
 
     public loadRecipes(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
+        this.cancelLoad.next();
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
 
         return this.recipeService.queryOverview({ page, limit, filters, includePublic, recentLimit: 1, favoriteLimit: 0 }).pipe(
+            takeUntil(this.cancelLoad),
+            takeUntilDestroyed(this.destroyRef),
             tap(data => {
                 this.recipeData.setData(data.allRecipes);
                 this.favoriteTotalCount.set(data.favoriteTotalCount);
@@ -97,6 +103,7 @@ export class RecipeListFacade {
     }
 
     public loadInitialOverview(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
+        this.cancelLoad.next();
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
@@ -111,6 +118,8 @@ export class RecipeListFacade {
                 favoriteLimit: RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT,
             })
             .pipe(
+                takeUntil(this.cancelLoad),
+                takeUntilDestroyed(this.destroyRef),
                 tap(data => {
                     this.recipeData.setData(data.allRecipes);
                     this.recentRecipes.set(data.recentItems);
@@ -224,6 +233,10 @@ export class RecipeListFacade {
                 this.syncRecipeFavoriteState(recipe.id, true, favorite.id);
             }),
             switchMap(() => this.loadFavorites()),
+            catchError(() => {
+                this.toastService.error(this.translateService.instant('RECIPE_LIST.FAVORITE_ERROR'));
+                return of(void 0);
+            }),
             finalize(() => {
                 this.setFavoriteLoading(recipe.id, false);
             }),
@@ -311,6 +324,10 @@ export class RecipeListFacade {
                 this.syncRecipeFavoriteState(recipe.id, false, null);
             }),
             switchMap(() => this.loadFavorites()),
+            catchError(() => {
+                this.toastService.error(this.translateService.instant('RECIPE_LIST.FAVORITE_ERROR'));
+                return of(void 0);
+            }),
             finalize(() => {
                 this.setFavoriteLoading(recipe.id, false);
             }),

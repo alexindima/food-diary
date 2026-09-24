@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../products/models/product.data';
@@ -131,3 +131,61 @@ function createStepCardState(step: StepFormValues): RecipeStepCardState {
         })),
     };
 }
+
+describe('RecipeStepCardComponent editing boundaries', () => {
+    it.each([
+        ['', null],
+        ['  ', null],
+        ['12.5', FRACTIONAL_AMOUNT],
+        ['bad', null],
+        ['Infinity', null],
+        ['0', 0],
+    ])('normalizes ingredient amount %s', (value, expected) => {
+        const { component } = setupComponent();
+        const changed = vi.fn();
+        component.ingredientAmountChange.subscribe(changed);
+        component['onIngredientAmountInput'](0, value);
+        expect(changed).toHaveBeenCalledExactlyOnceWith({ ingredientIndex: 0, amount: expected });
+    });
+
+    it('ignores input for an ingredient that no longer exists', () => {
+        const { component } = setupComponent();
+        const changed = vi.fn();
+        component.ingredientAmountChange.subscribe(changed);
+        component['onIngredientAmountInput'](-1, '10');
+        component['onIngredientAmountInput'](MISSING_INGREDIENT_INDEX, '10');
+        expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('commits a blank title on blur and exits editing', () => {
+        const { component } = setupComponent(createRecipeStepValue({ title: '  ', imageUrl: null, description: '', ingredients: [] }));
+        const changed = vi.fn();
+        component.stepTitleChange.subscribe(changed);
+        component['toggleStepTitleEdit']();
+        component['onStepTitleBlur']();
+        expect(changed).toHaveBeenCalledExactlyOnceWith(null);
+        expect(component['isStepTitleEditing']()).toBe(false);
+    });
+
+    it('wires the rendered expand and remove controls and protects the first step', () => {
+        const { component, fixture } = setupComponent();
+        const toggle = vi.fn();
+        const remove = vi.fn();
+        component.toggleExpanded.subscribe(toggle);
+        component.removeStep.subscribe(remove);
+        const buttons: HTMLButtonElement[] = [
+            ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.recipe-step-card__header-actions button'),
+        ];
+        buttons[0].click();
+        buttons[1].click();
+        expect(toggle).toHaveBeenCalledTimes(1);
+        expect(remove).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('stepIndex', 1);
+        fixture.detectChanges();
+        buttons[1].click();
+        expect(remove).toHaveBeenCalledTimes(1);
+    });
+});
+
+const FRACTIONAL_AMOUNT = 12.5;
+const MISSING_INGREDIENT_INDEX = 10;

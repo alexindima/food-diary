@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
@@ -298,5 +298,136 @@ describe('RecipeListFacade favorite picker', () => {
         expect(quickMealService.addRecipe).not.toHaveBeenCalled();
         expect(await firstValueFrom(facade.addFavoriteToMeal(favorite))).toBe(true);
         expect(quickMealService.addRecipe).toHaveBeenCalledExactlyOnceWith(recipe);
+    });
+});
+
+describe('RecipeListFacade competing requests', () => {
+    it('cancels initial load when search starts and preserves newer results', () => {
+        const initial = new Subject<unknown>();
+        const search = new Subject<unknown>();
+        recipeService.queryOverview.mockReturnValueOnce(initial).mockReturnValueOnce(search);
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, false).subscribe();
+        facade.loadRecipes(1, PAGE_LIMIT, { search: 'rice' }, false).subscribe();
+        expect(initial.observed).toBe(false);
+        search.next({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 2,
+            allRecipes: { data: [{ ...recipe, name: 'Rice' }], page: 1, limit: PAGE_LIMIT, totalPages: 1, totalItems: 1 },
+        });
+        search.complete();
+        initial.next({ allRecipes: { data: [recipe] } });
+        expect(facade.recipeData.items()[0].name).toBe('Rice');
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('cancels page requests on scope destruction', () => {
+        const pending = new Subject<unknown>();
+        recipeService.queryOverview.mockReturnValue(pending);
+        facade.loadRecipes(2, PAGE_LIMIT, {}, true).subscribe();
+        expect(pending.observed).toBe(true);
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
+    });
+});
+
+describe('RecipeListFacade edge cases', () => {
+    it.each([false, true])('reports favorite mutation errors without changing state and permits retry: %s', async isFavorite => {
+        const item = { ...recipe, isFavorite, favoriteRecipeId: 'favorite-1' };
+        facade.recipeData.items.set([item]);
+        const mutation = isFavorite ? favoriteRecipeService.remove : favoriteRecipeService.add;
+        mutation.mockReturnValueOnce(throwError(() => new Error('offline')));
+        await firstValueFrom(facade.toggleRecipeFavorite(item));
+        expect(facade.recipeData.items()[0].isFavorite).toBe(isFavorite);
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+        expect(toastService.error).toHaveBeenCalledTimes(1);
+        await firstValueFrom(facade.toggleRecipeFavorite(item));
+        expect(facade.recipeData.items()[0].isFavorite).toBe(!isFavorite);
+    });
+
+    it('blocks duplicate favorite mutations while one is pending', () => {
+        const pending = new Subject<FavoriteRecipe>();
+        favoriteRecipeService.add.mockReturnValue(pending);
+        facade.toggleRecipeFavorite(recipe).subscribe();
+        facade.toggleRecipeFavorite(recipe).subscribe();
+        expect(favoriteRecipeService.add).toHaveBeenCalledTimes(1);
+        pending.next(createFavoriteRecipe());
+        pending.complete();
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+
+    it.each([{ isOwnedByCurrentUser: false }, { usageCount: 1 }])('does not delete a protected recipe: %s', async overrides => {
+        await firstValueFrom(facade.deleteRecipe({ ...recipe, ...overrides }, null, false));
+        expect(recipeService.deleteById).not.toHaveBeenCalled();
+    });
+
+    it('keeps recent recipes separate and exposes search results after search', () => {
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, false).subscribe();
+        expect(facade.showRecentSection()).toBe(true);
+        expect(facade.allRecipesSectionItems()).toEqual([]);
+        expect(facade.hasVisibleRecipes()).toBe(true);
+        expect(facade.allRecipesSectionLabelKey()).toBe('RECIPE_LIST.ALL_RECIPES');
+        facade.loadRecipes(1, PAGE_LIMIT, { search: 'rice' }, false).subscribe();
+        expect(facade.showRecentSection()).toBe(false);
+        expect(facade.allRecipesSectionItems()).toEqual([recipe]);
+        expect(facade.allRecipesSectionLabelKey()).toBe('RECIPE_LIST.SEARCH_RESULTS');
+    });
+
+    it('clears stale results on a page error and recovers on retry', () => {
+        recipeService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.loadRecipes(1, PAGE_LIMIT, {}, false).subscribe();
+        expect(facade.hasVisibleRecipes()).toBe(false);
+        expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
+        facade.loadRecipes(1, PAGE_LIMIT, {}, false).subscribe();
+        expect(facade.errorKey()).toBeNull();
+        expect(facade.hasVisibleRecipes()).toBe(true);
+    });
+
+    it.each([{ category: 'Soup' }, { maxTotalTime: 0 }, { caloriesFrom: 0 }, { caloriesTo: 0 }, { hasImage: false }])(
+        'preserves meaningful falsy filters: %s',
+        filters => {
+            expect(facade.hasActiveFilters(false, filters)).toBe(true);
+        },
+    );
+
+    it('distinguishes blank search and filters from active ones', () => {
+        expect(facade.hasActiveFilters(false, { category: '  ' })).toBe(false);
+        expect(facade.hasActiveFilters(true, {})).toBe(true);
+        expect(facade.hasSearch(null)).toBe(false);
+        expect(facade.hasSearch(' ')).toBe(false);
+        expect(facade.hasSearch('Rice')).toBe(true);
+    });
+
+    it.each(['Edit', 'Duplicate'] as const)('routes the %s result to the correct recipe', async action => {
+        await facade.handleDetailActionAsync(new RecipeDetailActionResult('new-id', action), recipe, null, false);
+        expect(navigationService.navigateToRecipeEditAsync).toHaveBeenCalledWith(action === 'Edit' ? recipe.id : 'new-id');
+    });
+});
+
+describe('RecipeListFacade recovery and navigation', () => {
+    it('preserves favorite count after refresh failure and releases loading state', async () => {
+        facade.favoriteTotalCount.set(2);
+        favoriteRecipeService.getPage.mockReturnValueOnce(throwError(() => new Error('offline')));
+        await firstValueFrom(facade.loadFavorites());
+        expect(facade.favoriteTotalCount()).toBe(2);
+        expect(facade.isFavoritesLoadingMore()).toBe(false);
+    });
+
+    it('does not add a meal when recipe resolution fails', async () => {
+        recipeService.getById.mockReturnValueOnce(throwError(() => new Error('offline')));
+        expect(await firstValueFrom(facade.addFavoriteToMeal(createFavoriteRecipe()))).toBe(false);
+        expect(quickMealService.addRecipe).not.toHaveBeenCalled();
+        expect(await firstValueFrom(facade.getFavoriteRecipe(createFavoriteRecipe()))).toEqual(recipe);
+    });
+
+    it('opens filters with current values and returns cancellation unchanged', async () => {
+        const dialogs = TestBed.inject(FdUiDialogService);
+        const dialog = { afterClosed: (): Observable<null> => of(null) };
+        const open = vi.spyOn(dialogs, 'open').mockReturnValue(dialog as ReturnType<FdUiDialogService['open']>);
+        const filters = { onlyMine: true, category: 'Soup', maxTotalTime: null, caloriesFrom: null, caloriesTo: null, hasImage: false };
+        expect(await firstValueFrom(facade.openFilters(filters))).toBeNull();
+        expect(open).toHaveBeenCalledWith(expect.anything(), { preset: 'form', data: filters });
+        await facade.navigateToAddRecipeAsync();
+        expect(navigationService.navigateToRecipeAddAsync).toHaveBeenCalledTimes(1);
     });
 });

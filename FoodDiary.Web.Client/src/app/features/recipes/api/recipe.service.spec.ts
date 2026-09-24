@@ -1,6 +1,7 @@
-import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
@@ -337,3 +338,47 @@ function createRecipeDto(name: string): RecipeDto {
         steps: [],
     };
 }
+
+describe('RecipeService mutation failures and filters', () => {
+    it.each(['create', 'update', 'delete', 'duplicate'] as const)('propagates %s errors to the caller', operation => {
+        const requests = {
+            create: (): Observable<unknown> => service.create(createRecipeDto('Rice')),
+            update: (): Observable<unknown> => service.update('r1', createRecipeDto('Rice')),
+            delete: (): Observable<unknown> => service.deleteById('r1'),
+            duplicate: (): Observable<unknown> => service.duplicate('r1'),
+        };
+        let status = 0;
+        const request: Observable<unknown> = requests[operation]();
+        request.subscribe({
+            next: () => {
+                throw new Error('Must not succeed');
+            },
+            error: (error: unknown) => {
+                status = error instanceof HttpErrorResponse ? error.status : 0;
+            },
+        });
+        httpMock
+            .expectOne(req => req.url.startsWith(BASE_URL))
+            .flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(status).toBe(HttpStatusCode.ServiceUnavailable);
+    });
+
+    it('sends structured filters including false and zero without dropping them', () => {
+        service
+            .queryOverview({
+                page: 1,
+                limit: DEFAULT_PAGE_LIMIT,
+                includePublic: false,
+                filters: { category: '  Soup  ', maxTotalTime: 0, caloriesFrom: 0, caloriesTo: 120, hasImage: false },
+            })
+            .subscribe();
+        const request = httpMock.expectOne(req => req.url.endsWith('/overview'));
+        expect(request.request.params.get('category')).toBe('Soup');
+        expect(request.request.params.get('maxTotalTime')).toBe('0');
+        expect(request.request.params.get('caloriesFrom')).toBe('0');
+        expect(request.request.params.get('caloriesTo')).toBe('120');
+        expect(request.request.params.get('hasImage')).toBe('false');
+        expect(request.request.params.get('includePublic')).toBe('false');
+        request.flush({ recentItems: [], favoriteItems: [], favoriteTotalCount: 0, allRecipes: { data: [] } });
+    });
+});

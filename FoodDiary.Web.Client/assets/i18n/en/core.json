@@ -510,7 +510,12 @@
         "QUALITY_SCORE": "Healthiness"
     },
     "RECIPE_CARD": {
-        "ADD_TO_MEAL": "Add to meal"
+        "ADD_TO_MEAL": "Add to meal",
+        "TO_DIARY": "To diary",
+        "INGREDIENTS_ONE": "{{count}} ingredient",
+        "INGREDIENTS_FEW": "{{count}} ingredients",
+        "INGREDIENTS_MANY": "{{count}} ingredients",
+        "INGREDIENTS_OTHER": "{{count}} ingredients"
     },
     "RECIPE_LIST": {
         "TITLE": "Recipes",

@@ -511,11 +511,11 @@
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Добавить в приём пищи",
+        "TO_DIARY": "В дневник",
         "INGREDIENTS_ONE": "{{count}} ингредиент",
         "INGREDIENTS_FEW": "{{count}} ингредиента",
         "INGREDIENTS_MANY": "{{count}} ингредиентов",
-        "INGREDIENTS_OTHER": "{{count}} ингредиента",
-        "TO_DIARY": "В дневник"
+        "INGREDIENTS_OTHER": "{{count}} ингредиента"
     },
     "RECIPE_LIST": {
         "TITLE": "Рецепты",
@@ -590,7 +590,8 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Тур можно повторить",
             "HELP_TEXT": "Эта кнопка запускает тур по рецептам заново, когда нужно быстро вспомнить страницу."
-        }
+        },
+        "FAVORITE_ERROR": "Не удалось обновить избранное. Попробуйте ещё раз."
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Категория",

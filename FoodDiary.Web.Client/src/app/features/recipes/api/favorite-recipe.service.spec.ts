@@ -1,6 +1,7 @@
-import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { FavoriteRecipe } from '../models/recipe.data';
@@ -133,3 +134,22 @@ function createFavoriteRecipe(): FavoriteRecipe {
         ingredientCount: INGREDIENT_COUNT,
     };
 }
+
+describe('FavoriteRecipeService mutation failures', () => {
+    it.each(['add', 'remove'] as const)('propagates %s failure', operation => {
+        let status = 0;
+        const request: Observable<unknown> = operation === 'add' ? service.add('recipe-1') : service.remove('favorite-1');
+        request.subscribe({
+            next: () => {
+                throw new Error('Must not succeed');
+            },
+            error: (error: unknown) => {
+                status = error instanceof HttpErrorResponse ? error.status : 0;
+            },
+        });
+        httpMock
+            .expectOne(req => req.method === (operation === 'add' ? 'POST' : 'DELETE'))
+            .flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(status).toBe(HttpStatusCode.ServiceUnavailable);
+    });
+});

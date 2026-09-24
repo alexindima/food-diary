@@ -389,15 +389,11 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the recipes tour whenever you need a reminder."
-        }
+        },
+        "FAVORITE_ERROR": "Could not update favorites. Please try again."
     },
     "RECIPE_CARD": {
-        "ADD_TO_MEAL": "Add to meal",
-        "INGREDIENTS_ONE": "{{count}} ingredient",
-        "INGREDIENTS_FEW": "{{count}} ingredients",
-        "INGREDIENTS_MANY": "{{count}} ingredients",
-        "INGREDIENTS_OTHER": "{{count}} ingredients",
-        "TO_DIARY": "To diary"
+        "ADD_TO_MEAL": "Add to meal"
     },
     "QUICK_MEAL": {
         "TITLE": "Meal draft",

@@ -283,3 +283,115 @@ function emptyRecipeFilters(): RecipeFilters {
         hasImage: null,
     };
 }
+
+describe('RecipeListComponent search and recovery', () => {
+    it('uses the latest search and reloads the first page when cleared', async () => {
+        const { component } = setupComponent();
+        await flushPromisesAsync();
+        component['searchForm'].search().value.set('Rice');
+        TestBed.tick();
+        await flushPromisesAsync();
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, false);
+        component['clearSearch']();
+        TestBed.tick();
+        await flushPromisesAsync();
+        expect(component['searchModel']().search).toBe('');
+        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: '' }, false);
+    });
+
+    it('does not reload when the filter dialog is cancelled', () => {
+        const { component } = setupComponent();
+        component['openFilters']();
+        expect(facade.loadRecipes).not.toHaveBeenCalled();
+    });
+
+    it('retries loading and delegates new recipe navigation', async () => {
+        const { component } = setupComponent();
+        component['retryLoad']();
+        expect(facade.loadInitialOverview).toHaveBeenCalledTimes(2);
+        await component['onAddRecipeClickAsync']();
+        expect(facade.navigateToAddRecipeAsync).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps unavailable favorites from opening or adding a meal', () => {
+        const { component } = setupComponent();
+        facade.getFavoriteRecipe.mockReturnValue(of(null));
+        component['openFavoriteRecipe'](createFavoriteRecipe());
+        component['addFavoriteRecipeToMeal'](createFavoriteRecipe());
+        expect(dialogService.open).not.toHaveBeenCalled();
+        expect(facade.addToMeal).not.toHaveBeenCalled();
+    });
+
+    it('toggles mobile search and delegates favorite actions', () => {
+        const { component } = setupComponent();
+        component['toggleMobileSearch']();
+        expect(component['isMobileSearchOpen']()).toBe(true);
+        component['toggleMobileSearch']();
+        expect(component['isMobileSearchOpen']()).toBe(false);
+        component['onRecipeFavoriteToggle'](createRecipe());
+        component['removeFavorite'](createFavoriteRecipe());
+        component['loadFavorites']();
+        expect(facade.toggleRecipeFavorite).toHaveBeenCalledWith(createRecipe());
+        expect(facade.removeFavorite).toHaveBeenCalledWith(createFavoriteRecipe());
+        expect(facade.loadFavorites).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('RecipeListComponent presentation state', () => {
+    it('distinguishes an empty collection from an empty search result', () => {
+        const { component } = setupComponent();
+        vi.spyOn(facade, 'hasVisibleRecipes').mockReturnValue(false);
+        expect(component['emptyState']()).toBe('empty');
+        component['searchForm'].search().value.set('Rice');
+        expect(component['emptyState']()).toBe('no-results');
+        expect(component['isMobileSearchVisible']()).toBe(true);
+        expect(component['allRecipesSectionLabelKey']()).toBe('RECIPE_LIST.ALL_RECIPES');
+        expect(component['pageIndex']()).toBe(0);
+    });
+
+    it('maps cover images and provides placeholders for absent images', () => {
+        const { component } = setupComponent();
+        facade.recentRecipes.set([createRecipe({ imageUrl: '/cover.jpg' })]);
+        expect(component['recentRecipeItems']()[0].imageUrl).toBe('/cover.jpg');
+        expect(component['allRecipeItems']()[0].imageUrl).toBeUndefined();
+    });
+
+    it('shows distinct filter chips for no photo, with photo, limits and ownership', () => {
+        const { component } = setupComponent();
+        component['searchModel'].update(model => ({
+            ...model,
+            onlyMine: true,
+            category: 'Soup',
+            maxTotalTime: 0,
+            caloriesFrom: 0,
+            caloriesTo: 120,
+            hasImage: false,
+        }));
+        expect(component['activeFilterKeys']()).toEqual([
+            'RECIPE_LIST.FILTER_MY_RECIPES',
+            'RECIPE_LIST.FILTER_CATEGORY_ACTIVE',
+            'RECIPE_LIST.FILTER_MAX_TOTAL_TIME_ACTIVE',
+            'RECIPE_LIST.FILTER_CALORIES_ACTIVE',
+            'RECIPE_LIST.FILTER_IMAGE_WITHOUT',
+        ]);
+        component['searchModel'].update(model => ({ ...model, hasImage: true }));
+        expect(component['activeFilterKeys']()).toContain('RECIPE_LIST.FILTER_IMAGE_WITH');
+        expect(component['activeFilterKeys']()).not.toContain('RECIPE_LIST.FILTER_IMAGE_WITHOUT');
+    });
+
+    it('does not reload when filters are unchanged', () => {
+        const { component } = setupComponent();
+        facade.openFilters.mockReturnValue(
+            of({ onlyMine: false, category: null, maxTotalTime: null, caloriesFrom: null, caloriesTo: null, hasImage: null }),
+        );
+        component['openFilters']();
+        expect(facade.loadRecipes).not.toHaveBeenCalled();
+    });
+
+    it('opens the favorites picker lazily without querying every favorite', () => {
+        const { component } = setupComponent();
+        component['toggleFavorites']();
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(facade.loadFavorites).not.toHaveBeenCalled();
+    });
+});

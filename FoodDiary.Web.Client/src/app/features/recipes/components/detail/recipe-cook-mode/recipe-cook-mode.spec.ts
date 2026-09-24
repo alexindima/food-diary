@@ -114,3 +114,39 @@ function createRecipe(): Recipe {
         ],
     };
 }
+
+describe('RecipeCookModeComponent boundaries', () => {
+    it('handles a recipe without instructions without allowing navigation', () => {
+        const { component } = setupComponent({ ...createRecipe(), steps: [] });
+        component['previousStep']();
+        component['nextStep']();
+        expect(component['currentStep']()).toBeNull();
+        expect(component['ingredients']()).toEqual([]);
+        expect(component['progressPercent']()).toBe(0);
+        expect(component['isDone']()).toBe(false);
+    });
+
+    it('sorts steps without mutating the recipe and does not move beyond boundaries', () => {
+        const recipe = createRecipe();
+        recipe.steps.reverse();
+        const { component } = setupComponent(recipe);
+        expect(recipe.steps[0].instruction).toBe('Bake');
+        expect(component['currentStep']()?.instruction).toBe('Mix');
+        component['previousStep']();
+        expect(component['currentStepIndex']()).toBe(0);
+        component['nextStep']();
+        component['nextStep']();
+        expect(component['currentStepIndex']()).toBe(1);
+        component['previousStep']();
+        expect(component['currentStepIndex']()).toBe(0);
+    });
+
+    it('uses nested recipe names and omits unknown measurement units', () => {
+        const recipe = createRecipe();
+        recipe.steps[0].ingredients = [
+            { ...recipe.steps[0].ingredients[0], productName: null, nestedRecipeName: 'Sauce', productBaseUnit: null },
+        ];
+        const { component } = setupComponent(recipe);
+        expect(component['ingredients']()[0]).toMatchObject({ name: 'Sauce', unitKey: '' });
+    });
+});

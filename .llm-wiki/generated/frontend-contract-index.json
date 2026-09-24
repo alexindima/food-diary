@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 458,
-    "componentsWithoutDirectSpecs": 127,
-    "inputs": 1450,
+    "componentsWithoutDirectSpecs": 126,
+    "inputs": 1452,
     "outputs": 480,
     "apiCalls": 267,
     "templatesWithTranslations": 318,
-    "translationKeys": 1868,
-    "consumerEdges": 1120,
+    "translationKeys": 1869,
+    "consumerEdges": 1121,
     "consumedComponents": 294,
     "unconsumedComponents": 163
   },
@@ -10079,7 +10079,7 @@
           "type": "FavoriteRecipe"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.spec.ts"
     },
     {
       "class": "RecipeAddComponent",
@@ -11556,6 +11556,16 @@
         {
           "name": "showAction",
           "type": "",
+          "required": false
+        },
+        {
+          "name": "compactAction",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "actionLabel",
+          "type": "string | null",
           "required": false
         },
         {
@@ -20926,7 +20936,8 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.html",
       "keys": [
-        "RECIPE_CARD.ADD_TO_MEAL"
+        "RECIPE_CARD.ADD_TO_MEAL",
+        "RECIPE_CARD.TO_DIARY"
       ]
     },
     {
@@ -23537,9 +23548,11 @@
       "occurrences": 1,
       "inputsUsed": [
         "actionAriaLabel",
+        "actionLabel",
         "backgroundKey",
         "calories",
         "comment",
+        "compactAction",
         "description",
         "favoriteAriaLabel",
         "favoriteLoading",
@@ -30315,7 +30328,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "name"
       ],
@@ -30836,6 +30849,19 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "public",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/features/features.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
       "occurrences": 1,
       "inputsUsed": [
         "name",

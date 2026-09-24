@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, switchMap, take } from 'rxjs';
+import { of, Subject, switchMap, take, takeUntil } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -27,17 +27,19 @@ export class RecipeDetailFacade {
     public readonly isFavoriteLoading = signal(false);
     public readonly isDuplicateInProgress = signal(false);
 
+    private readonly cancelFavoriteCheck = new Subject<void>();
     private initialFavoriteState = false;
     private favoriteRecipeId: string | null = null;
 
     public initialize(recipe: Recipe): void {
+        this.cancelFavoriteCheck.next();
         this.initialFavoriteState = recipe.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteRecipeId = recipe.favoriteRecipeId ?? null;
 
         this.favoriteRecipeService
             .isFavorite(recipe.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.cancelFavoriteCheck), takeUntilDestroyed(this.destroyRef))
             .subscribe(isFav => {
                 this.initialFavoriteState = isFav;
                 this.isFavorite.set(isFav);
@@ -63,7 +65,7 @@ export class RecipeDetailFacade {
         this.fdDialogService
             .open(ConfirmDeleteDialogComponent, { size: 'sm', data })
             .afterClosed()
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(confirm => {
                 if (confirm === true) {
                     this.dialogRef.close(new RecipeDetailActionResult(recipe.id, 'Delete', this.hasFavoriteChanged()));
@@ -79,7 +81,7 @@ export class RecipeDetailFacade {
         this.isDuplicateInProgress.set(true);
         this.recipeService
             .duplicate(recipe.id)
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: duplicated => {
                     this.dialogRef.close(new RecipeDetailActionResult(duplicated.id, 'Duplicate', this.hasFavoriteChanged()));
@@ -99,6 +101,7 @@ export class RecipeDetailFacade {
             return;
         }
 
+        this.cancelFavoriteCheck.next();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {
@@ -108,7 +111,7 @@ export class RecipeDetailFacade {
 
         this.favoriteRecipeService
             .add(recipe.id)
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: favorite => {
                     this.isFavorite.set(true);
@@ -137,7 +140,7 @@ export class RecipeDetailFacade {
                       }),
                   );
 
-        request$.pipe(take(1)).subscribe({
+        request$.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {
                 this.isFavorite.set(false);
                 this.favoriteRecipeId = null;

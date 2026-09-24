@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 100,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 10
   },
@@ -4620,65 +4620,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FavoriteRecipeRowComponent",
-      "selector": "fd-favorite-recipe-row",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
-      "inputs": [
-        {
-          "name": "recipe",
-          "type": "FavoriteRecipe",
-          "required": true
-        },
-        {
-          "name": "removed",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "restoring",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "restoreFailed",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "removing",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "loading",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "remove",
-          "type": "FavoriteRecipe"
-        },
-        {
-          "name": "restore",
-          "type": "FavoriteRecipe"
-        },
-        {
-          "name": "add",
-          "type": "FavoriteRecipe"
-        }
-      ],
       "specPath": null
     },
     {

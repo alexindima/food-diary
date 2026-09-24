@@ -210,3 +210,51 @@ function createFavoriteRecipe(): FavoriteRecipe {
         ingredientCount: 0,
     };
 }
+
+describe('RecipeDetailFacade request lifecycle', () => {
+    it('does not overwrite a user toggle with a delayed initial favorite check', () => {
+        const check = new Subject<boolean>();
+        favoriteRecipeService.isFavorite.mockReturnValue(check);
+        facade.initialize(createRecipe());
+        facade.toggleFavorite(createRecipe());
+        check.next(false);
+        expect(facade.isFavorite()).toBe(true);
+        facade.close(createRecipe());
+        expect(dialogRef.close).toHaveBeenCalledWith(new RecipeDetailActionResult(RECIPE_ID, 'FavoriteChanged', true));
+    });
+
+    it('does not close a destroyed dialog when duplication finishes', () => {
+        const pending = new Subject<Recipe>();
+        recipeService.duplicate.mockReturnValue(pending);
+        facade.duplicate(createRecipe());
+        facade.duplicate(createRecipe());
+        expect(recipeService.duplicate).toHaveBeenCalledTimes(1);
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
+        pending.next(createRecipe());
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+});
+
+describe('RecipeDetailFacade favorite failures', () => {
+    it.each([false, true])('preserves state and permits retry after mutation failure: %s', isFavorite => {
+        favoriteRecipeService.isFavorite.mockReturnValue(of(isFavorite));
+        facade.initialize(createRecipe({ isFavorite, favoriteRecipeId: FAVORITE_ID }));
+        const mutation = isFavorite ? favoriteRecipeService.remove : favoriteRecipeService.add;
+        mutation.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.toggleFavorite(createRecipe());
+        expect(facade.isFavorite()).toBe(isFavorite);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        facade.toggleFavorite(createRecipe());
+        expect(facade.isFavorite()).toBe(!isFavorite);
+    });
+
+    it('handles an already removed favorite without issuing a delete', () => {
+        favoriteRecipeService.isFavorite.mockReturnValue(of(true));
+        favoriteRecipeService.getAll.mockReturnValue(of([]));
+        facade.initialize(createRecipe());
+        facade.toggleFavorite(createRecipe());
+        expect(favoriteRecipeService.remove).not.toHaveBeenCalled();
+        expect(facade.isFavorite()).toBe(false);
+    });
+});

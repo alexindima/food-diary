@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1731,
+    "typescriptFiles": 1732,
     "symbols": 671,
     "routes": 100,
     "features": 44,
-    "specs": 622,
+    "specs": 623,
     "localeFiles": 5,
     "roles": {
       "Component": 453,
@@ -1154,6 +1154,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail-nutrition.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-results.spec.ts",
@@ -2919,7 +2920,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "SkeletonCardComponent",
@@ -4970,7 +4971,7 @@
       "role": "Component",
       "selector": "fd-favorite-recipe-row",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
-      "line": 18
+      "line": 17
     },
     {
       "name": "RecipeListFiltersDialogComponent",
@@ -5082,7 +5083,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
-      "line": 23
+      "line": 24
     },
     {
       "name": "RecipeManageFacade",
@@ -6628,8 +6629,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3647,
-      "russianProperties": 3647,
+      "englishProperties": 3653,
+      "russianProperties": 3653,
       "countsMatch": true
     },
     {

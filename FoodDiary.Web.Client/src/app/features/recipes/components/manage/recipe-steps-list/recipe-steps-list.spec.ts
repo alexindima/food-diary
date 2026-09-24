@@ -1,9 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card';
 import { type RecipeStepListItem, RecipeStepsListComponent } from './recipe-steps-list';
 
 describe('RecipeStepsListComponent', () => {
@@ -101,3 +103,44 @@ function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()
         },
     };
 }
+
+describe('RecipeStepsListComponent child event wiring', () => {
+    it('routes edited fields from the second step with its actual index', () => {
+        const { component, fixture } = setupComponent(new Set([0, 1]));
+        const child: RecipeStepCardComponent = fixture.debugElement
+            .queryAll(By.directive(RecipeStepCardComponent))[1]
+            .injector.get(RecipeStepCardComponent);
+        const title = vi.fn();
+        const image = vi.fn();
+        const description = vi.fn();
+        const amount = vi.fn();
+        const added = vi.fn();
+        const removed = vi.fn();
+        component.stepTitleChange.subscribe(title);
+        component.stepImageChange.subscribe(image);
+        component.stepDescriptionChange.subscribe(description);
+        component.ingredientAmountChange.subscribe(amount);
+        component.addIngredient.subscribe(added);
+        component.removeStep.subscribe(removed);
+        child.stepTitleChange.emit('Bake');
+        child.stepImageChange.emit(null);
+        child.stepDescriptionChange.emit('Bake until ready');
+        child.ingredientAmountChange.emit({ ingredientIndex: 0, amount: 25 });
+        child.addIngredient.emit();
+        child.removeStep.emit();
+        expect(title).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: 'Bake' });
+        expect(image).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: null });
+        expect(description).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: 'Bake until ready' });
+        expect(amount).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, ingredientIndex: 0, amount: 25 });
+        expect(added).toHaveBeenCalledExactlyOnceWith(1);
+        expect(removed).toHaveBeenCalledExactlyOnceWith(1);
+    });
+
+    it('ignores a drop that leaves the order unchanged', () => {
+        const { component } = setupComponent(new Set([0]));
+        const dropped = vi.fn();
+        component.stepDrop.subscribe(dropped);
+        component['onStepDrop']({ previousIndex: 0, currentIndex: 0 });
+        expect(dropped).not.toHaveBeenCalled();
+    });
+});
