@@ -65,6 +65,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
     [RequiresDockerTheory]
     [InlineData("GET", "/api/v1/ai/food/recognitions")]
+    [InlineData("GET", "/api/v1/ai/food/recognitions/page")]
     [InlineData("GET", "/api/v1/ai/food/recognitions/11111111-1111-1111-1111-111111111111")]
     [InlineData("POST", "/api/v1/ai/food/recognitions")]
     [InlineData("POST", "/hubs/food-recognition/negotiate?negotiateVersion=1")]

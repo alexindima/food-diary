@@ -9,6 +9,7 @@ tags:
   - api
   - compatibility
 sources:
+  - .github/workflows/ci-tests.yml
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
   - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
@@ -25,6 +26,14 @@ After regenerating API contract snapshots, compare them with the intended base:
 ```powershell
 ./.llm-wiki/wiki.ps1 api-compat -BaseRef origin/master -FailOnBreaking
 ```
+
+For pushes, CI compares API contracts with the latest successful CI push on the
+same branch that is an ancestor of the pre-push commit. A failed CI run does not
+promote a rejected contract to the compatibility baseline. This lets a repair
+restore an older response shape while still checking every change since the last
+accepted contract. If no successful ancestral run is available, CI retains the
+ordinary comparison base. Pull requests continue to compare with their target
+branch. The general Wiki change scope still uses the immediate push base.
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. Property presence determines the format, so a

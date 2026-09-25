@@ -17810,11 +17810,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
-      "nonBlankLines": 48,
+      "nonBlankLines": 53,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.96
+      "structuralRiskScore": 3.06
     },
     {
       "path": "Modules/Ai/Presentation/Extensions/AiPresentationServiceCollectionExtensions.cs",

@@ -14,6 +14,9 @@ jobs:
   llm-wiki-focused:
     name: LLM Wiki focused regressions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
 
     steps:
       - name: Checkout code
@@ -36,6 +39,7 @@ jobs:
         shell: pwsh
         env:
           EVENT_BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if ("${{ github.event_name }}" -eq "pull_request") {
             $baseRef = "origin/${{ github.base_ref }}"
@@ -47,6 +51,26 @@ jobs:
 
           "WIKI_BASE_REF=$baseRef" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
 
+          # A failed push is not an approved API baseline. Compare repairs with
+          # the last successful ancestral push so restoring compatibility is
+          # checked against the accepted contract, not the rejected one.
+          $apiBaseRef = $baseRef
+          if ($env:GITHUB_EVENT_NAME -eq 'push') {
+            $successfulCommits = @(gh api --method GET "repos/$env:GITHUB_REPOSITORY/actions/workflows/ci-tests.yml/runs" `
+              -f "branch=$env:GITHUB_REF_NAME" -f 'status=success' -f 'event=push' -f 'per_page=100' `
+              --jq '.workflow_runs[].head_sha')
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the last successful API compatibility baseline.' }
+            foreach ($candidate in $successfulCommits) {
+              if ($candidate -notmatch '^[0-9a-f]{40}$') { throw 'Invalid workflow commit SHA.' }
+              if ($candidate -eq $env:GITHUB_SHA) { continue }
+              git merge-base --is-ancestor $candidate $baseRef
+              if ($LASTEXITCODE -eq 0) { $apiBaseRef = $candidate; break }
+              if ($LASTEXITCODE -ne 1) { throw 'Unable to verify API baseline ancestry.' }
+            }
+          }
+          "API_COMPAT_BASE_REF=$apiBaseRef" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
+          Write-Host "API compatibility baseline: $apiBaseRef"
+
       - name: Verify complete Wiki focused catalog
         shell: pwsh
         run: ./.llm-wiki/wiki.ps1 verify-full -BaseRef $env:WIKI_BASE_REF -VerificationProfile Focused
@@ -55,7 +79,7 @@ jobs:
         shell: pwsh
         run: |
           ./.llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1 `
-            -BaseRef $env:WIKI_BASE_REF `
+            -BaseRef $env:API_COMPAT_BASE_REF `
             -FailOnBreaking
 
       - name: Inspect Wiki dependency changes

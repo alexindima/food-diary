@@ -17,6 +17,32 @@ namespace FoodDiary.Modules.Ai.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionListControllerTests {
     [Fact]
+    public async Task List_PreservesLegacyArrayAndTenMostRecentJobsContract() {
+        var owner = Guid.NewGuid();
+        var job = new FoodRecognitionJobModel(Guid.NewGuid(), owner, Guid.NewGuid(), "https://example.com/image",
+            Description: null, "Queued", DateTime.UtcNow, DateTime.UtcNow);
+        var jobs = new PagedResponse<FoodRecognitionJobModel>([job], 1, 10, 2, 11);
+        IRequest<Result<PagedResponse<FoodRecognitionJobModel>>>? sent = null;
+        ISender sender = SubstituteSender.Create(Result.Success(jobs), request => sent = request);
+        var controller = new FoodRecognitionController(sender) {
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
+        };
+
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.List(owner));
+
+        ListFoodRecognitionsQuery query = Assert.IsType<ListFoodRecognitionsQuery>(sent);
+        IReadOnlyList<FoodRecognitionJobHttpResponse> responses = Assert.IsAssignableFrom<IReadOnlyList<FoodRecognitionJobHttpResponse>>(result.Value);
+        FoodRecognitionJobHttpResponse response = Assert.Single(responses);
+        Assert.Multiple(
+            () => Assert.Equal(owner, query.UserId),
+            () => Assert.Equal(1, query.Page),
+            () => Assert.Equal(10, query.Limit),
+            () => Assert.Null(query.IsProductLabel),
+            () => Assert.Equal(job.Id, response.Id),
+            () => Assert.Equal(job.ImageUrl, response.ImageUrl));
+    }
+
+    [Fact]
     public async Task Delete_UsesAuthenticatedOwnerAndReturnsNoContent() {
         var owner = Guid.NewGuid();
         var id = Guid.NewGuid();
@@ -32,7 +58,7 @@ public sealed class FoodRecognitionListControllerTests {
     }
 
     [Fact]
-    public async Task List_RequestsOwnedJobsAndMapsEachResult() {
+    public async Task ListPage_RequestsOwnedJobsAndMapsEachResult() {
         var owner = Guid.NewGuid();
         var image = new FoodRecognitionImageModel(Guid.NewGuid(), "https://example.com/label");
         var label = new ProductLabelModel("Yogurt", "Brand", 100, "g", 60, 5, 2, 6, Fiber: null, Alcohol: null, "label notes");
@@ -45,7 +71,7 @@ public sealed class FoodRecognitionListControllerTests {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
         };
 
-        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.List(owner, new ListFoodRecognitionsHttpQuery(2, 20, IsProductLabel: true)));
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.ListPage(owner, new ListFoodRecognitionsHttpQuery(2, 20, IsProductLabel: true)));
 
         Assert.Equal(owner, Assert.IsType<ListFoodRecognitionsQuery>(sent).UserId);
         PagedHttpResponse<FoodRecognitionJobHttpResponse> page = Assert.IsType<PagedHttpResponse<FoodRecognitionJobHttpResponse>>(result.Value);

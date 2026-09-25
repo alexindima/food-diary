@@ -238,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "373d668685cc0efdf32da63ff6aca71d91db925eaf9185ab78c10c3f2ba7c669"
+          "sha256": "beb77b7a3a13eec6aeff4014359cd1a85e1c85f02accb5151c19c9b04fa1a549"
         }
       ],
-      "reason": "Reviewed the regenerated contract index: production consumer edges remain 5692; added edges are test fixtures exercising existing DTOs and handlers. No wire or in-process contract changed, so the consumer-review workflow remains accurate.",
+      "reason": "Restored legacy recognition history array and ten-item limit; moved pagination to an additive /page route and updated the client and OpenAPI snapshot. Compatibility versus successful commit d54e59f5c reports zero structural breaks; controller tests cover both response shapes.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:50:16.7294756Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:43.0272134Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -635,18 +635,14 @@
       "pageSha256": "c6fd8e17f197e4ecc035bdded8000a48549c175f4b0f3022fdd0de74c0879df7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "9b9e8195be03d712248f8d3bbd7a09cb4729ad8dd53789af0cba2e9b6595e159"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "5cc398461638a8b2730a5a37e5caf97d3ca2639c805e318086fb0628ac651cc8"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "aea9e242aff413ded6f91b68554a3757766a0e144a42b05f904460741bf19e16"
         }
       ],
-      "reason": "Full Orchestration audit passed. Exact UTC daily date assertion replaces wall-clock-dependent single-day expectation; all 710 assertions remain with reviewed updated inventory hashes.",
+      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:35.6700541Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:43.2776225Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "85de811510cda241abb8ef3fa9be47e1cd39479357fbe9dc762e552a12efc5b1"
+          "sha256": "f73f428ff5e2afdf11fc329e912b3c994e1bac3446ca5e0a7fd2b06d3a99efdb"
         }
       ],
-      "reason": "Reviewed new direct test references for AI recognition and Products gallery paths. Structural navigation signals retain their documented limits; coverage claims are backed separately by dotCover snapshots.",
+      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:50:18.4976413Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:43.6284919Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -869,13 +865,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "7a10391c24e59fcdbdb4ae5057301ceff917ee734f2f5326feb72b5617954b42"
+          "sha256": "aea9e242aff413ded6f91b68554a3757766a0e144a42b05f904460741bf19e16"
         }
       ],
-      "reason": "Reviewed CI timezone regression logging: it uses the existing frontend failure metadata and log convention. Wiki report generation, publication and governance inputs are unchanged.",
+      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
       "baseRef": "HEAD",
-      "gitHead": "5d41413c16cc738c2844dde56ad0861ace9089fb",
-      "reviewedAtUtc": "2026-09-20T08:13:05.2395541Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:43.8582753Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -899,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9df13b3604b8f96a81f162e93c6fff728efdb361f1afbdc79789bedb1b70505c"
+          "sha256": "0bbcce4370471a082450a0f2504e1005ac41aa6471bd926e60cbd3f5d788389f"
         }
       ],
-      "reason": "Only list reads changed; worker admission, claim, retries, provider calls and retention job unchanged. Existing cancellation flows through count and page EF queries. Local API restarted and browser verified.",
+      "reason": "Runtime topology changed only its source fingerprint after the HTTP compatibility adapter was added. Worker, provider, transaction and retry declarations are unchanged; existing runtime review guidance remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T10:26:09.4136630Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:44.1079746Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -913,14 +909,18 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "432047a10e9027da955292f8973a97239da288e12cf7dece84ff42cdab750723"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "f73f428ff5e2afdf11fc329e912b3c994e1bac3446ca5e0a7fd2b06d3a99efdb"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "0bbcce4370471a082450a0f2504e1005ac41aa6471bd926e60cbd3f5d788389f"
         }
       ],
-      "reason": "The sole policy delta excludes admin queries from a personal dashboard meals reader boost. Security discovery controls, query normalization, source authority and the read-only retrieval boundary remain unchanged.",
+      "reason": "Both recognition routes retain authenticated owner binding; five anonymous-route cases pass. No provider sharing or persistence boundary changed, and the CI token has only contents/read and actions/read permissions.",
       "baseRef": "HEAD",
-      "gitHead": "7e8b036316bdf360d594421cdbccb426cadb20f5",
-      "reviewedAtUtc": "2026-09-25T21:18:11.9665326Z"
+      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
+      "reviewedAtUtc": "2026-09-25T22:45:44.5675928Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

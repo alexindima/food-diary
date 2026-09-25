@@ -40006,7 +40006,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "FoodRecognitionJobHttpResponse",
@@ -40032,7 +40032,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "FoodTextHttpRequest",
@@ -105525,7 +105525,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IRequest",
@@ -111167,7 +111167,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ISender",
@@ -127638,7 +127638,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ListFoodRecognitionsHttpQuery",
@@ -127716,7 +127716,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "ListReadyTelegramOperationsQuery",
@@ -132721,7 +132721,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "PagedResponse",

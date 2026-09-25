@@ -98,7 +98,7 @@ export class FoodRecognitionService {
     }
 
     public list(page = 1, limit = RECOGNITION_PAGE_SIZE, isProductLabel = false): Observable<PageOf<FoodRecognitionJob>> {
-        return this.http.get<PageOf<FoodRecognitionJob>>(this.baseUrl, { params: { page, limit, isProductLabel } });
+        return this.http.get<PageOf<FoodRecognitionJob>>(`${this.baseUrl}/page`, { params: { page, limit, isProductLabel } });
     }
 
     private waitForResult(id: string, user: string): Observable<FoodVisionResponse> {

@@ -232,7 +232,7 @@ it('deletes only the requested recognition endpoint', () => {
 it('requests a server-filtered page and preserves total count', () => {
     const received = vi.fn();
     service.list(2, undefined, true).subscribe(received);
-    const pageRequest = http.expectOne(item => item.url === url && item.method === 'GET');
+    const pageRequest = http.expectOne(item => item.url === `${url}/page` && item.method === 'GET');
     expect(pageRequest.request.params.get('page')).toBe('2');
     expect(pageRequest.request.params.get('limit')).toBe('20');
     expect(pageRequest.request.params.get('isProductLabel')).toBe('true');
