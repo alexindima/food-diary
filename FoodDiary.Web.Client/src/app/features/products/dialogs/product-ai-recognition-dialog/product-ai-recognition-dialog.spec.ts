@@ -427,3 +427,48 @@ it('loads the recent product recognition total and refreshes after returning fro
     fixture.detectChanges();
     expect(component['recognitionCount']()).toBe(total - 1);
 });
+
+const STALE_COUNT = 9;
+const RECOVERED_COUNT = 3;
+const COMPLETED_COUNT = 4;
+describe('recognition count lifecycle', () => {
+    it('clears a stale count after an error and recovers on the next visit', () => {
+        component['historyOpen'].set(true);
+        fixture.detectChanges();
+        productAiRecognitionFacade.recognitionCount.mockReturnValue(throwError(() => new Error('offline')));
+        component['recognitionCount'].set(STALE_COUNT);
+        component['historyOpen'].set(false);
+        fixture.detectChanges();
+        expect(component['recognitionCount']()).toBe(0);
+        component['historyOpen'].set(true);
+        fixture.detectChanges();
+        productAiRecognitionFacade.recognitionCount.mockReturnValue(of(RECOVERED_COUNT));
+        component['historyOpen'].set(false);
+        fixture.detectChanges();
+        expect(component['recognitionCount']()).toBe(RECOVERED_COUNT);
+    });
+    it('cancels pending counts while busy and refreshes after recognition finishes', () => {
+        const pending = new Subject<number>();
+        component['historyOpen'].set(true);
+        fixture.detectChanges();
+        productAiRecognitionFacade.recognitionCount.mockReturnValue(pending);
+        component['historyOpen'].set(false);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
+        component['isLoading'].set(true);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(false);
+        productAiRecognitionFacade.recognitionCount.mockReturnValue(of(COMPLETED_COUNT));
+        component['isLoading'].set(false);
+        fixture.detectChanges();
+        expect(component['recognitionCount']()).toBe(COMPLETED_COUNT);
+    });
+});
+
+it('ignores an empty legacy cover when opening recognition for a product without photos', () => {
+    Object.assign(TestBed.inject(FD_UI_DIALOG_DATA), { initialPhotos: [{ url: null, assetId: null }] });
+    const empty = TestBed.createComponent(ProductAiRecognitionDialogComponent).componentInstance;
+    expect(empty['photos']()).toEqual([]);
+    expect(empty['cover']()).toBeNull();
+    expect(empty['isAnalyzeDisabled']()).toBe(true);
+});

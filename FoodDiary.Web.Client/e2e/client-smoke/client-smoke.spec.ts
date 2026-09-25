@@ -1805,16 +1805,20 @@ test.describe('meal detail and gallery regression', () => {
             const gallery = page.locator('fd-ui-image-preview-dialog');
             await expect(gallery).toBeVisible();
             await expect(page.locator('fd-meal-detail')).toHaveCount(0);
-            await expect(gallery.locator('img')).toHaveCount(1);
+            await expect(gallery.locator('.fd-ui-image-preview-dialog__image')).toHaveCount(1);
             await gallery.getByRole('button', { name: 'Next photo' }).click();
             await expect(gallery).toContainText('2 / 4');
             await gallery.press('ArrowLeft');
             await expect(gallery).toContainText('1 / 4');
-            await expect(gallery.locator('img')).toBeVisible();
+            await expect(gallery.locator('.fd-ui-image-preview-dialog__image')).toBeVisible();
             await expect
-                .poll(async () => gallery.locator('img').evaluate(image => (image as HTMLImageElement).naturalWidth))
+                .poll(async () =>
+                    gallery.locator('.fd-ui-image-preview-dialog__image').evaluate(image => (image as HTMLImageElement).naturalWidth),
+                )
                 .toBeGreaterThan(0);
-            expect(await gallery.locator('.fd-ui-dialog__body').evaluate(el => el.scrollHeight <= el.clientHeight + 1)).toBe(true);
+            await expect
+                .poll(async () => gallery.locator('.fd-ui-dialog__body').evaluate(el => el.scrollHeight <= el.clientHeight + 1))
+                .toBe(true);
             await page.screenshot({ path: testInfo.outputPath(`gallery-${width}.png`) });
             await page.keyboard.press('Escape');
             await expect(gallery).toHaveCount(0);
@@ -2162,3 +2166,219 @@ test.describe('product creation behavior', () => {
         expect(attempts).toBe(2);
     });
 });
+
+const RECOGNITION_LABEL = {
+    name: 'Recognized yogurt',
+    brand: 'Test dairy',
+    baseAmount: 100,
+    baseUnit: 'g',
+    calories: 63,
+    protein: 5,
+    fat: 2,
+    carbs: 6,
+    fiber: null,
+    alcohol: null,
+    notes: 'Read from label',
+};
+function recognitionJob(status = 'Succeeded', id = 'recognition-1'): Record<string, unknown> {
+    return {
+        id,
+        status,
+        imageAssetId: 'photo-1',
+        imageUrl: TEST_IMAGE_URLS[0],
+        isProductLabel: true,
+        additionalImages: [{ imageAssetId: 'photo-2', imageUrl: TEST_IMAGE_URLS[1] }],
+        description: null,
+        createdOnUtc: '2026-09-25T10:00:00Z',
+        updatedOnUtc: '2026-09-25T10:00:00Z',
+        vision: status === 'Succeeded' ? { items: [], productLabel: RECOGNITION_LABEL } : null,
+        nutrition: null,
+        errorCode: status === 'Failed' ? 'Ai.Failed' : null,
+        nutritionErrorCode: null,
+    };
+}
+
+const RECOGNITION_HISTORY_PAGE_SIZE = 20;
+const RECOGNITION_TEST_TIMEOUT = 60_000;
+test.describe('product recognition regression', () => {
+    test('history pages, deletion, empty return and retained hint', async ({ page }) => verifyRecognitionHistoryAsync(page));
+    for (const status of ['Succeeded', 'Failed']) {
+        test(`photo upload, themed scanning and ${status.toLowerCase()} result`, async ({ page }) =>
+            verifyRecognitionJourneyAsync(page, status));
+    }
+});
+async function verifyRecognitionHistoryAsync(page: Page): Promise<void> {
+    await authenticateUserAsync(page, 'Premium');
+    await mockAuthenticatedClientApiAsync(page);
+    await page.route('**/api/v1/billing/overview', async route => route.fulfill({ json: { ...createBillingOverview(), isPremium: true } }));
+    await page.route('**/api/v1/users/info', async route =>
+        route.fulfill({ json: { ...createUser(), aiConsentAcceptedAt: '2026-09-25T00:00:00Z' } }),
+    );
+    let jobs = Array.from({ length: 21 }, (_, index) => recognitionJob('Succeeded', `job-${index}`));
+    await page.route('**/api/v1/ai/food/recognitions**', async route => {
+        const url = new URL(route.request().url());
+        if (route.request().method() === 'DELETE') {
+            jobs = jobs.filter(job => !url.pathname.endsWith(String(job.id)));
+            await route.fulfill({ status: 204 });
+            return;
+        }
+        expect(url.searchParams.get('isProductLabel')).toBe('true');
+        const current = Number(url.searchParams.get('page'));
+        const limit = Number(url.searchParams.get('limit'));
+        await route.fulfill({
+            json: {
+                data: jobs.slice((current - 1) * limit, current * limit),
+                page: current,
+                limit,
+                totalItems: jobs.length,
+                totalPages: Math.ceil(jobs.length / limit),
+            },
+        });
+    });
+    await page.goto('/products/p1/edit');
+    await page.getByRole('button', { name: 'Recognize', exact: true }).click();
+    const dialog = page.locator('fd-product-ai-recognition-dialog');
+    await dialog.locator('textarea').fill('Keep this hint');
+    await expect(dialog.locator('.product-ai-dialog__history-link')).toContainText('21');
+    await dialog.locator('.product-ai-dialog__history-link button').click();
+    await expect(dialog.locator('.history-list__row')).toHaveCount(RECOGNITION_HISTORY_PAGE_SIZE);
+    await dialog.locator('fd-ui-pagination').getByRole('button', { name: '2', exact: true }).click();
+    await expect(dialog.locator('.history-list__row')).toHaveCount(1);
+    await dialog.getByRole('button', { name: 'Delete result', exact: true }).click();
+    await expect(dialog.locator('.history-list__row')).toHaveCount(RECOGNITION_HISTORY_PAGE_SIZE);
+    await expect(dialog.locator('fd-ui-pagination')).not.toBeVisible();
+    jobs = [];
+    await dialog.getByRole('button', { name: 'Back to recognition', exact: true }).click();
+    await expect(dialog.locator('textarea')).toHaveValue('Keep this hint');
+    await dialog.locator('.product-ai-dialog__history-link button').click();
+    await expect(dialog.locator('.history-list__empty')).toBeVisible();
+    await dialog.locator('.history-list__empty button').click();
+    await expect(dialog.locator('textarea')).toHaveValue('Keep this hint');
+}
+async function mockProductRecognitionAsync(
+    page: Page,
+    terminalStatus: string,
+): Promise<{ state: { finish: boolean }; writes: Array<Record<string, unknown>> }> {
+    await authenticateUserAsync(page, 'Premium');
+    await mockAuthenticatedClientApiAsync(page);
+    await page.route('**/api/v1/billing/overview', async route => route.fulfill({ json: { ...createBillingOverview(), isPremium: true } }));
+    await page.route('**/api/v1/users/info', async route =>
+        route.fulfill({ json: { ...createUser(), aiConsentAcceptedAt: '2026-09-25T00:00:00Z' } }),
+    );
+    let product: Record<string, unknown> = { ...createOwnedProduct(), imageUrl: null, imageAssetId: null, images: [] };
+    let uploaded = 0;
+    const state = { finish: false };
+    const writes: Array<Record<string, unknown>> = [];
+    await page.route('**/api/v1/products/p1', async route => {
+        if (route.request().method() === 'PATCH') {
+            const body = route.request().postDataJSON() as Record<string, unknown>;
+            writes.push(body);
+            product = {
+                ...product,
+                ...body,
+                images: (body.imageAssetIds as string[]).map(id => ({
+                    imageAssetId: id,
+                    imageUrl: TEST_IMAGE_URLS[id === 'photo-1' ? 0 : 1],
+                })),
+            };
+        }
+        await route.fulfill({ json: product });
+    });
+    await page.route('**/api/v1/images/upload-url', async route => {
+        uploaded++;
+        await route.fulfill({
+            json: {
+                assetId: `photo-${uploaded}`,
+                uploadUrl: `http://127.0.0.1:4201/test-upload/${uploaded}`,
+                fileUrl: TEST_IMAGE_URLS[uploaded - 1],
+                expiresAtUtc: '2099-01-01T00:00:00Z',
+            },
+        });
+    });
+    await page.route('**/test-upload/*', async route => route.fulfill({ status: 200, body: '' }));
+    await page.route('**/api/v1/images/*/confirm', async route => {
+        const id = /images\/([^/]+)\/confirm/u.exec(route.request().url())?.[1] ?? '';
+        await route.fulfill({ json: { assetId: id, fileUrl: TEST_IMAGE_URLS[id === 'photo-1' ? 0 : 1] } });
+    });
+    await page.route('**/api/v1/ai/food/recognitions**', async route => {
+        const url = new URL(route.request().url());
+        if (route.request().method() === 'POST') {
+            expect(route.request().postDataJSON()).toMatchObject({
+                isProductLabel: true,
+                imageAssetId: 'photo-1',
+                additionalImageAssetIds: ['photo-2'],
+            });
+            await route.fulfill({ json: recognitionJob('Running') });
+        } else if (url.search.length > 0) {
+            await route.fulfill({
+                json: { data: [], page: 1, limit: 1, totalItems: state.finish ? 1 : 0, totalPages: state.finish ? 1 : 0 },
+            });
+        } else {
+            await route.fulfill({ json: recognitionJob(state.finish ? terminalStatus : 'Running') });
+        }
+    });
+
+    return { state, writes };
+}
+async function verifyRecognitionScanAsync(page: Page, dialog: Locator): Promise<Locator> {
+    const scanning = dialog.locator('.recognition-photos__item--scanning');
+    await expect(scanning).toHaveCount(1);
+    await expect(dialog.locator('.product-ai-dialog__history-link button')).toBeDisabled();
+    await expect.poll(async () => scanning.evaluate(el => getComputedStyle(el, '::before').animationName)).toBe('none');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await expect.poll(async () => scanning.evaluate(el => getComputedStyle(el, '::before').animationName)).not.toBe('none');
+    for (const theme of ['ocean', 'leaf', 'dark']) {
+        await page.locator('html').evaluate((el, value) => {
+            el.setAttribute('data-theme', value);
+        }, theme);
+        const colors = await scanning.evaluate(el => {
+            const style = getComputedStyle(el);
+            return {
+                accent: style.getPropertyValue('--fd-color-primary-500').trim(),
+                line: style.getPropertyValue('--fd-bg-ai-scan-line').trim(),
+            };
+        });
+        expect(colors.accent).not.toBe('');
+        expect(colors.line).toContain(colors.accent);
+    }
+
+    return scanning;
+}
+async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string): Promise<void> {
+    test.setTimeout(RECOGNITION_TEST_TIMEOUT);
+    const { state, writes } = await mockProductRecognitionAsync(page, terminalStatus);
+    await page.goto('/products/p1/edit');
+    await page.getByRole('button', { name: 'Recognize', exact: true }).click();
+    const dialog = page.locator('fd-product-ai-recognition-dialog');
+    await expect(dialog.getByRole('button', { name: 'Analyze photo', exact: true })).toBeDisabled();
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=', 'base64');
+    await dialog.locator('input[type=file]').setInputFiles([
+        { name: 'front.png', mimeType: 'image/png', buffer: png },
+        { name: 'label.png', mimeType: 'image/png', buffer: png },
+    ]);
+    await expect(dialog.locator('.recognition-photos__item')).toHaveCount(2);
+    await dialog.getByRole('button', { name: 'Actions for photo 2' }).focus();
+    await dialog.getByRole('button', { name: 'Actions for photo 2' }).press('Enter');
+    await page.getByRole('menuitem', { name: 'Use as cover' }).click();
+    await dialog.getByRole('button', { name: 'Analyze photo', exact: true }).click();
+    const scanning = await verifyRecognitionScanAsync(page, dialog);
+    state.finish = true;
+    await expect(scanning).toHaveCount(0, { timeout: 15_000 });
+    await expect(dialog.locator('.recognition-photos__item')).toHaveCount(2);
+    if (terminalStatus === 'Failed') {
+        await expect(dialog.getByRole('button', { name: 'Analyze again' })).toBeEnabled();
+        await expect(dialog.getByRole('button', { name: 'Apply values' })).toHaveCount(0);
+        return;
+    }
+    await expect(dialog.getByRole('button', { name: 'Apply values' })).toBeDisabled();
+    await dialog.getByRole('checkbox', { name: 'Replace existing product values' }).check();
+    await dialog.getByRole('checkbox', { name: 'Use the selected photo as the cover' }).check();
+    await dialog.getByRole('button', { name: 'Apply values' }).click();
+    await expect(dialog).toHaveCount(0);
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect.poll(() => writes.length).toBe(1);
+    expect(writes[0]).toMatchObject({ name: RECOGNITION_LABEL.name, imageAssetIds: ['photo-2', 'photo-1'] });
+    await page.goto('/products/p1/edit');
+    await expect(page.locator('.recognition-photos__item')).toHaveCount(2);
+    await expect(page.locator('.recognition-photos__item img').first()).toHaveAttribute('src', TEST_IMAGE_URLS[1]);
+}

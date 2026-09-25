@@ -20,6 +20,9 @@
     object-fit: contain;
     user-select: none;
 }
+.fd-ui-image-preview-dialog__viewport--gallery .fd-ui-image-preview-dialog__image {
+    height: calc(min(60dvh, 640px) - var(--fd-size-control-xl) - var(--fd-space-md));
+}
 .fd-ui-image-preview-dialog__arrow {
     position: absolute;
     top: 50%;
@@ -86,7 +89,8 @@
     .fd-ui-image-preview-dialog__viewport--gallery {
         padding-inline: 0;
     }
-    .fd-ui-image-preview-dialog__image {
+    .fd-ui-image-preview-dialog__image,
+    .fd-ui-image-preview-dialog__viewport--gallery .fd-ui-image-preview-dialog__image {
         height: auto;
         max-height: 60dvh;
     }

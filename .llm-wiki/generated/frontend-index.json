@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1741,
+    "typescriptFiles": 1742,
     "symbols": 675,
     "routes": 100,
     "features": 44,
-    "specs": 627,
+    "specs": 628,
     "localeFiles": 5,
     "roles": {
       "Component": 456,
@@ -1016,6 +1016,7 @@
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/manage/product-name-search.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/manage/product-nutrition-prefill.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/products/lib/product-ai-recognition.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/product-image.util.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/product-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/product-type.utils.spec.ts",

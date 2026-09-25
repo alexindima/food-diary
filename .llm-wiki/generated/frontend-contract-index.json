@@ -8,7 +8,7 @@
     "apiCalls": 267,
     "templatesWithTranslations": 321,
     "translationKeys": 1906,
-    "consumerEdges": 1133,
+    "consumerEdges": 1134,
     "consumedComponents": 294,
     "unconsumedComponents": 166
   },
@@ -22804,6 +22804,16 @@
       "componentPath": "FoodDiary.Web.Client/src/app/shell/app.ts",
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/index.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "AppComponent",
+      "selector": "fd-root",
+      "componentPath": "FoodDiary.Web.Client/src/app/shell/app.ts",
+      "consumerFeature": "shell",
+      "consumerPath": "FoodDiary.Web.Client/test-results/.playwright-artifacts-0/traces/resources/66d823b38bd58fb1c7132ed4df4f86738eb63e08.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []

@@ -9,6 +9,8 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { FoodRecognitionHistoryComponent } from './food-recognition-history';
 
 const PAGE_SIZE = 20;
+const EXPIRED_PAGE = 3;
+const HISTORY_POLL_INTERVAL = 5000;
 const TOTAL_ITEMS = 41;
 const listRecognitions = vi.fn();
 const deleteRecognition = vi.fn();
@@ -19,7 +21,6 @@ beforeEach(() => {
         imports: [FoodRecognitionHistoryComponent],
         providers: [provideTranslateService(), { provide: AiFoodFacade, useValue: { listRecognitions, deleteRecognition } }],
     });
-    TestBed.overrideComponent(FoodRecognitionHistoryComponent, { set: { template: '' } });
 });
 describe('recognition history recovery', () => {
     it.each([true, false])('keeps product-label and meal recognition histories separate: %s', productLabel => {
@@ -162,3 +163,140 @@ describe('recognition history pagination', () => {
         expect(component['failed']()).toBe(true);
     });
 });
+
+const historyJob: FoodRecognitionJob = {
+    id: 'history-result',
+    status: 'Succeeded',
+    imageAssetId: 'asset',
+    imageUrl: '/photo.jpg',
+    description: null,
+    createdOnUtc: '2026-09-25T00:00:00Z',
+    updatedOnUtc: '2026-09-25T00:00:00Z',
+    vision: null,
+    nutrition: null,
+    errorCode: null,
+    nutritionErrorCode: null,
+};
+
+describe('recognition history rendered interactions', () => {
+    it('shows empty state only after loading and returns through the actual button', () => {
+        const pending = new Subject<PageOf<FoodRecognitionJob>>();
+        listRecognitions.mockReturnValue(pending);
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.componentRef.setInput('screen', true);
+        const back = vi.fn();
+        fixture.componentInstance.backToRecognition.subscribe(back);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const empty = requiredElement(host, '.history-list__empty');
+        expect(empty.style.display).toBe('none');
+        pending.next(pageOf([]));
+        pending.complete();
+        fixture.detectChanges();
+        expect(empty.style.display).not.toBe('none');
+        requiredElement(empty, 'button').click();
+        expect(back).toHaveBeenCalledOnce();
+    });
+    it('keeps deletion separate from opening a result and renders empty state after the last deletion', () => {
+        listRecognitions.mockReturnValueOnce(of(pageOf([historyJob]))).mockReturnValue(of(pageOf([])));
+        deleteRecognition.mockReturnValue(of(undefined));
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.componentRef.setInput('screen', true);
+        const selected = vi.fn();
+        fixture.componentInstance.recognitionSelected.subscribe(selected);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        requiredElement(host, '.history-list__open').click();
+        expect(selected).toHaveBeenCalledWith(historyJob);
+        selected.mockClear();
+        requiredElement(host, '[aria-label="AI_RECOGNITION.DELETE"]').click();
+        fixture.detectChanges();
+        expect(selected).not.toHaveBeenCalled();
+        expect(deleteRecognition).toHaveBeenCalledWith(historyJob.id);
+        expect(host.querySelector('.history-list__row')).toBeNull();
+        expect(requiredElement(host, '.history-list__empty').style.display).not.toBe('none');
+        expect(fixture.componentInstance['totalItems']()).toBe(0);
+    });
+    it('refetches the last valid page when automatic cleanup removes the requested page', () => {
+        listRecognitions
+            .mockReturnValueOnce(of(pageOf([], EXPIRED_PAGE, PAGE_SIZE + 1)))
+            .mockReturnValueOnce(of(pageOf([historyJob], 2, PAGE_SIZE + 1)));
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.componentRef.setInput('productLabel', true);
+        fixture.componentInstance['load'](2);
+        expect(listRecognitions.mock.calls).toEqual([
+            [EXPIRED_PAGE, PAGE_SIZE, true],
+            [2, PAGE_SIZE, true],
+        ]);
+        expect(fixture.componentInstance['pageIndex']()).toBe(1);
+        expect(fixture.componentInstance['jobs']()).toEqual([historyJob]);
+    });
+    it('polls the current page until completion and stops on destruction', () => {
+        vi.useFakeTimers();
+        try {
+            listRecognitions
+                .mockReturnValueOnce(of(pageOf([{ ...historyJob, status: 'Running' }], 2, PAGE_SIZE + 1)))
+                .mockReturnValue(of(pageOf([historyJob], 2, PAGE_SIZE + 1)));
+            const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+            fixture.componentInstance['load'](1);
+            vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            expect(listRecognitions).toHaveBeenLastCalledWith(2, PAGE_SIZE, false);
+            expect(listRecognitions).toHaveBeenCalledTimes(2);
+            vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            expect(listRecognitions).toHaveBeenCalledTimes(2);
+            fixture.destroy();
+            vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            expect(listRecognitions).toHaveBeenCalledTimes(2);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+it('blocks pagination and duplicate mutations while deletion is pending, then permits retry after failure', () => {
+    listRecognitions.mockReturnValue(of(pageOf([historyJob], 1, PAGE_SIZE + 1)));
+    const pending = new Subject<void>();
+    deleteRecognition.mockReturnValue(pending);
+    const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+    fixture.componentRef.setInput('screen', true);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    requiredElement(host, '[aria-label="AI_RECOGNITION.DELETE"]').click();
+    fixture.detectChanges();
+    expect(requiredElement(host, 'fd-ui-pagination').parentElement?.hasAttribute('inert')).toBe(true);
+    fixture.componentInstance['load'](1);
+    fixture.componentInstance['remove'](historyJob);
+    expect(listRecognitions).toHaveBeenCalledTimes(1);
+    expect(deleteRecognition).toHaveBeenCalledTimes(1);
+    pending.error(new Error('offline'));
+    fixture.detectChanges();
+    expect(requiredElement(host, '[role="alert"]').hidden).toBe(false);
+    expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
+    expect(requiredElement(host, 'fd-ui-pagination').parentElement?.hasAttribute('inert')).toBe(false);
+});
+
+it('renders a retry instead of an empty history when loading fails', () => {
+    listRecognitions.mockReturnValueOnce(throwError(() => new Error('offline'))).mockReturnValueOnce(of(pageOf([])));
+    const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+    fixture.componentRef.setInput('screen', true);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(requiredElement(host, '.history-list__empty').style.display).toBe('none');
+    const retry = Array.from(host.querySelectorAll<HTMLButtonElement>('button')).find(button =>
+        button.textContent.includes('AI_RECOGNITION.RETRY'),
+    );
+    if (retry === undefined) {
+        throw new Error('Retry button missing');
+    }
+    retry.click();
+    fixture.detectChanges();
+    expect(requiredElement(host, '.history-list__empty').style.display).not.toBe('none');
+});
+
+function requiredElement(host: Element, selector: string): HTMLElement {
+    const element = host.querySelector<HTMLElement>(selector);
+    if (element === null) {
+        throw new Error(`Missing element: ${selector}`);
+    }
+    return element;
+}
