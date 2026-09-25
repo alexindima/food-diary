@@ -475,13 +475,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "20af6be8aa714bd8bd95f04f0a9eae7a8e29adae1a32f6b80f46a3b6e640ab74"
+          "sha256": "16b60d8b098cbe31fa0d2708d6edaa18a287481255534630157285d0f5512e8b"
         }
       ],
-      "reason": "Reviewed workflow guidance against refreshed source indexes. This change relocates three unchanged source types, updates direct project references and Docker source copies; it changes no workflow tool semantics, UI contracts, provider behavior or data lifecycle. Existing guidance remains applicable; behavior and dependency evidence is in role-quality-verification.",
+      "reason": "Reviewed configuration index delta: it adds the existing Images rate-limit option and PermitLimit/QueueLimit/WindowSeconds keys introduced by the committed image upload policy. No package, migration, deployment ordering or provider change is introduced by this index refresh; dependency and rollout guidance remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T14:38:09.8168262Z"
+      "gitHead": "327e3abd52ac7d08166c975e6d32d3ba20f09a60",
+      "reviewedAtUtc": "2026-09-25T21:11:14.9408029Z"
     },
     {
       "pageId": "workflow-developer-experience",

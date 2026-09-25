@@ -370,8 +370,9 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
-    public void ImagesController_GetUploadUrl_UsesAuthRateLimitPolicy() {
-        AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.AuthRateLimitPolicyName);
+    public void ImagesController_UploadActions_UseImagesRateLimitPolicy() {
+        AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.ImagesRateLimitPolicyName);
+        AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.Confirm), PresentationPolicyNames.ImagesRateLimitPolicyName);
     }
 
     [Fact]

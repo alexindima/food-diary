@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 64,
     "configurationFiles": 8,
-    "configurationKeys": 270,
+    "configurationKeys": 273,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -95,6 +95,7 @@
         "Export",
         "FixedWindowPolicyOptions",
         "FoodData",
+        "Images",
         "MarketingAttribution",
         "PermitLimit",
         "QueueLimit",
@@ -926,6 +927,9 @@
         "RateLimiting:FoodData:PermitLimit",
         "RateLimiting:FoodData:QueueLimit",
         "RateLimiting:FoodData:WindowSeconds",
+        "RateLimiting:Images:PermitLimit",
+        "RateLimiting:Images:QueueLimit",
+        "RateLimiting:Images:WindowSeconds",
         "RateLimiting:MarketingAttribution:PermitLimit",
         "RateLimiting:MarketingAttribution:QueueLimit",
         "RateLimiting:MarketingAttribution:WindowSeconds",

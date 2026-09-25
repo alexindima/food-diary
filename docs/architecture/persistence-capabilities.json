@@ -1356,8 +1356,8 @@
         "tracked:FoodRecognitionJob",
         "write:FoodRecognitionJob"
       ],
-      "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. Explicit collection loading reads only Ai-owned job images after the row lock, avoiding nullable joins in FOR UPDATE. No foreign aggregate writes.",
-      "technicalSourceSha256": "02a1b7189b8a0e64ea67078ce8215e39b6c630fd890505f2869200c0eb75aafc"
+      "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. Explicit collection loading reads only Ai-owned job images after the row lock, avoiding nullable joins in FOR UPDATE. History pagination counts and reads the same owner-scoped, seven-day no-tracking query with optional label filtering and deterministic CreatedOnUtc/Id ordering. No foreign aggregate writes.",
+      "technicalSourceSha256": "8c7aa7117ed0a931247a4129addc2ddf73065b37d7d5e2e3a077db15999469c6"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
