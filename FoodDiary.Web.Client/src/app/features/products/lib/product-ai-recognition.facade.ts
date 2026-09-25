@@ -1,5 +1,5 @@
 import { inject, Service } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { FoodRecognitionService } from '../../../shared/api/food-recognition.service';
@@ -11,6 +11,10 @@ export class ProductAiRecognitionFacade {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly recognition = inject(FoodRecognitionService);
+
+    public recognitionCount(): Observable<number> {
+        return this.recognition.list(1, 1, true).pipe(map(page => page.totalItems));
+    }
 
     public resumeRecognition(id: string): Observable<FoodVisionResponse> {
         return this.recognition.resume(id);

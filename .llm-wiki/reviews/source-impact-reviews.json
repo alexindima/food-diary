@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "1978686f630f25256605f1edd4e1b9ae5eeddc0c5c9b233d74c59786bf6ad366"
+          "sha256": "3c5af08cf93bb71fb2a9c9a0d8b1c99af66a6f54d1350e2e909ebfbb90f817b3"
         }
       ],
-      "reason": "Reviewed recognition history screen, additive authenticated DELETE contract (204/404/409), owner-and-terminal-status SQL predicate, unchanged image assets and worker transactions. 35 frontend tests, 10 PostgreSQL tests, 14 controller tests and 3 OpenAPI snapshots passed; desktop/mobile navigation and error retry verified. Workflow guidance remains accurate.",
+      "reason": "Intentional list response change from an array to PagedHttpResponse with page, limit and type filter. Both SPA facades and shared history consumer migrated; Telegram uses only POST and GET-by-id. Deploy frontend and API together. OpenAPI snapshot and controller tests updated.",
       "baseRef": "HEAD",
-      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
-      "reviewedAtUtc": "2026-09-25T09:24:52.5913811Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T10:26:04.8418552Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "bcc54ab1f908a0f748b664aed0a713298ad5df787358dd8b4cd2e095db7a4762"
+          "sha256": "c95ac43724a9c27d45222f67fa811df7c659764f475776a0426d89b0b9571525"
         }
       ],
-      "reason": "Products redesign adds no project references or dependency exceptions; all 2107 architecture tests passed. Regenerated health entries do not change this workflow.",
+      "reason": "Pagination remains in existing Ai reader, query and presentation layers. No project references, ownership or DI changes; infrastructure query uses existing AiDbContext.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:12.1518125Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T10:26:03.6128466Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "540173abc7db5c2836635fd5029b748bce211194fa55a5c4fcd8152f44ea3700"
+          "sha256": "7690e57b41ec2d3df0149940e55efc4133b1fa86c54319dea3eabc7e23e3fe0e"
         }
       ],
-      "reason": "Reviewed optional gallery fields through product overview, favorites mappings and Swagger snapshot; existing constructors remain compatible.",
+      "reason": "All IFoodRecognitionJobReader.ListAsync call sites migrated to page, limit, nullable type and tuple total. Shared PaginationPolicy bounds pages; handler and controller tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
-      "reviewedAtUtc": "2026-09-25T07:04:56.6686274Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T10:26:10.6615780Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -779,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "44f1a891bb2a2e1d19814d216b794ec3fda78f61ebbd8cba2211856021613d2f"
+          "sha256": "d57fc6cd06e5f759ea62342e94891f60bd0f31c63dab4df5a026532ab8f8e3a0"
         }
       ],
-      "reason": "Photos retain existing image ownership checks; usage queries protect every saved gallery photo from recognition retention cleanup; user purge transfers gallery assets through Images contract.",
+      "reason": "List and count retain authenticated owner and seven-day cutoff before filtering and paging. No new provider calls, persisted data or logging. PostgreSQL tests verify foreign-owner isolation.",
       "baseRef": "HEAD",
-      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
-      "reviewedAtUtc": "2026-09-25T07:04:53.2651509Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T10:26:07.3057549Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "63fd151e0afcf0d6b38f51537788a879b60359cf15bbcb98e1169c222f396b01"
+          "sha256": "f868bc3c7a3e42a123d169d46b39cf0ee5258919bb2de3d72c3f030914acd2af"
         }
       ],
-      "reason": "Reviewed opt-in click/tap hint behavior with default dismissal preserved; retention help moved to header and delete hint expanded. 13 hint tests and desktop/mobile browser checks passed. Shared component docs and Storybook example updated; workflow guidance unchanged.",
+      "reason": "Final incremental changes only add busy-state scan decoration, theme-token colors and empty-state presentation. No provider calls, authorization or persistence changes. Existing pagination test evidence remains applicable; latest frontend production build and browser theme/reduced-motion checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
-      "reviewedAtUtc": "2026-09-25T09:59:58.6184857Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T16:25:20.0796083Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3cc3d72150203bf3f6c5db44d2e1925aecc4864728f6866748f08036f0190597"
+          "sha256": "9df13b3604b8f96a81f162e93c6fff728efdb361f1afbdc79789bedb1b70505c"
         }
       ],
-      "reason": "Gallery adds persistence and extends image usage lookup; no new queue, provider or scheduler. Rebuilt local worker and applied additive migration before API use.",
+      "reason": "Only list reads changed; worker admission, claim, retries, provider calls and retention job unchanged. Existing cancellation flows through count and page EF queries. Local API restarted and browser verified.",
       "baseRef": "HEAD",
-      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
-      "reviewedAtUtc": "2026-09-25T07:04:54.3462712Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T10:26:09.4136630Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "63fd151e0afcf0d6b38f51537788a879b60359cf15bbcb98e1169c222f396b01"
+          "sha256": "f868bc3c7a3e42a123d169d46b39cf0ee5258919bb2de3d72c3f030914acd2af"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "9df13b3604b8f96a81f162e93c6fff728efdb361f1afbdc79789bedb1b70505c"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "d57fc6cd06e5f759ea62342e94891f60bd0f31c63dab4df5a026532ab8f8e3a0"
         }
       ],
-      "reason": "Reviewed opt-in click/tap hint behavior with default dismissal preserved; retention help moved to header and delete hint expanded. 13 hint tests and desktop/mobile browser checks passed. Shared component docs and Storybook example updated; workflow guidance unchanged.",
+      "reason": "Final incremental changes only add busy-state scan decoration, theme-token colors and empty-state presentation. No provider calls, authorization or persistence changes. Existing pagination test evidence remains applicable; latest frontend production build and browser theme/reduced-motion checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
-      "reviewedAtUtc": "2026-09-25T09:59:59.9008886Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T16:25:20.9314217Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c8cf7f5117cb3d6a3fac5db7a5e3a169669320e4b81b88b87735d02735b3ed75"
+          "sha256": "687a713a267c7e43bc11b802547a3884b55c9fe41fe38b13a53f17a5d7a5d3e0"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "e3181154fa74ecc0c170429f9b2bfef236bb1484d5f0a04e71f689db3112ca0e"
+          "sha256": "215658422221c9ea6bcbcb81fb1e7eb23dfdbfc02576dfdb424e3712979efd72"
         }
       ],
-      "reason": "Verified product form and recognition dialog source paths after presentation refinements. Feature ownership and navigation flow are unchanged; generated frontend indexes are current.",
+      "reason": "Reviewed recognition photo scanning input and theme-token styling, empty-screen icon removal and compact help control. Browser verified animated scan without provider requests, reduced motion, all three theme accents, empty state and return navigation. Frontend build and focused checks pass; guide remains current.",
       "baseRef": "HEAD",
-      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
-      "reviewedAtUtc": "2026-09-25T10:08:59.5119617Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T16:24:47.6015663Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c8cf7f5117cb3d6a3fac5db7a5e3a169669320e4b81b88b87735d02735b3ed75"
+          "sha256": "687a713a267c7e43bc11b802547a3884b55c9fe41fe38b13a53f17a5d7a5d3e0"
         }
       ],
-      "reason": "Reviewed current recognition history navigation and product form spacing changes. Existing component contracts remain compatible; desktop and mobile browser checks plus focused style checks passed. Workflow guidance remains current.",
+      "reason": "Reviewed recognition photo scanning input and theme-token styling, empty-screen icon removal and compact help control. Browser verified animated scan without provider requests, reduced motion, all three theme accents, empty state and return navigation. Frontend build and focused checks pass; guide remains current.",
       "baseRef": "HEAD",
-      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
-      "reviewedAtUtc": "2026-09-25T10:08:58.3305330Z"
+      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
+      "reviewedAtUtc": "2026-09-25T16:24:46.6098610Z"
     },
     {
       "pageId": "workflow.query-context",

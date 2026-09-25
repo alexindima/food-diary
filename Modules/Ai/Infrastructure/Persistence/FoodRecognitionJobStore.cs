@@ -68,15 +68,21 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         return job is null ? null : ToModel(job);
     }
 
-    public async Task<IReadOnlyList<FoodRecognitionJobModel>> ListAsync(Guid userId, CancellationToken cancellationToken) {
+    public async Task<(IReadOnlyList<FoodRecognitionJobModel> Items, int TotalItems)> ListAsync(Guid userId, int page, int limit, bool? isProductLabel, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         var owner = new UserId(userId);
         DateTime cutoff = timeProvider.GetUtcNow().UtcDateTime.AddDays(-7);
-        List<FoodRecognitionJob> jobs = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
-            .Where(x => x.UserId == owner && x.CreatedOnUtc >= cutoff)
-            .OrderByDescending(x => x.CreatedOnUtc).Take(10).ToListAsync(cancellationToken).ConfigureAwait(false);
-        return jobs.Select(ToModel).ToArray();
+        IQueryable<FoodRecognitionJob> query = context.Set<FoodRecognitionJob>().AsNoTracking()
+            .Where(x => x.UserId == owner && x.CreatedOnUtc >= cutoff);
+        if (isProductLabel.HasValue) {
+            query = query.Where(x => x.IsProductLabel == isProductLabel.Value);
+        }
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<FoodRecognitionJob> jobs = await query.Include(x => x.AdditionalImages)
+            .OrderByDescending(x => x.CreatedOnUtc).ThenByDescending(x => x.Id)
+            .Skip((page - 1) * limit).Take(limit).ToListAsync(cancellationToken).ConfigureAwait(false);
+        return (jobs.Select(ToModel).ToArray(), totalItems);
     }
 
     public Task<FoodRecognitionJobModel?> ClaimAsync(CancellationToken cancellationToken) =>

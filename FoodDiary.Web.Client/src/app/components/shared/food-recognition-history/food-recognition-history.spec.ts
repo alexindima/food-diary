@@ -5,12 +5,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import { FoodRecognitionHistoryComponent } from './food-recognition-history';
 
+const PAGE_SIZE = 20;
+const TOTAL_ITEMS = 41;
 const listRecognitions = vi.fn();
 const deleteRecognition = vi.fn();
 beforeEach(() => {
-    listRecognitions.mockReset();
+    listRecognitions.mockReset().mockReturnValue(of(pageOf([])));
     deleteRecognition.mockReset();
     TestBed.configureTestingModule({
         imports: [FoodRecognitionHistoryComponent],
@@ -34,14 +37,15 @@ describe('recognition history recovery', () => {
             nutritionErrorCode: null,
         };
         const entries: FoodRecognitionJob[] = [meal, { ...meal, id: 'label', isProductLabel: true }];
-        listRecognitions.mockReturnValue(of(entries));
+        listRecognitions.mockReturnValue(of(pageOf(entries.filter(job => (job.isProductLabel ?? false) === productLabel))));
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('productLabel', productLabel);
         fixture.componentInstance['load']();
+        expect(listRecognitions).toHaveBeenCalledWith(1, PAGE_SIZE, productLabel);
         expect(fixture.componentInstance['jobs']().map(job => job.id)).toEqual([productLabel ? 'label' : 'meal']);
     });
     it('distinguishes a failed request from empty history and permits retry', () => {
-        listRecognitions.mockReturnValueOnce(throwError(() => new Error('offline'))).mockReturnValueOnce(of([]));
+        listRecognitions.mockReturnValueOnce(throwError(() => new Error('offline'))).mockReturnValueOnce(of(pageOf([])));
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         const component = fixture.componentInstance;
         component['load']();
@@ -53,7 +57,7 @@ describe('recognition history recovery', () => {
         expect(component['jobs']()).toEqual([]);
     });
     it('prevents duplicate history requests and unsubscribes on destruction', () => {
-        const pending = new Subject<FoodRecognitionJob[]>();
+        const pending = new Subject<PageOf<FoodRecognitionJob>>();
         listRecognitions.mockReturnValue(pending);
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentInstance['load']();
@@ -98,8 +102,14 @@ describe('recognition history deletion', () => {
         component['remove'](job);
         expect(deleteRecognition).toHaveBeenCalledTimes(2);
         expect(component['jobs']()).toEqual([job]);
+        component['pageIndex'].set(1);
+        component['totalItems'].set(PAGE_SIZE + 1);
+        listRecognitions.mockReturnValue(of(pageOf([], 1, PAGE_SIZE)));
         pending.next();
         pending.complete();
+        expect(listRecognitions).toHaveBeenLastCalledWith(1, PAGE_SIZE, false);
+        expect(component['pageIndex']()).toBe(0);
+        expect(component['totalItems']()).toBe(PAGE_SIZE);
         expect(component['jobs']()).toEqual([]);
         expect(component['deleted']()).toBe(true);
         expect(component['deleting']()).toEqual([]);
@@ -121,5 +131,34 @@ describe('recognition history deletion', () => {
         };
         fixture.componentInstance['remove'](job);
         expect(deleteRecognition).not.toHaveBeenCalled();
+    });
+});
+
+function pageOf(data: FoodRecognitionJob[], page = 1, totalItems = data.length): PageOf<FoodRecognitionJob> {
+    return { data, page, limit: PAGE_SIZE, totalItems, totalPages: Math.ceil(totalItems / PAGE_SIZE) };
+}
+
+describe('recognition history pagination', () => {
+    it('requests the selected page and emits the server total', () => {
+        listRecognitions.mockReturnValue(of(pageOf([], 2, TOTAL_ITEMS)));
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.componentRef.setInput('productLabel', true);
+        const count = vi.fn();
+        fixture.componentInstance.countChanged.subscribe(count);
+        fixture.componentInstance['load'](1);
+        expect(listRecognitions).toHaveBeenCalledWith(2, PAGE_SIZE, true);
+        expect(fixture.componentInstance['pageIndex']()).toBe(1);
+        expect(fixture.componentInstance['totalItems']()).toBe(TOTAL_ITEMS);
+        expect(count).toHaveBeenCalledWith(TOTAL_ITEMS);
+    });
+    it('keeps the current page and total after a failed page request', () => {
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        const component = fixture.componentInstance;
+        component['totalItems'].set(TOTAL_ITEMS);
+        listRecognitions.mockReturnValue(throwError(() => new Error('offline')));
+        component['load'](1);
+        expect(component['pageIndex']()).toBe(0);
+        expect(component['totalItems']()).toBe(TOTAL_ITEMS);
+        expect(component['failed']()).toBe(true);
     });
 });

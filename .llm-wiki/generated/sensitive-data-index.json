@@ -85,7 +85,7 @@
       "name": "SecretVerification",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 51
+      "line": 56
     },
     {
       "category": "credential",
@@ -1142,7 +1142,7 @@
       "name": "Billing",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 56
+      "line": 61
     },
     {
       "category": "financial",

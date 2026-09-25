@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
@@ -30,7 +32,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         FoodRecognitionJobModel loaded = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(job.UserId, job.Id, CancellationToken.None));
         Assert.True(loaded.IsProductLabel);
         Assert.Equal(labelPhoto.Id.Value, Assert.Single(loaded.AdditionalImages!).ImageAssetId);
-        Assert.Single(Assert.Single(await store.ListAsync(job.UserId, CancellationToken.None)).AdditionalImages!);
+        Assert.Single(Assert.Single((await store.ListAsync(job.UserId, 1, 20, isProductLabel: null, CancellationToken.None)).Items).AdditionalImages!);
         FoodRecognitionJobModel claimed = Assert.IsType<FoodRecognitionJobModel>(await store.ClaimAsync(CancellationToken.None));
         Assert.Single(claimed.AdditionalImages!);
         var label = new ProductLabelModel("Yogurt", Brand: null, 100, "g", 63, 5, 2, 6, Fiber: null, Alcohol: null, Notes: null);
@@ -79,7 +81,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Result<FoodRecognitionJobModel>[] admissions = await Task.WhenAll(Enumerable.Range(0, 8)
             .Select(_ => store.CreateAsync(job, CancellationToken.None)));
         Assert.All(admissions, result => Assert.True(result.IsSuccess));
-        Assert.Single(await store.ListAsync(job.UserId, CancellationToken.None));
+        Assert.Single((await store.ListAsync(job.UserId, 1, 20, isProductLabel: null, CancellationToken.None)).Items);
         Assert.Null(await store.GetAsync(Guid.NewGuid(), job.Id, CancellationToken.None));
         Result<FoodRecognitionJobModel> conflict = await store.CreateAsync(job with { Description = "changed" }, CancellationToken.None);
         Assert.Equal("Ai.RecognitionConflict", conflict.Error.Code);
@@ -146,6 +148,42 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
             options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
         Assert.Equal(job.ImageAssetId, (await context.ImageAssets.SingleAsync()).Id.Value);
+    }
+
+    [RequiresDockerFact]
+    public async Task List_PaginatesFilteredRecentOwnedJobsWithStableOrdering() {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        var store = new FoodRecognitionJobStore(options, new TestClock(now));
+        await using var context = new AiDbContext(options);
+        for (int index = 0; index < 25; index++) {
+            context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
+                Id = Guid.NewGuid(), UserId = new UserId(job.UserId),
+                ImageAssetId = new ImageAssetId(job.ImageAssetId), ImageUrl = job.ImageUrl,
+                Status = index % 2 == 0 ? "Succeeded" : "Failed", IsProductLabel = index < 23,
+                CreatedOnUtc = now.UtcDateTime, UpdatedOnUtc = now.UtcDateTime,
+            });
+        }
+        context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
+            Id = Guid.NewGuid(), UserId = new UserId(job.UserId),
+            ImageAssetId = new ImageAssetId(job.ImageAssetId), ImageUrl = job.ImageUrl,
+            Status = "Succeeded", IsProductLabel = true,
+            CreatedOnUtc = now.AddDays(-8).UtcDateTime, UpdatedOnUtc = now.UtcDateTime,
+        });
+        await context.SaveChangesAsync();
+
+        (IReadOnlyList<FoodRecognitionJobModel> firstItems, int firstTotal) = await store.ListAsync(job.UserId, 1, 20, isProductLabel: true, CancellationToken.None);
+        (IReadOnlyList<FoodRecognitionJobModel> secondItems, int _) = await store.ListAsync(job.UserId, 2, 20, isProductLabel: true, CancellationToken.None);
+        Assert.Equal(23, firstTotal);
+        Assert.Equal(20, firstItems.Count);
+        Assert.Equal(3, secondItems.Count);
+        Assert.Empty(firstItems.Select(item => item.Id).Intersect(secondItems.Select(item => item.Id)));
+        Assert.Equal(firstItems.Select(item => item.Id), (await store.ListAsync(job.UserId, 1, 20, isProductLabel: true, CancellationToken.None)).Items.Select(item => item.Id));
+        Assert.Equal(2, (await store.ListAsync(job.UserId, 1, 20, isProductLabel: false, CancellationToken.None)).TotalItems);
+        Assert.Equal(0, (await store.ListAsync(Guid.NewGuid(), 1, 20, isProductLabel: true, CancellationToken.None)).TotalItems);
+        (IReadOnlyList<FoodRecognitionJobModel> beyondItems, int beyondTotal) = await store.ListAsync(job.UserId, 3, 20, isProductLabel: true, CancellationToken.None);
+        Assert.Empty(beyondItems);
+        Assert.Equal(23, beyondTotal);
     }
 
     private async Task<(DbContextOptions<AiDbContext>, FoodRecognitionJobModel)> CreateDatabaseAsync() {

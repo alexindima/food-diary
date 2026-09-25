@@ -1277,45 +1277,45 @@ $fd-theme-design-tokens: (
             var(--fd-bg-surface-raised);
         --fd-bg-ai-scan-overlay: linear-gradient(
             180deg,
-            color-mix(in srgb, var(--fd-color-blue-500) 5%, transparent),
-            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 5%, transparent),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-scan-overlay-nutrition: linear-gradient(
             180deg,
-            color-mix(in srgb, var(--fd-color-green-500) 8%, transparent),
-            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 8%, transparent),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-scan-line: linear-gradient(
             90deg,
-            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
-            var(--fd-color-blue-500),
-            color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-white)),
-            var(--fd-color-blue-500),
-            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 95%, var(--fd-color-white)),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-scan-line-nutrition: linear-gradient(
             90deg,
-            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
-            var(--fd-color-green-500),
-            color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-white)),
-            var(--fd-color-green-500),
-            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 95%, var(--fd-color-white)),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-dialog-scan-line: linear-gradient(
             90deg,
-            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent),
-            var(--fd-color-blue-500),
-            color-mix(in srgb, var(--fd-color-blue-500) 95%, var(--fd-color-dialog-surface)),
-            var(--fd-color-blue-500),
-            color-mix(in srgb, var(--fd-color-blue-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 95%, var(--fd-color-dialog-surface)),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-dialog-scan-line-nutrition: linear-gradient(
             90deg,
-            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent),
-            var(--fd-color-green-500),
-            color-mix(in srgb, var(--fd-color-green-500) 95%, var(--fd-color-dialog-surface)),
-            var(--fd-color-green-500),
-            color-mix(in srgb, var(--fd-color-green-500) 0%, transparent)
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 95%, var(--fd-color-dialog-surface)),
+            var(--fd-color-primary-500),
+            color-mix(in srgb, var(--fd-color-primary-500) 0%, transparent)
         );
         --fd-bg-ai-button-surface: color-mix(in srgb, var(--fd-color-ai) 10%, var(--fd-bg-surface));
         --fd-bg-ai-button-surface-hover: color-mix(in srgb, var(--fd-color-ai) 18%, var(--fd-bg-surface));
@@ -1691,17 +1691,17 @@ $fd-theme-design-tokens: (
         --fd-shadow-filter-drop-sm: drop-shadow(0 4px 10px color-mix(in srgb, var(--fd-color-slate-900) 8%, transparent));
         --fd-shadow-filter-glow-sm: drop-shadow(0 0 10px color-mix(in srgb, var(--fd-color-slate-900) 10%, transparent));
         --fd-shadow-ai-scan-line:
-            0 0 16px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
-            0 0 30px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-white));
+            0 0 16px color-mix(in srgb, var(--fd-color-primary-500) 80%, transparent),
+            0 0 30px color-mix(in srgb, var(--fd-color-primary-500) 60%, var(--fd-color-white));
         --fd-shadow-ai-scan-line-nutrition:
-            0 0 16px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
-            0 0 30px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-white));
+            0 0 16px color-mix(in srgb, var(--fd-color-primary-500) 75%, transparent),
+            0 0 30px color-mix(in srgb, var(--fd-color-primary-500) 60%, var(--fd-color-white));
         --fd-shadow-ai-dialog-scan-line:
-            0 0 22px color-mix(in srgb, var(--fd-color-blue-500) 80%, transparent),
-            0 0 40px color-mix(in srgb, var(--fd-color-blue-500) 60%, var(--fd-color-dialog-surface));
+            0 0 22px color-mix(in srgb, var(--fd-color-primary-500) 80%, transparent),
+            0 0 40px color-mix(in srgb, var(--fd-color-primary-500) 60%, var(--fd-color-dialog-surface));
         --fd-shadow-ai-dialog-scan-line-nutrition:
-            0 0 22px color-mix(in srgb, var(--fd-color-green-500) 75%, transparent),
-            0 0 40px color-mix(in srgb, var(--fd-color-green-500) 60%, var(--fd-color-dialog-surface));
+            0 0 22px color-mix(in srgb, var(--fd-color-primary-500) 75%, transparent),
+            0 0 40px color-mix(in srgb, var(--fd-color-primary-500) 60%, var(--fd-color-dialog-surface));
         --fd-shadow-filter-ai-dialog-scan-line: drop-shadow(
             0 0 8px color-mix(in srgb, var(--fd-color-blue-500) 90%, var(--fd-color-dialog-surface))
         );

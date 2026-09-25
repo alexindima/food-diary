@@ -1,7 +1,7 @@
 <div class="recognition-photos" [class.recognition-photos--editor]="editor()">
     <div class="recognition-photos__strip">
         @for (photo of photos(); track photo.assetId ?? photo.url) {
-            <div class="recognition-photos__item">
+            <div class="recognition-photos__item" [class.recognition-photos__item--scanning]="scanning() && $first">
                 @if (editor()) {
                     <fd-ui-button
                         class="recognition-photos__preview"

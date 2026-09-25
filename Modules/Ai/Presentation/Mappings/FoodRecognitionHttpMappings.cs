@@ -13,7 +13,7 @@ public static class FoodRecognitionHttpMappings {
 
     public static GetFoodRecognitionQuery ToRecognitionQuery(this Guid id, Guid userId) => new(userId, id);
 
-    public static ListFoodRecognitionsQuery ToRecognitionListQuery(this Guid userId) => new(userId);
+    public static ListFoodRecognitionsQuery ToRecognitionListQuery(this ListFoodRecognitionsHttpQuery query, Guid userId) => new(userId, query.Page, query.Limit, query.IsProductLabel);
 
     public static StartFoodRecognitionCommand ToCommand(this StartFoodRecognitionHttpRequest request, Guid userId) =>
         new(userId, request.Id, request.ImageAssetId, request.Description, request.IsProductLabel, request.AdditionalImageAssetIds);

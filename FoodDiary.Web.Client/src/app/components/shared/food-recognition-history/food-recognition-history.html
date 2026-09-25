@@ -24,6 +24,16 @@
     }}</fd-ui-button>
     <p role="alert" class="fd-ui-helper-text" [hidden]="!deleteFailed()">{{ 'AI_RECOGNITION.DELETE_ERROR' | translate }}</p>
     <p role="status" class="fd-ui-helper-text" [hidden]="!deleted()">{{ 'AI_RECOGNITION.DELETED' | translate }}</p>
+    <div class="history-list__empty" [style.display]="showEmptyState() ? null : 'none'">
+        <fd-ui-empty-state
+            [icon]="null"
+            [title]="'AI_RECOGNITION.EMPTY_TITLE' | translate"
+            [message]="'AI_RECOGNITION.EMPTY_DESCRIPTION' | translate"
+        />
+        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="backToRecognition.emit()">{{
+            'AI_RECOGNITION.EMPTY_BACK' | translate
+        }}</fd-ui-button>
+    </div>
     <div class="history-list">
         @for (job of jobs(); track job.id) {
             <div class="history-list__row">
@@ -58,7 +68,7 @@
                         fill="text"
                         [ariaLabel]="'AI_RECOGNITION.DELETE' | translate"
                         [fdUiHint]="'AI_RECOGNITION.DELETE_HINT' | translate"
-                        [disabled]="disabled() || loading()"
+                        [disabled]="disabled() || loading() || deleting().length > 0"
                         [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                         [loading]="deleting().includes(job.id)"
                         (click)="remove(job)"
@@ -66,5 +76,8 @@
                 }
             </div>
         }
+    </div>
+    <div [style.display]="totalItems() > pageSize ? null : 'none'" [attr.inert]="paginationDisabled() ? '' : null">
+        <fd-ui-pagination [length]="totalItems()" [pageSize]="pageSize" [pageIndex]="pageIndex()" (pageIndexChange)="load($event)" />
     </div>
 </div>

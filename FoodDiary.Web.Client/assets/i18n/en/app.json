@@ -3881,6 +3881,9 @@
         "ERROR_DECLINE": "Failed to decline the invitation."
     },
     "AI_RECOGNITION": {
+        "EMPTY_TITLE": "No recognitions yet",
+        "EMPTY_DESCRIPTION": "Your recent recognition tasks and results will appear here.",
+        "EMPTY_BACK": "Back to recognition",
         "RETENTION_HELP": "About result retention",
         "RETENTION_HINT": "Results are automatically deleted after 7 days.",
         "DELETE_HINT": "Delete result. Photos of saved products will be kept.",

@@ -2759,7 +2759,7 @@
       "role": "Component",
       "selector": "fd-food-recognition-history",
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
-      "line": 22
+      "line": 29
     },
     {
       "name": "HeaderActionsOverflowComponent",
@@ -5748,7 +5748,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "ImageUploadService",
@@ -5881,7 +5881,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-food.facade.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AutosaveQueue",
@@ -6664,8 +6664,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3711,
-      "russianProperties": 3711,
+      "englishProperties": 3714,
+      "russianProperties": 3714,
       "countsMatch": true
     },
     {

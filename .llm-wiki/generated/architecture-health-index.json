@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 103,
     "routedStandaloneComponents": 63,
     "componentsWithoutDirectSpecs": 126,
-    "criticalSymbolsWithoutTestReferences": 37,
+    "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -4924,6 +4924,16 @@
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "DeleteFoodRecognitionCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommandHandler.cs",
+      "line": 6,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

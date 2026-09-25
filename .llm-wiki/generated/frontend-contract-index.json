@@ -3,12 +3,12 @@
   "summary": {
     "components": 461,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1488,
-    "outputs": 492,
-    "apiCalls": 268,
+    "inputs": 1489,
+    "outputs": 494,
+    "apiCalls": 267,
     "templatesWithTranslations": 321,
-    "translationKeys": 1903,
-    "consumerEdges": 1131,
+    "translationKeys": 1906,
+    "consumerEdges": 1133,
     "consumedComponents": 294,
     "unconsumedComponents": 166
   },
@@ -9383,6 +9383,11 @@
           "required": false
         },
         {
+          "name": "scanning",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "reviewing",
           "type": "",
           "required": false
@@ -11975,6 +11980,14 @@
         }
       ],
       "outputs": [
+        {
+          "name": "countChanged",
+          "type": "number"
+        },
+        {
+          "name": "backToRecognition",
+          "type": ""
+        },
         {
           "name": "recognitionSelected",
           "type": "FoodRecognitionJob"
@@ -16864,7 +16877,7 @@
       "responseType": "FoodRecognitionJob",
       "urlExpression": "this.baseUrl",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 74,
+      "line": 75,
       "publicMethod": "submit",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -16876,7 +16889,7 @@
       "responseType": "void",
       "urlExpression": "`${this.baseUrl}/${id}`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 96,
+      "line": 97,
       "publicMethod": "deleteRecognition",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -16885,22 +16898,10 @@
     {
       "feature": "shell",
       "method": "GET",
-      "responseType": "FoodRecognitionJob[]",
-      "urlExpression": "this.baseUrl",
-      "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 100,
-      "publicMethod": "list",
-      "transport": "HttpClient",
-      "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
-      "resolvedUrlExpression": "this.baseUrl"
-    },
-    {
-      "feature": "shell",
-      "method": "GET",
       "responseType": "FoodRecognitionJob",
       "urlExpression": "`${this.baseUrl}/${id}`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 110,
+      "line": 111,
       "publicMethod": "waitForResult",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -21131,6 +21132,9 @@
         "AI_RECOGNITION.DELETED",
         "AI_RECOGNITION.DELETE_ERROR",
         "AI_RECOGNITION.DELETE_HINT",
+        "AI_RECOGNITION.EMPTY_BACK",
+        "AI_RECOGNITION.EMPTY_DESCRIPTION",
+        "AI_RECOGNITION.EMPTY_TITLE",
         "AI_RECOGNITION.PHOTO_COUNT",
         "AI_RECOGNITION.RETENTION",
         "AI_RECOGNITION.RETRY",
@@ -25437,7 +25441,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27068,6 +27072,7 @@
         "fill",
         "icon",
         "iconSize",
+        "size",
         "type",
         "variant"
       ],
@@ -30268,6 +30273,20 @@
       "component": "FdUiEmptyStateComponent",
       "selector": "fd-ui-empty-state",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "icon",
+        "message",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiEmptyStateComponent",
+      "selector": "fd-ui-empty-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
       "occurrences": 1,
@@ -33448,6 +33467,22 @@
       "component": "FdUiPaginationComponent",
       "selector": "fd-ui-pagination",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "explore",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.html",
       "occurrences": 1,
@@ -35197,6 +35232,8 @@
         "screen"
       ],
       "outputsHandled": [
+        "backToRecognition",
+        "countChanged",
         "recognitionSelected"
       ]
     },
@@ -37556,6 +37593,7 @@
         "disabled",
         "editor",
         "photos",
+        "scanning",
         "uploading"
       ],
       "outputsHandled": [

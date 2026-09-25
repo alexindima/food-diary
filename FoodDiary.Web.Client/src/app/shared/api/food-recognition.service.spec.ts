@@ -167,7 +167,6 @@ describe('durable food recognition', () => {
         expect(result).toHaveBeenCalledOnce();
         expect(storage.size).toBe(0);
     });
-
 });
 
 describe('recognition notifications', () => {
@@ -228,4 +227,16 @@ it('deletes only the requested recognition endpoint', () => {
     expect(deletion.request.method).toBe('DELETE');
     deletion.flush(null);
     expect(done).toHaveBeenCalledTimes(1);
+});
+
+it('requests a server-filtered page and preserves total count', () => {
+    const received = vi.fn();
+    service.list(2, undefined, true).subscribe(received);
+    const pageRequest = http.expectOne(item => item.url === url && item.method === 'GET');
+    expect(pageRequest.request.params.get('page')).toBe('2');
+    expect(pageRequest.request.params.get('limit')).toBe('20');
+    expect(pageRequest.request.params.get('isProductLabel')).toBe('true');
+    const page = { data: [job('page-2', 'Succeeded')], page: 2, limit: 20, totalPages: 2, totalItems: 21 };
+    pageRequest.flush(page);
+    expect(received).toHaveBeenCalledWith(page);
 });

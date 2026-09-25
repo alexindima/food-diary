@@ -124,6 +124,10 @@
     }
 }
 
+.product-ai-dialog__history-help {
+    margin-inline-start: calc(-1 * var(--fd-space-sm));
+}
+
 .product-ai-dialog__history-header > fd-ui-button:last-child {
     margin-inline-start: auto;
 }

@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4239,
-    "symbols": 4170,
+    "sourceFiles": 4242,
+    "symbols": 4173,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2190,
+      "class": 2191,
       "enum": 64,
       "interface": 401,
-      "record": 1395,
+      "record": 1397,
       "record struct": 120
     },
     "roles": {
-      "Command": 222,
-      "CommandHandler": 217,
+      "Command": 223,
+      "CommandHandler": 218,
       "Configuration": 96,
       "Controller": 105,
       "Entity": 98,
@@ -33,7 +33,7 @@
       "Mapping": 4,
       "Options": 70,
       "Other": 1720,
-      "Query": 280,
+      "Query": 281,
       "QueryHandler": 204,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
@@ -2110,7 +2110,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 89
+      "line": 96
     },
     {
       "name": "CorsOptionsSetup",
@@ -5004,6 +5004,20 @@
       "line": 4
     },
     {
+      "name": "DeleteFoodRecognitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteFoodRecognitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "ParseFoodTextCommand",
       "kind": "record",
       "role": "Command",
@@ -5162,14 +5176,14 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ListFoodRecognitionsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "PreviewAiPromptQueryHandler",
@@ -5645,7 +5659,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "FoodVisionItemHttpModel",
@@ -5674,6 +5688,13 @@
       "role": "Request",
       "path": "Modules/Ai/Presentation/Requests/FoodVisionHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "ListFoodRecognitionsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Presentation/Requests/ListFoodRecognitionsHttpQuery.cs",
+      "line": 4
     },
     {
       "name": "StartFoodRecognitionHttpRequest",

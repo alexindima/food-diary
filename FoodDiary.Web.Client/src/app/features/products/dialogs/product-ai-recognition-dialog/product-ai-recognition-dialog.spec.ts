@@ -23,6 +23,7 @@ const CONFIDENCE = 0.95;
 let fixture: ComponentFixture<ProductAiRecognitionDialogComponent>;
 let component: ProductAiRecognitionDialogComponent;
 let productAiRecognitionFacade: {
+    recognitionCount: ReturnType<typeof vi.fn>;
     resumeRecognition: ReturnType<typeof vi.fn>;
     analyzeFoodImage: ReturnType<typeof vi.fn>;
     calculateNutrition: ReturnType<typeof vi.fn>;
@@ -33,6 +34,7 @@ let logger: { warn: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     productAiRecognitionFacade = {
+        recognitionCount: vi.fn().mockReturnValue(of(0)),
         resumeRecognition: vi.fn(),
         analyzeFoodImage: vi.fn(),
         calculateNutrition: vi.fn(),
@@ -408,4 +410,20 @@ it('returns to editable inputs without requesting recognition and keeps photos, 
     expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
     component['startAnalysis']();
     expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledOnce();
+});
+
+it('loads the recent product recognition total and refreshes after returning from history', () => {
+    const total = 25;
+    component['historyOpen'].set(true);
+    fixture.detectChanges();
+    component['historyOpen'].set(false);
+    productAiRecognitionFacade.recognitionCount.mockReturnValue(of(total));
+    fixture.detectChanges();
+    expect(component['recognitionCount']()).toBe(total);
+    component['historyOpen'].set(true);
+    fixture.detectChanges();
+    productAiRecognitionFacade.recognitionCount.mockReturnValue(of(total - 1));
+    component['historyOpen'].set(false);
+    fixture.detectChanges();
+    expect(component['recognitionCount']()).toBe(total - 1);
 });

@@ -12,8 +12,10 @@
             />
             <h2 class="fd-ui-section-title">{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</h2>
             <fd-ui-button
+                class="product-ai-dialog__history-help"
                 type="button"
                 appearance="muted-icon"
+                size="xs"
                 icon="info_outline"
                 variant="secondary"
                 fill="text"
@@ -34,7 +36,13 @@
     }
     <div class="product-ai-dialog fd-stack fd-gap-lg">
         @if (historyOpen()) {
-            <fd-food-recognition-history [screen]="true" [productLabel]="true" (recognitionSelected)="onResumeRecognition($event)" />
+            <fd-food-recognition-history
+                [screen]="true"
+                [productLabel]="true"
+                (backToRecognition)="historyOpen.set(false)"
+                (countChanged)="recognitionCount.set($event)"
+                (recognitionSelected)="onResumeRecognition($event)"
+            />
         } @else {
             <fd-ui-button
                 class="product-ai-dialog__history-link"
@@ -46,13 +54,15 @@
                 [disabled]="isBusy() || photoUploading()"
                 [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                 (click)="historyOpen.set(true)"
-                >{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</fd-ui-button
-            >
+                >{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
+                <span [style.display]="recognitionCount() > 0 ? null : 'none'">· {{ recognitionCount() }}</span>
+            </fd-ui-button>
             <div class="product-ai-dialog__input-layout">
                 <fd-product-recognition-photos
                     [editor]="true"
                     [photos]="photos()"
                     [disabled]="isBusy()"
+                    [scanning]="isBusy()"
                     [cover]="cover()"
                     [(uploading)]="photoUploading"
                     (photosChange)="onPhotosChanged($event)"

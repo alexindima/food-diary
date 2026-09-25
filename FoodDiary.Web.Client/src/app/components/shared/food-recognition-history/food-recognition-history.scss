@@ -70,3 +70,15 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.history-list__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--fd-space-lg);
+    padding-block: var(--fd-space-xl);
+
+    fd-ui-empty-state {
+        padding: 0;
+    }
+}

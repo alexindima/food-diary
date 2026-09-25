@@ -28,6 +28,7 @@ export class ProductRecognitionPhotosComponent {
     public readonly editor = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
+    public readonly scanning = input(false);
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);

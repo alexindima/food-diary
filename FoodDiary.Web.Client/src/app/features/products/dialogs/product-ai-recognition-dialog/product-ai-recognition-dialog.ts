@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -60,6 +60,7 @@ export class ProductAiRecognitionDialogComponent {
     private analysisSubscription: Subscription | null = null;
     private nutritionSubscription: Subscription | null = null;
     protected readonly historyOpen = signal(false);
+    protected readonly recognitionCount = signal(0);
     protected readonly isLoading = signal(false);
     protected readonly isNutritionLoading = signal(false);
     protected readonly hasAnalyzed = signal(false);
@@ -341,6 +342,22 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     public constructor() {
+        effect(onCleanup => {
+            if (this.historyOpen() || this.isBusy()) {
+                return;
+            }
+            const subscription = this.productAiRecognitionFacade.recognitionCount().subscribe({
+                next: count => {
+                    this.recognitionCount.set(count);
+                },
+                error: () => {
+                    this.recognitionCount.set(0);
+                },
+            });
+            onCleanup(() => {
+                subscription.unsubscribe();
+            });
+        });
         this.destroyRef.onDestroy(() => {
             this.analysisSubscription?.unsubscribe();
             this.nutritionSubscription?.unsubscribe();

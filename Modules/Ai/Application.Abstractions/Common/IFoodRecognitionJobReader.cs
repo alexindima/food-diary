@@ -4,6 +4,6 @@ namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 public interface IFoodRecognitionJobReader {
     Task<FoodRecognitionJobModel?> GetAsync(Guid userId, Guid jobId, CancellationToken cancellationToken);
-    Task<IReadOnlyList<FoodRecognitionJobModel>> ListAsync(Guid userId, CancellationToken cancellationToken);
+    Task<(IReadOnlyList<FoodRecognitionJobModel> Items, int TotalItems)> ListAsync(Guid userId, int page, int limit, bool? isProductLabel, CancellationToken cancellationToken);
     Task<IReadOnlyList<FoodRecognitionJobUpdate>> GetUpdatesAsync(DateTime sinceUtc, CancellationToken cancellationToken);
 }

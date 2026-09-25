@@ -24,7 +24,8 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { buildRealtimeHubUrl } from '../lib/realtime-hub-url.utils';
 import type { FoodVisionRequest, FoodVisionResponse } from '../models/ai.data';
-import type { FoodRecognitionJob } from '../models/food-recognition.data';
+import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
+import type { PageOf } from '../models/page-of.data';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 
 const POLL_INTERVAL_MS = 5000;
@@ -96,8 +97,8 @@ export class FoodRecognitionService {
         return this.http.delete<void>(`${this.baseUrl}/${id}`);
     }
 
-    public list(): Observable<FoodRecognitionJob[]> {
-        return this.http.get<FoodRecognitionJob[]>(this.baseUrl);
+    public list(page = 1, limit = RECOGNITION_PAGE_SIZE, isProductLabel = false): Observable<PageOf<FoodRecognitionJob>> {
+        return this.http.get<PageOf<FoodRecognitionJob>>(this.baseUrl, { params: { page, limit, isProductLabel } });
     }
 
     private waitForResult(id: string, user: string): Observable<FoodVisionResponse> {

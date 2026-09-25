@@ -45,8 +45,9 @@ public sealed class FoodRecognitionController(ISender mediator) : AuthorizedCont
         HandleNoContent(id.ToDeleteRecognitionCommand(userId));
 
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<FoodRecognitionJobHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> List([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToRecognitionListQuery(),
-            static jobs => (IReadOnlyList<FoodRecognitionJobHttpResponse>)[.. jobs.Select(job => job.ToHttpResponse())]);
+    [ProducesResponseType<PagedHttpResponse<FoodRecognitionJobHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> List([FromCurrentUser] Guid userId, [FromQuery] ListFoodRecognitionsHttpQuery query) =>
+        HandleOk(query.ToRecognitionListQuery(userId),
+            static jobs => new PagedHttpResponse<FoodRecognitionJobHttpResponse>(
+                [.. jobs.Data.Select(job => job.ToHttpResponse())], jobs.Page, jobs.Limit, jobs.TotalPages, jobs.TotalItems));
 }

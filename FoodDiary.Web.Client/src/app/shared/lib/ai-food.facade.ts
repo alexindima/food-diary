@@ -10,7 +10,8 @@ import type {
     FoodVisionRequest,
     FoodVisionResponse,
 } from '../models/ai.data';
-import type { FoodRecognitionJob } from '../models/food-recognition.data';
+import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
+import type { PageOf } from '../models/page-of.data';
 
 @Service()
 export class AiFoodFacade {
@@ -25,8 +26,8 @@ export class AiFoodFacade {
         return this.recognition.deleteRecognition(id);
     }
 
-    public listRecognitions(): Observable<FoodRecognitionJob[]> {
-        return this.recognition.list();
+    public listRecognitions(page = 1, limit = RECOGNITION_PAGE_SIZE, isProductLabel = false): Observable<PageOf<FoodRecognitionJob>> {
+        return this.recognition.list(page, limit, isProductLabel);
     }
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
