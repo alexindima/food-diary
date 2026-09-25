@@ -64,13 +64,12 @@
             </div>
         </div>
         <div class="product-manage__image fd-row">
-            <fd-image-upload-field
-                appearance="compact"
-                [showRecommendation]="false"
-                [formField]="form().imageUrl"
-                [cropEnabled]="true"
-                [cropSize]="512"
-                [cropAspectRatio]="1"
+            <fd-product-recognition-photos
+                [photos]="productPhotos()"
+                [cover]="form().imageUrl().value()"
+                (photosChange)="setPhotos($event)"
+                (coverChange)="setCover($event)"
+                (uploadingChange)="photosUploading.emit($event)"
             />
         </div>
     </div>

@@ -39,13 +39,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
-- Public contract files: 12
+- Public contract files: 13
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
+- Public contract types: 13
 - Interfaces: 8
 - DTO/read-model/projection types: 1
 - Enums: 0
@@ -60,6 +60,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IProductSnapshotReadService`
 - `interface IProductUsageQuery`
 - `interface IProductWriteRepository`
+- `record ProductImageReadItem`
 - `record ProductOverviewReadItem`
 - `record ProductQueryFilters`
 - `record ProductSnapshotReadModel`

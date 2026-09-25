@@ -25,4 +25,6 @@ public record CreateProductCommand(
     double FiberPerBase,
     double AlcoholPerBase,
     string Visibility
-) : ICommand<Result<ProductModel>>, IUserRequest;
+) : ICommand<Result<ProductModel>>, IUserRequest {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

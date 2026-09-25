@@ -72,6 +72,7 @@ export function buildFavoriteProductSnapshot(favorite: FavoriteProduct): Product
         description: null,
         comment: favorite.comment ?? null,
         imageUrl: favorite.imageUrl ?? null,
+        images: favorite.imageUrls?.map(imageUrl => ({ imageAssetId: null, imageUrl })),
         imageAssetId: null,
         baseUnit,
         baseAmount: baseUnit === MeasurementUnit.PCS ? 1 : FAVORITE_GRAM_BASE_AMOUNT,

@@ -20,4 +20,6 @@ public sealed record CreateProductHttpRequest(
     double FiberPerBase,
     double AlcoholPerBase,
     string Visibility
-);
+) {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

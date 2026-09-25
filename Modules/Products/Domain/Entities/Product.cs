@@ -25,6 +25,22 @@ public sealed class Product : AggregateRoot<ProductId> {
     public const int CommentMaxLength = 2048;
     public const int ImageUrlMaxLength = 2048;
 
+    private readonly List<ProductImage> _images = [];
+    public IReadOnlyCollection<ProductImage> Images => _images.AsReadOnly();
+    public void ReplaceImages(IReadOnlyList<ProductImage> images) {
+        if (images.Count > 5 || images.Select(image => image.ImageAssetId).Distinct().Count() != images.Count) {
+            throw new ArgumentException("A product can have up to five distinct images.", nameof(images));
+        }
+        _images.RemoveAll(image => !images.Any(next => next.ImageAssetId == image.ImageAssetId));
+        for (int index = 0; index < images.Count; index++) {
+            ProductImage? existing = _images.Find(image => image.ImageAssetId == images[index].ImageAssetId);
+            if (existing is null) { _images.Add(new ProductImage(images[index].ImageAssetId, images[index].ImageUrl, index)); } else { existing.SetPosition(index); }
+        }
+        ImageAssetId = images.Count > 0 ? images[0].ImageAssetId : null;
+        ImageUrl = images.Count > 0 ? images[0].ImageUrl : null;
+        SetModified();
+    }
+
     public string? Barcode { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string? Brand { get; private set; }

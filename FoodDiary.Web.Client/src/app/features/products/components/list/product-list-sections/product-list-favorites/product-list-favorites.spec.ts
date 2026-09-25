@@ -11,6 +11,13 @@ import { ProductListFavoritesComponent } from './product-list-favorites';
 const DEFAULT_PORTION_AMOUNT = 100;
 
 describe('ProductListFavoritesComponent', () => {
+    it('preserves every photo when adapting a favorite for gallery preview', async () => {
+        const favorite = { ...createFavoriteProduct(), imageUrls: ['cover.jpg', 'label.jpg'] };
+        const { component } = await setupComponentAsync({ favorites: [favorite] });
+
+        expect(component['toProductCardItem'](favorite).images).toEqual([{ imageUrl: 'cover.jpg' }, { imageUrl: 'label.jpg' }]);
+    });
+
     it('should render favorite products', async () => {
         const favorite = createFavoriteProduct();
         const { fixture } = await setupComponentAsync({ favorites: [favorite] });

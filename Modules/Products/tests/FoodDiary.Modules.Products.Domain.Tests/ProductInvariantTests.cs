@@ -26,6 +26,35 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void Gallery_PreservesOrderAndTracksCoverAndRemoval() {
+        Product product = CreateValidProduct();
+        var first = new ProductImage(ImageAssetId.New(), "https://example.test/front.jpg", 0);
+        var second = new ProductImage(ImageAssetId.New(), "https://example.test/label.jpg", 1);
+        product.ReplaceImages([first, second]);
+        Assert.Equal(first.ImageAssetId, product.ImageAssetId);
+        product.ReplaceImages([second, first]);
+        Assert.Equal(second.ImageAssetId, product.ImageAssetId);
+        Assert.Equal(second.ImageUrl, product.ImageUrl);
+        Assert.Equal(second.ImageAssetId, product.Images.OrderBy(image => image.Position).First().ImageAssetId);
+        product.ReplaceImages([first]);
+        Assert.Single(product.Images);
+        product.ReplaceImages([]);
+        Assert.Null(product.ImageUrl);
+        Assert.Null(product.ImageAssetId);
+    }
+
+    [Fact]
+    public void Gallery_RejectsDuplicatesAndMoreThanFiveBeforeMutation() {
+        Product product = CreateValidProduct();
+        var image = new ProductImage(ImageAssetId.New(), "https://example.test/front.jpg", 0);
+        product.ReplaceImages([image]);
+        Assert.Throws<ArgumentException>(() => product.ReplaceImages([image, image]));
+        Assert.Throws<ArgumentException>(() => product.ReplaceImages(Enumerable.Range(0, 6).Select(index => new ProductImage(ImageAssetId.New(), "https://example.test/image.jpg", index)).ToList()));
+        Assert.Single(product.Images);
+        Assert.Equal(image.ImageAssetId, product.ImageAssetId);
+    }
+
+    [Fact]
     public void Create_WithInvalidName_Throws() {
         Assert.Throws<ArgumentException>(() => Product.Create(
             UserId.New(),

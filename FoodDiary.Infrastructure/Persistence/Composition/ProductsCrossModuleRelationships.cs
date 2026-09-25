@@ -14,6 +14,9 @@ internal static class ProductsCrossModuleRelationships {
             .IsRequired(false)
             .OnDelete(DeleteBehavior.ClientNoAction);
 
+        modelBuilder.Entity<Product>().OwnsMany(product => product.Images, images =>
+            images.HasOne<ImageAsset>().WithMany().HasForeignKey(image => image.ImageAssetId).OnDelete(DeleteBehavior.ClientNoAction));
+
         modelBuilder.Entity<Product>().HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId);

@@ -2,7 +2,7 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutriti
 import { getControlNumericValue } from '../../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
-import { PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
+import { PRODUCT_MAX_PHOTOS, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../lib/product-type.utils';
 import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { NutritionMode, ProductFormValues } from './product-manage-form.types';
@@ -85,6 +85,9 @@ export function buildProductData(values: ProductFormValues, nutritionMode: Nutri
         comment: values.comment,
         imageUrl: imageSelection?.url ?? null,
         imageAssetId: imageSelection?.assetId ?? null,
+        ...(values.images !== undefined
+            ? { imageAssetIds: values.images.map(image => image.assetId).filter((id): id is string => id !== null) }
+            : {}),
         baseAmount,
         defaultPortionAmount,
         baseUnit: values.baseUnit,
@@ -132,6 +135,7 @@ export function buildProductFormPatch(product: Product): Partial<ProductFormValu
         description: product.description ?? null,
         comment: product.comment ?? null,
         imageUrl: getProductImageSelection(product),
+        images: getProductGallery(product),
         baseAmount: targetBaseAmount,
         defaultPortionAmount: product.defaultPortionAmount,
         baseUnit: product.baseUnit,
@@ -154,7 +158,8 @@ export function buildAiResultPatch(values: ProductFormValues, result: ProductAiR
         name: result.name.length > 0 ? result.name : values.name,
         description: result.description ?? values.description,
         brand: result.brand ?? values.brand,
-        imageUrl: result.image ?? values.imageUrl,
+        imageUrl: result.image ?? values.imageUrl ?? result.images?.[0] ?? null,
+        images: mergeProductPhotos(values, result),
         baseAmount: targetBaseAmount,
         baseUnit: result.baseUnit,
         caloriesPerBase: roundNullableProductNutrientValue(result.caloriesPerBase),
@@ -237,4 +242,25 @@ function normalizeProductVisibility(value: ProductVisibility | null | string | u
     }
 
     return value.toUpperCase() === ProductVisibility.Public.toUpperCase() ? ProductVisibility.Public : ProductVisibility.Private;
+}
+
+function getProductGallery(product: Product): ImageSelection[] | undefined {
+    return product.images?.some(image => image.imageAssetId !== null) === true
+        ? product.images.map(image => ({ assetId: image.imageAssetId, url: image.imageUrl }))
+        : undefined;
+}
+
+function mergeProductPhotos(values: ProductFormValues, result: ProductAiRecognitionResult): ImageSelection[] | undefined {
+    if ((result.images?.length ?? 0) === 0) {
+        return values.images;
+    }
+    const existing = getExistingPhotos(values);
+    const combined = [...(result.image !== null ? [result.image] : []), ...existing, ...(result.images ?? [])];
+    return combined
+        .filter((photo, index) => combined.findIndex(other => other.assetId === photo.assetId && other.url === photo.url) === index)
+        .slice(0, PRODUCT_MAX_PHOTOS);
+}
+
+function getExistingPhotos(values: ProductFormValues): ImageSelection[] {
+    return values.images ?? (values.imageUrl !== null && (values.imageUrl.url?.length ?? 0) > 0 ? [values.imageUrl] : []);
 }

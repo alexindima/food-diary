@@ -39,6 +39,7 @@ import {
     PRODUCT_BRAND_MAX_LENGTH,
     PRODUCT_COMMENT_MAX_LENGTH,
     PRODUCT_DESCRIPTION_MAX_LENGTH,
+    PRODUCT_MAX_PHOTOS,
     PRODUCT_MIN_AMOUNT,
     PRODUCT_NAME_MAX_LENGTH,
 } from '../../../lib/product-manage.constants';
@@ -105,6 +106,7 @@ export class ProductManageFormComponent {
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
     protected readonly isDeleting = signal(false);
+    protected readonly photosUploading = signal(false);
     protected readonly isSubmitting = signal(false);
 
     protected readonly productFormModel = signal<ProductFormValues>(createProductForm());
@@ -363,7 +365,7 @@ export class ProductManageFormComponent {
     }
 
     protected async onSubmitAsync(): Promise<Product | null> {
-        if (this.isSubmitting() || this.isDeleting()) {
+        if (this.isSubmitting() || this.isDeleting() || this.photosUploading()) {
             return null;
         }
 
@@ -469,7 +471,14 @@ export class ProductManageFormComponent {
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
-        this.patchProductForm(buildAiResultPatch(this.productFormModel(), result));
+        const values = this.productFormModel();
+        const existing = values.images ?? (values.imageUrl !== null && (values.imageUrl.url?.length ?? 0) > 0 ? [values.imageUrl] : []);
+        const ids = new Set([...existing, ...(result.images ?? [])].map(image => image.assetId ?? image.url));
+        const fits = ids.size <= PRODUCT_MAX_PHOTOS;
+        this.patchProductForm(buildAiResultPatch(values, fits ? result : { ...result, image: null, images: undefined }));
+        if (!fits) {
+            this.setGlobalError('PRODUCT_MANAGE.PHOTO_IMPORT_LIMIT');
+        }
         this.productForm().markAsDirty();
         this.nutritionMode = 'portion';
     }

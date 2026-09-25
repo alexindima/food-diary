@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1512,
+    "candidateFields": 1528,
     "credential": 156,
     "identity": 174,
     "health": 700,
     "financial": 129,
-    "privateContent": 353,
-    "boundaryFiles": 199,
+    "privateContent": 369,
+    "boundaryFiles": 200,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2115,7 +2115,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 186
+      "line": 187
     },
     {
       "category": "health",
@@ -4810,7 +4810,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 40
+      "line": 56
     },
     {
       "category": "health",
@@ -8226,21 +8226,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 180
+      "line": 181
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 181
+      "line": 182
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 182
+      "line": 183
     },
     {
       "category": "privateContent",
@@ -9140,6 +9140,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 27
+    },
+    {
+      "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
@@ -9175,6 +9182,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
+      "line": 25
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
@@ -9186,6 +9200,13 @@
       "type": "string?",
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
       "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
+      "line": 22
     },
     {
       "category": "privateContent",
@@ -9228,6 +9249,13 @@
       "type": "string?",
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "line": 25
     },
     {
       "category": "privateContent",
@@ -9756,6 +9784,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
+      "line": 29
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
@@ -9833,6 +9868,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommand.cs",
+      "line": 36
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Common/ProductImageAssetResolution.cs",
@@ -9851,6 +9893,20 @@
       "type": "bool",
       "path": "Modules/Products/Application/Common/ProductImageAssetResolution.cs",
       "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Products/Application/Models/ProductImageModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Products/Application/Models/ProductImageModel.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -9879,6 +9935,20 @@
       "type": "string?",
       "path": "Modules/Products/Application/Models/ProductSearchSuggestionModel.cs",
       "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Products/Contracts/Models/ProductImageReadItem.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Products/Contracts/Models/ProductImageReadItem.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -9913,63 +9983,77 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 33
+      "line": 49
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 34
+      "line": 50
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 35
+      "line": 51
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 94
+      "line": 110
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 95
+      "line": 111
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 169
+      "line": 185
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 221
+      "line": 237
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 327
+      "line": 343
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 523
+      "line": 539
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 5
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -10015,6 +10099,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs",
+      "line": 24
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
@@ -10057,6 +10148,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
+      "line": 30
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
@@ -10075,6 +10173,20 @@
       "type": "Guid?",
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
       "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -11267,7 +11379,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 3
+      "fieldCount": 4
     },
     {
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
@@ -11583,7 +11695,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 4
+      "fieldCount": 5
     },
     {
       "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
@@ -11591,7 +11703,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 7
+      "fieldCount": 8
     },
     {
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
@@ -11600,6 +11712,13 @@
         "privateContent"
       ],
       "fieldCount": 4
+    },
+    {
+      "path": "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Products/Presentation/Responses/ProductSearchSuggestionHttpResponse.cs",

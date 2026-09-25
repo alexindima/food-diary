@@ -298,8 +298,10 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(expected, valid);
     }
 
-    [Fact]
-    public void AddApiServices_WithInvalidTestDeliveryRateLimit_FailsOptionsValidation() {
+    [Theory]
+    [InlineData("TestDelivery")]
+    [InlineData("Images")]
+    public void AddApiServices_WithInvalidRateLimit_FailsOptionsValidation(string policy) {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -312,7 +314,7 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
                 ["TelegramBot:ApiSecret"] = "",
                 ["Cors:Origins:0"] = "http://localhost:4200",
-                ["RateLimiting:TestDelivery:PermitLimit"] = "0",
+                [$"RateLimiting:{policy}:PermitLimit"] = "0",
             })
             .Build();
 
@@ -323,7 +325,7 @@ public sealed class ApiHostOptionsConfigurationTests {
 
         OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
             () => provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value);
-        Assert.Contains("RateLimiting:TestDelivery", exception.Message, StringComparison.Ordinal);
+        Assert.Contains($"RateLimiting:{policy}", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]

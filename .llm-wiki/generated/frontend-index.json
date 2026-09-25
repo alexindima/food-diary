@@ -2920,7 +2920,7 @@
       "role": "Component",
       "selector": "fd-product-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "RecipeCardComponent",
@@ -4537,14 +4537,14 @@
       "role": "Component",
       "selector": "fd-product-basic-info",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.ts",
-      "line": 55
+      "line": 56
     },
     {
       "name": "ProductManageFormComponent",
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 87
+      "line": 88
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -4663,7 +4663,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/models/product.data.ts",
-      "line": 83
+      "line": 85
     },
     {
       "name": "ProductContainerComponent",
@@ -6664,8 +6664,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3685,
-      "russianProperties": 3685,
+      "englishProperties": 3690,
+      "russianProperties": 3690,
       "countsMatch": true
     },
     {

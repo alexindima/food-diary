@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 226,
-    "entities": 86,
+    "domainTypes": 227,
+    "entities": 87,
     "valueObjects": 92,
-    "invariants": 515,
+    "invariants": 518,
     "persistenceMappings": 92,
-    "indexes": 169,
+    "indexes": 170,
     "relationships": 36
   },
   "domainTypes": [
@@ -492,6 +492,13 @@
       "role": "entity",
       "path": "Modules/Products/Domain/Entities/Product.cs",
       "line": 11
+    },
+    {
+      "area": "FoodDiary",
+      "name": "ProductImage",
+      "role": "entity",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 3
     },
     {
       "area": "FoodDiary",
@@ -4004,73 +4011,94 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A product can have up to five distinct images.\", nameof(images))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 32
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(fdcId), \"USDA FDC ID must be positive.\")",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 363
+      "line": 379
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Product name is required.\", nameof(value))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 402
+      "line": 418
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Product name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 407
+      "line": 423
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 422
+      "line": 438
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Base amount for {unit} must be {canonicalAmount}.\"))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 430
+      "line": 446
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 465
+      "line": 481
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 484
+      "line": 500
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 573
+      "line": 589
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 580
+      "line": 596
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 587
+      "line": 603
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Image id is required.\", nameof(imageAssetId))",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 10
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Invalid image URL.\", nameof(imageUrl))",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 11
     },
     {
       "area": "FoodDiary",
@@ -5912,11 +5940,12 @@
     {
       "area": "FoodDiary",
       "entity": "Product",
-      "table": null,
+      "table": "ProductImages",
       "indexes": [
         "e => e.Barcode)",
         "e => e.Brand)",
         "e => e.Category)",
+        "e => e.ImageAssetId)",
         "e => e.Name)",
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"

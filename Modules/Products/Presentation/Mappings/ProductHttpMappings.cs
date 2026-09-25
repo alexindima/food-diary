@@ -43,7 +43,7 @@ public static class ProductHttpMappings {
                 FiberPerBase: request.FiberPerBase,
                 AlcoholPerBase: request.AlcoholPerBase,
                 Visibility: request.Visibility
-            );
+            ) { ImageAssetIds = request.ImageAssetIds };
         }
     }
 
@@ -77,7 +77,7 @@ public static class ProductHttpMappings {
                 CarbsPerBase: request.CarbsPerBase,
                 FiberPerBase: request.FiberPerBase,
                 AlcoholPerBase: request.AlcoholPerBase,
-                Visibility: request.Visibility);
+                Visibility: request.Visibility) { ImageAssetIds = request.ImageAssetIds };
         }
     }
 

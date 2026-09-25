@@ -10,6 +10,7 @@ export type ProductFormValues = {
     description: string | null;
     comment: string | null;
     imageUrl: ImageSelection | null;
+    images?: ImageSelection[];
     baseAmount: number;
     defaultPortionAmount: number;
     baseUnit: MeasurementUnit;

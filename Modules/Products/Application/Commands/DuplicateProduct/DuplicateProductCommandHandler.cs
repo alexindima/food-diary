@@ -73,6 +73,8 @@ public sealed class DuplicateProductCommandHandler(
             imageAssetId: null,
             original.Visibility);
 
+        if (isOwnedByCurrentUser && original.Images.Count > 0) { duplicate.ReplaceImages(original.Images.OrderBy(image => image.Position).ToList()); }
+
         await productWriteRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(duplicate.ToModel(isOwnedByCurrentUser: true));

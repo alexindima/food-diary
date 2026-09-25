@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1272,
+    "contracts": 1273,
     "ambiguousContracts": 2,
-    "consumerEdges": 9939,
-    "productionConsumerEdges": 5680,
-    "testConsumerEdges": 4259,
-    "consumedContracts": 1272,
+    "consumerEdges": 9942,
+    "productionConsumerEdges": 5682,
+    "testConsumerEdges": 4260,
+    "consumedContracts": 1273,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -17255,6 +17255,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ProductImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "ProductLabelHttpResponse",
       "roles": [
         "Response"
@@ -32249,7 +32266,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.CreateCommandTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 12
     },
     {
       "contract": "CreateProductCommand",
@@ -79696,7 +79713,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Common/ProductImageAssetResolver.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IImageAssetAccessService",
@@ -82180,6 +82197,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ImageAssetUsageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedProductsContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IMailInboxClient",
@@ -94593,7 +94623,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedProductsContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "IProductOverviewReadService",
@@ -95373,7 +95403,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedProductsContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "IProductWriteRepository",
@@ -115549,7 +115579,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedProductsContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 7
     },
     {
       "contract": "IUnitOfWork",
@@ -133102,6 +133132,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "ProductImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Mappings/ProductHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ProductImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "ProductLabelHttpResponse",
       "roles": [
         "Response"
@@ -146265,7 +146321,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 3
     },
     {
       "contract": "UpdateProductCommand",

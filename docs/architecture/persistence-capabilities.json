@@ -1084,7 +1084,7 @@
         "write:Product"
       ],
       "reason": "Owner product persistence and parameterized row locking. Cross-module usage count is delegated to the host-composed query in the same scoped transaction.",
-      "technicalSourceSha256": "ecc0c9bfe09cb8cc77bbb27caf53b1771d3dca9b55a353045a84432284abc607"
+      "technicalSourceSha256": "8d610fcb9b9809efd38c36759bc384e07b319fd986d2a869631350ae430c59c7"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
@@ -1092,11 +1092,13 @@
         "context:CurrentTransaction",
         "context:Database",
         "entity:Product",
+        "entity:ProductImage",
         "tracked:Product",
+        "tracked:ProductImage",
         "write:Product"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "b0ab15d00d323f622cdc4a1379cd3b57cf8f1206d142f98a0898e756599d52a3"
+      "technicalSourceSha256": "f63220617df8093446b926b19caeca07c963fa3b8c48fa6af84cbab1f1d9b564"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",

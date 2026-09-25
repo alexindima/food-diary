@@ -27,6 +27,7 @@ public sealed class CreateProductCommandHandler(
         }
 
         Product product = CreateProduct(command, valuesResult.Value);
+        if (valuesResult.Value.Images is { } images) { product.ReplaceImages(images); }
         product = await productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));

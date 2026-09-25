@@ -14,4 +14,6 @@ internal sealed record ProductUpdateValues(
     ProductType? ProductType,
     ImageAssetId? ImageAssetId,
     string? ImageUrl,
-    bool HasResolvedImageAsset);
+    bool HasResolvedImageAsset) {
+    public IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>? Images { get; init; }
+}

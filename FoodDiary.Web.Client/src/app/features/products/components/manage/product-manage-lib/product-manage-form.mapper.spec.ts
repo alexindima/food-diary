@@ -217,3 +217,60 @@ describe('product manage nutrition mapping', () => {
         });
     });
 });
+
+describe('product gallery mapping', () => {
+    it('imports every recognition photo while retaining existing photos and selected cover', () => {
+        const existing = { assetId: 'existing', url: '/existing.jpg' };
+        const cover = { assetId: 'cover', url: '/cover.jpg' };
+        const label = { assetId: 'label', url: '/label.jpg' };
+        const result: ProductAiRecognitionResult = {
+            name: 'Recognized product',
+            description: null,
+            image: cover,
+            images: [label, cover],
+            baseAmount: 100,
+            baseUnit: MeasurementUnit.G,
+            caloriesPerBase: 100,
+            proteinsPerBase: 10,
+            fatsPerBase: 0,
+            carbsPerBase: 15,
+            fiberPerBase: null,
+            alcoholPerBase: null,
+        };
+        const patch = buildAiResultPatch({ ...createProductForm(), imageUrl: existing, images: [existing] }, result);
+        expect(patch.images).toEqual([cover, existing, label]);
+        expect(patch.imageUrl).toEqual(cover);
+    });
+
+    it('does not clear an untouched legacy URL-only cover', () => {
+        const product = {
+            ...PRODUCT,
+            imageAssetId: null,
+            imageUrl: '/legacy.jpg',
+            images: [{ imageAssetId: null, imageUrl: '/legacy.jpg' }],
+        };
+        const values = { ...createProductForm(), ...buildProductFormPatch(product) };
+        const request = buildProductData(values, 'base');
+        expect(request.imageAssetIds).toBeUndefined();
+        expect(request.imageUrl).toBe('/legacy.jpg');
+    });
+
+    it('restores the saved photo order and sends the ordered asset ids', () => {
+        const images = [
+            { imageAssetId: 'label', imageUrl: '/label.jpg' },
+            { imageAssetId: 'front', imageUrl: '/front.jpg' },
+        ];
+        const values = {
+            ...createProductForm(),
+            ...buildProductFormPatch({ ...PRODUCT, images, imageAssetId: 'label', imageUrl: '/label.jpg' }),
+        };
+        expect(values.images?.map(image => image.assetId)).toEqual(['label', 'front']);
+        expect(buildProductData(values, 'base').imageAssetIds).toEqual(['label', 'front']);
+    });
+    it('sends an empty gallery explicitly after removing all images', () => {
+        expect(buildProductData({ ...createProductForm(), images: [], imageUrl: null }, 'base').imageAssetIds).toEqual([]);
+    });
+    it('keeps legacy single-image payload semantics when the gallery is untouched', () => {
+        expect(buildProductData(createProductForm(), 'base').imageAssetIds).toBeUndefined();
+    });
+});

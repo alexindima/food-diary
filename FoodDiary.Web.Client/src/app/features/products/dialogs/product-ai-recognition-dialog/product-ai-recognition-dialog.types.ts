@@ -11,6 +11,7 @@ export type ProductAiRecognitionResult = {
     name: string;
     description?: string | null;
     image: ImageSelection | null;
+    images?: ImageSelection[];
     baseAmount: number;
     baseUnit: MeasurementUnit;
     caloriesPerBase: number;

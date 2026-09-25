@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -34,6 +35,7 @@ async function setupProductCardAsync(): Promise<ProductCardTestContext> {
     await TestBed.configureTestingModule({
         imports: [ProductCardComponent],
         providers: [
+            { provide: FdUiDialogService, useValue: { open: vi.fn() } },
             provideTranslateTesting(),
             {
                 provide: FavoriteProductService,
@@ -63,6 +65,29 @@ async function setupProductCardAsync(): Promise<ProductCardTestContext> {
 }
 
 describe('ProductCardComponent', () => {
+    it('opens all photos in cover order without also opening product details', async () => {
+        const { component, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('imageUrl', '/cover.jpg');
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, images: [{ imageUrl: '/cover.jpg' }, { imageUrl: '/label.jpg' }] });
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+        fixture.detectChanges();
+        component['previewCardImage']();
+        expect(TestBed.inject(FdUiDialogService).open).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    imageUrl: undefined,
+                    collageImages: [
+                        { url: '/cover.jpg', alt: MOCK_PRODUCT.name },
+                        { url: '/label.jpg', alt: MOCK_PRODUCT.name },
+                    ],
+                }),
+            }),
+        );
+        expect(opened).not.toHaveBeenCalled();
+    });
+
     it('should create', async () => {
         const { component, fixture } = await setupProductCardAsync();
         fixture.detectChanges();

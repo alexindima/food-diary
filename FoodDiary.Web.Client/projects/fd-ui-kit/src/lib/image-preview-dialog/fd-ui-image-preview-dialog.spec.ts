@@ -36,12 +36,33 @@ const images = [
     { url: '/second.jpg', alt: 'Second photo' },
 ];
 describe('Image preview gallery', () => {
+    it('selects a photo through thumbnails and updates the highlighted pressed state', () => {
+        const { fixture, host } = setup({ collageImages: images });
+        const thumbnails = host.querySelectorAll<HTMLButtonElement>('.fd-ui-image-preview-dialog__thumbnail');
+        expect(thumbnails).toHaveLength(images.length);
+        expect(thumbnails[0].getAttribute('aria-pressed')).toBe('true');
+        thumbnails[1].click();
+        fixture.detectChanges();
+        expect(host.querySelector<HTMLImageElement>('.fd-ui-image-preview-dialog__image')?.src).toContain('/second.jpg');
+        expect(thumbnails[0].getAttribute('aria-pressed')).toBe('false');
+        expect(thumbnails[1].getAttribute('aria-pressed')).toBe('true');
+        expect(thumbnails[1].classList.contains('fd-ui-image-preview-dialog__thumbnail--active')).toBe(true);
+    });
+
+    it('hides arrows and thumbnails for a single gallery image', () => {
+        const { host } = setup({ collageImages: [images[0]] });
+        expect(host.querySelectorAll('img')).toHaveLength(1);
+        expect(host.querySelector('.fd-ui-image-preview-dialog__arrow')).toBeNull();
+        expect(host.querySelector('.fd-ui-image-preview-dialog__navigation')).toBeNull();
+    });
+
     it('navigates individual originals with keyboard and wraps in both directions', () => {
         const { fixture, host } = setup({ collageImages: images });
         expect(host.querySelector('img')?.alt).toBe('First photo');
         host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
         fixture.detectChanges();
         expect(host.querySelector('img')?.alt).toBe('Second photo');
+        expect(host.querySelectorAll('.fd-ui-image-preview-dialog__thumbnail')[1].getAttribute('aria-pressed')).toBe('true');
         expect(host.textContent).toContain('2 / 2');
         host.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
         fixture.detectChanges();

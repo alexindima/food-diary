@@ -33,4 +33,6 @@ public sealed record ProductOverviewReadItem(
     bool IsOwnedByCurrentUser,
     int QualityScore,
     string QualityGrade,
-    int? UsdaFdcId);
+    int? UsdaFdcId) {
+    public IReadOnlyList<ProductImageReadItem> Images { get; init; } = [];
+}

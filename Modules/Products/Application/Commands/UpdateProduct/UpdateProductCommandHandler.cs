@@ -66,34 +66,22 @@ public sealed class UpdateProductCommandHandler(
             return Result.Failure<ProductModel>(limitsResult.Error);
         }
 
-        ImageAssetId? oldAssetId = product.ImageAssetId;
+        var previousImages = product.Images.Select(image => image.ImageAssetId).ToHashSet();
+        if (product.ImageAssetId is { } coverId) { previousImages.Add(coverId); }
         DateTime? modifiedOnBefore = product.ModifiedOnUtc;
         ProductUpdateApplier.Apply(product, command, values);
-
-        bool hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
-        if (hasChanges) {
-            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        if (values.Images is { } images) { product.ReplaceImages(images); } else if (command.ImageAssetId.HasValue || command.ClearImageAssetId || command.ClearImageUrl) {
+            product.ReplaceImages(values.ImageAssetId is { } imageId && values.ImageUrl is { } imageUrl
+                ? [new ProductImage(imageId, imageUrl, 0)] : []);
         }
-
-        await CleanupOldImageAssetAsync(
-            oldAssetId,
-            command,
-            hasChanges,
-            cancellationToken).ConfigureAwait(false);
+        if (product.ModifiedOnUtc != modifiedOnBefore) {
+            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+            foreach (ImageAssetId removed in previousImages.Where(id => id != product.ImageAssetId && !product.Images.Any(image => image.ImageAssetId == id))) {
+                await imageAssetCleanupService.DeleteIfUnusedAsync(removed, cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
     }
 
-    private async Task CleanupOldImageAssetAsync(
-        ImageAssetId? oldAssetId,
-        UpdateProductCommand command,
-        bool hasChanges,
-        CancellationToken cancellationToken) {
-        bool imageAssetChanged = command.ClearImageAssetId ||
-                                (command.ImageAssetId.HasValue && (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value));
-
-        if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
-        }
-    }
 }

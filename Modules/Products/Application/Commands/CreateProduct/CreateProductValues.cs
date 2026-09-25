@@ -11,4 +11,6 @@ internal sealed record CreateProductValues(
     Visibility Visibility,
     ProductType ProductType,
     ImageAssetId? ImageAssetId,
-    string? ImageUrl);
+    string? ImageUrl) {
+    public IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>? Images { get; init; }
+}

@@ -10,6 +10,52 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {
+    [Theory]
+    [InlineData("GetUploadUrl")]
+    [InlineData("Confirm")]
+    public void ImageEndpoints_UseDedicatedImagePolicy(string action) {
+        MethodInfo method = typeof(FoodDiary.Modules.Images.Presentation.Controllers.ImagesController).GetMethod(action)!;
+        EnableRateLimitingAttribute? policy = method.GetCustomAttribute<EnableRateLimitingAttribute>();
+        Assert.NotNull(policy);
+        Assert.Equal(PresentationPolicyNames.ImagesRateLimitPolicyName, policy.PolicyName);
+    }
+
+    [Fact]
+    public void ImagesPolicy_AllowsSixtyRequests_AndIsSeparateFromAuth() {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        Delegate images = Assert.Single(GetDelegates(FindPolicy(options, PresentationPolicyNames.ImagesRateLimitPolicyName)));
+        Delegate auth = Assert.Single(GetDelegates(FindPolicy(options, PresentationPolicyNames.AuthRateLimitPolicyName)));
+        var context = new DefaultHttpContext {
+            User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(
+                [new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())], "test")),
+        };
+        context.Request.Path = "/api/v1/images/upload-url";
+        object partition = images.DynamicInvoke(context)!;
+        context.Request.Path = "/api/v1/images/test/confirm";
+        Assert.Equal(GetPartitionKey(partition), GetPartitionKey(images.DynamicInvoke(context)));
+        Assert.NotEqual(GetPartitionKey(partition), GetPartitionKey(auth.DynamicInvoke(context)), StringComparer.Ordinal);
+        using RateLimiter limiter = CreateLimiter(partition);
+        using RateLimitLease batch = limiter.AttemptAcquire(60);
+        Assert.True(batch.IsAcquired);
+        using RateLimitLease overflow = limiter.AttemptAcquire();
+        Assert.False(overflow.IsAcquired);
+        Assert.True(overflow.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter));
+        Assert.InRange(retryAfter.TotalSeconds, 1, 60);
+        using RateLimiter authLimiter = CreateLimiter(auth.DynamicInvoke(context)!);
+        using RateLimitLease authBatch = authLimiter.AttemptAcquire(5);
+        Assert.True(authBatch.IsAcquired);
+        using RateLimitLease authOverflow = authLimiter.AttemptAcquire();
+        Assert.False(authOverflow.IsAcquired);
+    }
+
+    private static RateLimiter CreateLimiter(object partition) {
+        Type type = partition.GetType();
+        object key = type.GetProperty("PartitionKey")!.GetValue(partition)!;
+        var factory = (Delegate)type.GetProperty("Factory")!.GetValue(partition)!;
+        return Assert.IsAssignableFrom<RateLimiter>(factory.DynamicInvoke(key));
+    }
+
     [Fact]
     public void GetPartitionKey_IgnoresSpoofedForwardedForHeader_AndUsesRemoteIp() {
         var httpContext = new DefaultHttpContext();

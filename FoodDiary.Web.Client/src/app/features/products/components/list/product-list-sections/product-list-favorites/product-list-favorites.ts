@@ -34,6 +34,7 @@ export class ProductListFavoritesComponent {
     protected toProductCardItem(favorite: FavoriteProduct): ProductCardItem {
         return {
             id: favorite.productId,
+            images: favorite.imageUrls?.map(imageUrl => ({ imageUrl })),
             name: this.resolveFavoriteName(favorite),
             brand: favorite.brand,
             barcode: favorite.barcode,

@@ -690,7 +690,8 @@
         "PREVIOUS": "Previous photo",
         "NEXT": "Next photo",
         "OPEN": "Open image preview",
-        "ALT": "Preview of {{name}}"
+        "ALT": "Preview of {{name}}",
+        "SELECT_PHOTO": "Show photo {{index}} of {{total}}"
     },
     "DASHBOARD": {
         "MEALS_TITLE": "Today's meals",
@@ -4331,6 +4332,7 @@
         }
     },
     "PRODUCT_MANAGE": {
+        "PHOTO_IMPORT_LIMIT": "Values were applied, but photos were not added: a product can have up to 5 photos. Remove unwanted photos and apply again from recognition history.",
         "ADD_TITLE": "Create product",
         "EDIT_TITLE": "Edit Product",
         "SUBTITLE": "Fill nutrition and details to save",

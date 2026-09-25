@@ -28,7 +28,7 @@ public static class FavoriteProductMappings {
             product.IsOwnedByCurrentUser,
             product.BaseUnit.ToString(),
             favorite.PreferredPortionAmount ?? product.DefaultPortionAmount,
-            product.DefaultPortionAmount);
+            product.DefaultPortionAmount) { ImageUrls = product.ImageUrls };
     }
 
     public static FavoriteProductModel ToModel(this FavoriteProductReadModel favorite) {
@@ -63,6 +63,6 @@ public static class FavoriteProductMappings {
             isOwnedByCurrentUser,
             favorite.BaseUnit.ToString(),
             favorite.PreferredPortionAmount ?? favorite.DefaultPortionAmount,
-            favorite.DefaultPortionAmount);
+            favorite.DefaultPortionAmount) { ImageUrls = favorite.ImageUrls };
     }
 }

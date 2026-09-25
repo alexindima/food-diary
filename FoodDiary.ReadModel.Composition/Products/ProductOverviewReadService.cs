@@ -118,7 +118,8 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
             context.MealItems.AsNoTracking().Count(item => item.ProductId == product.Id) + context.RecipeIngredients.AsNoTracking().Count(ingredient => ingredient.ProductId == product.Id),
             product.Visibility,
             product.CreatedOnUtc,
-            product.UsdaFdcId));
+            product.UsdaFdcId,
+            product.Images.OrderBy(image => image.Position).Select(image => new ProductImageReadItem(image.ImageAssetId.Value, image.ImageUrl)).ToList()));
 
     private static ProductOverviewReadItem ToReadItem(ProductOverviewReadRow row, UserId currentUserId) {
         var quality = FoodQualityScore.Calculate(
@@ -158,7 +159,7 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            row.UsdaFdcId);
+            row.UsdaFdcId) { Images = row.Images };
     }
 
     private static string EscapeLikePattern(string value) {
@@ -192,5 +193,5 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
         int UsageCount,
         Visibility Visibility,
         DateTime CreatedOnUtc,
-        int? UsdaFdcId);
+        int? UsdaFdcId, IReadOnlyList<ProductImageReadItem> Images);
 }

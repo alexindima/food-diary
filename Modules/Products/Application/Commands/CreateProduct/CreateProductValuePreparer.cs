@@ -53,13 +53,16 @@ internal static class CreateProductValuePreparer {
             return Result.Failure<CreateProductValues>(imageAssetResult.Error);
         }
 
+        Result<IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        if (gallery.IsFailure) { return Result.Failure<CreateProductValues>(gallery.Error); }
+
         return Result.Success(new CreateProductValues(
             userId,
             baseUnitResult.Value,
             visibilityResult.Value,
             productTypeResult.Value,
             imageAssetResult.Value.ImageAssetId,
-            imageAssetResult.Value.ImageUrl));
+            imageAssetResult.Value.ImageUrl) { Images = gallery.Value });
     }
 
     private static async Task<Result<UserId>> ResolveUserIdAsync(

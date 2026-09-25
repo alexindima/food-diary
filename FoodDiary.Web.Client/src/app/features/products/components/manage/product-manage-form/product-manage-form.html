@@ -15,7 +15,7 @@
                 data-fd-overflow-primary
                 [ariaLabel]="manageHeaderState().submitLabelKey | translate"
                 [fdUiHint]="manageHeaderState().submitLabelKey | translate"
-                [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
+                [disabled]="productForm().invalid() || isSubmitting() || isDeleting() || photosUploading()"
                 [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
                 [loading]="isSubmitting()"
                 (click)="manageForm.requestSubmit()"
@@ -48,6 +48,7 @@
                         [expandAdditional]="!!product()?.comment?.trim()"
                         [nameOptions]="nameSearch.options()"
                         [isNameSearchLoading]="nameSearch.isLoading()"
+                        (photosUploading)="photosUploading.set($event)"
                         (openBarcodeScanner)="openBarcodeScanner()"
                         (openAiRecognition)="openAiRecognitionDialog()"
                         (nameQueryChange)="onNameQueryChange($event)"
@@ -95,7 +96,7 @@
                                     appearance="brand-action"
                                     [icon]="manageHeaderState().submitIcon"
                                     [fullWidth]="true"
-                                    [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
+                                    [disabled]="productForm().invalid() || isSubmitting() || isDeleting() || photosUploading()"
                                     [disabledReason]="productForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                                     [loading]="isSubmitting()"
                                 >

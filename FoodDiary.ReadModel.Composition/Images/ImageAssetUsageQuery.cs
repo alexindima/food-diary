@@ -12,7 +12,7 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
         return await context.ImageAssets.AsNoTracking()
             .Where(a => a.Id == assetId)
             .Select(_ =>
-                context.Products.AsNoTracking().Any(p => p.ImageAssetId == assetId) ||
+                context.Products.AsNoTracking().Any(p => p.ImageAssetId == assetId || p.Images.Any(image => image.ImageAssetId == assetId)) ||
                 context.Recipes.AsNoTracking().Any(r => r.ImageAssetId == assetId) ||
                 context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
                 context.Meals.AsNoTracking().Any(m => m.ImageAssetId == assetId) ||
@@ -31,7 +31,7 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
             .AsNoTracking()
             .Where(asset =>
                 asset.CreatedOnUtc < olderThanUtc &&
-                !context.Products.AsNoTracking().Any(p => p.ImageAssetId == asset.Id) &&
+                !context.Products.AsNoTracking().Any(p => p.ImageAssetId == asset.Id || p.Images.Any(image => image.ImageAssetId == asset.Id)) &&
                 !context.Recipes.AsNoTracking().Any(r => r.ImageAssetId == asset.Id) &&
                 !context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
                 !context.Meals.AsNoTracking().Any(m => m.ImageAssetId == asset.Id) &&

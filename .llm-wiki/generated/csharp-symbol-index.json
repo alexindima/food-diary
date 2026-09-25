@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4235,
-    "symbols": 4166,
+    "sourceFiles": 4239,
+    "symbols": 4170,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2189,
+      "class": 2190,
       "enum": 64,
       "interface": 401,
-      "record": 1392,
+      "record": 1395,
       "record struct": 120
     },
     "roles": {
@@ -24,7 +24,7 @@
       "CommandHandler": 217,
       "Configuration": 96,
       "Controller": 105,
-      "Entity": 97,
+      "Entity": 98,
       "Event": 19,
       "Factory": 14,
       "Handler": 7,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1718,
+      "Other": 1720,
       "Query": 280,
       "QueryHandler": 204,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 223,
+      "Response": 224,
       "Service": 162,
       "Validator": 229,
       "ValueObject": 114,
@@ -20593,6 +20593,13 @@
       "line": 5
     },
     {
+      "name": "ProductImageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/ProductImageModel.cs",
+      "line": 2
+    },
+    {
       "name": "ProductModel",
       "kind": "record",
       "role": "Other",
@@ -20775,6 +20782,13 @@
       "line": 4
     },
     {
+      "name": "ProductImageReadItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Models/ProductImageReadItem.cs",
+      "line": 2
+    },
+    {
       "name": "ProductOverviewReadItem",
       "kind": "record",
       "role": "Other",
@@ -20822,6 +20836,13 @@
       "role": "Entity",
       "path": "Modules/Products/Domain/Entities/Product.cs",
       "line": 11
+    },
+    {
+      "name": "ProductImage",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Products/Domain/Entities/ProductImage.cs",
+      "line": 3
     },
     {
       "name": "ProductIdentityState",
@@ -21045,6 +21066,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "ProductImageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Products/Presentation/Responses/ProductImageHttpResponse.cs",
       "line": 2
     },
     {

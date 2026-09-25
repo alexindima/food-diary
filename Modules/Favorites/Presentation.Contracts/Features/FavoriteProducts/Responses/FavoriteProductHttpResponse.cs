@@ -21,4 +21,6 @@ public sealed record FavoriteProductHttpResponse(
     bool IsOwnedByCurrentUser,
     string BaseUnit,
     double PreferredPortionAmount,
-    double DefaultPortionAmount);
+    double DefaultPortionAmount) {
+    public IReadOnlyList<string> ImageUrls { get; init; } = [];
+}

@@ -281,5 +281,81 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
+    [Fact]
+    public async Task CreateProductCommandHandler_WithGallery_ResolvesEveryImageInOrder() {
+        var user = User.Create("create-product-image@example.com", "hash");
+        var assetId = ImageAssetId.New();
+        RecordingImageAssetAccessService access = new FoodDiary.Modules.Products.Application.Tests.Support.RecordingImageAssetAccessService()
+            .WithAsset(assetId, "https://cdn.test/assets/product.webp");
+        var repository = new NoopProductRepository();
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
+
+        Result<ProductModel> result = await handler.Handle(
+            new CreateProductCommand(
+                user.Id.Value,
+                Barcode: null,
+                Name: "Apple",
+                Brand: null,
+                ProductType: "Other",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: "https://client.test/not-trusted.webp",
+                ImageAssetId: null,
+                BaseUnit: "G",
+                BaseAmount: 100,
+                DefaultPortionAmount: 100,
+                CaloriesPerBase: 52,
+                ProteinsPerBase: 0.3,
+                FatsPerBase: 0.2,
+                CarbsPerBase: 14,
+                FiberPerBase: 2.4,
+                AlcoholPerBase: 0,
+                Visibility: "Private") { ImageAssetIds = [assetId.Value, Guid.NewGuid()] },
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(2, access.RequestedAssetIds.Count(id => id.HasValue));
+        Assert.Equal(2, result.Value.Images.Count);
+        Assert.Equal("https://cdn.test/assets/product.webp", repository.LastAddedProduct!.ImageUrl);
+        Assert.Equal(assetId, repository.LastAddedProduct.ImageAssetId);
+    }
+
+    [Fact]
+    public async Task CreateProductCommandHandler_WhenGalleryAssetAccessFails_DoesNotPersist() {
+        var user = User.Create("create-product-forbidden-image@example.com", "hash");
+        var repository = new NoopProductRepository();
+        RecordingImageAssetAccessService access = new FoodDiary.Modules.Products.Application.Tests.Support.RecordingImageAssetAccessService()
+            .WithFailure(ImageErrors.Forbidden());
+        var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
+
+        Result<ProductModel> result = await handler.Handle(
+            new CreateProductCommand(
+                user.Id.Value,
+                Barcode: null,
+                Name: "Apple",
+                Brand: null,
+                ProductType: "Other",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                BaseUnit: "G",
+                BaseAmount: 100,
+                DefaultPortionAmount: 100,
+                CaloriesPerBase: 52,
+                ProteinsPerBase: 0.3,
+                FatsPerBase: 0.2,
+                CarbsPerBase: 14,
+                FiberPerBase: 2.4,
+                AlcoholPerBase: 0,
+                Visibility: "Private") { ImageAssetIds = [Guid.NewGuid()] },
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
+        Assert.Null(repository.LastAddedProduct);
+    }
 
 }

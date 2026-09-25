@@ -5131,6 +5131,39 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                b.OwnsMany("FoodDiary.Modules.Products.Domain.Entities.ProductImage", "Images", b1 => {
+                    b1.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b1.Property<Guid>("ImageAssetId")
+                        .HasColumnType("uuid");
+
+                    b1.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b1.Property<int>("Position")
+                        .HasColumnType("integer");
+
+                    b1.HasKey("ProductId", "ImageAssetId");
+
+                    b1.HasIndex("ImageAssetId");
+
+                    b1.ToTable("ProductImages", (string)null);
+
+                    b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
+                    b1.WithOwner()
+                        .HasForeignKey("ProductId");
+                });
+
+                b.Navigation("Images");
             });
 
             modelBuilder.Entity("FoodDiary.Modules.RecentItems.Domain.Entities.Recents.RecentItem", b => {

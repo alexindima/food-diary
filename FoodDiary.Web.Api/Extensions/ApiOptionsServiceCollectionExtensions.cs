@@ -63,6 +63,8 @@ public static class ApiOptionsServiceCollectionExtensions {
             services
                 .AddOptions<ApiRateLimitingOptions>()
                 .BindConfiguration(ApiRateLimitingOptions.SectionName)
+                .Validate(ApiRateLimitingOptions.HasValidImages,
+                    "RateLimiting:Images requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidAuth,
                     "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidAi,

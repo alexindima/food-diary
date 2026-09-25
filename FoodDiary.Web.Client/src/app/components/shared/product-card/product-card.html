@@ -24,3 +24,7 @@
     (favoriteToggle)="toggleFavorite()"
     (action)="addToMealFromCard()"
 />
+
+@if ((product().images?.length ?? 0) > 1) {
+    <span class="product-card__photo-count" aria-hidden="true">{{ product().images?.length }}</span>
+}

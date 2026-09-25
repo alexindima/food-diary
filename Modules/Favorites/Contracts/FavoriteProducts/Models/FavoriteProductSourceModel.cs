@@ -18,4 +18,6 @@ public sealed record FavoriteProductSourceModel(
     string QualityGrade,
     bool IsOwnedByCurrentUser,
     MeasurementUnit BaseUnit,
-    double DefaultPortionAmount);
+    double DefaultPortionAmount) {
+    public IReadOnlyList<string> ImageUrls { get; init; } = [];
+}

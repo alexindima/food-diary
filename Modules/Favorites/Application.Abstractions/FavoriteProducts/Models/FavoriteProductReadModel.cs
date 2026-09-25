@@ -23,4 +23,6 @@ public sealed record FavoriteProductReadModel(
     MeasurementUnit BaseUnit,
     double? PreferredPortionAmount,
     double DefaultPortionAmount,
-    Guid ProductUserId);
+    Guid ProductUserId) {
+    public IReadOnlyList<string> ImageUrls { get; init; } = [];
+}

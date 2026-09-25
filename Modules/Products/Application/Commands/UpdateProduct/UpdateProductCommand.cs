@@ -32,4 +32,6 @@ public record UpdateProductCommand(
     double? CarbsPerBase,
     double? FiberPerBase,
     double? AlcoholPerBase,
-    string? Visibility) : ICommand<Result<ProductModel>>, IUserRequest;
+    string? Visibility) : ICommand<Result<ProductModel>>, IUserRequest {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

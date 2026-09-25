@@ -26,4 +26,6 @@ public sealed record UpdateProductHttpRequest(
     double? CarbsPerBase,
     double? FiberPerBase,
     double? AlcoholPerBase,
-    string? Visibility);
+    string? Visibility) {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

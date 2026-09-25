@@ -9,7 +9,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { ProductRecognitionPhotosComponent } from '../../../dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos';
 import {
     getProductMaxAmountForUnit,
     PRODUCT_BARCODE_MAX_LENGTH,
@@ -49,7 +50,7 @@ type FieldErrors = Record<ErrorField, string | null>;
         FdUiTextareaComponent,
         FdUiSelectComponent,
         FdUiCardComponent,
-        ImageUploadFieldComponent,
+        ProductRecognitionPhotosComponent,
     ],
 })
 export class ProductBasicInfoComponent {
@@ -59,6 +60,11 @@ export class ProductBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
+    public readonly photosUploading = output<boolean>();
+    protected readonly productPhotos = computed(() => {
+        const value = this.form()().value();
+        return value.images ?? (value.imageUrl !== null && (value.imageUrl.url?.length ?? 0) > 0 ? [value.imageUrl] : []);
+    });
     public readonly expandAdditional = input(false);
     protected readonly additionalOpen = computed(
         () => this.expandAdditional() || Boolean(this.fieldErrors().visibility) || Boolean(this.fieldErrors().comment),
@@ -120,6 +126,16 @@ export class ProductBasicInfoComponent {
     protected onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         if (this.isProductNameSuggestion(option.data)) {
             this.nameSuggestionSelected.emit(option.data);
+        }
+    }
+
+    protected setPhotos(photos: ImageSelection[]): void {
+        this.form()().value.update(value => ({ ...value, images: photos, imageUrl: photos[0] ?? null }));
+    }
+
+    protected setCover(photo: ImageSelection | null): void {
+        if (photo !== null) {
+            this.setPhotos([photo, ...this.productPhotos().filter(image => image !== photo)]);
         }
     }
 

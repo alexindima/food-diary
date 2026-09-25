@@ -27,4 +27,6 @@ public sealed record ProductHttpResponse(
     int QualityScore,
     string QualityGrade,
     bool IsFavorite,
-    Guid? FavoriteProductId);
+    Guid? FavoriteProductId) {
+    public IReadOnlyList<ProductImageHttpResponse> Images { get; init; } = [];
+}

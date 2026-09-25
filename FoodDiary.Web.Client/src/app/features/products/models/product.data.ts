@@ -12,6 +12,7 @@ export type Product = {
     comment?: string | null;
     imageUrl?: string | null;
     imageAssetId?: string | null;
+    images?: Array<{ imageAssetId: string | null; imageUrl: string }>;
     baseUnit: MeasurementUnit;
     baseAmount: number;
     defaultPortionAmount: number;
@@ -59,6 +60,7 @@ export type CreateProductRequest = {
     comment?: string | null;
     imageUrl?: string | null;
     imageAssetId?: string | null;
+    imageAssetIds?: string[];
     baseUnit: MeasurementUnit;
     baseAmount: number;
     defaultPortionAmount: number;
@@ -126,6 +128,7 @@ export type ProductOverview = {
 };
 
 export type FavoriteProduct = {
+    imageUrls?: string[];
     id: string;
     productId: string;
     name?: string | null;

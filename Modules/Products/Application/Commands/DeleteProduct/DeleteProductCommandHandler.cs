@@ -72,6 +72,7 @@ public sealed class DeleteProductCommandHandler(
                 "Product is already used and cannot be deleted"));
         }
 
+        var galleryAssets = product.Images.Select(image => image.ImageAssetId).ToList();
         ImageAssetId? assetId = product.ImageAssetId;
         await productRepository.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
 
@@ -79,6 +80,9 @@ public sealed class DeleteProductCommandHandler(
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
+        foreach (ImageAssetId id in galleryAssets.Where(id => id != assetId)) {
+            await imageAssetCleanupService.DeleteIfUnusedAsync(id, cancellationToken).ConfigureAwait(false);
+        }
         return Result.Success();
     }
 }

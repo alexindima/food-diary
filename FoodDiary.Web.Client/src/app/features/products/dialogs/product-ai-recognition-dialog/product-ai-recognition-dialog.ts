@@ -203,7 +203,7 @@ export class ProductAiRecognitionDialogComponent {
             description: null,
         });
 
-        this.dialogRef?.close(result);
+        this.dialogRef?.close({ ...result, images: this.photos() });
     }
 
     protected close(): void {
@@ -261,7 +261,9 @@ export class ProductAiRecognitionDialogComponent {
                     return of(null);
                 }),
             )
-            .subscribe(response => { this.applyRecognitionResponse(response); });
+            .subscribe(response => {
+                this.applyRecognitionResponse(response);
+            });
     }
 
     private applyRecognitionResponse(response: FoodVisionResponse | null): void {

@@ -30,6 +30,6 @@ internal sealed class FavoriteProductSourceReadService(IProductLookupService sou
             item.QualityGrade,
             item.IsOwnedByCurrentUser,
             item.BaseUnit,
-            item.DefaultPortionAmount));
+            item.DefaultPortionAmount) { ImageUrls = item.Images.Select(image => image.ImageUrl).ToList() });
     }
 }

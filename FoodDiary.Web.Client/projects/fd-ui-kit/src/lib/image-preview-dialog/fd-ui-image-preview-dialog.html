@@ -1,28 +1,51 @@
 <fd-ui-dialog class="fd-ui-image-preview-dialog" size="lg" bodyScrollInset="edge" [title]="title || undefined">
-    <div class="fd-ui-image-preview-dialog__viewport" (touchstart)="startSwipe($event)" (touchend)="endSwipe($event)">
+    <div
+        class="fd-ui-image-preview-dialog__viewport"
+        [class.fd-ui-image-preview-dialog__viewport--gallery]="images.length > 1"
+        (touchstart)="startSwipe($event)"
+        (touchend)="endSwipe($event)"
+    >
         @if (activeImage(); as image) {
             <img class="fd-ui-image-preview-dialog__image" width="1200" height="800" [src]="image.url" [alt]="image.alt || alt" />
         }
-    </div>
-    @if (images.length > 1) {
-        <div class="fd-ui-image-preview-dialog__navigation">
+        @if (images.length > 1) {
             <fd-ui-button
-                appearance="plain-icon"
+                class="fd-ui-image-preview-dialog__arrow fd-ui-image-preview-dialog__arrow--previous"
                 variant="secondary"
                 fill="text"
+                size="lg"
                 icon="chevron_left"
                 [ariaLabel]="'IMAGE_PREVIEW.PREVIOUS' | translate"
                 (click)="navigate(-1)"
             />
-            <span aria-live="polite" aria-atomic="true">{{ activeIndex() + 1 }} / {{ images.length }}</span>
             <fd-ui-button
-                appearance="plain-icon"
+                class="fd-ui-image-preview-dialog__arrow fd-ui-image-preview-dialog__arrow--next"
                 variant="secondary"
                 fill="text"
+                size="lg"
                 icon="chevron_right"
                 [ariaLabel]="'IMAGE_PREVIEW.NEXT' | translate"
                 (click)="navigate(1)"
             />
+        }
+    </div>
+    @if (images.length > 1) {
+        <div class="fd-ui-image-preview-dialog__navigation">
+            @for (image of images; track $index) {
+                <button
+                    type="button"
+                    class="fd-ui-image-preview-dialog__thumbnail"
+                    [class.fd-ui-image-preview-dialog__thumbnail--active]="activeIndex() === $index"
+                    [attr.aria-pressed]="activeIndex() === $index"
+                    [attr.aria-label]="'IMAGE_PREVIEW.SELECT_PHOTO' | translate: { index: $index + 1, total: $count }"
+                    (click)="activeIndex.set($index)"
+                >
+                    <img alt="" width="64" height="64" loading="lazy" [src]="image.url" />
+                </button>
+            }
         </div>
+        <span class="fd-ui-image-preview-dialog__announcement" aria-live="polite" aria-atomic="true"
+            >{{ activeIndex() + 1 }} / {{ images.length }}</span
+        >
     }
 </fd-ui-dialog>

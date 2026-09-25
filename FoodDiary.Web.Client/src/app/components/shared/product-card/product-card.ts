@@ -10,6 +10,7 @@ import { EntityCardComponent } from '../entity-card/entity-card';
 
 export type ProductCardItem = {
     id?: string;
+    images?: Array<{ imageUrl: string }>;
     name: string;
     brand?: string | null;
     barcode?: string | null;
@@ -99,7 +100,8 @@ export class ProductCardComponent {
             width: 'var(--fd-size-dialog-media-width)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
             data: {
-                imageUrl,
+                imageUrl: (this.product().images?.length ?? 0) > 1 ? undefined : imageUrl,
+                collageImages: this.product().images?.map(image => ({ url: image.imageUrl, alt: this.product().name })),
                 alt: this.translateService.instant('IMAGE_PREVIEW.ALT', { name: this.product().name }),
                 title: this.product().name,
             },

@@ -65,6 +65,9 @@ internal static class ProductUpdateValuePreparer {
             return Result.Failure<ProductUpdateValues>(imageAssetResult.Error);
         }
 
+        Result<IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        if (gallery.IsFailure) { return Result.Failure<ProductUpdateValues>(gallery.Error); }
+
         return Result.Success(new ProductUpdateValues(
             userId,
             productId,
@@ -73,7 +76,7 @@ internal static class ProductUpdateValuePreparer {
             productTypeResult.Value,
             imageAssetResult.Value.ImageAssetId,
             imageAssetResult.Value.ImageUrl,
-            imageAssetResult.Value.HasResolvedImageAsset));
+            imageAssetResult.Value.HasResolvedImageAsset) { Images = gallery.Value });
     }
 
     private static async Task<Result<UserId>> ResolveUserIdAsync(

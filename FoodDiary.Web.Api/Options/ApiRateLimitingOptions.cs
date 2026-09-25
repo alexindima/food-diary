@@ -3,6 +3,11 @@ namespace FoodDiary.Web.Api.Options;
 public sealed class ApiRateLimitingOptions {
     public const string SectionName = "RateLimiting";
 
+    public FixedWindowPolicyOptions Images { get; init; } = new() {
+        PermitLimit = 60,
+        WindowSeconds = 60,
+    };
+
     public FixedWindowPolicyOptions Auth { get; init; } = new() {
         PermitLimit = 5,
         WindowSeconds = 60,
@@ -64,6 +69,8 @@ public sealed class ApiRateLimitingOptions {
     };
 
     public static bool HasValidAuth(ApiRateLimitingOptions options) => options.Auth.IsValid();
+
+    public static bool HasValidImages(ApiRateLimitingOptions options) => options.Images.IsValid();
 
     public static bool HasValidAi(ApiRateLimitingOptions options) => options.Ai.IsValid();
 

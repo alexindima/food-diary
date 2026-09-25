@@ -27,6 +27,6 @@ public static class FavoriteProductHttpResponseMappings {
                     model.IsOwnedByCurrentUser,
                     model.BaseUnit,
                     model.PreferredPortionAmount,
-                    model.DefaultPortionAmount);
+                    model.DefaultPortionAmount) { ImageUrls = model.ImageUrls };
     }
 }

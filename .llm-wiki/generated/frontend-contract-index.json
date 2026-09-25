@@ -3,11 +3,11 @@
   "summary": {
     "components": 461,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1480,
-    "outputs": 489,
+    "inputs": 1484,
+    "outputs": 492,
     "apiCalls": 267,
     "templatesWithTranslations": 321,
-    "translationKeys": 1887,
+    "translationKeys": 1890,
     "consumerEdges": 1128,
     "consumedComponents": 294,
     "unconsumedComponents": 166
@@ -8851,6 +8851,10 @@
       ],
       "outputs": [
         {
+          "name": "photosUploading",
+          "type": "boolean"
+        },
+        {
           "name": "openBarcodeScanner",
           "type": ""
         },
@@ -11992,6 +11996,26 @@
           "required": false
         },
         {
+          "name": "multiple",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "maxFiles",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "selectText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dropText",
+          "type": "string",
+          "required": false
+        },
+        {
           "name": "showRecommendation",
           "type": "",
           "required": false
@@ -12073,11 +12097,19 @@
         },
         {
           "name": "appearance",
-          "type": "'default' | 'compact' | 'preview' | 'step' | 'hidden'",
+          "type": "'default' | 'compact' | 'preview' | 'step' | 'tile' | 'hidden'",
           "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "imagesAdded",
+          "type": "ImageSelection[]"
+        },
+        {
+          "name": "batchUploading",
+          "type": "boolean"
+        },
         {
           "name": "imageChanged",
           "type": "ImageSelection | null"
@@ -20215,9 +20247,12 @@
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
         "IMAGE_UPLOAD_FIELD.REMOVE",
+        "PRODUCT_AI_DIALOG.ADD_PHOTOS",
+        "PRODUCT_AI_DIALOG.DROP_PHOTOS",
         "PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION",
         "PRODUCT_AI_DIALOG.PHOTO",
-        "PRODUCT_AI_DIALOG.PHOTOS_HINT"
+        "PRODUCT_AI_DIALOG.PHOTOS_HINT",
+        "PRODUCT_AI_DIALOG.PHOTO_COUNT"
       ]
     },
     {
@@ -25357,8 +25392,11 @@
         "disabled",
         "disabledReason",
         "fill",
+        "icon",
         "loading",
-        "type"
+        "size",
+        "type",
+        "variant"
       ],
       "outputsHandled": []
     },
@@ -35306,40 +35344,13 @@
       "selector": "fd-image-upload-field",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
       "consumerFeature": "products",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "appearance",
-        "cropAspectRatio",
-        "cropEnabled",
-        "cropSize",
-        "showRecommendation"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "ImageUploadFieldComponent",
-      "selector": "fd-image-upload-field",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos.html",
       "occurrences": 1,
       "inputsUsed": [
         "acceptedTypes",
-        "appearance",
-        "clearRequest",
-        "cropEnabled",
-        "deleteOnClear",
-        "description",
-        "disabled",
-        "resizeMaxDimension",
-        "showRecommendation"
+        "appearance"
       ],
-      "outputsHandled": [
-        "imageChanged",
-        "imagePreparationFailed",
-        "imagePreparationStarted"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "ImageUploadFieldComponent",
@@ -37165,7 +37176,8 @@
         "nameQueryChange",
         "nameSuggestionSelected",
         "openAiRecognition",
-        "openBarcodeScanner"
+        "openBarcodeScanner",
+        "photosUploading"
       ]
     },
     {
@@ -37419,6 +37431,23 @@
       "outputsHandled": [
         "nutritionModeChange",
         "openAiRecognition"
+      ]
+    },
+    {
+      "component": "ProductRecognitionPhotosComponent",
+      "selector": "fd-product-recognition-photos",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "cover",
+        "photos"
+      ],
+      "outputsHandled": [
+        "coverChange",
+        "photosChange",
+        "uploadingChange"
       ]
     },
     {

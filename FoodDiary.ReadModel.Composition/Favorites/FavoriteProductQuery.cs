@@ -87,5 +87,5 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
                 row.Source.BaseUnit,
                 row.Favorite.PreferredPortionAmount,
                 row.Source.DefaultPortionAmount,
-                row.Source.UserId.Value));
+                row.Source.UserId.Value) { ImageUrls = row.Source.Images.OrderBy(image => image.Position).Select(image => image.ImageUrl).ToList() });
 }

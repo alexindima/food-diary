@@ -41,6 +41,12 @@ public static class ProductMappings {
             product.UsdaFdcId,
             isFavorite,
             favoriteProductId
-        );
+        ) { Images = GetImages(product) };
+    }
+    private static IReadOnlyList<ProductImageModel> GetImages(Product product) {
+        if (product.Images.Count > 0) {
+            return product.Images.OrderBy(image => image.Position).Select(image => new ProductImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList();
+        }
+        return product.ImageUrl is { } url ? [new ProductImageModel(product.ImageAssetId?.Value, url)] : [];
     }
 }

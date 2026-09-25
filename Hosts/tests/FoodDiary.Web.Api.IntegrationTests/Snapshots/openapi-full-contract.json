@@ -23890,6 +23890,13 @@
           "Nullable": true
         },
         {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
           "Name": "imageUrl",
           "Required": false,
           "Type": "string",
@@ -26646,6 +26653,13 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "imageUrls",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         },
         {
           "Name": "isOwnedByCurrentUser",
@@ -29762,6 +29776,13 @@
           "Nullable": true
         },
         {
+          "Name": "images",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/ProductImageHttpResponse"
+        },
+        {
           "Name": "isFavorite",
           "Required": false,
           "Type": "boolean",
@@ -29857,6 +29878,24 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "ProductImageHttpResponse",
+      "Properties": [
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         }
       ]
     },
@@ -32776,6 +32815,13 @@
           "Type": "string",
           "Format": "uuid",
           "Nullable": true
+        },
+        {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         },
         {
           "Name": "imageUrl",

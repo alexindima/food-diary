@@ -25,6 +25,17 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
+        builder.OwnsMany(e => e.Images, images => {
+            images.ToTable("ProductImages");
+            images.WithOwner().HasForeignKey("ProductId");
+            images.Property<FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId>("ProductId").HasConversion(id => id.Value, value => new FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId(value));
+            images.Property(e => e.ImageAssetId).HasConversion(id => id.Value, value => new ImageAssetId(value));
+            images.Property(e => e.ImageUrl).HasMaxLength(Product.ImageUrlMaxLength);
+            images.HasKey("ProductId", nameof(ProductImage.ImageAssetId));
+            images.HasIndex(e => e.ImageAssetId);
+        });
+        builder.Navigation(e => e.Images).UsePropertyAccessMode(PropertyAccessMode.Field);
+
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });

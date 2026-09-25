@@ -1,6 +1,7 @@
 import { MeasurementUnit } from '../models/product.data';
 
 export const PRODUCT_NAME_SEARCH_MIN_LENGTH = 3;
+export const PRODUCT_MAX_PHOTOS = 5;
 export const PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT = 5;
 export const PRODUCT_MIN_AMOUNT = 0.001;
 export const PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT = 10000;

@@ -31,4 +31,6 @@ public sealed record ProductModel(
     string QualityGrade,
     int? UsdaFdcId,
     bool IsFavorite,
-    Guid? FavoriteProductId);
+    Guid? FavoriteProductId) {
+    public IReadOnlyList<ProductImageModel> Images { get; init; } = [];
+}

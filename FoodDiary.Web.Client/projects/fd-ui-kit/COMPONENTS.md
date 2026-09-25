@@ -830,9 +830,12 @@ Both `fd-ui-input` and `fd-ui-date-input` accept `showRequiredIndicator` (defaul
 
 `FdUiImagePreviewDialogComponent` uses the standard dialog header and close action.
 An `imageUrl` displays a single original. When only `collageImages` is supplied,
-images appear individually with previous/next controls, an announced position,
+images appear individually with large previous/next controls beside the original,
+selectable thumbnails below it (the selected thumbnail is highlighted), an announced position,
 Left/Right keyboard navigation and horizontal swipe. Blank URLs are ignored;
 vertical gestures and pinch zoom are reserved for the browser.
+With zero or one image, both arrows and thumbnails are hidden. Thumbnail buttons
+use native button pressed-state semantics; the kit has no standalone thumbnail primitive.
 
 `FdUiInputComponent.floatLabel`: `auto` (default) floats the label on focus or when filled; `always` keeps the label above the field and shows its placeholder while empty, without changing the form value.
 

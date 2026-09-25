@@ -43,7 +43,8 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
         await writes.AddAsync(product);
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await unitOfWork.SaveChangesAsync();
-        Assert.Single(owned.Model.GetEntityTypes());
+        Assert.Equal(new[] { typeof(Product), typeof(ProductImage) }, owned.Model.GetEntityTypes().Select(entity => entity.ClrType).OrderBy(type => type.Name, StringComparer.Ordinal));
+        Assert.True(owned.Model.FindEntityType(typeof(ProductImage))!.IsOwned());
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<Product>());
         Assert.Single(await database.Products.ToListAsync());
@@ -118,6 +119,36 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
             return Result.Success();
         });
         Assert.Empty(second.GetRequiredService<ProductsDbContext>().ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
+    public async Task GalleryRoundTripsThroughOwnerLockAndProtectsEveryImageAsync() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        string connection = database.Database.GetConnectionString()!;
+        await using ServiceProvider provider = CreateProvider(connection);
+        (User user, Product product) = await SeedAsync(provider);
+        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        var front = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "gallery/front", "https://example.test/front.jpg");
+        var label = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "gallery/label", "https://example.test/label.jpg");
+        shared.ImageAssets.AddRange(front, label);
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        product.ReplaceImages([new ProductImage(front.Id, front.Url, 0), new ProductImage(label.Id, label.Url, 1)]);
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        await using ServiceProvider reopened = CreateProvider(connection);
+        await reopened.GetRequiredService<IProductMutationTransactionRunner>().ExecuteAsync(async token => {
+            Product? loaded = await reopened.GetRequiredService<IProductWriteRepository>().GetByIdForUpdateAsync(product.Id, user.Id, includePublic: false, token);
+            Assert.NotNull(loaded);
+            Assert.Equal(2, loaded.Images.Count);
+            loaded.ReplaceImages(loaded.Images.OrderByDescending(image => image.Position).ToList());
+            await reopened.GetRequiredService<IUnitOfWork>().SaveChangesAsync(token);
+            return Result.Success();
+        });
+        Product saved = await database.Products.AsNoTracking().SingleAsync(item => item.Id == product.Id);
+        Assert.Equal(label.Id, saved.ImageAssetId);
+        Assert.Equal(label.Id, saved.Images.OrderBy(image => image.Position).First().ImageAssetId);
+        var usage = new FoodDiary.ReadModel.Composition.Images.ImageAssetUsageQuery(database);
+        Assert.True(await usage.IsAssetInUseAsync(front.Id, CancellationToken.None));
+        Assert.True(await usage.IsAssetInUseAsync(label.Id, CancellationToken.None));
     }
 
     private static Product CreateProduct(User user) => Product.Create(user.Id, "Owner product", MeasurementUnit.G, 100, 100, 100, 10, 5, 10, 1, 0);

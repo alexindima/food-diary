@@ -56,7 +56,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
                 $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND ("UserId" = {userId.Value} OR "Visibility" = {(int)Visibility.Public}) FOR UPDATE""")
             : context.Products.FromSqlInterpolated(
                 $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
-        return await lockedProducts.SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await lockedProducts.AsSplitQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(

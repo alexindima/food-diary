@@ -22,7 +22,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.ImagesRateLimitPolicyName)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
@@ -33,7 +33,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.ImagesRateLimitPolicyName)]
     public Task<IActionResult> Confirm(Guid assetId, [FromCurrentUser] Guid userId) =>
         HandleOk(assetId.ToConfirmCommand(userId), static value => value.ToHttpResponse());
 

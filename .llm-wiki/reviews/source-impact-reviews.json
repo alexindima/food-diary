@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "11f71a844c9b74df4625295944c098add35702b0ffd8eff6089f993d788de1db"
+          "sha256": "6e598511dfebfe539b51db6b28f554ffa237c43c4f9d29528aeb214b8ff875fb"
         }
       ],
-      "reason": "Reviewed the full OpenAPI snapshot after adding optional product-label mode, additional images and nullable label fields. Snapshot regeneration plus rebuilt host integration tests pass; the documented compatibility workflow remains accurate.",
+      "reason": "Product gallery adds optional imageAssetIds and image preview collections; legacy cover properties and routes are retained. Full Swagger snapshot test passes; compatibility workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a669423e16ee5264751ac40af541b2281203cef1",
-      "reviewedAtUtc": "2026-09-24T20:24:10.2711679Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:03:08.2410761Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e54208fe93e42ff03033f97a9b9d77ccf2f74d48f58fe9d194a0bc001fe5494b"
+          "sha256": "540173abc7db5c2836635fd5029b748bce211194fa55a5c4fcd8152f44ea3700"
         }
       ],
-      "reason": "Reviewed IFavoriteProductQuery implementation and overview consumers, added paging handlers and owner validation tests. Existing DTO shapes remain; the paged wrapper is additive. Consumer review guidance remains valid.",
+      "reason": "Reviewed optional gallery fields through product overview, favorites mappings and Swagger snapshot; existing constructors remain compatible.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:10.2622637Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:56.6686274Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -501,13 +501,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d1700041b577879e3e2aae92f22198ffadc4a6b32b10aecf75c862b3092c0ed5"
+          "sha256": "8243324f2fd6176dd4ed89f53aa97a0eaedecdb9f2b82154cf2aaef4bba12b9c"
         }
       ],
-      "reason": "RemovedAtUtc hides removed favorites through owner query filter. Filtered unique index preserves one active favorite per user/meal. Original ID/date/name remain unchanged. PostgreSQL 5 tests and local migration/model checks passed.",
+      "reason": "Reviewed owned ProductImage keys, ImageAsset FK, five-photo invariant, backfill migration and PostgreSQL roundtrip/locking tests; workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "efd1d45ad8222029f576a61394b860439d482540",
-      "reviewedAtUtc": "2026-09-22T16:15:37.9432023Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:55.3614064Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -779,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "47c00feb2a548da3d3467ded8af55830a3e4cfd862397e20cd9ec7ca1886eb76"
+          "sha256": "44f1a891bb2a2e1d19814d216b794ec3fda78f61ebbd8cba2211856021613d2f"
         }
       ],
-      "reason": "Favorites remain scoped to authenticated owner; photo lookup uses only linked meal and item IDs with no logging or provider changes.",
+      "reason": "Photos retain existing image ownership checks; usage queries protect every saved gallery photo from recognition retention cleanup; user purge transfers gallery assets through Images contract.",
       "baseRef": "HEAD",
-      "gitHead": "496bc93cc9b15fbbf72c2d104e3ddf577ac843c8",
-      "reviewedAtUtc": "2026-09-22T13:09:16.4985666Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:53.2651509Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
+          "sha256": "5561d7ea58b6a383647f51ea8ac5cda6942832c9eeaaaa10ec0788dc2318e0ab"
         }
       ],
-      "reason": "Reviewed refreshed quality index with executed 300 product tests, localized input cases, browser normalization and HTTP 500 retry scenarios. AI discard regression reproduced before fix. Live image success remains blocked by unavailable local storage, not inferred from unit coverage.",
+      "reason": "Generated test references updated for gallery tests; conclusions use executed domain/application/frontend and PostgreSQL tests rather than static references.",
       "baseRef": "HEAD",
-      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
-      "reviewedAtUtc": "2026-09-24T16:03:46.3274451Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:52.1304156Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e00873e67e7f73eda143b4da94704f885f83bd35143d4a4886a1af4bf74555cb"
+          "sha256": "3cc3d72150203bf3f6c5db44d2e1925aecc4864728f6866748f08036f0190597"
         }
       ],
-      "reason": "No workers, providers or deployment configuration changed. New paged product favorites is served by the existing API host; cancellation and owner scoping remain explicit. Topology workflow remains applicable.",
+      "reason": "Gallery adds persistence and extends image usage lookup; no new queue, provider or scheduler. Rebuilt local worker and applied additive migration before API use.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:32:14.0651627Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:54.3462712Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
+          "sha256": "5561d7ea58b6a383647f51ea8ac5cda6942832c9eeaaaa10ec0788dc2318e0ab"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "3cc3d72150203bf3f6c5db44d2e1925aecc4864728f6866748f08036f0190597"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "44f1a891bb2a2e1d19814d216b794ec3fda78f61ebbd8cba2211856021613d2f"
         }
       ],
-      "reason": "Reviewed input parsing and validation boundary: malformed/nonfinite numeric input is rejected before API submission; no auth or visibility defaults changed. Local QA created only explicitly named test products. No production or secret configuration changed.",
+      "reason": "Every gallery asset resolves through existing current-user access validation; foreign asset rejection is tested. No new external fetching or credential handling.",
       "baseRef": "HEAD",
-      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
-      "reviewedAtUtc": "2026-09-24T16:03:47.5112871Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:57.7673471Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fce6ef1f677b48b6344bbb2e8cc260e01b9ece63b20c8f12fec2f3913e2b32ce"
+          "sha256": "6a072adf7b20c066f9c0f79791fa37c6ea553150256831fc4071024a205fba5f"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d7f21e767ab12cf177e38358d89d0a1607b44ec81df267b357db1082cb12a2f3"
+          "sha256": "e1f13c6bd87bcf6cdd2ff5f3fdf1bc8b7543c5a7e43663574cfee50256ff24ae"
         }
       ],
-      "reason": "Verified product create validator permits zero nutrition; aligned frontend and tested real local API creation of normal and zero-calorie products. AI result marks form dirty for discard confirmation. Routes and backend contracts unchanged.",
+      "reason": "Reviewed form to request mapping, product preparation/domain persistence, overview/favorites projections and card viewer paths; trace workflow semantics unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
-      "reviewedAtUtc": "2026-09-24T16:03:45.0065294Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:58.8347749Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fce6ef1f677b48b6344bbb2e8cc260e01b9ece63b20c8f12fec2f3913e2b32ce"
+          "sha256": "6a072adf7b20c066f9c0f79791fa37c6ea553150256831fc4071024a205fba5f"
         }
       ],
-      "reason": "Reviewed localizedNumber opt-in input API, raw comma preservation, finite-number validation by product consumers, and visible calorie field errors. Default native number behavior remains unchanged. Product browser request tests cover normalization and retry; shared input tests cover parsing.",
+      "reason": "Reviewed product gallery inputs, recognition result images, favorites adapter and existing viewer consumers; 343 frontend tests and browser upload/reorder/remove checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
-      "reviewedAtUtc": "2026-09-24T16:03:43.6988730Z"
+      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
+      "reviewedAtUtc": "2026-09-25T07:04:59.8119631Z"
     },
     {
       "pageId": "workflow.query-context",
