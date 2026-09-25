@@ -110,7 +110,10 @@ describe('durable food recognition', () => {
         const completed: FoodRecognitionJob = {
             ...job(id, 'Succeeded'),
             isProductLabel: true,
-            additionalImages: productRequest.additionalImageAssetIds.map(imageAssetId => ({ imageAssetId, imageUrl: 'https://example.com/label.jpg' })),
+            additionalImages: productRequest.additionalImageAssetIds.map(imageAssetId => ({
+                imageAssetId,
+                imageUrl: 'https://example.com/label.jpg',
+            })),
         };
         accepted.flush(completed);
         await vi.advanceTimersByTimeAsync(0);
@@ -165,6 +168,9 @@ describe('durable food recognition', () => {
         expect(storage.size).toBe(0);
     });
 
+});
+
+describe('recognition notifications', () => {
     it('uses SignalR only as a hint and fetches the owner-scoped saved result', async () => {
         const result = vi.fn();
         const subscription = service.resume('job-1').subscribe(result);
@@ -213,4 +219,13 @@ describe('recognition terminal states', () => {
         expect(result).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 401 }));
     });
+});
+
+it('deletes only the requested recognition endpoint', () => {
+    const done = vi.fn();
+    service.deleteRecognition('completed-id').subscribe(done);
+    const deletion = http.expectOne(`${url}/completed-id`);
+    expect(deletion.request.method).toBe('DELETE');
+    deletion.flush(null);
+    expect(done).toHaveBeenCalledTimes(1);
 });

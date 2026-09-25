@@ -8,5 +8,6 @@ public interface IFoodRecognitionJobStore {
     Task<FoodRecognitionJobModel?> ClaimAsync(CancellationToken cancellationToken);
     Task<bool> SaveVisionAsync(Guid jobId, FoodVisionModel vision, CancellationToken cancellationToken);
     Task CompleteAsync(Guid jobId, FoodNutritionModel? nutrition, string? errorCode, string? nutritionErrorCode, CancellationToken cancellationToken);
+    Task<Result> DeleteCompletedAsync(Guid userId, Guid jobId, CancellationToken cancellationToken);
     Task MaintainAsync(CancellationToken cancellationToken);
 }

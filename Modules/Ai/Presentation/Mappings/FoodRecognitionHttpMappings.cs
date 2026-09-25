@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Commands.DeleteFoodRecognition;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Commands.StartFoodRecognition;
 using FoodDiary.Modules.Ai.Application.Queries.GetFoodRecognition;
@@ -8,6 +9,8 @@ using FoodDiary.Modules.Ai.Presentation.Responses;
 namespace FoodDiary.Modules.Ai.Presentation.Mappings;
 
 public static class FoodRecognitionHttpMappings {
+    public static DeleteFoodRecognitionCommand ToDeleteRecognitionCommand(this Guid id, Guid userId) => new(userId, id);
+
     public static GetFoodRecognitionQuery ToRecognitionQuery(this Guid id, Guid userId) => new(userId, id);
 
     public static ListFoodRecognitionsQuery ToRecognitionListQuery(this Guid userId) => new(userId);

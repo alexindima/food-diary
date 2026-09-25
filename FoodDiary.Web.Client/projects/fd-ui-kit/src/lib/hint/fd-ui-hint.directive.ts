@@ -95,6 +95,7 @@ export class FdUiHintDirective {
     private readonly defaultShowDelayMs = inject(FD_UI_HINT_SHOW_DELAY_MS);
 
     public readonly fdUiHint = input<HintContent>(null);
+    public readonly fdUiHintToggleOnClick = input(false, { transform: booleanAttribute });
     public readonly fdUiHintHtml = input(false);
     public readonly fdUiHintContext = input<Record<string, unknown> | null>(null);
     public readonly fdUiHintShowDelay = input(this.defaultShowDelayMs);
@@ -143,7 +144,11 @@ export class FdUiHintDirective {
 
     protected toggleHint(): void {
         this.cancelPendingDisplay();
-        this.hide();
+        if (this.fdUiHintToggleOnClick() && this.overlayRef?.hasAttached() !== true) {
+            this.show();
+        } else {
+            this.hide();
+        }
     }
 
     protected onEscape(): void {

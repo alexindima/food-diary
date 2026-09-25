@@ -19,6 +19,7 @@ let overlayContainer: OverlayContainer | null = null;
         <button
             type="button"
             [fdUiHint]="hint"
+            [fdUiHintToggleOnClick]="toggleOnClick"
             [fdUiHintContext]="hintContext"
             [fdUiHintDisabled]="disabled"
             [fdUiHintFocusShowDelay]="focusShowDelayMs"
@@ -34,6 +35,7 @@ let overlayContainer: OverlayContainer | null = null;
 })
 class TestHostComponent {
     public hint = 'Notifications';
+    public toggleOnClick = false;
     public hintContext: Record<string, unknown> | null = null;
     public disabled = false;
     public focusShowDelayMs = ZERO_DELAY_MS;
@@ -247,6 +249,19 @@ function registerContentTests(): void {
 
 function registerDismissTests(): void {
     describe('dismiss', () => {
+        it('opens on tap when opted in and closes on a second tap', async () => {
+            const context = await createContextAsync(TestHostComponent, component => {
+                component.toggleOnClick = true;
+            });
+            overlayContainer = TestBed.inject(OverlayContainer);
+            context.trigger.click();
+            context.fixture.detectChanges();
+            expect(tooltipText(context.overlayRoot)).toBe('Notifications');
+            context.trigger.click();
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+        });
+
         it('cancels a pending tooltip show when the trigger is clicked', async () => {
             const context = await createContextAsync(TestHostComponent);
             overlayContainer = TestBed.inject(OverlayContainer);

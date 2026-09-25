@@ -2759,7 +2759,7 @@
       "role": "Component",
       "selector": "fd-food-recognition-history",
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
-      "line": 17
+      "line": 22
     },
     {
       "name": "HeaderActionsOverflowComponent",
@@ -4572,7 +4572,7 @@
       "role": "Component",
       "selector": "fd-product-ai-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
-      "line": 49
+      "line": 53
     },
     {
       "name": "ProductAiRecognitionResultComponent",
@@ -6664,8 +6664,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3693,
-      "russianProperties": 3693,
+      "englishProperties": 3711,
+      "russianProperties": 3711,
       "countsMatch": true
     },
     {

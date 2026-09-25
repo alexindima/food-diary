@@ -1,34 +1,70 @@
-<div class="fd-stack fd-gap-sm">
-    @if (!compact()) {
-        <p class="fd-ui-helper-text">{{ 'AI_RECOGNITION.BACKGROUND_HINT' | translate }}</p>
-    }
-    <fd-ui-button
-        type="button"
-        icon="history"
-        [size]="compact() ? 'sm' : 'md'"
-        [variant]="compact() ? 'secondary' : 'primary'"
-        [fill]="compact() ? 'text' : 'outline'"
-        [disabled]="disabled()"
-        [loading]="loading()"
-        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-        (click)="load()"
-    >
-        {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
-    </fd-ui-button>
-    @if (failed()) {
-        <p role="alert" class="fd-ui-helper-text">{{ 'AI_RECOGNITION.LOAD_ERROR' | translate }}</p>
-    } @else if (loaded() && jobs().length === 0) {
-        <p class="fd-ui-helper-text">{{ 'AI_RECOGNITION.EMPTY' | translate }}</p>
-    }
-    @for (job of jobs(); track job.id) {
+<div class="fd-stack fd-gap-md">
+    @if (!screen()) {
         <fd-ui-button
             type="button"
-            fill="outline"
+            icon="history"
+            variant="secondary"
+            fill="text"
             [disabled]="disabled()"
             [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-            (click)="recognitionSelected.emit(job)"
+            [loading]="loading()"
+            (click)="load()"
         >
-            {{ job.createdOnUtc | date: 'short' }} · {{ `AI_RECOGNITION.STATUS.${job.status}` | translate }}
+            {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
         </fd-ui-button>
     }
+    @if (!screen() && loaded()) {
+        <p class="fd-ui-helper-text">{{ 'AI_RECOGNITION.RETENTION' | translate }}</p>
+    }
+    @if (statusMessage(); as message) {
+        <p role="status" class="fd-ui-helper-text">{{ message | translate }}</p>
+    }
+    <fd-ui-button type="button" fill="text" [style.display]="failed() ? null : 'none'" (click)="load()">{{
+        'AI_RECOGNITION.RETRY' | translate
+    }}</fd-ui-button>
+    <p role="alert" class="fd-ui-helper-text" [hidden]="!deleteFailed()">{{ 'AI_RECOGNITION.DELETE_ERROR' | translate }}</p>
+    <p role="status" class="fd-ui-helper-text" [hidden]="!deleted()">{{ 'AI_RECOGNITION.DELETED' | translate }}</p>
+    <div class="history-list">
+        @for (job of jobs(); track job.id) {
+            <div class="history-list__row">
+                <button
+                    type="button"
+                    class="history-list__open"
+                    [disabled]="disabled() || deleting().includes(job.id)"
+                    (click)="recognitionSelected.emit(job)"
+                >
+                    <img alt="" class="history-list__photo" [src]="job.imageUrl" />
+                    <span class="history-list__text">
+                        <strong class="history-list__title" [title]="title(job) ?? (fallbackTitle(job) | translate)">{{
+                            title(job) ?? (fallbackTitle(job) | translate)
+                        }}</strong>
+                        <span class="history-list__metadata">
+                            <span class="fd-ui-helper-text"
+                                >{{ date(job.createdOnUtc) }} ·
+                                {{ 'AI_RECOGNITION.PHOTO_COUNT' | translate: { count: photoCount(job) } }}</span
+                            >
+                            <fd-ui-status-badge [tone]="statusTone(job)">{{
+                                `AI_RECOGNITION.STATUS.${job.status}` | translate
+                            }}</fd-ui-status-badge>
+                        </span>
+                    </span>
+                </button>
+                @if (isCompleted(job)) {
+                    <fd-ui-button
+                        type="button"
+                        icon="delete"
+                        appearance="muted-icon"
+                        variant="danger"
+                        fill="text"
+                        [ariaLabel]="'AI_RECOGNITION.DELETE' | translate"
+                        [fdUiHint]="'AI_RECOGNITION.DELETE_HINT' | translate"
+                        [disabled]="disabled() || loading()"
+                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                        [loading]="deleting().includes(job.id)"
+                        (click)="remove(job)"
+                    />
+                }
+            </div>
+        }
+    </div>
 </div>

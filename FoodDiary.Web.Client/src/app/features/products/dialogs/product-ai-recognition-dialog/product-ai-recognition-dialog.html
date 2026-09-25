@@ -1,79 +1,150 @@
-<fd-ui-dialog [title]="'PRODUCT_AI_DIALOG.TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
-    <div class="product-ai-dialog fd-stack fd-gap-lg">
-        <fd-food-recognition-history
-            [productLabel]="true"
-            [compact]="true"
-            [disabled]="isBusy()"
-            (recognitionSelected)="onResumeRecognition($event)"
-        />
-        <fd-product-recognition-photos
-            [photos]="photos()"
-            [disabled]="isBusy()"
-            [reviewing]="hasResult()"
-            [cover]="cover()"
-            [(uploading)]="photoUploading"
-            (photosChange)="onPhotosChanged($event)"
-            (coverChange)="onCoverChanged($event)"
-        />
-        @if (statusKey(); as status) {
-            <p role="status" class="fd-ui-helper-text">{{ status | translate }}</p>
-        }
-
-        <fd-ui-textarea
-            [style.display]="hasResult() ? 'none' : null"
-            [formField]="descriptionForm.description"
-            [label]="'PRODUCT_AI_DIALOG.DESCRIPTION' | translate"
-            [placeholder]="'PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER' | translate"
-            [rows]="2"
-            [autosize]="true"
-        />
-
-        @for (notice of notices(); track notice) {
-            <p role="status" class="fd-ui-helper-text">{{ notice | translate }}</p>
-        }
-        @if (hasResult()) {
-            <fd-product-ai-recognition-result
-                [form]="resultForm"
-                [nutrition]="nutrition()"
-                [labelNotes]="productLabel()?.notes ?? null"
-                [fromLabel]="productLabel() !== null"
-                [itemNames]="itemNames()"
-                [isValid]="isResultValid()"
-                [hasExistingData]="hasExistingData"
-                [(useAsCover)]="useAsCover"
-                [(replacementAccepted)]="replacementAccepted"
+<fd-ui-dialog [title]="historyOpen() ? undefined : ('PRODUCT_AI_DIALOG.TITLE' | translate)" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+    @if (historyOpen()) {
+        <header fdUiDialogHeader class="product-ai-dialog__history-header">
+            <fd-ui-button
+                type="button"
+                appearance="plain-icon"
+                icon="arrow_back"
+                variant="secondary"
+                fill="text"
+                [ariaLabel]="'AI_RECOGNITION.BACK' | translate"
+                (click)="historyOpen.set(false)"
             />
+            <h2 class="fd-ui-section-title">{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</h2>
+            <fd-ui-button
+                type="button"
+                appearance="muted-icon"
+                icon="info_outline"
+                variant="secondary"
+                fill="text"
+                [ariaLabel]="'AI_RECOGNITION.RETENTION_HELP' | translate"
+                [fdUiHint]="'AI_RECOGNITION.RETENTION_HINT' | translate"
+                [fdUiHintToggleOnClick]="true"
+            />
+            <fd-ui-button
+                type="button"
+                appearance="plain-icon"
+                icon="close"
+                variant="secondary"
+                fill="text"
+                [ariaLabel]="'COMMON.CLOSE' | translate"
+                (click)="close()"
+            />
+        </header>
+    }
+    <div class="product-ai-dialog fd-stack fd-gap-lg">
+        @if (historyOpen()) {
+            <fd-food-recognition-history [screen]="true" [productLabel]="true" (recognitionSelected)="onResumeRecognition($event)" />
+        } @else {
+            <fd-ui-button
+                class="product-ai-dialog__history-link"
+                type="button"
+                icon="history"
+                iconSize="sm"
+                variant="secondary"
+                fill="text"
+                [disabled]="isBusy() || photoUploading()"
+                [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                (click)="historyOpen.set(true)"
+                >{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</fd-ui-button
+            >
+            <div class="product-ai-dialog__input-layout">
+                <fd-product-recognition-photos
+                    [editor]="true"
+                    [photos]="photos()"
+                    [disabled]="isBusy()"
+                    [cover]="cover()"
+                    [(uploading)]="photoUploading"
+                    (photosChange)="onPhotosChanged($event)"
+                    (coverChange)="onCoverChanged($event)"
+                />
+                <div class="product-ai-dialog__guidance fd-stack fd-gap-md">
+                    <div class="fd-stack fd-gap-md" [style.display]="hasResult() ? 'none' : null">
+                        <p class="fd-ui-helper-text product-ai-dialog__note">{{ 'PRODUCT_AI_DIALOG.PHOTOS_HINT' | translate }}</p>
+                        <fd-ui-textarea
+                            [formField]="descriptionForm.description"
+                            [label]="'PRODUCT_AI_DIALOG.DESCRIPTION' | translate"
+                            [placeholder]="'PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER' | translate"
+                            [rows]="4"
+                            [autosize]="true"
+                        />
+                    </div>
+                    <div class="product-ai-dialog__status" role="status" [hidden]="!statusKey() && !notices().length && !hasResult()">
+                        @if (statusKey(); as status) {
+                            <p class="fd-ui-helper-text">{{ status | translate }}</p>
+                        }
+                        @for (notice of notices(); track notice) {
+                            <p class="fd-ui-helper-text">{{ notice | translate }}</p>
+                        }
+                        <p class="fd-ui-helper-text" [hidden]="!hasResult()">
+                            {{
+                                (productLabel() !== null ? 'PRODUCT_AI_DIALOG.LABEL_REVIEW_HINT' : 'PRODUCT_AI_DIALOG.REVIEW_HINT')
+                                    | translate
+                            }}
+                        </p>
+                    </div>
+                    @if (hasResult() && (productLabel()?.notes ?? nutrition()?.notes); as notes) {
+                        <details class="product-ai-dialog__details">
+                            <summary class="fd-ui-body-sm">{{ 'PRODUCT_AI_DIALOG.DETAILS' | translate }}</summary>
+                            <p class="product-ai-dialog__note fd-ui-body-sm">{{ notes }}</p>
+                        </details>
+                    }
+                </div>
+            </div>
+            @if (hasResult()) {
+                <fd-product-ai-recognition-result
+                    [form]="resultForm"
+                    [showNotes]="false"
+                    [nutrition]="nutrition()"
+                    [labelNotes]="productLabel()?.notes ?? null"
+                    [fromLabel]="productLabel() !== null"
+                    [itemNames]="itemNames()"
+                    [isValid]="isResultValid()"
+                    [hasExistingData]="hasExistingData"
+                    [(useAsCover)]="useAsCover"
+                    [(replacementAccepted)]="replacementAccepted"
+                />
+            }
         }
     </div>
 
-    <ng-container fdUiDialogFooter>
-        <div class="product-ai-dialog__footer fd-ui-actions fd-ui-actions--end">
-            <fd-ui-button class="product-ai-dialog__cancel" type="button" variant="secondary" fill="text" (click)="close()">
-                {{ (isBusy() ? 'COMMON.CLOSE' : 'PRODUCT_AI_DIALOG.CANCEL') | translate }}
-            </fd-ui-button>
-            @if (!isBusy()) {
-                <fd-ui-button
-                    type="button"
-                    variant="primary"
-                    [fill]="hasResult() ? 'outline' : 'solid'"
-                    [disabled]="isAnalyzeDisabled()"
-                    [disabledReason]="analyzeDisabledReason() === null ? null : (analyzeDisabledReason() | translate)"
-                    (click)="startAnalysis()"
-                >
-                    {{ (hasAnalyzed() ? 'PRODUCT_AI_DIALOG.REANALYZE' : 'PRODUCT_AI_DIALOG.ANALYZE') | translate }}
+    @if (!historyOpen()) {
+        <ng-container fdUiDialogFooter>
+            <div class="product-ai-dialog__footer fd-ui-actions fd-ui-actions--end">
+                <fd-ui-button class="product-ai-dialog__cancel" type="button" variant="secondary" fill="text" (click)="close()">
+                    {{ (isBusy() || historyOpen() ? 'COMMON.CLOSE' : 'PRODUCT_AI_DIALOG.CANCEL') | translate }}
                 </fd-ui-button>
-                @if (hasResult()) {
+                @if (!isBusy() && !historyOpen()) {
                     <fd-ui-button
                         type="button"
                         variant="primary"
-                        [disabled]="!canApply()"
-                        [disabledReason]="'PRODUCT_AI_DIALOG.APPLY_DISABLED' | translate"
-                        (click)="apply()"
+                        [fill]="hasResult() ? 'outline' : 'solid'"
+                        [disabled]="isAnalyzeDisabled()"
+                        [disabledReason]="analyzeDisabledReason() === null ? null : (analyzeDisabledReason() | translate)"
+                        (click)="hasResult() ? refineRecognition() : startAnalysis()"
                     >
-                        {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}
+                        {{
+                            (hasResult()
+                                ? 'PRODUCT_AI_DIALOG.REFINE'
+                                : hasAnalyzed()
+                                  ? 'PRODUCT_AI_DIALOG.REANALYZE'
+                                  : 'PRODUCT_AI_DIALOG.ANALYZE'
+                            ) | translate
+                        }}
                     </fd-ui-button>
+                    @if (hasResult()) {
+                        <fd-ui-button
+                            type="button"
+                            variant="primary"
+                            [disabled]="!canApply()"
+                            [disabledReason]="'PRODUCT_AI_DIALOG.APPLY_DISABLED' | translate"
+                            (click)="apply()"
+                        >
+                            {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}
+                        </fd-ui-button>
+                    }
                 }
-            }
-        </div>
-    </ng-container>
+            </div>
+        </ng-container>
+    }
 </fd-ui-dialog>

@@ -391,3 +391,21 @@ it('prefills existing photos without starting recognition or mutating the form p
     expect(prefilled['isAnalyzeDisabled']()).toBe(false);
     expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
 });
+
+it('returns to editable inputs without requesting recognition and keeps photos, cover and hint', () => {
+    const photo = createImageSelection();
+    component['onPhotosChanged']([photo]);
+    component['onCoverChanged'](photo);
+    component['nutrition'].set(createNutrition());
+    component['hasAnalyzed'].set(true);
+    component['replacementAccepted'].set(true);
+    component['refineRecognition']();
+    expect(component['hasResult']()).toBe(false);
+    expect(component['photos']()).toEqual([photo]);
+    expect(component['cover']()).toEqual(photo);
+    expect(component['descriptionModel']().description).toBe(' fresh apple ');
+    expect(component['replacementAccepted']()).toBe(false);
+    expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
+    component['startAnalysis']();
+    expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledOnce();
+});

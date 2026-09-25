@@ -6,6 +6,9 @@ public static class AiErrors {
     public static Error RecognitionNotFound() => new(
         "Ai.RecognitionNotFound", "Recognition task was not found.", Kind: ErrorKind.NotFound);
 
+    public static Error RecognitionInProgress() => new(
+        "Ai.RecognitionInProgress", "An active recognition task cannot be deleted.", Kind: ErrorKind.Conflict);
+
     public static Error RecognitionConflict() => new(
         "Ai.RecognitionConflict", "Task identifier is already in use.", Kind: ErrorKind.Conflict);
 

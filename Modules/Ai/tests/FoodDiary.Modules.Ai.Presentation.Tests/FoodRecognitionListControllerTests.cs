@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Commands.DeleteFoodRecognition;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions;
@@ -12,6 +13,21 @@ namespace FoodDiary.Modules.Ai.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionListControllerTests {
+    [Fact]
+    public async Task Delete_UsesAuthenticatedOwnerAndReturnsNoContent() {
+        var owner = Guid.NewGuid();
+        var id = Guid.NewGuid();
+        IRequest<Result>? sent = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sent = request);
+        var controller = new FoodRecognitionController(sender) {
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
+        };
+        Assert.IsType<NoContentResult>(await controller.Delete(owner, id));
+        DeleteFoodRecognitionCommand command = Assert.IsType<DeleteFoodRecognitionCommand>(sent);
+        Assert.Equal(owner, command.UserId);
+        Assert.Equal(id, command.Id);
+    }
+
     [Fact]
     public async Task List_RequestsOwnedJobsAndMapsEachResult() {
         var owner = Guid.NewGuid();

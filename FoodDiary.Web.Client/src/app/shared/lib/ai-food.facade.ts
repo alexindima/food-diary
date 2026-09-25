@@ -21,6 +21,10 @@ export class AiFoodFacade {
         return this.recognition.resume(id);
     }
 
+    public deleteRecognition(id: string): Observable<void> {
+        return this.recognition.deleteRecognition(id);
+    }
+
     public listRecognitions(): Observable<FoodRecognitionJob[]> {
         return this.recognition.list();
     }

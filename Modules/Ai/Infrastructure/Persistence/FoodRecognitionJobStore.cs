@@ -122,6 +122,21 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
                 cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<Result> DeleteCompletedAsync(Guid userId, Guid jobId, CancellationToken cancellationToken) {
+        var context = new AiDbContext(options);
+        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        var owner = new UserId(userId);
+        int deleted = await context.Set<FoodRecognitionJob>()
+            .Where(x => x.Id == jobId && x.UserId == owner && (x.Status == "Succeeded" || x.Status == "Failed"))
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        if (deleted > 0) {
+            return Result.Success();
+        }
+        bool exists = await context.Set<FoodRecognitionJob>()
+            .AnyAsync(x => x.Id == jobId && x.UserId == owner, cancellationToken).ConfigureAwait(false);
+        return exists ? Result.Failure(AiErrors.RecognitionInProgress()) : Result.Failure(AiErrors.RecognitionNotFound());
+    }
+
     public async Task MaintainAsync(CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);

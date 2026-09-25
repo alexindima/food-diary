@@ -844,3 +844,5 @@ use native button pressed-state semantics; the kit has no standalone thumbnail p
 For numeric forms, `fd-ui-input type="number" [localizedNumber]="true"` accepts comma and dot decimals using a text input with decimal keyboard. It emits numbers, null for empty input and NaN for invalid input; consumers must validate finite values. The default native number input is unchanged.
 
 The image preview dialog accepts an optional zero-based `initialIndex` for opening a selected original without changing the cover. Invalid indices fall back to the first image.
+
+`fdUiHintToggleOnClick` opts an informational hint into tap/click toggling (default false). Use it on help buttons for touch access; ordinary action hints still dismiss on click.

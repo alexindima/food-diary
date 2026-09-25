@@ -59,3 +59,71 @@
 .product-ai-dialog__cancel {
     --fd-button-font-weight: var(--fd-text-body-sm-weight);
 }
+
+.product-ai-dialog__input-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--fd-space-lg);
+    align-items: start;
+
+    @media #{variables.$media-mobile} {
+        grid-template-columns: 1fr;
+    }
+}
+
+.product-ai-dialog__status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-xs);
+
+    &[hidden] {
+        display: none;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+.product-ai-dialog__details {
+    summary {
+        cursor: pointer;
+        color: var(--fd-color-text-muted);
+    }
+    &[open] summary {
+        margin-bottom: var(--fd-space-sm);
+    }
+}
+
+.product-ai-dialog__basis-label {
+    margin: 0;
+    grid-column: 1 / -1;
+}
+
+.product-ai-dialog__history-header {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+    width: 100%;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.product-ai-dialog__history-link {
+    --fd-button-font-size: var(--fd-text-body-size);
+    --fd-button-font-weight: var(--fd-font-weight-medium);
+    --fd-button-text-hover: var(--fd-color-primary-500);
+    --fd-button-text-active: var(--fd-color-primary-500);
+    --fd-button-secondary-text-text-default: var(--fd-color-text-muted);
+
+    &:hover,
+    &:focus-within {
+        --fd-button-secondary-text-text-default: var(--fd-color-primary-500);
+    }
+}
+
+.product-ai-dialog__history-header > fd-ui-button:last-child {
+    margin-inline-start: auto;
+}

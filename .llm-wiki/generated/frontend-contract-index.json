@@ -3,12 +3,12 @@
   "summary": {
     "components": 461,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1486,
+    "inputs": 1488,
     "outputs": 492,
-    "apiCalls": 267,
+    "apiCalls": 268,
     "templatesWithTranslations": 321,
-    "translationKeys": 1895,
-    "consumerEdges": 1130,
+    "translationKeys": 1903,
+    "consumerEdges": 1131,
     "consumedComponents": 294,
     "unconsumedComponents": 166
   },
@@ -8779,6 +8779,11 @@
           "required": true
         },
         {
+          "name": "showNotes",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "labelNotes",
           "type": "string | null",
           "required": false
@@ -11948,6 +11953,11 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
       "inputs": [
+        {
+          "name": "screen",
+          "type": "",
+          "required": false
+        },
         {
           "name": "compact",
           "type": "",
@@ -16862,11 +16872,23 @@
     },
     {
       "feature": "shell",
+      "method": "DELETE",
+      "responseType": "void",
+      "urlExpression": "`${this.baseUrl}/${id}`",
+      "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
+      "line": 96,
+      "publicMethod": "deleteRecognition",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
+      "resolvedUrlExpression": "`${this.baseUrl}/${id}`"
+    },
+    {
+      "feature": "shell",
       "method": "GET",
       "responseType": "FoodRecognitionJob[]",
       "urlExpression": "this.baseUrl",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 96,
+      "line": 100,
       "publicMethod": "list",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -16878,7 +16900,7 @@
       "responseType": "FoodRecognitionJob",
       "urlExpression": "`${this.baseUrl}/${id}`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 106,
+      "line": 110,
       "publicMethod": "waitForResult",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20193,8 +20215,7 @@
         "DISABLED_HINTS.FORM_INVALID",
         "PRODUCT_MANAGE.CANCEL_BUTTON",
         "PRODUCT_MANAGE.DELETE_BUTTON",
-        "PRODUCT_MANAGE.START_TOUR",
-        "PRODUCT_MANAGE.SUBTITLE"
+        "PRODUCT_MANAGE.START_TOUR"
       ]
     },
     {
@@ -20221,11 +20242,18 @@
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.html",
       "keys": [
+        "AI_RECOGNITION.BACK",
+        "AI_RECOGNITION.RETENTION_HELP",
+        "AI_RECOGNITION.RETENTION_HINT",
+        "AI_RECOGNITION.SHOW_RECENT",
         "COMMON.CLOSE",
+        "DISABLED_HINTS.OPERATION_BUSY",
         "PRODUCT_AI_DIALOG.APPLY",
         "PRODUCT_AI_DIALOG.APPLY_DISABLED",
         "PRODUCT_AI_DIALOG.DESCRIPTION",
         "PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER",
+        "PRODUCT_AI_DIALOG.DETAILS",
+        "PRODUCT_AI_DIALOG.PHOTOS_HINT",
         "PRODUCT_AI_DIALOG.TITLE"
       ]
     },
@@ -20236,6 +20264,7 @@
         "NUTRITION_EDITOR.FIELD_LABELS.CARBS",
         "NUTRITION_EDITOR.FIELD_LABELS.FATS",
         "NUTRITION_EDITOR.FIELD_LABELS.PROTEINS",
+        "PRODUCT_AI_DIALOG.BASIS_LABEL",
         "PRODUCT_AI_DIALOG.CONFIRM_REPLACE",
         "PRODUCT_AI_DIALOG.INVALID_RESULT",
         "PRODUCT_AI_DIALOG.ITEMS_LABEL",
@@ -21098,9 +21127,13 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
       "keys": [
-        "AI_RECOGNITION.BACKGROUND_HINT",
-        "AI_RECOGNITION.EMPTY",
-        "AI_RECOGNITION.LOAD_ERROR",
+        "AI_RECOGNITION.DELETE",
+        "AI_RECOGNITION.DELETED",
+        "AI_RECOGNITION.DELETE_ERROR",
+        "AI_RECOGNITION.DELETE_HINT",
+        "AI_RECOGNITION.PHOTO_COUNT",
+        "AI_RECOGNITION.RETENTION",
+        "AI_RECOGNITION.RETRY",
         "AI_RECOGNITION.SHOW_RECENT",
         "DISABLED_HINTS.OPERATION_BUSY"
       ]
@@ -25404,14 +25437,15 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "appearance",
+        "ariaLabel",
         "disabled",
         "disabledReason",
         "fill",
         "icon",
         "loading",
-        "size",
         "type",
         "variant"
       ],
@@ -26971,7 +27005,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.html",
-      "occurrences": 5,
+      "occurrences": 4,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27025,11 +27059,15 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.html",
-      "occurrences": 3,
+      "occurrences": 7,
       "inputsUsed": [
+        "appearance",
+        "ariaLabel",
         "disabled",
         "disabledReason",
         "fill",
+        "icon",
+        "iconSize",
         "type",
         "variant"
       ],
@@ -34568,6 +34606,18 @@
       "component": "FdUiStatusBadgeComponent",
       "selector": "fd-ui-status-badge",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "tone"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiStatusBadgeComponent",
+      "selector": "fd-ui-status-badge",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
       "occurrences": 1,
@@ -35143,9 +35193,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "compact",
-        "disabled",
-        "productLabel"
+        "productLabel",
+        "screen"
       ],
       "outputsHandled": [
         "recognitionSelected"
@@ -37195,6 +37244,7 @@
         "labelNotes",
         "nutrition",
         "replacementAccepted",
+        "showNotes",
         "useAsCover"
       ],
       "outputsHandled": [
@@ -37504,8 +37554,8 @@
       "inputsUsed": [
         "cover",
         "disabled",
+        "editor",
         "photos",
-        "reviewing",
         "uploading"
       ],
       "outputsHandled": [

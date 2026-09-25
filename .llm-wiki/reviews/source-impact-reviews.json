@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "6e598511dfebfe539b51db6b28f554ffa237c43c4f9d29528aeb214b8ff875fb"
+          "sha256": "1978686f630f25256605f1edd4e1b9ae5eeddc0c5c9b233d74c59786bf6ad366"
         }
       ],
-      "reason": "Product gallery adds optional imageAssetIds and image preview collections; legacy cover properties and routes are retained. Full Swagger snapshot test passes; compatibility workflow remains accurate.",
+      "reason": "Reviewed recognition history screen, additive authenticated DELETE contract (204/404/409), owner-and-terminal-status SQL predicate, unchanged image assets and worker transactions. 35 frontend tests, 10 PostgreSQL tests, 14 controller tests and 3 OpenAPI snapshots passed; desktop/mobile navigation and error retry verified. Workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
-      "reviewedAtUtc": "2026-09-25T07:03:08.2410761Z"
+      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
+      "reviewedAtUtc": "2026-09-25T09:24:52.5913811Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9f395bd13d4b835e7a3f636ebfafbecfed8a721fa438bdbf87d54cf39f5d6ddf"
+          "sha256": "63fd151e0afcf0d6b38f51537788a879b60359cf15bbcb98e1169c222f396b01"
         }
       ],
-      "reason": "Reviewed final product photo editor changes: optional initial gallery index, existing-photo recognition input, menu and empty-slot states, and layout-only refinements. Focused tests, rendered desktop/mobile checks and lint passed. Updated navigation indexes preserve the workflow contracts, test-reference caveats and security boundaries.",
+      "reason": "Reviewed opt-in click/tap hint behavior with default dismissal preserved; retention help moved to header and delete hint expanded. 13 hint tests and desktop/mobile browser checks passed. Shared component docs and Storybook example updated; workflow guidance unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "257158f834e26b934b9388415d3f8ba81f2fe746",
-      "reviewedAtUtc": "2026-09-25T08:04:42.9918050Z"
+      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
+      "reviewedAtUtc": "2026-09-25T09:59:58.6184857Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9f395bd13d4b835e7a3f636ebfafbecfed8a721fa438bdbf87d54cf39f5d6ddf"
+          "sha256": "63fd151e0afcf0d6b38f51537788a879b60359cf15bbcb98e1169c222f396b01"
         }
       ],
-      "reason": "Reviewed final product photo editor changes: optional initial gallery index, existing-photo recognition input, menu and empty-slot states, and layout-only refinements. Focused tests, rendered desktop/mobile checks and lint passed. Updated navigation indexes preserve the workflow contracts, test-reference caveats and security boundaries.",
+      "reason": "Reviewed opt-in click/tap hint behavior with default dismissal preserved; retention help moved to header and delete hint expanded. 13 hint tests and desktop/mobile browser checks passed. Shared component docs and Storybook example updated; workflow guidance unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "257158f834e26b934b9388415d3f8ba81f2fe746",
-      "reviewedAtUtc": "2026-09-25T08:04:44.3814958Z"
+      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
+      "reviewedAtUtc": "2026-09-25T09:59:59.9008886Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "20e6e9ca1299a88b539a0516a37bf7c91eab8039a3f5571ee77a4d626861e87f"
+          "sha256": "c8cf7f5117cb3d6a3fac5db7a5e3a169669320e4b81b88b87735d02735b3ed75"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0ff2ec0f9a7a0f09c0525502a6734fd4f40a210bc157ec0b7f2b1f08298d2bf0"
+          "sha256": "e3181154fa74ecc0c170429f9b2bfef236bb1484d5f0a04e71f689db3112ca0e"
         }
       ],
-      "reason": "Reviewed final product photo editor changes: optional initial gallery index, existing-photo recognition input, menu and empty-slot states, and layout-only refinements. Focused tests, rendered desktop/mobile checks and lint passed. Updated navigation indexes preserve the workflow contracts, test-reference caveats and security boundaries.",
+      "reason": "Verified product form and recognition dialog source paths after presentation refinements. Feature ownership and navigation flow are unchanged; generated frontend indexes are current.",
       "baseRef": "HEAD",
-      "gitHead": "257158f834e26b934b9388415d3f8ba81f2fe746",
-      "reviewedAtUtc": "2026-09-25T08:04:45.5545651Z"
+      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
+      "reviewedAtUtc": "2026-09-25T10:08:59.5119617Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "20e6e9ca1299a88b539a0516a37bf7c91eab8039a3f5571ee77a4d626861e87f"
+          "sha256": "c8cf7f5117cb3d6a3fac5db7a5e3a169669320e4b81b88b87735d02735b3ed75"
         }
       ],
-      "reason": "Reviewed final product photo editor changes: optional initial gallery index, existing-photo recognition input, menu and empty-slot states, and layout-only refinements. Focused tests, rendered desktop/mobile checks and lint passed. Updated navigation indexes preserve the workflow contracts, test-reference caveats and security boundaries.",
+      "reason": "Reviewed current recognition history navigation and product form spacing changes. Existing component contracts remain compatible; desktop and mobile browser checks plus focused style checks passed. Workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "257158f834e26b934b9388415d3f8ba81f2fe746",
-      "reviewedAtUtc": "2026-09-25T08:04:41.3535492Z"
+      "gitHead": "7d8e91943b82155add6b655437939b998808493e",
+      "reviewedAtUtc": "2026-09-25T10:08:58.3305330Z"
     },
     {
       "pageId": "workflow.query-context",

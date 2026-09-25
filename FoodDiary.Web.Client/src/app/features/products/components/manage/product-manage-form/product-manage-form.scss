@@ -17,6 +17,7 @@
     }
 
     &__delete-button {
+        margin-inline-end: var(--fd-space-lg);
         &--icon {
             width: var(--fd-size-control-md);
             min-width: var(--fd-size-control-md);
@@ -25,7 +26,7 @@
     }
 
     &__form {
-        padding: var(--fd-space-lg) 0 0;
+        padding: 0;
     }
 
     &__grid {
@@ -86,10 +87,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        &__form {
-            padding: var(--fd-space-xs) 0 0;
-        }
-
         &__cancel-button {
             display: none;
         }

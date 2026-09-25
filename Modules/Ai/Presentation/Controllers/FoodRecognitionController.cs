@@ -37,6 +37,13 @@ public sealed class FoodRecognitionController(ISender mediator) : AuthorizedCont
     public Task<IActionResult> Get([FromCurrentUser] Guid userId, Guid id) =>
         HandleOk(id.ToRecognitionQuery(userId), static job => job.ToHttpResponse());
 
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> Delete([FromCurrentUser] Guid userId, Guid id) =>
+        HandleNoContent(id.ToDeleteRecognitionCommand(userId));
+
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<FoodRecognitionJobHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> List([FromCurrentUser] Guid userId) =>

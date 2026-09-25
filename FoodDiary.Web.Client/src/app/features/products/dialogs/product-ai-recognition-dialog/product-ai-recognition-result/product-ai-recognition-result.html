@@ -1,4 +1,3 @@
-<p class="fd-ui-helper-text">{{ (fromLabel() ? 'PRODUCT_AI_DIALOG.LABEL_REVIEW_HINT' : 'PRODUCT_AI_DIALOG.REVIEW_HINT') | translate }}</p>
 <div class="product-ai-dialog__summary fd-stack fd-gap-md">
     <div class="product-ai-dialog__items fd-stack fd-gap-sm" [style.display]="fromLabel() ? 'none' : null">
         <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
@@ -13,7 +12,7 @@
             {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
         </div>
     }
-    @if (notes()) {
+    @if (showNotes() && notes()) {
         <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ notes() }}</div>
     }
 
@@ -24,6 +23,7 @@
             [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
         />
         <fd-ui-input [formField]="form().brand" [label]="'PRODUCT_MANAGE.BRAND' | translate" />
+        <p class="product-ai-dialog__basis-label fd-ui-helper-text">{{ 'PRODUCT_AI_DIALOG.BASIS_LABEL' | translate }}</p>
         <div class="product-ai-dialog__portion-grid fd-grid fd-gap-md">
             <fd-ui-input
                 type="number"

@@ -104,3 +104,14 @@ export const AllPositions: Story = {
         `,
     }),
 };
+
+export const TapToToggle: Story = {
+    render: () => ({
+        template: `
+            <div style="padding: var(--fd-space-xl);">
+                <fd-ui-button appearance="muted-icon" icon="info_outline" ariaLabel="About retention"
+                    fdUiHint="Results are automatically deleted after 7 days." [fdUiHintToggleOnClick]="true" />
+            </div>
+        `,
+    }),
+};

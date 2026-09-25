@@ -2,25 +2,11 @@
     <fd-page-header
         class="product-manage__header"
         [title]="manageHeaderState().titleKey | translate"
-        [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
+        [subtitle]="(product() ? 'PRODUCT_MANAGE.EDIT_SUBTITLE' : 'PRODUCT_MANAGE.CREATE_SUBTITLE') | translate"
         [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
     >
-        @if (product()) {
-            <fd-ui-button
-                appearance="toolbar"
-                variant="primary"
-                icon="save"
-                data-fd-overflow-primary
-                [ariaLabel]="manageHeaderState().submitLabelKey | translate"
-                [fdUiHint]="manageHeaderState().submitLabelKey | translate"
-                [disabled]="productForm().invalid() || isSubmitting() || isDeleting() || photosUploading()"
-                [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
-                [loading]="isSubmitting()"
-                (click)="manageForm.requestSubmit()"
-            />
-        }
         <fd-ui-button
             class="product-manage__tour-action"
             data-tour-id="product-manage-tour-help"
@@ -67,15 +53,6 @@
 
                         <div class="product-manage__actions-panel" data-tour-id="product-manage-actions">
                             <div class="product-manage__footer-actions fd-row fd-gap-md">
-                                <fd-ui-button
-                                    type="button"
-                                    class="product-manage__cancel-button"
-                                    fill="text"
-                                    variant="secondary"
-                                    (click)="onCancelAsync()"
-                                >
-                                    {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
-                                </fd-ui-button>
                                 @if (canShowDeleteButton()) {
                                     <fd-ui-button
                                         type="button"
@@ -90,6 +67,15 @@
                                         (click)="onDeleteProductAsync()"
                                     />
                                 }
+                                <fd-ui-button
+                                    type="button"
+                                    class="product-manage__cancel-button"
+                                    fill="text"
+                                    variant="secondary"
+                                    (click)="onCancelAsync()"
+                                >
+                                    {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                                </fd-ui-button>
                                 <fd-ui-button
                                     type="submit"
                                     class="product-manage__action-button"

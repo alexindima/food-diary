@@ -4146,6 +4146,33 @@
       "Path": "/api/v{version}/ai/food/recognitions/{id}",
       "Operations": [
         {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "404",
+            "409",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        },
+        {
           "Method": "get",
           "HasRequestBody": false,
           "ResponseCodes": [

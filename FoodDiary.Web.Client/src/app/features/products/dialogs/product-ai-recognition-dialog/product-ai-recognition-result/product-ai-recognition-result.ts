@@ -22,6 +22,7 @@ export class ProductAiRecognitionResultComponent {
     public readonly form = input.required<FieldTree<ProductAiRecognitionFormModel>>();
     public readonly nutrition = input<FoodNutritionResponse | null>(null);
     public readonly itemNames = input.required<readonly string[]>();
+    public readonly showNotes = input(true);
     public readonly labelNotes = input<string | null>(null);
     public readonly fromLabel = input(false);
     protected readonly notes = computed(() => this.labelNotes() ?? this.nutrition()?.notes);

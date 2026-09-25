@@ -92,6 +92,10 @@ export class FoodRecognitionService {
         });
     }
 
+    public deleteRecognition(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    }
+
     public list(): Observable<FoodRecognitionJob[]> {
         return this.http.get<FoodRecognitionJob[]>(this.baseUrl);
     }

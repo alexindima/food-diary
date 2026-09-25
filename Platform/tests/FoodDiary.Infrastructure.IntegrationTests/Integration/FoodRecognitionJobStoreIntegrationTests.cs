@@ -127,6 +127,27 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Equal(1, await context.ImageAssets.ExecuteDeleteAsync());
     }
 
+    [RequiresDockerTheory]
+    [InlineData("Succeeded")]
+    [InlineData("Failed")]
+    public async Task DeleteCompleted_IsOwnerScopedAndPreservesImageAssets(string status) {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        var store = new FoodRecognitionJobStore(options, TimeProvider.System);
+        await store.CreateAsync(job, CancellationToken.None);
+        Assert.Equal("Ai.RecognitionInProgress", (await store.DeleteCompletedAsync(job.UserId, job.Id, CancellationToken.None)).Error.Code);
+        await store.ClaimAsync(CancellationToken.None);
+        Assert.Equal("Ai.RecognitionInProgress", (await store.DeleteCompletedAsync(job.UserId, job.Id, CancellationToken.None)).Error.Code);
+        await store.CompleteAsync(job.Id, nutrition: null, string.Equals(status, "Failed", StringComparison.Ordinal) ? "Ai.OpenAiFailed" : null, nutritionErrorCode: null, CancellationToken.None);
+        Assert.Equal("Ai.RecognitionNotFound", (await store.DeleteCompletedAsync(Guid.NewGuid(), job.Id, CancellationToken.None)).Error.Code);
+        Assert.NotNull(await store.GetAsync(job.UserId, job.Id, CancellationToken.None));
+        Assert.True((await store.DeleteCompletedAsync(job.UserId, job.Id, CancellationToken.None)).IsSuccess);
+        Assert.Null(await store.GetAsync(job.UserId, job.Id, CancellationToken.None));
+        Assert.Equal("Ai.RecognitionNotFound", (await store.DeleteCompletedAsync(job.UserId, job.Id, CancellationToken.None)).Error.Code);
+        await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
+            options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
+        Assert.Equal(job.ImageAssetId, (await context.ImageAssets.SingleAsync()).Id.Value);
+    }
+
     private async Task<(DbContextOptions<AiDbContext>, FoodRecognitionJobModel)> CreateDatabaseAsync() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()

@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { catchError, of, type Subscription } from 'rxjs';
@@ -39,6 +41,8 @@ import { ProductRecognitionPhotosComponent } from './product-recognition-photos/
         FormField,
         TranslatePipe,
         FdUiDialogComponent,
+        FdUiHintDirective,
+        FdUiDialogHeaderDirective,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
         FdUiTextareaComponent,
@@ -55,6 +59,7 @@ export class ProductAiRecognitionDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private analysisSubscription: Subscription | null = null;
     private nutritionSubscription: Subscription | null = null;
+    protected readonly historyOpen = signal(false);
     protected readonly isLoading = signal(false);
     protected readonly isNutritionLoading = signal(false);
     protected readonly hasAnalyzed = signal(false);
@@ -160,12 +165,28 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected onCoverChanged(photo: ImageSelection | null): void {
+        if (photo !== null) {
+            this.photos.update(photos => [photo, ...photos.filter(item => item.assetId !== photo.assetId)]);
+        }
         this.cover.set(photo);
         this.useAsCover.set(photo !== null);
     }
 
     protected startAnalysis(): void {
         this.runAnalysisFlow();
+    }
+
+    protected refineRecognition(): void {
+        if (this.isBusy()) {
+            return;
+        }
+        this.productLabel.set(null);
+        this.nutrition.set(null);
+        this.results.set([]);
+        this.hasAnalyzed.set(false);
+        this.replacementAccepted.set(false);
+        this.errorKey.set(null);
+        this.nutritionErrorKey.set(null);
     }
 
     protected reanalyze(): void {
@@ -211,6 +232,7 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected onResumeRecognition(job: FoodRecognitionJob): void {
+        this.historyOpen.set(false);
         this.useAsCover.set(false);
         this.replacementAccepted.set(false);
         const selection = { assetId: job.imageAssetId, url: job.imageUrl };
@@ -248,9 +270,8 @@ export class ProductAiRecognitionDialogComponent {
                       imageAssetId: assetId,
                       isProductLabel: true,
                       additionalImageAssetIds: this.photos()
-                          .slice(1)
                           .map(photo => photo.assetId)
-                          .filter((id): id is string => id !== null),
+                          .filter((id): id is string => id !== null && id !== assetId),
                       description: this.getDescription(),
                   })
                 : this.productAiRecognitionFacade.resumeRecognition(jobId)
