@@ -31,3 +31,83 @@
 .recognition-photos > p {
     margin: 0;
 }
+
+.recognition-photos--editor {
+    container-type: inline-size;
+    .recognition-photos__strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: start;
+    }
+    .recognition-photos__item,
+    .recognition-photos__empty {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface-muted);
+    }
+    .recognition-photos__item::after,
+    .recognition-photos__empty::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: var(--fd-border-width) dashed var(--fd-color-primary-500);
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0.65;
+    }
+    .recognition-photos__item:where(:hover)::after,
+    .recognition-photos__item:where(:focus-within)::after,
+    .recognition-photos__empty:where(:hover)::after,
+    .recognition-photos__empty:where(:focus-within)::after {
+        opacity: 1;
+    }
+    .recognition-photos__item:first-child {
+        grid-column: 1 / -1;
+    }
+    .recognition-photos__preview,
+    .recognition-photos__empty {
+        display: grid;
+        --fd-button-height: 100%;
+        --fd-button-height-explicit: 100%;
+        --fd-button-width: 100%;
+        --fd-button-min-width: 0;
+        --fd-button-padding-x: 0;
+        --fd-button-transform-hover: none;
+        --fd-button-transform-active: none;
+    }
+    .recognition-photos__preview {
+        position: absolute;
+        inset: 0;
+    }
+    .recognition-photos__item img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        background: transparent;
+    }
+    .recognition-photos__strip > fd-image-upload-field {
+        grid-column: 1 / -1;
+        --image-preview-height: calc(125cqw + var(--fd-space-sm) / 4);
+    }
+    .recognition-photos__strip > .recognition-photos__uploader-hidden {
+        display: none;
+    }
+}
+
+.recognition-photos__cover-label {
+    position: absolute;
+    bottom: var(--fd-space-sm);
+    left: var(--fd-space-sm);
+    padding: var(--fd-space-xxs) var(--fd-space-sm);
+    border-radius: var(--fd-radius-sm);
+    background: var(--fd-bg-surface-muted);
+    color: var(--fd-color-text);
+    font-size: var(--fd-text-helper-size);
+    pointer-events: none;
+}

@@ -1667,7 +1667,7 @@
       "role": "Component",
       "selector": "fd-ui-image-preview-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
-      "line": 31
+      "line": 32
     },
     {
       "name": "FdUiInlineAlertActionsComponent",
@@ -4544,7 +4544,7 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 88
+      "line": 91
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -4586,7 +4586,7 @@
       "role": "Component",
       "selector": "fd-product-recognition-photos",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos.ts",
-      "line": 16
+      "line": 26
     },
     {
       "name": "ProductFavoritesPickerComponent",
@@ -6664,8 +6664,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3690,
-      "russianProperties": 3690,
+      "englishProperties": 3693,
+      "russianProperties": 3693,
       "countsMatch": true
     },
     {

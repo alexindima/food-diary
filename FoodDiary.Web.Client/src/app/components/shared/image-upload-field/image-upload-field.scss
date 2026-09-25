@@ -428,8 +428,10 @@
 }
 
 .image-upload-field--appearance-tile {
+    height: 100%;
     .image-upload-field__dropzone {
         min-height: 80px;
+        height: 100%;
     }
     .image-upload-field__placeholder {
         padding: var(--fd-space-sm);

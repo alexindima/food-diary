@@ -381,3 +381,13 @@ describe('product label recognition', () => {
         expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
     });
 });
+
+it('prefills existing photos without starting recognition or mutating the form photo array', () => {
+    const photos = [createImageSelection(), { assetId: 'second', url: '/second.jpg' }];
+    Object.assign(TestBed.inject(FD_UI_DIALOG_DATA), { initialPhotos: photos });
+    const prefilled = TestBed.createComponent(ProductAiRecognitionDialogComponent).componentInstance;
+    expect(prefilled['photos']()).toEqual(photos);
+    expect(prefilled['photos']()).not.toBe(photos);
+    expect(prefilled['isAnalyzeDisabled']()).toBe(false);
+    expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
+});

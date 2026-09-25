@@ -7,6 +7,7 @@ import { FdUiDialogComponent } from '../dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from '../dialog/fd-ui-dialog-data';
 
 export type FdUiImagePreviewDialogData = {
+    initialIndex?: number;
     imageUrl?: string;
     collageImages?: readonly FdUiImagePreviewDialogCollageImage[];
     alt?: string;
@@ -36,7 +37,13 @@ export class FdUiImagePreviewDialogComponent {
         this.imageUrl.length > 0
             ? [{ url: this.imageUrl, alt: this.dialogData.alt }]
             : (this.dialogData.collageImages ?? []).filter(image => image.url.trim().length > 0);
-    protected readonly activeIndex = signal(0);
+    protected readonly activeIndex = signal(
+        Number.isInteger(this.dialogData.initialIndex) &&
+            (this.dialogData.initialIndex ?? -1) >= 0 &&
+            (this.dialogData.initialIndex ?? 0) < this.images.length
+            ? (this.dialogData.initialIndex ?? 0)
+            : 0,
+    );
     protected readonly activeImage = computed(() => this.images[this.activeIndex()]);
     private touchStart: { x: number; y: number } | null = null;
 

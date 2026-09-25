@@ -15,12 +15,12 @@
         (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
     );
     grid-template-columns: var(--fd-product-image-size) minmax(0, 1fr);
-    grid-template-rows: repeat(3, minmax(0, auto));
+    grid-template-rows: repeat(4, minmax(0, auto));
     align-items: stretch;
 }
 
 .product-manage__image {
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 4;
     width: var(--fd-product-image-size);
     height: auto;
     aspect-ratio: auto;
@@ -91,4 +91,17 @@
     &[open] summary {
         margin-bottom: var(--fd-space-lg);
     }
+}
+
+.product-manage__portion-hint {
+    margin: 0;
+}
+
+.product-manage__serving-row {
+    padding-top: var(--fd-space-md);
+    align-items: flex-start;
+}
+
+.product-manage__description {
+    justify-content: flex-end;
 }

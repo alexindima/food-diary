@@ -2,6 +2,7 @@ import type { ImageSelection } from '../../../../shared/models/image-upload.data
 import type { MeasurementUnit } from '../../models/product.data';
 
 export type ProductAiDialogData = {
+    initialPhotos?: ImageSelection[];
     initialDescription?: string | null;
     hasExistingData?: boolean;
 };

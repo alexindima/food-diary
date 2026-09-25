@@ -63,18 +63,7 @@
                 />
             </div>
         </div>
-        <div class="product-manage__image fd-row">
-            <fd-product-recognition-photos
-                [photos]="productPhotos()"
-                [cover]="form().imageUrl().value()"
-                (photosChange)="setPhotos($event)"
-                (coverChange)="setCover($event)"
-                (uploadingChange)="photosUploading.emit($event)"
-            />
-        </div>
-    </div>
-    <div class="product-manage__basic-grid fd-grid fd-gap-lg">
-        <div class="product-manage__field product-manage__field--full fd-stack fd-gap-xs">
+        <div class="product-manage__hero-field product-manage__description fd-stack fd-gap-xs">
             <fd-ui-textarea
                 [formField]="form().description"
                 [label]="'PRODUCT_MANAGE.DESCRIPTION' | translate"
@@ -85,6 +74,18 @@
                 [autosize]="true"
             />
         </div>
+        <div class="product-manage__image fd-row">
+            <fd-product-recognition-photos
+                [editor]="true"
+                [photos]="productPhotos()"
+                [cover]="form().imageUrl().value()"
+                (photosChange)="setPhotos($event)"
+                (coverChange)="setCover($event)"
+                (uploadingChange)="photosUploading.emit($event)"
+            />
+        </div>
+    </div>
+    <div class="product-manage__basic-grid fd-grid fd-gap-lg">
         <div class="product-manage__serving-row product-manage__field--full fd-row fd-wrap fd-gap-lg">
             <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-input
@@ -97,6 +98,7 @@
                     [error]="errors.defaultPortionAmount"
                     [maximum]="maxAmount()"
                 />
+                <p class="product-manage__portion-hint fd-ui-helper-text">{{ 'PRODUCT_MANAGE.DEFAULT_PORTION_HINT' | translate }}</p>
             </div>
             <div class="product-manage__serving-part fd-stack fd-gap-xs">
                 <fd-ui-select
@@ -109,7 +111,6 @@
             </div>
         </div>
     </div>
-    <p class="fd-ui-helper-text">{{ 'PRODUCT_MANAGE.DEFAULT_PORTION_HINT' | translate }}</p>
     <details class="product-manage__additional" data-tour-id="product-manage-tracking" [open]="additionalOpen()">
         <summary class="fd-ui-body-sm">{{ 'PRODUCT_MANAGE.ADDITIONAL' | translate }} · {{ selectedVisibilityLabel() }}</summary>
         <div class="product-manage__basic-grid fd-grid fd-gap-lg">

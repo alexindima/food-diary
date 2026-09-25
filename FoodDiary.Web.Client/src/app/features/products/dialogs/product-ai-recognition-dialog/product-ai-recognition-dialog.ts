@@ -65,11 +65,11 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly hasExistingData = this.dialogData.hasExistingData ?? false;
     protected readonly isBusy = computed(() => this.isLoading() || this.isNutritionLoading());
     protected readonly photoUploading = signal(false);
-    protected readonly photos = signal<ImageSelection[]>([]);
-    protected readonly cover = signal<ImageSelection | null>(null);
+    protected readonly photos = signal<ImageSelection[]>([...(this.dialogData.initialPhotos ?? [])]);
+    protected readonly cover = signal<ImageSelection | null>(this.photos()[0] ?? null);
     protected readonly productLabel = signal<ProductLabel | null>(null);
     protected readonly hasResult = computed(() => this.productLabel() !== null || this.nutrition() !== null);
-    protected readonly selection = signal<ImageSelection | null>(null);
+    protected readonly selection = signal<ImageSelection | null>(this.photos()[0] ?? null);
     protected readonly results = signal<FoodVisionItem[]>([]);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
     protected readonly descriptionModel = signal({ description: this.dialogData.initialDescription ?? '' });

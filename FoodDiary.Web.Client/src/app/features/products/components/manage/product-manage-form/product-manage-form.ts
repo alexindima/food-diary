@@ -21,7 +21,10 @@ import { LocalizedTourDefinitionService } from '../../../../../shared/tours/loca
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
 import { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog';
-import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import type {
+    ProductAiDialogData,
+    ProductAiRecognitionResult,
+} from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import { ProductNameSearchFacade } from '../../../lib/manage/product-name-search.facade';
 import {
@@ -295,19 +298,21 @@ export class ProductManageFormComponent {
             return;
         }
 
+        const currentPhotos = this.productFormModel().images;
+        const currentCover = this.productFormModel().imageUrl;
         this.fdDialogService
-            .open<
+            .open<ProductAiRecognitionDialogComponent, ProductAiDialogData, ProductAiRecognitionResult | null>(
                 ProductAiRecognitionDialogComponent,
-                { initialDescription?: string | null; hasExistingData: boolean },
-                ProductAiRecognitionResult | null
-            >(ProductAiRecognitionDialogComponent, {
-                size: 'lg',
-                data: {
-                    initialDescription: this.productFormModel().description ?? null,
-                    hasExistingData:
-                        this.productForm().dirty() || this.product() !== null || this.productFormModel().name.trim().length > 0,
+                {
+                    size: 'lg',
+                    data: {
+                        initialDescription: this.productFormModel().description ?? null,
+                        initialPhotos: currentPhotos ?? (currentCover !== null ? [currentCover] : []),
+                        hasExistingData:
+                            this.productForm().dirty() || this.product() !== null || this.productFormModel().name.trim().length > 0,
+                    },
                 },
-            })
+            )
             .afterClosed()
             .subscribe(result => {
                 if (result === null || result === undefined) {

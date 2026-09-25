@@ -7,6 +7,8 @@ import { FdUiDialogRef } from '../dialog/fd-ui-dialog-ref';
 import { FdUiImagePreviewDialogComponent, type FdUiImagePreviewDialogData } from './fd-ui-image-preview-dialog';
 
 const PHOTO_COUNT = 6;
+const INVALID_LARGE_INDEX = 99;
+const INVALID_FRACTIONAL_INDEX = 0.5;
 const SWIPE_START = 100;
 const SWIPE_LEFT = 10;
 const SWIPE_RIGHT = 200;
@@ -101,5 +103,17 @@ describe('Image preview gallery', () => {
         component['navigate'](1);
         expect(component['activeImage']()).toBeUndefined();
         expect(host.querySelector('img')).toBeNull();
+    });
+});
+
+describe('Image preview initial selection', () => {
+    it('opens the requested image and highlights its thumbnail', () => {
+        const { host } = setup({ collageImages: images, initialIndex: 1 });
+        expect(host.querySelector('img')?.alt).toBe('Second photo');
+        expect(host.querySelectorAll('.fd-ui-image-preview-dialog__thumbnail')[1].getAttribute('aria-pressed')).toBe('true');
+    });
+    it.each([-1, INVALID_LARGE_INDEX, INVALID_FRACTIONAL_INDEX, NaN])('falls back to the cover for invalid index %s', initialIndex => {
+        const { host } = setup({ collageImages: images, initialIndex });
+        expect(host.querySelector('img')?.alt).toBe('First photo');
     });
 });

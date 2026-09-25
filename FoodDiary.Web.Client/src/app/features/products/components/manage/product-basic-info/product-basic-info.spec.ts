@@ -226,3 +226,20 @@ function createProductSignalForm(model = createProductForm()): FieldTree<Product
         }),
     );
 }
+
+describe('Product cover management', () => {
+    it('uses the first upload as cover, reorders explicitly and promotes the next remaining photo', () => {
+        setRequiredInputs();
+        const first = { assetId: 'first', url: '/first.jpg' };
+        const second = { assetId: 'second', url: '/second.jpg' };
+        component['setPhotos']([first, second]);
+        expect(component.form().imageUrl().value()).toEqual(first);
+        component['setCover'](second);
+        expect(component['productPhotos']()).toEqual([second, first]);
+        expect(component.form().imageUrl().value()).toEqual(second);
+        component['setPhotos']([first]);
+        expect(component.form().imageUrl().value()).toEqual(first);
+        component['setPhotos']([]);
+        expect(component.form().imageUrl().value()).toBeNull();
+    });
+});

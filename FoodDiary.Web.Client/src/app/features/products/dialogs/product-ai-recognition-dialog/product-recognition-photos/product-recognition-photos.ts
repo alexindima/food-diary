@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
+import { FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit/menu';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
@@ -10,15 +13,39 @@ const MAX_PHOTOS = 5;
     selector: 'fd-product-recognition-photos',
     templateUrl: './product-recognition-photos.html',
     styleUrl: './product-recognition-photos.scss',
-    imports: [TranslatePipe, FdUiButtonComponent, ImageUploadFieldComponent],
+    imports: [
+        TranslatePipe,
+        FdUiButtonComponent,
+        ImageUploadFieldComponent,
+        FdUiMenuComponent,
+        FdUiMenuItemComponent,
+        FdUiMenuTriggerDirective,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductRecognitionPhotosComponent {
+    private readonly dialogService = inject(FdUiDialogService);
+    public readonly editor = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);
+
+    protected preview(index: number): void {
+        this.dialogService.open(FdUiImagePreviewDialogComponent, {
+            size: 'lg',
+            width: 'var(--fd-size-dialog-media-width)',
+            maxWidth: 'var(--fd-size-dialog-media-max-width)',
+            data: { collageImages: this.photos().map(photo => ({ url: photo.url ?? '' })), initialIndex: index },
+        });
+    }
+
+    protected readonly emptySlots = computed(() =>
+        this.editor() && this.photos().length > 0
+            ? Array.from({ length: Math.min(MAX_PHOTOS - 1, MAX_PHOTOS - this.photos().length) }, (_, index) => index)
+            : [],
+    );
 
     protected readonly maxPhotos = MAX_PHOTOS;
     protected readonly clearRequest = signal(0);

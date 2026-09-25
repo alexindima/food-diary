@@ -4512,7 +4512,9 @@
         "PROCESSING_HINT": "You can close this dialog: recognition will continue. Find the result in recent recognitions.",
         "EMPTY": "No product was found. Try another photo or add a hint.",
         "REVIEW_HINT": "Review the name, quantity and nutrients before applying. AI can make mistakes; nutrition calculated from a photo is an estimate.",
-        "LABEL_REVIEW_HINT": "Values were read from the label. Review the quantity, unit and nutrients. Empty fields could not be read; they are not zero."
+        "LABEL_REVIEW_HINT": "Values were read from the label. Review the quantity, unit and nutrients. Empty fields could not be read; they are not zero.",
+        "PHOTO_ACTIONS": "Actions for photo {{index}}",
+        "VIEW_PHOTO": "View photo"
     },
     "IMAGE_UPLOAD_FIELD": {
         "SELECT_FILE": "Add photo",
