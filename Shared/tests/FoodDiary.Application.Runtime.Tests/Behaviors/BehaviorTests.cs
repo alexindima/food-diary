@@ -79,6 +79,38 @@ public class BehaviorTests {
     }
 
     [Fact]
+    public async Task LoggingBehavior_WhenPipelineCancellationIsRequested_LogsDebugAndRethrows() {
+        var logger = new RecordingLogger<LoggingBehavior<TestQuery, Result<string>>>();
+        var behavior = new LoggingBehavior<TestQuery, Result<string>>(logger);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            behavior.Handle(
+                new TestQuery(),
+                cancellationToken => Task.FromCanceled<Result<string>>(cancellationToken),
+                cancellationTokenSource.Token));
+
+        Assert.Equal(LogLevel.Debug, logger.LastLogLevel);
+    }
+
+    [Fact]
+    public async Task LoggingBehavior_WhenUnrelatedCancellationIsThrown_LogsErrorAndRethrows() {
+        var logger = new RecordingLogger<LoggingBehavior<TestQuery, Result<string>>>();
+        var behavior = new LoggingBehavior<TestQuery, Result<string>>(logger);
+        using var unrelatedCancellationTokenSource = new CancellationTokenSource();
+        await unrelatedCancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            behavior.Handle(
+                new TestQuery(),
+                _ => Task.FromCanceled<Result<string>>(unrelatedCancellationTokenSource.Token),
+                CancellationToken.None));
+
+        Assert.Equal(LogLevel.Error, logger.LastLogLevel);
+    }
+
+    [Fact]
     public async Task CommandTransactionBehavior_WhenHandlerSucceeds_SavesThenFlushesPostCommitActions() {
         var callOrder = new List<string>();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();

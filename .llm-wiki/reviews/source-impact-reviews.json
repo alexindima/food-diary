@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
+          "sha256": "d2d5e75099d94db9540eec0c9c2b1d8b77be52eef66f4ba58480f98225a508b2"
         }
       ],
-      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
+      "reason": "Added focused positive and negative regression tests for pipeline versus unrelated cancellation; exception propagation remains unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:52.7397224Z"
+      "gitHead": "d45e1146c1a552a68dcafa11a9ba1c422457c6b7",
+      "reviewedAtUtc": "2026-09-25T05:18:34.8204695Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "14279e7ba8c11dee7e5d4645999299c677cb7bc01b71cd70aac9b61ec4e4b9e8"
+          "sha256": "8dd125368a2adbb802d0241e5f0b69e5e9b6ab2fc945e8ebdff881cb0a5ea547"
         }
       ],
-      "reason": "Existing controller-mapping-mediator convention restored; generated references reviewed.",
+      "reason": "Logging severity changes only when the existing pipeline token is already cancelled; request handling, status mapping, retries, persistence, and deployment topology are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8cbf443c9738591ec57360bbb23e14079a6c34e2",
-      "reviewedAtUtc": "2026-09-22T23:27:11.8441504Z"
+      "gitHead": "d45e1146c1a552a68dcafa11a9ba1c422457c6b7",
+      "reviewedAtUtc": "2026-09-25T05:18:35.1001326Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,13 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f16d30c93bf6ec38249a88be6bd6f9590b8bf90a6b183fbf92559884fafade3b"
+          "sha256": "d2d5e75099d94db9540eec0c9c2b1d8b77be52eef66f4ba58480f98225a508b2"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "8dd125368a2adbb802d0241e5f0b69e5e9b6ab2fc945e8ebdff881cb0a5ea547"
         }
       ],
-      "reason": "Regenerated quality index contains tool line-count changes only; static navigation and security ranking semantics unchanged.",
+      "reason": "No new data fields or payload logging were introduced; the change removes false error classification without suppressing unrelated cancellation errors.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:53.9585868Z"
+      "gitHead": "d45e1146c1a552a68dcafa11a9ba1c422457c6b7",
+      "reviewedAtUtc": "2026-09-25T05:18:35.4976255Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
