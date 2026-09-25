@@ -1,3 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProductPage;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
@@ -112,6 +115,29 @@ public sealed class FavoriteProductsControllerTests {
         Assert.Equal(favoriteProductId, command.FavoriteProductId);
     }
 
+    [Fact]
+    public async Task GetPage_PreservesOwnerSearchPaginationAndMapsItems() {
+        var owner = Guid.NewGuid();
+        FavoriteProductModel favorite = CreateFavorite();
+        var page = new PagedResponse<FavoriteProductModel>([favorite], 2, 10, 3, 21);
+        IRequest<Result<PagedResponse<FavoriteProductModel>>>? sent = null;
+        FavoriteProductsController controller = CreateController(SubstituteSender.Create(Result.Success(page), request => sent = request));
+
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(owner, new GetFavoriteProductPageHttpQuery(2, 10, "rice")));
+
+        GetFavoriteProductPageQuery query = Assert.IsType<GetFavoriteProductPageQuery>(sent);
+        PagedHttpResponse<FavoriteProductHttpResponse> response = Assert.IsType<PagedHttpResponse<FavoriteProductHttpResponse>>(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(owner, query.UserId),
+            () => Assert.Equal("rice", query.Search),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(10, query.Limit),
+            () => Assert.Equal(2, response.Page),
+            () => Assert.Equal(10, response.Limit),
+            () => Assert.Equal(3, response.TotalPages),
+            () => Assert.Equal(21, response.TotalItems),
+            () => Assert.Equal(favorite.Id, Assert.Single(response.Data).Id));
+    }
     private static FavoriteProductsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {

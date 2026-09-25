@@ -89,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ProcessNextFoodRecognitionCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/AiUsageModelTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Behaviors/OwnerRequestTransactionTests.cs`
@@ -111,7 +112,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs`
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionNotifierTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/AiConsentTests.cs`
-- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 
 ## Working Rule
 

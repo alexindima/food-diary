@@ -18,6 +18,50 @@ namespace FoodDiary.Presentation.Api.Tests;
 [Collection(PresentationTelemetryCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class TelemetryActionFilterTests {
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task Cancellation_FromResultOrThrownResource_IsDeferredUntilFinalResponse(bool resultFilter, bool throws) {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext resource = CreateResourceExecutingContext("Get");
+        var responseFeature = new CompletingResponseFeature();
+        resource.HttpContext.Features.Set<IHttpResponseFeature>(responseFeature);
+        using var unrelated = new CancellationTokenSource();
+        var exception = new OperationCanceledException(unrelated.Token);
+
+        Task ExecuteAsync() {
+            if (!resultFilter) {
+                return filter.OnResourceExecutionAsync(resource, () => throws
+                    ? Task.FromException<ResourceExecutedContext>(exception)
+                    : Task.FromResult(new ResourceExecutedContext(resource, []) { Exception = exception }));
+            }
+            ResultExecutingContext result = CreateResultExecutingContext(resource.ActionDescriptor, resource.HttpContext, new OkResult());
+            return filter.OnResultExecutionAsync(result, () => throws
+                ? Task.FromException<ResultExecutedContext>(exception)
+                : Task.FromResult(new ResultExecutedContext(result, [], result.Result, result.Controller) { Exception = exception }));
+        }
+
+        if (throws) {
+            Assert.Same(exception, await Assert.ThrowsAsync<OperationCanceledException>(ExecuteAsync));
+        } else {
+            await ExecuteAsync();
+        }
+        Assert.Empty(metrics.Operations);
+        resource.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await responseFeature.CompleteAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal("failure", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Equal("UnhandledException", Assert.Single(metrics.Failures).Tags["error.code"]),
+            () => Assert.Equal(ActivityStatusCode.Error, Assert.Single(activities.Completed).Status),
+            () => Assert.Single(logger.Entries),
+            () => Assert.Empty(resource.HttpContext.Items));
+    }
+
     [Fact]
     public async Task OnResourceExecutionAsync_WithSuccessfulResult_RecordsFinalStatusOnce() {
         using var metrics = new PresentationMetricListener();

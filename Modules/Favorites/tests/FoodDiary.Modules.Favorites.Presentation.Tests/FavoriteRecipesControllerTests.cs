@@ -1,3 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipePage;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
@@ -88,6 +91,29 @@ public sealed class FavoriteRecipesControllerTests {
         Assert.Equal(favoriteRecipeId, command.FavoriteRecipeId);
     }
 
+    [Fact]
+    public async Task GetPage_PreservesOwnerSearchPaginationAndMapsItems() {
+        var owner = Guid.NewGuid();
+        FavoriteRecipeModel favorite = CreateFavorite();
+        var page = new PagedResponse<FavoriteRecipeModel>([favorite], 2, 10, 3, 21);
+        IRequest<Result<PagedResponse<FavoriteRecipeModel>>>? sent = null;
+        FavoriteRecipesController controller = CreateController(SubstituteSender.Create(Result.Success(page), request => sent = request));
+
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(owner, new GetFavoriteRecipePageHttpQuery(2, 10, "rice")));
+
+        GetFavoriteRecipePageQuery query = Assert.IsType<GetFavoriteRecipePageQuery>(sent);
+        PagedHttpResponse<FavoriteRecipeHttpResponse> response = Assert.IsType<PagedHttpResponse<FavoriteRecipeHttpResponse>>(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(owner, query.UserId),
+            () => Assert.Equal("rice", query.Search),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(10, query.Limit),
+            () => Assert.Equal(2, response.Page),
+            () => Assert.Equal(10, response.Limit),
+            () => Assert.Equal(3, response.TotalPages),
+            () => Assert.Equal(21, response.TotalItems),
+            () => Assert.Equal(favorite.Id, Assert.Single(response.Data).Id));
+    }
     private static FavoriteRecipesController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {

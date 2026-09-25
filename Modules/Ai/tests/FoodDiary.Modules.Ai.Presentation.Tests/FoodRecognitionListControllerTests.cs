@@ -34,7 +34,10 @@ public sealed class FoodRecognitionListControllerTests {
     [Fact]
     public async Task List_RequestsOwnedJobsAndMapsEachResult() {
         var owner = Guid.NewGuid();
-        var job = new FoodRecognitionJobModel(Guid.NewGuid(), owner, Guid.NewGuid(), "https://example.com/image", Description: null, "Queued", DateTime.UtcNow, DateTime.UtcNow);
+        var image = new FoodRecognitionImageModel(Guid.NewGuid(), "https://example.com/label");
+        var label = new ProductLabelModel("Yogurt", "Brand", 100, "g", 60, 5, 2, 6, Fiber: null, Alcohol: null, "label notes");
+        var job = new FoodRecognitionJobModel(Guid.NewGuid(), owner, Guid.NewGuid(), "https://example.com/image", Description: null, "Queued", DateTime.UtcNow, DateTime.UtcNow,
+            Vision: new FoodVisionModel([], ProductLabel: label), IsProductLabel: true, AdditionalImages: [image]);
         var jobs = new PagedResponse<FoodRecognitionJobModel>([job], 2, 20, 2, 21);
         IRequest<Result<PagedResponse<FoodRecognitionJobModel>>>? sent = null;
         ISender sender = SubstituteSender.Create(Result.Success(jobs), request => sent = request);
@@ -52,5 +55,21 @@ public sealed class FoodRecognitionListControllerTests {
         FoodRecognitionJobHttpResponse response = Assert.Single(page.Data);
         Assert.Equal(job.Id, response.Id);
         Assert.Equal(job.Status, response.Status);
+        FoodRecognitionImageHttpResponse mappedImage = Assert.Single(response.AdditionalImages!);
+        Assert.Multiple(
+            () => Assert.Equal(image.ImageAssetId, mappedImage.ImageAssetId),
+            () => Assert.Equal(image.ImageUrl, mappedImage.ImageUrl),
+            () => Assert.True(response.IsProductLabel),
+            () => Assert.Equal(label.Name, response.Vision!.ProductLabel!.Name),
+            () => Assert.Equal(label.Brand, response.Vision!.ProductLabel!.Brand),
+            () => Assert.Equal(label.BaseAmount, response.Vision!.ProductLabel!.BaseAmount),
+            () => Assert.Equal(label.BaseUnit, response.Vision!.ProductLabel!.BaseUnit),
+            () => Assert.Equal(label.Calories, response.Vision!.ProductLabel!.Calories),
+            () => Assert.Equal(label.Protein, response.Vision!.ProductLabel!.Protein),
+            () => Assert.Equal(label.Fat, response.Vision!.ProductLabel!.Fat),
+            () => Assert.Equal(label.Carbs, response.Vision!.ProductLabel!.Carbs),
+            () => Assert.Null(response.Vision!.ProductLabel!.Fiber),
+            () => Assert.Null(response.Vision!.ProductLabel!.Alcohol),
+            () => Assert.Equal(label.Notes, response.Vision!.ProductLabel!.Notes));
     }
 }

@@ -347,6 +347,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         var query = new FavoriteRecipeQuery(context);
+        Assert.Empty(await query.GetByRecipeIdsReadModelsAsync(owner.Id, []));
         (IReadOnlyList<FavoriteRecipeReadModel> pageOne, int total) = await query.GetPageReadModelsAsync(owner.Id, 1, 1, search: null);
         (IReadOnlyList<FavoriteRecipeReadModel> pageTwo, _) = await query.GetPageReadModelsAsync(owner.Id, 2, 1, search: null);
         Assert.Equal(2, total);

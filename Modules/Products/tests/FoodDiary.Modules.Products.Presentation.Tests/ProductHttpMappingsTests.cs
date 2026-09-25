@@ -359,9 +359,11 @@ public sealed class ProductHttpMappingsTests {
             "green",
             123456,
             IsFavorite: true,
-            favoriteProductId);
+            favoriteProductId) { Images = [new ProductImageModel(Guid.NewGuid(), "https://example.test/front.jpg"), new ProductImageModel(ImageAssetId: null, "https://example.test/back.jpg")] };
 
         ProductHttpResponse response = model.ToHttpResponse();
+        Assert.Equal(model.Images.Select(image => image.ImageAssetId), response.Images.Select(image => image.ImageAssetId));
+        Assert.Equal(model.Images.Select(image => image.ImageUrl), response.Images.Select(image => image.ImageUrl), StringComparer.Ordinal);
 
         Assert.Multiple(
             () => Assert.Equal(model.Id, response.Id),

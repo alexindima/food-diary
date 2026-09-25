@@ -26,6 +26,7 @@ public sealed class FavoriteProductPageIntegrationTests(PostgresDatabaseFixture 
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         var query = new FavoriteProductQuery(context);
+        Assert.Empty(await query.GetByProductIdsReadModelsAsync(owner.Id, []));
         (IReadOnlyList<FavoriteProductReadModel> one, int total) = await query.GetPageReadModelsAsync(owner.Id, 1, 1, search: null);
         (IReadOnlyList<FavoriteProductReadModel> two, _) = await query.GetPageReadModelsAsync(owner.Id, 2, 1, search: null);
         Assert.Equal(2, total);

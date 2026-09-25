@@ -9,8 +9,8 @@
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 960,
-    "criticalSymbolsWithTestReferences": 922,
-    "criticalSymbolsWithoutTestReferences": 38,
+    "criticalSymbolsWithTestReferences": 923,
+    "criticalSymbolsWithoutTestReferences": 37,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -17101,8 +17101,8 @@
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.18
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
@@ -45455,9 +45455,10 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
       "line": 14,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs"
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45954,9 +45955,10 @@
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
       "line": 12,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.CreateCommandTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.CreateCommandTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46171,9 +46173,11 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommandHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -46247,9 +46251,10 @@
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -46404,9 +46409,10 @@
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -47419,8 +47425,9 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -47864,8 +47871,9 @@
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -54123,8 +54131,9 @@
       "role": "Validator",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
       "line": 7,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",

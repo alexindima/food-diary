@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1275,
     "ambiguousContracts": 2,
-    "consumerEdges": 9957,
+    "consumerEdges": 9983,
     "productionConsumerEdges": 5692,
-    "testConsumerEdges": 4265,
+    "testConsumerEdges": 4291,
     "consumedContracts": 1275,
     "unconsumedContracts": 0
   },
@@ -26149,6 +26149,19 @@
         "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AnalyzeFoodImageCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -32324,6 +32337,19 @@
         "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateProductCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsValidatorTests.cs",
       "isTest": true,
       "referenceCount": 13
@@ -35483,6 +35509,19 @@
         "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -35850,6 +35889,19 @@
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "DeleteProductCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "DeleteProductCommand",
@@ -37446,6 +37498,19 @@
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "DuplicateProductCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "DuplicateProductCommand",
@@ -39395,7 +39460,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "FavoriteMealHttpResponse",
@@ -39499,7 +39564,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
     },
     {
       "contract": "FavoriteProductQuery",
@@ -39603,7 +39668,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "FavoriteRecipeQuery",
@@ -39915,6 +39980,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -45651,6 +45729,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetFavoriteMealPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteMeals/Requests/GetFavoriteMealPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetFavoriteMealPageQuery",
       "roles": [
         "Query"
@@ -45714,6 +45805,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetFavoriteMealPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMealPage/GetFavoriteMealPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetFavoriteMealsQuery",
@@ -45807,6 +45911,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetFavoriteProductPageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/GetFavoriteProductPageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetFavoriteProductPageQuery",
       "roles": [
         "Query"
@@ -45857,6 +45974,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/GetFavoriteProductPageTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "GetFavoriteProductPageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProductPage/GetFavoriteProductPageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetFavoriteProductsQuery",
@@ -45950,6 +46080,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetFavoriteRecipePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/GetFavoriteRecipePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetFavoriteRecipePageQuery",
       "roles": [
         "Query"
@@ -46000,6 +46143,19 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "GetFavoriteRecipePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipePage/GetFavoriteRecipePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetFavoriteRecipesQuery",
@@ -78887,6 +79043,19 @@
         "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -79875,6 +80044,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -79930,6 +80112,19 @@
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/RecordingImageAssetAccessService.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IImageAssetAccessService",
@@ -80528,6 +80723,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IImageAssetContentService",
@@ -92294,6 +92502,19 @@
       "referenceCount": 10
     },
     {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IOpenFoodFactsProductCacheReadRepository",
       "roles": [
         "ReadRepository"
@@ -94591,6 +94812,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductLookupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Common/IProductLookupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FavoriteProductSourceReadServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -105499,7 +105733,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IRequest",
@@ -105512,7 +105746,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "IRequest",
@@ -105525,7 +105759,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IRequest",
@@ -117005,6 +117239,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IUserAiProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAiProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IUserAiProfileReadService",
@@ -131562,6 +131809,45 @@
         "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/PagedHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Presentation.Tests/RecipeCommentHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -132540,6 +132826,45 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/GetFavoriteRecipePageTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "PagedResponse",
@@ -142495,6 +142820,19 @@
       "consumerPath": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "StartFoodRecognitionCommand",

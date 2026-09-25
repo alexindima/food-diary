@@ -1316,6 +1316,8 @@ public sealed class OpenAiFoodServiceTests {
     [InlineData("{\"baseUnit\":\"kg\"}")]
     [InlineData("null")]
     [InlineData("not json")]
+    [InlineData("")]
+    [InlineData(" ")]
     public async Task ProductLabel_InvalidProviderValuesAreRejected(string json) {
         using var http = new HttpClient(new CapturingHttpMessageHandler(_ => CreateOpenAiSuccessResponse(json)));
         OpenAiFoodClient client = CreateClient(http, new OpenAiOptions { ApiKey = "test-key" });

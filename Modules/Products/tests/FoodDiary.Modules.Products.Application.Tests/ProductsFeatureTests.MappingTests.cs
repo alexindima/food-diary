@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.Contracts.Models;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
@@ -10,6 +12,22 @@ using FoodDiary.Modules.Products.Application.Models;
 namespace FoodDiary.Modules.Products.Application.Tests;
 
 public partial class ProductsFeatureTests {
+    [Fact]
+    public void OverviewMapping_PreservesGalleryOrderAndOptionalAssetIds() {
+        var source = new ProductOverviewReadItem(
+            ProductId.New(), UserId.New(), Barcode: null, "Apple", Brand: null,
+            ProductType.Unknown, Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null, MeasurementUnit.G,
+            100, 100, 52, 0, 0, 14, 0, 0, 0, Visibility.Private, DateTime.UtcNow, IsOwnedByCurrentUser: true, 80, "green", UsdaFdcId: null) {
+            Images = [new(Guid.NewGuid(), "https://example.test/front.jpg"), new(ImageAssetId: null, "https://example.test/back.jpg")],
+        };
+
+        ProductModel model = source.ToModel();
+
+        Assert.Multiple(
+            () => Assert.Equal(source.Images.Select(image => image.ImageAssetId), model.Images.Select(image => image.ImageAssetId)),
+            () => Assert.Equal(source.Images.Select(image => image.ImageUrl), model.Images.Select(image => image.ImageUrl), StringComparer.Ordinal));
+    }
+
     [Fact]
     public void ProductMappings_ToModel_HidesOwnerCommentForNonOwnerAndPreservesFavoriteMetadata() {
         var favoriteProductId = FavoriteProductId.New();

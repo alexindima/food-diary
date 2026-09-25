@@ -80,6 +80,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductUsdaLinkServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.MappingTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.UpdateCommandTests.cs`
@@ -90,15 +91,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/FoodQualityScoreBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ProductExtractedInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ProductImageTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ProductInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ProductsIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/FoodQualityScoreTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/NutritionContractTests.cs`
+- [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FavoriteProductSourceReadServiceTests.cs`
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductSnapshotReadServiceIntegrationTests.cs`
-- [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductHttpMappingsTests.cs`
-- [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductSuggestionsControllerTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`
 
 ## Working Rule
 

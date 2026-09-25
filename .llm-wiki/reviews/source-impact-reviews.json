@@ -90,14 +90,14 @@
       "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "558ba4e99eb24fb6bd54a531202a9f2ae0be95cd251df71f4e3c1eedec6402f2"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "Reviewed the test-only direct Favorites.Contracts reference in Products.Infrastructure.IntegrationTests. It names the existing adapter return DTO and grants no production dependency or aggregate write capability. Runtime and ownership guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:57.9513475Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:46:27.2705057Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -219,13 +219,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c95ac43724a9c27d45222f67fa811df7c659764f475776a0426d89b0b9571525"
+          "sha256": "a80726ab66f68f894ab35166c6d0ded2211061a381cabb216921c242baa50c66"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "558ba4e99eb24fb6bd54a531202a9f2ae0be95cd251df71f4e3c1eedec6402f2"
         }
       ],
-      "reason": "Pagination remains in existing Ai reader, query and presentation layers. No project references, ownership or DI changes; infrastructure query uses existing AiDbContext.",
+      "reason": "Reviewed the exact project-reference allowlist delta and regenerated architecture-health index. The intentional test-only DTO reference is asserted by the matrix; no production project, module cycle, or drift policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T10:26:03.6128466Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:46:28.6761788Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7690e57b41ec2d3df0149940e55efc4133b1fa86c54319dea3eabc7e23e3fe0e"
+          "sha256": "373d668685cc0efdf32da63ff6aca71d91db925eaf9185ab78c10c3f2ba7c669"
         }
       ],
-      "reason": "All IFoodRecognitionJobReader.ListAsync call sites migrated to page, limit, nullable type and tuple total. Shared PaginationPolicy bounds pages; handler and controller tests pass.",
+      "reason": "Reviewed the regenerated contract index: production consumer edges remain 5692; added edges are test fixtures exercising existing DTOs and handlers. No wire or in-process contract changed, so the consumer-review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T10:26:10.6615780Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:50:16.7294756Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -824,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f868bc3c7a3e42a123d169d46b39cf0ee5258919bb2de3d72c3f030914acd2af"
+          "sha256": "85de811510cda241abb8ef3fa9be47e1cd39479357fbe9dc762e552a12efc5b1"
         }
       ],
-      "reason": "Final incremental changes only add busy-state scan decoration, theme-token colors and empty-state presentation. No provider calls, authorization or persistence changes. Existing pagination test evidence remains applicable; latest frontend production build and browser theme/reduced-motion checks passed.",
+      "reason": "Reviewed new direct test references for AI recognition and Products gallery paths. Structural navigation signals retain their documented limits; coverage claims are backed separately by dotCover snapshots.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T16:25:20.0796083Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:50:18.4976413Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -914,21 +918,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f868bc3c7a3e42a123d169d46b39cf0ee5258919bb2de3d72c3f030914acd2af"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9df13b3604b8f96a81f162e93c6fff728efdb361f1afbdc79789bedb1b70505c"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d57fc6cd06e5f759ea62342e94891f60bd0f31c63dab4df5a026532ab8f8e3a0"
+          "sha256": "85de811510cda241abb8ef3fa9be47e1cd39479357fbe9dc762e552a12efc5b1"
         }
       ],
-      "reason": "Final incremental changes only add busy-state scan decoration, theme-token colors and empty-state presentation. No provider calls, authorization or persistence changes. Existing pagination test evidence remains applicable; latest frontend production build and browser theme/reduced-motion checks passed.",
+      "reason": "The quality index gains references from regression tests only. No security scanner, runtime boundary or privacy declaration changed; the page correctly continues to distinguish navigation signals from security evidence.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T16:25:20.9314217Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:50:21.5420365Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1182,17 +1178,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "b7525ecd7b9faccbda196a096f2daceb74862dd63ab01677b08d79e75e0cf70b",
+      "pageSha256": "73398eac6a1d8c10dbe85c604fb373d402b3bc6ca4103419751c0b4b8d9cd8e5",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "df2ab23a7c00a23d2243c9d5fb2233b116ec3ef130da10586b34699fa6be01a0"
+          "sha256": "df1ad70dc6f6982d97cf91c96df140479497da33005a4caa2ea9232196745567"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "Reviewed repository catalog changes for added test files and one narrow test project reference. No runtime file, query ranking, index schema or retrieval rule changed; current retrieval guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:59.6317663Z"
+      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
+      "reviewedAtUtc": "2026-09-25T20:50:19.9014199Z"
     },
     {
       "pageId": "workflow.review-diff",

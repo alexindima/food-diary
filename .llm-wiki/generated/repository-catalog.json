@@ -9431,6 +9431,7 @@
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
+          "Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
           "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj",
