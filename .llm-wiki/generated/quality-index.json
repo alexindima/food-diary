@@ -44034,11 +44034,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 3,
+      "nonBlankLines": 60,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
+      "structuralRiskScore": 7.2
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
