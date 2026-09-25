@@ -226,6 +226,17 @@ describe('MealCardComponent cover image', () => {
 });
 
 describe('MealCardComponent collage images', () => {
+    it('shows the full unique gallery count, not just the four collage tiles', async () => {
+        const { fixture, el } = await setupMealCardAsync();
+        const items = Array.from({ length: AI_ITEM_COUNT }, (_, index) => ({ product: { imageUrl: `/photo-${index}.jpg` } }));
+        fixture.componentRef.setInput('meal', { ...MOCK_MEAL, items, aiSessions: [{ imageUrl: '/photo-0.jpg' }] });
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__photo-count')?.textContent.trim()).toBe(String(AI_ITEM_COUNT));
+        fixture.componentRef.setInput('meal', { ...MOCK_MEAL, items, imageUrl: '/cover.jpg' });
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__photo-count')).toBeNull();
+    });
+
     it('should build collage images from product and recipe items', async () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.componentRef.setInput('meal', createItemCollageMeal());

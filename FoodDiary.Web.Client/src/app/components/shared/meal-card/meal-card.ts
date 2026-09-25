@@ -114,6 +114,7 @@ export class MealCardComponent {
         return itemImages.length > 1 ? itemImages.slice(0, COLLAGE_IMAGE_LIMIT) : [];
     });
     protected readonly hasPreviewImage = computed(() => this.resolvePreviewImage() !== undefined || this.collageImages().length > 0);
+    protected readonly previewImageCount = computed(() => (this.resolvePreviewImage() !== undefined ? 1 : this.resolveItemImages().length));
 
     protected readonly itemCount = computed(() => {
         const meal = this.meal();

@@ -13,6 +13,10 @@
             (preview)="previewCardImage()"
         />
 
+        @if (imageCount() > 1) {
+            <span class="entity-card__photo-count" aria-hidden="true">{{ imageCount() }}</span>
+        }
+
         @if (ownershipIcon(); as icon) {
             <span class="entity-card__ownership-badge fd-inline-center" aria-hidden="true">
                 <fd-ui-icon class="entity-card__ownership-badge-icon" [name]="icon" />

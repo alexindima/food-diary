@@ -1,16 +1,4 @@
 :host {
     display: block;
-    position: relative;
     --entity-card-placeholder-size: clamp(40px, 10cqi, 96px);
-}
-
-.product-card__photo-count {
-    position: absolute;
-    top: var(--fd-space-sm);
-    left: var(--fd-space-sm);
-    padding: var(--fd-space-xxs) var(--fd-space-xs);
-    border-radius: var(--fd-radius-pill);
-    background: var(--fd-bg-scrim);
-    color: var(--fd-color-white);
-    pointer-events: none;
 }

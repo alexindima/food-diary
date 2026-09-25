@@ -42,6 +42,7 @@ export class EntityCardComponent {
 
     public readonly backgroundKey = input('');
     public readonly imageUrl = input<string | null | undefined>(null);
+    public readonly imageCount = input(0);
     public readonly collageImages = input<readonly EntityCardCollageImage[]>([]);
     public readonly imageAlt = input.required<string>();
     public readonly imageIcon = input('restaurant');
