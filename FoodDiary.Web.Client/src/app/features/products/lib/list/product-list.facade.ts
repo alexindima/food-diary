@@ -49,12 +49,7 @@ import {
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
 import { resolveProductImageUrl } from '../product-image.util';
-import {
-    buildFavoriteProductSnapshot,
-    excludeRecentProducts,
-    getProductListActiveFilterCount,
-    resolveProductListFilterChanges,
-} from './product-list.state';
+import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
 
 @Injectable()
 export class ProductListFacade {
@@ -79,7 +74,13 @@ export class ProductListFacade {
     });
     public readonly searchForm = form(this.searchModel);
     public readonly productData = new PagedData<Product>();
-    public currentPageIndex = 0;
+    private readonly pageIndex = signal(0);
+    public get currentPageIndex(): number {
+        return this.pageIndex();
+    }
+    public set currentPageIndex(value: number) {
+        this.pageIndex.set(value);
+    }
     public readonly recentProducts = signal<Product[]>([]);
     public readonly favorites = signal<FavoriteProduct[]>([]);
     public readonly favoriteTotalCount = signal(0);
@@ -91,7 +92,9 @@ export class ProductListFacade {
     public readonly onlyMineFilter = computed(() => this.searchModel().onlyMine);
     public readonly isMobileView = this.viewportService.isMobile;
     public readonly hasSearchValue = computed(() => (this.searchValue()?.trim().length ?? 0) > 0);
-    public readonly showRecentSection = computed(() => !this.hasSearchValue() && this.recentProducts().length > 0);
+    public readonly showRecentSection = computed(
+        () => this.pageIndex() === 0 && !this.hasSearchValue() && !this.hasActiveFilters() && this.recentProducts().length > 0,
+    );
     public readonly recentProductItems = computed<ProductCardViewModel[]>(() => {
         if (!this.showRecentSection()) {
             return [];
@@ -102,18 +105,7 @@ export class ProductListFacade {
             imageUrl: this.resolveImage(product),
         }));
     });
-    public readonly allProductsSectionItems = computed(() => {
-        const products = this.productData.items();
-        if (products.length === 0) {
-            return [];
-        }
-
-        if (!this.showRecentSection()) {
-            return products;
-        }
-
-        return excludeRecentProducts(products, this.recentProducts());
-    });
+    public readonly allProductsSectionItems = computed(() => this.productData.items());
     public readonly allProductItems = computed<ProductCardViewModel[]>(() =>
         this.allProductsSectionItems().map(product => ({
             product,
@@ -165,7 +157,7 @@ export class ProductListFacade {
     }
 
     public retryLoad(): void {
-        this.loadInitialOverview().subscribe();
+        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
     }
 
     public onPageChange(pageIndex: number): void {
@@ -275,6 +267,9 @@ export class ProductListFacade {
     }
 
     public loadProducts(page: number, limit: number, search: string | null): Observable<void> {
+        if (page === 1 && (search?.trim().length ?? 0) === 0 && !this.hasActiveFilters()) {
+            return this.loadInitialOverview();
+        }
         this.cancelLoad.next();
         this.productData.setLoading(true);
         this.offProducts.set([]);
@@ -294,7 +289,6 @@ export class ProductListFacade {
             takeUntilDestroyed(this.destroyRef),
             tap(data => {
                 this.productData.setData(data);
-                this.recentProducts.set([]);
                 this.currentPageIndex = data.page - 1;
                 this.errorKey.set(null);
             }),

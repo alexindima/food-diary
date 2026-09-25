@@ -4517,7 +4517,7 @@
       "role": "Component",
       "selector": "fd-product-list-groups",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-groups/product-list-groups.ts",
-      "line": 18
+      "line": 21
     },
     {
       "name": "ProductListOffSectionComponent",
@@ -4629,7 +4629,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "line": 60
+      "line": 55
     },
     {
       "name": "ProductExternalFoodFacade",
@@ -6665,8 +6665,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3714,
-      "russianProperties": 3714,
+      "englishProperties": 3715,
+      "russianProperties": 3715,
       "countsMatch": true
     },
     {

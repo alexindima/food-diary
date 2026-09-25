@@ -95,3 +95,20 @@ function createProduct(id: string, name: string): Product {
         qualityGrade: 'green',
     };
 }
+
+it('keeps the compact open and add actions independent and retains the full catalog card', async () => {
+    const product = createProduct('recent', 'Recent apple');
+    const { fixture, component } = await setupComponentAsync({ recentItems: [createItem(product)], allItems: [createItem(product)] });
+    const host = fixture.nativeElement as HTMLElement;
+    const open = vi.fn();
+    const add = vi.fn();
+    component.openProduct.subscribe(open);
+    component.addToMeal.subscribe(add);
+    host.querySelector<HTMLButtonElement>('.recent-products__open')?.click();
+    expect(open).toHaveBeenCalledWith(product);
+    open.mockClear();
+    host.querySelector<HTMLButtonElement>('.recent-products fd-ui-button button')?.click();
+    expect(add).toHaveBeenCalledWith(product);
+    expect(open).not.toHaveBeenCalled();
+    expect(host.querySelectorAll('fd-product-card')).toHaveLength(1);
+});

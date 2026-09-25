@@ -743,6 +743,14 @@
       "structuralRiskScore": 81.14
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
+      "nonBlankLines": 573,
+      "decisionPoints": 46,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 80.46
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
       "nonBlankLines": 304,
       "decisionPoints": 48,
@@ -805,14 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 77.94
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiQualityAdjustment.ps1",
-      "nonBlankLines": 184,
-      "decisionPoints": 48,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.68
     }
   ],
   "files": [
@@ -10642,11 +10642,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-groups/product-list-groups.ts",
-      "nonBlankLines": 25,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-off-section/product-list-off-section.ts",
@@ -10842,19 +10842,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 577,
-      "decisionPoints": 42,
+      "nonBlankLines": 573,
+      "decisionPoints": 46,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 74.54
+      "structuralRiskScore": 80.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.ts",
-      "nonBlankLines": 101,
-      "decisionPoints": 14,
+      "nonBlankLines": 94,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.02
+      "structuralRiskScore": 21.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/manage/product-external-food.facade.ts",

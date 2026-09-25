@@ -2382,3 +2382,51 @@ async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string)
     await expect(page.locator('.recognition-photos__item')).toHaveCount(2);
     await expect(page.locator('.recognition-photos__item img').first()).toHaveAttribute('src', TEST_IMAGE_URLS[1]);
 }
+
+const RECENT_SHORTCUT_COUNT = 5;
+const RECENT_STRIP_MAX_HEIGHT = 120;
+test.describe('compact recent products', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`keeps the catalog complete and limits recent shortcuts to page one at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 900 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const products = Array.from({ length: 10 }, (_, index) => ({
+                ...createOwnedProduct(),
+                id: `recent-${index}`,
+                name: `Yogurt ${index}`,
+                imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
+            }));
+            const firstPage = { data: products, page: 1, limit: 10, totalPages: 2, totalItems: 11 };
+            await page.route('**/api/v1/products/overview**', async route => {
+                expect(new URL(route.request().url()).searchParams.get('recentLimit')).toBe('5');
+                await route.fulfill({
+                    json: {
+                        allProducts: firstPage,
+                        recentItems: products.slice(0, RECENT_SHORTCUT_COUNT),
+                        favoriteItems: [],
+                        favoriteTotalCount: 0,
+                    },
+                });
+            });
+            await page.route(/\/api\/v1\/products\/?\?/u, async route =>
+                route.fulfill({ json: { ...firstPage, data: [products[0]], page: 2 } }),
+            );
+            await page.goto('/products');
+            const recent = page.locator('.recent-products');
+            await expect(recent.locator('.recent-products__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
+            await expect(page.locator('fd-product-card')).toHaveCount(products.length);
+            expect(await recent.evaluate(el => el.getBoundingClientRect().height)).toBeLessThan(RECENT_STRIP_MAX_HEIGHT);
+            const stripOverflows = await recent.evaluate(el => el.scrollWidth > el.clientWidth + 1);
+            expect(stripOverflows).toBe(width === MEAL_DIALOG_VIEWPORTS[0]);
+            expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`recent-products-${width}.png`) });
+            await page.locator('fd-ui-pagination').getByRole('button', { name: '2', exact: true }).click();
+            await expect(recent).toHaveCount(0);
+            await expect(page.locator('fd-product-card')).toHaveCount(1);
+            await page.locator('fd-ui-pagination').getByRole('button', { name: '1', exact: true }).click();
+            await expect(recent.locator('.recent-products__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
+            await expect(page.locator('fd-product-card')).toHaveCount(products.length);
+        });
+    }
+});

@@ -4006,6 +4006,7 @@
         }
     },
     "PRODUCT_LIST": {
+        "RECENT_ADD": "Add {{name}} to diary",
         "TITLE": "Products",
         "SUBTITLE": "Browse and manage your products",
         "SEARCH_TITLE": "Searching:",

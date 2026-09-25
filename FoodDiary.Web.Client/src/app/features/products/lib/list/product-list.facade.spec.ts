@@ -137,7 +137,7 @@ beforeEach(() => {
 });
 
 describe('ProductListFacade overview', () => {
-    it('loads initial overview and hides duplicate recent products from the all-products section', () => {
+    it('loads recent shortcuts without removing products from the catalog page', () => {
         expect(productService.queryOverview).toHaveBeenCalledWith({
             page: 1,
             limit: PRODUCT_LIST_PAGE_SIZE,
@@ -146,7 +146,7 @@ describe('ProductListFacade overview', () => {
             favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
         });
         expect(facade.recentProducts().map(product => product.id)).toEqual(['recent-product']);
-        expect(facade.allProductItems().map(item => item.product.id)).toEqual(['all-product']);
+        expect(facade.allProductItems().map(item => item.product.id)).toEqual(['recent-product', 'all-product']);
         expect(facade.favorites()).toEqual([createFavoriteProduct()]);
         expect(facade.favoriteTotalCount()).toBe(1);
         expect(facade.errorKey()).toBeNull();
@@ -239,7 +239,7 @@ describe('ProductListFacade search and filters', () => {
 
         expect(openFoodFactsService.search).toHaveBeenCalledWith('banana', PRODUCT_LIST_OFF_SEARCH_LIMIT);
         expect(facade.searchValue()).toBe('banana');
-        expect(facade.recentProducts()).toEqual([]);
+        expect(facade.showRecentSection()).toBe(false);
         expect(facade.productData.items().map(product => product.id)).toEqual(['query-product']);
         expect(facade.offProducts()).toEqual([createOpenFoodFactsProduct()]);
     });
@@ -529,5 +529,26 @@ describe('Product favorites picker callbacks', () => {
         expect(facade.productData.items()[0].favoriteProductId).toBe('restored-id');
         callbacks.remove(favorite).subscribe();
         expect(favoriteProductService.remove).toHaveBeenLastCalledWith('restored-id');
+    });
+});
+
+describe('recent product visibility', () => {
+    it('shows recent products only on the default first page and reloads them on return', () => {
+        expect(facade.showRecentSection()).toBe(true);
+        facade.currentPageIndex = 1;
+        expect(facade.showRecentSection()).toBe(false);
+        facade.currentPageIndex = 0;
+        facade.searchModel.set({ search: 'apple', onlyMine: false });
+        expect(facade.showRecentSection()).toBe(false);
+        facade.searchModel.set({ search: null, onlyMine: true });
+        expect(facade.showRecentSection()).toBe(false);
+        facade.searchModel.set({ search: null, onlyMine: false });
+        facade.hasImageFilter.set(false);
+        expect(facade.showRecentSection()).toBe(false);
+        facade.hasImageFilter.set(null);
+        facade.onPageChange(0);
+        expect(productService.queryOverview).toHaveBeenCalledTimes(2);
+        expect(facade.showRecentSection()).toBe(true);
+        expect(facade.allProductItems()).toHaveLength(2);
     });
 });

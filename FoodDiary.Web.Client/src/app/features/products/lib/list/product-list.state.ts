@@ -20,15 +20,6 @@ export type ProductListFilterChanges = {
     hasChanges: boolean;
 };
 
-export function excludeRecentProducts(products: readonly Product[], recentProducts: readonly Product[]): Product[] {
-    if (recentProducts.length === 0) {
-        return [...products];
-    }
-
-    const recentIds = new Set(recentProducts.map(product => product.id));
-    return products.filter(product => !recentIds.has(product.id));
-}
-
 export function getProductListActiveFilterCount(state: ProductListFilterState): number {
     return (
         (state.onlyMine ? 1 : 0) +

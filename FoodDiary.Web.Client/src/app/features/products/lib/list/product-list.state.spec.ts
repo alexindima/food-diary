@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
-import {
-    buildFavoriteProductSnapshot,
-    excludeRecentProducts,
-    getProductListActiveFilterCount,
-    resolveProductListFilterChanges,
-} from './product-list.state';
+import { MeasurementUnit, ProductType } from '../../models/product.data';
+import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
 
 const CALORIES_FROM = 100;
 const CALORIES_TO = 500;
@@ -15,17 +10,6 @@ const ACTIVE_FILTER_COUNT = 5;
 const FAVORITE_GRAM_BASE_AMOUNT = 100;
 
 describe('product list state', () => {
-    it('excludes recent products without mutating the source list', () => {
-        const recent = createProduct('recent');
-        const other = createProduct('other');
-        const products = [recent, other];
-
-        expect(excludeRecentProducts(products, [recent])).toEqual([other]);
-        expect(products).toEqual([recent, other]);
-        expect(excludeRecentProducts(products, [])).toEqual(products);
-        expect(excludeRecentProducts(products, [])).not.toBe(products);
-    });
-
     it('counts each product type and grouped range/image filters', () => {
         expect(
             getProductListActiveFilterCount({
@@ -80,36 +64,6 @@ describe('product list state', () => {
         expect(snapshot.isFavorite).toBe(true);
     });
 });
-
-function createProduct(id: string): Product {
-    return {
-        id,
-        name: id,
-        barcode: null,
-        brand: null,
-        productType: ProductType.Other,
-        category: null,
-        description: null,
-        comment: null,
-        imageUrl: null,
-        imageAssetId: null,
-        baseUnit: MeasurementUnit.G,
-        baseAmount: FAVORITE_GRAM_BASE_AMOUNT,
-        defaultPortionAmount: DEFAULT_PORTION,
-        caloriesPerBase: 0,
-        proteinsPerBase: 0,
-        fatsPerBase: 0,
-        carbsPerBase: 0,
-        fiberPerBase: 0,
-        alcoholPerBase: 0,
-        usageCount: 0,
-        visibility: ProductVisibility.Private,
-        createdAt: new Date('2026-04-12T10:00:00Z'),
-        isOwnedByCurrentUser: true,
-        qualityScore: 0,
-        qualityGrade: 'red',
-    };
-}
 
 function createFavorite(baseUnit: string): Parameters<typeof buildFavoriteProductSnapshot>[0] {
     return {

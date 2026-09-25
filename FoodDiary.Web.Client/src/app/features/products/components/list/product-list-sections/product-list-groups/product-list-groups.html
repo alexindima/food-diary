@@ -5,16 +5,36 @@
                 <span class="product-list__section-label fd-ui-card-title"> {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }} </span>
                 <span class="product-list__section-line"></span>
             </div>
-            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
+            <div class="recent-products" role="list" [attr.aria-label]="'PRODUCT_LIST.RECENT_PRODUCTS' | translate">
                 @for (item of recentItems(); track item.product.id) {
-                    <fd-product-card
-                        [product]="item.product"
-                        [imageUrl]="item.imageUrl"
-                        [favoriteLoading]="favoriteLoadingIds().has(item.product.id)"
-                        (open)="openProduct.emit(item.product)"
-                        (addToMeal)="addToMeal.emit(item.product)"
-                        (favoriteToggle)="favoriteToggle.emit(item.product)"
-                    />
+                    <div class="recent-products__item" role="listitem">
+                        <!-- A native content button keeps the independent add action outside its click target. -->
+                        <button type="button" class="recent-products__open fd-ui-body-sm" (click)="openProduct.emit(item.product)">
+                            <span class="recent-products__image">
+                                @if (item.imageUrl) {
+                                    <img alt="" width="48" height="48" loading="lazy" [src]="item.imageUrl" />
+                                } @else {
+                                    <fd-ui-icon name="restaurant_menu" size="md" aria-hidden="true" />
+                                }
+                            </span>
+                            <span class="recent-products__copy">
+                                <strong [title]="item.product.name">{{ item.product.name }}</strong>
+                                <span class="fd-ui-meta-text"
+                                    >{{ item.product.caloriesPerBase | localizedNumber: locale() : 0 : 0 }}
+                                    {{ 'GENERAL.UNITS.KCAL' | translate }} / {{ item.product.baseAmount }}
+                                    {{ `GENERAL.UNITS.${item.product.baseUnit}` | translate }}</span
+                                >
+                            </span>
+                        </button>
+                        <fd-ui-button
+                            icon="add"
+                            variant="secondary"
+                            fill="text"
+                            size="sm"
+                            [ariaLabel]="'PRODUCT_LIST.RECENT_ADD' | translate: { name: item.product.name }"
+                            (click)="addToMeal.emit(item.product)"
+                        />
+                    </div>
                 }
             </div>
         </div>
