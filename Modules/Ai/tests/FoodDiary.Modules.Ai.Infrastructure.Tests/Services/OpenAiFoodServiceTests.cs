@@ -1278,6 +1278,52 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal("Ai.InvalidResponse", result.Error.Code);
     }
 
+    [Fact]
+    public async Task ProductLabel_CountAndRecognitionUseAllImagesAndPreserveUnknownValues() {
+        string[] photos = ["data:image/png;base64,AQID", "data:image/png;base64,BAUG"];
+        int calls = 0;
+        using var http = new HttpClient(new CapturingHttpMessageHandler(request => {
+            calls++;
+            using var body = JsonDocument.Parse(CapturingHttpMessageHandler.LastRequestBody!);
+            JsonElement root = body.RootElement;
+            string?[] images = [.. root.GetProperty("input")[0].GetProperty("content").EnumerateArray()
+                .Where(item => string.Equals(item.GetProperty("type").GetString(), "input_image", StringComparison.Ordinal))
+                .Select(item => item.GetProperty("image_url").GetString())];
+            Assert.Equal(photos, images, StringComparer.Ordinal);
+            Assert.Equal("product_label", root.GetProperty("text").GetProperty("format").GetProperty("name").GetString());
+            Assert.Contains("Do not estimate nutrition", root.GetProperty("input")[0].GetProperty("content")[0].GetProperty("text").GetString(), StringComparison.Ordinal);
+            return request.RequestUri!.AbsolutePath.EndsWith("input_tokens", StringComparison.Ordinal)
+                ? CreateTokenCountResponse(200)
+                : CreateOpenAiSuccessResponse("""{"name":"Yogurt","brand":null,"baseAmount":100,"baseUnit":"g","calories":63.5,"protein":5,"fat":2,"carbs":6,"fiber":null,"alcohol":null,"notes":"Unreadable fiber"}""");
+        }));
+        OpenAiFoodClient client = CreateClient(http, new OpenAiOptions { ApiKey = "test-key", VisionModel = "primary", VisionFallbackModel = "fallback" });
+        var product = new ProductImageAnalysis([photos[1]]);
+        Result<AiProviderTokenBudget> budget = await client.GetAnalyzeFoodImageTokenBudgetAsync(photos[0], "ru", description: null, FoodDiary.Modules.Ai.Application.Abstractions.Prompts.AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(photos[0], "ru", description: null, FoodDiary.Modules.Ai.Application.Abstractions.Prompts.AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
+        Assert.True(budget.IsSuccess);
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal(3, calls);
+        Assert.Empty(result.Value.Value.Items);
+        ProductLabelModel label = Assert.IsType<ProductLabelModel>(result.Value.Value.ProductLabel);
+        Assert.Equal(63.5m, label.Calories);
+        Assert.Null(label.Fiber);
+        Assert.Null(label.Alcohol);
+    }
+
+    [Theory]
+    [InlineData("{\"baseAmount\":0}")]
+    [InlineData("{\"calories\":-1}")]
+    [InlineData("{\"baseUnit\":\"kg\"}")]
+    [InlineData("null")]
+    [InlineData("not json")]
+    public async Task ProductLabel_InvalidProviderValuesAreRejected(string json) {
+        using var http = new HttpClient(new CapturingHttpMessageHandler(_ => CreateOpenAiSuccessResponse(json)));
+        OpenAiFoodClient client = CreateClient(http, new OpenAiOptions { ApiKey = "test-key" });
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync("data:image/png;base64,AQID", "ru", description: null, VisionPrompt, CancellationToken.None, new ProductImageAnalysis([]));
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+    }
+
     private static OpenAiFoodClient CreateClient(
         HttpClient httpClient,
         OpenAiOptions options,

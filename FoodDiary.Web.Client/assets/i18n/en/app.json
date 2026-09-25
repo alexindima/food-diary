@@ -750,11 +750,23 @@
         "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check."
     },
     "PRODUCT_AI_DIALOG": {
+        "DROP_PHOTOS": "Select or drop up to {{count}} photos",
+        "ADD_PHOTOS": "Add photos",
+        "COVER_SELECTED": "Cover",
+        "CHOOSE_COVER": "Use as cover",
+        "PHOTO": "Photo",
+        "CONFIRM_REPLACE": "Replace existing product values",
+        "USE_AS_COVER": "Use the selected photo as the cover",
+        "INVALID_RESULT": "Check the name, calories and product quantity.",
+        "UNKNOWN": "Not shown on the label",
+        "APPLY_DISABLED": "Check the values and confirm replacing populated fields.",
+        "PHOTO_COUNT": "{{count}} of {{max}} photos",
+        "PHOTOS_HINT": "Photos of one product: packaging, nutrition label and ingredients.",
         "TITLE": "Product recognition",
         "IMAGE_LABEL": "Photo for recognition",
-        "IMAGE_DESCRIPTION": "Upload a label or product photo. Supported: JPG, PNG, WebP up to 20 MB",
+        "IMAGE_DESCRIPTION": "JPG, PNG, WebP · up to 20 MB each",
         "DESCRIPTION": "Product hint (optional)",
-        "DESCRIPTION_PLACEHOLDER": "e.g. chocolate bar with nuts, 50 g",
+        "DESCRIPTION_PLACEHOLDER": "For example: nutrition values are per 30 g serving",
         "REANALYZE": "Analyze again",
         "ANALYZE": "Analyze photo",
         "STATUS_ANALYZING": "Analyzing photo...",
@@ -777,7 +789,11 @@
         "APPLY": "Apply values",
         "HIDE_ANNOTATIONS": "Hide labels",
         "SHOW_ANNOTATIONS": "Show labels",
-        "ANNOTATIONS_LABEL": "Recognized products on the photo"
+        "ANNOTATIONS_LABEL": "Recognized products on the photo",
+        "PROCESSING_HINT": "You can close this dialog: recognition will continue. Find the result in recent recognitions.",
+        "EMPTY": "No product was found. Try another photo or add a hint.",
+        "REVIEW_HINT": "Review the name, quantity and nutrients before applying. AI can make mistakes; nutrition calculated from a photo is an estimate.",
+        "LABEL_REVIEW_HINT": "Values were read from the label. Review the quantity, unit and nutrients. Empty fields could not be read; they are not zero."
     },
     "IMAGE_UPLOAD_FIELD": {
         "SELECT_FILE": "Add photo",
@@ -791,6 +807,7 @@
         "CROP_SUBTITLE": "Keep a square crop so your image looks sharp.",
         "APPLY": "Apply",
         "ERRORS": {
+            "TOO_MANY_FILES": "You can add {{count}} more photos. Select fewer files.",
             "ONLY_IMAGES": "Only image files are allowed.",
             "FILE_TOO_LARGE": "File size exceeds {{maxSizeMb}} MB.",
             "READ_FAILED": "Could not read the image. Please try another file.",
@@ -3855,6 +3872,7 @@
         "ERROR_DECLINE": "Failed to decline the invitation."
     },
     "AI_RECOGNITION": {
+        "LOAD_ERROR": "Could not load recent recognitions. Please try again.",
         "SHOW_RECENT": "Recent recognitions",
         "STATUS": {
             "Failed": "Interrupted or failed",

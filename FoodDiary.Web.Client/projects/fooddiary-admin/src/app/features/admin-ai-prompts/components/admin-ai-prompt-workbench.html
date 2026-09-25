@@ -26,13 +26,13 @@
         </div>
     } @else {
         <fd-ui-textarea
-            [label]="(scenarioKey() === 'vision' ? 'ADMIN_PROMPTS.PHOTO_HINT' : 'ADMIN_PROMPTS.FOOD_TEXT') | translate"
+            [label]="(requiresImage() ? 'ADMIN_PROMPTS.PHOTO_HINT' : 'ADMIN_PROMPTS.FOOD_TEXT') | translate"
             [rows]="3"
             [value]="text()"
             (valueChange)="text.set($event?.toString() || '')"
         />
     }
-    @if (scenarioKey() === 'vision') {
+    @if (requiresImage()) {
         <!-- UI kit has no file picker; a hidden native input opens the chooser through the shared button. -->
         <input #photoInput type="file" hidden accept="image/jpeg,image/png,image/webp" (change)="uploadAsync(photoInput.files?.item(0))" />
         <fd-ui-button

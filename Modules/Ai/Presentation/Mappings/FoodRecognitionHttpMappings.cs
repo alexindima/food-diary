@@ -13,9 +13,10 @@ public static class FoodRecognitionHttpMappings {
     public static ListFoodRecognitionsQuery ToRecognitionListQuery(this Guid userId) => new(userId);
 
     public static StartFoodRecognitionCommand ToCommand(this StartFoodRecognitionHttpRequest request, Guid userId) =>
-        new(userId, request.Id, request.ImageAssetId, request.Description);
+        new(userId, request.Id, request.ImageAssetId, request.Description, request.IsProductLabel, request.AdditionalImageAssetIds);
 
     public static FoodRecognitionJobHttpResponse ToHttpResponse(this FoodRecognitionJobModel job) =>
         new(job.Id, job.ImageAssetId, job.ImageUrl, job.Description, job.Status, job.CreatedOnUtc, job.UpdatedOnUtc,
-            job.Vision?.ToHttpResponse(), job.Nutrition?.ToHttpResponse(), job.ErrorCode, job.NutritionErrorCode);
+            job.Vision?.ToHttpResponse(), job.Nutrition?.ToHttpResponse(), job.ErrorCode, job.NutritionErrorCode, job.IsProductLabel,
+            (job.AdditionalImages ?? []).Select(image => new FoodRecognitionImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToArray());
 }

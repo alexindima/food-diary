@@ -13,7 +13,7 @@ public sealed class AdminAiPromptWorkbenchIntegrationTests(TestAuthApiWebApplica
     public async Task CatalogAndPreview_AreUsableWithoutPersistingTemplatesOrCallingAi() {
         using HttpClient client = CreateClient(PresentationRoleNames.Admin);
         using var catalog = JsonDocument.Parse(await client.GetStringAsync("/api/v1/admin/ai-prompts/scenarios"));
-        Assert.Equal(6, catalog.RootElement.GetArrayLength());
+        Assert.Equal(8, catalog.RootElement.GetArrayLength());
         foreach (JsonElement scenario in catalog.RootElement.EnumerateArray()) {
             using var format = JsonDocument.Parse(scenario.GetProperty("responseFormatJson").GetString()!);
             Assert.Equal("json_schema", format.RootElement.GetProperty("type").GetString());
@@ -28,6 +28,10 @@ public sealed class AdminAiPromptWorkbenchIntegrationTests(TestAuthApiWebApplica
             () => Assert.Contains("language 'ru'", text, StringComparison.Ordinal));
         using var templates = JsonDocument.Parse(await client.GetStringAsync("/api/v1/admin/ai-prompts"));
         Assert.Equal(0, templates.RootElement.GetArrayLength());
+        HttpResponseMessage labelPreview = await client.PostAsJsonAsync("/api/v1/admin/ai-prompts/preview",
+            new { key = "product-label", locale = "ru", promptText = "Read {{descriptionHint}}. {{languageHint}}", text = "nutrition label" });
+        labelPreview.EnsureSuccessStatusCode();
+        Assert.Contains("nutrition label", await labelPreview.Content.ReadAsStringAsync(), StringComparison.Ordinal);
     }
 
     [RequiresDockerFact]

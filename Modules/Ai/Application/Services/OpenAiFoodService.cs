@@ -29,7 +29,7 @@ public sealed class OpenAiFoodService(
         string? description,
         string requestId,
         CancellationToken cancellationToken,
-        AiPromptOverride? promptOverride = null) {
+        AiPromptOverride? promptOverride = null, ProductImageAnalysis? product = null) {
         const string operation = "vision";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
@@ -38,13 +38,13 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(product is null ? operation : "product-label", contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
                 imageUrl,
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token, product).ConfigureAwait(false);
             if (budgetResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(budgetResult.Error);
             }
@@ -59,7 +59,7 @@ public sealed class OpenAiFoodService(
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token, product).ConfigureAwait(false);
             if (response.IsFailure) {
                 // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
                 return Result.Failure<FoodVisionModel>(response.Error);

@@ -12,6 +12,37 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task ProductPhotos_RoundTripProtectCleanupAndParticipateInIdempotency() {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
+            options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
+        ImageAsset primary = await context.ImageAssets.SingleAsync();
+        var labelPhoto = ImageAsset.Create(primary.UserId, "label.jpg", "https://example.com/label.jpg");
+        context.ImageAssets.Add(labelPhoto);
+        await context.SaveChangesAsync();
+        job = job with { IsProductLabel = true, AdditionalImages = [new FoodRecognitionImageModel(labelPhoto.Id.Value, "https://example.com/label.jpg")] };
+        var store = new FoodRecognitionJobStore(options, TimeProvider.System);
+        Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+        Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+        Assert.Equal("Ai.RecognitionConflict", (await store.CreateAsync(job with { AdditionalImages = [] }, CancellationToken.None)).Error.Code);
+        Assert.Equal("Ai.RecognitionConflict", (await store.CreateAsync(job with { IsProductLabel = false }, CancellationToken.None)).Error.Code);
+        FoodRecognitionJobModel loaded = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(job.UserId, job.Id, CancellationToken.None));
+        Assert.True(loaded.IsProductLabel);
+        Assert.Equal(labelPhoto.Id.Value, Assert.Single(loaded.AdditionalImages!).ImageAssetId);
+        Assert.Single(Assert.Single(await store.ListAsync(job.UserId, CancellationToken.None)).AdditionalImages!);
+        FoodRecognitionJobModel claimed = Assert.IsType<FoodRecognitionJobModel>(await store.ClaimAsync(CancellationToken.None));
+        Assert.Single(claimed.AdditionalImages!);
+        var label = new ProductLabelModel("Yogurt", Brand: null, 100, "g", 63, 5, 2, 6, Fiber: null, Alcohol: null, Notes: null);
+        Assert.True(await store.SaveVisionAsync(job.Id, new FoodVisionModel([], ProductLabel: label), CancellationToken.None));
+        await store.CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, CancellationToken.None);
+        Assert.Equal(label, (await store.GetAsync(job.UserId, job.Id, CancellationToken.None))!.Vision!.ProductLabel);
+        var usage = new ImageAssetUsageQuery(context);
+        Assert.True(await usage.IsAssetInUseAsync(labelPhoto.Id));
+        await context.FoodRecognitionJobs.ExecuteDeleteAsync();
+        Assert.False(await usage.IsAssetInUseAsync(labelPhoto.Id));
+    }
+
     [RequiresDockerTheory]
     [InlineData("Queued")]
     [InlineData("Running")]

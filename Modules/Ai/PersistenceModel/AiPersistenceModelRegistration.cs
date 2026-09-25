@@ -10,6 +10,7 @@ public static class AiPersistenceModelRegistration {
         modelBuilder.ApplyConfiguration(new AiQuotaPeriodConfiguration());
         modelBuilder.ApplyConfiguration(new AiQuotaReservationConfiguration());
         modelBuilder.ApplyConfiguration(new FoodRecognitionJobConfiguration());
+        modelBuilder.ApplyConfiguration(new FoodRecognitionJobImageConfiguration());
         return modelBuilder;
     }
 }

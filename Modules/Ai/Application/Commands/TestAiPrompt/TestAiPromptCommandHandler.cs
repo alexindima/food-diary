@@ -39,7 +39,7 @@ public sealed class TestAiPromptCommandHandler(IOpenAiFoodService foodService, I
             return Result.Failure<string>(image.Error);
         }
         return Serialize(await foodService.AnalyzeFoodImageAsync(image.Value, userId, draft.Text,
-            request.RequestId, cancellationToken, prompt).ConfigureAwait(false));
+            request.RequestId, cancellationToken, prompt, product: string.Equals(draft.Key, "product-label", StringComparison.Ordinal) ? new ProductImageAnalysis([]) : null).ConfigureAwait(false));
     }
 
     private static Result<string> Serialize<T>(Result<T> result) => result.IsSuccess

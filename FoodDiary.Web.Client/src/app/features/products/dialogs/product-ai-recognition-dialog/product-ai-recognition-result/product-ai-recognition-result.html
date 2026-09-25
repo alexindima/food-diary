@@ -1,21 +1,20 @@
+<p class="fd-ui-helper-text">{{ (fromLabel() ? 'PRODUCT_AI_DIALOG.LABEL_REVIEW_HINT' : 'PRODUCT_AI_DIALOG.REVIEW_HINT') | translate }}</p>
 <div class="product-ai-dialog__summary fd-stack fd-gap-md">
-    @if (itemNames().length) {
-        <div class="product-ai-dialog__items fd-stack fd-gap-sm">
-            <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
-            <div class="product-ai-dialog__items-list fd-row fd-wrap fd-gap-xs">
-                @for (item of itemNames(); track item) {
-                    <span class="product-ai-dialog__item-chip fd-ui-pill fd-ui-pill--compact fd-ui-caption">{{ item }}</span>
-                }
-            </div>
+    <div class="product-ai-dialog__items fd-stack fd-gap-sm" [style.display]="fromLabel() ? 'none' : null">
+        <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
+        <div class="product-ai-dialog__items-list fd-row fd-wrap fd-gap-xs">
+            @for (item of itemNames(); track item) {
+                <span class="product-ai-dialog__item-chip fd-ui-pill fd-ui-pill--compact fd-ui-caption">{{ item }}</span>
+            }
         </div>
-    }
+    </div>
     @if (hasMultipleItems()) {
         <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">
             {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
         </div>
     }
-    @if (nutrition().notes) {
-        <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ nutrition().notes }}</div>
+    @if (notes()) {
+        <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ notes() }}</div>
     }
 
     <div class="product-ai-dialog__form-grid fd-grid fd-gap-md">
@@ -24,18 +23,80 @@
             [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
             [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
         />
+        <fd-ui-input [formField]="form().brand" [label]="'PRODUCT_MANAGE.BRAND' | translate" />
         <div class="product-ai-dialog__portion-grid fd-grid fd-gap-md">
-            <fd-ui-input type="number" [formField]="form().portionAmount" [label]="'PRODUCT_AI_DIALOG.PORTION_AMOUNT' | translate" />
+            <fd-ui-input
+                type="number"
+                [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+                [localizedNumber]="true"
+                [formField]="form().portionAmount"
+                [label]="'PRODUCT_AI_DIALOG.PORTION_AMOUNT' | translate"
+            />
             <fd-ui-select [formField]="form().baseUnit" [label]="'PRODUCT_AI_DIALOG.PORTION_UNIT' | translate" [options]="unitOptions()" />
         </div>
     </div>
 
     <div class="product-ai-dialog__nutrition-grid fd-grid fd-gap-md">
-        <fd-ui-input type="number" [formField]="form().caloriesPerBase" [label]="'PRODUCT_MANAGE.CALORIES' | translate" />
-        <fd-ui-input type="number" [formField]="form().proteinsPerBase" [label]="'PRODUCT_MANAGE.PROTEINS' | translate" />
-        <fd-ui-input type="number" [formField]="form().fatsPerBase" [label]="'PRODUCT_MANAGE.FATS' | translate" />
-        <fd-ui-input type="number" [formField]="form().carbsPerBase" [label]="'PRODUCT_MANAGE.CARBS' | translate" />
-        <fd-ui-input type="number" [formField]="form().fiberPerBase" [label]="'PRODUCT_MANAGE.FIBER' | translate" />
-        <fd-ui-input type="number" [formField]="form().alcoholPerBase" [label]="'PRODUCT_MANAGE.ALCOHOL' | translate" />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().caloriesPerBase"
+            [label]="'PRODUCT_MANAGE.CALORIES' | translate"
+        />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().proteinsPerBase"
+            [label]="'NUTRITION_EDITOR.FIELD_LABELS.PROTEINS' | translate"
+        />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().fatsPerBase"
+            [label]="'NUTRITION_EDITOR.FIELD_LABELS.FATS' | translate"
+        />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().carbsPerBase"
+            [label]="'NUTRITION_EDITOR.FIELD_LABELS.CARBS' | translate"
+        />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().fiberPerBase"
+            [label]="'PRODUCT_MANAGE.FIBER' | translate"
+        />
+        <fd-ui-input
+            type="number"
+            [placeholder]="'PRODUCT_AI_DIALOG.UNKNOWN' | translate"
+            [localizedNumber]="true"
+            [formField]="form().alcoholPerBase"
+            [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
+        />
     </div>
 </div>
+@if (!isValid()) {
+    <p role="alert" class="fd-ui-helper-text">{{ 'PRODUCT_AI_DIALOG.INVALID_RESULT' | translate }}</p>
+}
+<div class="product-ai-dialog__choice">
+    <input #coverChoice type="checkbox" id="product-ai-cover" [checked]="useAsCover()" (change)="useAsCover.set(coverChoice.checked)" />
+    <label for="product-ai-cover">{{ 'PRODUCT_AI_DIALOG.USE_AS_COVER' | translate }}</label>
+</div>
+@if (hasExistingData()) {
+    <div class="product-ai-dialog__choice">
+        <input
+            #replaceChoice
+            type="checkbox"
+            id="product-ai-replace"
+            [checked]="replacementAccepted()"
+            (change)="replacementAccepted.set(replaceChoice.checked)"
+        />
+        <label for="product-ai-replace">{{ 'PRODUCT_AI_DIALOG.CONFIRM_REPLACE' | translate }}</label>
+    </div>
+}

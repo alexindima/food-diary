@@ -4307,6 +4307,9 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasMaxLength(2048)
                     .HasColumnType("character varying(2048)");
 
+                b.Property<bool>("IsProductLabel")
+                    .HasColumnType("boolean");
+
                 b.Property<string>("NutritionErrorCode")
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
@@ -5657,6 +5660,49 @@ namespace FoodDiary.Infrastructure.Migrations {
 
                 b.Navigation("WeightGoals");
             });
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJobImage", b => {
+                b.Property<Guid>("JobId")
+                    .HasColumnType("uuid");
+
+                b.Property<Guid>("ImageAssetId")
+                    .HasColumnType("uuid");
+
+                b.Property<string>("ImageUrl")
+                    .IsRequired()
+                    .HasMaxLength(2048)
+                    .HasColumnType("character varying(2048)");
+
+                b.Property<int>("Position")
+                    .HasColumnType("integer");
+
+                b.HasKey("JobId", "ImageAssetId");
+
+                b.HasIndex("ImageAssetId");
+
+                b.HasIndex("JobId", "Position")
+                    .IsUnique();
+
+                b.ToTable("FoodRecognitionJobImages", (string)null);
+            });
+
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJobImage", b => {
+                b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                    .WithMany()
+                    .HasForeignKey("ImageAssetId")
+                    .OnDelete(DeleteBehavior.ClientNoAction)
+                    .IsRequired();
+
+                b.HasOne("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", null)
+                    .WithMany("AdditionalImages")
+                    .HasForeignKey("JobId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", b => {
+                b.Navigation("AdditionalImages");
+            });
+
 #pragma warning restore 612, 618
         }
     }

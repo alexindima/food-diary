@@ -4,5 +4,5 @@ using FoodDiary.Modules.Ai.Contracts.Models;
 
 namespace FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 
-public sealed record AnalyzeFoodImageCommand(Guid UserId, Guid ImageAssetId, string? Description, string RequestId)
+public sealed record AnalyzeFoodImageCommand(Guid UserId, Guid ImageAssetId, string? Description, string RequestId, bool IsProductLabel = false, IReadOnlyList<Guid>? AdditionalImageAssetIds = null)
     : ICommand<Result<FoodVisionModel>>;

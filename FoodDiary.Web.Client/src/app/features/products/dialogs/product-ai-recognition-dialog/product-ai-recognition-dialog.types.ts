@@ -3,30 +3,33 @@ import type { MeasurementUnit } from '../../models/product.data';
 
 export type ProductAiDialogData = {
     initialDescription?: string | null;
+    hasExistingData?: boolean;
 };
 
 export type ProductAiRecognitionResult = {
+    brand?: string | null;
     name: string;
     description?: string | null;
     image: ImageSelection | null;
     baseAmount: number;
     baseUnit: MeasurementUnit;
     caloriesPerBase: number;
-    proteinsPerBase: number;
-    fatsPerBase: number;
-    carbsPerBase: number;
-    fiberPerBase: number;
-    alcoholPerBase: number;
+    proteinsPerBase: number | null;
+    fatsPerBase: number | null;
+    carbsPerBase: number | null;
+    fiberPerBase: number | null;
+    alcoholPerBase: number | null;
 };
 
 export type ProductAiRecognitionFormModel = {
     name: string;
-    portionAmount: number;
-    baseUnit: MeasurementUnit;
-    caloriesPerBase: number;
-    proteinsPerBase: number;
-    fatsPerBase: number;
-    carbsPerBase: number;
-    fiberPerBase: number;
-    alcoholPerBase: number;
+    brand: string;
+    portionAmount: number | null;
+    baseUnit: MeasurementUnit | null;
+    caloriesPerBase: number | null;
+    proteinsPerBase: number | null;
+    fatsPerBase: number | null;
+    carbsPerBase: number | null;
+    fiberPerBase: number | null;
+    alcoholPerBase: number | null;
 };

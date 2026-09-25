@@ -98,6 +98,33 @@ afterEach(() => {
 });
 
 describe('durable food recognition', () => {
+    it('includes product mode and every photo in the request fingerprint and releases the completed request', async () => {
+        const digest = vi.spyOn(crypto.subtle, 'digest');
+        const productRequest = { ...request, isProductLabel: true, additionalImageAssetIds: ['image-2', 'image-3'] };
+        const result = vi.fn();
+        service.start(productRequest).subscribe(result);
+        await vi.advanceTimersByTimeAsync(0);
+        const accepted = http.expectOne(url);
+        const id = (accepted.request.body as { id: string }).id;
+        expect(accepted.request.body).toEqual({ id, ...productRequest });
+        const completed: FoodRecognitionJob = {
+            ...job(id, 'Succeeded'),
+            isProductLabel: true,
+            additionalImages: productRequest.additionalImageAssetIds.map(imageAssetId => ({ imageAssetId, imageUrl: 'https://example.com/label.jpg' })),
+        };
+        accepted.flush(completed);
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/${id}`).flush(completed);
+        await vi.advanceTimersByTimeAsync(0);
+        const fingerprints = digest.mock.calls.map(call => new TextDecoder().decode(call[1] as ArrayBuffer));
+        expect(fingerprints.length).toBeGreaterThanOrEqual(2);
+        expect(fingerprints.map(value => JSON.parse(value) as object)).toEqual(
+            fingerprints.map(() => ({ ...productRequest, description: null })),
+        );
+        expect(result).toHaveBeenCalledOnce();
+        expect(storage.size).toBe(0);
+    });
+
     it('reuses the task id after a lost acceptance response and completes with HTTP when SignalR is unavailable', async () => {
         const result = vi.fn();
         service.start(request).subscribe(result);

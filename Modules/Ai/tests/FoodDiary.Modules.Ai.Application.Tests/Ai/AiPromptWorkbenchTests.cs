@@ -57,22 +57,25 @@ public sealed class AiPromptWorkbenchTests {
         Assert.Empty(images.ReceivedCalls());
     }
 
-    [Fact]
-    public async Task Test_Photo_UsesAuthorizedImageAndDraft() {
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("product-label")]
+    public async Task Test_Photo_UsesAuthorizedImageAndDraft(string key) {
         IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
         IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
         using var cancellation = new CancellationTokenSource();
         var user = UserId.New();
         var image = ImageAssetId.New();
-        var draft = new AiPromptDraft("vision", "en", "Find foods", "plate", image.Value, Items: null);
+        bool isMeal = string.Equals(key, "vision", StringComparison.Ordinal);
+        var draft = new AiPromptDraft(key, "en", "Find foods", "plate", image.Value, Items: null);
         images.GetDataUrlAsync(image, user, cancellation.Token).Returns(Result.Success("data:image/png;base64,sample"));
         service.AnalyzeFoodImageAsync("data:image/png;base64,sample", user, "plate", "request", cancellation.Token,
-            new AiPromptOverride("Find foods", "en")).Returns(Result.Success(new FoodVisionModel([])));
+            new AiPromptOverride("Find foods", "en"), Arg.Is<ProductImageAnalysis?>(p => isMeal ? p == null : p != null && p.AdditionalImageUrls.Count == 0)).Returns(Result.Success(new FoodVisionModel([])));
         string result = ResultAssert.Success(await new TestAiPromptCommandHandler(service, images)
             .Handle(new TestAiPromptCommand(user.Value, "request", draft), cancellation.Token));
         Assert.Contains("items", result, StringComparison.Ordinal);
         await service.Received(1).AnalyzeFoodImageAsync("data:image/png;base64,sample", user, "plate", "request", cancellation.Token,
-            new AiPromptOverride("Find foods", "en"));
+            new AiPromptOverride("Find foods", "en"), Arg.Is<ProductImageAnalysis?>(p => isMeal ? p == null : p != null && p.AdditionalImageUrls.Count == 0));
     }
 
     [Fact]
@@ -81,7 +84,7 @@ public sealed class AiPromptWorkbenchTests {
         repository.GetAllReadModelsAsync(Arg.Any<CancellationToken>()).Returns(Array.Empty<AiPromptTemplateReadModel>());
         var handler = new GetAiPromptScenariosQueryHandler(repository, Substitute.For<IAiPromptPreviewRenderer>());
         IReadOnlyList<AiPromptScenarioModel> scenarios = await handler.Handle(new GetAiPromptScenariosQuery(), CancellationToken.None);
-        Assert.Equal(6, scenarios.Count);
+        Assert.Equal(8, scenarios.Count);
         Assert.All(scenarios, item => {
             Assert.Equal("built-in", item.Source);
             Assert.Equal(AiPromptCatalog.GetDefault(item.Key), item.PromptText);
@@ -108,6 +111,8 @@ public sealed class AiPromptWorkbenchTests {
     [InlineData("text-parse", "Ignore the input", false)]
     [InlineData("text-parse", "Parse {{userText}} {{languageHint}}", true)]
     [InlineData("vision", "Find {{userText}}", false)]
+    [InlineData("product-label", "Read {{descriptionHint}} {{languageHint}}", true)]
+    [InlineData("product-label", "Estimate {{itemsJson}}", false)]
     [InlineData("nutrition", "Estimate {{itemsJson}}", true)]
     [InlineData("unknown", "Anything", false)]
     [InlineData("NUTRITION", "Estimate food", false)]

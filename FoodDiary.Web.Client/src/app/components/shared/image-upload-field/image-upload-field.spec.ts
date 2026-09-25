@@ -234,3 +234,43 @@ describe('ImageUploadFieldComponent interactions', () => {
         expect(component['cropSelection']()?.x).toBe(CROP_SHIFTED_X);
     });
 });
+
+describe('ImageUploadFieldComponent multiple uploads', () => {
+    const files = [new File(['a'], 'one.png', { type: 'image/png' }), new File(['b'], 'two.png', { type: 'image/png' })];
+    it('uploads a dropped batch in order and keeps busy until completion', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('multiple', true);
+        fixture.componentRef.setInput('maxFiles', 2);
+        const added = vi.fn();
+        const busy = vi.fn();
+        component.imagesAdded.subscribe(added);
+        component.batchUploading.subscribe(busy);
+        component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
+        await vi.waitFor(() => { expect(added).toHaveBeenCalledOnce(); });
+        expect(imageUploadService.upload).toHaveBeenNthCalledWith(1, files[0]);
+        expect(imageUploadService.upload).toHaveBeenNthCalledWith(2, files[1]);
+        expect(added.mock.calls[0][0]).toHaveLength(2);
+        expect(busy.mock.calls).toEqual([[true], [false]]);
+    });
+    it('rejects an oversized batch without uploading or silently discarding files', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('multiple', true);
+        component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(component['error']()).toBeTruthy();
+    });
+    it('preserves successful uploads when a later upload fails and releases busy state', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('multiple', true);
+        fixture.componentRef.setInput('maxFiles', 2);
+        imageUploadService.upload
+            .mockReturnValueOnce(of({ assetId: 'one', url: '/one.png' }))
+            .mockReturnValueOnce(throwError(() => new Error('failed')));
+        const added = vi.fn();
+        component.imagesAdded.subscribe(added);
+        component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
+        await vi.waitFor(() => { expect(added).toHaveBeenCalledWith([{ assetId: 'one', url: '/one.png' }]); });
+        expect(component['error']()).toBeTruthy();
+        expect(component['isUploading']()).toBe(false);
+    });
+});

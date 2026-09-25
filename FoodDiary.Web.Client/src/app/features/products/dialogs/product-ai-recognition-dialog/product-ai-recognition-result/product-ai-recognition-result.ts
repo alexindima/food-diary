@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, signal } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -20,8 +20,15 @@ export class ProductAiRecognitionResultComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly form = input.required<FieldTree<ProductAiRecognitionFormModel>>();
-    public readonly nutrition = input.required<FoodNutritionResponse>();
+    public readonly nutrition = input<FoodNutritionResponse | null>(null);
     public readonly itemNames = input.required<readonly string[]>();
+    public readonly labelNotes = input<string | null>(null);
+    public readonly fromLabel = input(false);
+    protected readonly notes = computed(() => this.labelNotes() ?? this.nutrition()?.notes);
+    public readonly isValid = input(true);
+    public readonly hasExistingData = input(false);
+    public readonly useAsCover = model(false);
+    public readonly replacementAccepted = model(false);
     protected readonly hasMultipleItems = computed(() => this.itemNames().length > 1);
     protected readonly unitOptions = signal<Array<FdUiSelectOption<MeasurementUnit>>>([]);
 

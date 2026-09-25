@@ -12,4 +12,6 @@ public sealed record FoodRecognitionJobModel(
     FoodVisionModel? Vision = null,
     FoodNutritionModel? Nutrition = null,
     string? ErrorCode = null,
-    string? NutritionErrorCode = null);
+    string? NutritionErrorCode = null,
+    bool IsProductLabel = false,
+    IReadOnlyList<FoodRecognitionImageModel>? AdditionalImages = null);

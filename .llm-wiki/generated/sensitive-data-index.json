@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1501,
+    "candidateFields": 1512,
     "credential": 156,
     "identity": 174,
-    "health": 698,
+    "health": 700,
     "financial": 129,
-    "privateContent": 344,
-    "boundaryFiles": 197,
+    "privateContent": 353,
+    "boundaryFiles": 199,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2476,17 +2476,24 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "decimal?",
+      "path": "Modules/Ai/Contracts/Models/ProductLabelModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
       "name": "NutritionJson",
       "type": "string?",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 16
+      "line": 18
     },
     {
       "category": "health",
       "name": "NutritionErrorCode",
       "type": "string?",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 18
+      "line": 20
     },
     {
       "category": "health",
@@ -2515,6 +2522,13 @@
       "type": "string?",
       "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "decimal?",
+      "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
+      "line": 5
     },
     {
       "category": "health",
@@ -8370,6 +8384,13 @@
     },
     {
       "category": "privateContent",
+      "name": "AdditionalImageUrls",
+      "type": "IReadOnlyList<string>",
+      "path": "Modules/Ai/Application.Abstractions/Common/ProductImageAnalysis.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
@@ -8435,6 +8456,20 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionImageModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionImageModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
       "path": "Modules/Ai/Contracts/Models/FoodRecognitionJobModel.cs",
       "line": 6
     },
@@ -8444,6 +8479,13 @@
       "type": "string",
       "path": "Modules/Ai/Contracts/Models/FoodRecognitionJobModel.cs",
       "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Ai/Contracts/Models/ProductLabelModel.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -8478,14 +8520,28 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 9
+      "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 10
+      "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId",
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJobImage.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJobImage.cs",
+      "line": 8
     },
     {
       "category": "privateContent",
@@ -8505,6 +8561,20 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
       "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "line": 4
     },
@@ -8514,6 +8584,13 @@
       "type": "string",
       "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -10793,12 +10870,27 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
       "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
       ],
       "fieldCount": 4
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",

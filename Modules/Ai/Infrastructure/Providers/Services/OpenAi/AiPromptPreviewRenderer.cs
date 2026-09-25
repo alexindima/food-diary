@@ -10,6 +10,7 @@ internal sealed class AiPromptPreviewRenderer : IAiPromptPreviewRenderer {
     public string GetResponseFormatJson(string key) {
         object text = key switch {
             "vision" or "text-parse" => OpenAiRequestFactory.BuildFoodVisionTextFormat(),
+            "product-label" => OpenAiProductLabelRequest.BuildTextFormat(),
             "nutrition" => OpenAiRequestFactory.BuildFoodNutritionTextFormat(),
             _ => throw new ArgumentOutOfRangeException(nameof(key)),
         };
@@ -18,6 +19,7 @@ internal sealed class AiPromptPreviewRenderer : IAiPromptPreviewRenderer {
 
     public string Render(AiPromptDraft draft) {
         object request = draft.Key switch {
+            "product-label" => OpenAiProductLabelRequest.Build("preview", "image-placeholder", new ProductImageAnalysis([]), draft.Locale, draft.Text, draft.PromptText, 1),
             "vision" => OpenAiRequestFactory.BuildVisionRequest("preview", "image-placeholder", draft.Locale, draft.Text, draft.PromptText, 1),
             "text-parse" => OpenAiRequestFactory.BuildTextParseRequest("preview", draft.Text!, draft.Locale, draft.PromptText, 1),
             _ => OpenAiRequestFactory.BuildNutritionRequest("preview", draft.Items!, draft.PromptText, 1),

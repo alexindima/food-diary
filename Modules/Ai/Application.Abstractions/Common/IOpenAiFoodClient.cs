@@ -9,14 +9,14 @@ public interface IOpenAiFoodClient {
         string? userLanguage,
         string? description,
         string promptTemplate,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken, ProductImageAnalysis? product = null);
 
     Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
         string imageUrl,
         string? userLanguage,
         string? description,
         string promptTemplate,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken, ProductImageAnalysis? product = null);
 
     Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
         string text,

@@ -8,12 +8,14 @@ import {
     buildProductAiRecognitionResult,
     createProductAiRecognitionFormModel,
     getRecognizedAmount,
+    isProductAiRecognitionModelValid,
     mapAiNutritionErrorKey,
     mapAiRecognitionErrorKey,
     normalizeItemsForNutrition,
     resolveAiMeasurementUnit,
 } from './product-ai-recognition.helpers';
 
+const HALF_LITER_ML = 500;
 const RECOGNIZED_GRAMS = 120;
 const RECOGNIZED_MILLILITERS = 200;
 const DEFAULT_GRAMS = 100;
@@ -109,5 +111,29 @@ describe('product AI recognition helpers', () => {
         expect(mapAiRecognitionErrorKey({ status: HttpStatusCode.InternalServerError })).toBe('PRODUCT_AI_DIALOG.ERROR_GENERIC');
         expect(mapAiNutritionErrorKey({ status: HttpStatusCode.TooManyRequests })).toBe('PRODUCT_AI_DIALOG.ERROR_QUOTA');
         expect(mapAiNutritionErrorKey({ status: HttpStatusCode.InternalServerError })).toBe('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+    });
+});
+
+describe('product recognition quantities and review validation', () => {
+    it('converts liters to milliliters consistently for provider input and reviewed quantity', () => {
+        const items = [{ ...ITEMS[1], amount: 0.5, unit: 'liter' }];
+        expect(normalizeItemsForNutrition(items)[0]).toEqual(expect.objectContaining({ amount: HALF_LITER_ML, unit: 'ml' }));
+        expect(getRecognizedAmount(items, MeasurementUnit.ML)).toBe(HALF_LITER_ML);
+        expect(buildProductAiRecognitionModelFromNutrition(items, NUTRITION).portionAmount).toBe(HALF_LITER_ML);
+    });
+
+    it('permits genuine zero nutrients but rejects missing values rather than replacing them with zero', () => {
+        const model = { ...createProductAiRecognitionFormModel(), name: 'Water' };
+        expect(isProductAiRecognitionModelValid(model)).toBe(true);
+        const missing = buildProductAiRecognitionModelFromNutrition(ITEMS, {
+            ...NUTRITION,
+            calories: null,
+        } as unknown as FoodNutritionResponse);
+        expect(missing.caloriesPerBase).toBeNull();
+        expect(isProductAiRecognitionModelValid(missing)).toBe(false);
+    });
+
+    it.each([0, -1, NaN, Infinity])('rejects invalid quantity %s', portionAmount => {
+        expect(isProductAiRecognitionModelValid({ ...createProductAiRecognitionFormModel(), name: 'Water', portionAmount })).toBe(false);
     });
 });

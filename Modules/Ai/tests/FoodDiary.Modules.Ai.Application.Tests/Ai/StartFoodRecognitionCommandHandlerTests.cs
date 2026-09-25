@@ -15,6 +15,35 @@ namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 [ExcludeFromCodeCoverage]
 public sealed class StartFoodRecognitionCommandHandlerTests {
     [Theory]
+    [InlineData(0, true)]
+    [InlineData(4, true)]
+    [InlineData(5, false)]
+    public void ProductImages_AllowAtMostFiveDistinctPhotos(int additionalCount, bool expected) {
+        var command = new StartFoodRecognitionCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Description: null, IsProductLabel: true,
+            Enumerable.Range(0, additionalCount).Select(_ => Guid.NewGuid()).ToArray());
+        Assert.Equal(expected, new StartFoodRecognitionCommandValidator().Validate(command).IsValid);
+        Assert.False(new StartFoodRecognitionCommandValidator().Validate(command with { AdditionalImageAssetIds = [command.ImageAssetId] }).IsValid);
+        Assert.False(new StartFoodRecognitionCommandValidator().Validate(command with { AdditionalImageAssetIds = [Guid.Empty] }).IsValid);
+    }
+
+    [Fact]
+    public async Task ProductImages_ForeignAdditionalImageNeverEnqueuesJob() {
+        IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
+        IImageAssetAccessService images = Substitute.For<IImageAssetAccessService>();
+        IUserAiProfileReadService users = Substitute.For<IUserAiProfileReadService>();
+        var user = new UserId(Guid.NewGuid());
+        var primary = new ImageAssetId(Guid.NewGuid());
+        var foreign = new ImageAssetId(Guid.NewGuid());
+        users.GetAiProfileAsync(user, Arg.Any<CancellationToken>()).Returns(Result.Success(new UserAiProfileModel(user, "en", 1000, 1000, HasAcceptedAiConsent: true)));
+        images.ResolveOptionalAsync(primary, user, Arg.Any<CancellationToken>()).Returns(Result.Success<ImageAssetReadModel?>(new ImageAssetReadModel(primary, "https://example.com/image")));
+        images.ResolveOptionalAsync(foreign, user, Arg.Any<CancellationToken>()).Returns(Result.Failure<ImageAssetReadModel?>(AiErrors.Forbidden()));
+        Result<FoodRecognitionJobModel> result = await new StartFoodRecognitionCommandHandler(store, images, users, TimeProvider.System)
+            .Handle(new StartFoodRecognitionCommand(user.Value, Guid.NewGuid(), primary.Value, Description: null, IsProductLabel: true, [foreign.Value]), CancellationToken.None);
+        Assert.True(result.IsFailure);
+        await store.DidNotReceive().CreateAsync(Arg.Any<FoodRecognitionJobModel>(), Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
     [InlineData(true)]
     [InlineData(false)]
     public async Task Handle_MissingUserOrImageNeverEnqueues(bool missingUser) {

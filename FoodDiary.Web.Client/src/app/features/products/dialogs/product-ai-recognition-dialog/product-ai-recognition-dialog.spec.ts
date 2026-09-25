@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
@@ -90,37 +90,6 @@ describe('ProductAiRecognitionDialogComponent state', () => {
         expect(component['hasAnalyzed']()).toBe(false);
         expect(component['isAnalyzeDisabled']()).toBe(false);
     });
-
-    it('builds photo annotations and lets the user hide them', () => {
-        component['results'].set([createVisionItem()]);
-        component['nutrition'].set(createNutrition());
-
-        expect(component['annotations']()).toEqual([
-            expect.objectContaining({
-                name: 'Apple local',
-                centerX: 42,
-                centerY: 58,
-                calories: PRODUCT_CALORIES,
-                protein: PRODUCT_PROTEINS,
-                fat: PRODUCT_FATS,
-                carbs: PRODUCT_CARBS,
-            }),
-        ]);
-
-        component['toggleAnnotations']();
-
-        expect(component['annotationsVisible']()).toBe(false);
-    });
-
-    it('omits annotations with missing or unreliable locations', () => {
-        component['results'].set([
-            { ...createVisionItem(), centerX: null, centerY: null },
-            { ...createVisionItem(), locationConfidence: 0.2 },
-        ]);
-        component['nutrition'].set(createNutrition());
-
-        expect(component['annotations']()).toEqual([]);
-    });
 });
 
 describe('ProductAiRecognitionDialogComponent analysis', () => {
@@ -132,6 +101,8 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 
         expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledWith({
             imageAssetId: 'asset-1',
+            isProductLabel: true,
+            additionalImageAssetIds: [],
             description: 'fresh apple',
         });
         expect(productAiRecognitionFacade.calculateNutrition).toHaveBeenCalledWith({
@@ -143,7 +114,8 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
         expect(dialogRef.close).toHaveBeenCalledWith(
             expect.objectContaining({
                 name: 'Apple local',
-                image: createImageSelection(),
+                image: null,
+                description: null,
                 baseUnit: MeasurementUnit.G,
                 caloriesPerBase: PRODUCT_CALORIES,
                 proteinsPerBase: PRODUCT_PROTEINS,
@@ -261,3 +233,151 @@ function createNutrition(): FoodNutritionResponse {
         ],
     };
 }
+
+describe('Product recognition review safeguards', () => {
+    it('only applies the photo when explicitly selected as cover', () => {
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        component['useAsCover'].set(true);
+        component['apply']();
+        expect(dialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ image: createImageSelection(), description: null }));
+    });
+
+    it('does not call successful empty recognition done or allow applying it', () => {
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(of({ items: [] }));
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        expect(component['isEmpty']()).toBe(true);
+        expect(component['statusKey']()).toBeNull();
+        component['apply']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+
+    it('preserves the photo and hint after failure and supports a retry', () => {
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValueOnce(throwError(() => new Error('offline')));
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        expect(component['statusKey']()).toBeNull();
+        expect(component['isEmpty']()).toBe(false);
+        expect(component['selection']()).toEqual(createImageSelection());
+        expect(component['descriptionModel']().description).toBe(' fresh apple ');
+        component['reanalyze']();
+        expect(component['canApply']()).toBe(true);
+        expect(component['errorKey']()).toBeNull();
+    });
+
+    it('prevents duplicate requests while recognition runs', () => {
+        const pending = new Subject<{ items: FoodVisionItem[] }>();
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(pending);
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        component['startAnalysis']();
+        expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledTimes(1);
+        expect(component['isBusy']()).toBe(true);
+        expect(component['canApply']()).toBe(false);
+        fixture.destroy();
+        expect(pending.observed).toBe(false);
+        expect(productAiRecognitionFacade.deleteAsset).not.toHaveBeenCalled();
+    });
+
+    it.each([NaN, Infinity, -1])('does not apply an invalid nutrient: %s', value => {
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        component['resultFormModel'].update(model => ({ ...model, fiberPerBase: value }));
+        component['apply']();
+        expect(component['canApply']()).toBe(false);
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+
+    it('requires explicit acceptance before replacing existing product data', () => {
+        fixture.destroy();
+        const data = TestBed.inject(FD_UI_DIALOG_DATA) as { hasExistingData?: boolean };
+        data.hasExistingData = true;
+        fixture = TestBed.createComponent(ProductAiRecognitionDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        component['onImageChanged'](createImageSelection());
+        component['startAnalysis']();
+        component['apply']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        component['replacementAccepted'].set(true);
+        component['apply']();
+        expect(dialogRef.close).toHaveBeenCalledTimes(1);
+        component['reanalyze']();
+        expect(component['replacementAccepted']()).toBe(false);
+    });
+});
+
+describe('product label recognition', () => {
+    it('uses all photos in one label request and never calculates nutrients from names', () => {
+        const label = {
+            name: 'Yogurt',
+            brand: 'Dairy',
+            baseAmount: 100,
+            baseUnit: 'g',
+            calories: 63.5,
+            protein: 5,
+            fat: 2,
+            carbs: 6,
+            fiber: null,
+            alcohol: null,
+            notes: 'Fiber not on label',
+        };
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(of({ items: [], productLabel: label }));
+        const second = { assetId: 'asset-2', url: 'https://example.test/label.jpg' };
+        component['onPhotosChanged']([createImageSelection(), second]);
+        component['onCoverChanged'](second);
+        component['startAnalysis']();
+        expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledWith({
+            imageAssetId: 'asset-1',
+            additionalImageAssetIds: ['asset-2'],
+            isProductLabel: true,
+            description: 'fresh apple',
+        });
+        expect(productAiRecognitionFacade.calculateNutrition).not.toHaveBeenCalled();
+        expect(component['hasResult']()).toBe(true);
+        expect(component['isEmpty']()).toBe(false);
+        component['apply']();
+        expect(dialogRef.close).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'Yogurt',
+                brand: 'Dairy',
+                image: second,
+                fiberPerBase: null,
+                alcoholPerBase: null,
+                caloriesPerBase: 63.5,
+            }),
+        );
+    });
+    it('does not invent an unknown label basis or allow applying it', () => {
+        productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(
+            of({
+                items: [],
+                productLabel: {
+                    name: 'Yogurt',
+                    brand: null,
+                    baseAmount: null,
+                    baseUnit: null,
+                    calories: 63,
+                    protein: null,
+                    fat: null,
+                    carbs: null,
+                    fiber: null,
+                    alcohol: null,
+                    notes: 'Unreadable label',
+                },
+            }),
+        );
+        component['onPhotosChanged']([createImageSelection()]);
+        component['startAnalysis']();
+        expect(component['resultFormModel']().portionAmount).toBeNull();
+        expect(component['resultFormModel']().baseUnit).toBeNull();
+        expect(component['canApply']()).toBe(false);
+    });
+    it('does not submit while an additional photo is uploading', () => {
+        component['onPhotosChanged']([createImageSelection()]);
+        component['photoUploading'].set(true);
+        component['startAnalysis']();
+        expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
+    });
+});

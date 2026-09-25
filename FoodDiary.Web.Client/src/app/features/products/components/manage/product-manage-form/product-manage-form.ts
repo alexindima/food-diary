@@ -294,15 +294,18 @@ export class ProductManageFormComponent {
         }
 
         this.fdDialogService
-            .open<ProductAiRecognitionDialogComponent, { initialDescription?: string | null }, ProductAiRecognitionResult | null>(
+            .open<
                 ProductAiRecognitionDialogComponent,
-                {
-                    size: 'lg',
-                    data: {
-                        initialDescription: this.productFormModel().description ?? null,
-                    },
+                { initialDescription?: string | null; hasExistingData: boolean },
+                ProductAiRecognitionResult | null
+            >(ProductAiRecognitionDialogComponent, {
+                size: 'lg',
+                data: {
+                    initialDescription: this.productFormModel().description ?? null,
+                    hasExistingData:
+                        this.productForm().dirty() || this.product() !== null || this.productFormModel().name.trim().length > 0,
                 },
-            )
+            })
             .afterClosed()
             .subscribe(result => {
                 if (result === null || result === undefined) {

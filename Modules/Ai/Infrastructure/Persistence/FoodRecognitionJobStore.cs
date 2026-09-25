@@ -26,10 +26,13 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         // Serialize admissions per user, including the outstanding-job limit and idempotency check.
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"SELECT pg_advisory_xact_lock(hashtextextended({job.UserId.ToString()}, 731))", cancellationToken).ConfigureAwait(false);
-        FoodRecognitionJob? existing = await context.Set<FoodRecognitionJob>().AsNoTracking()
+        FoodRecognitionJob? existing = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
             .SingleOrDefaultAsync(x => x.Id == job.Id, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return existing.UserId.Value == job.UserId && existing.ImageAssetId.Value == job.ImageAssetId && string.Equals(existing.Description, job.Description, StringComparison.Ordinal)
+                && existing.IsProductLabel == job.IsProductLabel
+                && existing.AdditionalImages.OrderBy(x => x.Position).Select(x => x.ImageAssetId.Value)
+                    .SequenceEqual((job.AdditionalImages ?? []).Select(x => x.ImageAssetId))
                 ? Result.Success(ToModel(existing))
                 : Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionConflict());
         }
@@ -40,6 +43,10 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionQueueFull());
         }
         context.Set<FoodRecognitionJob>().Add(new FoodRecognitionJob {
+            IsProductLabel = job.IsProductLabel,
+            AdditionalImages = [.. (job.AdditionalImages ?? []).Select((image, position) => new FoodRecognitionJobImage {
+                JobId = job.Id, ImageAssetId = new ImageAssetId(image.ImageAssetId), ImageUrl = image.ImageUrl, Position = position,
+            })],
             Id = job.Id,
             UserId = userId,
             ImageAssetId = new ImageAssetId(job.ImageAssetId),
@@ -56,7 +63,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         var owner = new UserId(userId);
-        FoodRecognitionJob? job = await context.Set<FoodRecognitionJob>().AsNoTracking()
+        FoodRecognitionJob? job = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
             .SingleOrDefaultAsync(x => x.Id == jobId && x.UserId == owner, cancellationToken).ConfigureAwait(false);
         return job is null ? null : ToModel(job);
     }
@@ -66,7 +73,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         var owner = new UserId(userId);
         DateTime cutoff = timeProvider.GetUtcNow().UtcDateTime.AddDays(-7);
-        List<FoodRecognitionJob> jobs = await context.Set<FoodRecognitionJob>().AsNoTracking()
+        List<FoodRecognitionJob> jobs = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
             .Where(x => x.UserId == owner && x.CreatedOnUtc >= cutoff)
             .OrderByDescending(x => x.CreatedOnUtc).Take(10).ToListAsync(cancellationToken).ConfigureAwait(false);
         return jobs.Select(ToModel).ToArray();
@@ -84,6 +91,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         if (job is null) {
             return null;
         }
+        await context.Entry(job).Collection(x => x.AdditionalImages).LoadAsync(cancellationToken).ConfigureAwait(false);
         job.Status = "Running";
         job.UpdatedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -141,7 +149,8 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         job.Id, job.UserId.Value, job.ImageAssetId.Value, job.ImageUrl, job.Description, job.Status, job.CreatedOnUtc, job.UpdatedOnUtc,
         job.VisionJson is null ? null : JsonSerializer.Deserialize<FoodVisionModel>(job.VisionJson, JsonOptions),
         job.NutritionJson is null ? null : JsonSerializer.Deserialize<FoodNutritionModel>(job.NutritionJson, JsonOptions),
-        job.ErrorCode, job.NutritionErrorCode);
+        job.ErrorCode, job.NutritionErrorCode, job.IsProductLabel,
+        job.AdditionalImages.OrderBy(x => x.Position).Select(x => new FoodRecognitionImageModel(x.ImageAssetId.Value, x.ImageUrl)).ToArray());
 
     private async Task<T> InTransactionAsync<T>(Func<AiDbContext, CancellationToken, Task<T>> action, CancellationToken cancellationToken) {
         var strategyContext = new AiDbContext(options);

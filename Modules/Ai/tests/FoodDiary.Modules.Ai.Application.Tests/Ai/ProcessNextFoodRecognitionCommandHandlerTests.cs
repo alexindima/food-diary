@@ -12,6 +12,23 @@ namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 [ExcludeFromCodeCoverage]
 public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
     [Fact]
+    public async Task ProductLabel_PersistsDirectResultAndSkipsEstimatedNutrition() {
+        IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
+        ISender sender = Substitute.For<ISender>();
+        var extra = new FoodRecognitionImageModel(Guid.NewGuid(), "https://example.com/label");
+        FoodRecognitionJobModel job = Job() with { IsProductLabel = true, AdditionalImages = [extra] };
+        var label = new ProductLabelModel("Yogurt", Brand: null, 100, "g", 63, 5, 2, 6, Fiber: null, Alcohol: null, Notes: null);
+        var vision = new FoodVisionModel([], ProductLabel: label);
+        store.ClaimAsync(Arg.Any<CancellationToken>()).Returns(job);
+        store.SaveVisionAsync(job.Id, vision, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(vision));
+        Assert.True(await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
+        await sender.Received(1).Send(Arg.Is<AnalyzeFoodImageCommand>(command => command.IsProductLabel && command.AdditionalImageAssetIds!.Single() == extra.ImageAssetId), Arg.Any<CancellationToken>());
+        await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
+        await store.Received(1).CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ProcessNextAsync_EmptyVisionCompletesWithoutChargingForNutrition() {
         IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
         ISender sender = Substitute.For<ISender>();

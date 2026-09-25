@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Ai.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -18,6 +20,9 @@ public sealed class StartFoodRecognitionCommandHandler(
     IUserAiProfileReadService userContext,
     TimeProvider timeProvider) : ICommandHandler<StartFoodRecognitionCommand, Result<FoodRecognitionJobModel>> {
     public async Task<Result<FoodRecognitionJobModel>> Handle(StartFoodRecognitionCommand request, CancellationToken cancellationToken) {
+        if (!RecognitionImagesValidation.IsValid(request.ImageAssetId, request.IsProductLabel, request.AdditionalImageAssetIds)) {
+            return Result.Failure<FoodRecognitionJobModel>(Errors.Validation.Invalid("Images", "Invalid product image selection."));
+        }
         var userId = (UserId)request.UserId;
         Result<UserAiProfileModel> context = await userContext.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (context.IsFailure) {
@@ -33,9 +38,20 @@ public sealed class StartFoodRecognitionCommandHandler(
         if (image.Value is null) {
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.ImageNotFound(request.ImageAssetId));
         }
+        var additionalImages = new List<FoodRecognitionImageModel>();
+        foreach (Guid id in request.AdditionalImageAssetIds ?? []) {
+            Result<ImageAssetReadModel?> additional = await images.ResolveOptionalAsync((ImageAssetId)id, userId, cancellationToken).ConfigureAwait(false);
+            if (additional.IsFailure) {
+                return Result.Failure<FoodRecognitionJobModel>(additional.Error);
+            }
+            if (additional.Value is null) {
+                return Result.Failure<FoodRecognitionJobModel>(AiErrors.ImageNotFound(id));
+            }
+            additionalImages.Add(new FoodRecognitionImageModel(id, additional.Value.Url));
+        }
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         return await store.CreateAsync(new FoodRecognitionJobModel(
             request.Id, request.UserId, request.ImageAssetId, image.Value.Url, request.Description,
-            "Queued", now, now), cancellationToken).ConfigureAwait(false);
+            "Queued", now, now, IsProductLabel: request.IsProductLabel, AdditionalImages: additionalImages), cancellationToken).ConfigureAwait(false);
     }
 }

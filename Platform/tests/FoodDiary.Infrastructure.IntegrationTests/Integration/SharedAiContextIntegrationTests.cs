@@ -40,8 +40,9 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         Assert.Same(templates, templateReads);
         var user = User.Create("ai-context@example.com", "hash");
         shared.Users.Add(user);
-        AiPromptTemplate prompt = await templates.AddAsync(AiPromptTemplate.Create("context-test", "en", "Original"));
-        Assert.Equal(6, owned.Model.GetEntityTypes().Count());
+        AiPromptTemplate prompt = await templates.AddAsync(AiPromptTemplate.Create("vision", "en", "Original"));
+        Assert.Equal(7, owned.Model.GetEntityTypes().Count());
+        Assert.NotNull(owned.Model.FindEntityType(typeof(FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJobImage)));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<AiUsage>());
         Assert.Empty(shared.ChangeTracker.Entries<AiPromptTemplate>());
@@ -50,16 +51,16 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         await using (IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>().Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("ai-rollback@example.com", "hash"));
             await unitOfWork.SaveChangesAsync();
-            AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("context-test", "en");
+            AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("vision", "en");
             Assert.NotNull(tracked);
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
-            Assert.Contains(await templateReads.GetAllReadModelsAsync(CancellationToken.None), template => string.Equals(template.Key, "context-test", StringComparison.Ordinal));
+            Assert.Contains(await templateReads.GetAllReadModelsAsync(CancellationToken.None), template => string.Equals(template.Key, "vision", StringComparison.Ordinal));
             FoodDiary.Results.Result<AiPromptTemplateReadModel> changed = await provider.GetRequiredService<ISender>()
-                .Send(new UpsertAiPromptCommand("context-test", "en", "Changed", IsActive: true));
+                .Send(new UpsertAiPromptCommand("vision", "en", "Changed", IsActive: true));
             Assert.True(changed.IsSuccess);
             Assert.Equal(EntityState.Modified, owned.Entry(tracked).State);
             await unitOfWork.SaveChangesAsync();
-            Assert.Single(await templateReads.GetRevisionsAsync("context-test", "en", CancellationToken.None));
+            Assert.Single(await templateReads.GetRevisionsAsync("vision", "en", CancellationToken.None));
             await transaction.RollbackAsync();
         }
         Assert.Single(await database.Users.ToListAsync());

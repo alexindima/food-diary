@@ -1,7 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -77,7 +77,7 @@ function latestConfig(open: DialogOpenMock): DialogOpenConfig {
     return config;
 }
 
-function setupDialogService(matches: boolean): DialogServiceTestContext {
+function setupDialogService(matches: boolean, platformId = 'browser'): DialogServiceTestContext {
     const documentMock = {
         defaultView: {
             matchMedia: vi.fn().mockReturnValue({ matches }),
@@ -91,6 +91,7 @@ function setupDialogService(matches: boolean): DialogServiceTestContext {
     TestBed.configureTestingModule({
         providers: [
             FdUiDialogService,
+            { provide: PLATFORM_ID, useValue: platformId },
             { provide: Dialog, useValue: dialogMock },
             { provide: DOCUMENT, useValue: documentMock },
             { provide: Overlay, useValue: overlayMock },
@@ -132,6 +133,13 @@ describe('FdUiDialogService panel classes', () => {
 });
 
 describe('FdUiDialogService options', () => {
+    it('does not call browser-only matchMedia during server rendering', () => {
+        const { open, service } = setupDialogService(false, 'server');
+        Object.defineProperty(TestBed.inject(DOCUMENT).defaultView, 'matchMedia', { value: undefined });
+        expect(() => service.open(DummyDialogComponent)).not.toThrow();
+        expect(open).toHaveBeenCalledOnce();
+    });
+
     it('uses the app mobile breakpoint for compact dialogs', () => {
         TestBed.configureTestingModule({});
 

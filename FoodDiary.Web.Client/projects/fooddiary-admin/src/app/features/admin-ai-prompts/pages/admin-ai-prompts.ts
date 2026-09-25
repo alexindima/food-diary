@@ -50,7 +50,7 @@ export class AdminAiPromptsPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogs = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
-    protected readonly keys: AdminAiPromptKey[] = ['vision', 'text-parse', 'nutrition'];
+    protected readonly keys: AdminAiPromptKey[] = ['vision', 'text-parse', 'nutrition', 'product-label'];
     protected readonly items = signal<AdminAiPromptScenario[]>([]);
     protected readonly key = signal<AdminAiPromptKey>('vision');
     protected readonly locale = signal('en');

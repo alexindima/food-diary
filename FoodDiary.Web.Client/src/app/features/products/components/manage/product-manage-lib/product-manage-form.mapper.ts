@@ -153,6 +153,7 @@ export function buildAiResultPatch(values: ProductFormValues, result: ProductAiR
     return {
         name: result.name.length > 0 ? result.name : values.name,
         description: result.description ?? values.description,
+        brand: result.brand ?? values.brand,
         imageUrl: result.image ?? values.imageUrl,
         baseAmount: targetBaseAmount,
         baseUnit: result.baseUnit,

@@ -7,6 +7,22 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 public sealed class AiPromptPreviewRendererTests {
     [Fact]
+    public void ProductLabelPreview_UsesSeparateSchemaAndResolvesDraftWithoutImageBytes() {
+        var renderer = new AiPromptPreviewRenderer();
+        using var format = JsonDocument.Parse(renderer.GetResponseFormatJson("product-label"));
+        Assert.Equal("product_label", format.RootElement.GetProperty("name").GetString());
+        Assert.True(format.RootElement.GetProperty("strict").GetBoolean());
+        JsonElement schema = format.RootElement.GetProperty("schema");
+        Assert.False(schema.GetProperty("additionalProperties").GetBoolean());
+        Assert.Equal("null", schema.GetProperty("properties").GetProperty("fiber").GetProperty("type")[1].GetString());
+        string result = renderer.Render(new AiPromptDraft("product-label", "ru", "Read {{descriptionHint}}. {{languageHint}}", "back label", Guid.NewGuid(), Items: null));
+        Assert.Contains("back label", result, StringComparison.Ordinal);
+        Assert.Contains("language ru", result, StringComparison.Ordinal);
+        Assert.DoesNotContain("{{", result, StringComparison.Ordinal);
+        Assert.DoesNotContain("image-placeholder", result, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ResponseFormat_UnknownScenario_Throws() =>
         Assert.Throws<ArgumentOutOfRangeException>(() => new AiPromptPreviewRenderer().GetResponseFormatJson("unknown"));
 

@@ -8,21 +8,21 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4226,
-    "symbols": 4157,
+    "sourceFiles": 4235,
+    "symbols": 4166,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2185,
+      "class": 2189,
       "enum": 64,
       "interface": 401,
-      "record": 1387,
+      "record": 1392,
       "record struct": 120
     },
     "roles": {
       "Command": 222,
       "CommandHandler": 217,
-      "Configuration": 95,
+      "Configuration": 96,
       "Controller": 105,
       "Entity": 97,
       "Event": 19,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1713,
+      "Other": 1718,
       "Query": 280,
       "QueryHandler": 204,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
-      "Request": 156,
-      "Response": 221,
+      "Request": 157,
+      "Response": 223,
       "Service": 162,
       "Validator": 229,
       "ValueObject": 114,
@@ -4934,6 +4934,13 @@
       "line": 2
     },
     {
+      "name": "ProductImageAnalysis",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/ProductImageAnalysis.cs",
+      "line": 2
+    },
+    {
       "name": "UserAiUsageModel",
       "kind": "record",
       "role": "Other",
@@ -4966,14 +4973,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "CalculateFoodNutritionCommand",
@@ -5036,14 +5043,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "StartFoodRecognitionCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "TestAiPromptCommandHandler",
@@ -5058,6 +5065,13 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
       "line": 12
+    },
+    {
+      "name": "RecognitionImagesValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Common/Validation/RecognitionImagesValidation.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
@@ -5270,6 +5284,13 @@
       "line": 2
     },
     {
+      "name": "FoodRecognitionImageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionImageModel.cs",
+      "line": 2
+    },
+    {
       "name": "FoodRecognitionJobModel",
       "kind": "record",
       "role": "Other",
@@ -5288,6 +5309,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Contracts/Models/FoodVisionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ProductLabelModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/ProductLabelModel.cs",
       "line": 2
     },
     {
@@ -5466,6 +5494,13 @@
       "line": 18
     },
     {
+      "name": "OpenAiProductLabelRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiProductLabelRequest.cs",
+      "line": 4
+    },
+    {
       "name": "OpenAiRequestFactory",
       "kind": "class",
       "role": "Factory",
@@ -5536,11 +5571,25 @@
       "line": 7
     },
     {
+      "name": "FoodRecognitionJobImageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobImageConfiguration.cs",
+      "line": 6
+    },
+    {
       "name": "FoodRecognitionJob",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
       "line": 5
+    },
+    {
+      "name": "FoodRecognitionJobImage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJobImage.cs",
+      "line": 4
     },
     {
       "name": "AiFoodController",
@@ -5648,6 +5697,13 @@
       "line": 2
     },
     {
+      "name": "FoodRecognitionImageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "FoodRecognitionJobHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -5660,6 +5716,13 @@
       "role": "Response",
       "path": "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs",
       "line": 4
+    },
+    {
+      "name": "ProductLabelHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "UserAiUsageHttpResponse",

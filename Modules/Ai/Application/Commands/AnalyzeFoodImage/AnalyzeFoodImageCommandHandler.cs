@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -25,7 +26,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return UserIdParser.ToFailure<FoodVisionModel>(userIdResult);
         }
 
-        if (query.ImageAssetId == Guid.Empty) {
+        if (!RecognitionImagesValidation.IsValid(query.ImageAssetId, query.IsProductLabel, query.AdditionalImageAssetIds)) {
             return Result.Failure<FoodVisionModel>(Errors.Validation.Invalid(
                 nameof(query.ImageAssetId),
                 "Image asset id must not be empty."));
@@ -45,11 +46,19 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(error);
         }
 
+        var additionalUrls = new List<string>();
+        foreach (Guid id in query.AdditionalImageAssetIds ?? []) {
+            Result<string> additional = await imageAssetContentService.GetDataUrlAsync((ImageAssetId)id, userId, cancellationToken).ConfigureAwait(false);
+            if (additional.IsFailure) {
+                return Result.Failure<FoodVisionModel>(additional.Error);
+            }
+            additionalUrls.Add(additional.Value);
+        }
         return await openAiFoodService.AnalyzeFoodImageAsync(
             assetResult.Value,
             userId,
             query.Description,
             query.RequestId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, product: query.IsProductLabel ? new ProductImageAnalysis(additionalUrls) : null).ConfigureAwait(false);
     }
 }

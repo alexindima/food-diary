@@ -8,7 +8,7 @@ AI owns food analysis, prompt administration, usage reporting contracts, quotas 
 - Application.Abstractions owns provider, quota, job-store and repository ports. IAiUsageQuery is implemented by FoodDiary.ReadModel.Composition. AiQuotaRepository writes usage during quota reconciliation; there is no standalone usage writer.
 - Application owns command/query handlers, provider/quota orchestration, completed-result validation and background recognition processing. GetUserAiUsageSummary computes its result in the handler. Profile consumers use the existing Users.Contracts IUserAiProfileReadService and UserAiProfileModel directly; no duplicate AI profile adapter or model is needed.
 - Domain owns AI usage and prompt entities and IDs. UserId comes from Users.Domain.Contracts; no foreign aggregate navigation is permitted.
-- PersistenceModel owns EF mappings and internal quota/job records. Four foreign User/ImageAsset relationships are composed centrally by AiCrossModuleRelationships. Preserve indexes, conversions and delete behavior.
+- PersistenceModel owns EF mappings and internal quota/job records. Foreign User/ImageAsset relationships, including additional recognition images, are composed centrally by AiCrossModuleRelationships. Preserve indexes, conversions and delete behavior.
 - Infrastructure owns AiDbContext, staged usage and prompt writes, independent quota/job stores, prompt caching, and OpenAI transport under Providers. Shared HTTP bounds and telemetry helpers belong to Shared/FoodDiary.Integrations.Http.
 - Presentation owns Controllers, Requests, Responses, Models, Mappings, Hubs, Services and Extensions. FoodRecognitionNotifier publishes invalidation hints; owner-scoped HTTP remains authoritative. Presentation has no direct Domain reference.
 
@@ -36,8 +36,8 @@ Architecture checks protect project layout, namespace alignment, module extracti
 
 ## Admin prompt workbench
 
-The admin catalog exposes the three runtime scenarios (`vision`, `text-parse`,
-`nutrition`) for English and Russian, including built-in instructions when no
+The admin catalog exposes four runtime scenarios (`vision`, `text-parse`,
+`nutrition`, `product-label`) for English and Russian, including built-in instructions when no
 custom template exists. `AiPromptCatalog` is the single source of unchanged
 built-in texts and supported variables. Requested-locale overrides, English
 fallbacks and built-ins retain the production selection order. The catalog
@@ -48,6 +48,20 @@ Each catalog entry also exposes `responseFormatJson`, serialized from the same
 `OpenAiRequestFactory` format used by provider requests. The admin displays this
 read-only strict JSON schema alongside scenario-specific input and automatic
 instruction guidance. Schema fields cannot be edited through prompt text.
+
+Product label recognition accepts up to five owned photographs of one product in
+one durable job. The `product-label` prompt reads visible packaging information;
+missing values remain nullable and do not trigger the name-based nutrition
+estimator. Quotas continue using the vision operation. Existing meal jobs retain
+their vision-then-nutrition workflow. Additional image references protect uploads
+from cleanup for the same seven-day retention period as the job.
+
+Deploy migration `AddProductLabelRecognitionImages` before the API and worker,
+then deploy the client. Existing jobs default to meal mode. Drain running label
+jobs before rolling back application code; keep the additive schema to preserve
+their results. No prompt data migration is needed: the new default is available
+without overwriting saved vision, text or nutrition templates. An active admin
+override takes precedence and may be cached for up to five minutes.
 Preview remains the assembled input text, rather than the full provider payload.
 
 Preview resolves an unsaved draft through the production `OpenAiRequestFactory`

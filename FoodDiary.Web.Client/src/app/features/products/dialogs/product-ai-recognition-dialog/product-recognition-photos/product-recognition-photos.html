@@ -1,0 +1,63 @@
+<div class="recognition-photos">
+    <div class="recognition-photos__strip">
+        @for (photo of photos(); track photo.assetId) {
+            <div class="recognition-photos__item">
+                <img [src]="photo.url" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
+                <fd-ui-button
+                    type="button"
+                    fill="text"
+                    size="sm"
+                    [disabled]="disabled() || uploading()"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    (click)="cover.set(photo)"
+                >
+                    {{
+                        (cover()?.assetId === photo.assetId ? 'PRODUCT_AI_DIALOG.COVER_SELECTED' : 'PRODUCT_AI_DIALOG.CHOOSE_COVER')
+                            | translate
+                    }}
+                </fd-ui-button>
+                <fd-ui-button
+                    type="button"
+                    fill="text"
+                    size="sm"
+                    [disabled]="disabled() || uploading()"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    (click)="remove(photo)"
+                >
+                    {{ 'IMAGE_UPLOAD_FIELD.REMOVE' | translate }}
+                </fd-ui-button>
+            </div>
+        }
+        @if (!reviewing() && photos().length < maxPhotos) {
+            <fd-image-upload-field
+                acceptedTypes="image/jpeg,image/png,image/webp"
+                [appearance]="photos().length ? 'tile' : 'preview'"
+                [class.recognition-photos__add]="photos().length > 0"
+                [showRecommendation]="false"
+                [multiple]="true"
+                [maxFiles]="maxPhotos - photos().length"
+                [selectText]="'PRODUCT_AI_DIALOG.ADD_PHOTOS' | translate"
+                [dropText]="'PRODUCT_AI_DIALOG.DROP_PHOTOS' | translate: { count: maxPhotos - photos().length }"
+                [disabled]="disabled()"
+                [cropEnabled]="false"
+                [deleteOnClear]="false"
+                [resizeMaxDimension]="2048"
+                [clearRequest]="clearRequest()"
+                [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
+                (imagesAdded)="addBatch($event)"
+                (batchUploading)="uploading.set($event)"
+                (imagePreparationStarted)="uploading.set(true)"
+                (imagePreparationFailed)="uploading.set(false)"
+                (imageChanged)="add($event)"
+            />
+        }
+    </div>
+    @if (!reviewing()) {
+        <p class="fd-ui-helper-text">{{ 'PRODUCT_AI_DIALOG.PHOTOS_HINT' | translate }}</p>
+    }
+    @if (photos().length) {
+        <p class="fd-ui-helper-text" role="status">
+            {{ 'PRODUCT_AI_DIALOG.PHOTO_COUNT' | translate: { count: photos().length, max: maxPhotos } }}
+        </p>
+    }
+</div>

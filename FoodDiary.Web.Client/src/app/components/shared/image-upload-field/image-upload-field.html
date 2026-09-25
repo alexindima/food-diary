@@ -21,6 +21,7 @@
             type="file"
             hidden
             [accept]="acceptedTypes()"
+            [multiple]="multiple() && !cropEnabled()"
             [disabled]="disabled() || isUploading()"
             (change)="onFileSelected($event)"
         />
@@ -58,9 +59,11 @@
         } @else {
             <div class="image-upload-field__placeholder fd-gap-xxs">
                 <div class="image-upload-field__icon">&#8593;</div>
-                <div class="image-upload-field__main-text fd-ui-card-title">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
+                <div class="image-upload-field__main-text fd-ui-card-title">
+                    {{ selectText() || ('IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate) }}
+                </div>
                 <div class="image-upload-field__sub-text image-upload-field__sub-text--plain fd-ui-caption">
-                    {{ 'IMAGE_UPLOAD_FIELD.DROP_HERE' | translate }}
+                    {{ dropText() || ('IMAGE_UPLOAD_FIELD.DROP_HERE' | translate) }}
                 </div>
                 <div class="image-upload-field__sub-text fd-ui-caption">
                     {{ description() || ('IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate: { maxSizeMb: maxSizeMb() }) }}

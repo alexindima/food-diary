@@ -20,6 +20,10 @@ internal static class AiCrossModuleRelationships {
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<FoodRecognitionJobImage>().HasOne<ImageAsset>()
+            .WithMany()
+            .HasForeignKey(x => x.ImageAssetId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
         modelBuilder.Entity<FoodRecognitionJob>().HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(x => x.ImageAssetId)

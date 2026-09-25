@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 102,
+    "selectorUnreferencedComponents": 103,
     "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 127,
-    "criticalSymbolsWithoutTestReferences": 38,
+    "componentsWithoutDirectSpecs": 126,
+    "criticalSymbolsWithoutTestReferences": 37,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -707,6 +707,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.spec.ts"
+    },
+    {
+      "class": "ProductAiRecognitionActionComponent",
+      "selector": "fd-product-ai-recognition-action",
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-action/product-ai-recognition-action.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-action/product-ai-recognition-action.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-action/product-ai-recognition-action.spec.ts"
     },
     {
       "class": "ProductAiRecognitionDialogComponent",
@@ -4762,21 +4770,6 @@
       "specPath": null
     },
     {
-      "class": "FoodRecognitionHistoryComponent",
-      "selector": "fd-food-recognition-history",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "recognitionSelected",
-          "type": "FoodRecognitionJob"
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "NutritionEditorMessagesComponent",
       "selector": "fd-nutrition-editor-messages",
       "feature": "shared",
@@ -5231,16 +5224,6 @@
       "role": "Validator",
       "path": "Modules/Recipes/Application/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "StartFoodRecognitionCommandValidator",
-      "role": "Validator",
-      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
-      "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

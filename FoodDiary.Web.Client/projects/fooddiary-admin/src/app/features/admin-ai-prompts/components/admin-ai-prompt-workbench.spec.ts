@@ -28,6 +28,25 @@ describe('AdminAiPromptWorkbenchComponent', () => {
         return fixture;
     }
 
+    it('requires an image for a product-label test and passes the separate scenario', async () => {
+        const fixture = create();
+        const component = fixture.componentInstance;
+        fixture.componentRef.setInput('scenarioKey', 'product-label');
+        fixture.componentRef.setInput('promptText', 'Read the label');
+        fixture.detectChanges();
+        await component['inspectAsync'](false);
+        expect(component['requiresImage']()).toBe(true);
+        expect(component['canTest']()).toBe(false);
+        await component['inspectAsync'](true);
+        expect(api.test).not.toHaveBeenCalled();
+        component['imageAssetId'].set('label-image');
+        fixture.detectChanges();
+        await component['inspectAsync'](false);
+        expect(component['canTest']()).toBe(true);
+        await component['inspectAsync'](true);
+        expect(api.test).toHaveBeenCalledWith(expect.objectContaining({ key: 'product-label', imageAssetId: 'label-image' }));
+    });
+
     it('ignores preview responses for a draft edited while the request was in flight', async () => {
         const pending = new Subject<{ text: string }>();
         api.preview.mockReturnValue(pending);

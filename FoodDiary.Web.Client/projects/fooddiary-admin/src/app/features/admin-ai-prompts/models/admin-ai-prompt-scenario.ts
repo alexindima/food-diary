@@ -1,6 +1,6 @@
 import type { AdminAiPrompt } from './admin-ai-prompt';
 
-export type AdminAiPromptKey = 'vision' | 'text-parse' | 'nutrition';
+export type AdminAiPromptKey = 'vision' | 'text-parse' | 'nutrition' | 'product-label';
 export type AdminAiPromptSource = 'custom' | 'english' | 'built-in';
 export type AdminAiPromptScenario = {
     key: AdminAiPromptKey;

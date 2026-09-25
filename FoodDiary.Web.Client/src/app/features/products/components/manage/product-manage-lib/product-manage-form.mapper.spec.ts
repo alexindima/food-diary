@@ -183,6 +183,7 @@ describe('product manage nutrition mapping', () => {
         expect(buildAiResultPatch(form, aiResult)).toEqual({
             name: 'Existing name',
             description: 'Existing description',
+            brand: form.brand,
             imageUrl: image,
             baseAmount: 1,
             baseUnit: MeasurementUnit.PCS,

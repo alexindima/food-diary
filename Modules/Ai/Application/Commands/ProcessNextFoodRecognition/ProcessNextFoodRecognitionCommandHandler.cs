@@ -22,7 +22,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJob
         // A claimed operation is never automatically dispatched again: a lost provider response
         // cannot prove that the paid request was not processed. Maintenance marks it interrupted.
         Result<FoodVisionModel> vision = await sender.Send(new AnalyzeFoodImageCommand(
-            job.UserId, job.ImageAssetId, job.Description, RequestId(job.Id, "vision")), cancellationToken).ConfigureAwait(false);
+            job.UserId, job.ImageAssetId, job.Description, RequestId(job.Id, "vision"), job.IsProductLabel, (job.AdditionalImages ?? []).Select(x => x.ImageAssetId).ToArray()), cancellationToken).ConfigureAwait(false);
         if (vision.IsFailure) {
             await store.CompleteAsync(job.Id, nutrition: null, vision.Error.Code, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
             return true;
@@ -30,7 +30,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJob
         if (!await store.SaveVisionAsync(job.Id, vision.Value, cancellationToken).ConfigureAwait(false)) {
             return true;
         }
-        if (vision.Value.Items.Count == 0) {
+        if (job.IsProductLabel || vision.Value.Items.Count == 0) {
             await store.CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
             return true;
         }

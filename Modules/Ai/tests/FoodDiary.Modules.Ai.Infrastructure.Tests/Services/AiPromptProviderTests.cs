@@ -46,6 +46,7 @@ public sealed class AiPromptProviderTests {
 
     [Theory]
     [InlineData("nutrition", "nutrition assistant")]
+    [InlineData("product-label", "Do not estimate nutrition")]
     [InlineData("unknown-key", "unknown-key")]
     public async Task GetPromptAsync_WhenTemplateMissing_ReturnsFallbackOrKey(string key, string expectedText) {
         await using ServiceProvider provider = CreateProvider();

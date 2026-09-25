@@ -375,7 +375,7 @@ public sealed class OpenAiFoodServiceTests {
             string? userLanguage,
             string? description,
             string promptTemplate,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken, ProductImageAnalysis? product = null) {
             BudgetCalls++;
             if (BeforeVisionBudgetAsync is not null) {
                 await BeforeVisionBudgetAsync(cancellationToken);
@@ -389,7 +389,7 @@ public sealed class OpenAiFoodServiceTests {
             string? userLanguage,
             string? description,
             string promptTemplate,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken, ProductImageAnalysis? product = null) {
             ProviderCalls++;
             return Task.FromResult(AnalyzeFoodImageResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
@@ -550,6 +550,26 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Multiple(() => Assert.Single(quota.Reservations), () => Assert.Single(quota.Reconciliations),
             () => Assert.Empty(prompts.ReceivedCalls()));
         await client.Received(1).ParseFoodTextAsync("apple", "ru", "Draft {{userText}}", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ProductLabel_UsesDedicatedSavedPromptForBudgetAndExecution() {
+        IOpenAiFoodClient client = Substitute.For<IOpenAiFoodClient>();
+        var product = new ProductImageAnalysis(["data:image/png;base64,BB=="]);
+        client.GetAnalyzeFoodImageTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), "Saved label prompt", Arg.Any<CancellationToken>(), product)
+            .Returns(Result.Success(new AiProviderTokenBudget(InputTokens: 10, MaximumOutputTokens: 20)));
+        client.AnalyzeFoodImageAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), "Saved label prompt", Arg.Any<CancellationToken>(), product)
+            .Returns(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(new FoodVisionModel([]), "vision", "test-model",
+                new AiUsageTokens(InputTokens: 10, OutputTokens: 5, TotalTokens: 15))));
+        IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
+        prompts.GetPromptAsync("product-label", Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns("Saved label prompt");
+        var quota = new RecordingAiQuotaRepository();
+        var service = new OpenAiFoodService(client, quota, CreateUserAiProfileReadService(), new StubDateTimeProvider(), prompts);
+        ResultAssert.Success(await service.AnalyzeFoodImageAsync("data:image/png;base64,AA==", UserId.New(), "label", RequestId, CancellationToken.None, product: product));
+        await prompts.Received(1).GetPromptAsync("product-label", Arg.Any<string?>(), Arg.Any<CancellationToken>());
+        await prompts.DidNotReceive().GetPromptAsync("vision", Arg.Any<string?>(), Arg.Any<CancellationToken>());
+        Assert.Single(quota.Reservations);
+        Assert.Single(quota.Reconciliations);
     }
 
     private static IAiPromptProvider CreateAiPromptProvider() {

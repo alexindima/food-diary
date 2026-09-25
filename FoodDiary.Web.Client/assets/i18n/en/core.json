@@ -959,6 +959,8 @@
         "SAVE_ERROR": "Could not save the prompt. Your edits are preserved.",
         "SUBTITLE": "Manage instructions for food recognition and nutrition estimates. Check a draft before applying it.",
         "SCENARIOS": "AI scenarios",
+        "SCENARIOS_product-label": "Product label",
+        "DESCRIPTION_product-label": "Read one product's packaging and nutrition label from its photos, without estimating missing values.",
         "SCENARIOS_vision": "Food photo",
         "SCENARIOS_text-parse": "Food description",
         "SCENARIOS_nutrition": "Nutrition estimate",

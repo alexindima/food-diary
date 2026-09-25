@@ -199,7 +199,12 @@ export class FoodRecognitionService {
     }
 
     private async releaseRequestAsync(user: string, job: FoodRecognitionJob): Promise<FoodRecognitionJob> {
-        const key = await this.requestKeyAsync(user, { imageAssetId: job.imageAssetId, description: job.description });
+        const key = await this.requestKeyAsync(user, {
+            imageAssetId: job.imageAssetId,
+            description: job.description,
+            isProductLabel: job.isProductLabel,
+            additionalImageAssetIds: job.additionalImages?.map(image => image.imageAssetId),
+        });
         if (this.storage.getItem('session', key) === job.id) {
             this.storage.removeItem('session', key);
         }
@@ -208,7 +213,13 @@ export class FoodRecognitionService {
 
     private async requestKeyAsync(user: string, request: FoodVisionRequest): Promise<string> {
         const bytes = new TextEncoder().encode(
-            JSON.stringify({ imageAssetId: request.imageAssetId, description: request.description ?? null }),
+            JSON.stringify({
+                imageAssetId: request.imageAssetId,
+                description: request.description ?? null,
+                ...(request.isProductLabel === true
+                    ? { isProductLabel: true, additionalImageAssetIds: request.additionalImageAssetIds ?? [] }
+                    : {}),
+            }),
         );
         const hash = await crypto.subtle.digest('SHA-256', bytes);
         const fingerprint = Array.from(new Uint8Array(hash), value => value.toString(HEX_RADIX).padStart(2, '0')).join('');

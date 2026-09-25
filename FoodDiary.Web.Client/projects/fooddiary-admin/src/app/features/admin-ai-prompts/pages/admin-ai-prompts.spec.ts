@@ -14,7 +14,7 @@ import type { AdminAiPromptKey, AdminAiPromptScenario } from '../models/admin-ai
 import { AdminAiPromptsPageComponent } from './admin-ai-prompts';
 
 describe('AdminAiPromptsPageComponent', () => {
-    const scenarios: AdminAiPromptScenario[] = (['vision', 'text-parse', 'nutrition'] as AdminAiPromptKey[]).flatMap(key =>
+    const scenarios: AdminAiPromptScenario[] = (['vision', 'text-parse', 'nutrition', 'product-label'] as AdminAiPromptKey[]).flatMap(key =>
         ['en', 'ru'].map(locale => ({
             key,
             locale,

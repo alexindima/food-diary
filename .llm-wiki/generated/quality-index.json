@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5546,
+    "productionFiles": 5556,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 959,
-    "criticalSymbolsWithTestReferences": 921,
-    "criticalSymbolsWithoutTestReferences": 38,
+    "criticalSymbolsWithTestReferences": 922,
+    "criticalSymbolsWithoutTestReferences": 37,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -127,6 +127,14 @@
       "structuralRiskScore": 163.12
     },
     {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "nonBlankLines": 562,
+      "decisionPoints": 98,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 158.24
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
       "nonBlankLines": 417,
       "decisionPoints": 96,
@@ -149,14 +157,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 149.98
-    },
-    {
-      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 544,
-      "decisionPoints": 92,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 148.88
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
@@ -263,20 +263,20 @@
       "structuralRiskScore": 126.88
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
+      "nonBlankLines": 550,
+      "decisionPoints": 77,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 126.5
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
       "nonBlankLines": 331,
       "decisionPoints": 77,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 124.12
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "nonBlankLines": 547,
-      "decisionPoints": 75,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
@@ -2938,11 +2938,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/AiCrossModuleRelationships.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.6
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/BillingCrossModuleRelationships.cs",
@@ -3195,10 +3195,10 @@
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
       "nonBlankLines": 55,
-      "decisionPoints": 0,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.1
+      "structuralRiskScore": 2.6
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -5322,11 +5322,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.service.ts",
-      "nonBlankLines": 142,
+      "nonBlankLines": 145,
       "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.34
+      "structuralRiskScore": 40.4
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.stories.ts",
@@ -6194,11 +6194,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.ts",
-      "nonBlankLines": 134,
-      "decisionPoints": 19,
+      "nonBlankLines": 135,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.18
+      "structuralRiskScore": 32.7
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/lib/admin-ai-prompts.facade.ts",
@@ -7506,11 +7506,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
+      "nonBlankLines": 49,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 5.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/header-actions-overflow/header-actions-overflow.ts",
@@ -10690,19 +10690,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "nonBlankLines": 547,
-      "decisionPoints": 75,
+      "nonBlankLines": 550,
+      "decisionPoints": 77,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.44
+      "structuralRiskScore": 126.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-lib/product-manage-form.mapper.ts",
-      "nonBlankLines": 212,
-      "decisionPoints": 20,
+      "nonBlankLines": 213,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.24
+      "structuralRiskScore": 35.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-lib/product-manage-form.types.ts",
@@ -10754,35 +10754,43 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
-      "nonBlankLines": 320,
-      "decisionPoints": 37,
+      "nonBlankLines": 302,
+      "decisionPoints": 43,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 61.9
+      "structuralRiskScore": 70.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types.ts",
-      "nonBlankLines": 29,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 0.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-lib/product-ai-recognition.helpers.ts",
-      "nonBlankLines": 132,
-      "decisionPoints": 12,
+      "nonBlankLines": 171,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.64
+      "structuralRiskScore": 45.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.ts",
-      "nonBlankLines": 47,
-      "decisionPoints": 1,
+      "nonBlankLines": 54,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 4.08
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos.ts",
+      "nonBlankLines": 38,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
@@ -12930,11 +12938,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "nonBlankLines": 202,
-      "decisionPoints": 28,
+      "nonBlankLines": 213,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 46.04
+      "structuralRiskScore": 47.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
@@ -13402,11 +13410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/ai.data.ts",
-      "nonBlankLines": 53,
+      "nonBlankLines": 69,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.06
+      "structuralRiskScore": 1.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/charts.data.ts",
@@ -13434,11 +13442,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/food-recognition.data.ts",
-      "nonBlankLines": 14,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/http-request.params.ts",
@@ -16993,6 +17001,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Ai/Application.Abstractions/Common/ProductImageAnalysis.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Ai/Application.Abstractions/Models/UserAiUsageModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -17002,11 +17018,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Prompts/AiPromptCatalog.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 8,
+      "nonBlankLines": 33,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.46
+      "structuralRiskScore": 15.66
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Prompts/AiPromptDraftValidation.cs",
@@ -17034,19 +17050,19 @@
     },
     {
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 4,
+      "nonBlankLines": 58,
+      "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.98
+      "structuralRiskScore": 13.66
     },
     {
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
+      "structuralRiskScore": 2.44
     },
     {
       "path": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
@@ -17099,10 +17115,10 @@
     {
       "path": "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
       "nonBlankLines": 43,
-      "decisionPoints": 4,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.86
+      "structuralRiskScore": 11.86
     },
     {
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs",
@@ -17114,19 +17130,19 @@
     },
     {
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 4,
+      "nonBlankLines": 54,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.76
+      "structuralRiskScore": 16.58
     },
     {
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/Ai/Application/Commands/TestAiPrompt/TestAiPromptCommandHandler.cs",
@@ -17143,6 +17159,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 11.76
+    },
+    {
+      "path": "Modules/Ai/Application/Common/Validation/RecognitionImagesValidation.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.66
     },
     {
       "path": "Modules/Ai/Application/DependencyInjection.cs",
@@ -17385,12 +17409,20 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Ai/Contracts/Models/FoodRecognitionJobModel.cs",
-      "nonBlankLines": 14,
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionImageModel.cs",
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionJobModel.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Ai/Contracts/Models/FoodVisionItemModel.cs",
@@ -17402,11 +17434,19 @@
     },
     {
       "path": "Modules/Ai/Contracts/Models/FoodVisionModel.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Ai/Contracts/Models/ProductLabelModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Ai/Contracts/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQuery.cs",
@@ -17578,11 +17618,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "nonBlankLines": 146,
-      "decisionPoints": 16,
+      "nonBlankLines": 155,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.92
+      "structuralRiskScore": 33.1
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs",
@@ -17594,11 +17634,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/AiPromptPreviewRenderer.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 28,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.52
+      "structuralRiskScore": 3.56
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs",
@@ -17610,11 +17650,19 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 544,
-      "decisionPoints": 92,
+      "nonBlankLines": 562,
+      "decisionPoints": 98,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 148.88
+      "structuralRiskScore": 158.24
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiProductLabelRequest.cs",
+      "nonBlankLines": 48,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.46
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs",
@@ -17626,11 +17674,11 @@
     },
     {
       "path": "Modules/Ai/PersistenceModel/AiPersistenceModelRegistration.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Ai/PersistenceModel/AiQuotaPeriod.cs",
@@ -17705,12 +17753,28 @@
       "structuralRiskScore": 0.42
     },
     {
-      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "nonBlankLines": 17,
+      "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobImageConfiguration.cs",
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJobImage.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
@@ -17762,19 +17826,19 @@
     },
     {
       "path": "Modules/Ai/Presentation/Mappings/AiHttpResponseMappings.cs",
-      "nonBlankLines": 70,
+      "nonBlankLines": 72,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.4
+      "structuralRiskScore": 1.44
     },
     {
       "path": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 1.84
     },
     {
       "path": "Modules/Ai/Presentation/Models/FoodVisionItemHttpModel.cs",
@@ -17833,15 +17897,31 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
-      "nonBlankLines": 6,
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs",
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -44034,11 +44114,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
-      "nonBlankLines": 60,
-      "decisionPoints": 4,
+      "nonBlankLines": 53,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.2
+      "structuralRiskScore": 5.56
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
@@ -45318,7 +45398,7 @@
       "name": "AnalyzeFoodImageCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs"
@@ -47272,7 +47352,7 @@
       "name": "StartFoodRecognitionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
-      "line": 14,
+      "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs"
@@ -52125,7 +52205,7 @@
       "name": "AnalyzeFoodImageCommandValidator",
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-      "line": 4,
+      "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs"
@@ -54366,10 +54446,12 @@
       "name": "StartFoodRecognitionCommandValidator",
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

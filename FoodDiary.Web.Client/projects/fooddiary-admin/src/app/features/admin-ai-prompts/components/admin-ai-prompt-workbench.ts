@@ -38,8 +38,9 @@ export class AdminAiPromptWorkbenchComponent {
     protected readonly result = signal('');
     private readonly revision = computed(() => JSON.stringify(this.draft()));
     private readonly verifiedRevision = signal('');
+    protected readonly requiresImage = computed(() => this.scenarioKey() === 'vision' || this.scenarioKey() === 'product-label');
     protected readonly canTest = computed(
-        () => this.verifiedRevision() === this.revision() && (this.scenarioKey() !== 'vision' || Boolean(this.imageAssetId())),
+        () => this.verifiedRevision() === this.revision() && (!this.requiresImage() || Boolean(this.imageAssetId())),
     );
     protected readonly draft = computed<AdminAiPromptDraft>(() => ({
         key: this.scenarioKey(),

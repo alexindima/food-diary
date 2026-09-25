@@ -5,9 +5,9 @@
     "entities": 86,
     "valueObjects": 92,
     "invariants": 515,
-    "persistenceMappings": 91,
-    "indexes": 168,
-    "relationships": 35
+    "persistenceMappings": 92,
+    "indexes": 169,
+    "relationships": 36
   },
   "domainTypes": [
     {
@@ -5665,6 +5665,22 @@
       ],
       "relationships": [],
       "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "FoodRecognitionJobImage",
+      "table": "FoodRecognitionJobImages",
+      "indexes": [
+        "x => new { x.JobId, x.Position }).IsUnique()"
+      ],
+      "relationships": [
+        {
+          "kind": "HasOne",
+          "target": "FoodRecognitionJob",
+          "expression": ").WithMany(x => x.AdditionalImages).HasForeignKey(x => x.JobId).OnDelete(DeleteBehavior.Cascade)"
+        }
+      ],
+      "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobImageConfiguration.cs"
     },
     {
       "area": "FoodDiary",

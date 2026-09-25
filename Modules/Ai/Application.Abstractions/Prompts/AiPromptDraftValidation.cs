@@ -7,7 +7,7 @@ public static class AiPromptDraftValidation {
         draft.Locale is "en" or "ru" && AiPromptCatalog.IsValid(draft.Key, draft.PromptText)
         && draft.Text?.Length is not > 2048
         && (!string.Equals(draft.Key, "text-parse", StringComparison.Ordinal) || !string.IsNullOrWhiteSpace(draft.Text))
-        && (!string.Equals(draft.Key, "vision", StringComparison.Ordinal) || !requireImage || (draft.ImageAssetId is { } id && id != Guid.Empty))
+        && (draft.Key is not ("vision" or "product-label") || !requireImage || (draft.ImageAssetId is { } id && id != Guid.Empty))
         && (!string.Equals(draft.Key, "nutrition", StringComparison.Ordinal) || (draft.Items is { Count: > 0 and <= 50 }
             && draft.Items.All(item => item is not null && !string.IsNullOrWhiteSpace(item.NameEn)
                 && item.NameEn.Length <= 256 && !string.IsNullOrWhiteSpace(item.Unit)

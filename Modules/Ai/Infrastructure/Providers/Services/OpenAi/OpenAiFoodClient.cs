@@ -42,12 +42,12 @@ public sealed class OpenAiFoodClient(
         string? userLanguage,
         string? description,
         string promptTemplate,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, ProductImageAnalysis? product = null) {
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
             return Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        object primary = BuildVisionRequest(_options.VisionModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
+        object primary = BuildVisionRequest(_options.VisionModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
         Result<long> primaryCount = await CountInputTokensAsync(primary, cancellationToken).ConfigureAwait(false);
         if (primaryCount.IsFailure) {
             return Result.Failure<AiProviderTokenBudget>(primaryCount.Error);
@@ -55,7 +55,7 @@ public sealed class OpenAiFoodClient(
 
         long inputTokens = primaryCount.Value;
         if (!string.Equals(_options.VisionFallbackModel, _options.VisionModel, StringComparison.Ordinal)) {
-            object fallback = BuildVisionRequest(_options.VisionFallbackModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
+            object fallback = BuildVisionRequest(_options.VisionFallbackModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
             Result<long> fallbackCount = await CountInputTokensAsync(fallback, cancellationToken).ConfigureAwait(false);
             if (fallbackCount.IsFailure) {
                 return Result.Failure<AiProviderTokenBudget>(fallbackCount.Error);
@@ -72,14 +72,14 @@ public sealed class OpenAiFoodClient(
         string? userLanguage,
         string? description,
         string promptTemplate,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, ProductImageAnalysis? product = null) {
         const string operation = "vision";
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         string requestModel = _options.VisionModel;
-        object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
+        object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
         (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess &&
             response.CanFallback &&
@@ -90,7 +90,7 @@ public sealed class OpenAiFoodClient(
                 new KeyValuePair<string, object?>("fooddiary.ai.from_model", requestModel),
                 new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
-            object fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
+            object fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
             response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken).ConfigureAwait(false);
         }
 
@@ -99,7 +99,7 @@ public sealed class OpenAiFoodClient(
         }
 
         using JsonDocument json = response.Json!;
-        Result<FoodVisionModel> parsed = ParseVisionResponse(json);
+        Result<FoodVisionModel> parsed = product is null ? ParseVisionResponse(json) : ParseProductLabelResponse(json);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -463,7 +463,8 @@ public sealed class OpenAiFoodClient(
         string? userLanguage,
         string? description,
         string promptTemplate,
-        int maxOutputTokens) =>
+        int maxOutputTokens, ProductImageAnalysis? product = null) =>
+        product is not null ? OpenAiProductLabelRequest.Build(model, imageUrl, product, userLanguage, description, promptTemplate, maxOutputTokens) :
         OpenAiRequestFactory.BuildVisionRequest(model, imageUrl, userLanguage, description, promptTemplate, maxOutputTokens);
 
     private static object BuildTextParseRequest(
@@ -480,6 +481,24 @@ public sealed class OpenAiFoodClient(
         string promptTemplate,
         int maxOutputTokens) =>
         OpenAiRequestFactory.BuildNutritionRequest(model, items, promptTemplate, maxOutputTokens);
+
+    private static Result<FoodVisionModel> ParseProductLabelResponse(JsonDocument json) {
+        string? text = ExtractOutputText(json);
+        if (string.IsNullOrWhiteSpace(text)) {
+            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Missing product label output."));
+        }
+        try {
+            ProductLabelModel? label = JsonSerializer.Deserialize<ProductLabelModel>(text, JsonOptions());
+            if (label is null || label.BaseAmount is <= 0 ||
+                label.BaseUnit is not (null or "g" or "ml" or "pcs") ||
+                new[] { label.Calories, label.Protein, label.Fat, label.Carbs, label.Fiber, label.Alcohol }.Any(value => value is < 0)) {
+                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Invalid product label values."));
+            }
+            return Result.Success(new FoodVisionModel([], ProductLabel: label));
+        } catch (JsonException) {
+            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Invalid product label JSON."));
+        }
+    }
 
     private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
         string? text = ExtractOutputText(json);

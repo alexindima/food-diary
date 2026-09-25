@@ -4,6 +4,8 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Ai.PersistenceModel;
 
 internal sealed class FoodRecognitionJob {
+    public bool IsProductLabel { get; set; }
+    public ICollection<FoodRecognitionJobImage> AdditionalImages { get; set; } = [];
     public Guid Id { get; set; }
     public UserId UserId { get; set; }
     public ImageAssetId ImageAssetId { get; set; }

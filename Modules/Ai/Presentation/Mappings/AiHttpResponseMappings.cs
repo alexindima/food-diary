@@ -11,7 +11,9 @@ public static class AiHttpResponseMappings {
         public FoodVisionHttpResponse ToHttpResponse() {
             return new FoodVisionHttpResponse(
                 model.Items.ToHttpResponseList(ToHttpModel),
-                model.Notes
+                model.Notes,
+                model.ProductLabel is { } label ? new ProductLabelHttpResponse(label.Name, label.Brand, label.BaseAmount, label.BaseUnit,
+                    label.Calories, label.Protein, label.Fat, label.Carbs, label.Fiber, label.Alcohol, label.Notes) : null
             );
         }
     }

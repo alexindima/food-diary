@@ -27128,8 +27128,33 @@
       ]
     },
     {
+      "Name": "FoodRecognitionImageHttpResponse",
+      "Properties": [
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "FoodRecognitionJobHttpResponse",
       "Properties": [
+        {
+          "Name": "additionalImages",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/FoodRecognitionImageHttpResponse"
+        },
         {
           "Name": "createdOnUtc",
           "Required": false,
@@ -27168,6 +27193,12 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "isProductLabel",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
         },
         {
           "Name": "nutrition",
@@ -27246,6 +27277,12 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "productLabel",
+          "Required": false,
+          "Reference": "#/components/schemas/ProductLabelHttpResponse",
+          "Nullable": false
         }
       ]
     },
@@ -29824,6 +29861,84 @@
       ]
     },
     {
+      "Name": "ProductLabelHttpResponse",
+      "Properties": [
+        {
+          "Name": "alcohol",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "baseAmount",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "baseUnit",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "brand",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "calories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "carbs",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fat",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "name",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "notes",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "protein",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "ProductOverviewHttpResponse",
       "Properties": [
         {
@@ -31506,6 +31621,13 @@
       "Name": "StartFoodRecognitionHttpRequest",
       "Properties": [
         {
+          "Name": "additionalImageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
           "Name": "description",
           "Required": false,
           "Type": "string",
@@ -31523,6 +31645,12 @@
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isProductLabel",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         }
       ]

@@ -1,0 +1,33 @@
+.recognition-photos {
+    --image-preview-height: 140px;
+    display: grid;
+    gap: var(--fd-space-sm);
+}
+.recognition-photos__strip {
+    display: flex;
+    gap: var(--fd-space-sm);
+    flex-wrap: wrap;
+}
+.recognition-photos__item {
+    display: flex;
+    flex-direction: column;
+    width: 110px;
+}
+.recognition-photos__item img {
+    width: 100%;
+    height: 80px;
+    object-fit: contain;
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-color-surface-raised);
+}
+
+.recognition-photos__strip > fd-image-upload-field {
+    width: 100%;
+}
+.recognition-photos__strip > .recognition-photos__add {
+    width: 110px;
+}
+
+.recognition-photos > p {
+    margin: 0;
+}

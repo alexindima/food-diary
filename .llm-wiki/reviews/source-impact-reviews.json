@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "b1dd63e9c8c35030bebe6a2d8a79c02c4aecddf3858d8eb8d665e9d6f7bc7d97"
+          "sha256": "11f71a844c9b74df4625295944c098add35702b0ffd8eff6089f993d788de1db"
         }
       ],
-      "reason": "Added bounded GET favorite-products/page, allowed favoriteLimit=0 on product overview, and updated the full OpenAPI snapshot. Existing routes and response shapes remain compatible. Application and presentation tests pass; Docker-dependent integration verification remains pending CI. The documented compatibility workflow still applies.",
+      "reason": "Reviewed the full OpenAPI snapshot after adding optional product-label mode, additional images and nullable label fields. Snapshot regeneration plus rebuilt host integration tests pass; the documented compatibility workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
-      "reviewedAtUtc": "2026-09-24T10:30:24.2622560Z"
+      "gitHead": "a669423e16ee5264751ac40af541b2281203cef1",
+      "reviewedAtUtc": "2026-09-24T20:24:10.2711679Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f635546170fa8cc421a924929fd3e360313324b07bcfa64b81dc3b10c3dcfa4e"
+          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
         }
       ],
-      "reason": "Merged focused regression coverage for pipeline cancellation versus unrelated cancellation; logging severity changes only for the already-cancelled pipeline token and exception propagation remains unchanged.",
+      "reason": "Reviewed refreshed quality index with executed 300 product tests, localized input cases, browser normalization and HTTP 500 retry scenarios. AI discard regression reproduced before fix. Live image success remains blocked by unavailable local storage, not inferred from unit coverage.",
       "baseRef": "HEAD",
-      "gitHead": "a669423e16ee5264751ac40af541b2281203cef1",
-      "reviewedAtUtc": "2026-09-25T05:53:37.2277210Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:46.3274451Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b63e48f3d04ae507fee99bc0ace404e1fe147cfc44de0f5cb3895cba4641c04c"
+          "sha256": "e00873e67e7f73eda143b4da94704f885f83bd35143d4a4886a1af4bf74555cb"
         }
       ],
-      "reason": "Merged application-pipeline logging classification only; request handling, HTTP status mapping, retries, persistence, hosted services, providers, and deployment topology remain unchanged.",
+      "reason": "No workers, providers or deployment configuration changed. New paged product favorites is served by the existing API host; cancellation and owner scoping remain explicit. Topology workflow remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "a669423e16ee5264751ac40af541b2281203cef1",
-      "reviewedAtUtc": "2026-09-25T05:53:57.4280833Z"
+      "gitHead": "52631729a39a37a9bb3bd8eec5559c10e1e20203",
+      "reviewedAtUtc": "2026-09-24T10:32:14.0651627Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f635546170fa8cc421a924929fd3e360313324b07bcfa64b81dc3b10c3dcfa4e"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b63e48f3d04ae507fee99bc0ace404e1fe147cfc44de0f5cb3895cba4641c04c"
+          "sha256": "6981db94641bbec34e3d639f42de78a0945fda91ee2860751705cd7531b87071"
         }
       ],
-      "reason": "Merged logging classification change introduces no new payload fields or sensitive-data logging; unrelated cancellation errors remain error-level and exception propagation is unchanged.",
+      "reason": "Reviewed input parsing and validation boundary: malformed/nonfinite numeric input is rejected before API submission; no auth or visibility defaults changed. Local QA created only explicitly named test products. No production or secret configuration changed.",
       "baseRef": "HEAD",
-      "gitHead": "a669423e16ee5264751ac40af541b2281203cef1",
-      "reviewedAtUtc": "2026-09-25T05:53:38.4137819Z"
+      "gitHead": "47b3e8f6c094a115517e532e09a3621d18d1979b",
+      "reviewedAtUtc": "2026-09-24T16:03:47.5112871Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

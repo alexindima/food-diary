@@ -17,7 +17,7 @@ import type { FormValueControl } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
@@ -75,6 +75,12 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
+    public readonly multiple = input(false);
+    public readonly maxFiles = input(1);
+    public readonly selectText = input<string>();
+    public readonly dropText = input<string>();
+    public readonly imagesAdded = output<ImageSelection[]>();
+    public readonly batchUploading = output<boolean>();
     public readonly showRecommendation = input(true);
     public readonly recommendedSize = input<string>('2160 x 1080');
     public readonly maxSizeMb = input<number>(DEFAULT_MAX_SIZE_MB);
@@ -91,7 +97,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly value = model<ImageSelection | null>(null);
     public readonly touched = model(false);
     public readonly disabled = input(false);
-    public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'hidden'>('default');
+    public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'tile' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
     public readonly imagePreparationStarted = output<string>();
@@ -162,10 +168,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
 
         const target = event.target;
-        const file = target.files?.[0];
-        if (file !== undefined) {
-            this.handleIncomingFile(file);
-        }
+        this.handleFiles(Array.from(target.files ?? []));
         target.value = '';
     }
 
@@ -176,9 +179,55 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
         this.isDragging.set(false);
-        const file = event.dataTransfer?.files[0];
-        if (file !== undefined) {
-            this.handleIncomingFile(file);
+        this.handleFiles(Array.from(event.dataTransfer?.files ?? []));
+    }
+
+    private handleFiles(files: File[]): void {
+        if (this.disabled() || this.isUploading() || files.length === 0) {
+            return;
+        }
+        if (!this.multiple() || this.cropEnabled()) {
+            this.handleIncomingFile(files[0]);
+            return;
+        }
+        if (files.length > this.maxFiles()) {
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.TOO_MANY_FILES', { count: this.maxFiles() }));
+            return;
+        }
+        void this.uploadBatchAsync(files);
+    }
+
+    private async uploadBatchAsync(files: File[]): Promise<void> {
+        this.error.set(null);
+        this.isUploading.set(true);
+        this.batchUploading.emit(true);
+        const uploaded: ImageSelection[] = [];
+        try {
+            for (const file of files) {
+                if (this.destroyRef.destroyed) {
+                    break;
+                }
+                if (!this.acceptedTypes().split(',').includes(file.type)) {
+                    this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
+                    break;
+                }
+                if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
+                    this.error.set(
+                        this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', { maxSizeMb: this.maxSizeMb() }),
+                    );
+                    break;
+                }
+                const resized = await this.resizeFileIfNeededAsync(file);
+                uploaded.push(await firstValueFrom(this.imageUploadFacade.upload(resized)));
+            }
+        } catch {
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED'));
+        } finally {
+            if (!this.destroyRef.destroyed) {
+                this.isUploading.set(false);
+                this.imagesAdded.emit(uploaded);
+                this.batchUploading.emit(false);
+            }
         }
     }
 

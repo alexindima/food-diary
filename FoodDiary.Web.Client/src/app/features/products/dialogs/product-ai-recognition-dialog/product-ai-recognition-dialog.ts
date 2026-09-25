@@ -10,50 +10,24 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { catchError, of, type Subscription } from 'rxjs';
 
 import { FoodRecognitionHistoryComponent } from '../../../../components/shared/food-recognition-history/food-recognition-history';
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field';
-import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse, ProductLabel } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
-import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action';
 import type { ProductAiDialogData, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import {
     buildProductAiRecognitionModelFromNutrition,
     buildProductAiRecognitionResult,
+    buildProductLabelFormModel,
     capitalizeName,
     createProductAiRecognitionFormModel,
+    isProductAiRecognitionModelValid,
     mapAiNutritionErrorKey,
     mapAiRecognitionErrorKey,
     normalizeItemsForNutrition,
 } from './product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result/product-ai-recognition-result';
-
-const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
-const PERCENT_SCALE = 100;
-const PERCENT_PRECISION = 100;
-const MIDPOINT_PERCENT = 50;
-const CARD_MIN_X_PERCENT = 2;
-const CARD_MAX_X_PERCENT = 70;
-const CARD_MIN_Y_PERCENT = 4;
-const CARD_MAX_Y_PERCENT = 72;
-const CARD_RIGHT_OFFSET_PERCENT = 5;
-const CARD_LEFT_OFFSET_PERCENT = 34;
-const CARD_BELOW_OFFSET_PERCENT = 6;
-const CARD_ABOVE_OFFSET_PERCENT = 30;
-type PhotoAnnotation = {
-    id: string;
-    name: string;
-    amount: number;
-    unit: string;
-    centerX: number;
-    centerY: number;
-    cardX: number;
-    cardY: number;
-    calories: number;
-    protein: number;
-    fat: number;
-    carbs: number;
-};
+import { ProductRecognitionPhotosComponent } from './product-recognition-photos/product-recognition-photos';
 
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
@@ -68,8 +42,7 @@ type PhotoAnnotation = {
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
         FdUiTextareaComponent,
-        ImageUploadFieldComponent,
-        ProductAiRecognitionActionComponent,
+        ProductRecognitionPhotosComponent,
         ProductAiRecognitionResultComponent,
     ],
 })
@@ -87,7 +60,15 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly hasAnalyzed = signal(false);
     protected readonly errorKey = signal<string | null>(null);
     protected readonly nutritionErrorKey = signal<string | null>(null);
-    protected readonly annotationsVisible = signal(true);
+    protected readonly useAsCover = signal(false);
+    protected readonly replacementAccepted = signal(false);
+    protected readonly hasExistingData = this.dialogData.hasExistingData ?? false;
+    protected readonly isBusy = computed(() => this.isLoading() || this.isNutritionLoading());
+    protected readonly photoUploading = signal(false);
+    protected readonly photos = signal<ImageSelection[]>([]);
+    protected readonly cover = signal<ImageSelection | null>(null);
+    protected readonly productLabel = signal<ProductLabel | null>(null);
+    protected readonly hasResult = computed(() => this.productLabel() !== null || this.nutrition() !== null);
     protected readonly selection = signal<ImageSelection | null>(null);
     protected readonly results = signal<FoodVisionItem[]>([]);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
@@ -108,47 +89,79 @@ export class ProductAiRecognitionDialogComponent {
         if (this.isNutritionLoading()) {
             return 'PRODUCT_AI_DIALOG.STATUS_NUTRITION';
         }
-        if (this.hasAnalyzed()) {
+        if (this.hasResult()) {
             return 'PRODUCT_AI_DIALOG.STATUS_DONE';
         }
         return null;
     });
-    protected readonly canApply = computed(() => this.nutrition() !== null);
-    protected readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
+    protected readonly isResultValid = computed(() => isProductAiRecognitionModelValid(this.resultFormModel()));
+    protected readonly canApply = computed(
+        () => this.hasResult() && !this.isBusy() && this.isResultValid() && (!this.hasExistingData || this.replacementAccepted()),
+    );
+    protected readonly isEmpty = computed(
+        () =>
+            this.hasAnalyzed() &&
+            !this.isBusy() &&
+            this.errorKey() === null &&
+            this.nutritionErrorKey() === null &&
+            this.results().length === 0 &&
+            !this.hasResult(),
+    );
+    protected readonly isAnalyzeDisabled = computed(
+        () => (this.selection()?.assetId ?? '').length === 0 || this.isBusy() || this.photoUploading(),
+    );
     protected readonly analyzeDisabledReason = computed(() => {
         if (this.selection() === null) {
             return 'DISABLED_HINTS.IMAGE_REQUIRED';
         }
 
-        if (this.isLoading() || this.isNutritionLoading()) {
+        if (this.isBusy() || this.photoUploading()) {
             return 'DISABLED_HINTS.OPERATION_BUSY';
         }
 
         return null;
     });
+    protected readonly notices = computed(() =>
+        [
+            this.isBusy() ? 'PRODUCT_AI_DIALOG.PROCESSING_HINT' : null,
+            this.isEmpty() ? 'PRODUCT_AI_DIALOG.EMPTY' : null,
+            this.errorKey(),
+            this.nutritionErrorKey(),
+        ].filter((key): key is string => key !== null),
+    );
     protected readonly itemNames = computed(() =>
         this.results()
             .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
             .filter(name => name.length > 0),
     );
-    protected readonly annotations = computed(() => {
-        const nutritionItems = this.nutrition()?.items ?? [];
-        return this.results().flatMap((item, index) =>
-            hasReliableLocation(item) && index < nutritionItems.length ? [buildPhotoAnnotation(item, nutritionItems[index], index)] : [],
-        );
-    });
     protected onImageChanged(selection: ImageSelection | null): void {
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(false);
         this.isNutritionLoading.set(false);
         this.selection.set(selection);
+        this.productLabel.set(null);
+        this.useAsCover.set(false);
+        this.replacementAccepted.set(false);
         this.errorKey.set(null);
         this.nutritionErrorKey.set(null);
         this.results.set([]);
         this.nutrition.set(null);
         this.hasAnalyzed.set(false);
-        this.annotationsVisible.set(true);
+    }
+
+    protected onPhotosChanged(photos: ImageSelection[]): void {
+        if (this.isBusy()) {
+            return;
+        }
+        this.photos.set(photos);
+        this.cover.set(null);
+        this.onImageChanged(photos[0] ?? null);
+    }
+
+    protected onCoverChanged(photo: ImageSelection | null): void {
+        this.cover.set(photo);
+        this.useAsCover.set(photo !== null);
     }
 
     protected startAnalysis(): void {
@@ -159,12 +172,8 @@ export class ProductAiRecognitionDialogComponent {
         this.runAnalysisFlow();
     }
 
-    protected toggleAnnotations(): void {
-        this.annotationsVisible.update(visible => !visible);
-    }
-
     private runAnalysisFlow(): void {
-        if (this.isLoading() || this.isNutritionLoading()) {
+        if (this.isAnalyzeDisabled()) {
             return;
         }
 
@@ -182,17 +191,16 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected apply(): void {
-        const nutrition = this.nutrition();
-        if (nutrition === null) {
+        if (!this.canApply()) {
             return;
         }
 
         const result = buildProductAiRecognitionResult({
             model: this.resultFormModel(),
-            selection: this.selection(),
+            selection: this.useAsCover() ? (this.cover() ?? this.selection()) : null,
             itemNames: this.itemNames(),
             results: this.results(),
-            description: this.getDescription(),
+            description: null,
         });
 
         this.dialogRef?.close(result);
@@ -203,8 +211,13 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected onResumeRecognition(job: FoodRecognitionJob): void {
+        this.useAsCover.set(false);
+        this.replacementAccepted.set(false);
         const selection = { assetId: job.imageAssetId, url: job.imageUrl };
+        this.photos.set([selection, ...(job.additionalImages ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl }))]);
+        this.cover.set(null);
         this.selection.set(selection);
+        this.productLabel.set(null);
         this.descriptionModel.set({ description: job.description ?? '' });
         this.runAnalysis(job.imageAssetId, job.id);
     }
@@ -223,6 +236,9 @@ export class ProductAiRecognitionDialogComponent {
         this.nutritionErrorKey.set(null);
         this.errorKey.set(null);
         this.nutrition.set(null);
+        this.hasAnalyzed.set(false);
+        this.productLabel.set(null);
+        this.replacementAccepted.set(false);
     }
 
     private subscribeToAnalysis(assetId: string, jobId?: string): void {
@@ -230,6 +246,11 @@ export class ProductAiRecognitionDialogComponent {
             jobId === undefined
                 ? this.productAiRecognitionFacade.analyzeFoodImage({
                       imageAssetId: assetId,
+                      isProductLabel: true,
+                      additionalImageAssetIds: this.photos()
+                          .slice(1)
+                          .map(photo => photo.assetId)
+                          .filter((id): id is string => id !== null),
                       description: this.getDescription(),
                   })
                 : this.productAiRecognitionFacade.resumeRecognition(jobId)
@@ -240,25 +261,32 @@ export class ProductAiRecognitionDialogComponent {
                     return of(null);
                 }),
             )
-            .subscribe(response => {
-                this.isLoading.set(false);
-                this.hasAnalyzed.set(true);
-                if (response === null) {
-                    return;
-                }
-                const items = response.items;
-                this.results.set(items);
-                if (response.recognition !== undefined) {
-                    const nutrition = response.recognition.nutrition;
-                    this.nutrition.set(nutrition);
-                    if (nutrition !== null) {
-                        this.resultFormModel.set(buildProductAiRecognitionModelFromNutrition(items, nutrition));
-                    }
-                    this.nutritionErrorKey.set(response.recognition.errorCode === null ? null : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR');
-                } else if (items.length > 0) {
-                    this.runNutrition(items);
-                }
-            });
+            .subscribe(response => { this.applyRecognitionResponse(response); });
+    }
+
+    private applyRecognitionResponse(response: FoodVisionResponse | null): void {
+        this.isLoading.set(false);
+        this.hasAnalyzed.set(true);
+        if (response === null) {
+            return;
+        }
+        if (response.productLabel !== null && response.productLabel !== undefined) {
+            this.productLabel.set(response.productLabel);
+            this.resultFormModel.set(buildProductLabelFormModel(response.productLabel));
+            return;
+        }
+        const items = response.items;
+        this.results.set(items);
+        if (response.recognition !== undefined) {
+            const nutrition = response.recognition.nutrition;
+            this.nutrition.set(nutrition);
+            if (nutrition !== null) {
+                this.resultFormModel.set(buildProductAiRecognitionModelFromNutrition(items, nutrition));
+            }
+            this.nutritionErrorKey.set(response.recognition.errorCode === null ? null : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+        } else if (items.length > 0) {
+            this.runNutrition(items);
+        }
     }
 
     private runNutrition(items: FoodVisionItem[]): void {
@@ -295,55 +323,4 @@ export class ProductAiRecognitionDialogComponent {
             this.nutritionSubscription?.unsubscribe();
         });
     }
-}
-
-function hasReliableLocation(
-    item: FoodVisionItem,
-): item is FoodVisionItem & { centerX: number; centerY: number; locationConfidence?: number | null } {
-    if (item.centerX === null || item.centerX === undefined || item.centerY === null || item.centerY === undefined) {
-        return false;
-    }
-
-    const coordinatesAreValid = item.centerX >= 0 && item.centerX <= 1 && item.centerY >= 0 && item.centerY <= 1;
-    return coordinatesAreValid && (item.locationConfidence ?? 1) >= LOCATION_CONFIDENCE_THRESHOLD;
-}
-
-function buildPhotoAnnotation(
-    item: FoodVisionItem & { centerX: number; centerY: number },
-    nutrition: FoodNutritionResponse['items'][number],
-    index: number,
-): PhotoAnnotation {
-    const x = toPercentage(item.centerX);
-    const y = toPercentage(item.centerY);
-
-    return {
-        id: `${item.nameEn}-${index}`,
-        name: capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()),
-        amount: item.amount,
-        unit: item.unit,
-        centerX: x,
-        centerY: y,
-        cardX: clamp(
-            x < MIDPOINT_PERCENT ? x + CARD_RIGHT_OFFSET_PERCENT : x - CARD_LEFT_OFFSET_PERCENT,
-            CARD_MIN_X_PERCENT,
-            CARD_MAX_X_PERCENT,
-        ),
-        cardY: clamp(
-            y < MIDPOINT_PERCENT ? y + CARD_BELOW_OFFSET_PERCENT : y - CARD_ABOVE_OFFSET_PERCENT,
-            CARD_MIN_Y_PERCENT,
-            CARD_MAX_Y_PERCENT,
-        ),
-        calories: Math.round(nutrition.calories),
-        protein: Math.round(nutrition.protein),
-        fat: Math.round(nutrition.fat),
-        carbs: Math.round(nutrition.carbs),
-    };
-}
-
-function toPercentage(value: number): number {
-    return Math.round(value * PERCENT_SCALE * PERCENT_PRECISION) / PERCENT_PRECISION;
-}
-
-function clamp(value: number, min: number, max: number): number {
-    return Math.min(Math.max(value, min), max);
 }

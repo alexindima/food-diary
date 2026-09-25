@@ -1,6 +1,8 @@
 import type { FoodNutritionResponse, FoodVisionResponse } from './ai.data';
 
 export type FoodRecognitionJob = {
+    isProductLabel?: boolean;
+    additionalImages?: { imageAssetId: string; imageUrl: string }[];
     id: string;
     imageAssetId: string;
     imageUrl: string;

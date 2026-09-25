@@ -11,7 +11,7 @@ public interface IOpenAiFoodService {
         string? description,
         string requestId,
         CancellationToken cancellationToken,
-        AiPromptOverride? promptOverride = null);
+        AiPromptOverride? promptOverride = null, ProductImageAnalysis? product = null);
 
     Task<Result<FoodVisionModel>> ParseFoodTextAsync(
         string text,
