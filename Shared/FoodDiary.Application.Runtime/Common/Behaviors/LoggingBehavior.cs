@@ -34,6 +34,13 @@ public sealed class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior
             }
 
             return response;
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            stopwatch.Stop();
+            logger.LogDebug(
+                "Handling {RequestName} was cancelled ({ElapsedMs}ms)",
+                requestName,
+                stopwatch.ElapsedMilliseconds);
+            throw;
         } catch (Exception ex) {
             stopwatch.Stop();
             logger.LogError(ex,
