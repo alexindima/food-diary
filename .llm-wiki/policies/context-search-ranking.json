@@ -1236,7 +1236,7 @@
     {
       "id": "dashboard-meals-reader",
       "queryTerms": ["dashboard", "meal", "persistence", "read"],
-      "excludedQueryTerms": ["projection"],
+      "excludedQueryTerms": ["projection", "admin"],
       "minimumMatches": 2,
       "identityTerms": ["dashboardmealsreadservice"],
       "score": 300

@@ -286,18 +286,14 @@
       "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "555f10dbf46ece2cb67adc57907c8d803084f9e0d8a56949421254d1875a83b1"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "432047a10e9027da955292f8973a97239da288e12cf7dece84ff42cdab750723"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Restricted the existing dashboard-meals-reader identity boost for queries containing admin, because administrative paged-user/dashboard summaries were incorrectly outranked by the personal meals reader. Existing probe-7 corpus now retains 40/40 top-1 results with all five cohorts at 8/8; no frozen cases, thresholds, parser behavior or evidence authority changed.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:31.7390401Z"
+      "gitHead": "7e8b036316bdf360d594421cdbccb426cadb20f5",
+      "reviewedAtUtc": "2026-09-25T21:18:11.5655580Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -917,14 +913,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "85de811510cda241abb8ef3fa9be47e1cd39479357fbe9dc762e552a12efc5b1"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "432047a10e9027da955292f8973a97239da288e12cf7dece84ff42cdab750723"
         }
       ],
-      "reason": "The quality index gains references from regression tests only. No security scanner, runtime boundary or privacy declaration changed; the page correctly continues to distinguish navigation signals from security evidence.",
+      "reason": "The sole policy delta excludes admin queries from a personal dashboard meals reader boost. Security discovery controls, query normalization, source authority and the read-only retrieval boundary remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:50:21.5420365Z"
+      "gitHead": "7e8b036316bdf360d594421cdbccb426cadb20f5",
+      "reviewedAtUtc": "2026-09-25T21:18:11.9665326Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
