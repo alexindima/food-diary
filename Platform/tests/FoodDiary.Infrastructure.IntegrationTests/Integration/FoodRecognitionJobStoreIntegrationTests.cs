@@ -158,17 +158,25 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         await using var context = new AiDbContext(options);
         for (int index = 0; index < 25; index++) {
             context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
-                Id = Guid.NewGuid(), UserId = new UserId(job.UserId),
-                ImageAssetId = new ImageAssetId(job.ImageAssetId), ImageUrl = job.ImageUrl,
-                Status = index % 2 == 0 ? "Succeeded" : "Failed", IsProductLabel = index < 23,
-                CreatedOnUtc = now.UtcDateTime, UpdatedOnUtc = now.UtcDateTime,
+                Id = Guid.NewGuid(),
+                UserId = new UserId(job.UserId),
+                ImageAssetId = new ImageAssetId(job.ImageAssetId),
+                ImageUrl = job.ImageUrl,
+                Status = index % 2 == 0 ? "Succeeded" : "Failed",
+                IsProductLabel = index < 23,
+                CreatedOnUtc = now.UtcDateTime,
+                UpdatedOnUtc = now.UtcDateTime,
             });
         }
         context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
-            Id = Guid.NewGuid(), UserId = new UserId(job.UserId),
-            ImageAssetId = new ImageAssetId(job.ImageAssetId), ImageUrl = job.ImageUrl,
-            Status = "Succeeded", IsProductLabel = true,
-            CreatedOnUtc = now.AddDays(-8).UtcDateTime, UpdatedOnUtc = now.UtcDateTime,
+            Id = Guid.NewGuid(),
+            UserId = new UserId(job.UserId),
+            ImageAssetId = new ImageAssetId(job.ImageAssetId),
+            ImageUrl = job.ImageUrl,
+            Status = "Succeeded",
+            IsProductLabel = true,
+            CreatedOnUtc = now.AddDays(-8).UtcDateTime,
+            UpdatedOnUtc = now.UtcDateTime,
         });
         await context.SaveChangesAsync();
 

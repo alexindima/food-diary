@@ -69,20 +69,19 @@ describe('ProductCardComponent', () => {
         const { component, fixture } = await setupProductCardAsync();
         fixture.componentRef.setInput('imageUrl', '/cover.jpg');
         fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, images: [{ imageUrl: '/cover.jpg' }, { imageUrl: '/label.jpg' }] });
+        const dialogOpen = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
         const opened = vi.fn();
         component.open.subscribe(opened);
         fixture.detectChanges();
         component['previewCardImage']();
-        expect(TestBed.inject(FdUiDialogService).open).toHaveBeenCalledWith(
-            expect.anything(),
+        expect(dialogOpen).toHaveBeenCalledOnce();
+        expect(dialogOpen.mock.calls[0]?.[1]?.data).toEqual(
             expect.objectContaining({
-                data: expect.objectContaining({
-                    imageUrl: undefined,
-                    collageImages: [
-                        { url: '/cover.jpg', alt: MOCK_PRODUCT.name },
-                        { url: '/label.jpg', alt: MOCK_PRODUCT.name },
-                    ],
-                }),
+                imageUrl: undefined,
+                collageImages: [
+                    { url: '/cover.jpg', alt: MOCK_PRODUCT.name },
+                    { url: '/label.jpg', alt: MOCK_PRODUCT.name },
+                ],
             }),
         );
         expect(opened).not.toHaveBeenCalled();

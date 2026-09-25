@@ -246,7 +246,9 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
         component.imagesAdded.subscribe(added);
         component.batchUploading.subscribe(busy);
         component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
-        await vi.waitFor(() => { expect(added).toHaveBeenCalledOnce(); });
+        await vi.waitFor(() => {
+            expect(added).toHaveBeenCalledOnce();
+        });
         expect(imageUploadService.upload).toHaveBeenNthCalledWith(1, files[0]);
         expect(imageUploadService.upload).toHaveBeenNthCalledWith(2, files[1]);
         expect(added.mock.calls[0][0]).toHaveLength(2);
@@ -269,7 +271,9 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
         const added = vi.fn();
         component.imagesAdded.subscribe(added);
         component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
-        await vi.waitFor(() => { expect(added).toHaveBeenCalledWith([{ assetId: 'one', url: '/one.png' }]); });
+        await vi.waitFor(() => {
+            expect(added).toHaveBeenCalledWith([{ assetId: 'one', url: '/one.png' }]);
+        });
         expect(component['error']()).toBeTruthy();
         expect(component['isUploading']()).toBe(false);
     });

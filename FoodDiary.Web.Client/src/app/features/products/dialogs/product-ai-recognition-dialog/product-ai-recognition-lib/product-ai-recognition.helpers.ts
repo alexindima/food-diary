@@ -180,7 +180,7 @@ export function buildProductLabelFormModel(label: ProductLabel): ProductAiRecogn
         name: label.name ?? '',
         brand: label.brand ?? '',
         portionAmount: getOptionalNumericValue(label.baseAmount),
-        baseUnit: (label.baseUnit === null) ? null : resolveAiMeasurementUnit(label.baseUnit),
+        baseUnit: label.baseUnit === null ? null : resolveAiMeasurementUnit(label.baseUnit),
         caloriesPerBase: getOptionalNumericValue(label.calories),
         proteinsPerBase: getOptionalNumericValue(label.protein),
         fatsPerBase: getOptionalNumericValue(label.fat),

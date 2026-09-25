@@ -12,6 +12,8 @@
 }
 .favorite-row__media {
     display: grid;
+    place-items: center;
+    color: var(--fd-color-text-muted);
     flex-shrink: 0;
     width: var(--fd-size-control-xxl);
     height: var(--fd-size-control-xxl);
@@ -101,10 +103,4 @@
 
 .favorite-row__undo fd-ui-button {
     flex-shrink: 0;
-}
-
-.favorite-row__media {
-    display: grid;
-    place-items: center;
-    color: var(--fd-color-text-muted);
 }
