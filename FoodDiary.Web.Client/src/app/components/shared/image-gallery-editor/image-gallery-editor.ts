@@ -25,6 +25,7 @@ const MAX_PHOTOS = 5;
 })
 export class ImageGalleryEditorComponent {
     private readonly dialogService = inject(FdUiDialogService);
+    public readonly compact = input(false);
     public readonly editor = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);

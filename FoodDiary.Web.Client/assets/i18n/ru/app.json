@@ -417,6 +417,7 @@
         "STEPS": "Шаг {{index}}",
         "STEPS_SECTION_TITLE": "Шаги приготовления",
         "STEP_TITLE": "Шаг {{index}}",
+        "STEP_ACTIONS": "Действия с шагом",
         "EDIT_STEP_TITLE": "Редактировать название шага",
         "STEP_TITLE_LABEL": "Название шага",
         "STEP_TITLE_PLACEHOLDER": "Необязательно",

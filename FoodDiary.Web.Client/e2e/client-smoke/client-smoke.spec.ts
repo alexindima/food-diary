@@ -2462,3 +2462,45 @@ test.describe('recipe editor gallery', () => {
         });
     }
 });
+
+test.describe('recipe step galleries', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`compact steps preserve five photos at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 1000 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const recipe = createRecipeRedesignFixtures().recipe;
+            const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({ imageAssetId: `step-photo-${index}`, imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length] }));
+            const ingredient = { id: 'ingredient-1', productId: 'product-1', productName: 'Rice', productBaseUnit: 'G', productBaseAmount: 100, amount: 100 };
+            const steps = [
+                { id: 'first', stepNumber: 1, title: 'Prepare vegetables', instruction: 'Wash and slice the vegetables.', imageUrl: images[0].imageUrl, imageAssetId: images[0].imageAssetId, images, ingredients: [ingredient] },
+                { id: 'second', stepNumber: 2, title: 'Cook', instruction: 'Cook until tender.', imageUrl: null, images: [], ingredients: [ingredient] },
+            ];
+            await page.route('**/api/v1/recipes/recipe-1**', async route => route.fulfill({ json: { ...recipe, steps, isOwnedByCurrentUser: true, usageCount: 0 } }));
+            await page.goto('/recipes/recipe-1/edit');
+            const cards = page.locator('fd-recipe-step-card');
+            await expect(cards).toHaveCount(steps.length);
+            await expect(cards.first().locator('.recognition-photos__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
+            await expect(cards.last().locator('.recipe-step-card__content')).toHaveCount(0);
+            await expect(cards.first().locator('fd-ui-select')).toHaveCount(1);
+            await cards.first().scrollIntoViewIfNeeded();
+            expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`recipe-steps-${width}.png`) });
+            await cards.last().getByRole('button', { name: 'Toggle step', exact: true }).click();
+            await expect(cards.last().locator('fd-image-gallery-editor')).toBeVisible();
+            await cards.last().scrollIntoViewIfNeeded();
+            await page.screenshot({ path: testInfo.outputPath(`recipe-empty-step-${width}.png`) });
+            await cards.first().getByRole('button', { name: 'Toggle step', exact: true }).click();
+            await expect(cards.first().locator('.recipe-step-card__summary')).toBeVisible();
+            await cards.first().getByRole('button', { name: 'Toggle step', exact: true }).click();
+            await expect(cards.first().locator('.recognition-photos__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
+            await page.getByRole('button', { name: 'Add step', exact: true }).click();
+            await expect(cards).toHaveCount(steps.length + 1);
+            await expect(cards.last().locator('textarea')).toBeFocused();
+            await cards.last().getByRole('button', { name: 'Step actions', exact: true }).click();
+            await page.getByRole('menuitem', { name: 'Remove step', exact: true }).click();
+            await expect(cards).toHaveCount(steps.length);
+
+        });
+    }
+});

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1275,
+    "contracts": 1276,
     "ambiguousContracts": 2,
-    "consumerEdges": 9983,
-    "productionConsumerEdges": 5692,
+    "consumerEdges": 9987,
+    "productionConsumerEdges": 5696,
     "testConsumerEdges": 4291,
-    "consumedContracts": 1275,
+    "consumedContracts": 1276,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -17986,6 +17986,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "RecipeImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "RecipeIngredientHttpRequest",
       "roles": [
         "Request"
@@ -32625,7 +32642,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 16
     },
     {
       "contract": "CreateRecipeCommand",
@@ -34770,7 +34787,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -69815,7 +69832,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IDashboardUserContextService",
@@ -80019,6 +80036,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Common/RecipeImageAssetResolver.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -136374,6 +136404,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/RecipeHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecipeImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Responses/RecipeStepHttpResponse.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {

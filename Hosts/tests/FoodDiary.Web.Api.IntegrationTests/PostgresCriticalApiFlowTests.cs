@@ -366,6 +366,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         ImageUploadPayload recipeAsset = await CreateImageAssetAsync(client, "recipe-photo.jpg");
         ImageUploadPayload stepAsset = await CreateImageAssetAsync(client, "step-photo.jpg");
         ImageUploadPayload galleryAsset = await CreateImageAssetAsync(client, "gallery-photo.jpg");
+        ImageUploadPayload stepGalleryAsset = await CreateImageAssetAsync(client, "step-detail.jpg");
 
         HttpResponseMessage createRecipeResponse = await client.PostAsJsonAsync(
             "/api/v1/recipes",
@@ -395,7 +396,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                             new RecipeIngredientHttpRequest(product.Id, NestedRecipeId: null, 1),
                         ],
                         stepAsset.FileUrl,
-                        stepAsset.AssetId),
+                        stepAsset.AssetId) { ImageAssetIds = [stepAsset.AssetId, stepGalleryAsset.AssetId] },
                 ]) { ImageAssetIds = [recipeAsset.AssetId, galleryAsset.AssetId] });
         RecipePayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 
@@ -403,6 +404,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.NotNull(recipe);
 
         using var savedRecipe = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{recipe.Id}"));
+        JsonElement savedStepImages = savedRecipe.RootElement.GetProperty("steps")[0].GetProperty("images");
+        Assert.Equal(2, savedStepImages.GetArrayLength());
+        Assert.Equal(stepGalleryAsset.AssetId, savedStepImages[1].GetProperty("imageAssetId").GetGuid());
+        await AssertStatusCodeAsync(HttpStatusCode.Conflict, await client.DeleteAsync($"/api/v1/images/{stepGalleryAsset.AssetId}"));
         JsonElement savedImages = savedRecipe.RootElement.GetProperty("images");
         Assert.Equal(2, savedImages.GetArrayLength());
         Assert.Equal(recipeAsset.AssetId, savedImages[0].GetProperty("imageAssetId").GetGuid());

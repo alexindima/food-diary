@@ -125,6 +125,10 @@ public sealed class DuplicateRecipeCommandHandler(
                 step.ImageUrl,
                 preserveManagedAssets ? step.ImageAssetId : null);
 
+            if (preserveManagedAssets && step.Images.Count > 0) {
+                newStep.ReplaceImages(step.Images.OrderBy(image => image.Position).ToList());
+            }
+
             foreach (RecipeIngredient ingredient in step.Ingredients) {
                 if (ingredient.ProductId.HasValue &&
                     (preserveManagedAssets || ingredient.ProductSnapshot?.Visibility == Visibility.Public)) {

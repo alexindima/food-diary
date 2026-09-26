@@ -14,6 +14,7 @@ const DEFAULT_ROWS = 4;
     templateUrl: './fd-ui-textarea.html',
     styleUrls: ['./fd-ui-textarea.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[class.fd-ui-textarea-stretch]': 'stretch()' },
 })
 export class FdUiTextareaComponent implements FormValueControl<string | number | null> {
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
@@ -24,6 +25,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly readonly = input(false);
     public readonly rows = input(DEFAULT_ROWS);
     public readonly autosize = input(false);
+    public readonly stretch = input(false);
     public readonly maxLength = input<number>();
     public readonly maximumLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');

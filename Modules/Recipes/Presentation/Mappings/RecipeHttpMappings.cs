@@ -88,6 +88,6 @@ public static class RecipeHttpMappings {
                                     ingredient.ProductId,
                                     ingredient.NestedRecipeId,
                                     ingredient.Amount))
-                            .ToList()!))
+                            .ToList()!) { ImageAssetIds = step.ImageAssetIds })
             .ToList();
 }

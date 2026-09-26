@@ -848,3 +848,5 @@ The image preview dialog accepts an optional zero-based `initialIndex` for openi
 `fdUiHintToggleOnClick` opts an informational hint into tap/click toggling (default false). Use it on help buttons for touch access; ordinary action hints still dismiss on click.
 
 `fd-ui-input` supports `controlReadonly` for read-only presentation when used with Signal Forms `formField`, which owns the `readonly` binding.
+
+Textarea supports `[stretch]="true"` to fill an available flex/grid height (for example, beside an image gallery). Its default row-based sizing is unchanged.

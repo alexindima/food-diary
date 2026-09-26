@@ -13,6 +13,7 @@ const meta: Meta<FdUiTextareaComponent> = {
         required: { control: 'boolean' },
         readonly: { control: 'boolean' },
         rows: { control: 'number' },
+        stretch: { control: 'boolean' },
         maxLength: { control: 'number' },
         size: { control: 'select', options: ['sm', 'md', 'lg'] },
         fillColor: { control: 'color' },
@@ -72,5 +73,11 @@ export const Readonly: Story = {
     render: () => ({
         template:
             '<fd-ui-textarea label="Readonly" [value]="\'This content cannot be edited.\'" [readonly]="true" [rows]="3"></fd-ui-textarea>',
+    }),
+};
+
+export const Stretch: Story = {
+    render: () => ({
+        template: '<div style="display: flex; height: 300px"><fd-ui-textarea style="flex: 1" label="Step description" [stretch]="true" /></div>',
     }),
 };

@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1528,
+    "candidateFields": 1542,
     "credential": 156,
     "identity": 174,
     "health": 700,
     "financial": 129,
-    "privateContent": 369,
-    "boundaryFiles": 200,
+    "privateContent": 383,
+    "boundaryFiles": 201,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -4971,28 +4971,28 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 27
+      "line": 43
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 33
+      "line": 49
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 34
+      "line": 50
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 499
+      "line": 515
     },
     {
       "category": "health",
@@ -10232,6 +10232,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommand.cs",
+      "line": 28
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
@@ -10288,6 +10295,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+      "line": 34
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
@@ -10313,6 +10327,27 @@
       "type": "Guid?",
       "path": "Modules/Recipes/Application/Common/RecipeStepInput.cs",
       "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Application/Common/RecipeStepInput.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Recipes/Application/Models/RecipeImageModel.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Recipes/Application/Models/RecipeImageModel.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -10351,6 +10386,20 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Recipes/Contracts/Models/RecipeImageReadItem.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Recipes/Contracts/Models/RecipeImageReadItem.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Contracts/Models/RecipeOverviewReadItem.cs",
@@ -10389,91 +10438,105 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 20
+      "line": 36
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 22
+      "line": 38
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 23
+      "line": 39
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 73
+      "line": 89
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 75
+      "line": 91
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 121
+      "line": 137
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "update.ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 123
+      "line": 139
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 286
+      "line": 302
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 351
+      "line": 367
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 470
+      "line": 486
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 5
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 14
+      "line": 30
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 15
+      "line": 31
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 90
+      "line": 106
     },
     {
       "category": "privateContent",
@@ -10547,6 +10610,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs",
+      "line": 22
+    },
+    {
+      "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs",
@@ -10558,6 +10628,13 @@
       "type": "Guid?",
       "path": "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs",
       "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs",
+      "line": 9
     },
     {
       "category": "privateContent",
@@ -10603,6 +10680,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
+      "line": 27
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",
@@ -10621,6 +10705,20 @@
       "type": "Guid?",
       "path": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",
       "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -11734,14 +11832,14 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 5
+      "fieldCount": 6
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs",
       "categories": [
         "privateContent"
       ],
-      "fieldCount": 2
+      "fieldCount": 3
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
@@ -11749,7 +11847,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 8
+      "fieldCount": 9
     },
     {
       "path": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",
@@ -11758,6 +11856,13 @@
         "privateContent"
       ],
       "fieldCount": 6
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Recipes/Presentation/Responses/RecipeIngredientHttpResponse.cs",

@@ -46,6 +46,7 @@ export type Recipe = {
 };
 
 export type RecipeStep = {
+    images?: Array<{ imageAssetId: string; imageUrl: string }>;
     id: string;
     stepNumber: number;
     title?: string | null;
@@ -136,6 +137,7 @@ export type RecipeDto = {
 };
 
 export type RecipeStepDto = {
+    imageAssetIds?: string[];
     title?: string | null;
     description: string;
     imageUrl?: string | null;

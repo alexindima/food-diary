@@ -25,6 +25,7 @@ internal static class RecipeUpdateAssetCleanup {
             .Select(step => step.ImageAssetId)
             .Where(id => id.HasValue)
             .Select(ToStepImageAssetId)
+            .Concat(values.Steps.SelectMany(step => step.ImageAssetIds ?? []).Select(id => new ImageAssetId(id)))
             .ToHashSet();
 
         foreach (ImageAssetId assetId in values.OldStepAssetIds) {

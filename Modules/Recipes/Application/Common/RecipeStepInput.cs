@@ -6,4 +6,6 @@ public record RecipeStepInput(
     string? Title,
     string? ImageUrl,
     Guid? ImageAssetId,
-    IReadOnlyList<RecipeIngredientInput> Ingredients);
+    IReadOnlyList<RecipeIngredientInput> Ingredients) {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

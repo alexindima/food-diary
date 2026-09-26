@@ -7,4 +7,6 @@ public sealed record RecipeStepModel(
     string Instruction,
     string? ImageUrl,
     Guid? ImageAssetId,
-    IReadOnlyList<RecipeIngredientModel> Ingredients);
+    IReadOnlyList<RecipeIngredientModel> Ingredients) {
+    public IReadOnlyList<RecipeImageModel> Images { get; init; } = [];
+}

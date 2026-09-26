@@ -5223,6 +5223,40 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b => {
+                b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 =>
+                        {
+                            b1.Property<Guid>("RecipeStepId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("ImageAssetId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired()
+                                .HasMaxLength(2048)
+                                .HasColumnType("character varying(2048)");
+
+                            b1.Property<int>("Position")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("RecipeStepId", "ImageAssetId");
+
+                            b1.HasIndex("ImageAssetId");
+
+                            b1.ToTable("RecipeStepImages", (string)null);
+
+                            b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                                .WithMany()
+                                .HasForeignKey("ImageAssetId")
+                                .OnDelete(DeleteBehavior.ClientNoAction)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("RecipeStepId");
+                        });
+
+                    b.Navigation("Images");
+
                 b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")

@@ -7,4 +7,6 @@ public sealed record RecipeStepHttpResponse(
     string Instruction,
     string? ImageUrl,
     Guid? ImageAssetId,
-    IReadOnlyList<RecipeIngredientHttpResponse> Ingredients);
+    IReadOnlyList<RecipeIngredientHttpResponse> Ingredients) {
+    public IReadOnlyList<RecipeImageHttpResponse> Images { get; init; } = [];
+}

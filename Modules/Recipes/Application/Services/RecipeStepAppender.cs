@@ -64,6 +64,15 @@ internal static class RecipeStepAppender {
                 stepImageAssetResult.Value?.Url ?? entry.Step.ImageUrl,
                 stepImageAssetIdResult.Value);
 
+            Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(
+                entry.Step.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+            if (gallery.IsFailure) {
+                return Result.Failure(gallery.Error);
+            }
+            if (gallery.Value is { } images) {
+                step.ReplaceImages(images);
+            }
+
             Result ingredientsResult = AddIngredients(step, entry.Step.Ingredients);
             if (ingredientsResult.IsFailure) {
                 return ingredientsResult;

@@ -73,7 +73,7 @@ public static class RecipeHttpResponseMappings {
                 model.ImageUrl,
                 model.ImageAssetId,
                 model.Ingredients.ToHttpResponseList(ToHttpResponse)
-            );
+            ) { Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
         }
     }
 

@@ -60,3 +60,17 @@
         width: 100%;
     }
 }
+
+.recipe-cook-mode__photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+}
+.recipe-cook-mode__photo {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    max-width: 200px;
+    flex: 1 1 120px;
+}

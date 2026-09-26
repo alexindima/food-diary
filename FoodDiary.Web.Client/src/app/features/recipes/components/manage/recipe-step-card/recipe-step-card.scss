@@ -36,17 +36,10 @@
     cursor: not-allowed;
 }
 
-.recipe-step-card__title {
-    color: var(--fd-color-text);
-}
 
 .recipe-step-card__title-input {
-    min-width: 200px;
-}
-
-.recipe-step-card__edit {
-    margin-left: var(--fd-space-micro);
-    color: var(--fd-color-text-muted);
+    min-width: 0;
+    width: 100%;
 }
 
 .recipe-step-card__summary {
@@ -68,7 +61,7 @@
     display: grid;
     grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
     gap: var(--fd-space-md);
-    align-items: start;
+    align-items: stretch;
 
     @media #{variables.$media-mobile} {
         grid-template-columns: minmax(0, 1fr);
@@ -81,6 +74,12 @@
 
 .recipe-step-card__description {
     min-width: 0;
+    display: flex;
+
+    > fd-ui-textarea {
+        flex: 1;
+        min-width: 0;
+    }
 }
 
 .recipe-step-card__subtitle {
@@ -92,30 +91,43 @@
 }
 
 .recipe-ingredient {
-    @media #{variables.$media-mobile} {
-        flex-direction: column;
-    }
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, 30%);
+    gap: var(--fd-space-sm);
 }
-
 .recipe-ingredient__selection {
-    flex: 1;
+    display: grid;
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: var(--fd-space-sm);
     min-width: 0;
 }
-
 .recipe-ingredient__name {
-    width: 100%;
+    min-width: 0;
 }
-
-.recipe-ingredient__amount {
-    flex: 0 0 35%;
-
-    @media #{variables.$media-mobile} {
-        width: 100%;
-    }
+.recipe-ingredient__amount > fd-ui-input {
+    min-width: 0;
+    flex: 1;
 }
-
 @media #{variables.$media-mobile} {
-    .recipe-step-card__image {
-        max-width: 144px;
+    .recipe-ingredient {
+        grid-template-columns: minmax(0, 1fr);
     }
+    .recipe-step-card__image {
+        max-width: 240px;
+    }
+}
+
+.recipe-step-card__header-left {
+    min-width: 0;
+    flex: 1;
+}
+.recipe-step-card__title {
+    color: var(--fd-color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.recipe-step-card__header-actions,
+.recipe-step-card__drag {
+    flex-shrink: 0;
 }

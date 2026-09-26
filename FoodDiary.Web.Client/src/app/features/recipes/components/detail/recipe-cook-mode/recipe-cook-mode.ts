@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../models/recipe.data';
 
@@ -20,6 +22,15 @@ type CookModeIngredientView = {
     imports: [TranslatePipe, FdUiButtonComponent],
 })
 export class RecipeCookModeComponent {
+    private readonly dialogService = inject(FdUiDialogService);
+    protected readonly stepPhotos = computed(() => {
+        const step = this.currentStep();
+        if (step === null) { return []; }
+        if (step.images !== undefined && step.images.length > 0) {
+            return step.images.map(image => image.imageUrl);
+        }
+        return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
+    });
     public readonly recipe = input.required<Recipe>();
     public readonly addToMeal = output();
 
@@ -37,6 +48,13 @@ export class RecipeCookModeComponent {
     protected readonly canGoBack = computed(() => this.currentStepIndex() > 0);
     protected readonly canGoNext = computed(() => this.currentStepIndex() < this.stepCount() - 1);
     protected readonly isDone = computed(() => this.stepCount() > 0 && !this.canGoNext());
+
+    protected previewPhoto(index: number): void {
+        this.dialogService.open(FdUiImagePreviewDialogComponent, {
+            size: 'lg',
+            data: { collageImages: this.stepPhotos().map(url => ({ url })), initialIndex: index },
+        });
+    }
 
     protected previousStep(): void {
         if (this.canGoBack()) {

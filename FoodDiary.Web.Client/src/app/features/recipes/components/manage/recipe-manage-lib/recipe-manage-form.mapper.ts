@@ -49,6 +49,7 @@ export function createRecipeStepValue(step?: StepFormValues): StepFormValues {
 
     return {
         title: step?.title ?? null,
+        images: step?.images,
         imageUrl: step?.imageUrl ?? null,
         description: step?.description ?? '',
         ingredients: ingredientValues.map(ingredient => createRecipeIngredientValue(ingredient)),
@@ -88,7 +89,7 @@ export function buildRecipeDto(
         category: formValue.category ?? null,
         imageUrl: formValue.imageUrl?.url ?? null,
         imageAssetId: formValue.imageUrl?.assetId ?? null,
-        ...((formValue.images?.every(image => image.assetId !== null) === true)
+        ...(formValue.images?.every(image => image.assetId !== null) === true
             ? { imageAssetIds: formValue.images.map(image => image.assetId).filter((id): id is string => id !== null) }
             : {}),
         prepTime: formValue.prepTime,
@@ -126,6 +127,9 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
 export function mapRecipeStepToFormValue(step: Recipe['steps'][number], labels: RecipeIngredientMappingLabels): StepFormValues {
     return {
         title: step.title ?? null,
+        ...((step.images?.length ?? 0) > 0
+            ? { images: (step.images ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl })) }
+            : {}),
         imageUrl: {
             url: step.imageUrl ?? null,
             assetId: step.imageAssetId ?? null,
@@ -160,6 +164,9 @@ function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto[
         title: step.title ?? null,
         imageUrl: step.imageUrl?.url ?? null,
         imageAssetId: step.imageUrl?.assetId ?? null,
+        ...(step.images?.every(image => image.assetId !== null) === true
+            ? { imageAssetIds: step.images.map(image => image.assetId).filter((id): id is string => id !== null) }
+            : {}),
         description: step.description,
         ingredients: step.ingredients
             .filter(ingredient => hasProductId(ingredient) || hasNestedRecipeId(ingredient))

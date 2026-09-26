@@ -7,6 +7,23 @@ namespace FoodDiary.Modules.Recipes.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecipeGalleryTests {
     [Fact]
+    public void StepGallery_PreservesOrderAndEnforcesLimit() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        RecipeStep step = recipe.AddStep(1, "Cook");
+        RecipeImage[] images = [.. Enumerable.Range(0, 5).Select(index => new RecipeImage(ImageAssetId.New(), "https://example.test/photo.jpg", index))];
+        step.ReplaceImages(images);
+        Assert.Equal(5, step.Images.Count);
+        step.ReplaceImages([images[4], images[0]]);
+        Assert.Equal(images[4].ImageAssetId, step.ImageAssetId);
+        Assert.Equal(2, step.Images.Count);
+        Assert.Throws<ArgumentException>(() => step.ReplaceImages([images[0], images[0]]));
+        Assert.Throws<ArgumentException>(() => step.ReplaceImages([.. images, new RecipeImage(ImageAssetId.New(), "https://example.test/extra.jpg", 5)]));
+        step.ReplaceImages([]);
+        Assert.Empty(step.Images);
+        Assert.Null(step.ImageUrl);
+    }
+
+    [Fact]
     public void ReplaceImages_ReordersCoverAndClearsAll() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         var first = new RecipeImage(ImageAssetId.New(), "https://example.test/first.jpg", 0);

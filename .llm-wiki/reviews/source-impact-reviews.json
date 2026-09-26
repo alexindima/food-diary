@@ -196,17 +196,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "8355451e34b29f0dcf610d559bb6b62b936c7f7af9702361767d3876e53a5795",
+      "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "3c5af08cf93bb71fb2a9c9a0d8b1c99af66a6f54d1350e2e909ebfbb90f817b3"
+          "sha256": "c027bbc7651b302b537be2a6ccb490506ac685f7c72050e04f9c7d4148c0a0ec"
         }
       ],
-      "reason": "Intentional list response change from an array to PagedHttpResponse with page, limit and type filter. Both SPA facades and shared history consumer migrated; Telegram uses only POST and GET-by-id. Deploy frontend and API together. OpenAPI snapshot and controller tests updated.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T10:26:04.8418552Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:02.4282411Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,17 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a80726ab66f68f894ab35166c6d0ded2211061a381cabb216921c242baa50c66"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "558ba4e99eb24fb6bd54a531202a9f2ae0be95cd251df71f4e3c1eedec6402f2"
+          "sha256": "1be2456ba6a8f017759c2ef731722c3633e7e78a0740422eba1c0840eb364846"
         }
       ],
-      "reason": "Reviewed the exact project-reference allowlist delta and regenerated architecture-health index. The intentional test-only DTO reference is asserted by the matrix; no production project, module cycle, or drift policy changed.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:46:28.6761788Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:02.5663475Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "beb77b7a3a13eec6aeff4014359cd1a85e1c85f02accb5151c19c9b04fa1a549"
+          "sha256": "c7193273ceb7fb03caeba0a270695854df111b056f8abd76c253d0e2ae9d5053"
         }
       ],
-      "reason": "Restored legacy recognition history array and ten-item limit; moved pagination to an additive /page route and updated the client and OpenAPI snapshot. Compatibility versus successful commit d54e59f5c reports zero structural breaks; controller tests cover both response shapes.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:43.0272134Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:03.0223394Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +493,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "8243324f2fd6176dd4ed89f53aa97a0eaedecdb9f2b82154cf2aaef4bba12b9c"
+          "sha256": "0e7c9afbdd598e924b7d0ef8822f40c94f25e978dba86a5e3dbac16611ebe16c"
         }
       ],
-      "reason": "Reviewed owned ProductImage keys, ImageAsset FK, five-photo invariant, backfill migration and PostgreSQL roundtrip/locking tests; workflow remains accurate.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "45d66bb6b25e6393daf82c7209cac2944e5be427",
-      "reviewedAtUtc": "2026-09-25T07:04:55.3614064Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:03.1676320Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -783,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d57fc6cd06e5f759ea62342e94891f60bd0f31c63dab4df5a026532ab8f8e3a0"
+          "sha256": "c80efc49b5d88e2ba74fd2a56679a8ddfaf192bad11a91bb3405a0a097c6ee01"
         }
       ],
-      "reason": "List and count retain authenticated owner and seven-day cutoff before filtering and paging. No new provider calls, persisted data or logging. PostgreSQL tests verify foreign-owner isolation.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T10:26:07.3057549Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:03.5736114Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "42f93a4f8e883940ac5726b2fdbdd73808112e40d37a179cc9fede76be9d5ad6"
+          "sha256": "3546c44da355c6f980dfa1f69b2b5e74e4c5b969e22e00aed7743dc5c0035b51"
         }
       ],
-      "reason": "Quality index changes only recalculate line/decision counts for the SQLite snapshot guard; hotspot interpretation and risk workflow remain accurate.",
+      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:09:50.8783229Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T13:15:35.9037849Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0bbcce4370471a082450a0f2504e1005ac41aa6471bd926e60cbd3f5d788389f"
+          "sha256": "564c49b7a9b11e70f0870048089ff1b097a6c661230282a74f96cbafbaa18075"
         }
       ],
-      "reason": "Runtime topology changed only its source fingerprint after the HTTP compatibility adapter was added. Worker, provider, transaction and retry declarations are unchanged; existing runtime review guidance remains applicable.",
+      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:44.1079746Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T11:50:04.0836498Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "42f93a4f8e883940ac5726b2fdbdd73808112e40d37a179cc9fede76be9d5ad6"
+          "sha256": "3546c44da355c6f980dfa1f69b2b5e74e4c5b969e22e00aed7743dc5c0035b51"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "564c49b7a9b11e70f0870048089ff1b097a6c661230282a74f96cbafbaa18075"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "c80efc49b5d88e2ba74fd2a56679a8ddfaf192bad11a91bb3405a0a097c6ee01"
         }
       ],
-      "reason": "Reviewed quality-index delta limited to read-only snapshot guard metrics; security review scope, ownership and obligations are unchanged.",
+      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:09:52.1086674Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T13:15:36.5855847Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "687a713a267c7e43bc11b802547a3884b55c9fe41fe38b13a53f17a5d7a5d3e0"
+          "sha256": "5f3739dfd9e242b867936fba21e85df4720feb122d10c87cec387dbfd5b85906"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "215658422221c9ea6bcbcb81fb1e7eb23dfdbfc02576dfdb424e3712979efd72"
+          "sha256": "d53dcf2d8c579fbadd027bae46a031fbff3de63eedca33be1474f68a7396c662"
         }
       ],
-      "reason": "Reviewed recognition photo scanning input and theme-token styling, empty-screen icon removal and compact help control. Browser verified animated scan without provider requests, reduced motion, all three theme accents, empty state and return navigation. Frontend build and focused checks pass; guide remains current.",
+      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T16:24:47.6015663Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T13:15:37.2900085Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1167,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "687a713a267c7e43bc11b802547a3884b55c9fe41fe38b13a53f17a5d7a5d3e0"
+          "sha256": "5f3739dfd9e242b867936fba21e85df4720feb122d10c87cec387dbfd5b85906"
         }
       ],
-      "reason": "Reviewed recognition photo scanning input and theme-token styling, empty-screen icon removal and compact help control. Browser verified animated scan without provider requests, reduced motion, all three theme accents, empty state and return navigation. Frontend build and focused checks pass; guide remains current.",
+      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
       "baseRef": "HEAD",
-      "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T16:24:46.609861Z"
+      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
+      "reviewedAtUtc": "2026-09-26T13:15:35.1986320Z"
     },
     {
       "pageId": "workflow.query-context",

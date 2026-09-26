@@ -6,10 +6,11 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
-import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
+import { FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit/menu';
+import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { IngredientFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
@@ -19,6 +20,7 @@ export type RecipeStepCardField<T> = {
 };
 
 export type RecipeStepCardState = {
+    images?: ImageSelection[];
     description: RecipeStepCardField<StepFormValues['description']>;
     imageUrl: RecipeStepCardField<StepFormValues['imageUrl']>;
     ingredients: readonly RecipeStepIngredientState[];
@@ -40,9 +42,12 @@ export type RecipeStepIngredientState = {
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
-        FdUiSegmentedToggleComponent,
+        FdUiSelectComponent,
+        FdUiMenuComponent,
+        FdUiMenuItemComponent,
+        FdUiMenuTriggerDirective,
         FdUiTextareaComponent,
-        ImageUploadFieldComponent,
+        ImageGalleryEditorComponent,
         CdkDragHandle,
     ],
     templateUrl: './recipe-step-card.html',
@@ -56,20 +61,30 @@ export class RecipeStepCardComponent {
     public readonly step = input.required<RecipeStepCardState>();
     public readonly stepIndex = input.required<number>();
     public readonly isExpanded = input.required<boolean>();
+    public readonly busy = input(false);
     public readonly dragDisabled = input.required<boolean>();
 
+    public readonly fieldBlur = output<{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
     public readonly removeStep = output();
     public readonly toggleExpanded = output();
     public readonly addIngredient = output();
     public readonly removeIngredient = output<number>();
     public readonly selectProduct = output<RecipeIngredientSelectEvent>();
     public readonly stepTitleChange = output<string | null>();
+    public readonly stepPhotosChange = output<ImageSelection[]>();
+    public readonly photosUploading = output<boolean>();
+    protected readonly uploading = signal(false);
+    protected readonly photos = computed(() => {
+        const step = this.step();
+        const image = step.imageUrl.value;
+        return step.images ?? (image !== null && (image.url?.length ?? 0) > 0 ? [image] : []);
+    });
     public readonly stepImageChange = output<ImageSelection | null>();
     public readonly stepDescriptionChange = output<string>();
     public readonly ingredientAmountChange = output<{ ingredientIndex: number; amount: number | null }>();
 
     protected readonly isStepTitleEditing = signal(false);
-    protected readonly ingredientTypeOptions: FdUiSegmentedToggleOption[] = [
+    protected readonly ingredientTypeOptions: Array<FdUiSelectOption<string>> = [
         { value: 'Product', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product') },
         { value: 'Recipe', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
     ];
@@ -108,7 +123,8 @@ export class RecipeStepCardComponent {
             return {
                 index,
                 prefixIcon: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'menu_book' : food !== null ? 'restaurant' : 'search',
-                amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0, unitKey),
+                amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0),
+                amountUnit: unitKey === null ? undefined : this.translateService.instant(unitKey),
                 itemType: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'Recipe' : 'Product',
                 foodNameError: ingredient.foodName.error,
                 amountError: ingredient.amount.error,
@@ -160,6 +176,21 @@ export class RecipeStepCardComponent {
         this.stepTitleChange.emit(value === null || value === undefined ? null : fdUiCoerceInputTextValue(value));
     }
 
+    protected onPhotosChange(images: ImageSelection[]): void {
+        this.stepPhotosChange.emit(images);
+    }
+
+    protected onCoverChange(image: ImageSelection | null): void {
+        if (image !== null) {
+            this.stepPhotosChange.emit([image, ...this.photos().filter(photo => photo !== image)]);
+        }
+    }
+
+    protected onUploadingChange(uploading: boolean): void {
+        this.uploading.set(uploading);
+        this.photosUploading.emit(uploading);
+    }
+
     protected onStepImageChange(value: ImageSelection | null | undefined): void {
         this.stepImageChange.emit(value ?? null);
     }
@@ -195,17 +226,12 @@ export class RecipeStepCardComponent {
         this.stepTitleChange.emit(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
 
-    private resolveIngredientAmountLabel(isNestedRecipe: boolean, unitKey: string | null): string {
+    private resolveIngredientAmountLabel(isNestedRecipe: boolean): string {
         if (isNestedRecipe) {
             return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
         }
 
-        const amountLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
-        if (unitKey === null || unitKey.length === 0) {
-            return amountLabel;
-        }
-
-        return `${amountLabel} (${this.translateService.instant(unitKey)})`;
+        return this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
     }
 
     private getCurrentLanguage(): string {
@@ -227,6 +253,7 @@ type RecipeIngredientRowView = {
     index: number;
     prefixIcon: 'menu_book' | 'restaurant' | 'search';
     amountLabel: string;
+    amountUnit: string | undefined;
     itemType: RecipeIngredientItemType;
     foodNameError: string | null;
     amountError: string | null;

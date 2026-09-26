@@ -335,3 +335,14 @@ describe('recipe gallery mapping', () => {
         expect(buildRecipeDto(createRecipeFormValue(), 'recipe', 1, value => value ?? 0).imageAssetIds).toBeUndefined();
     });
 });
+
+describe('step gallery mapping', () => {
+    it('preserves step photos through editing and sends reordered or cleared galleries', () => {
+        const step = createRecipeStepValue({ ...createRecipeStepValue(), images: [{ assetId: 'second', url: '/2.jpg' }, { assetId: 'first', url: '/1.jpg' }] });
+        const values = createManualRecipeFormValue();
+        step.ingredients = values.steps[0].ingredients;
+        const dto = buildRecipeDto({ ...values, steps: [step] }, 'recipe', 1, value => value ?? 0);
+        expect(dto.steps[0].imageAssetIds).toEqual(['second', 'first']);
+        expect(buildRecipeDto({ ...values, steps: [{ ...step, images: [] }] }, 'recipe', 1, value => value ?? 0).steps[0].imageAssetIds).toEqual([]);
+    });
+});

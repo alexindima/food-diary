@@ -1892,7 +1892,7 @@
       "role": "Component",
       "selector": "fd-ui-textarea",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "FdUiTimeInputComponent",
@@ -2935,7 +2935,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "SkeletonCardComponent",
@@ -4972,7 +4972,7 @@
       "role": "Component",
       "selector": "fd-recipe-cook-mode",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "line": 22
+      "line": 24
     },
     {
       "name": "RecipeDetailIngredientPreviewComponent",
@@ -5077,7 +5077,7 @@
       "role": "Component",
       "selector": "fd-recipe-step-card",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",
-      "line": 52
+      "line": 57
     },
     {
       "name": "RecipeStepsListComponent",
@@ -6672,8 +6672,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3717,
-      "russianProperties": 3717,
+      "englishProperties": 3718,
+      "russianProperties": 3718,
       "countsMatch": true
     },
     {

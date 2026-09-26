@@ -24,6 +24,8 @@ export type RecipeFormValues = {
 };
 
 export type StepFormValues = {
+    descriptionTouched?: boolean;
+    images?: ImageSelection[];
     title: string | null;
     imageUrl: ImageSelection | null;
     description: string;
@@ -31,6 +33,8 @@ export type StepFormValues = {
 };
 
 export type IngredientFormValues = {
+    amountTouched?: boolean;
+    foodNameTouched?: boolean;
     food: Product | null;
     productId: string | null;
     amount: number | null;

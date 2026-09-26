@@ -30896,6 +30896,13 @@
           "Nullable": true
         },
         {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
           "Name": "imageUrl",
           "Required": false,
           "Type": "string",
@@ -30938,6 +30945,13 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "images",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/RecipeImageHttpResponse"
         },
         {
           "Name": "ingredients",

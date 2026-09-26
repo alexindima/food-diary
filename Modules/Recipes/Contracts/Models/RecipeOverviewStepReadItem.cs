@@ -7,4 +7,6 @@ public sealed record RecipeOverviewStepReadItem(
     string Instruction,
     string? ImageUrl,
     Guid? ImageAssetId,
-    IReadOnlyList<RecipeOverviewIngredientReadItem> Ingredients);
+    IReadOnlyList<RecipeOverviewIngredientReadItem> Ingredients) {
+    public IReadOnlyList<RecipeImageReadItem> Images { get; init; } = [];
+}

@@ -7,6 +7,22 @@ using FoodDiary.Domain.Primitives;
 namespace FoodDiary.Modules.Recipes.Domain.Entities;
 
 public sealed class RecipeStep : Entity<RecipeStepId> {
+    private readonly List<RecipeImage> _images = [];
+    public IReadOnlyCollection<RecipeImage> Images => _images.AsReadOnly();
+    public void ReplaceImages(IReadOnlyList<RecipeImage> images) {
+        if (images.Count > 5 || images.Select(image => image.ImageAssetId).Distinct().Count() != images.Count) {
+            throw new ArgumentException("A recipe can have up to five distinct images.", nameof(images));
+        }
+        _images.RemoveAll(image => !images.Any(next => next.ImageAssetId == image.ImageAssetId));
+        for (int index = 0; index < images.Count; index++) {
+            RecipeImage? existing = _images.Find(image => image.ImageAssetId == images[index].ImageAssetId);
+            if (existing is null) { _images.Add(new RecipeImage(images[index].ImageAssetId, images[index].ImageUrl, index)); } else { existing.SetPosition(index); }
+        }
+        ImageAssetId = images.Count > 0 ? images[0].ImageAssetId : null;
+        ImageUrl = images.Count > 0 ? images[0].ImageUrl : null;
+        SetModified();
+    }
+
     public RecipeId RecipeId { get; private set; }
     public int StepNumber { get; private set; }
     public string? Title { get; private set; }

@@ -453,6 +453,7 @@
         "STEPS": "Step {{index}}",
         "STEPS_SECTION_TITLE": "Cooking steps",
         "STEP_TITLE": "Step {{index}}",
+        "STEP_ACTIONS": "Step actions",
         "EDIT_STEP_TITLE": "Edit step title",
         "STEP_TITLE_LABEL": "Step title",
         "STEP_TITLE_PLACEHOLDER": "Optional step name",

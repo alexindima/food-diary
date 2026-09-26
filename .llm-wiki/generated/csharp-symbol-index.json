@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4242,
-    "symbols": 4173,
+    "sourceFiles": 4247,
+    "symbols": 4178,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2191,
+      "class": 2193,
       "enum": 64,
       "interface": 401,
-      "record": 1397,
+      "record": 1400,
       "record struct": 120
     },
     "roles": {
@@ -24,7 +24,7 @@
       "CommandHandler": 218,
       "Configuration": 96,
       "Controller": 105,
-      "Entity": 98,
+      "Entity": 99,
       "Event": 19,
       "Factory": 14,
       "Handler": 7,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1720,
+      "Other": 1723,
       "Query": 281,
       "QueryHandler": 204,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 224,
+      "Response": 225,
       "Service": 162,
       "Validator": 229,
       "ValueObject": 114,
@@ -21731,7 +21731,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "UpdateRecipeCommandValidator",
@@ -21753,6 +21753,13 @@
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
       "line": 10
+    },
+    {
+      "name": "RecipeImageAssetResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Common/RecipeImageAssetResolver.cs",
+      "line": 6
     },
     {
       "name": "RecipeIngredientInput",
@@ -21816,6 +21823,13 @@
       "role": "Other",
       "path": "Modules/Recipes/Application/Mappings/RecipeOverviewReadMappings.cs",
       "line": 5
+    },
+    {
+      "name": "RecipeImageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/RecipeImageModel.cs",
+      "line": 6
     },
     {
       "name": "RecipeIngredientModel",
@@ -22035,6 +22049,13 @@
       "line": 4
     },
     {
+      "name": "RecipeImageReadItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Models/RecipeImageReadItem.cs",
+      "line": 6
+    },
+    {
       "name": "RecipeOverviewIngredientReadItem",
       "kind": "record",
       "role": "Other",
@@ -22089,6 +22110,13 @@
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
       "line": 10
+    },
+    {
+      "name": "RecipeImage",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 3
     },
     {
       "name": "RecipeIngredient",
@@ -22369,6 +22397,13 @@
       "role": "Response",
       "path": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "RecipeImageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/RecipeImageHttpResponse.cs",
+      "line": 6
     },
     {
       "name": "RecipeIngredientHttpResponse",

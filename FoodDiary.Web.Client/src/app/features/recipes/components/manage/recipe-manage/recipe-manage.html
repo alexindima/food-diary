@@ -24,7 +24,7 @@
             #manageForm
             class="recipe-manage__form fd-stack fd-gap-lg"
             [formRoot]="recipeSignalForm"
-            [attr.aria-busy]="isSubmitting() || photosUploading()"
+            [attr.aria-busy]="isSubmitting() || anyPhotosUploading()"
             (submit)="onFormSubmit($event)"
         >
             @if (globalError()) {
@@ -106,7 +106,10 @@
                         (removeIngredient)="removeIngredientFromStep($event)"
                         (selectProduct)="onProductSelectClick($event)"
                         (stepTitleChange)="onStepTitleChange($event)"
+                        (stepPhotosChange)="onStepPhotosChange($event)"
+                        (photosUploading)="stepPhotosUploading.set($event)"
                         (stepImageChange)="onStepImageChange($event)"
+                        (fieldBlur)="onStepFieldBlur($event)"
                         (stepDescriptionChange)="onStepDescriptionChange($event)"
                         (ingredientAmountChange)="onIngredientAmountChange($event)"
                     />
@@ -141,7 +144,12 @@
                                     appearance="brand-action"
                                     icon="save"
                                     [fullWidth]="true"
-                                    [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting() || photosUploading()"
+                                    [disabled]="
+                                        recipeSignalForm().invalid() ||
+                                        !areStepsValid() ||
+                                        isSubmitting() ||
+                                        anyPhotosUploading()
+                                    "
                                     [disabledReason]="
                                         recipeSignalForm().invalid()
                                             ? ('DISABLED_HINTS.FORM_INVALID' | translate)
@@ -149,7 +157,7 @@
                                               ? ('DISABLED_HINTS.STEPS_INVALID' | translate)
                                               : null
                                     "
-                                    [loading]="isSubmitting() || photosUploading()"
+                                    [loading]="isSubmitting() || anyPhotosUploading()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}
                                 </fd-ui-button>

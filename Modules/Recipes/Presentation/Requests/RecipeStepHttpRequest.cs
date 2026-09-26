@@ -5,4 +5,6 @@ public sealed record RecipeStepHttpRequest(
     string Description,
     IReadOnlyList<RecipeIngredientHttpRequest> Ingredients,
     string? ImageUrl,
-    Guid? ImageAssetId);
+    Guid? ImageAssetId) {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

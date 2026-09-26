@@ -82,7 +82,9 @@ export class RecipeManageComponent {
 
     public readonly recipe = input<Recipe | null>(null);
     protected globalError = this.recipeManageFacade.globalError;
+    protected readonly stepPhotosUploading = signal(false);
     protected readonly photosUploading = signal(false);
+    protected readonly anyPhotosUploading = computed(() => this.photosUploading() || this.stepPhotosUploading());
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
     protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
@@ -194,13 +196,11 @@ export class RecipeManageComponent {
 
     protected removeStep(index: number): void {
         this.stepFormManager.removeStep(index);
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 
     protected addIngredientToStep(stepIndex: number): void {
         this.stepFormManager.addIngredientToStep(stepIndex);
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -210,7 +210,6 @@ export class RecipeManageComponent {
 
     protected removeIngredientFromStep(event: StepIngredientEvent): void {
         this.stepFormManager.removeIngredientFromStep(event);
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -218,7 +217,6 @@ export class RecipeManageComponent {
         const steps = [...this.steps];
         moveItemInArray(steps, event.previousIndex, event.currentIndex);
         this.patchRecipeFormModel({ steps });
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -236,7 +234,6 @@ export class RecipeManageComponent {
                 },
                 selection,
             );
-            this.stepsTouchedState.markTouched();
             this.updateSummaryFromCurrentForm();
         });
     }
@@ -245,8 +242,23 @@ export class RecipeManageComponent {
         this.patchStep(event.stepIndex, { title: event.value });
     }
 
+    protected onStepPhotosChange(event: StepFieldEvent<NonNullable<StepFormValues['images']>>): void {
+        this.patchStep(event.stepIndex, { images: event.value, imageUrl: event.value[0] ?? null });
+    }
+
     protected onStepImageChange(event: StepFieldEvent<StepFormValues['imageUrl']>): void {
         this.patchStep(event.stepIndex, { imageUrl: event.value });
+    }
+
+    protected onStepFieldBlur(event: { stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }): void {
+        if (event.field === 'description') {
+            this.patchStep(event.stepIndex, { descriptionTouched: true });
+        } else if (event.ingredientIndex !== undefined) {
+            this.stepFormManager.patchIngredient(
+                { stepIndex: event.stepIndex, ingredientIndex: event.ingredientIndex },
+                event.field === 'amount' ? { amountTouched: true } : { foodNameTouched: true },
+            );
+        }
     }
 
     protected onStepDescriptionChange(event: StepFieldEvent<string>): void {
@@ -258,7 +270,6 @@ export class RecipeManageComponent {
             { stepIndex: event.stepIndex, ingredientIndex: event.ingredientIndex },
             { amount: event.amount },
         );
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -287,7 +298,7 @@ export class RecipeManageComponent {
     }
 
     protected onSubmit(): void {
-        if (this.isSubmitting() || this.photosUploading()) {
+        if (this.isSubmitting() || this.photosUploading() || this.stepPhotosUploading()) {
             return;
         }
 
@@ -497,13 +508,14 @@ export class RecipeManageComponent {
                 value: step.title,
                 error: null,
             },
+            images: step.images,
             imageUrl: {
                 value: step.imageUrl,
                 error: null,
             },
             description: {
                 value: step.description,
-                error: touched && step.description.trim().length === 0 ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+                error: (touched || step.descriptionTouched === true) && step.description.trim().length === 0 ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
             },
             ingredients: step.ingredients.map(ingredient => this.createIngredientCardState(ingredient, touched)),
         };
@@ -517,12 +529,12 @@ export class RecipeManageComponent {
         return {
             amount: {
                 value: ingredient.amount,
-                error: this.getIngredientAmountError(ingredient, touched),
+                error: this.getIngredientAmountError(ingredient, touched || ingredient.amountTouched === true),
             },
             food: ingredient.food,
             foodName: {
                 value: ingredient.foodName,
-                error: touched && !hasFoodName ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+                error: !hasFoodName && (touched || ingredient.foodNameTouched === true) ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
             },
             nestedRecipeId: ingredient.nestedRecipeId,
         };
@@ -578,7 +590,6 @@ export class RecipeManageComponent {
                     : step,
             ),
         });
-        this.stepsTouchedState.markTouched();
         this.updateSummaryFromCurrentForm();
     }
 

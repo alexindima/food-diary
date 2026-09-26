@@ -1,4 +1,4 @@
-<div class="recognition-photos" [class.recognition-photos--editor]="editor()">
+<div class="recognition-photos" [class.recognition-photos--editor]="editor()" [class.recognition-photos--compact]="compact()">
     <div class="recognition-photos__strip">
         @for (photo of photos(); track photo.assetId ?? photo.url) {
             <div class="recognition-photos__item" [class.recognition-photos__item--scanning]="scanning() && $first">
@@ -65,7 +65,7 @@
                 #uploader
                 acceptedTypes="image/jpeg,image/png,image/webp"
                 [class.recognition-photos__uploader-hidden]="editor() && photos().length > 0"
-                [appearance]="photos().length ? 'tile' : 'preview'"
+                [appearance]="photos().length ? 'tile' : compact() ? 'compact' : 'preview'"
                 [class.recognition-photos__add]="photos().length > 0"
                 [showRecommendation]="false"
                 [multiple]="true"

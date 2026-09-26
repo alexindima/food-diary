@@ -3,12 +3,12 @@
   "summary": {
     "components": 462,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1491,
-    "outputs": 497,
+    "inputs": 1494,
+    "outputs": 503,
     "apiCalls": 267,
     "templatesWithTranslations": 322,
     "translationKeys": 1907,
-    "consumerEdges": 1137,
+    "consumerEdges": 1139,
     "consumedComponents": 295,
     "unconsumedComponents": 166
   },
@@ -6640,6 +6640,11 @@
           "required": false
         },
         {
+          "name": "stretch",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "maxLength",
           "type": "number",
           "required": false
@@ -10677,12 +10682,21 @@
           "required": true
         },
         {
+          "name": "busy",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "dragDisabled",
           "type": "boolean",
           "required": true
         }
       ],
       "outputs": [
+        {
+          "name": "fieldBlur",
+          "type": "{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }"
+        },
         {
           "name": "removeStep",
           "type": ""
@@ -10706,6 +10720,14 @@
         {
           "name": "stepTitleChange",
           "type": "string | null"
+        },
+        {
+          "name": "stepPhotosChange",
+          "type": "ImageSelection[]"
+        },
+        {
+          "name": "photosUploading",
+          "type": "boolean"
         },
         {
           "name": "stepImageChange",
@@ -10779,8 +10801,20 @@
           "type": "StepFieldEvent<string | null>"
         },
         {
+          "name": "stepPhotosChange",
+          "type": "StepFieldEvent<NonNullable<RecipeStepCardState['images']>>"
+        },
+        {
+          "name": "photosUploading",
+          "type": "boolean"
+        },
+        {
           "name": "stepImageChange",
           "type": "StepFieldEvent<RecipeStepCardState['imageUrl']['value']>"
+        },
+        {
+          "name": "fieldBlur",
+          "type": "{ stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }"
         },
         {
           "name": "stepDescriptionChange",
@@ -11994,6 +12028,11 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
       "inputs": [
+        {
+          "name": "compact",
+          "type": "",
+          "required": false
+        },
         {
           "name": "editor",
           "type": "",
@@ -20735,6 +20774,7 @@
       "keys": [
         "DISABLED_HINTS.FIRST_STEP",
         "DISABLED_HINTS.LAST_STEP",
+        "PRODUCT_AI_DIALOG.VIEW_PHOTO",
         "RECIPE_DETAIL.COOK_MODE.ADD_TO_MEAL",
         "RECIPE_DETAIL.COOK_MODE.EMPTY",
         "RECIPE_DETAIL.COOK_MODE.INGREDIENTS",
@@ -20891,6 +20931,7 @@
         "COMMON.DELETE",
         "DISABLED_HINTS.FIRST_INGREDIENT_REQUIRED",
         "DISABLED_HINTS.FIRST_RECIPE_STEP_REQUIRED",
+        "DISABLED_HINTS.OPERATION_BUSY",
         "RECIPE_MANAGE.ADD_INGREDIENT",
         "RECIPE_MANAGE.EDIT_STEP_TITLE",
         "RECIPE_MANAGE.INGREDIENTS",
@@ -20899,9 +20940,9 @@
         "RECIPE_MANAGE.INGREDIENT_TYPE",
         "RECIPE_MANAGE.REMOVE_STEP",
         "RECIPE_MANAGE.SELECT_INGREDIENT",
+        "RECIPE_MANAGE.STEP_ACTIONS",
         "RECIPE_MANAGE.STEP_DESCRIPTION",
         "RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER",
-        "RECIPE_MANAGE.STEP_IMAGE_HINT",
         "RECIPE_MANAGE.STEP_INGREDIENTS_COUNT",
         "RECIPE_MANAGE.TOGGLE_STEP"
       ]
@@ -27653,9 +27694,8 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
-      "occurrences": 5,
+      "occurrences": 4,
       "inputsUsed": [
-        "appearance",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -32585,6 +32625,7 @@
         "readonly",
         "size",
         "step",
+        "suffixText",
         "type",
         "value"
       ],
@@ -33248,6 +33289,16 @@
       "component": "FdUiMenuComponent",
       "selector": "fd-ui-menu",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiMenuComponent",
+      "selector": "fd-ui-menu",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
       "occurrences": 1,
@@ -33322,6 +33373,21 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 2,
       "inputsUsed": [],
+      "outputsHandled": [
+        "itemClick"
+      ]
+    },
+    {
+      "component": "FdUiMenuItemComponent",
+      "selector": "fd-ui-menu-item",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason"
+      ],
       "outputsHandled": [
         "itemClick"
       ]
@@ -34113,26 +34179,6 @@
       "component": "FdUiSegmentedToggleComponent",
       "selector": "fd-ui-segmented-toggle",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "appearance",
-        "ariaLabel",
-        "options",
-        "selectedValue",
-        "shrinkItems",
-        "size",
-        "stackOnNarrow"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiSegmentedToggleComponent",
-      "selector": "fd-ui-segmented-toggle",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.html",
       "occurrences": 1,
@@ -34614,6 +34660,23 @@
         "size"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "options",
+        "size",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiSelectComponent",
@@ -35208,6 +35271,7 @@
         "label",
         "placeholder",
         "rows",
+        "stretch",
         "value"
       ],
       "outputsHandled": [
@@ -35549,6 +35613,25 @@
       ]
     },
     {
+      "component": "ImageGalleryEditorComponent",
+      "selector": "fd-image-gallery-editor",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "compact",
+        "cover",
+        "editor",
+        "photos"
+      ],
+      "outputsHandled": [
+        "coverChange",
+        "photosChange",
+        "uploadingChange"
+      ]
+    },
+    {
       "component": "ImageUploadFieldComponent",
       "selector": "fd-image-upload-field",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
@@ -35646,28 +35729,6 @@
         "cropSize",
         "deleteOnClear",
         "label",
-        "maxSizeMb",
-        "recommendedSize",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
-    },
-    {
-      "component": "ImageUploadFieldComponent",
-      "selector": "fd-image-upload-field",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "acceptedTypes",
-        "appearance",
-        "cropAspectRatio",
-        "cropEnabled",
-        "cropSize",
-        "description",
         "maxSizeMb",
         "recommendedSize",
         "value"
@@ -37993,22 +38054,10 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.html",
       "occurrences": 1,
       "inputsUsed": [
-        "dragDisabled",
-        "isExpanded",
-        "step",
-        "stepIndex"
+        "busy",
+        "step"
       ],
-      "outputsHandled": [
-        "addIngredient",
-        "ingredientAmountChange",
-        "removeIngredient",
-        "removeStep",
-        "selectProduct",
-        "stepDescriptionChange",
-        "stepImageChange",
-        "stepTitleChange",
-        "toggleExpanded"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "RecipeStepsListComponent",
@@ -38025,7 +38074,9 @@
       "outputsHandled": [
         "addIngredient",
         "addStep",
+        "fieldBlur",
         "ingredientAmountChange",
+        "photosUploading",
         "removeIngredient",
         "removeStep",
         "selectProduct",
@@ -38033,6 +38084,7 @@
         "stepDrop",
         "stepExpandedToggle",
         "stepImageChange",
+        "stepPhotosChange",
         "stepTitleChange"
       ]
     },

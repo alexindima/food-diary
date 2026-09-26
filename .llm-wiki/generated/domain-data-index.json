@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 227,
-    "entities": 87,
+    "domainTypes": 228,
+    "entities": 88,
     "valueObjects": 92,
-    "invariants": 518,
+    "invariants": 522,
     "persistenceMappings": 92,
-    "indexes": 170,
+    "indexes": 172,
     "relationships": 36
   },
   "domainTypes": [
@@ -520,6 +520,13 @@
       "role": "entity",
       "path": "Modules/RecipeCommunity/Domain/Entities/Recipes/RecipeComment.cs",
       "line": 7
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipeImage",
+      "role": "entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 3
     },
     {
       "area": "FoodDiary",
@@ -4180,72 +4187,93 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A recipe can have up to five distinct images.\", nameof(images))",
+      "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
+      "line": 22
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Step number must be unique within recipe.\", nameof(stepNumber))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 191
+      "line": 207
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(step)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 210
+      "line": 226
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipe name is required.\", nameof(value))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 526
+      "line": 542
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recipe name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 531
+      "line": 547
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 539
+      "line": 555
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\"),",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 546
+      "line": 562
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 558
+      "line": 574
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 564
+      "line": 580
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 571
+      "line": 587
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 578
+      "line": 594
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Image id is required.\", nameof(imageAssetId))",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 10
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Invalid image URL.\", nameof(imageUrl))",
+      "path": "Modules/Recipes/Domain/Entities/RecipeImage.cs",
+      "line": 11
     },
     {
       "area": "FoodDiary",
@@ -4291,31 +4319,38 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A recipe can have up to five distinct images.\", nameof(images))",
+      "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
+      "line": 14
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(stepNumber), \"Step number must be greater than zero.\")",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 35
+      "line": 51
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A recipe cannot contain itself as an ingredient.\", nameof(nestedRecipeId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 69
+      "line": 85
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(ingredient)",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 79
+      "line": 95
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 103
+      "line": 119
     },
     {
       "area": "FoodDiary",
@@ -5967,10 +6002,11 @@
     {
       "area": "FoodDiary",
       "entity": "Recipe",
-      "table": null,
+      "table": "RecipeImages",
       "indexes": [
         "e => e.Category)",
         "e => e.Description)",
+        "e => e.ImageAssetId)",
         "e => e.Name)",
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"
@@ -6021,8 +6057,10 @@
     {
       "area": "FoodDiary",
       "entity": "RecipeStep",
-      "table": null,
-      "indexes": [],
+      "table": "RecipeStepImages",
+      "indexes": [
+        "e => e.ImageAssetId)"
+      ],
       "relationships": [
         {
           "kind": "HasOne",

@@ -1,5 +1,5 @@
 import { type CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, ElementRef, inject, Injector, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
@@ -36,6 +36,8 @@ export type RecipeStepListItem = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeStepsListComponent {
+    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
     public readonly steps = input.required<readonly RecipeStepListItem[]>();
     public readonly expandedSteps = input.required<ReadonlySet<number>>();
     public readonly stepsError = input<string | null>(null);
@@ -48,9 +50,24 @@ export class RecipeStepsListComponent {
     public readonly removeIngredient = output<StepIngredientEvent>();
     public readonly selectProduct = output<StepIngredientSelectEvent>();
     public readonly stepTitleChange = output<StepFieldEvent<string | null>>();
+    public readonly stepPhotosChange = output<StepFieldEvent<NonNullable<RecipeStepCardState['images']>>>();
+    public readonly photosUploading = output<boolean>();
+    protected readonly uploadingSteps = signal<ReadonlySet<number>>(new Set());
     public readonly stepImageChange = output<StepFieldEvent<RecipeStepCardState['imageUrl']['value']>>();
+    public readonly fieldBlur = output<{ stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
     public readonly stepDescriptionChange = output<StepFieldEvent<string>>();
     public readonly ingredientAmountChange = output<StepIngredientAmountEvent>();
+
+    protected onPhotosUploading(index: number, uploading: boolean): void {
+        const steps = new Set(this.uploadingSteps());
+        if (uploading) {
+            steps.add(index);
+        } else {
+            steps.delete(index);
+        }
+        this.uploadingSteps.set(steps);
+        this.photosUploading.emit(steps.size > 0);
+    }
 
     protected isStepExpanded(index: number): boolean {
         return this.expandedSteps().has(index);
@@ -77,6 +94,13 @@ export class RecipeStepsListComponent {
 
     protected onAddStep(): void {
         this.addStep.emit();
+        afterNextRender(() => {
+            const descriptions = this.element.nativeElement.querySelectorAll<HTMLTextAreaElement>('fd-recipe-step-card textarea');
+            if (descriptions.length === 0) { return; }
+                const description = descriptions.item(descriptions.length - 1);
+            description.focus({ preventScroll: true });
+            description.scrollIntoView({ block: 'nearest' });
+        }, { injector: this.injector });
     }
 
     protected onAddIngredient(stepIndex: number): void {

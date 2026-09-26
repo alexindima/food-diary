@@ -56,6 +56,7 @@ describe('RecipeStepFormManager', () => {
         manager.populateRecipeSteps(createRecipe());
 
         expect(state.steps.length).toBe(2);
+        expect([...manager.expandedSteps]).toEqual([0]);
         expect(state.steps[0]?.ingredients[0]?.foodName).toBe('Unknown 1');
         expect(state.steps[1]?.ingredients[0]?.foodName).toBe('Flour');
     });

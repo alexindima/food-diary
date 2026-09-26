@@ -94,6 +94,8 @@ export class RecipeStepFormManager {
         recipe.steps.forEach(step => {
             this.addStep(mapRecipeStepToFormValue(step, this.resolveLabels()));
         });
+        this.expandedSteps.clear();
+        this.expandedSteps.add(0);
     }
 
     private updateStep(index: number, update: (step: StepFormValues) => StepFormValues): void {

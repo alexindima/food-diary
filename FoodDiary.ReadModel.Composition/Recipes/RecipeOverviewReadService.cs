@@ -200,7 +200,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalAlcohol : null,
                         product == null || product.UserId == currentUserId || product.Visibility == Visibility.Public,
                         ingredient.NestedRecipe == null || ingredient.NestedRecipe.UserId == currentUserId || ingredient.NestedRecipe.Visibility == Visibility.Public))
-                        .ToList()))
+                        .ToList()) { Images = step.Images.OrderBy(image => image.Position).Select(image => new RecipeImageReadItem(image.ImageAssetId.Value, image.ImageUrl)).ToList() })
                 .ToList(), recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageReadItem(image.ImageAssetId.Value, image.ImageUrl)).ToList()));
 
     private static RecipeOverviewReadItem ToReadItem(RecipeOverviewReadRow row, UserId currentUserId) {

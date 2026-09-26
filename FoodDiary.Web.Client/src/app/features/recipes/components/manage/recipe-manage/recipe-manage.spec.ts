@@ -566,3 +566,22 @@ function createProduct(overrides: Partial<Product> = {}): Product {
         ...overrides,
     };
 }
+
+describe('Recipe step validation timing', () => {
+    it('keeps unrelated fields pristine and validates each field on blur', async () => {
+        const { component } = await setupComponentAsync();
+        component['onStepPhotosChange']({ stepIndex: 0, value: [] });
+        component['onStepDescriptionChange']({ stepIndex: 0, value: '' });
+        expect(component['stepListItems']()[0].state.description.error).toBeNull();
+        component['onStepFieldBlur']({ stepIndex: 0, field: 'description' });
+        expect(component['stepListItems']()[0].state.description.error).not.toBeNull();
+        expect(component['stepListItems']()[0].state.ingredients[0].foodName.error).toBeNull();
+        expect(component['stepListItems']()[0].state.ingredients[0].amount.error).toBeNull();
+        component['onStepFieldBlur']({ stepIndex: 0, field: 'amount', ingredientIndex: 0 });
+        expect(component['stepListItems']()[0].state.ingredients[0].amount.error).not.toBeNull();
+        component['onStepDescriptionChange']({ stepIndex: 0, value: 'Mix ingredients' });
+        expect(component['stepListItems']()[0].state.description.error).toBeNull();
+        component['onSubmit']();
+        expect(component['stepListItems']()[0].state.ingredients[0].foodName.error).not.toBeNull();
+    });
+});

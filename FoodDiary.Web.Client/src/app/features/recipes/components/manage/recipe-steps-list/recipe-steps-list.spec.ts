@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -9,6 +10,18 @@ import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card';
 import { type RecipeStepListItem, RecipeStepsListComponent } from './recipe-steps-list';
 
 describe('RecipeStepsListComponent', () => {
+    it('keeps saving blocked until every step finishes uploading', () => {
+        const { component } = setupComponent(new Set([0]));
+        const uploading = vi.fn();
+        component.photosUploading.subscribe(uploading);
+        component['onPhotosUploading'](0, true);
+        component['onPhotosUploading'](1, true);
+        component['onPhotosUploading'](0, false);
+        expect(uploading).toHaveBeenLastCalledWith(true);
+        component['onPhotosUploading'](1, false);
+        expect(uploading).toHaveBeenLastCalledWith(false);
+    });
+
     it('checks expanded state from readonly expanded steps input', () => {
         const { component } = setupComponent(new Set([0]));
 
@@ -76,7 +89,7 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
 } {
     TestBed.configureTestingModule({
         imports: [RecipeStepsListComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideRouter([]), provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeStepsListComponent);
@@ -93,6 +106,7 @@ function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()
         state: {
             title: { value: step.title, error: null },
             imageUrl: { value: step.imageUrl, error: null },
+        images: step.images,
             description: { value: step.description, error: null },
             ingredients: step.ingredients.map(ingredient => ({
                 amount: { value: ingredient.amount, error: null },

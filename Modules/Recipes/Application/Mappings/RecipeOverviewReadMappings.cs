@@ -50,7 +50,7 @@ public static class RecipeOverviewReadMappings {
             step.Instruction,
             step.ImageUrl,
             step.ImageAssetId,
-            [.. step.Ingredients.Select(ToIngredientModel)]);
+            [.. step.Ingredients.Select(ToIngredientModel)]) { Images = step.Images.Select(image => new RecipeImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
 
     private static RecipeIngredientModel ToIngredientModel(RecipeOverviewIngredientReadItem ingredient) =>
         new(

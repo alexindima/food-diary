@@ -88,6 +88,7 @@ public sealed class DeleteRecipeCommandHandler(
             .Select(step => step.ImageAssetId)
             .Where(id => id.HasValue)
             .Select(id => id!.Value)
+            .Concat(recipe.Steps.SelectMany(step => step.Images).Select(image => image.ImageAssetId))
             .Concat(recipe.Images.Select(image => image.ImageAssetId))
             .Distinct()
             .ToList();

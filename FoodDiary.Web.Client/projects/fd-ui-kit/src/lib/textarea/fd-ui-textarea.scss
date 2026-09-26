@@ -103,3 +103,20 @@
     min-height: 0;
     resize: none;
 }
+
+:host(.fd-ui-textarea-stretch) {
+    display: flex;
+    flex-direction: column;
+
+    .fd-ui-textarea,
+    .fd-ui-textarea__control-wrap {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .fd-ui-textarea__control {
+        flex: 1;
+        resize: none;
+    }
+}

@@ -70,7 +70,7 @@ public static class RecipeMappings {
             step.Instruction,
             step.ImageUrl,
             step.ImageAssetId?.Value,
-            step.Ingredients.Select(ToIngredientModel).ToList());
+            step.Ingredients.Select(ToIngredientModel).ToList()) { Images = step.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
     private static RecipeIngredientModel ToIngredientModel(RecipeIngredient ingredient) {

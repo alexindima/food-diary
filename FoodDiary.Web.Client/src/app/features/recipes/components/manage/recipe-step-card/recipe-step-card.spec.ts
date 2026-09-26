@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -76,7 +77,7 @@ describe('RecipeStepCardComponent', () => {
         expect(component['ingredientRows']()[0]).toEqual(
             expect.objectContaining({
                 prefixIcon: 'restaurant',
-                amountLabel: 'RECIPE_MANAGE.INGREDIENT_AMOUNT (PRODUCT_AMOUNT_UNITS.G)',
+                amountLabel: 'RECIPE_MANAGE.INGREDIENT_AMOUNT',
                 itemType: 'Product',
             }),
         );
@@ -105,7 +106,7 @@ function setupComponent(step = createRecipeStepValue()): {
 } {
     TestBed.configureTestingModule({
         imports: [RecipeStepCardComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideRouter([]), provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeStepCardComponent);
@@ -122,6 +123,7 @@ function createStepCardState(step: StepFormValues): RecipeStepCardState {
     return {
         title: { value: step.title, error: null },
         imageUrl: { value: step.imageUrl, error: null },
+        images: step.images,
         description: { value: step.description, error: null },
         ingredients: step.ingredients.map(ingredient => ({
             amount: { value: ingredient.amount, error: null },
@@ -178,14 +180,38 @@ describe('RecipeStepCardComponent editing boundaries', () => {
         ];
         buttons[0].click();
         buttons[1].click();
+        fixture.detectChanges();
+        const removeButton = [...document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')].find(button => button.textContent.includes('RECIPE_MANAGE.REMOVE_STEP'));
+        expect(removeButton).toBeDefined();
+        expect(removeButton?.disabled).toBe(true);
         expect(toggle).toHaveBeenCalledTimes(1);
         expect(remove).not.toHaveBeenCalled();
         fixture.componentRef.setInput('stepIndex', 1);
         fixture.detectChanges();
-        buttons[1].click();
+        expect(removeButton?.disabled).toBe(false);
+        removeButton?.click();
         expect(remove).toHaveBeenCalledTimes(1);
     });
 });
 
 const FRACTIONAL_AMOUNT = 12.5;
 const MISSING_INGREDIENT_INDEX = 10;
+
+describe('RecipeStepCardComponent gallery', () => {
+    it('emits all photos in the selected cover order and preserves upload state', () => {
+        const photos = [{ assetId: 'first', url: '/first.jpg' }, { assetId: 'second', url: '/second.jpg' }];
+        const { component } = setupComponent({ ...createRecipeStepValue(), images: photos });
+        const changed = vi.fn();
+        const uploading = vi.fn();
+        component.stepPhotosChange.subscribe(changed);
+        component.photosUploading.subscribe(uploading);
+        component['onCoverChange'](photos[1]);
+        expect(changed).toHaveBeenCalledWith([photos[1], photos[0]]);
+        component['onPhotosChange']([]);
+        expect(changed).toHaveBeenLastCalledWith([]);
+        component['onUploadingChange'](true);
+        expect(uploading).toHaveBeenCalledWith(true);
+        expect(component['uploading']()).toBe(true);
+    });
+
+});

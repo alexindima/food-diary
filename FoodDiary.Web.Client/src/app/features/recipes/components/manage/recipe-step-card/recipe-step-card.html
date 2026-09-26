@@ -20,16 +20,6 @@
                 } @else {
                     <span class="recipe-step-card__title fd-ui-action-text"> {{ titleDisplay() }} </span>
                 }
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    fill="text"
-                    icon="edit"
-                    class="recipe-step-card__edit"
-                    [fdUiHint]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
-                    [ariaLabel]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
-                    (click)="toggleStepTitleEdit()"
-                />
             </div>
             <div class="recipe-step-card__header-actions fd-row fd-gap-xxs">
                 <fd-ui-button
@@ -37,21 +27,30 @@
                     variant="secondary"
                     fill="text"
                     [icon]="expandedIcon()"
+                    [disabled]="busy() || uploading()" [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    [attr.aria-expanded]="isExpanded()"
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
                 />
                 <fd-ui-button
-                    type="button"
-                    variant="danger"
                     fill="text"
-                    icon="delete"
-                    [disabled]="isFirst()"
-                    [disabledReason]="isFirst() ? ('DISABLED_HINTS.FIRST_RECIPE_STEP_REQUIRED' | translate) : null"
-                    (click)="onRemoveStep()"
-                >
-                    {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
-                </fd-ui-button>
+                    variant="secondary"
+                    icon="more_horiz"
+                    [ariaLabel]="'RECIPE_MANAGE.STEP_ACTIONS' | translate"
+                    [fdUiMenuTrigger]="stepMenu"
+                    [disabled]="busy() || uploading()" [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                />
+                <fd-ui-menu #stepMenu>
+                    <fd-ui-menu-item (itemClick)="toggleStepTitleEdit()">{{ 'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate }}</fd-ui-menu-item>
+                    <fd-ui-menu-item
+                        class="fd-ui-menu-item--danger"
+                        [disabled]="isFirst()"
+                        [disabledReason]="isFirst() ? ('DISABLED_HINTS.FIRST_RECIPE_STEP_REQUIRED' | translate) : null"
+                        (itemClick)="onRemoveStep()"
+                        >{{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}</fd-ui-menu-item
+                    >
+                </fd-ui-menu>
             </div>
         </div>
 
@@ -65,28 +64,26 @@
         } @else {
             <div class="recipe-step-card__content">
                 <div class="recipe-step-card__image">
-                    <fd-image-upload-field
-                        class="recipe-step-card__image-upload"
-                        appearance="step"
-                        recommendedSize="512 x 512"
-                        acceptedTypes="image/png,image/jpeg,image/webp"
-                        [value]="step().imageUrl.value"
-                        [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
-                        [maxSizeMb]="10"
-                        [cropEnabled]="true"
-                        [cropSize]="512"
-                        [cropAspectRatio]="1"
-                        (valueChange)="onStepImageChange($event)"
+                    <fd-image-gallery-editor
+                        [editor]="true"
+                        [compact]="true"
+                        [photos]="photos()"
+                        [cover]="photos()[0] ?? null"
+                        (photosChange)="onPhotosChange($event)"
+                        (coverChange)="onCoverChange($event)"
+                        (uploadingChange)="onUploadingChange($event)"
                     />
                 </div>
                 <div class="recipe-step-card__description">
                     <fd-ui-textarea
                         [value]="step().description.value"
                         [rows]="3"
+                        [stretch]="true"
                         [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                         [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
                         [error]="descriptionError()"
                         (valueChange)="onStepDescriptionInput($event)"
+                        (focusout)="fieldBlur.emit({ field: 'description' })"
                     />
                 </div>
             </div>
@@ -94,22 +91,19 @@
             <div class="recipe-step-card__ingredients fd-stack fd-gap-md">
                 <div class="recipe-step-card__subtitle fd-ui-caption">{{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}</div>
                 @for (row of ingredientRows(); track row.index) {
-                    <div class="recipe-ingredient fd-row fd-gap-md">
-                        <div class="recipe-ingredient__selection fd-stack fd-gap-xs">
-                            <fd-ui-segmented-toggle
+                    <div class="recipe-ingredient">
+                        <div class="recipe-ingredient__selection">
+                            <fd-ui-select
                                 class="recipe-ingredient__type-toggle"
-                                appearance="soft"
-                                size="sm"
+                                size="md"
                                 [options]="ingredientTypeOptions"
-                                [selectedValue]="row.itemType"
+                                [value]="row.itemType"
                                 [ariaLabel]="'RECIPE_MANAGE.INGREDIENT_TYPE' | translate"
-                                [shrinkItems]="true"
-                                [stackOnNarrow]="false"
-                                (selectedValueChange)="onIngredientTypeChange(row.index, $event)"
+                                (valueChange)="onIngredientTypeChange(row.index, $event ?? 'Product')"
                             />
                             <fd-ui-input
                                 class="recipe-ingredient__name"
-                                size="lg"
+                                size="md"
                                 [value]="ingredients[row.index]?.foodName.value ?? ''"
                                 [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
                                 [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
@@ -118,18 +112,21 @@
                                 [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
                                 [error]="row.foodNameError"
                                 (click)="onProductSelectClick(row.index, row.itemType)"
+                                (focusout)="fieldBlur.emit({ field: 'foodName', ingredientIndex: row.index })"
                             />
                         </div>
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
                             <fd-ui-input
-                                size="lg"
+                                size="md"
                                 type="number"
                                 [value]="ingredients[row.index]?.amount.value"
                                 [step]="0.01"
                                 [label]="row.amountLabel"
+                                [suffixText]="row.amountUnit"
                                 [error]="row.amountError"
                                 (valueChange)="onIngredientAmountInput(row.index, $event)"
+                                (focusout)="fieldBlur.emit({ field: 'amount', ingredientIndex: row.index })"
                             />
                             <fd-ui-button
                                 type="button"
@@ -150,9 +147,8 @@
                     type="button"
                     icon="add"
                     class="recipe-step-card__add-ingredient"
-                    appearance="dashed"
                     variant="secondary"
-                    fill="outline"
+                    fill="text"
                     (click)="onAddIngredient()"
                 >
                     {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}

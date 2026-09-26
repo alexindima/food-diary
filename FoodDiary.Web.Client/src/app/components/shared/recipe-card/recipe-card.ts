@@ -10,6 +10,7 @@ import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card';
 
 export type RecipeCardStep = {
+    images?: Array<{ imageUrl: string }>;
     ingredients?: Array<{ productName?: string | null; nestedRecipeName?: string | null }> | null;
     imageUrl?: string | null;
 };
@@ -93,7 +94,7 @@ export class RecipeCardComponent {
             [
                 this.recipe().imageUrl,
                 ...(this.recipe().images ?? []).map(image => image.imageUrl),
-                ...(this.recipe().steps ?? []).map(step => step.imageUrl),
+                ...(this.recipe().steps ?? []).flatMap(step => [step.imageUrl, ...(step.images ?? []).map(image => image.imageUrl)]),
             ].filter((url): url is string => typeof url === 'string' && url.trim().length > 0),
         ),
     ]);

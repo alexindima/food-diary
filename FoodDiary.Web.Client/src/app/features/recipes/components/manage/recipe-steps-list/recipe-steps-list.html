@@ -9,9 +9,16 @@
             (cdkDropListDropped)="onStepDrop($event)"
         >
             @for (step of steps(); track $index) {
-                <div class="recipe-step" cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="$count <= 1" [cdkDragBoundary]="dragBoundary">
+                <div
+                    class="recipe-step"
+                    cdkDrag
+                    cdkDragLockAxis="y"
+                    [cdkDragDisabled]="$count <= 1 || uploadingSteps().size > 0"
+                    [cdkDragBoundary]="dragBoundary"
+                >
                     <fd-recipe-step-card
                         [step]="step.state"
+                        [busy]="uploadingSteps().size > 0"
                         [stepIndex]="$index"
                         [isExpanded]="isStepExpanded($index)"
                         [dragDisabled]="$count <= 1"
@@ -21,7 +28,10 @@
                         (removeIngredient)="onRemoveIngredient($index, $event)"
                         (selectProduct)="onSelectProduct($index, $event)"
                         (stepTitleChange)="onStepTitleChange($index, $event)"
+                        (stepPhotosChange)="stepPhotosChange.emit({ stepIndex: $index, value: $event })"
+                        (photosUploading)="onPhotosUploading($index, $event)"
                         (stepImageChange)="onStepImageChange($index, $event)"
+                        (fieldBlur)="fieldBlur.emit({ stepIndex: $index, field: $event.field, ingredientIndex: $event.ingredientIndex })"
                         (stepDescriptionChange)="onStepDescriptionChange($index, $event)"
                         (ingredientAmountChange)="onIngredientAmountChange($index, $event)"
                     />
