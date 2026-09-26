@@ -175,20 +175,20 @@
       "structuralRiskScore": 144.12
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+      "nonBlankLines": 486,
+      "decisionPoints": 88,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 143.72
+    },
+    {
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
       "nonBlankLines": 515,
       "decisionPoints": 88,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 142.3
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 483,
-      "decisionPoints": 87,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 142.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
@@ -1586,11 +1586,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 483,
-      "decisionPoints": 87,
+      "nonBlankLines": 486,
+      "decisionPoints": 88,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 142.16
+      "structuralRiskScore": 143.72
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",

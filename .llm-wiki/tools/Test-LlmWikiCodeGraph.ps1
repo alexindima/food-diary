@@ -9,6 +9,8 @@ function Write-CodeGraphRegressionTiming([string]$Phase) {
 }
 & node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph snapshot/process regression tests failed.' }
+& node --test (Join-Path $PSScriptRoot 'code-graph-snapshot.test.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Code graph SQLite snapshot regression tests failed.' }
 & node (Join-Path $PSScriptRoot 'Test-LlmWikiRankingPathLayout.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Ranking path layout regression failed.' }
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'

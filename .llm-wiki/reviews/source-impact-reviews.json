@@ -185,17 +185,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "fd8bffb3ed9bd25758f39c0ab16a2e21381bffe8ca5ee686a6875fa634fb61a9"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "f438ce67ee2156aeefefd071fd9af89de9ae76f96f7d61a1b15d76797aea2e00"
+          "sha256": "abfcc040124fea145f6bf98a8ff9f2537039cf87fcd31dc9ddb3cab81bfb961a"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed snapshot seeding change: SQLite online backup preserves read-only isolation and guards; no adaptive routing change.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:13.7564847Z"
+      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
+      "reviewedAtUtc": "2026-09-26T06:03:08.1831257Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -286,14 +282,14 @@
       "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "432047a10e9027da955292f8973a97239da288e12cf7dece84ff42cdab750723"
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "176590c4b493bc5416d358f058e28944e1ea5a52bc021d4c6d622635cd6a028f"
         }
       ],
-      "reason": "Restricted the existing dashboard-meals-reader identity boost for queries containing admin, because administrative paged-user/dashboard summaries were incorrectly outranked by the personal meals reader. Existing probe-7 corpus now retains 40/40 top-1 results with all five cohorts at 8/8; no frozen cases, thresholds, parser behavior or evidence authority changed.",
+      "reason": "Reviewed added SQLite snapshot regression in code-graph lane; graph query and index semantics unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7e8b036316bdf360d594421cdbccb426cadb20f5",
-      "reviewedAtUtc": "2026-09-25T21:18:11.5655580Z"
+      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
+      "reviewedAtUtc": "2026-09-26T06:03:10.2639702Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -632,17 +628,29 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "c6fd8e17f197e4ecc035bdded8000a48549c175f4b0f3022fdd0de74c0879df7",
+      "pageSha256": "000054ea23026be502d7a9dcdd58d580effcf60c47aa69f2bd3795e7268be174",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "aea9e242aff413ded6f91b68554a3757766a0e144a42b05f904460741bf19e16"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "4280492d35abdc27ecca58f0967921becd5c69f22aa99823fdee67eaff31f556"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-snapshot.mjs",
+          "sha256": "c6cdcc34fd0f9416f6e0676d1eb56c31845b0c6cc9ab9ffa2dbf1a459953af25"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-snapshot.test.mjs",
+          "sha256": "61df25c60835fcd6a20564b2ae3ba6490c998204e695de0c8f6a42c778321543"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "abfcc040124fea145f6bf98a8ff9f2537039cf87fcd31dc9ddb3cab81bfb961a"
         }
       ],
-      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
+      "reason": "Documented consistent SQLite online backup and snapshot schema invalidation; WAL regression and isolation smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:43.2776225Z"
+      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
+      "reviewedAtUtc": "2026-09-26T06:03:09.2475134Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -820,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f73f428ff5e2afdf11fc329e912b3c994e1bac3446ca5e0a7fd2b06d3a99efdb"
+          "sha256": "42f93a4f8e883940ac5726b2fdbdd73808112e40d37a179cc9fede76be9d5ad6"
         }
       ],
-      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
+      "reason": "Quality index changes only recalculate line/decision counts for the SQLite snapshot guard; hotspot interpretation and risk workflow remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:43.6284919Z"
+      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
+      "reviewedAtUtc": "2026-09-26T06:09:50.8783229Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,17 +918,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f73f428ff5e2afdf11fc329e912b3c994e1bac3446ca5e0a7fd2b06d3a99efdb"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0bbcce4370471a082450a0f2504e1005ac41aa6471bd926e60cbd3f5d788389f"
+          "sha256": "42f93a4f8e883940ac5726b2fdbdd73808112e40d37a179cc9fede76be9d5ad6"
         }
       ],
-      "reason": "Both recognition routes retain authenticated owner binding; five anonymous-route cases pass. No provider sharing or persistence boundary changed, and the CI token has only contents/read and actions/read permissions.",
+      "reason": "Reviewed quality-index delta limited to read-only snapshot guard metrics; security review scope, ownership and obligations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:44.5675928Z"
+      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
+      "reviewedAtUtc": "2026-09-26T06:09:52.1086674Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1169,7 +1173,7 @@
       "reason": "Reviewed recognition photo scanning input and theme-token styling, empty-screen icon removal and compact help control. Browser verified animated scan without provider requests, reduced motion, all three theme accents, empty state and return navigation. Frontend build and focused checks pass; guide remains current.",
       "baseRef": "HEAD",
       "gitHead": "53b61c0571d748f684f0cf7c0c4c0d7fcadd3dd4",
-      "reviewedAtUtc": "2026-09-25T16:24:46.6098610Z"
+      "reviewedAtUtc": "2026-09-25T16:24:46.609861Z"
     },
     {
       "pageId": "workflow.query-context",

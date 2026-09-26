@@ -133,7 +133,7 @@ function Get-ReadOnlySnapshotFingerprint {
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
-    $material.Add('schema=5')
+    $material.Add('schema=6')
     $material.Add("head=$head")
     foreach ($relativePath in @($OverlayPath | Sort-Object -Unique)) {
         $material.Add($(if ($SlotKey) { "scope=$relativePath" } else { "$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))" }))
@@ -453,10 +453,13 @@ try {
         }
         $snapshotCreated = $true
         Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path $overlayPaths
-        if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot '.artifacts/llm-wiki/code-graph/code-graph.sqlite'))) {
+        $graphRelativePath = '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
+        if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot $graphRelativePath)) -and
+            (Test-Path -LiteralPath (Join-Path $sourceRepositoryRoot $graphRelativePath))) {
+            & node (Join-Path $PSScriptRoot 'code-graph-snapshot.mjs') `
+                (Join-Path $sourceRepositoryRoot $graphRelativePath) (Join-Path $snapshotRoot $graphRelativePath)
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to create a consistent SQLite code-graph snapshot.' }
             Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path @(
-                '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
-                '.artifacts/llm-wiki/code-graph/code-graph.sqlite-wal'
                 '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
             )
         }

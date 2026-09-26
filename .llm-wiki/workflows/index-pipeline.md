@@ -22,6 +22,8 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
   - .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1
   - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
+  - .llm-wiki/tools/code-graph-snapshot.mjs
+  - .llm-wiki/tools/code-graph-snapshot.test.mjs
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
@@ -164,6 +166,11 @@ private `json-cold-checkout` child can overlap with it in the parallel batch.
 `read-only-retrieval` retains retrieval and ownership assertions and remains
 serial behind shared code-graph writers. `-MaxConcurrency 1` runs the same child
 groups sequentially for diagnosis; no assertions or receipt checks are skipped.
+
+Read-only clones seed their graph through SQLite's online backup API. Copying
+the database and WAL separately races with concurrent checkpoints and can lose
+committed rows. The backup is published only after completion, and snapshot
+schema 6 invalidates older clones seeded by raw file copies.
 
 Groups marked `ParallelSafe` run concurrently in priority order. The long
 code-graph lane starts in the first worker batch to reduce idle tail time.
