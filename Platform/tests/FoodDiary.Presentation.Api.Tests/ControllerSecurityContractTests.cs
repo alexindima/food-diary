@@ -2,7 +2,7 @@ using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;

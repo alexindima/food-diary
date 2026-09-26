@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Email.MailRelay;
 
 internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IEmailTransport {
     public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {

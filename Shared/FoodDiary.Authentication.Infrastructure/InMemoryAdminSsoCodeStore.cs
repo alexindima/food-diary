@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 
 namespace FoodDiary.Authentication.Infrastructure;
 

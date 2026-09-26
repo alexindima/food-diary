@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginEvents;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 

@@ -233,6 +233,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Application": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",

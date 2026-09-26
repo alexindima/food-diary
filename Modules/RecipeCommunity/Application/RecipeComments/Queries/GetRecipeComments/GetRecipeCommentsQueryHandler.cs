@@ -1,12 +1,12 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;

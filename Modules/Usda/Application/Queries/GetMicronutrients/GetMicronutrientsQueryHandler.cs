@@ -4,7 +4,7 @@ using FoodDiary.Modules.Usda.Application.Abstractions.Common;
 using FoodDiary.Modules.Usda.Contracts.Common;
 using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Usda.Domain.ValueObjects;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Usda.Application.Queries.GetMicronutrients;
 

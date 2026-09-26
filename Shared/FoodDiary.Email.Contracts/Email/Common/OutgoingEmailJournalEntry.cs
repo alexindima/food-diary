@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Email.Common;
+namespace FoodDiary.Email.Contracts.Email.Common;
 
 public sealed record OutgoingEmailJournalEntry(
     Guid Id, string Status, string Purpose, string FromAddress, IReadOnlyList<string> To,

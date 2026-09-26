@@ -3,11 +3,11 @@ using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Users.Contracts.Commands.CreateUserByAdministrator;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 

@@ -4,7 +4,7 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotal;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Hydration.Application.Internal;
 using FoodDiary.Modules.Hydration.Contracts.Models;
 

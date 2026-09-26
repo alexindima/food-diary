@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 

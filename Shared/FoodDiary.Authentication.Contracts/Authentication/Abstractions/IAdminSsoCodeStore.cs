@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Authentication.Abstractions;
+namespace FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 
 public interface IAdminSsoCodeStore {
     Task StoreAsync(

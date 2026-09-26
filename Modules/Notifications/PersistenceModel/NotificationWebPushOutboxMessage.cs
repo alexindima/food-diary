@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
 
 namespace FoodDiary.Modules.Notifications.PersistenceModel;
 

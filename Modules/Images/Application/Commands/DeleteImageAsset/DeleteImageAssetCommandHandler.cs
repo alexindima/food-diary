@@ -3,7 +3,7 @@ using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 

@@ -10,7 +10,7 @@ using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+using FoodDiary.ReadModel.Composition.Dashboard;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -47,7 +47,7 @@ public sealed class DashboardMealsReadServiceTests {
         context.AddRange(user, product, aiAsset, meal, FavoriteMeal.Create(user.Id, meal.Id, "Lunch"));
         await context.SaveChangesAsync();
 
-        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
+        var readService = new DashboardMealsReadService(context, new FoodDiary.ReadModel.Composition.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             user.Id,
@@ -81,7 +81,7 @@ public sealed class DashboardMealsReadServiceTests {
     [Fact]
     public async Task GetMealsAsync_WhenDateRangeIsInvalid_ReturnsValidationFailure() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
+        var readService = new DashboardMealsReadService(context, new FoodDiary.ReadModel.Composition.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
@@ -102,7 +102,7 @@ public sealed class DashboardMealsReadServiceTests {
         Meal meal = CreateMeal(user.Id);
         context.AddRange(user, meal);
         await context.SaveChangesAsync();
-        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
+        var readService = new DashboardMealsReadService(context, new FoodDiary.ReadModel.Composition.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             user.Id,

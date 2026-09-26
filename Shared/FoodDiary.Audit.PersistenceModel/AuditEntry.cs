@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Persistence.Audit;
+namespace FoodDiary.Audit.PersistenceModel;
 
 internal sealed class AuditEntry {
     public Guid Id { get; set; }

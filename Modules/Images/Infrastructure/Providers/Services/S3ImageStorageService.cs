@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Services;
+using FoodDiary.Integrations.Http.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Net.Mime;

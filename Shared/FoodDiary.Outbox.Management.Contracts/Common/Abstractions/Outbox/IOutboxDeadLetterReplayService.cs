@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+namespace FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 
 public interface IOutboxDeadLetterReplayService {
     Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListDeadLettersAsync(

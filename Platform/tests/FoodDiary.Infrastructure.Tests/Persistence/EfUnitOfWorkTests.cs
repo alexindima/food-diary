@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -48,7 +48,7 @@ public sealed class EfUnitOfWorkTests {
     [Fact]
     public async Task TransactionBoundary_RejectsPendingPostCommitActionsWithoutDiscardingThem() {
         await using FoodDiaryDbContext context = CreateContext();
-        FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IPostCommitActionQueue queue = Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IPostCommitActionQueue>();
+        FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IPostCommitActionQueue queue = Substitute.For<FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IPostCommitActionQueue>();
         queue.HasActions.Returns(returnThis: true);
 
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>

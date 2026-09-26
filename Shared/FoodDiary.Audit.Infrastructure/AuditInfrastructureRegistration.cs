@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Audit.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Audit.Infrastructure;

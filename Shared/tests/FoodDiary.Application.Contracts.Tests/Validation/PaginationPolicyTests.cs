@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Application.Contracts.Tests.Validation;
 

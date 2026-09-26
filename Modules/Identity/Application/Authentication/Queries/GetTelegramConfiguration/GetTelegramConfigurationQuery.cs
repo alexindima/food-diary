@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;

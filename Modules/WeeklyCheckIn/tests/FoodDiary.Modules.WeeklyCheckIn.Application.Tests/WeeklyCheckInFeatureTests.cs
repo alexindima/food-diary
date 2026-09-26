@@ -1,12 +1,12 @@
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.WeeklyCheckIn.Application.Queries.GetWeeklyCheckIn;

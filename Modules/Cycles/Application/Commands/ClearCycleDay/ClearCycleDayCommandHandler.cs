@@ -5,7 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Application.Internal;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Contracts.Models;

@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
 

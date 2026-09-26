@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Application.Commands.AcceptAiConsent;
 using FoodDiary.Modules.Users.Application.Commands.RevokeAiConsent;

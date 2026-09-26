@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Gamification.Contracts.Commands.UpdateAchievementDefinition;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Results;

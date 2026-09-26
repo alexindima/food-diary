@@ -1,6 +1,6 @@
 using System.Diagnostics.Metrics;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Integrations.Http.Services;
 
 internal static class IntegrationsTelemetry {
     public const string MeterName = "FoodDiary.Integrations";

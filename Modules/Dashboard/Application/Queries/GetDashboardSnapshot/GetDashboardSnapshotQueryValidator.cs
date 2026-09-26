@@ -15,7 +15,7 @@ public sealed class GetDashboardSnapshotQueryValidator : AbstractValidator<GetDa
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.TimeZoneId)
-            .Must((query, value) => FoodDiary.Application.Abstractions.Common.Validation.LocalCalendar.TryResolve(query.TimeZoneId, query.TimeZoneOffsetMinutes, out _))
+            .Must((query, value) => FoodDiary.Application.Contracts.Common.Validation.LocalCalendar.TryResolve(query.TimeZoneId, query.TimeZoneOffsetMinutes, out _))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown time zone.");
 

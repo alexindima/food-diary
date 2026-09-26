@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
 using FoodDiary.Persistence.Abstractions;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;

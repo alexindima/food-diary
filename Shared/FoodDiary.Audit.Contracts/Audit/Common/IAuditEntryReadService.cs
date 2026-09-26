@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Audit.Models;
-namespace FoodDiary.Application.Abstractions.Audit.Common;
+using FoodDiary.Audit.Contracts.Audit.Models;
+namespace FoodDiary.Audit.Contracts.Audit.Common;
 
 public interface IAuditEntryReadService {
     Task<IReadOnlyList<AuditEntryReadModel>> GetRecentAsync(

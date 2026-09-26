@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Dietologist.Contracts.Commands.SendClientTaskReminders;
 

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Models;
+namespace FoodDiary.Application.Contracts.Common.Models;
 
 public sealed record PagedResponse<T>(
     IReadOnlyList<T> Data,

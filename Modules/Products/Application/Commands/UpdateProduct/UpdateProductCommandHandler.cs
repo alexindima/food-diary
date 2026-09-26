@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;

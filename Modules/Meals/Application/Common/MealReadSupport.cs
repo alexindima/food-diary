@@ -3,7 +3,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteIds;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Application.Mappings;

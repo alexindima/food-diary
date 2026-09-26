@@ -8,7 +8,7 @@ using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingHistory;

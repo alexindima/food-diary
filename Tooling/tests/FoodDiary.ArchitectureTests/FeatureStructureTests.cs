@@ -25,7 +25,7 @@ public class FeatureStructureTests {
     }
 
     [Theory]
-    [InlineData("Shared/FoodDiary.Application.Contracts", "FoodDiary.Application.Abstractions")]
+    [InlineData("Shared/FoodDiary.Application.Contracts", "FoodDiary.Application.Contracts")]
     [InlineData("Shared/FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
     [InlineData("FoodDiary.ReadModel.Composition/Recipes", "FoodDiary.ReadModel.Composition.Recipes")]

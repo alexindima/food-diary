@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboard;
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Dietologist.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;

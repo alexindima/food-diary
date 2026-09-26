@@ -2,7 +2,7 @@ using FoodDiary.Testing;
 using FoodDiary.Modules.Usda.Application.Queries.SearchUsdaFoods;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchProducts;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Modules.Usda.Application.Abstractions.Common;

@@ -5,9 +5,9 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 

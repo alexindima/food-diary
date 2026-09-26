@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
 using FoodDiary.Modules.Wearables.Domain.Enums;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

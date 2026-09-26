@@ -1,6 +1,6 @@
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.PersistenceModel;
+using FoodDiary.Email.Contracts.Email.Common;
 
 namespace FoodDiary.Email.Infrastructure.Persistence;
 

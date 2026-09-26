@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Lessons.Contracts.Queries.GetLessonsForAdministration;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;

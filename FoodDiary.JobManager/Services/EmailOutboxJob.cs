@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

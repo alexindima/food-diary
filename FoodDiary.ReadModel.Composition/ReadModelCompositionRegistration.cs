@@ -30,10 +30,8 @@ using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
-using FoodDiary.Infrastructure.Persistence.Admin;
-using FoodDiary.Infrastructure.Persistence.Meals;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
-using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
+using FoodDiary.ReadModel.Composition.Admin;
+using FoodDiary.ReadModel.Composition.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

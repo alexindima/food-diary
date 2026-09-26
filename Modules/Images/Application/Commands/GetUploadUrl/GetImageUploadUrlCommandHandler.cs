@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 

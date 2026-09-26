@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplates;
 using FoodDiary.Modules.Identity.Contracts.Admin.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;

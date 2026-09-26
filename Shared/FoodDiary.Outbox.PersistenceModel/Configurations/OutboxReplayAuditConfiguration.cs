@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Outbox.Configurations;
+namespace FoodDiary.Outbox.PersistenceModel.Configurations;
 
 internal sealed class OutboxReplayAuditConfiguration : IEntityTypeConfiguration<OutboxReplayAudit> {
     public void Configure(EntityTypeBuilder<OutboxReplayAudit> builder) {

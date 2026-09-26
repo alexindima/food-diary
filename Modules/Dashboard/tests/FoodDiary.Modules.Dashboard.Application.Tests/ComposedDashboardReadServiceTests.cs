@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;

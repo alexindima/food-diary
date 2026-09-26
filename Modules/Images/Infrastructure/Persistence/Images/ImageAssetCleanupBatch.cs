@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using Microsoft.Extensions.DependencyInjection;

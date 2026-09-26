@@ -22,6 +22,7 @@
     <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />

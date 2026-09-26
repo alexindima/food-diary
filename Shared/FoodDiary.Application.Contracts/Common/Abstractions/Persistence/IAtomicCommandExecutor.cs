@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+namespace FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 /// <summary>Executes and saves a top-level command atomically without exposing database capabilities.</summary>
 public interface IAtomicCommandExecutor {

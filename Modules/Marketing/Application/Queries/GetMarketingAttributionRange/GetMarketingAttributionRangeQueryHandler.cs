@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Contracts.Models;
 using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange;

@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
 namespace FoodDiary.Outbox.Infrastructure.Persistence;
 
 /// <summary>A tracked lifecycle record and stream-owned metadata captured before replay.</summary>

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

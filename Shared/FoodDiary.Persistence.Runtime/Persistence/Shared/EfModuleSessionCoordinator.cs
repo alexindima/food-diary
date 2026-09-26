@@ -1,5 +1,5 @@
 using FoodDiary.Persistence.Runtime.Persistence.Locking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 

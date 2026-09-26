@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure.Authentication;

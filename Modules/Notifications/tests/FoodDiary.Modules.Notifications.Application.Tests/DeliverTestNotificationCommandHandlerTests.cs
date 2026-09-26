@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Notifications.Application.Commands.DeliverTestNotification;
 using FoodDiary.Results;

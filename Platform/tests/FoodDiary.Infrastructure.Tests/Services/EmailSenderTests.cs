@@ -2,7 +2,7 @@ using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using System.Diagnostics.Metrics;
 using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 

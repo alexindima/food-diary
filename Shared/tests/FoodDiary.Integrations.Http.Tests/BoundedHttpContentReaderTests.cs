@@ -1,6 +1,6 @@
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Integrations.Http.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BoundedHttpContentReaderTests {

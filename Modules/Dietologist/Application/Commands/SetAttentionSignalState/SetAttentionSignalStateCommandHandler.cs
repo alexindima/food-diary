@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Audit.Common;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Audit.Contracts.Audit.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;

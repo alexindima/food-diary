@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Audit.Models;
+namespace FoodDiary.Audit.Contracts.Audit.Models;
 
 public sealed record AuditEntryReadModel(
     Guid Id,

@@ -1,10 +1,10 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageSummary;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;

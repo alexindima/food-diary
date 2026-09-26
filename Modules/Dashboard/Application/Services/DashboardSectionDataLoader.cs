@@ -1,8 +1,8 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseCalories;
 using FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;

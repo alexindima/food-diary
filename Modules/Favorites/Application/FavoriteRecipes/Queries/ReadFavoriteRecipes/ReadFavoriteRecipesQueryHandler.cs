@@ -3,7 +3,7 @@ using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Model
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipes;
 
 namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes;

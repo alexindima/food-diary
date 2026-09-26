@@ -7,13 +7,13 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipeOverview;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
 

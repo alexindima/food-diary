@@ -233,7 +233,7 @@ public sealed class FastingHttpMappingsTests {
                 [
                     new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive"),
                 ]),
-            new FoodDiary.Application.Abstractions.Common.Models.PagedResponse<FastingSessionModel>(
+            new FoodDiary.Application.Contracts.Common.Models.PagedResponse<FastingSessionModel>(
                 [],
                 1,
                 10,

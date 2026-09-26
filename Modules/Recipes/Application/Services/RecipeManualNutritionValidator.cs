@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 
 namespace FoodDiary.Modules.Recipes.Application.Services;
 

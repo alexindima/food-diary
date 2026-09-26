@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Results;

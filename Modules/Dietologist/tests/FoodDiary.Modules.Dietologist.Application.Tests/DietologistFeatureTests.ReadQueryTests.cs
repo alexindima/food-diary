@@ -21,8 +21,8 @@ using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Modules.Dietologist.Application.Tests;
 

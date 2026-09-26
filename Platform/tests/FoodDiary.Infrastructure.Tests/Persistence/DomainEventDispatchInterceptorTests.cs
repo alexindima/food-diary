@@ -1,5 +1,5 @@
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;

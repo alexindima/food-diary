@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Domain.Entities;
 

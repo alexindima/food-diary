@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Persistence.Runtime.Persistence;
 using Microsoft.EntityFrameworkCore;

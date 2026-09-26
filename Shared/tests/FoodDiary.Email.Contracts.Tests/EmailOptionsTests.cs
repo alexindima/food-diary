@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 
 namespace FoodDiary.Email.Contracts.Tests;
 

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Meals.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Meals.Presentation.Mappings;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 using FoodDiary.Modules.Meals.Application.Commands.DeleteMeal;

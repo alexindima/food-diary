@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;
 
 namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;

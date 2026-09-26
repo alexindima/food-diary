@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Options;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
+using FoodDiary.Authentication.Contracts.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

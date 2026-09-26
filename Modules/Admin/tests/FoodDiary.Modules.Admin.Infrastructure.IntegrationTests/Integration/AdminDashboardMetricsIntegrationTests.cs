@@ -5,7 +5,7 @@ using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.ReadModel.Composition.Admin;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.Integration;
 

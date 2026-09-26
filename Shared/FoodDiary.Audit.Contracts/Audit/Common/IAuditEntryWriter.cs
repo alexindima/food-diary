@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Audit.Common;
+namespace FoodDiary.Audit.Contracts.Audit.Common;
 
 public interface IAuditEntryWriter {
     Task AddAsync(

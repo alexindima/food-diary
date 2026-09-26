@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Mediator;
 

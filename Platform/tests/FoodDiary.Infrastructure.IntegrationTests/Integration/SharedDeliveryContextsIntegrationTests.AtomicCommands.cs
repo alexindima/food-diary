@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Mediator;
@@ -37,7 +37,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests {
         services.AddGamificationModule();
         services.AddSingleton(central);
         services.AddSingleton<SharedPersistenceDbContext>(central);
-        services.AddSingleton<FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher, NoEvents>();
+        services.AddSingleton<FoodDiary.Application.Contracts.Common.Abstractions.Events.IDomainEventPublisher, NoEvents>();
         services.AddScoped<IRequestHandler<AtomicMealProbe, Result<Guid>>, AtomicMealProbeHandler>();
         await using ServiceProvider provider = services.BuildServiceProvider();
         await using FoodDiaryDbContext observer = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);

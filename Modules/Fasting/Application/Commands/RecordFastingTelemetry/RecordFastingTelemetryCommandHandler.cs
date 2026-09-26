@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Fasting.Application.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
 

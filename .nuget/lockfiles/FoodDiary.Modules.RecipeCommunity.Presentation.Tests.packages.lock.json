@@ -260,6 +260,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;

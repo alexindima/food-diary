@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
 using FoodDiary.Modules.Products.Application.Commands.DeleteProduct;

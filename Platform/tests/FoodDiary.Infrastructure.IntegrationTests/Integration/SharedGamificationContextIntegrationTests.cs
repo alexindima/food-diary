@@ -8,8 +8,8 @@ using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;

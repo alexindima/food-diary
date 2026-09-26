@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Authentication.Common;
+namespace FoodDiary.Authentication.Contracts.Authentication.Common;
 
 public static class AuthenticationErrors {
     public static Error InvalidCredentials => new(

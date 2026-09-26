@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Persistence.Outbox;
+namespace FoodDiary.Outbox.PersistenceModel;
 
 internal sealed class OutboxReplayAudit {
     public Guid Id { get; private set; }

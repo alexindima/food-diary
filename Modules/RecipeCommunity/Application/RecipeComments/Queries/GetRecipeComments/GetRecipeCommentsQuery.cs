@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 
 namespace FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Queries.GetRecipeComments;

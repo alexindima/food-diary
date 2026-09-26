@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Models;
 
-namespace FoodDiary.Application.Abstractions.Audit.Common;
+namespace FoodDiary.Audit.Contracts.Audit.Common;
 
 public interface IAuditEntryJournal {
     Task<AuditEntryPage> GetPageAsync(AuditEntryFilter filter, CancellationToken cancellationToken);

@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;

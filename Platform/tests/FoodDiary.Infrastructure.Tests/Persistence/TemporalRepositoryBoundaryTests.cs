@@ -5,7 +5,6 @@ using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

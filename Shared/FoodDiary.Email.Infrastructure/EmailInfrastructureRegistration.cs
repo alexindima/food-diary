@@ -1,5 +1,5 @@
 using FoodDiary.Email.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

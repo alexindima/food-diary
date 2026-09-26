@@ -1,6 +1,6 @@
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.ContentReports.Application.Common;

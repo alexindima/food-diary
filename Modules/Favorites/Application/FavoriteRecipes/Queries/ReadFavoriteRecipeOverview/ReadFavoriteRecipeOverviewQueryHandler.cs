@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadFavoriteRecipeOverview;

@@ -9,7 +9,7 @@ using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Domain.Primitives;
 using Microsoft.Extensions.Configuration;
@@ -335,7 +335,7 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         IMealRepository repository = provider.GetRequiredService<IMealRepository>();
         await repository.AddAsync(meal);
-        await provider.GetRequiredService<FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IUnitOfWork>().SaveChangesAsync();
+        await provider.GetRequiredService<FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IUnitOfWork>().SaveChangesAsync();
         var filters = new FoodDiary.Modules.Meals.Contracts.Common.MealQueryFilters(DateFrom: null, DateTo: null);
         Assert.Equal(meal.Id, Assert.Single(await repository.GetByPeriodAsync(user.Id, meal.Date, meal.Date)).Id);
         Assert.Single(await repository.GetByPeriodMealProjectionsAsync(user.Id, meal.Date, meal.Date));

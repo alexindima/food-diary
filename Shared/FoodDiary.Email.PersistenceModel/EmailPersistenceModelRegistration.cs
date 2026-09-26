@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Email;
+namespace FoodDiary.Email.PersistenceModel;
 
 public static class EmailPersistenceModelRegistration {
     public static ModelBuilder ApplyEmailPersistenceModel(this ModelBuilder modelBuilder) {

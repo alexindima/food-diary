@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FluentValidation.TestHelper;

@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Xml.Linq;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ArchitectureTests;

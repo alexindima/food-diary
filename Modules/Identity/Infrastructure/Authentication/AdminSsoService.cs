@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Cryptography;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Authentication;

@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Mappings;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Common;

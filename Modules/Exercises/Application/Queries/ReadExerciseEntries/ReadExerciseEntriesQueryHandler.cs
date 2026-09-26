@@ -3,7 +3,7 @@ using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
 using FoodDiary.Modules.Exercises.Application.Mappings;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
 
 namespace FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseEntries;

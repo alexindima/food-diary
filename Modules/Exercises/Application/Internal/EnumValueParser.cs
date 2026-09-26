@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 namespace FoodDiary.Modules.Exercises.Application.Internal;
 
 internal static class EnumValueParser {

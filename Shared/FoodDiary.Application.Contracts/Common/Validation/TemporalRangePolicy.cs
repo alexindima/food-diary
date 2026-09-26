@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Application.Contracts.Common.Validation;
 
 public static class TemporalRangePolicy {
     public const int MaxPeriodDays = 366;

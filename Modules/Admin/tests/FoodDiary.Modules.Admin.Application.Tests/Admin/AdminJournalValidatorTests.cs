@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;

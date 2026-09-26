@@ -2,7 +2,7 @@ using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;

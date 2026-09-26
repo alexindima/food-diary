@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Audit.Contracts.Audit.Models;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 

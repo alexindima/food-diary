@@ -2,7 +2,7 @@ using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Common;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Modules.Recipes.Application.Services;

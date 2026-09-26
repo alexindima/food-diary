@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using System.Globalization;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Modules.Lessons.Domain.Entities.Content;

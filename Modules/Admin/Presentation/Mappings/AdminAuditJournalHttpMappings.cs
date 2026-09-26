@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 

@@ -13,7 +13,7 @@ using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.ReadModel.Composition.Recipes;

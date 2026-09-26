@@ -1,10 +1,11 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminBillingRepository(ICompositionReadContext context) : IAdminBillingRepository {
     private const string LikeEscapeCharacter = "\\";

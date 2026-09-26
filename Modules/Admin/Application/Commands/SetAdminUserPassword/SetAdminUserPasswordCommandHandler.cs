@@ -1,12 +1,12 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Users.Contracts.Commands.SetUserPasswordByAdministrator;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 

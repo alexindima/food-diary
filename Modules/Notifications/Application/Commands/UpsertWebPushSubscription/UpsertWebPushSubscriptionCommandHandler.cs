@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Notifications.Domain.Entities;

@@ -1,6 +1,6 @@
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;

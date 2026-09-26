@@ -4358,7 +4358,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FoodRecognitionJobs", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Audit.AuditEntry", b => {
+            modelBuilder.Entity("FoodDiary.Audit.PersistenceModel.AuditEntry", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4512,7 +4512,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("BugAcknowledgementReceipts", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Email.EmailOutboxMessage", b => {
+            modelBuilder.Entity("FoodDiary.Email.PersistenceModel.EmailOutboxMessage", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4693,7 +4693,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("NotificationWebPushOutbox", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Outbox.OutboxReplayAudit", b => {
+            modelBuilder.Entity("FoodDiary.Outbox.PersistenceModel.OutboxReplayAudit", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");

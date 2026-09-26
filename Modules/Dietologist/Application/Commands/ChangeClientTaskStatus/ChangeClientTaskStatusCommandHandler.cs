@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Domain.Entities;

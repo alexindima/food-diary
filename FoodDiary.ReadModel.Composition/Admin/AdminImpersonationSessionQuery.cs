@@ -1,9 +1,10 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminImpersonationSessionQuery(ICompositionReadContext context) : IAdminImpersonationSessionQuery {
     private const string LikeEscapeCharacter = "\\";

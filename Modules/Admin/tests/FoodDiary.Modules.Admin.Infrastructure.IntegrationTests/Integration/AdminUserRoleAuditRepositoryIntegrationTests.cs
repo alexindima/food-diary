@@ -4,7 +4,7 @@ using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.ReadModel.Composition.Admin;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.Integration;

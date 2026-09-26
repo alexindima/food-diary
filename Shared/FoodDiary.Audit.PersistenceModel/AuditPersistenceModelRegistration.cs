@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Audit;
+namespace FoodDiary.Audit.PersistenceModel;
 
 public static class AuditPersistenceModelRegistration {
     public static ModelBuilder ApplyAuditPersistenceModel(this ModelBuilder modelBuilder) {

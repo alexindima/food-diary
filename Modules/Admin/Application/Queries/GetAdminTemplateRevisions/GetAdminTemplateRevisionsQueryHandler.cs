@@ -3,7 +3,7 @@ using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
 using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 

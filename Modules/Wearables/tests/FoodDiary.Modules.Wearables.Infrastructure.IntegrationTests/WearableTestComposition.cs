@@ -4,7 +4,7 @@ using FoodDiary.Persistence.Runtime;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 

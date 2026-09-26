@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Tdee.Application.Common;
@@ -9,7 +9,7 @@ using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Exercises.Contracts.Models;

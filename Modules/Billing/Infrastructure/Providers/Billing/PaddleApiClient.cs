@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Modules.Billing.Domain.Contracts;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Results;
 

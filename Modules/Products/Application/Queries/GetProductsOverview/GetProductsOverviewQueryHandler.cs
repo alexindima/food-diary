@@ -9,11 +9,11 @@ using FoodDiary.Modules.Products.Application.Services;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProductOverview;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;

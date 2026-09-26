@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Requests;

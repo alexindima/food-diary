@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
 using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Meals.Application.Services;

@@ -1,8 +1,8 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Modules.Users.Contracts.Common;

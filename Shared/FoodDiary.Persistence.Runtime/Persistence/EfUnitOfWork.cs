@@ -1,7 +1,7 @@
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 

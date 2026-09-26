@@ -1,6 +1,6 @@
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;

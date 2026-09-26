@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Billing.Infrastructure.Providers;
-using FoodDiary.Integrations;
+using FoodDiary.Email.MailRelay;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

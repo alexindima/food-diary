@@ -4,7 +4,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed class DashboardMealAiSessionsLoader(ICompositionReadContext context) {
     public async Task<ILookup<MealId, DashboardMealAiSessionReadModel>> LoadAsync(

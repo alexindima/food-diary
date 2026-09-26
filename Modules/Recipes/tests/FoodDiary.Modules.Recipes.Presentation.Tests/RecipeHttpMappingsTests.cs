@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Recipes.Presentation.Mappings;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;

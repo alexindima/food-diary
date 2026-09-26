@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Prompts;

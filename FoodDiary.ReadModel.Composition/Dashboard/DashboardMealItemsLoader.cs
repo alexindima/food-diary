@@ -4,7 +4,7 @@ using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed class DashboardMealItemsLoader(IMealItemDisplayReadService reader) {
     public async Task<ILookup<MealId, DashboardMealItemReadModel>> LoadAsync(

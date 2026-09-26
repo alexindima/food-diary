@@ -5,14 +5,14 @@ using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Email;
+using FoodDiary.Email.PersistenceModel;
 
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;

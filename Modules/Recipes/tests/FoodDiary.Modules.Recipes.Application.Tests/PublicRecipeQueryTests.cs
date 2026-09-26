@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Application.Models;

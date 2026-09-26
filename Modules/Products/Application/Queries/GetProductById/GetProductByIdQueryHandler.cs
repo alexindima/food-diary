@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Common;

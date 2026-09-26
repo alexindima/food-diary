@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+namespace FoodDiary.Application.Contracts.Common.Abstractions.Events;
 
 /// <summary>
 /// Represents a committed application fact intended for another process, service, or provider workflow.

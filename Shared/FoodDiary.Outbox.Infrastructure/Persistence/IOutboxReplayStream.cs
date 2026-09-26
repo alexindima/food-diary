@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 
 namespace FoodDiary.Outbox.Infrastructure.Persistence;
 

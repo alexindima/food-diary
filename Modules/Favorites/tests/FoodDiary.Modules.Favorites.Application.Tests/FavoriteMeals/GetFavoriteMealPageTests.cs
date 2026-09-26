@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
@@ -27,7 +27,7 @@ public sealed class GetFavoriteMealPageTests {
         };
         repository.GetPageReadModelsAsync(owner, 2, 10, "rice", cancellation.Token).Returns((new[] { item }, 23));
         var handler = new GetFavoriteMealPageQueryHandler(repository, access);
-        FoodDiary.Application.Abstractions.Common.Models.PagedResponse<FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models.FavoriteMealModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteMealPageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
+        FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models.FavoriteMealModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteMealPageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
         Assert.Multiple(
             () => Assert.Equal(new[] { "https://example.com/rice.jpg", "https://example.com/ai.jpg" }, result.Data.Single().ItemImageUrls),
             () => Assert.Equal("https://example.com/meal.jpg", result.Data.Single().ImageUrl),

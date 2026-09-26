@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed record DashboardFavoriteMealProjection(MealId MealId, Guid FavoriteMealId);

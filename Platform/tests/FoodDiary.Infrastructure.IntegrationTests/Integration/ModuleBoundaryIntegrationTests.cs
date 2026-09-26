@@ -8,7 +8,7 @@ using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;

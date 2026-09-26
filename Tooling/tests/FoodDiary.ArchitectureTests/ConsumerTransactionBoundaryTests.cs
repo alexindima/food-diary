@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Xml.Linq;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Modules.Dietologist.Contracts.Commands.SendClientTaskReminders;

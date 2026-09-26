@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Fasting.Domain.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
 using FoodDiary.Modules.Fasting.Application.Mappings;

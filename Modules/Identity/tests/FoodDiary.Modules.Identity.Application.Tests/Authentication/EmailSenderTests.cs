@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Modules.Dietologist.Application.Services;
 

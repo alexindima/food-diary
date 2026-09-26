@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Infrastructure.Persistence.Audit;
+using FoodDiary.Audit.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;

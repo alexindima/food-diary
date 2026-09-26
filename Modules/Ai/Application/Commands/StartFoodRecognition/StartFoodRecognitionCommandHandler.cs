@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Ai.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 

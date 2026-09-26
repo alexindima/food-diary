@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 

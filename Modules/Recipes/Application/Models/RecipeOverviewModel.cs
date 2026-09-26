@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Recipes.Application.Models;
 

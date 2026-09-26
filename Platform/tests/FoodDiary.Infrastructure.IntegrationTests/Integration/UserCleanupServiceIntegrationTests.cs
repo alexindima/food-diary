@@ -21,7 +21,7 @@ using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 
 using FoodDiary.Modules.Images.Infrastructure;
 

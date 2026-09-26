@@ -1,10 +1,11 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.ReadModel.Composition.Meals;
 
 public sealed class MealProductNutritionQuery(ICompositionReadContext context) : IMealProductNutritionQuery {
     private static DateTime StartOfUtcDay(DateTime value) => DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);

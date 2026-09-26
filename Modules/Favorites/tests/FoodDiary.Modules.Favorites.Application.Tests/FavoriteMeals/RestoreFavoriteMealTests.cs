@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RestoreFavoriteMeal;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;

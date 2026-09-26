@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Application.Contracts.Common.Validation;
 
 /// <summary>Calendar boundaries are resolved independently so offset changes never imply 24-hour days.</summary>
 public static class LocalCalendar {

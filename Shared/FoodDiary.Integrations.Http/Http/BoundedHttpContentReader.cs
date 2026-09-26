@@ -2,7 +2,7 @@ using System.Buffers;
 using System.Text;
 using System.Text.Json;
 
-namespace FoodDiary.Integrations.Http;
+namespace FoodDiary.Integrations.Http.Http;
 
 internal static class BoundedHttpContentReader {
     public const long DefaultMaxResponseBodyBytes = 1024 * 1024;

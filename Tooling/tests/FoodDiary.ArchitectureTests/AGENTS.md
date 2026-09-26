@@ -199,3 +199,5 @@ ProjectFileConventionTests also uses RepositoryFileDiscovery to prune generated/
 Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.
 
 Ai and Identity complete the transitive central-Infrastructure exclusion. Identity infrastructure, internal ports and persistence-model project namespaces are canonical; their physical nesting exceptions are removed. Shared JwtOptions is owned by Authentication.Contracts.
+
+NamespaceConventionTests discovers all physical C# projects, rejects RootNamespace overrides and IDE0130 suppressions, and checks canonical project/folder namespaces. CompilerVisibleProperty exposes the default RootNamespace and ProjectDir globally; no project reference is needed to share a namespace.

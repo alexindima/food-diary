@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;

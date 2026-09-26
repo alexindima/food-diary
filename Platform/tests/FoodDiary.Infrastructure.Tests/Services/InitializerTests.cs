@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 

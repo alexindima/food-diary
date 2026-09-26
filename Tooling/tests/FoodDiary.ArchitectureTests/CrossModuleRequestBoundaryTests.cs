@@ -1,5 +1,5 @@
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.ArchitectureTests;

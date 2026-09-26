@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 

@@ -38,7 +38,7 @@ using FoodDiary.Modules.Notifications.Application;
 
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
-using FoodDiary.Integrations;
+using FoodDiary.Email.MailRelay;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

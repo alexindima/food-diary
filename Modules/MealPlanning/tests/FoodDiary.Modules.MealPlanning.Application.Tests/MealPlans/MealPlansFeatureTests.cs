@@ -6,7 +6,7 @@ using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;

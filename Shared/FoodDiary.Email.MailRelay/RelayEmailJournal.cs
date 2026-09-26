@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.MailRelay.Client.Journal;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Email.MailRelay;
 
 internal sealed class RelayEmailJournal(IMailRelayJournalClient client) : IOutgoingEmailJournal {
     public async Task<OutgoingEmailJournalPage> GetPageAsync(int page, int limit, string? purpose, string? status, string? recipient, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? id = null, string? correlationId = null) {

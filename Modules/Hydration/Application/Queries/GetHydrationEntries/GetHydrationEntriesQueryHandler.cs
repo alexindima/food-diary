@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationEntries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Hydration.Application.Internal;
 using FoodDiary.Modules.Hydration.Contracts.Models;

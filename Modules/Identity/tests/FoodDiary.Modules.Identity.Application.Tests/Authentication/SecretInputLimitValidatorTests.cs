@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication;
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;

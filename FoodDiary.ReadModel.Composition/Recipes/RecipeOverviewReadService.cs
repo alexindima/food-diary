@@ -6,7 +6,7 @@ using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

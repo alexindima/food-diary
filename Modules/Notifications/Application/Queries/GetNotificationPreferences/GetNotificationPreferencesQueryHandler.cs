@@ -4,7 +4,7 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Application.Mappings;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
 

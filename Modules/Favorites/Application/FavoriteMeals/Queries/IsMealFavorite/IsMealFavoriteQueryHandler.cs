@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteStatus;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;

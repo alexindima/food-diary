@@ -12,7 +12,7 @@ using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Models;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Products.Application.Tests;
 

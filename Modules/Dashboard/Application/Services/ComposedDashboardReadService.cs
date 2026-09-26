@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
@@ -31,7 +31,7 @@ internal sealed class ComposedDashboardReadService(
 
         if (periodDays == 1 && calendar is not null) {
             try {
-                weeklyFrom = FoodDiary.Application.Abstractions.Common.Validation.LocalCalendar.StartOfDayUtc(
+                weeklyFrom = FoodDiary.Application.Contracts.Common.Validation.LocalCalendar.StartOfDayUtc(
                     DateOnly.FromDateTime(calendar.Date).AddDays(-6), calendar.TimeZone);
             } catch (ArgumentOutOfRangeException) {
                 return Result.Failure<DashboardReadModel>(Errors.Validation.Invalid(nameof(dayStart), "Weekly range is outside supported boundaries."));

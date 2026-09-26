@@ -1,5 +1,5 @@
 using FoodDiary.Presentation.Api.Tests;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using System.Text;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;

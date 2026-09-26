@@ -46,7 +46,7 @@ using System.Net;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
@@ -65,7 +65,7 @@ using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+using FoodDiary.ReadModel.Composition.Dashboard;
 
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
@@ -77,7 +77,7 @@ using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Email.MailRelay;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
@@ -844,9 +844,9 @@ public sealed class DependencyInjectionTests {
         {
             "FoodDiary.Audit.Infrastructure.Persistence.AuditEntryService",
             [
-                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryReadService",
-                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryWriter",
-                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryJournal",
+                "FoodDiary.Audit.Contracts.Audit.Common.IAuditEntryReadService",
+                "FoodDiary.Audit.Contracts.Audit.Common.IAuditEntryWriter",
+                "FoodDiary.Audit.Contracts.Audit.Common.IAuditEntryJournal",
             ]
         },
         {

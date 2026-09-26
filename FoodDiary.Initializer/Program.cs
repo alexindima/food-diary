@@ -55,7 +55,7 @@ using FoodDiary.Modules.Images.Infrastructure;
 
 using FoodDiary.Modules.Export.Application;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;

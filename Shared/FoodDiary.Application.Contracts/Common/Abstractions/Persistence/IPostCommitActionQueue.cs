@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+namespace FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 /// <summary>
 /// Queues best-effort real-time side effects that must run only after a command's unit of work commits successfully.

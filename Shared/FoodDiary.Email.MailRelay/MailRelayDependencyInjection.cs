@@ -1,11 +1,10 @@
-using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.MailRelay.Client.Extensions;
 using FoodDiary.MailRelay.Client.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Integrations;
+namespace FoodDiary.Email.MailRelay;
 
 public static class MailRelayDependencyInjection {
     public static IServiceCollection AddMailRelayIntegration(

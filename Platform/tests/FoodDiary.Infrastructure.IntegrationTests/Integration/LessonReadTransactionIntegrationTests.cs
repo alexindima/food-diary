@@ -1,5 +1,5 @@
 using FoodDiary.Outbox.Infrastructure;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Modules.Users.Domain.Entities;

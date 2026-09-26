@@ -4,8 +4,8 @@ using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 

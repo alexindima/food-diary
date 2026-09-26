@@ -22,14 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:48.6054867Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:44.5541339Z"
     },
     {
       "pageId": "module.frontend",
@@ -53,13 +53,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "26c83c635408fe2422825d3486ddd11773ae762bf4ea7a94e8b3e820fe0e57f0"
+          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against current sources. ARCHITECTURE.md corrects Application.Abstractions paths and links the new reliability guide; existing layer, mail and transaction summaries remain accurate. Regenerated indexes include new guardrail tests and the notification dispatcher failure check without schema or topology changes. The workflow pages already distinguish static references from runtime evidence and need no prose change.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "c306dbf31813c868ebc0905bc777825ff1678182",
-      "reviewedAtUtc": "2026-09-19T09:36:57.7345879Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:45.0497095Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -68,13 +68,25 @@
       "sources": [
         {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "e7769457e9dec1f87d810bd45256bf8dceeb5ea150ae0810ea626b4b38752d06"
+          "sha256": "2f6a61da2a1b2c48c13d04da5801647721ea4fa5384aa3a9c0b3c41aac37006c"
+        },
+        {
+          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
+          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
+        },
+        {
+          "path": "Shared/FoodDiary.Integrations.Http/AGENTS.md",
+          "sha256": "7c8a1edbf55a3b5f7c7abd24c6c11527469eb852caffa141a889d8500bf3533e"
         }
       ],
-      "reason": "Recipes read composition now uses its physical project namespace; AGENTS documents the completed folder migration and IDE0130/FeatureStructureTests enforcement. Host/read-model ownership and module boundaries described by this page are unchanged.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T22:02:14.6841759Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:45.4808473Z"
     },
     {
       "pageId": "system.architecture",
@@ -82,14 +94,18 @@
       "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "558ba4e99eb24fb6bd54a531202a9f2ae0be95cd251df71f4e3c1eedec6402f2"
+          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
         }
       ],
-      "reason": "Reviewed the test-only direct Favorites.Contracts reference in Products.Infrastructure.IntegrationTests. It names the existing adapter return DTO and grants no production dependency or aggregate write capability. Runtime and ownership guidance remain accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:46:27.2705057Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:45.9306690Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -98,13 +114,13 @@
       "sources": [
         {
           "path": "Directory.Build.props",
-          "sha256": "65c364af3b5247b5dd7a119be65651a062d6d0c1e390a248281c8f3f37ea1d79"
+          "sha256": "de6204a7f5a4aeac7f9791a9bac3f361870863d612dc271b342bb16c2d09068d"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:27.6848415Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:46.4874000Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -128,17 +144,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "d0dbf28003d00dd58ed8c5aa3e8e3a20e0e9b86f3569f8d4d92a6e3830a9c7cf"
-        },
-        {
-          "path": "docs/README.md",
-          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
+          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:49.9309439Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:47.0892376Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -146,14 +158,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
+          "path": "Directory.Build.props",
+          "sha256": "de6204a7f5a4aeac7f9791a9bac3f361870863d612dc271b342bb16c2d09068d"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:50.6108696Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:47.7879690Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -207,13 +219,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1f0d830a5548fe8f8b918ac0ce3eb2362ab6e35db47248e4393aee273b5f0ff0"
+          "sha256": "ce5d5683541933540620add252b0bf8ad08b3b98ab3fb5bb00711ebeba630f92"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
         }
       ],
-      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:55:13.6555200Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:48.2253485Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -221,14 +237,18 @@
       "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1e29572c27f0b08cb7ad21c63646bd3d4d065ca72f988a94a97cbddef3db60f5"
+          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
+          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
         }
       ],
-      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:55:15.0116346Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:48.6830295Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -440,13 +460,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "d0dbf28003d00dd58ed8c5aa3e8e3a20e0e9b86f3569f8d4d92a6e3830a9c7cf"
+          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:52.6392323Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:49.1077545Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -816,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e703391f1c36be4882cf809c7679dfa272288f8ed21052f1e838258bb3027f8a"
+          "sha256": "d33fe5186605c5b4db46b546a6054b6f8f0c78ba6e81da8f9af126b3f2a2280f"
         }
       ],
-      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T22:05:08.5329305Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:49.8219218Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b4d942fe3d4a1c40c7da84d4f4e9f421134c194656180123192e52c3dbc92a03"
+          "sha256": "9a5c4bee60b57236175f08d3018195182750c1e01c64b4de8ef15d062e7cc71a"
         }
       ],
-      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T22:05:08.9986017Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:50.7924802Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,21 +926,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e703391f1c36be4882cf809c7679dfa272288f8ed21052f1e838258bb3027f8a"
+          "sha256": "d33fe5186605c5b4db46b546a6054b6f8f0c78ba6e81da8f9af126b3f2a2280f"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b4d942fe3d4a1c40c7da84d4f4e9f421134c194656180123192e52c3dbc92a03"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "34fef4fdcf46811b168afb3be514d45e282cd9bee033733b9910ec3398af8ca6"
+          "sha256": "9a5c4bee60b57236175f08d3018195182750c1e01c64b4de8ef15d062e7cc71a"
         }
       ],
-      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T22:05:09.6295136Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:51.8195049Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,18 +1061,14 @@
       "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "51829acac6e157137a536eae86a756079d99f479cea2db4117fb7e04304316a7"
-        },
-        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "2d34967175469b362ae2b3994f83835f1d0aa044d21f77491c5c6d2ce5fc2cfa"
+          "sha256": "ad10169a82fa1d6ad407384b357b5e26c42faf8392931b89a134d1a85204c193"
         }
       ],
-      "reason": "Reviewed affected workflow guidance against actual csproj source discovery, relocated Dashboard test paths, preserved context query with its relocated adapter target, and regenerated indexes. All four affected smoke groups and 2091 architecture tests pass; workflow semantics and thresholds are unchanged.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:40.6744333Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:52.4448112Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1178,13 +1190,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d8fbdf5e693d33e1a8b5fe2479c7a3a35233fb7daa26f3fed9835e068eaedc17"
+          "sha256": "7b192f30221c4892a375a2bd8ed1c3312dfa5d99e13a4c16726200ab5aacf071"
         }
       ],
-      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
+      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:55:21.6712104Z"
+      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
+      "reviewedAtUtc": "2026-09-26T22:55:50.4374963Z"
     },
     {
       "pageId": "workflow.review-diff",

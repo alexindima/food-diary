@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;

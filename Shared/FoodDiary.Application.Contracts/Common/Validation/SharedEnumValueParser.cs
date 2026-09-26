@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Application.Contracts.Common.Validation;
 
 public static class SharedEnumValueParser {
     public static bool TryParse<TEnum>(string? value, out TEnum parsed)

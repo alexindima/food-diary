@@ -251,7 +251,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Order(StringComparer.Ordinal)];
 
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Fasting",
         "FoodDiary.Application.Abstractions.Notifications.Common",
         "FoodDiary.Application.Abstractions.Users.Common",
@@ -262,8 +262,8 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Authentication.Common",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Authentication.Contracts.Authentication.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Modules.Notifications.Application",
@@ -271,10 +271,10 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Authentication.Common",
+        "FoodDiary.Authentication.Contracts.Authentication.Common",
         "FoodDiary.Modules.Billing.Application.Abstractions",
         "FoodDiary.Modules.Billing.Contracts",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Users",
         "FoodDiary.Modules.Billing.Application",
         "FoodDiary.Application.Common",
@@ -284,8 +284,8 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedProductsApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Authentication.Common",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Authentication.Contracts.Authentication.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.OpenFoodFacts.Models",
         "FoodDiary.Application.Abstractions.Products",
@@ -304,7 +304,7 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedRecipesApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Images.Models",
         "FoodDiary.Application.Abstractions.Products.Common",
@@ -328,7 +328,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Modules.Ai.Contracts.Models",
         "FoodDiary.Application.Abstractions.Usda",
         "FoodDiary.Application.Abstractions.Achievements.Common",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Meals",
         "FoodDiary.Application.Meals.Common",
         "FoodDiary.Application.Abstractions.FavoriteMeals",
@@ -351,8 +351,8 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedUsersApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Authentication.Common",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Authentication.Contracts.Authentication.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Dietologist",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Users",
@@ -364,7 +364,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     private static readonly HashSet<string> ApprovedAuthenticationApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Authentication",
-        "FoodDiary.Application.Abstractions.Common",
+        "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Email.Common",
         "FoodDiary.Application.Abstractions.Notifications.Common",
         "FoodDiary.Application.Abstractions.Users.Common",
@@ -407,8 +407,8 @@ public sealed class BusinessModuleBoundaryTests {
                                  !dependency.Namespace.StartsWith("FoodDiary.Modules.Fasting.Application.Abstractions.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Fasting", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Fasting.", StringComparison.Ordinal) &&
-                                 !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Common", StringComparison.Ordinal) &&
-                                 !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Common.", StringComparison.Ordinal))
+                                 !dependency.Namespace.Equals("FoodDiary.Application.Contracts.Common", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.StartsWith("FoodDiary.Application.Contracts.Common.", StringComparison.Ordinal))
             .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
@@ -444,8 +444,8 @@ public sealed class BusinessModuleBoundaryTests {
                                  !dependency.Namespace.StartsWith("FoodDiary.Modules.Notifications.Application.Abstractions.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Notifications", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Notifications.", StringComparison.Ordinal) &&
-                                 !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Common", StringComparison.Ordinal) &&
-                                 !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Common.", StringComparison.Ordinal))
+                                 !dependency.Namespace.Equals("FoodDiary.Application.Contracts.Common", StringComparison.Ordinal) &&
+                                 !dependency.Namespace.StartsWith("FoodDiary.Application.Contracts.Common.", StringComparison.Ordinal))
             .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
@@ -1183,11 +1183,14 @@ public sealed class BusinessModuleBoundaryTests {
 
     private static IEnumerable<NamespaceDependency> ReadApplicationNamespaceDependencies(SyntaxTree tree) =>
         ReadNamespaceDependencies(tree, "FoodDiary.Application.")
+            .Where(dependency => !dependency.Namespace.StartsWith("FoodDiary.Application.Contracts.", StringComparison.Ordinal))
             .Concat(ReadNamespaceDependencies(tree, "FoodDiary.Modules.")
                 .Where(dependency => IsModuleApplicationNamespace(dependency.Namespace)));
 
     private static IEnumerable<NamespaceDependency> ReadApplicationAbstractionsNamespaceDependencies(string path) =>
         ReadNamespaceDependencies(path, "FoodDiary.Application.Abstractions.")
+            .Concat(ReadNamespaceDependencies(path, "FoodDiary.Application.Contracts."))
+            .Concat(ReadNamespaceDependencies(path, "FoodDiary.Authentication.Contracts."))
             .Concat(ReadNamespaceDependencies(path, "FoodDiary.Modules.")
                 .Where(dependency => dependency.Namespace.Split('.') is ["FoodDiary", "Modules", _, "Application", "Abstractions", ..]));
 

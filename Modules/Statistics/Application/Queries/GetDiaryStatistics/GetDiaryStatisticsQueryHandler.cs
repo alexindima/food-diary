@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;

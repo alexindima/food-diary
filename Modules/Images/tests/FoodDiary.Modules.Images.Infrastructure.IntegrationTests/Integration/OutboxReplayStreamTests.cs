@@ -1,7 +1,7 @@
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.PersistenceModel.Images;
 using Microsoft.EntityFrameworkCore;

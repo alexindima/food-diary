@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Http.Options;
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 
 public sealed class OpenFoodFactsApiOptions {

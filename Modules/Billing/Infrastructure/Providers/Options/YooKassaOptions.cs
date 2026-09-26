@@ -28,7 +28,7 @@ public sealed class YooKassaOptions {
         Billing.BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
 
     private static bool HasValidApiBaseUrl(string? value) =>
-        FoodDiary.Integrations.Options.IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
+        FoodDiary.Integrations.Http.Options.IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
 
     private static bool IsValidAmount(string? value) =>
         decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&

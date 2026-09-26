@@ -4,7 +4,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Statistics.Application.Models;

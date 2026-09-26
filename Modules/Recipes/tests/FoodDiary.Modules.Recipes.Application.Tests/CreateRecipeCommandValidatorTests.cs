@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Domain.Primitives;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;

@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 

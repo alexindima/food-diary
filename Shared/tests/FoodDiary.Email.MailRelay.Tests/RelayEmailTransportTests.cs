@@ -1,9 +1,8 @@
-using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
 
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Email.MailRelay.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RelayEmailTransportTests {

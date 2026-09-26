@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginDeviceSummary;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 

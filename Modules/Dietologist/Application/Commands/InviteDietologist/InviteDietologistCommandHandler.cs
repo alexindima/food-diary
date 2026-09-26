@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
@@ -10,7 +10,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Dietologist.Application.Commands.InviteDietologist;

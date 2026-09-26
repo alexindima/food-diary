@@ -9,7 +9,7 @@ internal static class RecipeImageAssetResolver {
         IReadOnlyList<Guid>? ids, UserId userId, IImageAssetAccessService service, CancellationToken cancellationToken) {
         if (ids is null) { return Result.Success<IReadOnlyList<FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage>?>(value: null); }
         if (ids.Count > 5 || ids.Any(id => id == Guid.Empty) || ids.Distinct().Count() != ids.Count) {
-            return Result.Failure<IReadOnlyList<FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage>?>(FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Validation.Invalid("ImageAssetIds", "Provide up to five distinct image IDs."));
+            return Result.Failure<IReadOnlyList<FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage>?>(FoodDiary.Application.Contracts.Common.Abstractions.Results.Errors.Validation.Invalid("ImageAssetIds", "Provide up to five distinct image IDs."));
         }
         List<FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage> images = [];
         foreach (Guid id in ids) {

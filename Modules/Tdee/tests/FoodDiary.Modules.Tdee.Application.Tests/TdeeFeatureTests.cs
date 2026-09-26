@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories;
@@ -8,7 +8,7 @@ using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Testing;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;

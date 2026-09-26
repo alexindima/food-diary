@@ -1,7 +1,7 @@
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
-using FoodDiary.Infrastructure.Persistence.Audit;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Audit.PersistenceModel;
+using FoodDiary.Email.PersistenceModel;
+using FoodDiary.Outbox.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Persistence.Runtime.Persistence;

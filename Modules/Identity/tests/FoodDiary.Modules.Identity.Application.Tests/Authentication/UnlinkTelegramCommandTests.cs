@@ -7,7 +7,7 @@ using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 

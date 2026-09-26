@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Events;
 using FoodDiary.Persistence.Runtime.Events;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 

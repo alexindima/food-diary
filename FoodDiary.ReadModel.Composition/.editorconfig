@@ -1,3 +1,0 @@
-# ADR 0038 preserves implementation namespaces during the assembly extraction.
-[{Admin,Dashboard,Favorites,Meals}/*.cs]
-dotnet_diagnostic.IDE0130.severity = none

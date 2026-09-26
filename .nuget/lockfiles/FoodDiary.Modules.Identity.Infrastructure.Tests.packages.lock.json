@@ -570,23 +570,6 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
-      "fooddiary.modules.ai.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Ai.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.ai.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.ai.domain": {
         "type": "Project",
         "dependencies": {
@@ -596,7 +579,6 @@
       "fooddiary.modules.ai.persistencemodel": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
@@ -882,6 +864,7 @@
           "BCrypt.Net-Next": "[4.2.0, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",

@@ -4,7 +4,7 @@ using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Modules.Fasting.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

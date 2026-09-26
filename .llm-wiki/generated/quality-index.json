@@ -416,11 +416,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
-      "nonBlankLines": 258,
+      "nonBlankLines": 259,
       "decisionPoints": 71,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 111.66
+      "structuralRiskScore": 111.68
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
@@ -4090,43 +4090,43 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
-      "nonBlankLines": 258,
+      "nonBlankLines": 259,
       "decisionPoints": 71,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 111.66
+      "structuralRiskScore": 111.68
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 43,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.84
+      "structuralRiskScore": 24.86
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 59,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.66
+      "structuralRiskScore": 17.68
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 42,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.82
+      "structuralRiskScore": 21.84
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.64
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
@@ -4314,19 +4314,19 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
-      "nonBlankLines": 105,
+      "nonBlankLines": 106,
       "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.1
+      "structuralRiskScore": 41.12
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 34,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.16
+      "structuralRiskScore": 5.18
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
@@ -4354,11 +4354,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 82,
+      "nonBlankLines": 80,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.64
+      "structuralRiskScore": 1.6
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -44922,11 +44922,11 @@
     },
     {
       "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 23,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
+      "structuralRiskScore": 3.46
     },
     {
       "path": "Shared/FoodDiary.Email.MailRelay/Properties/AssemblyInfo.cs",
@@ -45410,11 +45410,11 @@
     },
     {
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "nonBlankLines": 196,
+      "nonBlankLines": 197,
       "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.92
+      "structuralRiskScore": 30.94
     },
     {
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfAtomicCommandExecutor.cs",

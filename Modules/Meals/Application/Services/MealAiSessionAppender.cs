@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Common.Validation;

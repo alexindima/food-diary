@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;

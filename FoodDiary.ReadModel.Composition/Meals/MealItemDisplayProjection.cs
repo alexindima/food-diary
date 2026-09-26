@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.ReadModel.Composition.Meals;
 
 internal sealed record MealItemDisplayProjection(
     MealId MealId,

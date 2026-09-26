@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Meals.Application.Mappings;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;

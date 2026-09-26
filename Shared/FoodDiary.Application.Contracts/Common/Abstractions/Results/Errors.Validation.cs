@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+namespace FoodDiary.Application.Contracts.Common.Abstractions.Results;
 
 public static partial class Errors {
     public static class Validation {

@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.UpdateRecipeComment;

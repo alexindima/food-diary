@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries;
@@ -16,7 +16,7 @@ using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSu
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
@@ -33,7 +33,7 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
 using FoodDiary.Modules.Statistics.Application.Models;

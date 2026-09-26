@@ -1,7 +1,7 @@
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

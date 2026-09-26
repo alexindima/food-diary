@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Service
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;

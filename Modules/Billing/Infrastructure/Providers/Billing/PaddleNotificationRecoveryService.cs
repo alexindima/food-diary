@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 

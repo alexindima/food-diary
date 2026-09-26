@@ -1,11 +1,11 @@
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed class DashboardBodyReadService(ICompositionReadContext context) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(

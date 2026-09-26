@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Recipes.Application.Queries.ExploreRecipes;
 using FoodDiary.Mediator;

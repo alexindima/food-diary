@@ -4,7 +4,7 @@ using FoodDiary.Modules.Users.Application.Commands.SetUserPasswordByAdministrato
 using FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator;
 using FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Entities;

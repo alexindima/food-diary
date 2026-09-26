@@ -2,7 +2,7 @@ using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Domain.Entities;

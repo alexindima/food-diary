@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.ReadModel.Composition.Admin;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.Tests;

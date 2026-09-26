@@ -3,7 +3,7 @@ using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Application.Mappings;
 using FoodDiary.Modules.Cycles.Application.Services;
 using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;

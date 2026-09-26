@@ -3,7 +3,7 @@ using FoodDiary.Modules.Meals.Application.Mappings;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Common.Validation;
 

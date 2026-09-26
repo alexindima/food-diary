@@ -661,7 +661,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 44
+      "line": 45
     },
     {
       "name": "FoodDiaryDbContext",
@@ -1445,35 +1445,35 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminDashboardMetricsReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AdminImpersonationSessionQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AdminRetentionReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminUserRoleAuditRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AiUsageQuery",
@@ -1634,14 +1634,14 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "MealProductNutritionQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealSourceSnapshotQuery",
@@ -1669,7 +1669,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 41
+      "line": 39
     },
     {
       "name": "RecipeOverviewReadService",
@@ -28801,7 +28801,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "RelayEmailJournal",
@@ -29200,7 +29200,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "EfAtomicCommandExecutor",
@@ -31241,7 +31241,7 @@
       "implementation": "RelayEmailJournal",
       "lifetime": "Scoped",
       "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
-      "line": 21
+      "line": 20
     },
     {
       "service": "IMediator",

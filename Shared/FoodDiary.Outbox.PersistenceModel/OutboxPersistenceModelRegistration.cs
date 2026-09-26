@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Outbox;
+namespace FoodDiary.Outbox.PersistenceModel;
 
 public static class OutboxPersistenceModelRegistration {
     public static ModelBuilder ApplyOutboxPersistenceModel(this ModelBuilder modelBuilder) {

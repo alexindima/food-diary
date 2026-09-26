@@ -36,7 +36,7 @@ using FoodDiary.Modules.Favorites.Infrastructure;
 
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
-using FoodDiary.Integrations;
+using FoodDiary.Email.MailRelay;
 using FoodDiary.JobManager.Services;
 using Hangfire;
 using Hangfire.PostgreSql;

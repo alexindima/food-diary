@@ -1,8 +1,8 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;

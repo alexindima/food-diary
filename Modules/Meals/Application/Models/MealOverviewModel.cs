@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Models;
 

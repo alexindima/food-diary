@@ -4,7 +4,7 @@ using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

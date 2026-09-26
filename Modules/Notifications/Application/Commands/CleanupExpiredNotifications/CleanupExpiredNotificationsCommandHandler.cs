@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 
 namespace FoodDiary.Modules.Notifications.Application.Commands.CleanupExpiredNotifications;

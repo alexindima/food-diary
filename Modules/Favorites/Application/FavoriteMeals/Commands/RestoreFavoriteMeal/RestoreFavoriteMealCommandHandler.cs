@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Mappings;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;

@@ -11,10 +11,10 @@ using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Meals.Application.Common.Time;
 using FoodDiary.Modules.Meals.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Meals.Application.Queries.GetMealsOverview;
@@ -46,7 +46,7 @@ public sealed class GetMealsOverviewQueryHandler(
             : null;
         MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
         if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
-            return Result.Failure<MealOverviewModel>(FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Validation.Invalid(nameof(request.TimeZoneId), "Invalid time zone."));
+            return Result.Failure<MealOverviewModel>(FoodDiary.Application.Contracts.Common.Abstractions.Results.Errors.Validation.Invalid(nameof(request.TimeZoneId), "Invalid time zone."));
         }
 
         MealOverviewModel overview = await GetOverviewAsync(

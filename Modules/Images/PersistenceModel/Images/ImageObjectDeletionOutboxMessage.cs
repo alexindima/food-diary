@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
 
 namespace FoodDiary.Modules.Images.PersistenceModel.Images;
 

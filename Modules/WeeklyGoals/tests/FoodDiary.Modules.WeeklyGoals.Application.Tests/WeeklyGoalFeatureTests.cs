@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Application.Common;

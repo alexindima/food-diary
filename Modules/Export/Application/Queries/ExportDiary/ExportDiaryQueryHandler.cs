@@ -1,9 +1,9 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport;
 using FoodDiary.Modules.Meals.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Application.Abstractions.Models;

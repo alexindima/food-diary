@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Http.Options;
 namespace FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 
 public sealed class S3Options {

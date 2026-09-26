@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;

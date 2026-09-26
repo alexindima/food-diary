@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.PersistenceModel;
 using FoodDiary.Modules.Users.PersistenceModel;
 using FoodDiary.Modules.Wearables.PersistenceModel;
 using FoodDiary.Modules.WeeklyGoals.PersistenceModel;
@@ -29,9 +30,9 @@ using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Infrastructure.Persistence.Composition;
 using Microsoft.EntityFrameworkCore;
 
-using FoodDiary.Infrastructure.Persistence.Audit;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Audit.PersistenceModel;
+using FoodDiary.Email.PersistenceModel;
+
 using FoodDiary.Modules.Fasting.PersistenceModel;
 
 using FoodDiary.Modules.DailyAdvices.PersistenceModel;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Application.Runtime.Common.Services;
 using FoodDiary.Application.Runtime.Common.Behaviors;
 using Microsoft.Extensions.DependencyInjection;

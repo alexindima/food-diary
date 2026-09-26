@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Audit.Contracts.Audit.Models;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;
 using FoodDiary.Results;

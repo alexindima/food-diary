@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Integrations.Http.Options;
 
 internal static class IntegrationUriValidator {
     public static bool IsAbsoluteHttpsBaseUrl(string? value) =>

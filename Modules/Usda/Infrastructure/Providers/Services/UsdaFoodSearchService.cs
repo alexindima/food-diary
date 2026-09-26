@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Modules.Usda.Contracts.Common;
 using FoodDiary.Modules.Usda.Contracts.Models;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

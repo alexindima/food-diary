@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+namespace FoodDiary.Application.Contracts.Common.Abstractions.Results;
 
 public static class ErrorKindResolver {
     private static readonly IReadOnlyDictionary<string, ErrorKind> ExactMappings = new Dictionary<string, ErrorKind>(StringComparer.Ordinal) {

@@ -7,7 +7,7 @@ using FoodDiary.Modules.Wearables.Application.Queries.GetWearableAuthUrl;
 using FoodDiary.Modules.Wearables.Application.Queries.GetWearableConnections;
 using FoodDiary.Modules.Wearables.Application.Queries.GetWearableDailySummary;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Wearables.Domain.Entities;
 using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Modules.Wearables.Domain.ValueObjects;

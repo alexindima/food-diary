@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Entities;
 

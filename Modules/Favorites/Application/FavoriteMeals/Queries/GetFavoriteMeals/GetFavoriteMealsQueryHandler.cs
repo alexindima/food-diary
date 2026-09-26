@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadFavoriteMeals;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Modules.Users.Contracts.Common;

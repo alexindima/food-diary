@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Identity.Contracts.Email.Commands.UpsertEmailTemplate;
 using FoodDiary.Mediator;
 

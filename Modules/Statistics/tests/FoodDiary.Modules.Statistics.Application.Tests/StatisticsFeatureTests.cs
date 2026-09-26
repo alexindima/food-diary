@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Contracts.Models;

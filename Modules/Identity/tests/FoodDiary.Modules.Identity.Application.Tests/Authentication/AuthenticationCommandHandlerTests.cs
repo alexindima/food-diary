@@ -4,13 +4,13 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;

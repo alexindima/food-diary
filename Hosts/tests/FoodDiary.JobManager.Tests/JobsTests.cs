@@ -3,7 +3,7 @@ using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotificat
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Notifications.Contracts.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.Modules.Users.Contracts.Commands.EnsureUserPremiumRole;
 using FoodDiary.Modules.Users.Contracts.Commands.RemoveUserPremiumRole;
@@ -17,7 +17,7 @@ using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Contracts.Models;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Models;

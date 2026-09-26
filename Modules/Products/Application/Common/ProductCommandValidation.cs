@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Domain.Entities;
 
 namespace FoodDiary.Modules.Products.Application.Common;

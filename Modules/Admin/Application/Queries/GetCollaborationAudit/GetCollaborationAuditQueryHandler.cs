@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Audit.Contracts.Audit.Models;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;

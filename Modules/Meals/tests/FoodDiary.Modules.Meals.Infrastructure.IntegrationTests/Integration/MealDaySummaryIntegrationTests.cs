@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Meals;
+using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
@@ -11,7 +11,6 @@ using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Modules.Users.Domain.Entities;
-using FoodDiary.ReadModel.Composition.Meals;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;

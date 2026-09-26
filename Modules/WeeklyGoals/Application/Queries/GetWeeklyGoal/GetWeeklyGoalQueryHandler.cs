@@ -3,7 +3,7 @@ using FoodDiary.Modules.WeeklyGoals.Application.Common;
 using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Results;
 

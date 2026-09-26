@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Services;

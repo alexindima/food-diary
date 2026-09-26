@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Recipes.Presentation.Responses;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Modules.Recipes.Presentation.Mappings;

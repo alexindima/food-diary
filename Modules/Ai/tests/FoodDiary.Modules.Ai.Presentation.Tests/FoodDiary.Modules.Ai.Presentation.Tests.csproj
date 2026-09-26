@@ -20,6 +20,7 @@
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Compile Include="../../../../Platform/tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />

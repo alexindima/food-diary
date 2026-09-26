@@ -13,7 +13,7 @@ using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Modules.Recipes.Application.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 using FoodDiary.Modules.Statistics.Application.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatisticsSummary;
 

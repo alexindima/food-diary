@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;

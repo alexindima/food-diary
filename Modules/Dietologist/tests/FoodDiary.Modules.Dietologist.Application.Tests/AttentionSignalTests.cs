@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using System.Globalization;
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Audit.Models;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Audit.Contracts.Audit.Models;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;

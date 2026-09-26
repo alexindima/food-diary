@@ -1,11 +1,11 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
 using FoodDiary.Modules.Cycles.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Modules.Export.Application.Services;

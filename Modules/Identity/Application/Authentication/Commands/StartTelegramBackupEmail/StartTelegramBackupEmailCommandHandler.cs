@@ -9,7 +9,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Identity.Application.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramBackupEmail;

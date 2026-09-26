@@ -2,7 +2,7 @@
 
 Own only bounded HTTP content reading, URI validation and the existing integration
 meter. Keep provider-neutral runtime code free of ProjectReference and PackageReference
-dependencies; root build-time analyzers are separate. Preserve legacy namespaces,
+dependencies; root build-time analyzers are separate. Use canonical project/folder namespaces. Preserve
 metric names/tags, byte/depth/time limits, URI rules and cancellation behavior.
 
 Module provider adapters reference this assembly directly. Do not add

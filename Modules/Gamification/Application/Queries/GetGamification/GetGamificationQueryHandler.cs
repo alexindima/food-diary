@@ -10,7 +10,7 @@ using FoodDiary.Modules.Gamification.Application.Common;
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Gamification.Application.Queries.GetGamification;

@@ -215,6 +215,8 @@
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Admin": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",

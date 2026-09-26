@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Admin.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.ExceptionServices;

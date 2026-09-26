@@ -5,7 +5,7 @@ using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;

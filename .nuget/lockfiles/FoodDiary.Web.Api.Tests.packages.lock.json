@@ -694,6 +694,8 @@
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Admin": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
@@ -1537,6 +1539,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Application": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
@@ -1885,6 +1888,7 @@
           "BCrypt.Net-Next": "[4.2.0, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
@@ -2336,6 +2340,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application": "[1.0.0, )",
@@ -2621,6 +2626,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Mappings": "[1.0.0, )",
@@ -2747,6 +2753,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",
@@ -2848,6 +2855,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Mappings": "[1.0.0, )",

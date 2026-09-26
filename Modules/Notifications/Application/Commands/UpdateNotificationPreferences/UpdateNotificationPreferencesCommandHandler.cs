@@ -6,9 +6,9 @@ using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Application.Mappings;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 using System.Globalization;
 
 namespace FoodDiary.Modules.Notifications.Application.Commands.UpdateNotificationPreferences;

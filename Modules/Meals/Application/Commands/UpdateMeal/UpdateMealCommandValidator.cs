@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Meals.Application.Common.Validation;
 using FoodDiary.Modules.Meals.Application.Common.Validators;
 

@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Services;
+using FoodDiary.Integrations.Http.Services;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Application.Contracts.Common.Validation;
 
 public static class PaginationPolicy {
     public const int DefaultPage = 1;

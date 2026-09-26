@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;

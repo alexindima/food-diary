@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.WeeklyGoals.Contracts.Commands.SendWeeklyGoalReminders;
 using FoodDiary.Modules.Notifications.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 

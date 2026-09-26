@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.Queries.SearchProductSuggestions;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
 using System.Reflection;
 using FluentValidation.Results;

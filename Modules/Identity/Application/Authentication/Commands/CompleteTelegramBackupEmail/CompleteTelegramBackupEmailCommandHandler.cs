@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
 using FoodDiary.Results;
 
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Identity.Application.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Services;
 

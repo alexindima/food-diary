@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application.Mappings;

@@ -36,7 +36,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await service.GetStatisticsAsync(user.Id, from, to, quantizationDays);
 
         Assert.True(result.IsSuccess, result.Error.Message);
-        IReadOnlyList<(DateTime Start, DateTime End)> ranges = FoodDiary.Application.Abstractions.Common.Validation.TemporalRangePolicy.BuildInstantBuckets(from, to, quantizationDays);
+        IReadOnlyList<(DateTime Start, DateTime End)> ranges = FoodDiary.Application.Contracts.Common.Validation.TemporalRangePolicy.BuildInstantBuckets(from, to, quantizationDays);
         Assert.Equal(ranges.Count, result.Value.Count);
         for (int index = 0; index < ranges.Count; index++) {
             (DateTime start, DateTime end) = ranges[index];

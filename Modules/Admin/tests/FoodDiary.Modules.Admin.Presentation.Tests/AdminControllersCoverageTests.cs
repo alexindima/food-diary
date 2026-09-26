@@ -33,7 +33,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Modules.Admin.Presentation.Controllers;

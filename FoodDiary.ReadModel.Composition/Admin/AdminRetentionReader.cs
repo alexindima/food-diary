@@ -1,10 +1,11 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminRetentionReader(ICompositionReadContext context) : IAdminRetentionReader {
     public async Task<AdminRetentionReport> GetAsync(DateTime fromUtc, DateTime toUtc, DateTime asOfUtc, CancellationToken cancellationToken, DateTime? cohortFromUtc = null, DateTime? cohortToUtc = null) {

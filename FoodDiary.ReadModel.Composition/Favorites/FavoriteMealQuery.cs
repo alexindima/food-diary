@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
+namespace FoodDiary.ReadModel.Composition.Favorites;
 
 public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavoriteMealQuery {
     public async Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(

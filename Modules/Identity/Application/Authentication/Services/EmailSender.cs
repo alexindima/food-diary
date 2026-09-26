@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using System.Globalization;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Services;

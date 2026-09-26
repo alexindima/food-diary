@@ -7,7 +7,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginEvents;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginDeviceSummary;
 using FoodDiary.Testing;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 

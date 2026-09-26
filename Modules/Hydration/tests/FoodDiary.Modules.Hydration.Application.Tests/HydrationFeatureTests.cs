@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationEntries;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 

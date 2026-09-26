@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Persistence.Outbox;
+namespace FoodDiary.Outbox.Abstractions;
 
 public interface IOutboxMessage {
     Guid Id { get; }

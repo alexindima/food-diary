@@ -12,7 +12,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
 using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;

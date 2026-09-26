@@ -1,8 +1,8 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;

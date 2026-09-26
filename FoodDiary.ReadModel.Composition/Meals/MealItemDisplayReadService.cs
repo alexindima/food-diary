@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -6,7 +7,7 @@ using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.ReadModel.Composition.Meals;
 
 public sealed class MealItemDisplayReadService(ICompositionReadContext context) : IMealItemDisplayReadService {
     public async Task<IReadOnlyList<MealItemDisplayReadModel>> GetByMealIdsAsync(

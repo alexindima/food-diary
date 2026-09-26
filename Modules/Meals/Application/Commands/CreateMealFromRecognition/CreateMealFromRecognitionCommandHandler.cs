@@ -3,7 +3,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
 using FluentValidation.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;

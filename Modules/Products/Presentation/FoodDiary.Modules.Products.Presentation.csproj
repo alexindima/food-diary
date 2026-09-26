@@ -16,6 +16,7 @@
     <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Favorites/Presentation.Contracts/FoodDiary.Modules.Favorites.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Favorites/Presentation.Mappings/FoodDiary.Modules.Favorites.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

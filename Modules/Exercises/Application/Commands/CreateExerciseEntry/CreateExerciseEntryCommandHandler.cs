@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Exercises.Domain.Enums;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Exercises.Application.Internal;
 using FoodDiary.Modules.Exercises.Application.Common;

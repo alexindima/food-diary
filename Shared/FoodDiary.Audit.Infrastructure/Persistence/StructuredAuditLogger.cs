@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Audit.Contracts.Common.Abstractions.Audit;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 

@@ -84,8 +84,8 @@ using FoodDiary.Modules.WeeklyCheckIn.Application;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Integrations;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
+using FoodDiary.Email.MailRelay;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;

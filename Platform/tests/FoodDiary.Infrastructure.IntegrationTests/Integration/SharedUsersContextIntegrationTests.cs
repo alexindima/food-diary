@@ -10,8 +10,8 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;

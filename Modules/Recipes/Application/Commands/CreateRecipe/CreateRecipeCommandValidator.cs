@@ -2,8 +2,8 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Common.Validators;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;

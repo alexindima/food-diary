@@ -5,7 +5,7 @@ using FoodDiary.Modules.Lessons.Contracts.Commands.UpdateLesson;
 using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Modules.Lessons.Contracts.Models;

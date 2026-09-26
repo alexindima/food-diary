@@ -1,9 +1,10 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminUserRoleAuditRepository(ICompositionReadContext context) : IAdminUserRoleAuditRepository {
     public async Task<IReadOnlyList<AdminUserRoleAuditEventReadModel>> GetRecentForUserAsync(

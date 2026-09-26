@@ -6,7 +6,7 @@ using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Persistence.Runtime.Services;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

@@ -139,7 +139,8 @@ public sealed class ModuleDependencyGraphTests {
             }
             const string prefix = "FoodDiary.Application.";
             if (!name.StartsWith(prefix, StringComparison.Ordinal) ||
-                name.StartsWith("FoodDiary.Application.Abstractions.", StringComparison.Ordinal)) {
+                (name.StartsWith("FoodDiary.Application.Abstractions.", StringComparison.Ordinal) ||
+                 name.StartsWith("FoodDiary.Application.Contracts.", StringComparison.Ordinal))) {
                 continue;
             }
 

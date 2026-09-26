@@ -7,7 +7,7 @@ single-use-code storage seam between them.
 
 IPasswordHasher and AuthenticationInputLimits are shared technical password and opaque-token contracts.
 Identity owns the hashing implementation; Users consumes the contract directly.
-Preserve the existing CLR namespaces and hashing/input-limit behavior.
+Use canonical FoodDiary.Authentication.Contracts namespaces; preserve hashing/input-limit behavior.
 
 AuthenticationErrors owns only InvalidCredentials and InvalidToken. Account/link
 failures belong to Users.Contracts and impersonation failures to Admin.Contracts.

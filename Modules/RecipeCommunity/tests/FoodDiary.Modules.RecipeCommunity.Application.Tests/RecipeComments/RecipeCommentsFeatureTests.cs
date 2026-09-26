@@ -16,7 +16,7 @@ using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.RecipeCommunity.Application.Tests.RecipeComments;
 

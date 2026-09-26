@@ -1,15 +1,15 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
+namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed class DashboardMealsReadService(ICompositionReadContext context, IMealItemDisplayReadService mealItems) : IDashboardMealsReadService {
     private readonly DashboardMealFavoritesLoader _favoriteMealsLoader = new(context);

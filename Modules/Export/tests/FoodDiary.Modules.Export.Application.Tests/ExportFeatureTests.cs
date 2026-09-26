@@ -3,7 +3,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
 using FoodDiary.Modules.Cycles.Domain.Entities;

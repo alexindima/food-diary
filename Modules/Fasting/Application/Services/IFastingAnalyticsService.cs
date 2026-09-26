@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;

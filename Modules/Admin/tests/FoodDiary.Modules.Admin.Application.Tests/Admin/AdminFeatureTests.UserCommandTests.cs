@@ -36,7 +36,7 @@ public partial class AdminFeatureTests {
             RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
-            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+            Substitute.For<FoodDiary.Audit.Contracts.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "NewPassword123!"),
@@ -59,7 +59,7 @@ public partial class AdminFeatureTests {
             RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
-            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+            Substitute.For<FoodDiary.Audit.Contracts.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "FirstPassword123!"),
@@ -83,7 +83,7 @@ public partial class AdminFeatureTests {
             RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
-            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+            Substitute.For<FoodDiary.Audit.Contracts.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "NewPassword123!"),
@@ -106,7 +106,7 @@ public partial class AdminFeatureTests {
             RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
-            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+            Substitute.For<FoodDiary.Audit.Contracts.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(emptyActor ? user.Id.Value : Guid.Empty, emptyActor ? Guid.Empty : UserId.New().Value, "NewPassword123!"),
@@ -127,7 +127,7 @@ public partial class AdminFeatureTests {
             RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
-            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+            Substitute.For<FoodDiary.Audit.Contracts.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
             new SetAdminUserPasswordCommand(Guid.NewGuid(), UserId.New().Value, "NewPassword123!"),

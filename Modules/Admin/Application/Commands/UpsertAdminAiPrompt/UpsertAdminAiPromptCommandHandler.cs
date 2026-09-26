@@ -2,7 +2,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
 

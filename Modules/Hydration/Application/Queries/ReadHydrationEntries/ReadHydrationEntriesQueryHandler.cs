@@ -2,7 +2,7 @@ using FoodDiary.Modules.Hydration.Application.Mappings;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Models;
 using FoodDiary.Modules.Hydration.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationEntries;
 
 namespace FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries;

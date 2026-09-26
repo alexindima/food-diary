@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Application.Runtime.Common.Behaviors;
 using FoodDiary.Application.Runtime.Common.Services;

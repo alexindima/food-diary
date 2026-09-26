@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Notifications.Infrastructure.Services;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using System.Globalization;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;

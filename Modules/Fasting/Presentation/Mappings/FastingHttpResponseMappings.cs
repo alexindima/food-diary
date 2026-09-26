@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Fasting.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Fasting.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;

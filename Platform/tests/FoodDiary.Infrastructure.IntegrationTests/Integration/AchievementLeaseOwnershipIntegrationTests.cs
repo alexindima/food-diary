@@ -3,7 +3,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;

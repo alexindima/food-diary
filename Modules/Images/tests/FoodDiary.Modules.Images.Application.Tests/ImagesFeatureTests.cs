@@ -4,7 +4,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Images.Application.Commands.DeleteImageAsset;

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Hydration.Application.Internal;
 using FoodDiary.Modules.Users.Contracts.Common;

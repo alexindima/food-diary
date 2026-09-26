@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts;

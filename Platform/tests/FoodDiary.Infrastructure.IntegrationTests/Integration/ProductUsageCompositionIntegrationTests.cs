@@ -4,7 +4,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Persistence.Runtime.Persistence;
 using System.Data;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;

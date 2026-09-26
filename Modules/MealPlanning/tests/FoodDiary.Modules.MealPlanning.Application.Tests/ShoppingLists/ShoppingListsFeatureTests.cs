@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;

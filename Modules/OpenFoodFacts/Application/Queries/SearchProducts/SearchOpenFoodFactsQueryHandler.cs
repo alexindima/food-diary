@@ -1,5 +1,5 @@
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Mediator;

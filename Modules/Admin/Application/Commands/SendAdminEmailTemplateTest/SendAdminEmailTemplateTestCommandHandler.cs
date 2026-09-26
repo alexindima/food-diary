@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 

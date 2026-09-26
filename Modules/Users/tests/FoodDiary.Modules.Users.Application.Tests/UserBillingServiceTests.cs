@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Users.Application.Queries.CheckUserAccess;
 using FoodDiary.Modules.Users.Application.Commands.RemoveUserPremiumRole;

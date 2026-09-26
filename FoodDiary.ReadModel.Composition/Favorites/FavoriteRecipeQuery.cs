@@ -3,7 +3,7 @@ using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;

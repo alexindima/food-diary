@@ -14,7 +14,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;
 

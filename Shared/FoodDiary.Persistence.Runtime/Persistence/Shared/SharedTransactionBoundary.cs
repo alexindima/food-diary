@@ -1,5 +1,5 @@
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Persistence.Runtime.Persistence.Shared;

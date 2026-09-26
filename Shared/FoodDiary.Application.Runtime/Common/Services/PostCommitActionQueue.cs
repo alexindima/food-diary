@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Runtime.Common.Services;

@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Audit.Contracts.Audit.Common;
+using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Email.Infrastructure;

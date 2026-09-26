@@ -4,7 +4,7 @@ using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Modules.Users.Contracts.Common;

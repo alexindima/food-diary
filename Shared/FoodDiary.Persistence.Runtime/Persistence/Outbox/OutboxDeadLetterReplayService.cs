@@ -1,8 +1,9 @@
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Outbox.Abstractions;
+using FoodDiary.Outbox.PersistenceModel;
 using FoodDiary.Outbox.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

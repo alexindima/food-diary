@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.Authentication;
 

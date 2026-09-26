@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;

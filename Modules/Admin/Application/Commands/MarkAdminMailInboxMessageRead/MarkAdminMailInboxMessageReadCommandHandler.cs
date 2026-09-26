@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
 

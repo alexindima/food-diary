@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;

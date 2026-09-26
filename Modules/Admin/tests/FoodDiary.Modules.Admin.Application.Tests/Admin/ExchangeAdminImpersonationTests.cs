@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;

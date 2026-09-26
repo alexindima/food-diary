@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;

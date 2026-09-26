@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Common;

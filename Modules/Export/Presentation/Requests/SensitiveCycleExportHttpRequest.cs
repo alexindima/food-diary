@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
 
 namespace FoodDiary.Modules.Export.Presentation.Requests;

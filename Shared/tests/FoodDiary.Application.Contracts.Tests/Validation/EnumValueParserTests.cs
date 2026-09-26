@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Results;
 using ResultAssert = FoodDiary.Testing.Assertions.ResultAssert;
 

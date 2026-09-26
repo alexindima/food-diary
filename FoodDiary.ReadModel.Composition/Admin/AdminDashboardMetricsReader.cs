@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using Microsoft.EntityFrameworkCore;
@@ -5,7 +6,7 @@ using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminDashboardMetricsReader(ICompositionReadContext context) : IAdminDashboardMetricsReader {
     public async Task<AdminDashboardMetrics> GetAsync(DateTime fromUtc, DateTime toUtc, bool monthly, CancellationToken cancellationToken) {

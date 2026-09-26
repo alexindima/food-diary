@@ -68,7 +68,7 @@ public sealed class DietologistModuleBoundaryTests {
     public void Dietologist_DoesNotDependOnOtherApplicationFeatures() {
         string root = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
         string[] allowedPrefixes = [
-            "FoodDiary.Application.Abstractions",
+            "FoodDiary.Application.Contracts.",
             "FoodDiary.Modules.Dietologist.Application",
         ];
 

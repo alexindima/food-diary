@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSummaries;

@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Application.Common;

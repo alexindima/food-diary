@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FoodDiary.Application.Abstractions.Options;
+namespace FoodDiary.Authentication.Contracts.Options;
 
 public sealed class JwtOptions {
     public const string SectionName = "Jwt";

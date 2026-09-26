@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Hydration.Application.Validators;

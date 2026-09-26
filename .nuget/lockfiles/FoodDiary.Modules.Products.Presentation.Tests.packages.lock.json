@@ -327,6 +327,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Presentation.Mappings": "[1.0.0, )",

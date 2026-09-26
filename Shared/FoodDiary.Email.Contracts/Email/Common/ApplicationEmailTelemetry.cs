@@ -1,6 +1,6 @@
 using System.Diagnostics.Metrics;
 
-namespace FoodDiary.Application.Abstractions.Email.Common;
+namespace FoodDiary.Email.Contracts.Email.Common;
 
 public static class ApplicationEmailTelemetry {
     public const string MeterName = "FoodDiary.Application.Email";

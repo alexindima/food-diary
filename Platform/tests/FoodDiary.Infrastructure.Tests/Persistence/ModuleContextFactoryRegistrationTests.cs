@@ -5,7 +5,7 @@ using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;

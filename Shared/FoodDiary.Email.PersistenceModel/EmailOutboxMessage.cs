@@ -1,8 +1,8 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Email.Contracts.Email.Common;
+using FoodDiary.Outbox.Abstractions;
 
-namespace FoodDiary.Infrastructure.Persistence.Email;
+namespace FoodDiary.Email.PersistenceModel;
 
 public sealed class EmailOutboxMessage : IOutboxMessage {
     private const int ErrorMaxLength = 2048;

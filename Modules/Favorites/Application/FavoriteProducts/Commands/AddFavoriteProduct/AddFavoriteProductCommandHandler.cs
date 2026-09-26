@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;

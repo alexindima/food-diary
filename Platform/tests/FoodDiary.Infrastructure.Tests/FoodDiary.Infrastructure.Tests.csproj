@@ -26,11 +26,13 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
@@ -102,6 +104,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />

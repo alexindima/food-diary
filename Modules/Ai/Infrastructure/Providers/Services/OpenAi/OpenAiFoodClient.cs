@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Integrations.Http.Services;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,7 +8,7 @@ using System.Text.Json.Nodes;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Integrations.Http;
+using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -4,10 +4,10 @@ using FoodDiary.Modules.Users.Contracts.Queries.GetUserForAdministration;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;

@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;

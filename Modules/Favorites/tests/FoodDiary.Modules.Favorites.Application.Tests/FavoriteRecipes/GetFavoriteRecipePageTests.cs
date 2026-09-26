@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipePage;
@@ -26,7 +26,7 @@ public sealed class GetFavoriteRecipePageTests {
         };
         repository.GetPageReadModelsAsync(owner, 2, 10, "rice", cancellation.Token).Returns((new[] { item }, 23));
         var handler = new GetFavoriteRecipePageQueryHandler(repository, access);
-        FoodDiary.Application.Abstractions.Common.Models.PagedResponse<FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models.FavoriteRecipeModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteRecipePageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
+        FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models.FavoriteRecipeModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteRecipePageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
         Assert.Multiple(
             () => Assert.Equal("https://example.com/rice.jpg", result.Data.Single().ImageUrl),
             () => Assert.Equal(7.5, result.Data.Single().TotalFiber),

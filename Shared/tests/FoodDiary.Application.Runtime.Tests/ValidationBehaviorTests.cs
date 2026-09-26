@@ -1,6 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Runtime.Common.Behaviors;
 using FoodDiary.Mediator;

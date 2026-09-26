@@ -5,7 +5,7 @@ using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;

@@ -1,15 +1,15 @@
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Contracts.Common.Models;
 
 using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetProducts;
