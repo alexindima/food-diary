@@ -32,28 +32,29 @@ public sealed class DashboardCalendarTests {
     }
 
     [Fact]
-    public async Task Context_WithSkippedCalendarDay_UsesSystemTimeZoneHistory() {
+    public async Task Context_WithSkippedCalendarDay_RejectsBeforeReadingUser() {
         var date = new DateTime(2011, 12, 30);
-        var zone = TimeZoneInfo.FindSystemTimeZoneById("Pacific/Apia");
-        // Windows' mapped zone may omit Samoa's dateline change; Linux IANA data retains it.
-        bool skipsDate = zone.GetUtcOffset(date.AddDays(1)) - zone.GetUtcOffset(date.AddDays(-1)) >= TimeSpan.FromDays(1);
+        var transitionStart = TimeZoneInfo.TransitionTime.CreateFixedDateRule(DateTime.MinValue, 1, 1);
+        var transitionEnd = TimeZoneInfo.TransitionTime.CreateFixedDateRule(DateTime.MinValue, 12, 31);
+        // A 24-hour offset jump collapses this calendar day's UTC interval.
+        // Explicit rules keep the regression independent of the OS time-zone database.
+        var zone = TimeZoneInfo.CreateCustomTimeZone("test-dateline", TimeSpan.Zero, "test", "test", "test", [
+            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(new DateTime(2011, 1, 1), date,
+                TimeSpan.Zero, transitionStart, transitionEnd, TimeSpan.FromHours(-10)),
+            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(date.AddDays(1), new DateTime(2012, 12, 31),
+                TimeSpan.Zero, transitionStart, transitionEnd, TimeSpan.FromHours(14)),
+        ]);
         var user = User.Create("skipped-calendar@example.com", "hash");
-        var request = new DashboardSnapshotRequest(user.Id.Value, date, DateTo: null, "en", 7, 1, 10,
-            UserContext: new DashboardUserContextModel(user.Id.Value, user.Email, user.Language, user.DashboardLayoutJson,
-                user.DesiredWeightKg, user.DesiredWaistCm, user.HydrationGoal, user.WaterGoal, user.ProteinTarget,
-                user.FatTarget, user.CarbTarget, user.FiberTarget, default), TimeZoneId: zone.Id);
-        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), Substitute.For<IDashboardUserContextService>(), Substitute.For<IDashboardReadService>());
+        var request = new DashboardSnapshotRequest(user.Id.Value, date, DateTo: null, "en", 7, 1, 10);
+        IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), users, Substitute.For<IDashboardReadService>());
 
-        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, user.Id, zone, CancellationToken.None);
 
-        if (skipsDate) {
-            ResultAssert.Failure(result);
-            Assert.Equal("Validation.Invalid", result.Error.Code);
-        } else {
-            DashboardBuildContext context = ResultAssert.Success(result);
-            Assert.Equal(date, context.Calendar.Date);
-            Assert.Equal(TimeZoneInfo.ConvertTimeToUtc(date, zone), context.DayStart);
-        }
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Calendar day does not exist", result.Error.Message, StringComparison.Ordinal);
+        Assert.Empty(users.ReceivedCalls());
     }
 
     public static IEnumerable<object[]> CalendarCases() {

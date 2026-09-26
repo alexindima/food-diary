@@ -53,6 +53,14 @@ internal sealed class DashboardSectionDataLoader(
         if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
             return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.TimeZoneId), "Unknown time zone."));
         }
+        return await CreateBuildContextAsync(request, userIdResult.Value, timeZone, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal async Task<Result<DashboardBuildContext>> CreateBuildContextAsync(
+        DashboardSnapshotRequest request,
+        UserId userId,
+        TimeZoneInfo timeZone,
+        CancellationToken cancellationToken) {
         DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
         DateTime normalizedDateTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date);
         if (!TemporalRangePolicy.IsPeriodWithinLimit(normalizedDate, normalizedDateTo)) {
@@ -81,7 +89,6 @@ internal sealed class DashboardSectionDataLoader(
             return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.Date), "Date range is outside supported boundaries."));
         }
 
-        UserId userId = userIdResult.Value;
         DashboardUserContextModel currentUser;
         if (request.UserContext is not null) {
             if (request.UserContext.Id != userId.Value) {
