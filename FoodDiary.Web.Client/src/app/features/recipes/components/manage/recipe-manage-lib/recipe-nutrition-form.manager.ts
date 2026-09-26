@@ -147,6 +147,18 @@ export class RecipeNutritionFormManager {
     }
 
     private patchManualNutritionFromCurrentSummary(): void {
+        const ingredients = this.form.controls.steps.flatMap(step => step.ingredients);
+        const hasUnknown = ingredients.some(
+            item => typeof item.textName === 'string' || (item.nestedRecipe?.missingIngredientCount ?? 0) > 0,
+        );
+        const hasKnown = ingredients.some(item => item.food !== null || typeof item.nestedRecipe?.totalCalories === 'number');
+        if (hasUnknown && !hasKnown && this.form.controls.calculateNutritionAutomatically.value) {
+            this.form.patchValue(
+                { manualCalories: null, manualProteins: null, manualFats: null, manualCarbs: null, manualFiber: null, manualAlcohol: null },
+                { emitEvent: false },
+            );
+            return;
+        }
         this.form.patchValue(
             {
                 manualCalories: this.fromRecipeTotal(this.totalCalories()),

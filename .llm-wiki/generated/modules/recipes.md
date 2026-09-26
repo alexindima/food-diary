@@ -85,6 +85,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Nutrition/NutritionMappingCompatibilityTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipeNutritionCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipeTextNutritionTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipesAdditionalValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/AllowImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/RecordingImageAssetAccessService.cs`
@@ -100,7 +101,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeDirectCycleTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeGalleryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeInvariantAndEventsTests.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionEventPayloadTests.cs`
 
 ## Working Rule
 

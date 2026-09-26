@@ -1125,5 +1125,8 @@
         "MISSING": "Translation missing",
         "EDIT_HELP": "Both translations are required (up to 512 characters each). Category: up to 64 characters. Weight: a positive whole number.",
         "CHANGE_FAILED": "Could not save the change. Please try again."
+    },
+    "NUTRITION_COMPLETENESS": {
+        "PARTIAL": "Nutrition is incomplete. Ingredients not included: {{count}}."
     }
 }

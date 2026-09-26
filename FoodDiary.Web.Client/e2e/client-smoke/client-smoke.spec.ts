@@ -2463,6 +2463,39 @@ test.describe('recipe editor gallery', () => {
     }
 });
 
+test.describe('recipe text ingredients', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`text ingredients can be edited and saved at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 1000 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const recipe = { ...createRecipeRedesignFixtures().recipe, totalCalories: null, totalProteins: null, totalFats: null, totalCarbs: null,
+                missingIngredientCount: 1, isNutritionAutoCalculated: true, isOwnedByCurrentUser: true, usageCount: 0,
+                steps: [{ id: 'step', stepNumber: 1, instruction: 'Season the soup.', ingredients: [{ id: 'salt', textName: 'Salt', amountText: 'to taste', amount: 0 }] }] };
+            let saved: Record<string, unknown> | null = null;
+            await page.route('**/api/v1/recipes/recipe-1**', async route => {
+                if (route.request().method() === 'PATCH') { saved = route.request().postDataJSON() as Record<string, unknown>; }
+                await route.fulfill({ json: recipe });
+            });
+            await page.goto('/recipes/recipe-1/edit');
+            const card = page.locator('fd-recipe-step-card').first();
+            await expect(card.locator('.recipe-ingredient__name input')).toHaveValue('Salt');
+            await expect(card.locator('.recipe-ingredient__amount input')).toHaveValue('to taste');
+            await expect(page.locator('fd-recipe-nutrition-editor')).toContainText('Nutrition is incomplete');
+            await expect(page.locator('fd-recipe-nutrition-editor input').first()).toHaveValue('');
+            await expect(page.locator('fd-recipe-nutrition-editor input').first()).toHaveAttribute('placeholder', '—');
+            await card.locator('.recipe-ingredient__name input').fill('Tomatoes');
+            await card.locator('.recipe-ingredient__amount input').fill('2 pieces');
+            await card.scrollIntoViewIfNeeded();
+            expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`text-ingredients-${width}.png`) });
+            await page.locator('.recipe-manage__actions-panel button[type="submit"]').click();
+            await expect.poll(() => saved).not.toBeNull();
+            expect(saved).toMatchObject({ steps: [{ ingredients: [{ textName: 'Tomatoes', amountText: '2 pieces', amount: 0 }] }] });
+        });
+    }
+});
+
 test.describe('recipe step galleries', () => {
     for (const width of MEAL_DIALOG_VIEWPORTS) {
         test(`compact steps preserve five photos at ${width}px`, async ({ page }, testInfo) => {
@@ -2474,7 +2507,7 @@ test.describe('recipe step galleries', () => {
             const ingredient = { id: 'ingredient-1', productId: 'product-1', productName: 'Rice', productBaseUnit: 'G', productBaseAmount: 100, amount: 100 };
             const steps = [
                 { id: 'first', stepNumber: 1, title: 'Prepare vegetables', instruction: 'Wash and slice the vegetables.', imageUrl: images[0].imageUrl, imageAssetId: images[0].imageAssetId, images, ingredients: [ingredient] },
-                { id: 'second', stepNumber: 2, title: 'Cook', instruction: 'Cook until tender.', imageUrl: null, images: [], ingredients: [ingredient] },
+                { id: 'second', stepNumber: 2, title: 'Cook', instruction: 'Cook until tender.', imageUrl: null, images: [], ingredients: [] },
             ];
             await page.route('**/api/v1/recipes/recipe-1**', async route => route.fulfill({ json: { ...recipe, steps, isOwnedByCurrentUser: true, usageCount: 0 } }));
             await page.goto('/recipes/recipe-1/edit');
@@ -2489,6 +2522,11 @@ test.describe('recipe step galleries', () => {
             await cards.last().getByRole('button', { name: 'Toggle step', exact: true }).click();
             await expect(cards.last().locator('fd-image-gallery-editor')).toBeVisible();
             await cards.last().scrollIntoViewIfNeeded();
+            await expect(cards.last().locator('.recipe-ingredient')).toHaveCount(0);
+            await cards.last().getByRole('button', { name: 'Add ingredient', exact: true }).click();
+            await expect(cards.last().locator('.recipe-ingredient')).toHaveCount(1);
+            await cards.last().getByRole('button', { name: 'Delete', exact: true }).click();
+            await expect(cards.last().locator('.recipe-ingredient')).toHaveCount(0);
             await page.screenshot({ path: testInfo.outputPath(`recipe-empty-step-${width}.png`) });
             await cards.first().getByRole('button', { name: 'Toggle step', exact: true }).click();
             await expect(cards.first().locator('.recipe-step-card__summary')).toBeVisible();

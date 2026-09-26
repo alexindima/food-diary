@@ -4,7 +4,7 @@
     "domainTypes": 228,
     "entities": 88,
     "valueObjects": 92,
-    "invariants": 522,
+    "invariants": 524,
     "persistenceMappings": 92,
     "indexes": 172,
     "relationships": 36
@@ -4196,70 +4196,70 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Step number must be unique within recipe.\", nameof(stepNumber))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 207
+      "line": 216
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(step)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 226
+      "line": 235
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipe name is required.\", nameof(value))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 542
+      "line": 552
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recipe name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 547
+      "line": 557
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 555
+      "line": 565
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\"),",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 562
+      "line": 572
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 574
+      "line": 584
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 580
+      "line": 590
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 587
+      "line": 597
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 594
+      "line": 604
     },
     {
       "area": "FoodDiary",
@@ -4280,42 +4280,56 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Product snapshot must match the ingredient product.\", nameof(snapshot))",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 22
+      "line": 27
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException.ThrowIfNullOrWhiteSpace",
+      "message": "ArgumentException.ThrowIfNullOrWhiteSpace(name)",
+      "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
+      "line": 70
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Text ingredient exceeds the length limit.\", nameof(name))",
+      "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
+      "line": 74
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 75
+      "line": 96
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Amount must be in range (0, {MaxAmount}].\"))",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 79
+      "line": 100
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"RecipeStepId is required.\", nameof(recipeStepId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 87
+      "line": 108
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"ProductId is required.\", nameof(productId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 93
+      "line": 114
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"NestedRecipeId is required.\", nameof(recipeId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 99
+      "line": 120
     },
     {
       "area": "FoodDiary",
@@ -4336,21 +4350,21 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A recipe cannot contain itself as an ingredient.\", nameof(nestedRecipeId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 85
+      "line": 92
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(ingredient)",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 95
+      "line": 102
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 119
+      "line": 126
     },
     {
       "area": "FoodDiary",

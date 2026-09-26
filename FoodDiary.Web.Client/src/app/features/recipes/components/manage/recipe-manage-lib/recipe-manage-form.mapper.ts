@@ -3,6 +3,8 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../models/recipe.data';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
+export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;
+export const RECIPE_TEXT_AMOUNT_MAX_LENGTH = 128;
 export const RECIPE_LONG_TEXT_MAX_LENGTH = 1_000;
 export const RECIPE_STEP_TITLE_MAX_LENGTH = 120;
 export const RECIPE_MIN_INGREDIENT_AMOUNT = 0.01;
@@ -14,6 +16,8 @@ export type RecipeIngredientMappingLabels = {
 };
 
 type RecipeIngredientGroupInput = {
+    textName?: string | null;
+    amountText?: string | null;
     food?: Product | null;
     productId?: string | null;
     amount?: number | null;
@@ -45,7 +49,7 @@ export function createRecipeFormValue(): RecipeFormValues {
 }
 
 export function createRecipeStepValue(step?: StepFormValues): StepFormValues {
-    const ingredientValues = step !== undefined && step.ingredients.length > 0 ? step.ingredients : [createRecipeIngredientValue()];
+    const ingredientValues = step?.ingredients ?? [];
 
     return {
         title: step?.title ?? null,
@@ -62,18 +66,25 @@ export function createRecipeIngredientValue(input: RecipeIngredientGroupInput = 
     const nestedRecipeName = input.nestedRecipeName ?? null;
 
     return {
+        textName: input.textName,
+        amountText: input.amountText,
         food,
         productId: input.productId ?? food?.id ?? null,
         amount: input.amount ?? null,
-        foodName: resolveIngredientFoodName(food, nestedRecipe, nestedRecipeName),
+        foodName: resolveIngredientFoodName(food, nestedRecipe, nestedRecipeName, input.textName),
         nestedRecipe,
         nestedRecipeId: input.nestedRecipeId ?? null,
         nestedRecipeName,
     };
 }
 
-function resolveIngredientFoodName(food: Product | null, nestedRecipe: Recipe | null, nestedRecipeName: string | null): string | null {
-    return food?.name ?? nestedRecipe?.name ?? nestedRecipeName;
+function resolveIngredientFoodName(
+    food: Product | null,
+    nestedRecipe: Recipe | null,
+    nestedRecipeName: string | null,
+    textName?: string | null,
+): string | null {
+    return textName ?? food?.name ?? nestedRecipe?.name ?? nestedRecipeName;
 }
 
 export function buildRecipeDto(
@@ -156,7 +167,7 @@ export function normalizeRecipeVisibility(value?: RecipeVisibility | string | nu
 }
 
 function mapRecipeStepsToDto(steps: RecipeFormValues['steps']): RecipeDto['steps'] {
-    return steps.map(step => mapRecipeStepToDto(step)).filter(step => step.ingredients.length > 0);
+    return steps.map(step => mapRecipeStepToDto(step));
 }
 
 function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto['steps'][number] {
@@ -169,11 +180,14 @@ function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto[
             : {}),
         description: step.description,
         ingredients: step.ingredients
-            .filter(ingredient => hasProductId(ingredient) || hasNestedRecipeId(ingredient))
+            .filter(ingredient => typeof ingredient.textName === 'string' || hasProductId(ingredient) || hasNestedRecipeId(ingredient))
             .map(ingredient => ({
                 productId: resolveProductId(ingredient),
                 nestedRecipeId: resolveNestedRecipeId(ingredient),
-                amount: ingredient.amount ?? 0,
+                amount: typeof ingredient.textName === 'string' ? 0 : (ingredient.amount ?? 0),
+                ...(typeof ingredient.textName === 'string'
+                    ? { textName: ingredient.textName.trim(), amountText: ingredient.amountText?.trim() ?? null }
+                    : {}),
             })),
     };
 }
@@ -229,6 +243,9 @@ function resolveRecipeManualNutritionValue(manual: number | null | undefined, to
 }
 
 function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIngredientMappingLabels): IngredientFormValues | null {
+    if (typeof ingredient.textName === 'string') {
+        return createRecipeIngredientValue({ textName: ingredient.textName, amountText: ingredient.amountText });
+    }
     if (ingredient.nestedRecipeId !== null && ingredient.nestedRecipeId !== undefined && ingredient.nestedRecipeId.length > 0) {
         return {
             food: null,
@@ -278,6 +295,7 @@ function buildNestedRecipe(ingredient: RecipeIngredient): Recipe | null {
         usageCount: 0,
         createdAt: new Date().toISOString(),
         isOwnedByCurrentUser: true,
+        missingIngredientCount: ingredient.nestedRecipeMissingIngredientCount ?? 0,
         ...buildNestedRecipeNutrition(ingredient),
         isNutritionAutoCalculated: true,
         steps: [],

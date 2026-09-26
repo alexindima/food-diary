@@ -21,6 +21,7 @@ export class EntityCardBodyComponent {
     public readonly description = input<string | null>(null);
     public readonly comment = input<string | null>(null);
     public readonly nutrition = input.required<EntityCardNutrition>();
-    public readonly calories = input.required<number>();
+    public readonly calories = input.required<number | null>();
+    public readonly nutritionNote = input<string | null>(null);
     public readonly quality = input<EntityCardNormalizedQuality | null>(null);
 }

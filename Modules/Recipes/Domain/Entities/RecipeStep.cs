@@ -73,6 +73,13 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         SetModified();
     }
 
+    public RecipeIngredient AddTextIngredient(string name, string? amountText = null) {
+        var ingredient = RecipeIngredient.CreateWithText(Id, name, amountText);
+        _ingredients.Add(ingredient);
+        SetModified();
+        return ingredient;
+    }
+
     public RecipeIngredient AddProductIngredient(ProductId productId, double amount) {
         var ingredient = RecipeIngredient.CreateWithProduct(Id, productId, amount);
         _ingredients.Add(ingredient);

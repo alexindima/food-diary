@@ -27,6 +27,8 @@ import {
     createRecipeFormValue,
     hasNoRecipeNutritionTotals,
     RECIPE_MIN_INGREDIENT_AMOUNT,
+    RECIPE_TEXT_AMOUNT_MAX_LENGTH,
+    RECIPE_TEXT_NAME_MAX_LENGTH,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
 import { RecipeStepFormManager } from '../recipe-manage-lib/recipe-step-form.manager';
@@ -222,6 +224,18 @@ export class RecipeManageComponent {
 
     protected onProductSelectClick(event: StepIngredientSelectEvent): void {
         const { stepIndex, ingredientIndex, itemType } = event;
+        if (itemType === 'Text') {
+            this.recipeManageFacade.applyItemSelection(
+                {
+                    patchValue: value => {
+                        this.stepFormManager.patchIngredient({ stepIndex, ingredientIndex }, value);
+                    },
+                },
+                { type: 'Text', name: '' },
+            );
+            this.updateSummaryFromCurrentForm();
+            return;
+        }
         this.recipeManageFacade.openItemSelectionDialog(itemType, this.recipe()?.id ?? null).subscribe(selection => {
             if (selection === null) {
                 return;
@@ -236,6 +250,19 @@ export class RecipeManageComponent {
             );
             this.updateSummaryFromCurrentForm();
         });
+    }
+
+    protected onIngredientTextChange(event: {
+        stepIndex: number;
+        ingredientIndex: number;
+        field: 'textName' | 'amountText';
+        value: string;
+    }): void {
+        this.stepFormManager.patchIngredient(event, {
+            [event.field]: event.value,
+            ...(event.field === 'textName' ? { foodName: event.value } : {}),
+        });
+        this.updateSummaryFromCurrentForm();
     }
 
     protected onStepTitleChange(event: StepFieldEvent<string | null>): void {
@@ -515,7 +542,10 @@ export class RecipeManageComponent {
             },
             description: {
                 value: step.description,
-                error: (touched || step.descriptionTouched === true) && step.description.trim().length === 0 ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+                error:
+                    (touched || step.descriptionTouched === true) && step.description.trim().length === 0
+                        ? this.translateService.instant('RECIPE_MANAGE.STEP_DESCRIPTION_REQUIRED')
+                        : null,
             },
             ingredients: step.ingredients.map(ingredient => this.createIngredientCardState(ingredient, touched)),
         };
@@ -531,22 +561,27 @@ export class RecipeManageComponent {
                 value: ingredient.amount,
                 error: this.getIngredientAmountError(ingredient, touched || ingredient.amountTouched === true),
             },
+            textName: ingredient.textName,
+            amountText: ingredient.amountText,
             food: ingredient.food,
             foodName: {
                 value: ingredient.foodName,
-                error: !hasFoodName && (touched || ingredient.foodNameTouched === true) ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null,
+                error:
+                    !hasFoodName && (touched || ingredient.foodNameTouched === true)
+                        ? this.translateService.instant('RECIPE_MANAGE.INGREDIENT_REQUIRED')
+                        : null,
             },
             nestedRecipeId: ingredient.nestedRecipeId,
         };
     }
 
     private getIngredientAmountError(ingredient: IngredientFormValues, touched: boolean): string | null {
-        if (!touched) {
+        if (!touched || typeof ingredient.textName === 'string') {
             return null;
         }
 
         if (ingredient.amount === null) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+            return this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT_REQUIRED');
         }
 
         if (ingredient.amount < RECIPE_MIN_INGREDIENT_AMOUNT) {
@@ -563,14 +598,17 @@ export class RecipeManageComponent {
     }
 
     private isStepValid(step: StepFormValues): boolean {
-        return (
-            step.description.trim().length > 0 &&
-            step.ingredients.length > 0 &&
-            step.ingredients.every(ingredient => this.isIngredientValid(ingredient))
-        );
+        return step.description.trim().length > 0 && step.ingredients.every(ingredient => this.isIngredientValid(ingredient));
     }
 
     private isIngredientValid(ingredient: IngredientFormValues): boolean {
+        if (typeof ingredient.textName === 'string') {
+            return (
+                ingredient.textName.trim().length > 0 &&
+                ingredient.textName.length <= RECIPE_TEXT_NAME_MAX_LENGTH &&
+                (ingredient.amountText?.length ?? 0) <= RECIPE_TEXT_AMOUNT_MAX_LENGTH
+            );
+        }
         return (
             ingredient.foodName !== null &&
             ingredient.foodName.trim().length > 0 &&

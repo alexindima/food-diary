@@ -79,7 +79,7 @@ describe('RecipeManageComponent form population', () => {
         const { component } = await setupComponentAsync();
 
         expect(component['steps'].length).toBe(1);
-        expect(component['steps'][0]?.ingredients.length).toBe(1);
+        expect(component['steps'][0]?.ingredients.length).toBe(0);
     });
 
     it('should repopulate the form when recipe input is refreshed with the same id', async () => {
@@ -313,11 +313,11 @@ describe('RecipeManageComponent steps and ingredients', () => {
         const { component } = await setupComponentAsync();
 
         component['addIngredientToStep'](0);
-        expect(component['steps'][0]?.ingredients.length).toBe(DEFAULT_SERVINGS);
-
-        component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 1 });
-
         expect(component['steps'][0]?.ingredients.length).toBe(1);
+
+        component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 0 });
+
+        expect(component['steps'][0]?.ingredients.length).toBe(0);
     });
 
     it('should apply selected product to an ingredient and recalculate automatic summary', async () => {
@@ -335,6 +335,7 @@ describe('RecipeManageComponent steps and ingredients', () => {
             });
         });
 
+        component['addIngredientToStep'](0);
         component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0, itemType: 'Recipe' });
 
         expect(facade.openItemSelectionDialog).toHaveBeenCalledWith('Recipe', null);
@@ -474,6 +475,9 @@ function patchFirstStep(component: RecipeManageComponent, value: Partial<RecipeF
 }
 
 function patchFirstIngredient(component: RecipeManageComponent, value: Partial<IngredientFormValues>): void {
+    if (component['steps'][0].ingredients.length === 0) {
+        component['addIngredientToStep'](0);
+    }
     component['recipeFormModel'].update(current => ({
         ...current,
         steps: current.steps.map((step, stepIndex) =>
@@ -570,6 +574,7 @@ function createProduct(overrides: Partial<Product> = {}): Product {
 describe('Recipe step validation timing', () => {
     it('keeps unrelated fields pristine and validates each field on blur', async () => {
         const { component } = await setupComponentAsync();
+        component['addIngredientToStep'](0);
         component['onStepPhotosChange']({ stepIndex: 0, value: [] });
         component['onStepDescriptionChange']({ stepIndex: 0, value: '' });
         expect(component['stepListItems']()[0].state.description.error).toBeNull();
@@ -583,5 +588,17 @@ describe('Recipe step validation timing', () => {
         expect(component['stepListItems']()[0].state.description.error).toBeNull();
         component['onSubmit']();
         expect(component['stepListItems']()[0].state.ingredients[0].foodName.error).not.toBeNull();
+    });
+});
+
+describe('optional step ingredients', () => {
+    it('accepts an instruction-only step but rejects an incomplete added ingredient', async () => {
+        const { component } = await setupComponentAsync();
+        component['onStepDescriptionChange']({ stepIndex: 0, value: 'Preheat oven' });
+        expect(component['areStepsValid']()).toBe(true);
+        component['addIngredientToStep'](0);
+        expect(component['areStepsValid']()).toBe(false);
+        component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 0 });
+        expect(component['areStepsValid']()).toBe(true);
     });
 });

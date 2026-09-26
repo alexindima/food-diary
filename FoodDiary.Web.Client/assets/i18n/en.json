@@ -1527,6 +1527,9 @@
         "EDIT_HELP": "Both translations are required (up to 512 characters each). Category: up to 64 characters. Weight: a positive whole number.",
         "CHANGE_FAILED": "Could not save the change. Please try again."
     },
+    "NUTRITION_COMPLETENESS": {
+        "PARTIAL": "Nutrition is incomplete. Ingredients not included: {{count}}."
+    },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",
         "HEADLINE": "Nutrition and progress — without spreadsheets or chaos",
@@ -4263,9 +4266,14 @@
         "STEP_TITLE_LABEL": "Step title",
         "STEP_TITLE_PLACEHOLDER": "Optional step name",
         "STEP_DESCRIPTION": "Step description",
+        "STEP_DESCRIPTION_REQUIRED": "Enter a step description",
+        "INGREDIENT_REQUIRED": "Select an ingredient",
+        "INGREDIENT_AMOUNT_REQUIRED": "Enter an amount",
         "STEP_DESCRIPTION_PLACEHOLDER": "Describe what needs to be done",
         "STEP_IMAGE_HINT": "Add a step photo. JPG, PNG, WebP up to 10 MB",
-        "STEP_NO_DESCRIPTION": "No description",
+        "STEP_SERVINGS_UNIT": "servings",
+        "REPLACE_INGREDIENT": "Replace ingredient",
+        "STEP_NO_DESCRIPTION": "Not filled in",
         "STEP_INGREDIENTS_COUNT": "Ingredients: {{count}}",
         "TOGGLE_STEP": "Toggle step",
         "INGREDIENTS": "Ingredients",
@@ -4333,7 +4341,11 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
-        }
+        },
+        "TEXT_INGREDIENT": "Text",
+        "TEXT_AMOUNT": "Amount",
+        "TEXT_NOT_CALCULATED": "Not included in nutrition calculations",
+        "USE_AS_TEXT": "Use “{{name}}” as text"
     },
     "PRODUCT_MANAGE": {
         "PHOTO_IMPORT_LIMIT": "Values were applied, but photos were not added: a product can have up to 5 photos. Remove unwanted photos and apply again from recognition history.",

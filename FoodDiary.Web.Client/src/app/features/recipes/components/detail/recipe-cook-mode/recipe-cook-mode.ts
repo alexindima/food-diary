@@ -10,7 +10,7 @@ const PERCENT_SCALE = 100;
 
 type CookModeIngredientView = {
     name: string;
-    amount: number;
+    amount: number | string;
     unitKey: string;
 };
 
@@ -25,7 +25,9 @@ export class RecipeCookModeComponent {
     private readonly dialogService = inject(FdUiDialogService);
     protected readonly stepPhotos = computed(() => {
         const step = this.currentStep();
-        if (step === null) { return []; }
+        if (step === null) {
+            return [];
+        }
         if (step.images !== undefined && step.images.length > 0) {
             return step.images.map(image => image.imageUrl);
         }
@@ -74,8 +76,8 @@ export class RecipeCookModeComponent {
 
     private buildIngredientViews(ingredients: readonly RecipeIngredient[]): CookModeIngredientView[] {
         return ingredients.map(ingredient => ({
-            name: ingredient.productName ?? ingredient.nestedRecipeName ?? '',
-            amount: ingredient.amount,
+            name: ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName ?? '',
+            amount: typeof ingredient.textName === 'string' ? (ingredient.amountText ?? '') : ingredient.amount,
             unitKey:
                 ingredient.productBaseUnit !== null && ingredient.productBaseUnit !== undefined && ingredient.productBaseUnit.length > 0
                     ? `GENERAL.UNITS.${ingredient.productBaseUnit}`

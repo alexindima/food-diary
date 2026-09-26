@@ -36,5 +36,6 @@ public sealed record RecipeModel(
     IReadOnlyList<RecipeStepModel> Steps,
     bool IsFavorite,
     Guid? FavoriteRecipeId) {
+    public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageModel> Images { get; init; } = [];
 }

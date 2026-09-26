@@ -3,6 +3,7 @@ import {
     Component,
     computed,
     DestroyRef,
+    effect,
     type ElementRef,
     inject,
     input,
@@ -55,6 +56,7 @@ export class RecipeSelectDialogComponent {
         optional: true,
     });
 
+    public readonly searchChanged = output<string>();
     public readonly embedded = input<boolean>(false);
     public readonly excludedRecipeId = input<string | null>(null);
     public readonly recipeSelected = output<Recipe>();
@@ -103,6 +105,9 @@ export class RecipeSelectDialogComponent {
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
+        effect(() => {
+            this.searchChanged.emit(this.searchValue() ?? '');
+        });
         this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE).subscribe();
 
         toObservable(this.searchValue)

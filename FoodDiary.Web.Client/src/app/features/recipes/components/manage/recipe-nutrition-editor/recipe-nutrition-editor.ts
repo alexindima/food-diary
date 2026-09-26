@@ -43,6 +43,13 @@ export class RecipeNutritionEditorComponent {
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
     public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionScaleMode = input.required<NutritionScaleMode>();
+    protected readonly missingIngredientCount = computed(() =>
+        this.form()
+            .steps()
+            .value()
+            .flatMap(step => step.ingredients)
+            .reduce((count, item) => count + (typeof item.textName === 'string' ? 1 : (item.nestedRecipe?.missingIngredientCount ?? 0)), 0),
+    );
     protected readonly maxCalories = MANUAL_NUTRITION_MAX_CALORIES;
     protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
     protected readonly nutritionWarning = signal<NutritionEditorWarning | null>(null);

@@ -1527,6 +1527,9 @@
         "EDIT_HELP": "Нужны оба перевода, до 512 символов каждый. Категория — до 64 символов. Вес — положительное целое число.",
         "CHANGE_FAILED": "Не удалось сохранить изменение. Попробуйте ещё раз."
     },
+    "NUTRITION_COMPLETENESS": {
+        "PARTIAL": "Пищевая ценность неполная. Не учтено ингредиентов: {{count}}."
+    },
     "LANDING_HERO": {
         "OVERLINE": "Дневник питания и счётчик калорий",
         "HEADLINE": "Питание и прогресс — без таблиц и хаоса",
@@ -4235,9 +4238,14 @@
         "STEP_TITLE_LABEL": "Название шага",
         "STEP_TITLE_PLACEHOLDER": "Необязательно",
         "STEP_DESCRIPTION": "Описание шага",
+        "STEP_DESCRIPTION_REQUIRED": "Укажите описание шага",
+        "INGREDIENT_REQUIRED": "Выберите ингредиент",
+        "INGREDIENT_AMOUNT_REQUIRED": "Укажите количество",
         "STEP_DESCRIPTION_PLACEHOLDER": "Опишите, что нужно сделать",
         "STEP_IMAGE_HINT": "Добавьте фото шага. JPG, PNG, WebP до 10 МБ",
-        "STEP_NO_DESCRIPTION": "Нет описания",
+        "STEP_SERVINGS_UNIT": "порции",
+        "REPLACE_INGREDIENT": "Заменить ингредиент",
+        "STEP_NO_DESCRIPTION": "Не заполнен",
         "STEP_INGREDIENTS_COUNT": "Ингредиентов: {{count}}",
         "TOGGLE_STEP": "Свернуть шаг",
         "INGREDIENTS": "Ингредиенты",
@@ -4305,7 +4313,11 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Подсказки всегда доступны",
             "HELP_DESCRIPTION": "Нажмите эту кнопку, когда захотите ещё раз посмотреть подсказки по форме."
-        }
+        },
+        "TEXT_INGREDIENT": "Текст",
+        "TEXT_AMOUNT": "Количество",
+        "TEXT_NOT_CALCULATED": "Не учитывается в расчёте пищевой ценности",
+        "USE_AS_TEXT": "Использовать «{{name}}» как текст"
     },
     "PRODUCT_MANAGE": {
         "PHOTO_IMPORT_LIMIT": "Значения перенесены, но фотографии не добавлены: в продукте может быть до 5 фото. Удалите ненужные снимки и повторите перенос из истории распознавания.",

@@ -422,9 +422,14 @@
         "STEP_TITLE_LABEL": "Название шага",
         "STEP_TITLE_PLACEHOLDER": "Необязательно",
         "STEP_DESCRIPTION": "Описание шага",
+        "STEP_DESCRIPTION_REQUIRED": "Укажите описание шага",
+        "INGREDIENT_REQUIRED": "Выберите ингредиент",
+        "INGREDIENT_AMOUNT_REQUIRED": "Укажите количество",
         "STEP_DESCRIPTION_PLACEHOLDER": "Опишите, что нужно сделать",
         "STEP_IMAGE_HINT": "Добавьте фото шага. JPG, PNG, WebP до 10 МБ",
-        "STEP_NO_DESCRIPTION": "Нет описания",
+        "STEP_SERVINGS_UNIT": "порции",
+        "REPLACE_INGREDIENT": "Заменить ингредиент",
+        "STEP_NO_DESCRIPTION": "Не заполнен",
         "STEP_INGREDIENTS_COUNT": "Ингредиентов: {{count}}",
         "TOGGLE_STEP": "Свернуть шаг",
         "INGREDIENTS": "Ингредиенты",
@@ -492,7 +497,11 @@
             "BALANCE_OVER": "сверх цели",
             "HELP_TITLE": "Подсказки всегда доступны",
             "HELP_DESCRIPTION": "Нажмите эту кнопку, когда захотите ещё раз посмотреть подсказки по форме."
-        }
+        },
+        "TEXT_INGREDIENT": "Текст",
+        "TEXT_AMOUNT": "Количество",
+        "TEXT_NOT_CALCULATED": "Не учитывается в расчёте пищевой ценности",
+        "USE_AS_TEXT": "Использовать «{{name}}» как текст"
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Категория",

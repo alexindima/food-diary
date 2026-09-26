@@ -62,7 +62,8 @@ export class EntityCardComponent {
 
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly quality = input<EntityCardQuality | null>(null);
-    public readonly calories = input.required<number>();
+    public readonly calories = input.required<number | null>();
+    public readonly nutritionNote = input<string | null>(null);
 
     public readonly showAction = input(false);
     public readonly compactAction = input(false);

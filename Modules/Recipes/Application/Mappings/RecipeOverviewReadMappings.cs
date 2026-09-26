@@ -40,7 +40,7 @@ public static class RecipeOverviewReadMappings {
             recipe.QualityGrade,
             [.. recipe.Steps.Select(ToStepModel)],
             isFavorite,
-            favoriteRecipeId) { Images = recipe.Images.Select(image => new RecipeImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
+            favoriteRecipeId) { MissingIngredientCount = recipe.MissingIngredientCount, Images = recipe.Images.Select(image => new RecipeImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
 
     private static RecipeStepModel ToStepModel(RecipeOverviewStepReadItem step) =>
         new(
@@ -74,5 +74,5 @@ public static class RecipeOverviewReadMappings {
             ingredient.NestedRecipeTotalFats,
             ingredient.NestedRecipeTotalCarbs,
             ingredient.NestedRecipeTotalFiber,
-            ingredient.NestedRecipeTotalAlcohol);
+            ingredient.NestedRecipeTotalAlcohol) { TextName = ingredient.TextName, AmountText = ingredient.AmountText, NestedRecipeMissingIngredientCount = ingredient.NestedRecipeMissingIngredientCount };
 }

@@ -200,13 +200,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "c027bbc7651b302b537be2a6ccb490506ac685f7c72050e04f9c7d4148c0a0ec"
+          "sha256": "2ec5c717b0f5465748c7c401e6b85019b863b89a6c4028e74c8d6cc60c811b5c"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:02.4282411Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:09.3529612Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -230,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c7193273ceb7fb03caeba0a270695854df111b056f8abd76c253d0e2ae9d5053"
+          "sha256": "8b84d7df4496594802321771af263f1c57c02c6f21238fdac124013ef6bb5149"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:03.0223394Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:09.9861205Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -493,13 +493,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "0e7c9afbdd598e924b7d0ef8822f40c94f25e978dba86a5e3dbac16611ebe16c"
+          "sha256": "09d6d9194c1f3d68546d050775402c68ed0285729e4c0e002b0fc554bbd16f24"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:03.1676320Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:10.3493269Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -779,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c80efc49b5d88e2ba74fd2a56679a8ddfaf192bad11a91bb3405a0a097c6ee01"
+          "sha256": "4299172c040b1ee012b85bde925de5b75add2cbec9cdfad204d1b724174a25b9"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:03.5736114Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:11.2142791Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3546c44da355c6f980dfa1f69b2b5e74e4c5b969e22e00aed7743dc5c0035b51"
+          "sha256": "3c382c421f3011d026f7f5e58bc2a2274914b1a1f66a1931a9f1f8ad59a5c769"
         }
       ],
-      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T13:15:35.9037849Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:11.7119214Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "564c49b7a9b11e70f0870048089ff1b097a6c661230282a74f96cbafbaa18075"
+          "sha256": "10c371264ccb2fd363a3ef123b9bf9014667def49657837f0c10b537080883b7"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:04.0836498Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:12.0635204Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3546c44da355c6f980dfa1f69b2b5e74e4c5b969e22e00aed7743dc5c0035b51"
+          "sha256": "3c382c421f3011d026f7f5e58bc2a2274914b1a1f66a1931a9f1f8ad59a5c769"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "564c49b7a9b11e70f0870048089ff1b097a6c661230282a74f96cbafbaa18075"
+          "sha256": "10c371264ccb2fd363a3ef123b9bf9014667def49657837f0c10b537080883b7"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c80efc49b5d88e2ba74fd2a56679a8ddfaf192bad11a91bb3405a0a097c6ee01"
+          "sha256": "4299172c040b1ee012b85bde925de5b75add2cbec9cdfad204d1b724174a25b9"
         }
       ],
-      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
+      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T13:15:36.5855847Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:37:12.6289573Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5f3739dfd9e242b867936fba21e85df4720feb122d10c87cec387dbfd5b85906"
+          "sha256": "0f693dfcdf88dc7c9357611c733780cafd737ac10e605f083d7163dc3bd42ed8"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d53dcf2d8c579fbadd027bae46a031fbff3de63eedca33be1474f68a7396c662"
+          "sha256": "4272ae0c2bb271530bac6a4f659e92b19200fb14c7a2ab246b4a201bd96ae005"
         }
       ],
-      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
+      "reason": "Reviewed final free-text recipe UI and contracts: optional text amount, required name, partial nutrition warning and unknown-value placeholders. Focused tests, API/PostgreSQL round-trip and mobile/desktop browser scenarios passed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T13:15:37.2900085Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:38:02.3519436Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5f3739dfd9e242b867936fba21e85df4720feb122d10c87cec387dbfd5b85906"
+          "sha256": "0f693dfcdf88dc7c9357611c733780cafd737ac10e605f083d7163dc3bd42ed8"
         }
       ],
-      "reason": "Step validation now uses individual blur flags, with all fields validated only on submit. Photo changes no longer touch unrelated fields. Focused regression test covers validation timing and error clearing.",
+      "reason": "Reviewed final free-text recipe UI and contracts: optional text amount, required name, partial nutrition warning and unknown-value placeholders. Focused tests, API/PostgreSQL round-trip and mobile/desktop browser scenarios passed.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T13:15:35.1986320Z"
+      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
+      "reviewedAtUtc": "2026-09-26T14:38:01.8868136Z"
     },
     {
       "pageId": "workflow.query-context",

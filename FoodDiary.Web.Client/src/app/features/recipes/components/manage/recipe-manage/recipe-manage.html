@@ -111,6 +111,7 @@
                         (stepImageChange)="onStepImageChange($event)"
                         (fieldBlur)="onStepFieldBlur($event)"
                         (stepDescriptionChange)="onStepDescriptionChange($event)"
+                        (ingredientTextChange)="onIngredientTextChange($event)"
                         (ingredientAmountChange)="onIngredientAmountChange($event)"
                     />
                 </div>
@@ -144,12 +145,7 @@
                                     appearance="brand-action"
                                     icon="save"
                                     [fullWidth]="true"
-                                    [disabled]="
-                                        recipeSignalForm().invalid() ||
-                                        !areStepsValid() ||
-                                        isSubmitting() ||
-                                        anyPhotosUploading()
-                                    "
+                                    [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting() || anyPhotosUploading()"
                                     [disabledReason]="
                                         recipeSignalForm().invalid()
                                             ? ('DISABLED_HINTS.FORM_INVALID' | translate)

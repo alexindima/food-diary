@@ -83,6 +83,7 @@
       "manualFats",
       "manualFiber",
       "manualProteins",
+      "missingIngredientCount",
       "name",
       "prepTime",
       "qualityGrade",
@@ -115,8 +116,10 @@
     ],
     "firstIngredientKeys": [
       "amount",
+      "amountText",
       "id",
       "nestedRecipeId",
+      "nestedRecipeMissingIngredientCount",
       "nestedRecipeName",
       "nestedRecipeServings",
       "nestedRecipeTotalAlcohol",
@@ -134,7 +137,8 @@
       "productFiberPerBase",
       "productId",
       "productName",
-      "productProteinsPerBase"
+      "productProteinsPerBase",
+      "textName"
     ]
   },
   "statistics-empty-range": {

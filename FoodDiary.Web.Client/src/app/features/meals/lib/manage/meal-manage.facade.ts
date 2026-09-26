@@ -175,6 +175,9 @@ export class MealManageFacade {
             return null;
         }
 
+        if (selection.type === 'Text') {
+            return null;
+        }
         if (selection.type === 'Product') {
             return createMealItemValue(selection.product, null, this.resolveProductAmount(selection.product), MealSourceType.Product);
         }

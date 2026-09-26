@@ -8,31 +8,36 @@
     }
 </p>
 <fd-recipe-detail-ingredient-preview [ingredients]="ingredientPreview()" />
-<section class="recipe-detail__overview fd-stack fd-gap-sm">
-    <span class="fd-ui-meta-text">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-    <strong class="recipe-detail__hero-value">{{ calories() | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
-    <dl class="recipe-detail__macro-summary">
-        @for (macro of macroSummaryBlocks(); track macro.labelKey) {
-            <div>
-                <dt>
-                    <span class="recipe-detail__nutrient-dot" aria-hidden="true" [style.background]="macro.color"></span
-                    >{{ macro.labelKey | translate }}
-                </dt>
-                <dd>{{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}</dd>
+<p class="fd-ui-caption" [hidden]="(recipe().missingIngredientCount ?? 0) === 0">
+    {{ 'NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: recipe().missingIngredientCount } }}
+</p>
+@if ((recipe().totalCalories !== null && recipe().totalCalories !== undefined) || (recipe().missingIngredientCount ?? 0) === 0) {
+    <section class="recipe-detail__overview fd-stack fd-gap-sm">
+        <span class="fd-ui-meta-text">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
+        <strong class="recipe-detail__hero-value">{{ calories() | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+        <dl class="recipe-detail__macro-summary">
+            @for (macro of macroSummaryBlocks(); track macro.labelKey) {
+                <div>
+                    <dt>
+                        <span class="recipe-detail__nutrient-dot" aria-hidden="true" [style.background]="macro.color"></span
+                        >{{ macro.labelKey | translate }}
+                    </dt>
+                    <dd>{{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}</dd>
+                </div>
+            }
+        </dl>
+        <div class="recipe-detail__quality-row">
+            <span class="recipe-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+            <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
+                <span
+                    [class]="`recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--${qualityGrade()}`"
+                    [style.width.%]="qualityScore()"
+                ></span>
             </div>
-        }
-    </dl>
-    <div class="recipe-detail__quality-row">
-        <span class="recipe-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-        <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
-            <span
-                [class]="`recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--${qualityGrade()}`"
-                [style.width.%]="qualityScore()"
-            ></span>
+            <strong [fdUiHint]="qualityHintKey() | translate">{{ qualityScore() }}</strong>
         </div>
-        <strong [fdUiHint]="qualityHintKey() | translate">{{ qualityScore() }}</strong>
-    </div>
-</section>
+    </section>
+}
 @if (recipe().comment) {
     <section class="recipe-detail__surface--comment fd-stack fd-gap-xs">
         <span class="fd-ui-meta-text">{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -31,6 +31,7 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
     ],
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
+    public readonly searchChanged = output<string>();
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
     protected readonly activeFilterCount = this.productListFacade.activeFilterCount;
@@ -44,6 +45,13 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,
     });
+
+    public constructor() {
+        super();
+        effect(() => {
+            this.searchChanged.emit(this.searchValue() ?? '');
+        });
+    }
 
     protected override onAddProductClick(): void {
         this.fdDialogService

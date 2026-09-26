@@ -136482,7 +136482,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecipeIngredientHttpRequest",

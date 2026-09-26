@@ -17,6 +17,13 @@ public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotR
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         await context.Recipes.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await LoadProductSnapshotsAsync(recipe, cancellationToken).ConfigureAwait(false);
+        RecipeId[] nestedIds = [.. recipe.Steps.SelectMany(step => step.Ingredients)
+            .Where(ingredient => ingredient.NestedRecipeId.HasValue)
+            .Select(ingredient => ingredient.NestedRecipeId!.Value).Distinct()];
+        if (nestedIds.Length > 0) {
+            await context.Recipes.Where(nested => Enumerable.Contains(nestedIds, nested.Id)).LoadAsync(cancellationToken).ConfigureAwait(false);
+        }
         return recipe;
     }
 
@@ -133,6 +140,7 @@ public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotR
             entry.CurrentValues.SetValues(recipe);
         }
 
+        entry.Property(r => r.MissingIngredientCount).IsModified = true;
         entry.Property(r => r.TotalCalories).IsModified = true;
         entry.Property(r => r.TotalProteins).IsModified = true;
         entry.Property(r => r.TotalFats).IsModified = true;

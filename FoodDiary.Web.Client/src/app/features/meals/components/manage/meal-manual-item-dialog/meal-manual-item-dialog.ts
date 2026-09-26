@@ -177,6 +177,9 @@ export class MealManualItemDialogComponent {
             return;
         }
 
+        if (selection.type === 'Text') {
+            return;
+        }
         this.servingWeightSubscription?.unsubscribe();
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);

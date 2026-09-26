@@ -42,6 +42,16 @@ let dialogService: {
     open: ReturnType<typeof vi.fn>;
 };
 
+describe('text ingredient selection', () => {
+    it('clears structured references when using text', () => {
+        const patchValue = vi.fn();
+        facade.applyItemSelection({ patchValue }, { type: 'Text', name: 'Tomatoes' });
+        expect(patchValue).toHaveBeenCalledWith(
+            expect.objectContaining({ textName: 'Tomatoes', foodName: 'Tomatoes', productId: null, nestedRecipeId: null, amount: null }),
+        );
+    });
+});
+
 beforeEach(() => {
     recipeService = {
         create: vi.fn().mockReturnValue(of({ id: 'recipe-1', name: 'Recipe' })),
@@ -167,7 +177,7 @@ describe('RecipeManageFacade selection', () => {
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(dialogService.open).toHaveBeenCalledWith(ItemSelectDialogComponent, {
             size: 'lg',
-            data: { initialTab: 'Recipe', lockInitialTab: true, excludedRecipeId: null },
+            data: { initialTab: 'Recipe', lockInitialTab: true, excludedRecipeId: null, allowText: true },
         });
         expect(result).toBeNull();
     });
@@ -423,6 +433,8 @@ describe('RecipeManageFacade nutrition boundaries', () => {
         const nested = createRecipe();
         facade.applyItemSelection({ patchValue }, { type: 'Recipe', recipe: nested });
         expect(patchValue).toHaveBeenCalledWith({
+            textName: null,
+            amountText: null,
             food: null,
             productId: null,
             foodName: nested.name,

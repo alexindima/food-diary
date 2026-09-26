@@ -59,7 +59,7 @@ public static class RecipeMappings {
             quality.Grade.ToString().ToLowerInvariant(),
             steps,
             isFavorite,
-            favoriteRecipeId) { Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
+            favoriteRecipeId) { MissingIngredientCount = recipe.IsNutritionAutoCalculated ? recipe.MissingIngredientCount : 0, Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
     private static RecipeStepModel ToStepModel(RecipeStep step) {
@@ -95,7 +95,7 @@ public static class RecipeMappings {
             ingredient.NestedRecipe?.TotalFats,
             ingredient.NestedRecipe?.TotalCarbs,
             ingredient.NestedRecipe?.TotalFiber,
-            ingredient.NestedRecipe?.TotalAlcohol);
+            ingredient.NestedRecipe?.TotalAlcohol) { TextName = ingredient.TextName, AmountText = ingredient.AmountText, NestedRecipeMissingIngredientCount = ingredient.NestedRecipe?.MissingIngredientCount ?? 0 };
     }
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {

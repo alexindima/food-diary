@@ -74,6 +74,19 @@ function configureComponent(
 }
 
 describe('ItemSelectDialogComponent', () => {
+    it('uses trimmed search text only when the caller enables text ingredients', () => {
+        const dialogRef = { close: vi.fn() };
+        const component = configureComponent({ dialogRef, dialogData: { allowText: true } }).componentInstance;
+        component['textQuery'].set('  Tomatoes  ');
+        component['useText']();
+        expect(dialogRef.close).toHaveBeenCalledWith({ type: 'Text', name: 'Tomatoes' });
+        dialogRef.close.mockClear();
+        const mealPicker = configureComponent({ dialogRef }).componentInstance;
+        mealPicker['textQuery'].set('Tomatoes');
+        mealPicker['useText']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+
     it('uses product tab by default and recipe tab from dialog data', () => {
         expect(configureComponent().componentInstance['activeTab']()).toBe('Product');
         expect(configureComponent({ dialogData: { initialTab: 'Recipe' } }).componentInstance['activeTab']()).toBe('Recipe');

@@ -10,10 +10,15 @@ internal sealed class RecipeIngredientInputValidator : AbstractValidator<RecipeI
             .WithMessage("Ingredient amount must be greater than zero")
             .LessThanOrEqualTo(RecipeIngredient.MaxAmount)
             .WithMessage(FormattableString.Invariant(
-                $"Ingredient amount must not exceed {RecipeIngredient.MaxAmount}"));
+                $"Ingredient amount must not exceed {RecipeIngredient.MaxAmount}"))
+            .When(x => x.TextName is null);
 
         RuleFor(x => x)
-            .Must(input => input.ProductId.HasValue ^ input.NestedRecipeId.HasValue)
-            .WithMessage("Ingredient must reference either productId or nestedRecipeId");
+            .Must(input => (input.ProductId.HasValue ? 1 : 0) + (input.NestedRecipeId.HasValue ? 1 : 0) + (input.TextName is not null ? 1 : 0) == 1)
+            .WithMessage("Ingredient must have exactly one product, recipe or text name");
+        RuleFor(x => x.TextName).NotEmpty().MaximumLength(RecipeIngredient.TextNameMaxLength).When(x => x.TextName is not null);
+        RuleFor(x => x.AmountText).MaximumLength(RecipeIngredient.AmountTextMaxLength);
+        RuleFor(x => x.AmountText).Null().When(x => x.TextName is null);
+        RuleFor(x => x.Amount).Equal(0).When(x => x.TextName is not null);
     }
 }

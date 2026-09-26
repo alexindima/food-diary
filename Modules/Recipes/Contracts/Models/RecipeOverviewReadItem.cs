@@ -37,5 +37,6 @@ public sealed record RecipeOverviewReadItem(
     int QualityScore,
     string QualityGrade,
     IReadOnlyList<RecipeOverviewStepReadItem> Steps) {
+    public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageReadItem> Images { get; init; } = [];
 }

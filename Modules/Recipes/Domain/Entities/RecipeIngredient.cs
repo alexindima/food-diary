@@ -6,6 +6,11 @@ using FoodDiary.Domain.Primitives;
 namespace FoodDiary.Modules.Recipes.Domain.Entities;
 
 public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
+    public const int TextNameMaxLength = 256;
+    public const int AmountTextMaxLength = 128;
+    public string? TextName { get; private set; }
+    public string? AmountText { get; private set; }
+
     public const double MaxAmount = 1_000_000d;
     private const double ComparisonEpsilon = 0.000001d;
 
@@ -55,6 +60,22 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
             ProductId = null,
             NestedRecipeId = nestedRecipeId,
             Amount = normalizedServings,
+        };
+        ingredient.SetCreated();
+        return ingredient;
+    }
+
+    internal static RecipeIngredient CreateWithText(RecipeStepId recipeStepId, string name, string? amountText) {
+        EnsureRecipeStepId(recipeStepId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        string normalizedName = name.Trim();
+        string? normalizedAmount = string.IsNullOrWhiteSpace(amountText) ? null : amountText.Trim();
+        if (normalizedName.Length > TextNameMaxLength || normalizedAmount?.Length > AmountTextMaxLength) {
+            throw new ArgumentException("Text ingredient exceeds the length limit.", nameof(name));
+        }
+        var ingredient = new RecipeIngredient {
+            Id = RecipeIngredientId.New(), RecipeStepId = recipeStepId,
+            TextName = normalizedName, AmountText = normalizedAmount,
         };
         ingredient.SetCreated();
         return ingredient;

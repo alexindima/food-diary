@@ -29,6 +29,7 @@ describe('RecipeStepFormManager', () => {
         manager.addStep();
 
         manager.addIngredientToStep(0);
+        manager.addIngredientToStep(0);
         manager.patchIngredient({ stepIndex: 0, ingredientIndex: 1 }, { foodName: 'Apple', amount: 120 });
         manager.removeIngredientFromStep({ stepIndex: 0, ingredientIndex: 0 });
 

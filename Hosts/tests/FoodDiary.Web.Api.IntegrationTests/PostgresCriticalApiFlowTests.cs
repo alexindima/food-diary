@@ -447,6 +447,63 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal("Image.NotFound", deletedStepAssetError.Error);
     }
 
+    [RequiresDockerFact]
+    public async Task RecipeTextIngredients_RoundTripDuplicateAndNutritionAgainstPostgres() {
+        HttpClient client = factory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var steps = new[] { new { description = "Season", ingredients = new[] { new { textName = "Salt", amountText = "to taste", amount = 0 } } } };
+        HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/recipes", new {
+            name = "Text recipe", servings = 2, visibility = "Private", calculateNutritionAutomatically = true, steps,
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.Created, created);
+        using var body = JsonDocument.Parse(await created.Content.ReadAsStringAsync());
+        Guid id = body.RootElement.GetProperty("id").GetGuid();
+        using var saved = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{id}"));
+        JsonElement ingredient = saved.RootElement.GetProperty("steps")[0].GetProperty("ingredients")[0];
+        Assert.Multiple(
+            () => Assert.Equal("Salt", ingredient.GetProperty("textName").GetString()),
+            () => Assert.Equal("to taste", ingredient.GetProperty("amountText").GetString()),
+            () => Assert.Equal(1, saved.RootElement.GetProperty("missingIngredientCount").GetInt32()),
+            () => Assert.Equal(JsonValueKind.Null, saved.RootElement.GetProperty("totalCalories").ValueKind));
+
+        HttpResponseMessage duplicate = await client.PostAsJsonAsync($"/api/v1/recipes/{id}/duplicate", new { });
+        await AssertStatusCodeAsync(HttpStatusCode.OK, duplicate);
+        using var copy = JsonDocument.Parse(await duplicate.Content.ReadAsStringAsync());
+        Assert.Equal("Salt", copy.RootElement.GetProperty("steps")[0].GetProperty("ingredients")[0].GetProperty("textName").GetString());
+
+        HttpResponseMessage nested = await client.PostAsJsonAsync("/api/v1/recipes", new {
+            name = "Nested text recipe", servings = 1, visibility = "Private", calculateNutritionAutomatically = true,
+            steps = new[] { new { description = "Mix", ingredients = new[] { new { nestedRecipeId = id, amount = 1 } } } },
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.Created, nested);
+        using var nestedBody = JsonDocument.Parse(await nested.Content.ReadAsStringAsync());
+        Assert.Equal(1, nestedBody.RootElement.GetProperty("missingIngredientCount").GetInt32());
+        Assert.Equal(JsonValueKind.Null, nestedBody.RootElement.GetProperty("totalCalories").ValueKind);
+
+        Guid copyId = copy.RootElement.GetProperty("id").GetGuid();
+        HttpResponseMessage updated = await client.PatchAsJsonAsync($"/api/v1/recipes/{copyId}", new {
+            calculateNutritionAutomatically = false, manualCalories = 100, manualProteins = 5, manualFats = 4, manualCarbs = 10,
+            manualFiber = 0, manualAlcohol = 0, steps,
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.OK, updated);
+        using var manual = JsonDocument.Parse(await updated.Content.ReadAsStringAsync());
+        Assert.Equal(0, manual.RootElement.GetProperty("missingIngredientCount").GetInt32());
+        Assert.Equal(100, manual.RootElement.GetProperty("totalCalories").GetDouble());
+
+        HttpResponseMessage partial = await client.PostAsJsonAsync("/api/v1/recipes", new {
+            name = "Partial recipe", servings = 1, visibility = "Private", calculateNutritionAutomatically = true,
+            steps = new[] { new { description = "Mix", ingredients = new RecipeIngredientHttpRequest[] {
+                new(ProductId: null, NestedRecipeId: copyId, Amount: 1),
+                new(ProductId: null, NestedRecipeId: null, Amount: 0) { TextName = "Pepper" },
+            }, }, },
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.Created, partial);
+        using var partialBody = JsonDocument.Parse(await partial.Content.ReadAsStringAsync());
+        Assert.Equal(1, partialBody.RootElement.GetProperty("missingIngredientCount").GetInt32());
+        Assert.Equal(50, partialBody.RootElement.GetProperty("totalCalories").GetDouble());
+    }
+
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
         if (response.StatusCode == expected) {
             return;

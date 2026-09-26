@@ -11,7 +11,7 @@ import { EntityCardComponent } from '../entity-card/entity-card';
 
 export type RecipeCardStep = {
     images?: Array<{ imageUrl: string }>;
-    ingredients?: Array<{ productName?: string | null; nestedRecipeName?: string | null }> | null;
+    ingredients?: Array<{ textName?: string | null; productName?: string | null; nestedRecipeName?: string | null }> | null;
     imageUrl?: string | null;
 };
 
@@ -30,6 +30,7 @@ export type RecipeCardItem = {
     totalFiber?: number | null;
     totalAlcohol?: number | null;
     totalCalories?: number | null;
+    missingIngredientCount?: number;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
     steps?: RecipeCardStep[] | null;
@@ -119,7 +120,7 @@ export class RecipeCardComponent {
     protected readonly description = computed(() => {
         const names = (this.recipe().steps ?? [])
             .flatMap(step => step.ingredients ?? [])
-            .map(item => item.productName ?? item.nestedRecipeName)
+            .map(item => item.textName ?? item.productName ?? item.nestedRecipeName)
             .filter(Boolean);
         const count = this.ingredientCount();
         const category = new Intl.PluralRules(this.language()).select(count).toUpperCase();

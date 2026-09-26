@@ -30500,6 +30500,13 @@
           "Nullable": true
         },
         {
+          "Name": "missingIngredientCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
           "Name": "name",
           "Required": false,
           "Type": "string",
@@ -30665,6 +30672,12 @@
           "Nullable": false
         },
         {
+          "Name": "amountText",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "nestedRecipeId",
           "Required": false,
           "Type": "string",
@@ -30676,6 +30689,12 @@
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "textName",
+          "Required": false,
+          "Type": "string",
           "Nullable": true
         }
       ]
@@ -30691,6 +30710,12 @@
           "Nullable": false
         },
         {
+          "Name": "amountText",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "id",
           "Required": false,
           "Type": "string",
@@ -30703,6 +30728,13 @@
           "Type": "string",
           "Format": "uuid",
           "Nullable": true
+        },
+        {
+          "Name": "nestedRecipeMissingIngredientCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
         },
         {
           "Name": "nestedRecipeName",
@@ -30825,6 +30857,12 @@
           "Required": false,
           "Type": "number",
           "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "textName",
+          "Required": false,
+          "Type": "string",
           "Nullable": true
         }
       ]

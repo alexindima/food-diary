@@ -30,6 +30,8 @@ internal sealed class RecipeIngredientConfiguration : IEntityTypeConfiguration<R
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Ignore(e => e.ProductSnapshot);
+        builder.Property(e => e.TextName).HasMaxLength(RecipeIngredient.TextNameMaxLength);
+        builder.Property(e => e.AmountText).HasMaxLength(RecipeIngredient.AmountTextMaxLength);
 
         builder.HasOne(e => e.NestedRecipe)
             .WithMany(r => r.NestedRecipeUsages)

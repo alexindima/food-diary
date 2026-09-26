@@ -14,7 +14,12 @@
     [comment]="recipe().comment"
     [nutrition]="nutrition()"
     [quality]="quality()"
-    [calories]="recipe().totalCalories ?? 0"
+    [calories]="recipe().totalCalories ?? null"
+    [nutritionNote]="
+        (recipe().missingIngredientCount ?? 0) > 0
+            ? ('NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: recipe().missingIngredientCount })
+            : null
+    "
     [showAction]="true"
     [compactAction]="true"
     [actionLabel]="'RECIPE_CARD.TO_DIARY' | translate"

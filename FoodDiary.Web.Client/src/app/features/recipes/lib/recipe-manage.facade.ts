@@ -52,17 +52,33 @@ export class RecipeManageFacade {
         return this.dialogService
             .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
                 size: 'lg',
-                data: { initialTab, lockInitialTab: true, excludedRecipeId },
+                data: { initialTab, lockInitialTab: true, excludedRecipeId, allowText: true },
             })
             .afterClosed()
             .pipe(map(selection => selection ?? null));
     }
 
     public applyItemSelection(foodGroup: RecipeIngredientSelectionTarget, selection: ItemSelection): void {
+        if (selection.type === 'Text') {
+            foodGroup.patchValue({
+                textName: selection.name,
+                amountText: null,
+                foodName: selection.name,
+                food: null,
+                productId: null,
+                nestedRecipe: null,
+                nestedRecipeId: null,
+                nestedRecipeName: null,
+                amount: null,
+            });
+            return;
+        }
         if (selection.type === 'Product') {
             const food = selection.product;
             const defaultAmount = food.defaultPortionAmount;
             foodGroup.patchValue({
+                textName: null,
+                amountText: null,
                 food,
                 productId: food.id,
                 foodName: food.name,
@@ -76,6 +92,8 @@ export class RecipeManageFacade {
 
         const recipe = selection.recipe;
         foodGroup.patchValue({
+            textName: null,
+            amountText: null,
             food: null,
             productId: null,
             foodName: recipe.name,

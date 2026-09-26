@@ -28,6 +28,8 @@ export type RecipeStepCardState = {
 };
 
 export type RecipeStepIngredientState = {
+    textName?: string | null;
+    amountText?: string | null;
     amount: RecipeStepCardField<IngredientFormValues['amount']>;
     food: IngredientFormValues['food'];
     foodName: RecipeStepCardField<IngredientFormValues['foodName']>;
@@ -81,14 +83,17 @@ export class RecipeStepCardComponent {
     });
     public readonly stepImageChange = output<ImageSelection | null>();
     public readonly stepDescriptionChange = output<string>();
+    public readonly ingredientTextChange = output<{ ingredientIndex: number; field: 'textName' | 'amountText'; value: string }>();
     public readonly ingredientAmountChange = output<{ ingredientIndex: number; amount: number | null }>();
 
     protected readonly isStepTitleEditing = signal(false);
     protected readonly ingredientTypeOptions: Array<FdUiSelectOption<string>> = [
         { value: 'Product', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product') },
         { value: 'Recipe', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
+        { value: 'Text', label: this.translateService.instant('RECIPE_MANAGE.TEXT_INGREDIENT') },
     ];
     protected readonly ingredientsCount = computed(() => this.ingredients.length);
+    protected readonly descriptionMissing = computed(() => this.step().description.value.trim().length === 0);
     protected readonly descriptionSummary = computed(() => {
         this.currentLanguage();
         const description = this.step().description.value.trim();
@@ -118,14 +123,17 @@ export class RecipeStepCardComponent {
         return this.ingredients.map((ingredient, index) => {
             const food = ingredient.food;
             const nestedRecipeId = ingredient.nestedRecipeId;
-            const unitKey = food?.baseUnit !== undefined ? `PRODUCT_AMOUNT_UNITS.${food.baseUnit}` : null;
+            const isRecipe = (nestedRecipeId?.length ?? 0) > 0;
+            const selected = isRecipe || food !== null;
+            const unitKey = this.getIngredientUnitKey(ingredient, isRecipe);
 
             return {
                 index,
-                prefixIcon: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'menu_book' : food !== null ? 'restaurant' : 'search',
-                amountLabel: this.resolveIngredientAmountLabel(nestedRecipeId !== null && nestedRecipeId.length > 0),
+                selected,
+                prefixIcon: isRecipe ? 'menu_book' : food !== null ? 'restaurant' : 'search',
+                amountLabel: this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT'),
                 amountUnit: unitKey === null ? undefined : this.translateService.instant(unitKey),
-                itemType: nestedRecipeId !== null && nestedRecipeId.length > 0 ? 'Recipe' : 'Product',
+                itemType: typeof ingredient.textName === 'string' ? 'Text' : isRecipe ? 'Recipe' : 'Product',
                 foodNameError: ingredient.foodName.error,
                 amountError: ingredient.amount.error,
             };
@@ -140,6 +148,14 @@ export class RecipeStepCardComponent {
 
     protected get ingredients(): readonly RecipeStepIngredientState[] {
         return this.step().ingredients;
+    }
+
+    private getIngredientUnitKey(ingredient: RecipeStepIngredientState, isRecipe: boolean): string | null {
+        if (isRecipe) {
+            return 'RECIPE_MANAGE.STEP_SERVINGS_UNIT';
+        }
+        const unit = ingredient.food?.baseUnit;
+        return unit === undefined ? null : `PRODUCT_AMOUNT_UNITS_SHORT.${unit}`;
     }
 
     protected toggleStepTitleEdit(): void {
@@ -161,7 +177,7 @@ export class RecipeStepCardComponent {
     }
 
     protected onIngredientTypeChange(ingredientIndex: number, itemType: string): void {
-        this.selectProduct.emit({ ingredientIndex, itemType: itemType === 'Recipe' ? 'Recipe' : 'Product' });
+        this.selectProduct.emit({ ingredientIndex, itemType: itemType === 'Text' ? 'Text' : itemType === 'Recipe' ? 'Recipe' : 'Product' });
     }
 
     protected onRemoveIngredient(ingredientIndex: number): void {
@@ -199,6 +215,10 @@ export class RecipeStepCardComponent {
         this.stepDescriptionChange.emit(fdUiCoerceInputTextValue(value));
     }
 
+    protected onIngredientTextInput(ingredientIndex: number, field: 'textName' | 'amountText', value: FdUiInputValue): void {
+        this.ingredientTextChange.emit({ ingredientIndex, field, value: fdUiCoerceInputTextValue(value) });
+    }
+
     protected onIngredientAmountInput(ingredientIndex: number, value: FdUiInputValue): void {
         if (ingredientIndex < 0 || ingredientIndex >= this.ingredients.length) {
             return;
@@ -226,14 +246,6 @@ export class RecipeStepCardComponent {
         this.stepTitleChange.emit(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
 
-    private resolveIngredientAmountLabel(isNestedRecipe: boolean): string {
-        if (isNestedRecipe) {
-            return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
-        }
-
-        return this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
-    }
-
     private getCurrentLanguage(): string {
         const currentLang = this.normalizeLanguage(this.translateService.getCurrentLang());
         if (currentLang.length > 0) {
@@ -250,6 +262,7 @@ export class RecipeStepCardComponent {
 }
 
 type RecipeIngredientRowView = {
+    selected: boolean;
     index: number;
     prefixIcon: 'menu_book' | 'restaurant' | 'search';
     amountLabel: string;
@@ -259,7 +272,7 @@ type RecipeIngredientRowView = {
     amountError: string | null;
 };
 
-export type RecipeIngredientItemType = 'Product' | 'Recipe';
+export type RecipeIngredientItemType = 'Product' | 'Recipe' | 'Text';
 
 export type RecipeIngredientSelectEvent = {
     ingredientIndex: number;

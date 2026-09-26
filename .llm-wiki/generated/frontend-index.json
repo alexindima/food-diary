@@ -2935,7 +2935,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 47
+      "line": 48
     },
     {
       "name": "SkeletonCardComponent",
@@ -5063,7 +5063,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 66
+      "line": 68
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -5077,7 +5077,7 @@
       "role": "Component",
       "selector": "fd-recipe-step-card",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",
-      "line": 57
+      "line": 59
     },
     {
       "name": "RecipeStepsListComponent",
@@ -5105,7 +5105,7 @@
       "role": "Component",
       "selector": "fd-recipe-select-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.ts",
-      "line": 50
+      "line": 51
     },
     {
       "name": "RecipeDetailFacade",
@@ -5854,7 +5854,7 @@
       "role": "Component",
       "selector": "fd-item-select-dialog",
       "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
-      "line": 33
+      "line": 35
     },
     {
       "name": "FoodDiaryTranslationLoader",
@@ -6672,16 +6672,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3718,
-      "russianProperties": 3718,
+      "englishProperties": 3727,
+      "russianProperties": 3727,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1029,
-      "russianProperties": 1029,
+      "englishProperties": 1031,
+      "russianProperties": 1031,
       "countsMatch": true
     },
     {

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
-import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepCardComponent, type RecipeStepCardState } from './recipe-step-card';
 
 describe('RecipeStepCardComponent', () => {
@@ -79,10 +79,14 @@ describe('RecipeStepCardComponent', () => {
                 prefixIcon: 'restaurant',
                 amountLabel: 'RECIPE_MANAGE.INGREDIENT_AMOUNT',
                 itemType: 'Product',
+                amountUnit: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                selected: true,
             }),
         );
     });
+});
 
+describe('Recipe ingredient selection', () => {
     it('emits ingredient selection with requested item type', () => {
         const { component } = setupComponent();
         const selections: Array<{ ingredientIndex: number; itemType: string }> = [];
@@ -100,7 +104,9 @@ describe('RecipeStepCardComponent', () => {
     });
 });
 
-function setupComponent(step = createRecipeStepValue()): {
+function setupComponent(
+    step = createRecipeStepValue({ title: null, imageUrl: null, description: '', ingredients: [createRecipeIngredientValue()] }),
+): {
     component: RecipeStepCardComponent;
     fixture: ComponentFixture<RecipeStepCardComponent>;
 } {
@@ -126,6 +132,8 @@ function createStepCardState(step: StepFormValues): RecipeStepCardState {
         images: step.images,
         description: { value: step.description, error: null },
         ingredients: step.ingredients.map(ingredient => ({
+            textName: ingredient.textName,
+            amountText: ingredient.amountText,
             amount: { value: ingredient.amount, error: null },
             food: ingredient.food,
             foodName: { value: ingredient.foodName, error: null },
@@ -181,7 +189,9 @@ describe('RecipeStepCardComponent editing boundaries', () => {
         buttons[0].click();
         buttons[1].click();
         fixture.detectChanges();
-        const removeButton = [...document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')].find(button => button.textContent.includes('RECIPE_MANAGE.REMOVE_STEP'));
+        const removeButton = [...document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')].find(button =>
+            button.textContent.includes('RECIPE_MANAGE.REMOVE_STEP'),
+        );
         expect(removeButton).toBeDefined();
         expect(removeButton?.disabled).toBe(true);
         expect(toggle).toHaveBeenCalledTimes(1);
@@ -199,7 +209,10 @@ const MISSING_INGREDIENT_INDEX = 10;
 
 describe('RecipeStepCardComponent gallery', () => {
     it('emits all photos in the selected cover order and preserves upload state', () => {
-        const photos = [{ assetId: 'first', url: '/first.jpg' }, { assetId: 'second', url: '/second.jpg' }];
+        const photos = [
+            { assetId: 'first', url: '/first.jpg' },
+            { assetId: 'second', url: '/second.jpg' },
+        ];
         const { component } = setupComponent({ ...createRecipeStepValue(), images: photos });
         const changed = vi.fn();
         const uploading = vi.fn();
@@ -213,5 +226,38 @@ describe('RecipeStepCardComponent gallery', () => {
         expect(uploading).toHaveBeenCalledWith(true);
         expect(component['uploading']()).toBe(true);
     });
+});
 
+describe('Recipe step presentation', () => {
+    it('renders editable text ingredients and emits free-form amounts', () => {
+        const { component, fixture } = setupComponent({
+            ...createRecipeStepValue(),
+            ingredients: [createRecipeIngredientValue({ textName: 'Salt', amountText: 'to taste' })],
+        });
+        const changed = vi.fn();
+        component.ingredientTextChange.subscribe(changed);
+        expect(component['ingredientRows']()[0].itemType).toBe('Text');
+        expect((fixture.nativeElement as HTMLElement).querySelector('input[type="number"]')).toBeNull();
+        component['onIngredientTextInput'](0, 'amountText', 'a pinch');
+        expect(changed).toHaveBeenCalledWith({ ingredientIndex: 0, field: 'amountText', value: 'a pinch' });
+    });
+    it('shows servings for a nested recipe and no unit before selection', () => {
+        const { component, fixture } = setupComponent();
+        expect(component['ingredientRows']()[0].amountUnit).toBeUndefined();
+        const state = component.step();
+        fixture.componentRef.setInput('step', { ...state, ingredients: [{ ...state.ingredients[0], nestedRecipeId: 'nested-1' }] });
+        fixture.detectChanges();
+        expect(component['ingredientRows']()[0].amountUnit).toBe('RECIPE_MANAGE.STEP_SERVINGS_UNIT');
+        expect(component['ingredientRows']()[0].selected).toBe(true);
+    });
+
+    it('marks an empty description in the collapsed summary', () => {
+        const { component, fixture } = setupComponent();
+        fixture.componentRef.setInput('isExpanded', false);
+        fixture.detectChanges();
+        expect(component['descriptionMissing']()).toBe(true);
+        expect(
+            (fixture.nativeElement as HTMLElement).querySelector('.recipe-step-card__summary-description--empty')?.textContent,
+        ).toContain('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
+    });
 });

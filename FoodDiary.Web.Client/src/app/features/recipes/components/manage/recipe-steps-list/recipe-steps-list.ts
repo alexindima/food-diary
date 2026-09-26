@@ -56,6 +56,7 @@ export class RecipeStepsListComponent {
     public readonly stepImageChange = output<StepFieldEvent<RecipeStepCardState['imageUrl']['value']>>();
     public readonly fieldBlur = output<{ stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
     public readonly stepDescriptionChange = output<StepFieldEvent<string>>();
+    public readonly ingredientTextChange = output<StepIngredientEvent & { field: 'textName' | 'amountText'; value: string }>();
     public readonly ingredientAmountChange = output<StepIngredientAmountEvent>();
 
     protected onPhotosUploading(index: number, uploading: boolean): void {
@@ -94,13 +95,18 @@ export class RecipeStepsListComponent {
 
     protected onAddStep(): void {
         this.addStep.emit();
-        afterNextRender(() => {
-            const descriptions = this.element.nativeElement.querySelectorAll<HTMLTextAreaElement>('fd-recipe-step-card textarea');
-            if (descriptions.length === 0) { return; }
+        afterNextRender(
+            () => {
+                const descriptions = this.element.nativeElement.querySelectorAll<HTMLTextAreaElement>('fd-recipe-step-card textarea');
+                if (descriptions.length === 0) {
+                    return;
+                }
                 const description = descriptions.item(descriptions.length - 1);
-            description.focus({ preventScroll: true });
-            description.scrollIntoView({ block: 'nearest' });
-        }, { injector: this.injector });
+                description.focus({ preventScroll: true });
+                description.scrollIntoView({ block: 'nearest' });
+            },
+            { injector: this.injector },
+        );
     }
 
     protected onAddIngredient(stepIndex: number): void {

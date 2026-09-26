@@ -58,6 +58,7 @@ export class NutritionEditorComponent {
     public readonly form = input<NutritionEditorSignalForm | null>(null);
     public readonly macroState = input.required<NutritionMacroState>();
     public readonly readonly = input(false);
+    public readonly emptyPlaceholder = input('0');
     public readonly appearance = input<'tinted' | 'plain'>('tinted');
     public readonly hideEmptyMacroBar = input(false);
     public readonly caloriesError = input<string | null>(null);

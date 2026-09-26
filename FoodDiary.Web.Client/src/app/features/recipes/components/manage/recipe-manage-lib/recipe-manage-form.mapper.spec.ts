@@ -19,6 +19,36 @@ const DEFAULT_SERVINGS = 2;
 const PRODUCT_AMOUNT = 150;
 const RECIPE_TOTAL_FACTOR = 10;
 
+describe('text ingredient persistence', () => {
+    it('round trips a text ingredient with a free-form amount', () => {
+        const step = mapRecipeStepToFormValue(
+            {
+                id: 'step',
+                stepNumber: 1,
+                instruction: 'Season',
+                ingredients: [{ id: 'salt', amount: 0, textName: 'Salt', amountText: 'to taste' }],
+            },
+            { selectIngredient: 'Select', unknownProduct: 'Unknown' },
+        );
+        expect(step.ingredients[0].textName).toBe('Salt');
+        const dto = buildRecipeDto({ ...createRecipeFormValue(), steps: [step] }, 'recipe', 1, value => value ?? 0);
+        expect(dto.steps[0].ingredients).toEqual([
+            { productId: undefined, nestedRecipeId: undefined, amount: 0, textName: 'Salt', amountText: 'to taste' },
+        ]);
+    });
+
+    it('keeps a text ingredient with no amount', () => {
+        const ingredient = createRecipeIngredientValue({ textName: 'Salt' });
+        const dto = buildRecipeDto(
+            { ...createRecipeFormValue(), steps: [{ ...createRecipeStepValue(), description: 'Season', ingredients: [ingredient] }] },
+            'recipe',
+            1,
+            value => value ?? 0,
+        );
+        expect(dto.steps[0].ingredients[0]).toMatchObject({ textName: 'Salt', amountText: null, amount: 0 });
+    });
+});
+
 const RECIPE: Recipe = {
     id: 'recipe-1',
     name: 'Test recipe',
@@ -61,13 +91,12 @@ describe('recipe manage form creation', () => {
         expect(form.steps.length).toBe(0);
     });
 
-    it('should create a step value with one empty ingredient when no values are provided', () => {
+    it('should create a step without ingredients when no values are provided', () => {
         const step = createRecipeStepValue();
 
         expect(step.title).toBeNull();
         expect(step.description).toBe('');
-        expect(step.ingredients.length).toBe(1);
-        expect(step.ingredients[0]?.foodName).toBeNull();
+        expect(step.ingredients).toEqual([]);
     });
 
     it('should create ingredient value from selected product defaults', () => {
@@ -338,11 +367,29 @@ describe('recipe gallery mapping', () => {
 
 describe('step gallery mapping', () => {
     it('preserves step photos through editing and sends reordered or cleared galleries', () => {
-        const step = createRecipeStepValue({ ...createRecipeStepValue(), images: [{ assetId: 'second', url: '/2.jpg' }, { assetId: 'first', url: '/1.jpg' }] });
+        const step = createRecipeStepValue({
+            ...createRecipeStepValue(),
+            images: [
+                { assetId: 'second', url: '/2.jpg' },
+                { assetId: 'first', url: '/1.jpg' },
+            ],
+        });
         const values = createManualRecipeFormValue();
         step.ingredients = values.steps[0].ingredients;
         const dto = buildRecipeDto({ ...values, steps: [step] }, 'recipe', 1, value => value ?? 0);
         expect(dto.steps[0].imageAssetIds).toEqual(['second', 'first']);
-        expect(buildRecipeDto({ ...values, steps: [{ ...step, images: [] }] }, 'recipe', 1, value => value ?? 0).steps[0].imageAssetIds).toEqual([]);
+        expect(
+            buildRecipeDto({ ...values, steps: [{ ...step, images: [] }] }, 'recipe', 1, value => value ?? 0).steps[0].imageAssetIds,
+        ).toEqual([]);
+    });
+});
+
+describe('instruction-only step mapping', () => {
+    it('preserves ingredient-free steps and their order in the save request', () => {
+        const value = createManualRecipeFormValue();
+        value.steps.unshift(createRecipeStepValue({ title: null, imageUrl: null, description: 'Preheat oven', ingredients: [] }));
+        const dto = buildRecipeDto(value, 'recipe', DEFAULT_SERVINGS, scaleValue);
+        expect(dto.steps.map(step => step.description)).toEqual(['Preheat oven', 'Cook']);
+        expect(dto.steps[0].ingredients).toEqual([]);
     });
 });

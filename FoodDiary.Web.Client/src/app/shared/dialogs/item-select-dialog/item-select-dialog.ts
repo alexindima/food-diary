@@ -15,6 +15,8 @@ import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/r
 import type { Recipe } from '../../../features/recipes/models/recipe.data';
 import type { ItemSelectDialogData, ItemSelection } from './item-select-dialog-lib/item-select-dialog.types';
 
+const MAX_TEXT_NAME_LENGTH = 256;
+
 @Component({
     selector: 'fd-item-select-dialog',
     templateUrl: './item-select-dialog.html',
@@ -39,6 +41,14 @@ export class ItemSelectDialogComponent {
     public readonly productSelected = output<Product>();
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();
+    protected readonly textQuery = signal('');
+    protected readonly allowText = this.dialogData?.allowText === true;
+    protected useText(): void {
+        const name = this.textQuery().trim();
+        if (this.allowText && name.length > 0 && name.length <= MAX_TEXT_NAME_LENGTH) {
+            this.completeWith({ type: 'Text', name });
+        }
+    }
     protected readonly tabs: FdUiTab[] = [
         {
             value: 'Product',
@@ -73,6 +83,7 @@ export class ItemSelectDialogComponent {
             return;
         }
 
+        this.textQuery.set('');
         this.activeTab.set(tab);
     }
 
@@ -108,7 +119,7 @@ export class ItemSelectDialogComponent {
 
         if (selection.type === 'Product') {
             this.productSelected.emit(selection.product);
-        } else {
+        } else if (selection.type === 'Recipe') {
             this.recipeSelected.emit(selection.recipe);
         }
     }

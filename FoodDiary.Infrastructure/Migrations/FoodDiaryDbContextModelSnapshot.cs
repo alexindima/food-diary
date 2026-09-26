@@ -1887,6 +1887,9 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.Recipe", b => {
+                b.Property<int>("MissingIngredientCount")
+                    .HasColumnType("integer");
+
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2036,6 +2039,14 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeIngredient", b => {
+                b.Property<string>("AmountText")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
+
+                b.Property<string>("TextName")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
+
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 

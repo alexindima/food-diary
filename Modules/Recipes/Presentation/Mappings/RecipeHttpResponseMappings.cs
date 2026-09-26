@@ -42,7 +42,7 @@ public static class RecipeHttpResponseMappings {
                 model.Steps.ToHttpResponseList(ToHttpResponse),
                 model.IsFavorite,
                 model.FavoriteRecipeId
-            ) { Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
+            ) { MissingIngredientCount = model.MissingIngredientCount, Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
         }
     }
 
@@ -101,7 +101,7 @@ public static class RecipeHttpResponseMappings {
                 model.NestedRecipeTotalCarbs,
                 model.NestedRecipeTotalFiber,
                 model.NestedRecipeTotalAlcohol
-            );
+            ) { TextName = model.TextName, AmountText = model.AmountText, NestedRecipeMissingIngredientCount = model.NestedRecipeMissingIngredientCount };
         }
     }
 }

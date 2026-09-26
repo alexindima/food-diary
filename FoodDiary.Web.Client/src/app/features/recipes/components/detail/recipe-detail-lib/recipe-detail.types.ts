@@ -10,7 +10,7 @@ export type MacroBlock = {
 
 export type IngredientPreviewItem = {
     name: string;
-    amount: number;
+    amount: number | string;
     unitKey: string | null;
 };
 

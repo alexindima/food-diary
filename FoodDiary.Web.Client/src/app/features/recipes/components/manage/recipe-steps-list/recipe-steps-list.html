@@ -33,6 +33,14 @@
                         (stepImageChange)="onStepImageChange($index, $event)"
                         (fieldBlur)="fieldBlur.emit({ stepIndex: $index, field: $event.field, ingredientIndex: $event.ingredientIndex })"
                         (stepDescriptionChange)="onStepDescriptionChange($index, $event)"
+                        (ingredientTextChange)="
+                            ingredientTextChange.emit({
+                                stepIndex: $index,
+                                ingredientIndex: $event.ingredientIndex,
+                                field: $event.field,
+                                value: $event.value,
+                            })
+                        "
                         (ingredientAmountChange)="onIngredientAmountChange($index, $event)"
                     />
                 </div>

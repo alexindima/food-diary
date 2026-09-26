@@ -7,9 +7,15 @@
     [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
 >
     <div class="recipe-manage__nutrition fd-stack fd-gap-md">
+        @if (isNutritionReadonly() && missingIngredientCount() > 0) {
+            <p class="fd-ui-caption" role="status">
+                {{ 'NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: missingIngredientCount() } }}
+            </p>
+        }
         <fd-nutrition-editor
             appearance="plain"
             manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
+            [emptyPlaceholder]="isNutritionReadonly() && missingIngredientCount() > 0 ? '—' : '0'"
             [hideEmptyMacroBar]="true"
             [form]="nutritionForm()"
             [macroState]="macroBarState()"

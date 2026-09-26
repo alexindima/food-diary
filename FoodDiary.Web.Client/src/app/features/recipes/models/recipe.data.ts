@@ -32,6 +32,7 @@ export type Recipe = {
     totalCarbs?: number | null;
     totalFiber?: number | null;
     totalAlcohol?: number | null;
+    missingIngredientCount?: number;
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;
     manualProteins?: number | null;
@@ -57,6 +58,9 @@ export type RecipeStep = {
 };
 
 export type RecipeIngredient = {
+    textName?: string | null;
+    amountText?: string | null;
+    nestedRecipeMissingIngredientCount?: number;
     id: string;
     amount: number;
     productId?: string | null;
@@ -146,6 +150,8 @@ export type RecipeStepDto = {
 };
 
 export type RecipeIngredientDto = {
+    textName?: string | null;
+    amountText?: string | null;
     productId?: string;
     nestedRecipeId?: string;
     amount: number;

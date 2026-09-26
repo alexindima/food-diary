@@ -93,6 +93,7 @@ public sealed class DuplicateRecipeCommandHandler(
     private static void ApplyNutritionSettings(Recipe duplicate, Recipe original) {
         if (original.IsNutritionAutoCalculated) {
             duplicate.EnableAutoNutrition();
+            duplicate.SetMissingIngredientCount(original.MissingIngredientCount);
             duplicate.ApplyComputedNutrition(
                 original.TotalCalories,
                 original.TotalProteins,
@@ -130,7 +131,9 @@ public sealed class DuplicateRecipeCommandHandler(
             }
 
             foreach (RecipeIngredient ingredient in step.Ingredients) {
-                if (ingredient.ProductId.HasValue &&
+                if (ingredient.TextName is not null) {
+                    newStep.AddTextIngredient(ingredient.TextName, ingredient.AmountText);
+                } else if (ingredient.ProductId.HasValue &&
                     (preserveManagedAssets || ingredient.ProductSnapshot?.Visibility == Visibility.Public)) {
                     newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
                 } else if (ingredient.NestedRecipeId.HasValue &&

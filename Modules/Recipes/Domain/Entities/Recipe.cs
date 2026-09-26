@@ -40,6 +40,15 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public int? PrepTime { get; private set; }
     public int? CookTime { get; private set; }
     public int Servings { get; private set; }
+    public int MissingIngredientCount { get; private set; }
+    public void SetMissingIngredientCount(int count) {
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (MissingIngredientCount != count) {
+            MissingIngredientCount = count;
+            SetModified();
+        }
+    }
+
     public double? TotalCalories { get; private set; }
     public double? TotalProteins { get; private set; }
     public double? TotalFats { get; private set; }
@@ -262,6 +271,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
 
         IsNutritionAutoCalculated = false;
+        SetMissingIngredientCount(0);
         ApplyManualNutrition(manualNutrition);
         ApplyTotalNutrition(manualNutrition);
         RaiseDomainEvent(new RecipeManualNutritionSetDomainEvent(Id));

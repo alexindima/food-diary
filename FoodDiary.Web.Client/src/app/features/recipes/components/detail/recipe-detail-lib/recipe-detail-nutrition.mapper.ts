@@ -111,8 +111,8 @@ function buildIngredientPreview(recipe: Recipe, unknownIngredientName: string): 
     return recipe.steps
         .flatMap(step => step.ingredients)
         .map(ingredient => ({
-            name: ingredient.productName ?? ingredient.nestedRecipeName ?? unknownIngredientName,
-            amount: ingredient.amount,
+            name: ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName ?? unknownIngredientName,
+            amount: typeof ingredient.textName === 'string' ? (ingredient.amountText ?? '') : ingredient.amount,
             unitKey:
                 ingredient.productBaseUnit !== null && ingredient.productBaseUnit !== undefined && ingredient.productBaseUnit.length > 0
                     ? `GENERAL.UNITS.${ingredient.productBaseUnit}`

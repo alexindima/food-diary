@@ -6,4 +6,6 @@ public sealed record RecipeNutritionSummary(
     double? TotalFats,
     double? TotalCarbs,
     double? TotalFiber,
-    double? TotalAlcohol);
+    double? TotalAlcohol) {
+    public int MissingIngredientCount { get; init; }
+}

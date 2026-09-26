@@ -87,7 +87,7 @@ public static class RecipeHttpMappings {
                                 : new RecipeIngredientInput(
                                     ingredient.ProductId,
                                     ingredient.NestedRecipeId,
-                                    ingredient.Amount))
+                                    ingredient.Amount) { TextName = ingredient.TextName, AmountText = ingredient.AmountText })
                             .ToList()!) { ImageAssetIds = step.ImageAssetIds })
             .ToList();
 }

@@ -3,11 +3,11 @@
   "summary": {
     "components": 462,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1494,
-    "outputs": 503,
+    "inputs": 1497,
+    "outputs": 507,
     "apiCalls": 267,
     "templatesWithTranslations": 322,
-    "translationKeys": 1907,
+    "translationKeys": 1909,
     "consumerEdges": 1139,
     "consumedComponents": 295,
     "unconsumedComponents": 166
@@ -9069,6 +9069,10 @@
       ],
       "outputs": [
         {
+          "name": "searchChanged",
+          "type": "string"
+        },
+        {
           "name": "productSelected",
           "type": "Product"
         }
@@ -10623,6 +10627,10 @@
       ],
       "outputs": [
         {
+          "name": "searchChanged",
+          "type": "string"
+        },
+        {
           "name": "recipeSelected",
           "type": "Recipe"
         },
@@ -10738,6 +10746,10 @@
           "type": "string"
         },
         {
+          "name": "ingredientTextChange",
+          "type": "{ ingredientIndex: number; field: 'textName' | 'amountText'; value: string }"
+        },
+        {
           "name": "ingredientAmountChange",
           "type": "{ ingredientIndex: number; amount: number | null }"
         }
@@ -10819,6 +10831,10 @@
         {
           "name": "stepDescriptionChange",
           "type": "StepFieldEvent<string>"
+        },
+        {
+          "name": "ingredientTextChange",
+          "type": "StepIngredientEvent & { field: 'textName' | 'amountText'; value: string }"
         },
         {
           "name": "ingredientAmountChange",
@@ -11654,8 +11670,13 @@
         },
         {
           "name": "calories",
-          "type": "number",
+          "type": "number | null",
           "required": true
+        },
+        {
+          "name": "nutritionNote",
+          "type": "string | null",
+          "required": false
         },
         {
           "name": "quality",
@@ -11765,8 +11786,13 @@
         },
         {
           "name": "calories",
-          "type": "number",
+          "type": "number | null",
           "required": true
+        },
+        {
+          "name": "nutritionNote",
+          "type": "string | null",
+          "required": false
         },
         {
           "name": "showAction",
@@ -12850,6 +12876,11 @@
         },
         {
           "name": "readonly",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "emptyPlaceholder",
           "type": "",
           "required": false
         },
@@ -20798,6 +20829,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.html",
       "keys": [
         "GENERAL.UNITS.KCAL",
+        "NUTRITION_COMPLETENESS.PARTIAL",
         "PRODUCT_CARD.QUALITY_SCORE",
         "RECIPE_DETAIL.MIN",
         "RECIPE_DETAIL.SUMMARY.CALORIES",
@@ -20919,6 +20951,7 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.html",
       "keys": [
+        "NUTRITION_COMPLETENESS.PARTIAL",
         "RECIPE_MANAGE.NUTRITION_GROUP_TITLE",
         "RECIPE_MANAGE.NUTRITION_MODE.ARIA",
         "RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA"
@@ -20929,7 +20962,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
       "keys": [
         "COMMON.DELETE",
-        "DISABLED_HINTS.FIRST_INGREDIENT_REQUIRED",
         "DISABLED_HINTS.FIRST_RECIPE_STEP_REQUIRED",
         "DISABLED_HINTS.OPERATION_BUSY",
         "RECIPE_MANAGE.ADD_INGREDIENT",
@@ -20939,11 +20971,12 @@
         "RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER",
         "RECIPE_MANAGE.INGREDIENT_TYPE",
         "RECIPE_MANAGE.REMOVE_STEP",
-        "RECIPE_MANAGE.SELECT_INGREDIENT",
         "RECIPE_MANAGE.STEP_ACTIONS",
         "RECIPE_MANAGE.STEP_DESCRIPTION",
         "RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER",
         "RECIPE_MANAGE.STEP_INGREDIENTS_COUNT",
+        "RECIPE_MANAGE.TEXT_AMOUNT",
+        "RECIPE_MANAGE.TEXT_NOT_CALCULATED",
         "RECIPE_MANAGE.TOGGLE_STEP"
       ]
     },
@@ -20971,6 +21004,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "keys": [
         "COMMON.ADD",
+        "NUTRITION_COMPLETENESS.PARTIAL",
         "RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND",
         "RECIPE_SELECT_DIALOG.SERVINGS",
         "SHARED.NUTRIENTS_SUMMARY.KKAL"
@@ -21359,6 +21393,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.html",
       "keys": [
+        "NUTRITION_COMPLETENESS.PARTIAL",
         "RECIPE_CARD.ADD_TO_MEAL",
         "RECIPE_CARD.TO_DIARY"
       ]
@@ -21395,7 +21430,8 @@
       "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
       "keys": [
         "COMMON.CLOSE",
-        "MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE"
+        "MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE",
+        "RECIPE_MANAGE.USE_AS_TEXT"
       ]
     },
     {
@@ -23886,6 +23922,7 @@
         "comment",
         "description",
         "nutrition",
+        "nutritionNote",
         "quality",
         "title",
         "titleMuted"
@@ -23974,12 +24011,9 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.html",
       "occurrences": 1,
       "inputsUsed": [
-        "actionAriaLabel",
-        "actionLabel",
         "backgroundKey",
         "calories",
         "comment",
-        "compactAction",
         "description",
         "favoriteAriaLabel",
         "favoriteLoading",
@@ -23988,19 +24022,14 @@
         "imageUrl",
         "isFavorite",
         "nutrition",
+        "nutritionNote",
         "ownershipIcon",
         "previewable",
         "quality",
-        "showAction",
         "showFavorite",
         "title"
       ],
-      "outputsHandled": [
-        "action",
-        "favoriteToggle",
-        "open",
-        "preview"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "EntityCardThumbComponent",
@@ -28224,7 +28253,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "fill",
         "icon",
@@ -32614,12 +32643,13 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
-      "occurrences": 3,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
         "error",
         "label",
+        "maxLength",
         "placeholder",
         "prefixIcon",
         "readonly",
@@ -35270,6 +35300,7 @@
         "error",
         "label",
         "placeholder",
+        "required",
         "rows",
         "stretch",
         "value"
@@ -36660,18 +36691,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
-        "caloriesError",
-        "fieldErrors",
-        "form",
-        "hideEmptyMacroBar",
-        "macroState",
-        "macrosError",
-        "manualHintKey",
-        "maxCalories",
-        "maxNutrient",
-        "readonly",
-        "showManualHint",
-        "warning"
+        "emptyPlaceholder",
+        "manualHintKey"
       ],
       "outputsHandled": []
     },
@@ -37618,7 +37639,8 @@
         "embedded"
       ],
       "outputsHandled": [
-        "productSelected"
+        "productSelected",
+        "searchChanged"
       ]
     },
     {
@@ -38028,7 +38050,8 @@
       ],
       "outputsHandled": [
         "createRecipeRequested",
-        "recipeSelected"
+        "recipeSelected",
+        "searchChanged"
       ]
     },
     {
@@ -38076,6 +38099,7 @@
         "addStep",
         "fieldBlur",
         "ingredientAmountChange",
+        "ingredientTextChange",
         "photosUploading",
         "removeIngredient",
         "removeStep",

@@ -21,9 +21,7 @@ internal sealed class RecipeStepInputValidator : AbstractValidator<RecipeStepInp
         RuleFor(x => x.Ingredients)
             .Cascade(CascadeMode.Stop)
             .NotNull()
-            .WithMessage("Ingredients collection is required")
-            .Must(ingredients => ingredients.Count > 0)
-            .WithMessage("Each step must contain at least one ingredient");
+            .WithMessage("Ingredients collection is required");
 
         RuleForEach(x => x.Ingredients)
             .Cascade(CascadeMode.Stop)

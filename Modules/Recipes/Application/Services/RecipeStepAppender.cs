@@ -102,7 +102,9 @@ internal static class RecipeStepAppender {
                 return nestedRecipeIdResult;
             }
 
-            if (productIdResult.Value.HasValue) {
+            if (ingredient.TextName is not null) {
+                step.AddTextIngredient(ingredient.TextName, ingredient.AmountText);
+            } else if (productIdResult.Value.HasValue) {
                 step.AddProductIngredient(productIdResult.Value.Value, ingredient.Amount);
             } else if (nestedRecipeIdResult.Value.HasValue) {
                 step.AddNestedRecipeIngredient(nestedRecipeIdResult.Value.Value, ingredient.Amount);

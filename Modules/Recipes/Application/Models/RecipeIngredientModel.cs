@@ -24,4 +24,8 @@ public sealed record RecipeIngredientModel(
     double? NestedRecipeTotalFats,
     double? NestedRecipeTotalCarbs,
     double? NestedRecipeTotalFiber,
-    double? NestedRecipeTotalAlcohol);
+    double? NestedRecipeTotalAlcohol) {
+    public string? TextName { get; init; }
+    public string? AmountText { get; init; }
+    public int NestedRecipeMissingIngredientCount { get; init; }
+}

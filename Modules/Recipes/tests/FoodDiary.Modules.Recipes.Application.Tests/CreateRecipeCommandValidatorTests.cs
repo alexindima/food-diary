@@ -10,6 +10,40 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public class CreateRecipeCommandValidatorTests {
+    [Theory]
+    [InlineData("Salt", null, true)]
+    [InlineData("Tomatoes", "2 pieces", true)]
+    [InlineData("", "to taste", false)]
+    [InlineData("   ", null, false)]
+    public async Task ValidateAsync_TextIngredient_ValidatesNameWithoutNumericAmount(string name, string? amount, bool valid) {
+        RecipeStepInput step = CreateStep(1, "Season") with {
+            Ingredients = [new RecipeIngredientInput(ProductId: null, NestedRecipeId: null, Amount: 0) { TextName = name, AmountText = amount }],
+        };
+        ValidationResult result = await new CreateRecipeCommandValidator().ValidateAsync(CreateCommand(Guid.NewGuid(), [step]));
+        Assert.Equal(valid, result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_TextIngredient_RejectsMixedReferencesAndOversizedText() {
+        RecipeStepInput step = CreateStep(1, "Season") with {
+            Ingredients = [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100) {
+                TextName = new string('a', 257), AmountText = new string('a', 129),
+            }],
+        };
+        ValidationResult result = await new CreateRecipeCommandValidator().ValidateAsync(CreateCommand(Guid.NewGuid(), [step]));
+        Assert.False(result.IsValid);
+    }
+
+    [Theory]
+    [InlineData("Preheat the oven", true)]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    public async Task ValidateAsync_WithIngredientFreeStep_RequiresDescription(string description, bool valid) {
+        RecipeStepInput step = CreateStep(1, description) with { Ingredients = [] };
+        ValidationResult result = await new CreateRecipeCommandValidator().ValidateAsync(CreateCommand(Guid.NewGuid(), [step]));
+        Assert.Equal(valid, result.IsValid);
+    }
+
     [Fact]
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();

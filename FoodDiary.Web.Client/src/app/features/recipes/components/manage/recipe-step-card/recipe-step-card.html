@@ -27,7 +27,8 @@
                     variant="secondary"
                     fill="text"
                     [icon]="expandedIcon()"
-                    [disabled]="busy() || uploading()" [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    [disabled]="busy() || uploading()"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                     [attr.aria-expanded]="isExpanded()"
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
@@ -39,7 +40,8 @@
                     icon="more_horiz"
                     [ariaLabel]="'RECIPE_MANAGE.STEP_ACTIONS' | translate"
                     [fdUiMenuTrigger]="stepMenu"
-                    [disabled]="busy() || uploading()" [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    [disabled]="busy() || uploading()"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                 />
                 <fd-ui-menu #stepMenu>
                     <fd-ui-menu-item (itemClick)="toggleStepTitleEdit()">{{ 'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate }}</fd-ui-menu-item>
@@ -55,8 +57,14 @@
         </div>
 
         @if (!isExpanded()) {
-            <div class="recipe-step-card__summary fd-stack fd-gap-xxs">
-                <div class="recipe-step-card__summary-description fd-ui-body-sm">{{ descriptionSummary() }}</div>
+            <div class="recipe-step-card__summary">
+                <div
+                    class="recipe-step-card__summary-description fd-ui-body-sm"
+                    [class.recipe-step-card__summary-description--empty]="descriptionMissing()"
+                    [attr.title]="descriptionSummary()"
+                >
+                    {{ descriptionSummary() }}
+                </div>
                 <div class="recipe-step-card__summary-meta fd-ui-caption">
                     {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount() } }}
                 </div>
@@ -79,6 +87,7 @@
                         [value]="step().description.value"
                         [rows]="3"
                         [stretch]="true"
+                        [required]="true"
                         [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                         [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
                         [error]="descriptionError()"
@@ -101,33 +110,62 @@
                                 [ariaLabel]="'RECIPE_MANAGE.INGREDIENT_TYPE' | translate"
                                 (valueChange)="onIngredientTypeChange(row.index, $event ?? 'Product')"
                             />
-                            <fd-ui-input
-                                class="recipe-ingredient__name"
-                                size="md"
-                                [value]="ingredients[row.index]?.foodName.value ?? ''"
-                                [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
-                                [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
-                                [readonly]="true"
-                                [prefixIcon]="row.prefixIcon"
-                                [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                                [error]="row.foodNameError"
-                                (click)="onProductSelectClick(row.index, row.itemType)"
-                                (focusout)="fieldBlur.emit({ field: 'foodName', ingredientIndex: row.index })"
-                            />
+                            @if (row.itemType === 'Text') {
+                                <fd-ui-input
+                                    class="recipe-ingredient__name"
+                                    size="md"
+                                    [value]="ingredients[row.index]?.textName ?? null"
+                                    [maxLength]="256"
+                                    [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                                    [error]="row.foodNameError"
+                                    (valueChange)="onIngredientTextInput(row.index, 'textName', $event)"
+                                    (focusout)="fieldBlur.emit({ field: 'foodName', ingredientIndex: row.index })"
+                                />
+                            } @else {
+                                <fd-ui-input
+                                    class="recipe-ingredient__name"
+                                    size="md"
+                                    [value]="ingredients[row.index]?.foodName.value ?? ''"
+                                    [label]="row.selected ? undefined : ('RECIPE_MANAGE.INGREDIENT_NAME' | translate)"
+                                    [attr.title]="ingredients[row.index]?.foodName.value"
+                                    [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                                    [readonly]="true"
+                                    [prefixIcon]="row.prefixIcon"
+                                    [ariaLabel]="
+                                        (row.selected ? 'RECIPE_MANAGE.REPLACE_INGREDIENT' : 'RECIPE_MANAGE.SELECT_INGREDIENT') | translate
+                                    "
+                                    [error]="row.foodNameError"
+                                    (click)="onProductSelectClick(row.index, row.itemType)"
+                                    (keydown.enter)="$event.preventDefault(); onProductSelectClick(row.index, row.itemType)"
+                                    (keydown.space)="$event.preventDefault(); onProductSelectClick(row.index, row.itemType)"
+                                    (focusout)="fieldBlur.emit({ field: 'foodName', ingredientIndex: row.index })"
+                                />
+                            }
                         </div>
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
-                            <fd-ui-input
-                                size="md"
-                                type="number"
-                                [value]="ingredients[row.index]?.amount.value"
-                                [step]="0.01"
-                                [label]="row.amountLabel"
-                                [suffixText]="row.amountUnit"
-                                [error]="row.amountError"
-                                (valueChange)="onIngredientAmountInput(row.index, $event)"
-                                (focusout)="fieldBlur.emit({ field: 'amount', ingredientIndex: row.index })"
-                            />
+                            @if (row.itemType === 'Text') {
+                                <fd-ui-input
+                                    size="md"
+                                    [value]="ingredients[row.index]?.amountText ?? null"
+                                    [maxLength]="128"
+                                    [label]="'RECIPE_MANAGE.TEXT_AMOUNT' | translate"
+                                    [fdUiHint]="'RECIPE_MANAGE.TEXT_NOT_CALCULATED' | translate"
+                                    (valueChange)="onIngredientTextInput(row.index, 'amountText', $event)"
+                                />
+                            } @else {
+                                <fd-ui-input
+                                    size="md"
+                                    type="number"
+                                    [value]="ingredients[row.index]?.amount.value"
+                                    [step]="0.01"
+                                    [label]="row.amountLabel"
+                                    [suffixText]="row.amountUnit"
+                                    [error]="row.amountError"
+                                    (valueChange)="onIngredientAmountInput(row.index, $event)"
+                                    (focusout)="fieldBlur.emit({ field: 'amount', ingredientIndex: row.index })"
+                                />
+                            }
                             <fd-ui-button
                                 type="button"
                                 variant="danger"
@@ -135,8 +173,6 @@
                                 icon="delete"
                                 [fdUiHint]="'COMMON.DELETE' | translate"
                                 [ariaLabel]="'COMMON.DELETE' | translate"
-                                [disabled]="$first"
-                                [disabledReason]="$first ? ('DISABLED_HINTS.FIRST_INGREDIENT_REQUIRED' | translate) : null"
                                 (click)="onRemoveIngredient(row.index)"
                             />
                         </div>

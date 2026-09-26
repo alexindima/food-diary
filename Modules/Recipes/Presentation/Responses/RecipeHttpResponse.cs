@@ -33,5 +33,6 @@ public sealed record RecipeHttpResponse(
     IReadOnlyList<RecipeStepHttpResponse> Steps,
     bool IsFavorite,
     Guid? FavoriteRecipeId) {
+    public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageHttpResponse> Images { get; init; } = [];
 }

@@ -19,6 +19,7 @@ public static class RecipeNutritionUpdater {
             return;
         }
 
+        recipe.SetMissingIngredientCount(summary.MissingIngredientCount);
         recipe.ApplyComputedNutrition(
             summary.TotalCalories,
             summary.TotalProteins,
@@ -30,7 +31,8 @@ public static class RecipeNutritionUpdater {
     }
 
     private static bool NeedsUpdate(Recipe recipe, RecipeNutritionSummary summary) =>
-        !AreClose(recipe.TotalCalories, summary.TotalCalories)
+        recipe.MissingIngredientCount != summary.MissingIngredientCount
+        || !AreClose(recipe.TotalCalories, summary.TotalCalories)
         || !AreClose(recipe.TotalProteins, summary.TotalProteins)
         || !AreClose(recipe.TotalFats, summary.TotalFats)
         || !AreClose(recipe.TotalCarbs, summary.TotalCarbs)

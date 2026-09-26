@@ -33,6 +33,8 @@ export type StepFormValues = {
 };
 
 export type IngredientFormValues = {
+    textName?: string | null;
+    amountText?: string | null;
     amountTouched?: boolean;
     foodNameTouched?: boolean;
     food: Product | null;
