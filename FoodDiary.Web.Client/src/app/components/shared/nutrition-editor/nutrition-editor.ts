@@ -68,7 +68,7 @@ export class NutritionEditorComponent {
     public readonly showManualHint = input(false);
     public readonly manualHintKey = input('');
     public readonly warning = input<NutritionEditorWarning | null>(null);
-    protected readonly usePlainEditor = computed(() => this.appearance() === 'plain' && !this.readonly());
+    protected readonly usePlainEditor = computed(() => this.appearance() === 'plain');
     protected readonly fields = [
         { key: 'calories', label: 'CALORIES', icon: 'local_fire_department', unit: 'KCAL' },
         { key: 'proteins', label: 'PROTEINS', icon: 'fitness_center', unit: 'G' },

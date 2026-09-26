@@ -41,7 +41,10 @@ public sealed class CreateRecipeCommandHandler(
         }
 
         CreateRecipeValues values = valuesResult.Value;
+        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        if (gallery.IsFailure) { return Result.Failure<RecipeModel>(gallery.Error); }
         Recipe recipe = RecipeCreateFactory.Create(command, values);
+        if (gallery.Value is { } images) { recipe.ReplaceImages(images); }
         Result stepsResult = await RecipeStepAppender.AddAsync(
             recipe,
             command.Steps,

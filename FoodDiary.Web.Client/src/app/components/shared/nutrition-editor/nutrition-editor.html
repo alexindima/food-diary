@@ -10,6 +10,7 @@
                         type="number"
                         placeholder="0"
                         [localizedNumber]="true"
+                        [controlReadonly]="readonly()"
                         [class]="`nutrition-editor__input nutrition-editor__input--${field.key}`"
                         [formField]="signalForm[field.key]"
                         [label]="`NUTRITION_EDITOR.FIELD_LABELS.${field.label}` | translate"

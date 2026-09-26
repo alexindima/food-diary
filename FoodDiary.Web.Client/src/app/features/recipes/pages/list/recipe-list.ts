@@ -85,7 +85,7 @@ export class RecipeListComponent {
     protected readonly errorKey = this.recipeListFacade.errorKey;
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly recentRecipeItems = computed<RecipeCardViewModel[]>(() =>
-        this.recentRecipes().map(recipe => ({
+        (this.recipeListFacade.showRecentSection() ? this.recentRecipes() : []).map(recipe => ({
             recipe,
             imageUrl: this.resolveImage(recipe),
         })),

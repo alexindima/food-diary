@@ -15,6 +15,22 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public const int CommentMaxLength = 2048;
     public const int ImageUrlMaxLength = 2048;
 
+    private readonly List<RecipeImage> _images = [];
+    public IReadOnlyCollection<RecipeImage> Images => _images.AsReadOnly();
+    public void ReplaceImages(IReadOnlyList<RecipeImage> images) {
+        if (images.Count > 5 || images.Select(image => image.ImageAssetId).Distinct().Count() != images.Count) {
+            throw new ArgumentException("A recipe can have up to five distinct images.", nameof(images));
+        }
+        _images.RemoveAll(image => !images.Any(next => next.ImageAssetId == image.ImageAssetId));
+        for (int index = 0; index < images.Count; index++) {
+            RecipeImage? existing = _images.Find(image => image.ImageAssetId == images[index].ImageAssetId);
+            if (existing is null) { _images.Add(new RecipeImage(images[index].ImageAssetId, images[index].ImageUrl, index)); } else { existing.SetPosition(index); }
+        }
+        ImageAssetId = images.Count > 0 ? images[0].ImageAssetId : null;
+        ImageUrl = images.Count > 0 ? images[0].ImageUrl : null;
+        SetModified();
+    }
+
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Comment { get; private set; }

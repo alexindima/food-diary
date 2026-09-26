@@ -365,6 +365,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         ImageUploadPayload recipeAsset = await CreateImageAssetAsync(client, "recipe-photo.jpg");
         ImageUploadPayload stepAsset = await CreateImageAssetAsync(client, "step-photo.jpg");
+        ImageUploadPayload galleryAsset = await CreateImageAssetAsync(client, "gallery-photo.jpg");
 
         HttpResponseMessage createRecipeResponse = await client.PostAsJsonAsync(
             "/api/v1/recipes",
@@ -395,11 +396,18 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                         ],
                         stepAsset.FileUrl,
                         stepAsset.AssetId),
-                ]));
+                ]) { ImageAssetIds = [recipeAsset.AssetId, galleryAsset.AssetId] });
         RecipePayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 
         await AssertStatusCodeAsync(HttpStatusCode.Created, createRecipeResponse);
         Assert.NotNull(recipe);
+
+        using var savedRecipe = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{recipe.Id}"));
+        JsonElement savedImages = savedRecipe.RootElement.GetProperty("images");
+        Assert.Equal(2, savedImages.GetArrayLength());
+        Assert.Equal(recipeAsset.AssetId, savedImages[0].GetProperty("imageAssetId").GetGuid());
+        Assert.Equal(galleryAsset.AssetId, savedImages[1].GetProperty("imageAssetId").GetGuid());
+        await AssertStatusCodeAsync(HttpStatusCode.Conflict, await client.DeleteAsync($"/api/v1/images/{galleryAsset.AssetId}"));
 
         HttpResponseMessage deleteRecipeAssetWhileInUse = await client.DeleteAsync($"/api/v1/images/{recipeAsset.AssetId}");
         HttpResponseMessage deleteStepAssetWhileInUse = await client.DeleteAsync($"/api/v1/images/{stepAsset.AssetId}");

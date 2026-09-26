@@ -39,13 +39,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
-- Public contract files: 14
+- Public contract files: 15
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 14
+- Public contract types: 15
 - Interfaces: 9
 - DTO/read-model/projection types: 0
 - Enums: 0
@@ -61,6 +61,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IRecipeRepository`
 - `interface IRecipeUsageQuery`
 - `interface IRecipeWriteRepository`
+- `record RecipeImageReadItem`
 - `record RecipeOverviewIngredientReadItem`
 - `record RecipeOverviewReadItem`
 - `record RecipeOverviewStepReadItem`
@@ -97,9 +98,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeDirectCycleTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeGalleryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeInvariantAndEventsTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionEventPayloadTests.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionPolicyTests.cs`
 
 ## Working Rule
 

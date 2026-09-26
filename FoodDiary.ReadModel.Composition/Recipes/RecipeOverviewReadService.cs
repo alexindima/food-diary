@@ -201,7 +201,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                         product == null || product.UserId == currentUserId || product.Visibility == Visibility.Public,
                         ingredient.NestedRecipe == null || ingredient.NestedRecipe.UserId == currentUserId || ingredient.NestedRecipe.Visibility == Visibility.Public))
                         .ToList()))
-                .ToList()));
+                .ToList(), recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageReadItem(image.ImageAssetId.Value, image.ImageUrl)).ToList()));
 
     private static RecipeOverviewReadItem ToReadItem(RecipeOverviewReadRow row, UserId currentUserId) {
         RecipeNutritionValues nutrition = GetEffectiveNutrition(row);
@@ -245,7 +245,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            SanitizeSteps(row.Steps));
+            SanitizeSteps(row.Steps)) { Images = row.Images };
     }
 
     private static IReadOnlyList<RecipeOverviewStepReadItem> SanitizeSteps(
@@ -329,6 +329,6 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         Visibility Visibility,
         int UsageCount,
         DateTime CreatedOnUtc,
-        IReadOnlyList<RecipeOverviewStepReadItem> Steps);
+        IReadOnlyList<RecipeOverviewStepReadItem> Steps, IReadOnlyList<RecipeImageReadItem> Images);
 
 }

@@ -82,6 +82,7 @@ export class RecipeManageComponent {
 
     public readonly recipe = input<Recipe | null>(null);
     protected globalError = this.recipeManageFacade.globalError;
+    protected readonly photosUploading = signal(false);
     protected isSubmitting = this.recipeManageFacade.isSubmitting;
     protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
@@ -286,7 +287,7 @@ export class RecipeManageComponent {
     }
 
     protected onSubmit(): void {
-        if (this.isSubmitting()) {
+        if (this.isSubmitting() || this.photosUploading()) {
             return;
         }
 

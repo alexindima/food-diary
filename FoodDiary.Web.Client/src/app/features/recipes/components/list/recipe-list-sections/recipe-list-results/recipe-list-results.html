@@ -6,18 +6,11 @@
                     <span class="recipe-list__section-label fd-ui-card-title"> {{ 'RECIPE_LIST.RECENT_RECIPES' | translate }} </span>
                     <span class="recipe-list__section-line"></span>
                 </div>
-                <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
-                    @for (item of recentRecipeItems(); track item.recipe.id) {
-                        <fd-recipe-card
-                            [recipe]="item.recipe"
-                            [imageUrl]="item.imageUrl"
-                            [favoriteLoading]="favoriteLoadingIds().has(item.recipe.id)"
-                            (open)="recipeOpen.emit(item.recipe)"
-                            (addToMeal)="recipeAddToMeal.emit(item.recipe)"
-                            (favoriteToggle)="recipeFavoriteToggle.emit(item.recipe)"
-                        />
-                    }
-                </div>
+                <fd-recipe-list-recent
+                    [recentRecipeItems]="recentRecipeItems()"
+                    (recipeOpen)="recipeOpen.emit($event)"
+                    (recipeAddToMeal)="recipeAddToMeal.emit($event)"
+                />
             </div>
         }
         @if (allRecipeItems().length > 0) {

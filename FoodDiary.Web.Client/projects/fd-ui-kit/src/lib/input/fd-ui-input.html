@@ -30,7 +30,7 @@
             [attr.autocomplete]="autocomplete() ?? null"
             [value]="internalValue()"
             [required]="required()"
-            [readonly]="readonly()"
+            [readonly]="readonly() || controlReadonly()"
             [disabled]="disabled()"
             [attr.placeholder]="placeholderAttribute()"
             [attr.aria-label]="ariaLabel() ?? label() ?? null"

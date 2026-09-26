@@ -846,3 +846,5 @@ For numeric forms, `fd-ui-input type="number" [localizedNumber]="true"` accepts 
 The image preview dialog accepts an optional zero-based `initialIndex` for opening a selected original without changing the cover. Invalid indices fall back to the first image.
 
 `fdUiHintToggleOnClick` opts an informational hint into tap/click toggling (default false). Use it on help buttons for touch access; ordinary action hints still dismiss on click.
+
+`fd-ui-input` supports `controlReadonly` for read-only presentation when used with Signal Forms `formField`, which owns the `readonly` binding.

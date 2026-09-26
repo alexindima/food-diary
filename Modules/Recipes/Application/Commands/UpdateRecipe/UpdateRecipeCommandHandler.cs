@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -44,7 +45,11 @@ public sealed class UpdateRecipeCommandHandler(
         }
 
         UpdateRecipeValues values = valuesResult.Value;
+        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        if (gallery.IsFailure) { return Result.Failure<RecipeModel>(gallery.Error); }
+        var previousGallery = values.Recipe.Images.Select(image => image.ImageAssetId).ToList();
         RecipeUpdateApplier.Apply(values.Recipe, command, values);
+        if (gallery.Value is { } images) { values.Recipe.ReplaceImages(images); }
 
         Result stepsResult = await RecipeStepAppender.ReplaceAsync(
             values.Recipe,
@@ -79,6 +84,9 @@ public sealed class UpdateRecipeCommandHandler(
             values,
             imageAssetCleanupService,
             cancellationToken).ConfigureAwait(false);
+        foreach (FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId in previousGallery.Where(id => !values.Recipe.Images.Any(image => image.ImageAssetId == id))) {
+            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+        }
         Recipe updated = updatedResult.Value;
         return Result.Success(updated.ToModel(usageCount: 0, isOwnedByCurrentUser: true));
     }

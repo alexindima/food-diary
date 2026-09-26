@@ -7,6 +7,7 @@ export type RecipeFormValues = {
     description: string | null;
     comment: string | null;
     category: string | null;
+    images?: ImageSelection[];
     imageUrl: ImageSelection | null;
     prepTime: number | null;
     cookTime: number | null;

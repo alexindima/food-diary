@@ -43,20 +43,15 @@ export class RecipeListFacade {
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
-    public readonly showRecentSection = computed(() => !this.hasSearchValue(this.searchValue()) && this.recentRecipes().length > 0);
-    public readonly allRecipesSectionItems = computed(() => {
-        const recipes = this.recipeData.items();
-        if (recipes.length === 0) {
-            return [];
-        }
-
-        if (!this.showRecentSection()) {
-            return recipes;
-        }
-
-        const recentIds = new Set(this.recentRecipes().map(recipe => recipe.id));
-        return recipes.filter(recipe => !recentIds.has(recipe.id));
-    });
+    private readonly filtersActive = signal(false);
+    public readonly showRecentSection = computed(
+        () =>
+            this.currentPageIndex() === 0 &&
+            !this.filtersActive() &&
+            !this.hasSearchValue(this.searchValue()) &&
+            this.recentRecipes().length > 0,
+    );
+    public readonly allRecipesSectionItems = computed(() => this.recipeData.items());
     public readonly hasVisibleRecipes = computed(() => this.showRecentSection() || this.allRecipesSectionItems().length > 0);
     public readonly allRecipesSectionLabelKey = computed(() =>
         this.hasSearchValue(this.searchValue()) ? 'RECIPE_LIST.SEARCH_RESULTS' : 'RECIPE_LIST.ALL_RECIPES',
@@ -74,6 +69,10 @@ export class RecipeListFacade {
     }
 
     public loadRecipes(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
+        if (page === 1 && !this.hasSearchValue(filters.search ?? null) && !this.hasActiveFilters(onlyMine, filters)) {
+            return this.loadInitialOverview(page, limit, filters, onlyMine);
+        }
+        this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
         this.cancelLoad.next();
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
@@ -103,6 +102,7 @@ export class RecipeListFacade {
     }
 
     public loadInitialOverview(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
+        this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
         this.cancelLoad.next();
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);

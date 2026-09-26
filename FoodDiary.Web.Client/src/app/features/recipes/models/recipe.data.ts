@@ -15,6 +15,7 @@ export type Recipe = {
     comment?: string | null;
     category?: string | null;
     imageUrl?: string | null;
+    images?: Array<{ imageAssetId: string; imageUrl: string }>;
     imageAssetId?: string | null;
     prepTime?: number | null;
     cookTime?: number | null;
@@ -118,6 +119,7 @@ export type RecipeDto = {
     comment?: string | null;
     category?: string | null;
     imageUrl?: string | null;
+    imageAssetIds?: string[];
     imageAssetId?: string | null;
     prepTime?: number | null;
     cookTime?: number | null;

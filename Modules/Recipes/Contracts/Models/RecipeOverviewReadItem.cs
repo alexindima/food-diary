@@ -36,4 +36,6 @@ public sealed record RecipeOverviewReadItem(
     bool IsOwnedByCurrentUser,
     int QualityScore,
     string QualityGrade,
-    IReadOnlyList<RecipeOverviewStepReadItem> Steps);
+    IReadOnlyList<RecipeOverviewStepReadItem> Steps) {
+    public IReadOnlyList<RecipeImageReadItem> Images { get; init; } = [];
+}

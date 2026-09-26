@@ -88,6 +88,9 @@ export function buildRecipeDto(
         category: formValue.category ?? null,
         imageUrl: formValue.imageUrl?.url ?? null,
         imageAssetId: formValue.imageUrl?.assetId ?? null,
+        ...((formValue.images?.every(image => image.assetId !== null) === true)
+            ? { imageAssetIds: formValue.images.map(image => image.assetId).filter((id): id is string => id !== null) }
+            : {}),
         prepTime: formValue.prepTime,
         cookTime: formValue.cookTime,
         servings: formValue.servings,
@@ -100,6 +103,9 @@ export function buildRecipeDto(
 
 export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
     return {
+        ...((recipeData.images?.length ?? 0) > 0
+            ? { images: (recipeData.images ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl })) }
+            : {}),
         name: recipeData.name,
         description: recipeData.description ?? '',
         comment: toNullable(recipeData.comment),

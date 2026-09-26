@@ -6,10 +6,11 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card';
 import type { Recipe } from '../../../../models/recipe.data';
 import type { RecipeCardViewModel } from '../../../../pages/list/recipe-list.types';
+import { RecipeListRecentComponent } from './recipe-list-recent';
 
 @Component({
     selector: 'fd-recipe-list-results',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent, RecipeCardComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent, RecipeCardComponent, RecipeListRecentComponent],
     templateUrl: './recipe-list-results.html',
     styleUrl: '../../../../pages/list/recipe-list.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

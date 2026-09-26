@@ -36,7 +36,7 @@ public static class RecipeHttpMappings {
                 ManualCarbs: request.ManualCarbs,
                 ManualFiber: request.ManualFiber,
                 ManualAlcohol: request.ManualAlcohol,
-                Steps: MapSteps(request.Steps));
+                Steps: MapSteps(request.Steps)) { ImageAssetIds = request.ImageAssetIds };
         }
     }
 
@@ -67,7 +67,7 @@ public static class RecipeHttpMappings {
                 ManualCarbs: request.ManualCarbs,
                 ManualFiber: request.ManualFiber,
                 ManualAlcohol: request.ManualAlcohol,
-                Steps: request.Steps is null ? null : MapSteps(request.Steps));
+                Steps: request.Steps is null ? null : MapSteps(request.Steps)) { ImageAssetIds = request.ImageAssetIds };
         }
     }
 

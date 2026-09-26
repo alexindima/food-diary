@@ -321,3 +321,17 @@ function createManualRecipeFormValue(): RecipeFormValues {
         ],
     };
 }
+
+describe('recipe gallery mapping', () => {
+    it('restores every image in order and sends ordered asset ids, including explicit removal', () => {
+        const images = [
+            { imageAssetId: 'front', imageUrl: '/front.jpg' },
+            { imageAssetId: 'back', imageUrl: '/back.jpg' },
+        ];
+        const values = { ...createRecipeFormValue(), ...buildRecipeFormPatchValue({ ...RECIPE, images }) };
+        expect(values.images?.map(image => image.assetId)).toEqual(['front', 'back']);
+        expect(buildRecipeDto(values, 'recipe', 1, value => value ?? 0).imageAssetIds).toEqual(['front', 'back']);
+        expect(buildRecipeDto({ ...values, images: [], imageUrl: null }, 'recipe', 1, value => value ?? 0).imageAssetIds).toEqual([]);
+        expect(buildRecipeDto(createRecipeFormValue(), 'recipe', 1, value => value ?? 0).imageAssetIds).toBeUndefined();
+    });
+});

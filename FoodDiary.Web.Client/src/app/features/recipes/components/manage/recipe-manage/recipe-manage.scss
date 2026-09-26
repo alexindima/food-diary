@@ -1,6 +1,7 @@
 @use 'variables' as variables;
 
 .recipe-manage {
+    --fd-layout-page-section-spacing: var(--fd-space-md);
     --fd-bg-page: var(--fd-bg-body);
     margin: 0 auto;
     box-sizing: border-box;
@@ -21,7 +22,7 @@
     }
 
     &__form {
-        padding: var(--fd-space-lg) 0 0;
+        padding: 0;
     }
 
     &__error {

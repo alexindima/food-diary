@@ -1,0 +1,31 @@
+<div class="recent-recipes" role="list" [attr.aria-label]="'RECIPE_LIST.RECENT_RECIPES' | translate">
+    @for (item of recentRecipeItems(); track item.recipe.id) {
+        <div class="recent-recipes__item" role="listitem">
+            <!-- A native content button keeps the independent add action outside its click target. -->
+            <button type="button" class="recent-recipes__open fd-ui-body-sm" (click)="recipeOpen.emit(item.recipe)">
+                <span class="recent-recipes__image">
+                    @if (item.imageUrl) {
+                        <img alt="" width="48" height="48" loading="lazy" [src]="item.imageUrl" />
+                    } @else {
+                        <fd-ui-icon name="menu_book" size="md" aria-hidden="true" />
+                    }
+                </span>
+                <span class="recent-recipes__copy">
+                    <strong [title]="item.recipe.name">{{ item.recipe.name }}</strong>
+                    <span class="fd-ui-meta-text">{{
+                        'RECIPE_LIST.RECENT_SERVING'
+                            | translate: { calories: (caloriesPerServing(item.recipe) | localizedNumber: locale() : 0 : 0) }
+                    }}</span>
+                </span>
+            </button>
+            <fd-ui-button
+                icon="add"
+                variant="secondary"
+                fill="text"
+                size="sm"
+                [ariaLabel]="'RECIPE_LIST.RECENT_ADD' | translate: { name: item.recipe.name }"
+                (click)="recipeAddToMeal.emit(item.recipe)"
+            />
+        </div>
+    }
+</div>

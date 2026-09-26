@@ -23,4 +23,6 @@ public sealed record UpdateRecipeHttpRequest(
     double? ManualCarbs,
     double? ManualFiber,
     double? ManualAlcohol,
-    IReadOnlyList<RecipeStepHttpRequest>? Steps);
+    IReadOnlyList<RecipeStepHttpRequest>? Steps) {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

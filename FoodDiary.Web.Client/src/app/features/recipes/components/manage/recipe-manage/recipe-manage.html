@@ -8,18 +8,6 @@
         (back)="onCancelAsync()"
     >
         <fd-ui-button
-            appearance="toolbar"
-            variant="primary"
-            icon="save"
-            data-fd-overflow-primary
-            [ariaLabel]="manageHeaderState().submitLabelKey | translate"
-            [fdUiHint]="manageHeaderState().submitLabelKey | translate"
-            [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
-            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
-            [loading]="isSubmitting()"
-            (click)="manageForm.requestSubmit()"
-        />
-        <fd-ui-button
             data-tour-id="recipe-manage-tour-help"
             appearance="toolbar"
             variant="secondary"
@@ -36,7 +24,7 @@
             #manageForm
             class="recipe-manage__form fd-stack fd-gap-lg"
             [formRoot]="recipeSignalForm"
-            [attr.aria-busy]="isSubmitting()"
+            [attr.aria-busy]="isSubmitting() || photosUploading()"
             (submit)="onFormSubmit($event)"
         >
             @if (globalError()) {
@@ -99,7 +87,11 @@
                         </details>
                     }
 
-                    <fd-recipe-basic-info data-tour-id="recipe-manage-basic-info" [form]="recipeSignalForm" />
+                    <fd-recipe-basic-info
+                        data-tour-id="recipe-manage-basic-info"
+                        [form]="recipeSignalForm"
+                        (photosUploading)="photosUploading.set($event)"
+                    />
 
                     <fd-recipe-steps-list
                         data-tour-id="recipe-manage-steps"
@@ -149,7 +141,7 @@
                                     appearance="brand-action"
                                     icon="save"
                                     [fullWidth]="true"
-                                    [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
+                                    [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting() || photosUploading()"
                                     [disabledReason]="
                                         recipeSignalForm().invalid()
                                             ? ('DISABLED_HINTS.FORM_INVALID' | translate)
@@ -157,7 +149,7 @@
                                               ? ('DISABLED_HINTS.STEPS_INVALID' | translate)
                                               : null
                                     "
-                                    [loading]="isSubmitting()"
+                                    [loading]="isSubmitting() || photosUploading()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}
                                 </fd-ui-button>

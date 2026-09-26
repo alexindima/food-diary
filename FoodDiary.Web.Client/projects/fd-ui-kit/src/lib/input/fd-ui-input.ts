@@ -64,6 +64,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly inputMode = input<'text' | 'decimal' | 'numeric' | 'tel' | 'email' | 'url' | 'search' | 'none'>();
     public readonly selectOnFocus = input(false);
     public readonly readonly = input(false);
+    public readonly controlReadonly = input(false);
     public readonly maxLength = input<number>();
     public readonly maximumLength = input<number>();
     public readonly max = input<string | number>();

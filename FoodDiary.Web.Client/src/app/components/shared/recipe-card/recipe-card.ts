@@ -19,6 +19,7 @@ export type RecipeCardItem = {
     name: string;
     comment?: string | null;
     imageUrl?: string | null;
+    images?: Array<{ imageUrl: string }>;
     isOwnedByCurrentUser: boolean;
     prepTime?: number | null;
     cookTime?: number | null;
@@ -89,9 +90,11 @@ export class RecipeCardComponent {
     });
     protected readonly galleryImages = computed(() => [
         ...new Set(
-            [this.recipe().imageUrl, ...(this.recipe().steps ?? []).map(step => step.imageUrl)].filter(
-                (url): url is string => typeof url === 'string' && url.trim().length > 0,
-            ),
+            [
+                this.recipe().imageUrl,
+                ...(this.recipe().images ?? []).map(image => image.imageUrl),
+                ...(this.recipe().steps ?? []).map(step => step.imageUrl),
+            ].filter((url): url is string => typeof url === 'string' && url.trim().length > 0),
         ),
     ]);
     protected readonly hasPreviewImage = computed(() => this.galleryImages().length > 0);

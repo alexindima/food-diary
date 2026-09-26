@@ -32,4 +32,6 @@ public sealed record RecipeHttpResponse(
     string QualityGrade,
     IReadOnlyList<RecipeStepHttpResponse> Steps,
     bool IsFavorite,
-    Guid? FavoriteRecipeId);
+    Guid? FavoriteRecipeId) {
+    public IReadOnlyList<RecipeImageHttpResponse> Images { get; init; } = [];
+}

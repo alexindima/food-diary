@@ -24079,6 +24079,13 @@
           "Nullable": true
         },
         {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
           "Name": "imageUrl",
           "Required": false,
           "Type": "string",
@@ -30426,6 +30433,13 @@
           "Nullable": true
         },
         {
+          "Name": "images",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/RecipeImageHttpResponse"
+        },
+        {
           "Name": "isFavorite",
           "Required": false,
           "Type": "boolean",
@@ -30619,6 +30633,24 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "RecipeImageHttpResponse",
+      "Properties": [
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         }
       ]
     },
@@ -33074,6 +33106,13 @@
           "Type": "string",
           "Format": "uuid",
           "Nullable": true
+        },
+        {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         },
         {
           "Name": "imageUrl",

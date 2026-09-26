@@ -59,7 +59,7 @@ public static class RecipeMappings {
             quality.Grade.ToString().ToLowerInvariant(),
             steps,
             isFavorite,
-            favoriteRecipeId);
+            favoriteRecipeId) { Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
     private static RecipeStepModel ToStepModel(RecipeStep step) {

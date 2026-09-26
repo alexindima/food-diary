@@ -2430,3 +2430,35 @@ test.describe('compact recent products', () => {
         });
     }
 });
+
+test.describe('recipe editor gallery', () => {
+    for (const width of MEAL_DIALOG_VIEWPORTS) {
+        test(`compact nutrition and five saved photos at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 1000 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.goto('/recipes/add');
+            const gallery = page.locator('fd-recipe-basic-info fd-image-gallery-editor');
+            await expect(gallery).toBeVisible();
+            await expect(gallery.locator('.recognition-photos__empty')).toHaveCount(0);
+            await expect(page.locator('fd-recipe-nutrition-editor fd-ui-input input')).toHaveCount(PRODUCT_NUTRIENT_FIELD_COUNT);
+            await expect(page.locator('fd-recipe-nutrition-editor fd-ui-input input').first()).toHaveAttribute('readonly', '');
+            expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+            await page.screenshot({ path: testInfo.outputPath(`recipe-create-${width}.png`) });
+            const recipe = createRecipeRedesignFixtures().recipe;
+            const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({
+                imageAssetId: `photo-${index}`,
+                imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
+            }));
+            await page.route('**/api/v1/recipes/recipe-1**', async route =>
+                route.fulfill({ json: { ...recipe, images, steps: [], isOwnedByCurrentUser: true, usageCount: 0 } }),
+            );
+            await page.goto('/recipes/recipe-1/edit');
+            await expect(gallery.locator('.recognition-photos__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
+            await expect(gallery.locator('.recognition-photos__empty')).toHaveCount(0);
+            expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+            await expect(page.locator('fd-recipe-nutrition-editor fd-ui-input input')).toHaveCount(PRODUCT_NUTRIENT_FIELD_COUNT);
+            await page.screenshot({ path: testInfo.outputPath(`recipe-edit-gallery-${width}.png`) });
+        });
+    }
+});

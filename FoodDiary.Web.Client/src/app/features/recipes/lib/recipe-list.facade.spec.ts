@@ -195,7 +195,7 @@ describe('RecipeListFacade overview', () => {
             limit: PAGE_LIMIT,
             filters: { search: null },
             includePublic: true,
-            recentLimit: PAGE_LIMIT,
+            recentLimit: 5,
             favoriteLimit: 0,
         });
         expect(facade.recipeData.items()).toEqual([recipe]);
@@ -361,16 +361,30 @@ describe('RecipeListFacade edge cases', () => {
         expect(recipeService.deleteById).not.toHaveBeenCalled();
     });
 
-    it('keeps recent recipes separate and exposes search results after search', () => {
+    it('preserves recent recipes in the catalogue and exposes search results after search', () => {
         facade.loadInitialOverview(1, PAGE_LIMIT, {}, false).subscribe();
         expect(facade.showRecentSection()).toBe(true);
-        expect(facade.allRecipesSectionItems()).toEqual([]);
+        expect(facade.allRecipesSectionItems()).toEqual([recipe]);
         expect(facade.hasVisibleRecipes()).toBe(true);
         expect(facade.allRecipesSectionLabelKey()).toBe('RECIPE_LIST.ALL_RECIPES');
         facade.loadRecipes(1, PAGE_LIMIT, { search: 'rice' }, false).subscribe();
         expect(facade.showRecentSection()).toBe(false);
         expect(facade.allRecipesSectionItems()).toEqual([recipe]);
         expect(facade.allRecipesSectionLabelKey()).toBe('RECIPE_LIST.SEARCH_RESULTS');
+    });
+
+    it('shows shortcuts only on the default first page and restores them after filtering', () => {
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, false).subscribe();
+        facade.currentPageIndex.set(1);
+        expect(facade.showRecentSection()).toBe(false);
+        facade.loadRecipes(1, PAGE_LIMIT, { hasImage: false }, false).subscribe();
+        expect(facade.showRecentSection()).toBe(false);
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, true).subscribe();
+        expect(facade.showRecentSection()).toBe(false);
+        facade.loadRecipes(1, PAGE_LIMIT, {}, false).subscribe();
+        expect(facade.showRecentSection()).toBe(true);
+        expect(facade.allRecipesSectionItems()).toEqual([recipe]);
+        expect(recipeService.queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ recentLimit: 5 }));
     });
 
     it('clears stale results on a page error and recovers on retry', () => {

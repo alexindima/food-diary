@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../models/recipe.data';
@@ -11,6 +11,22 @@ describe('RecipeListResultsComponent', () => {
 
         expect(component['showRecentSection']()).toBe(true);
         expect(component['hasVisibleRecipes']()).toBe(true);
+    });
+
+    it('keeps opening and adding independent while retaining the catalogue card', () => {
+        const { component, fixture } = setupComponent({ recentCount: 1, allCount: 1 });
+        const opened = vi.fn();
+        const added = vi.fn();
+        component.recipeOpen.subscribe(opened);
+        component.recipeAddToMeal.subscribe(added);
+        const element = fixture.nativeElement as HTMLElement;
+        element.querySelector<HTMLButtonElement>('.recent-recipes__open')?.click();
+        expect(opened).toHaveBeenCalledOnce();
+        expect(added).not.toHaveBeenCalled();
+        element.querySelector<HTMLButtonElement>('.recent-recipes__item fd-ui-button button')?.click();
+        expect(added).toHaveBeenCalledOnce();
+        expect(opened).toHaveBeenCalledOnce();
+        expect(element.querySelectorAll('fd-recipe-card')).toHaveLength(1);
     });
 
     it('renders empty state when no items and empty state is provided', () => {
@@ -62,6 +78,7 @@ function createRecipe(id: string): Recipe {
         id,
         name: 'Recipe',
         servings: 2,
+        totalCalories: 600,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
         createdAt: '2026-01-01T00:00:00Z',

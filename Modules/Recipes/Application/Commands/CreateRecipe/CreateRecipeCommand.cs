@@ -24,4 +24,6 @@ public record CreateRecipeCommand(
     double? ManualCarbs,
     double? ManualFiber,
     double? ManualAlcohol,
-    IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeModel>>, IUserRequest;
+    IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeModel>>, IUserRequest {
+    public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+}

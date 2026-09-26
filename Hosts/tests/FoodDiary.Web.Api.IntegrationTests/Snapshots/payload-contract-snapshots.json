@@ -73,6 +73,7 @@
       "id",
       "imageAssetId",
       "imageUrl",
+      "images",
       "isFavorite",
       "isNutritionAutoCalculated",
       "isOwnedByCurrentUser",

@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1742,
-    "symbols": 675,
+    "typescriptFiles": 1744,
+    "symbols": 676,
     "routes": 100,
     "features": 44,
     "specs": 628,
     "localeFiles": 5,
     "roles": {
-      "Component": 456,
+      "Component": 457,
       "Directive": 12,
       "Facade": 65,
       "Other": 19,
@@ -974,7 +974,6 @@
         "ProductManageFormComponent",
         "ProductNameSearchFacade",
         "ProductNutritionEditorComponent",
-        "ProductRecognitionPhotosComponent",
         "ProductService"
       ],
       "routes": [
@@ -1136,6 +1135,7 @@
         "RecipeListFacade",
         "RecipeListFavoritesComponent",
         "RecipeListFiltersDialogComponent",
+        "RecipeListRecentComponent",
         "RecipeListResultsComponent",
         "RecipeManageComponent",
         "RecipeManageFacade",
@@ -2770,6 +2770,13 @@
       "line": 44
     },
     {
+      "name": "ImageGalleryEditorComponent",
+      "role": "Component",
+      "selector": "fd-image-gallery-editor",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
+      "line": 26
+    },
+    {
       "name": "ImageUploadFieldComponent",
       "role": "Component",
       "selector": "fd-image-upload-field",
@@ -2928,7 +2935,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 45
+      "line": 46
     },
     {
       "name": "SkeletonCardComponent",
@@ -4583,13 +4590,6 @@
       "line": 19
     },
     {
-      "name": "ProductRecognitionPhotosComponent",
-      "role": "Component",
-      "selector": "fd-product-recognition-photos",
-      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos.ts",
-      "line": 26
-    },
-    {
       "name": "ProductFavoritesPickerComponent",
       "role": "Component",
       "selector": "fd-product-favorites-picker",
@@ -5024,18 +5024,25 @@
       "line": 16
     },
     {
+      "name": "RecipeListRecentComponent",
+      "role": "Component",
+      "selector": "fd-recipe-list-recent",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-recent.ts",
+      "line": 17
+    },
+    {
       "name": "RecipeListResultsComponent",
       "role": "Component",
       "selector": "fd-recipe-list-results",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-results.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "RecipeBasicInfoComponent",
       "role": "Component",
       "selector": "fd-recipe-basic-info",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.ts",
-      "line": 36
+      "line": 35
     },
     {
       "name": "RecipeNutritionFormManager",
@@ -6665,8 +6672,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3715,
-      "russianProperties": 3715,
+      "englishProperties": 3717,
+      "russianProperties": 3717,
       "countsMatch": true
     },
     {

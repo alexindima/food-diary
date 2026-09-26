@@ -35,4 +35,6 @@ public sealed record RecipeModel(
     string QualityGrade,
     IReadOnlyList<RecipeStepModel> Steps,
     bool IsFavorite,
-    Guid? FavoriteRecipeId);
+    Guid? FavoriteRecipeId) {
+    public IReadOnlyList<RecipeImageModel> Images { get; init; } = [];
+}

@@ -5646,6 +5646,39 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("NestedRecipeUsages");
 
                 b.Navigation("Steps");
+                    b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 =>
+                        {
+                            b1.Property<Guid>("RecipeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("ImageAssetId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired()
+                                .HasMaxLength(2048)
+                                .HasColumnType("character varying(2048)");
+
+                            b1.Property<int>("Position")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("RecipeId", "ImageAssetId");
+
+                            b1.HasIndex("ImageAssetId");
+
+                            b1.ToTable("RecipeImages", (string)null);
+
+                            b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                                .WithMany()
+                                .HasForeignKey("ImageAssetId")
+                                .OnDelete(DeleteBehavior.ClientNoAction)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("RecipeId");
+                        });
+
+                    b.Navigation("Images");
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b => {

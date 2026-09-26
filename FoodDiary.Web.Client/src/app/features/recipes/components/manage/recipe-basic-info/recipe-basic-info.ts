@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
+import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
@@ -23,11 +23,10 @@ type FieldErrors = Record<ErrorField, string | null>;
         FormField,
         TranslatePipe,
         FdUiCardComponent,
-        FdUiIconComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiSelectComponent,
-        ImageUploadFieldComponent,
+        ImageGalleryEditorComponent,
     ],
     templateUrl: './recipe-basic-info.html',
     styleUrls: ['./recipe-basic-info.scss'],
@@ -40,8 +39,14 @@ export class RecipeBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
-    protected readonly isAdvancedOpen = signal(false);
-    protected readonly advancedToggleIcon = computed(() => (this.isAdvancedOpen() ? 'expand_less' : 'expand_more'));
+    public readonly photosUploading = output<boolean>();
+    protected readonly photos = computed(() => {
+        const value = this.form()().value();
+        return value.images ?? (value.imageUrl !== null && (value.imageUrl.url?.length ?? 0) > 0 ? [value.imageUrl] : []);
+    });
+    protected readonly selectedVisibility = computed(
+        () => this.visibilitySelectOptions().find(option => option.value === this.form().visibility().value())?.label ?? '',
+    );
     protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() => {
         this.languageVersion();
 
@@ -62,8 +67,13 @@ export class RecipeBasicInfoComponent {
         });
     }
 
-    protected toggleAdvanced(): void {
-        this.isAdvancedOpen.update(isOpen => !isOpen);
+    protected setPhotos(images: ImageSelection[]): void {
+        this.form()().value.update(value => ({ ...value, images, imageUrl: images[0] ?? null }));
+    }
+    protected setCover(image: ImageSelection | null): void {
+        if (image !== null) {
+            this.setPhotos([image, ...this.photos().filter(item => item !== image)]);
+        }
     }
 
     private buildFieldErrors(): FieldErrors {

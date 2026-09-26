@@ -18,6 +18,11 @@ internal static class RecipesCrossModuleRelationships {
             .IsRequired(false)
             .OnDelete(DeleteBehavior.ClientNoAction);
 
+        modelBuilder.Entity<Recipe>().OwnsMany(recipe => recipe.Images, images => {
+            images.HasOne<ImageAsset>().WithMany().HasForeignKey(image => image.ImageAssetId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
+        });
+
         modelBuilder.Entity<RecipeIngredient>().HasOne<Product>()
             .WithMany()
             .HasForeignKey(e => e.ProductId)

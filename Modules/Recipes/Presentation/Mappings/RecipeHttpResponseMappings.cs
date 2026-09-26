@@ -42,7 +42,7 @@ public static class RecipeHttpResponseMappings {
                 model.Steps.ToHttpResponseList(ToHttpResponse),
                 model.IsFavorite,
                 model.FavoriteRecipeId
-            );
+            ) { Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
         }
     }
 

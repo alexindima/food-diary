@@ -82,6 +82,9 @@ public sealed class DuplicateRecipeCommandHandler(
             original.CookTime,
             original.Visibility);
 
+        if (isOwnerDuplicate && original.Images.Count > 0) {
+            duplicate.ReplaceImages(original.Images.OrderBy(image => image.Position).ToList());
+        }
         AddStepsFromOriginal(duplicate, original, isOwnerDuplicate);
         ApplyNutritionSettings(duplicate, original);
         return duplicate;

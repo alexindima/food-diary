@@ -220,7 +220,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         recipeData,
         recentRecipes: signal<Recipe[]>([]),
         removeFavorite: vi.fn().mockReturnValue(of(void 0)),
-        showRecentSection: signal(false),
+        showRecentSection: signal(true),
         toggleRecipeFavorite: vi.fn().mockReturnValue(of(void 0)),
     } as unknown as RecipeListFacadeMock;
 }

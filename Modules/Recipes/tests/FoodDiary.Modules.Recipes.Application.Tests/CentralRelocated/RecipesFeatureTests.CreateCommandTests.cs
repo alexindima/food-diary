@@ -15,6 +15,43 @@ namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 public partial class RecipesFeatureTests {
 
     [Fact]
+    public async Task CreateRecipeCommandHandler_WithFiveImages_ReturnsOrderedGalleryAndCover() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        CreateRecipeCommandHandler handler = CreateRecipeHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+
+        Result<RecipeModel> result = await handler.Handle(
+            new CreateRecipeCommand(
+                userId.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: false,
+                ManualCalories: 150,
+                ManualProteins: 10,
+                ManualFats: 4,
+                ManualCarbs: 20,
+                ManualFiber: 2,
+                ManualAlcohol: 0,
+                Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]) { ImageAssetIds = Enumerable.Range(0, 5).Select(_ => Guid.NewGuid()).ToArray() },
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(5, result.Value.Images.Count);
+        Assert.Equal(result.Value.Images[0].ImageAssetId, result.Value.ImageAssetId);
+        Assert.Equal(result.Value.Images[0].ImageUrl, result.Value.ImageUrl);
+    }
+
+    [Fact]
     public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();

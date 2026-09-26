@@ -58,7 +58,7 @@
                 <span [style.display]="recognitionCount() > 0 ? null : 'none'">· {{ recognitionCount() }}</span>
             </fd-ui-button>
             <div class="product-ai-dialog__input-layout">
-                <fd-product-recognition-photos
+                <fd-image-gallery-editor
                     [editor]="true"
                     [photos]="photos()"
                     [disabled]="isBusy()"

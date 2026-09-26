@@ -1,14 +1,16 @@
 <fd-ui-card
     class="recipe-manage__card recipe-manage__card--facts"
     appearance="entry"
-    tone="editor-gradient"
-    density="relaxed"
-    headerAlign="center"
+    tone="editor-white"
+    density="default"
+    headerAlign="start"
     [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
 >
     <div class="recipe-manage__nutrition fd-stack fd-gap-md">
         <fd-nutrition-editor
+            appearance="plain"
             manualHintKey="RECIPE_MANAGE.MANUAL_NUTRITION_HINT"
+            [hideEmptyMacroBar]="true"
             [form]="nutritionForm()"
             [macroState]="macroBarState()"
             [readonly]="isNutritionReadonly()"

@@ -10,6 +10,17 @@ namespace FoodDiary.Modules.Recipes.PersistenceModel.Configurations.Recipes;
 
 internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
     public void Configure(EntityTypeBuilder<Recipe> builder) {
+        builder.OwnsMany(e => e.Images, images => {
+            images.ToTable("RecipeImages");
+            images.WithOwner().HasForeignKey("RecipeId");
+            images.Property<FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId>("RecipeId").HasConversion(id => id.Value, value => new FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId(value));
+            images.Property(e => e.ImageAssetId).HasConversion(id => id.Value, value => new ImageAssetId(value));
+            images.Property(e => e.ImageUrl).HasMaxLength(Recipe.ImageUrlMaxLength);
+            images.HasKey("RecipeId", nameof(RecipeImage.ImageAssetId));
+            images.HasIndex(e => e.ImageAssetId);
+        });
+        builder.Navigation(e => e.Images).UsePropertyAccessMode(PropertyAccessMode.Field);
+
         builder.Property<uint>("xmin").IsRowVersion();
 
         builder.Property(e => e.Id).HasConversion(

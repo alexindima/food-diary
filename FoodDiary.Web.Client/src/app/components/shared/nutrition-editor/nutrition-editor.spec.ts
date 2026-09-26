@@ -156,3 +156,18 @@ describe('Nutrition editor outline appearance', () => {
         expect(el.querySelector('.nutrition-editor__macro-bar')).not.toBeNull();
     });
 });
+
+describe('plain nutrition read-only mode', () => {
+    it('keeps compact inputs read-only in auto mode and editable in manual mode', async () => {
+        const { fixture, el } = await setupNutritionEditorAsync();
+        fixture.componentRef.setInput('appearance', 'plain');
+        fixture.componentRef.setInput('readonly', true);
+        fixture.detectChanges();
+        const inputs = Array.from(el.querySelectorAll<HTMLInputElement>('fd-ui-input input'));
+        expect(inputs.length).toBeGreaterThan(0);
+        expect(inputs.every(input => input.readOnly)).toBe(true);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.detectChanges();
+        expect(inputs.every(input => !input.readOnly)).toBe(true);
+    });
+});
