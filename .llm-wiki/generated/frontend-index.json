@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1744,
+    "typescriptFiles": 1746,
     "symbols": 676,
     "routes": 100,
     "features": 44,
-    "specs": 628,
+    "specs": 629,
     "localeFiles": 5,
     "roles": {
       "Component": 457,
@@ -1185,6 +1185,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-select.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-servings.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-add/recipe-add.spec.ts",
@@ -2725,7 +2726,7 @@
       "role": "Component",
       "selector": "fd-entity-card-body",
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "EntityCardThumbComponent",
@@ -4972,7 +4973,7 @@
       "role": "Component",
       "selector": "fd-recipe-cook-mode",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "line": 24
+      "line": 25
     },
     {
       "name": "RecipeDetailIngredientPreviewComponent",
@@ -5098,7 +5099,7 @@
       "role": "Component",
       "selector": "fd-recipe-select-dialog-content",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "RecipeSelectDialogComponent",
@@ -6672,16 +6673,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3727,
-      "russianProperties": 3727,
+      "englishProperties": 3728,
+      "russianProperties": 3728,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1031,
-      "russianProperties": 1031,
+      "englishProperties": 1032,
+      "russianProperties": 1032,
       "countsMatch": true
     },
     {

@@ -31,7 +31,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     public ImageAssetId? ImageAssetId { get; private set; }
 
     private readonly List<RecipeIngredient> _ingredients = [];
-    public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.AsReadOnly();
+    public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.OrderBy(ingredient => ingredient.Position).ToArray();
 
     public Recipe Recipe { get; private set; } = null!;
 
@@ -75,6 +75,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
 
     public RecipeIngredient AddTextIngredient(string name, string? amountText = null) {
         var ingredient = RecipeIngredient.CreateWithText(Id, name, amountText);
+        ingredient.SetPosition(_ingredients.Count == 0 ? 0 : _ingredients.Max(item => item.Position) + 1);
         _ingredients.Add(ingredient);
         SetModified();
         return ingredient;
@@ -82,6 +83,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
 
     public RecipeIngredient AddProductIngredient(ProductId productId, double amount) {
         var ingredient = RecipeIngredient.CreateWithProduct(Id, productId, amount);
+        ingredient.SetPosition(_ingredients.Count == 0 ? 0 : _ingredients.Max(item => item.Position) + 1);
         _ingredients.Add(ingredient);
         SetModified();
         return ingredient;
@@ -93,6 +95,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         }
 
         var ingredient = RecipeIngredient.CreateWithRecipe(Id, nestedRecipeId, servings);
+        ingredient.SetPosition(_ingredients.Count == 0 ? 0 : _ingredients.Max(item => item.Position) + 1);
         _ingredients.Add(ingredient);
         SetModified();
         return ingredient;

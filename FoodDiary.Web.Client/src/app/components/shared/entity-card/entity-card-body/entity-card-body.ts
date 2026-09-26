@@ -1,13 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import { NutrientBadgesComponent } from '../../nutrient-badges/nutrient-badges';
 import type { EntityCardNormalizedQuality, EntityCardNutrition } from '../entity-card-lib/entity-card.types';
 
 @Component({
     selector: 'fd-entity-card-body',
-    imports: [NutrientBadgesComponent, DecimalPipe, TranslatePipe],
+    imports: [NutrientBadgesComponent, DecimalPipe, TranslatePipe, FdUiHintDirective, FdUiIconComponent],
     templateUrl: './entity-card-body.html',
     styleUrl: '../entity-card.scss',
     host: {

@@ -2,8 +2,9 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { resolveServingsUnitKey } from '../../../lib/recipe-servings.utils';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
-import { RecipeDetailSummaryComponent, resolveServingsUnitKey } from './recipe-detail-summary';
+import { RecipeDetailSummaryComponent } from './recipe-detail-summary';
 
 const RECIPE_CALORIES = 240;
 const TOTAL_TIME_MINUTES = 45;

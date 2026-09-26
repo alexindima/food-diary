@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 
-import { resolveRussianPluralCategory } from '../../../../../shared/i18n/russian-plural.utils';
+import { resolveServingsUnitKey } from '../../../lib/recipe-servings.utils';
 import type { Recipe } from '../../../models/recipe.data';
 import { RecipeDetailIngredientPreviewComponent } from '../recipe-detail-ingredient-preview/recipe-detail-ingredient-preview';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
@@ -26,8 +26,4 @@ export class RecipeDetailSummaryComponent {
     public readonly ingredientPreview = input.required<readonly IngredientPreviewItem[]>();
     protected readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
     protected readonly servingsUnitKey = computed(() => resolveServingsUnitKey(this.recipe().servings));
-}
-
-export function resolveServingsUnitKey(count: number): string {
-    return `RECIPE_DETAIL.SUMMARY.SERVINGS_${resolveRussianPluralCategory(count).toUpperCase()}`;
 }

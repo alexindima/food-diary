@@ -1528,6 +1528,7 @@
         "CHANGE_FAILED": "Could not save the change. Please try again."
     },
     "NUTRITION_COMPLETENESS": {
+        "CARD_HINT": "Nutrition is partially calculated. Only ingredients with known nutrition are included. Ingredients not included: {{count}}.",
         "PARTIAL": "Nutrition is incomplete. Ingredients not included: {{count}}."
     },
     "LANDING_HERO": {
@@ -4345,7 +4346,8 @@
         "TEXT_INGREDIENT": "Text",
         "TEXT_AMOUNT": "Amount",
         "TEXT_NOT_CALCULATED": "Not included in nutrition calculations",
-        "USE_AS_TEXT": "Use “{{name}}” as text"
+        "USE_AS_TEXT": "Use “{{name}}” as text",
+        "INGREDIENT_PICKER_TITLE": "Choose an ingredient"
     },
     "PRODUCT_MANAGE": {
         "PHOTO_IMPORT_LIMIT": "Values were applied, but photos were not added: a product can have up to 5 photos. Remove unwanted photos and apply again from recognition history.",

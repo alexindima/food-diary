@@ -18,6 +18,12 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     public ProductId? ProductId { get; private set; }
     public RecipeId? NestedRecipeId { get; private set; }
     public double Amount { get; private set; }
+    public int Position { get; private set; }
+
+    internal void SetPosition(int position) {
+        ArgumentOutOfRangeException.ThrowIfNegative(position);
+        Position = position;
+    }
 
     public RecipeStep RecipeStep { get; private set; } = null!;
     public RecipeIngredientProductSnapshot? ProductSnapshot { get; private set; }

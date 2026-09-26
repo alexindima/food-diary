@@ -1,5 +1,5 @@
 @if (!embedded()) {
-    <fd-ui-dialog size="lg" [title]="'MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+    <fd-ui-dialog size="lg" [title]="titleKey | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
         <div class="meal-item-select fd-stack fd-gap-md">
             @if (!isInitialTabLocked()) {
                 <fd-ui-tabs
@@ -29,15 +29,11 @@
             </div>
         </div>
 
-        <fd-ui-button
-            variant="secondary"
-            fill="text"
-            icon="add"
-            [hidden]="!allowText || textQuery().trim().length === 0"
-            (click)="useText()"
-        >
-            {{ 'RECIPE_MANAGE.USE_AS_TEXT' | translate: { name: textQuery().trim() } }}
-        </fd-ui-button>
+        <div [hidden]="!canUseText()">
+            <fd-ui-button variant="secondary" fill="text" icon="add" (click)="useText()">
+                {{ 'RECIPE_MANAGE.USE_AS_TEXT' | translate: { name: textQuery().trim() } }}
+            </fd-ui-button>
+        </div>
         <div fdUiDialogFooter class="meal-item-select__footer fd-ui-actions fd-ui-actions--end">
             <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateAction()">
                 {{ createActionLabelKey() | translate }}

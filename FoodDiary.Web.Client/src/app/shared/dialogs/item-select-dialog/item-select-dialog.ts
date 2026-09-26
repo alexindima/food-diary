@@ -43,6 +43,10 @@ export class ItemSelectDialogComponent {
     public readonly createRecipeRequested = output();
     protected readonly textQuery = signal('');
     protected readonly allowText = this.dialogData?.allowText === true;
+    protected readonly canUseText = computed(
+        () => this.allowText && this.textQuery().trim().length > 0 && this.textQuery().trim().length <= MAX_TEXT_NAME_LENGTH,
+    );
+    protected readonly titleKey = this.allowText ? 'RECIPE_MANAGE.INGREDIENT_PICKER_TITLE' : 'MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE';
     protected useText(): void {
         const name = this.textQuery().trim();
         if (this.allowText && name.length > 0 && name.length <= MAX_TEXT_NAME_LENGTH) {

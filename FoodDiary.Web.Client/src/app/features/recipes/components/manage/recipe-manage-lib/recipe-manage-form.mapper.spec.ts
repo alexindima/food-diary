@@ -86,7 +86,7 @@ describe('recipe manage form creation', () => {
 
         expect(form.name).toBe('');
         expect(form.servings).toBe(1);
-        expect(form.visibility).toBe(RecipeVisibility.Public);
+        expect(form.visibility).toBe(RecipeVisibility.Private);
         expect(form.calculateNutritionAutomatically).toBe(true);
         expect(form.steps.length).toBe(0);
     });

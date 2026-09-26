@@ -537,7 +537,8 @@
         "TEXT_INGREDIENT": "Text",
         "TEXT_AMOUNT": "Amount",
         "TEXT_NOT_CALCULATED": "Not included in nutrition calculations",
-        "USE_AS_TEXT": "Use “{{name}}” as text"
+        "USE_AS_TEXT": "Use “{{name}}” as text",
+        "INGREDIENT_PICKER_TITLE": "Choose an ingredient"
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Category",

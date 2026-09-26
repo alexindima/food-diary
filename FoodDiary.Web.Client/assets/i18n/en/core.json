@@ -1127,6 +1127,7 @@
         "CHANGE_FAILED": "Could not save the change. Please try again."
     },
     "NUTRITION_COMPLETENESS": {
+        "CARD_HINT": "Nutrition is partially calculated. Only ingredients with known nutrition are included. Ingredients not included: {{count}}.",
         "PARTIAL": "Nutrition is incomplete. Ingredients not included: {{count}}."
     }
 }

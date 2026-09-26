@@ -23,7 +23,7 @@
                                 {{ item.recipe.category }} ·
                             }
                             {{ item.recipe.totalCalories ?? '—' }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} ·
-                            {{ item.recipe.servings }} {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
+                            {{ item.recipe.servings }} {{ servingsUnitKey(item.recipe.servings) | translate }}
                         </div>
 
                         <div class="fd-ui-caption" [hidden]="(item.recipe.missingIngredientCount ?? 0) === 0">

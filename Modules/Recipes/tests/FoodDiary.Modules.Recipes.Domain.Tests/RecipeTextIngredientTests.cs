@@ -6,6 +6,18 @@ namespace FoodDiary.Modules.Recipes.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecipeTextIngredientTests {
     [Fact]
+    public void IngredientPositions_PreserveInsertionOrderAfterRemovalAndAppend() {
+        RecipeStep step = Recipe.Create(UserId.New(), "Soup", 2).AddStep(1, "Season");
+        RecipeIngredient salt = step.AddTextIngredient("Salt");
+        RecipeIngredient pepper = step.AddTextIngredient("Pepper");
+        RecipeIngredient water = step.AddTextIngredient("Water");
+        step.RemoveIngredient(pepper);
+        RecipeIngredient oil = step.AddTextIngredient("Oil");
+        Assert.Equal(new[] { salt, water, oil }, step.Ingredients);
+        Assert.Equal(new[] { 0, 2, 3 }, step.Ingredients.Select(ingredient => ingredient.Position));
+    }
+
+    [Fact]
     public void AddTextIngredient_NormalizesTextWithoutCreatingReferences() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeIngredient ingredient = recipe.AddStep(1, "Season").AddTextIngredient("  Salt  ", " to taste ");

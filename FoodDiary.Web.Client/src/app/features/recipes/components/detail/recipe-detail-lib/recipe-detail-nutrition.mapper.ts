@@ -3,6 +3,7 @@ import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/c
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
 import type { Recipe } from '../../../models/recipe.data';
 import { RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT } from './recipe-detail.config';
 import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
@@ -113,10 +114,7 @@ function buildIngredientPreview(recipe: Recipe, unknownIngredientName: string): 
         .map(ingredient => ({
             name: ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName ?? unknownIngredientName,
             amount: typeof ingredient.textName === 'string' ? (ingredient.amountText ?? '') : ingredient.amount,
-            unitKey:
-                ingredient.productBaseUnit !== null && ingredient.productBaseUnit !== undefined && ingredient.productBaseUnit.length > 0
-                    ? `GENERAL.UNITS.${ingredient.productBaseUnit}`
-                    : null,
+            unitKey: resolveIngredientUnitKey(ingredient),
         }));
 }
 

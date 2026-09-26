@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
+import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../models/recipe.data';
 
 const PERCENT_SCALE = 100;
@@ -34,7 +35,6 @@ export class RecipeCookModeComponent {
         return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
     });
     public readonly recipe = input.required<Recipe>();
-    public readonly addToMeal = output();
 
     protected readonly currentStepIndex = signal(0);
     protected readonly steps = computed(() => [...this.recipe().steps].sort((a, b) => a.stepNumber - b.stepNumber));
@@ -70,18 +70,11 @@ export class RecipeCookModeComponent {
         }
     }
 
-    protected addRecipeToMeal(): void {
-        this.addToMeal.emit();
-    }
-
     private buildIngredientViews(ingredients: readonly RecipeIngredient[]): CookModeIngredientView[] {
         return ingredients.map(ingredient => ({
             name: ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName ?? '',
             amount: typeof ingredient.textName === 'string' ? (ingredient.amountText ?? '') : ingredient.amount,
-            unitKey:
-                ingredient.productBaseUnit !== null && ingredient.productBaseUnit !== undefined && ingredient.productBaseUnit.length > 0
-                    ? `GENERAL.UNITS.${ingredient.productBaseUnit}`
-                    : '',
+            unitKey: resolveIngredientUnitKey(ingredient) ?? '',
         }));
     }
 }

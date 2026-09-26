@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -26,6 +27,33 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(migrationTypesMissingAttribute);
+    }
+
+    [RequiresDockerFact]
+    public async Task LegacyRecipeIngredients_ReceiveStablePositionsOnUpgrade() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+        await context.Database.MigrateAsync();
+        var user = User.Create($"recipe-order-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "Ordered recipe", 1);
+        RecipeStep step = recipe.AddStep(1, "Mix");
+        step.AddTextIngredient("Salt");
+        step.AddTextIngredient("Tomatoes");
+        context.Users.Add(user);
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
+        await context.Database.ExecuteSqlRawAsync("""
+            UPDATE "RecipeIngredients" SET "CreatedOnUtc" =
+                CASE "TextName" WHEN 'Salt' THEN TIMESTAMPTZ '2026-01-01 00:00:00+00'
+                    ELSE TIMESTAMPTZ '2026-01-02 00:00:00+00' END;
+            """);
+        IMigrator migrator = context.GetService<IMigrator>();
+        await migrator.MigrateAsync("20260926141133_AddRecipeTextIngredients");
+        await context.Database.MigrateAsync();
+        context.ChangeTracker.Clear();
+        List<RecipeIngredient> ingredients = await context.RecipeIngredients.OrderBy(ingredient => ingredient.Position).ToListAsync();
+        Assert.Equal(new[] { "Salt", "Tomatoes" }, ingredients.Select(ingredient => ingredient.TextName), StringComparer.Ordinal);
+        Assert.Equal(new[] { 0, 1 }, ingredients.Select(ingredient => ingredient.Position));
     }
 
     [RequiresDockerFact]

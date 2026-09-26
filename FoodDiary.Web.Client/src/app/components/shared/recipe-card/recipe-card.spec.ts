@@ -245,3 +245,21 @@ describe('RecipeCardComponent ingredients', () => {
         expect(component['ingredientCount']()).toBe(2);
     });
 });
+
+describe('RecipeCardComponent nutrition completeness', () => {
+    it.each([null, 0, MOCK_RECIPE.totalCalories])('keeps unknown and known calories distinct when nutrition is incomplete: %s', async calories => {
+        const { el, fixture, component } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, totalCalories: calories, missingIngredientCount: 2 });
+        fixture.detectChanges();
+        const warning = el.querySelector<HTMLButtonElement>('.entity-card__calories .entity-card__nutrition-warning');
+        expect(warning).not.toBeNull();
+        expect(el.querySelector('.entity-card__calories-value')?.textContent).toBe(calories === null ? '—' : String(calories));
+        expect(el.querySelector('fd-nutrient-badges') !== null).toBe(calories !== null);
+        const open = vi.spyOn(component.open, 'emit');
+        warning?.click();
+        expect(open).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, missingIngredientCount: 0 });
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__nutrition-warning')).toBeNull();
+    });
+});

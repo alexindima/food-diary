@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
@@ -22,6 +22,21 @@ describe('RecipeCookModeComponent', () => {
         expect(component['isDone']()).toBe(true);
     });
 
+    it('removes the ingredient section for a step without ingredients', () => {
+        const { component, fixture } = setupComponent(createRecipe());
+        expect((fixture.nativeElement as HTMLElement).querySelector('.recipe-cook-mode__ingredients')).not.toBeNull();
+        component['nextStep']();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.recipe-cook-mode__ingredients')).toBeNull();
+    });
+
+    it('shows portions for a nested recipe', () => {
+        const recipe = createRecipe();
+        recipe.steps[0].ingredients = [{ id: 'nested', nestedRecipeId: 'recipe-2', nestedRecipeName: 'Sauce', amount: 0.5 }];
+        const { component } = setupComponent(recipe);
+        expect(component['ingredients']()[0].unitKey).toBe('RECIPE_DETAIL.SUMMARY.SERVINGS_FEW');
+    });
+
     it('builds current-step ingredient views', () => {
         const { component } = setupComponent(createRecipe());
 
@@ -32,16 +47,6 @@ describe('RecipeCookModeComponent', () => {
                 unitKey: 'GENERAL.UNITS.G',
             },
         ]);
-    });
-
-    it('emits add-to-meal action', () => {
-        const { component } = setupComponent(createRecipe());
-        const addToMeal = vi.fn();
-
-        component.addToMeal.subscribe(addToMeal);
-        component['addRecipeToMeal']();
-
-        expect(addToMeal).toHaveBeenCalledTimes(1);
     });
 });
 

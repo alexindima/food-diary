@@ -580,3 +580,19 @@ fd-entity-card-actions {
     --fd-icon-size: var(--entity-card-placeholder-size, var(--fd-size-icon-lg));
     color: var(--fd-color-text-muted);
 }
+
+.entity-card__nutrition-warning {
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    padding: var(--fd-space-xxs);
+    border: 0;
+    border-radius: var(--fd-radius-pill);
+    background: transparent;
+    color: var(--fd-color-notice-warning-action);
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: var(--fd-outline-focus);
+    }
+}

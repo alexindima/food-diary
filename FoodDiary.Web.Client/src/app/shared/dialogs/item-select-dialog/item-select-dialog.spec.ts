@@ -74,6 +74,20 @@ function configureComponent(
 }
 
 describe('ItemSelectDialogComponent', () => {
+    it('offers text only for a nonempty valid ingredient query and uses the recipe title', () => {
+        const component = configureComponent({ dialogData: { allowText: true } }).componentInstance;
+        expect(component['titleKey']).toBe('RECIPE_MANAGE.INGREDIENT_PICKER_TITLE');
+        expect(component['canUseText']()).toBe(false);
+        component['textQuery'].set('   ');
+        expect(component['canUseText']()).toBe(false);
+        component['textQuery'].set('Salt');
+        expect(component['canUseText']()).toBe(true);
+        const overlongNameLength = 257;
+        component['textQuery'].set('x'.repeat(overlongNameLength));
+        expect(component['canUseText']()).toBe(false);
+        expect(configureComponent().componentInstance['titleKey']).toBe('MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE');
+    });
+
     it('uses trimmed search text only when the caller enables text ingredients', () => {
         const dialogRef = { close: vi.fn() };
         const component = configureComponent({ dialogRef, dialogData: { allowText: true } }).componentInstance;

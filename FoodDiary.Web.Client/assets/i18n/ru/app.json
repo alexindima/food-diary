@@ -501,7 +501,8 @@
         "TEXT_INGREDIENT": "Текст",
         "TEXT_AMOUNT": "Количество",
         "TEXT_NOT_CALCULATED": "Не учитывается в расчёте пищевой ценности",
-        "USE_AS_TEXT": "Использовать «{{name}}» как текст"
+        "USE_AS_TEXT": "Использовать «{{name}}» как текст",
+        "INGREDIENT_PICKER_TITLE": "Выберите ингредиент"
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Категория",

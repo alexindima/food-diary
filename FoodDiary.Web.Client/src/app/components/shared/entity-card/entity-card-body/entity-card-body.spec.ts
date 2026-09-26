@@ -20,6 +20,29 @@ async function setupEntityCardBodyAsync(): Promise<ComponentFixture<EntityCardBo
 }
 
 describe('EntityCardBodyComponent', () => {
+    it('places a focusable nutrition warning beside unknown calories without opening the card', async () => {
+        const fixture = await setupEntityCardBodyAsync();
+        fixture.componentRef.setInput('calories', null);
+        fixture.componentRef.setInput('nutritionNote', 'Partial nutrition');
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const warning = element.querySelector<HTMLButtonElement>('.entity-card__calories button');
+        expect(warning?.getAttribute('aria-label')).toBe('Partial nutrition');
+        expect(element.querySelector('.entity-card__calories-value')?.textContent).toBe('—');
+        let bubbled = false;
+        element.addEventListener('click', () => {
+            bubbled = true;
+        });
+        warning?.click();
+        expect(bubbled).toBe(false);
+    });
+
+    it('does not show a warning for complete nutrition', async () => {
+        const fixture = await setupEntityCardBodyAsync();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.entity-card__nutrition-warning')).toBeNull();
+    });
+
     it('should create', async () => {
         const fixture = await setupEntityCardBodyAsync();
         const component = fixture.componentInstance;

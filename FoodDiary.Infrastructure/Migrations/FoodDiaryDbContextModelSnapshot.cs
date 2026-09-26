@@ -2062,6 +2062,9 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Property<Guid?>("NestedRecipeId")
                     .HasColumnType("uuid");
 
+                b.Property<int>("Position")
+                    .HasColumnType("integer");
+
                 b.Property<Guid?>("ProductId")
                     .HasColumnType("uuid");
 

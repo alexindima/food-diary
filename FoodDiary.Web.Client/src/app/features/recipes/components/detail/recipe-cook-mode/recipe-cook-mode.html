@@ -27,8 +27,12 @@
 
         <div class="recipe-cook-mode__photos">
             @for (photo of stepPhotos(); track $index) {
-                <button type="button" class="recipe-cook-mode__photo" [attr.aria-label]="'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate"
-                    (click)="previewPhoto($index)">
+                <button
+                    type="button"
+                    class="recipe-cook-mode__photo"
+                    [attr.aria-label]="'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate"
+                    (click)="previewPhoto($index)"
+                >
                     <img class="recipe-cook-mode__image" [src]="photo" [alt]="step.title ?? recipe().name" />
                 </button>
             }
@@ -41,15 +45,19 @@
             <p class="recipe-cook-mode__instruction fd-ui-body-sm">{{ step.instruction }}</p>
         </div>
 
-        <section class="recipe-cook-mode__ingredients fd-stack fd-gap-xs" [hidden]="ingredients().length === 0">
-            <h4 class="recipe-cook-mode__ingredients-title fd-ui-card-title">{{ 'RECIPE_DETAIL.COOK_MODE.INGREDIENTS' | translate }}</h4>
-            @for (ingredient of ingredients(); track $index) {
-                <div class="recipe-cook-mode__ingredient-row">
-                    <span class="fd-ui-body-sm">{{ ingredient.name || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}</span>
-                    <strong class="fd-ui-body-sm"> {{ ingredient.amount }} {{ ingredient.unitKey | translate }} </strong>
-                </div>
-            }
-        </section>
+        @if (ingredients().length > 0) {
+            <section class="recipe-cook-mode__ingredients fd-stack fd-gap-xs">
+                <h4 class="recipe-cook-mode__ingredients-title fd-ui-card-title">
+                    {{ 'RECIPE_DETAIL.COOK_MODE.INGREDIENTS' | translate }}
+                </h4>
+                @for (ingredient of ingredients(); track $index) {
+                    <div class="recipe-cook-mode__ingredient-row">
+                        <span class="fd-ui-body-sm">{{ ingredient.name || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}</span>
+                        <strong class="fd-ui-body-sm"> {{ ingredient.amount }} {{ ingredient.unitKey | translate }} </strong>
+                    </div>
+                }
+            </section>
+        }
 
         <div class="recipe-cook-mode__actions fd-ui-actions fd-ui-actions--split">
             <fd-ui-button
@@ -74,17 +82,5 @@
                 {{ 'RECIPE_DETAIL.COOK_MODE.NEXT' | translate }}
             </fd-ui-button>
         </div>
-
-        <fd-ui-button
-            type="button"
-            class="recipe-cook-mode__log-button"
-            appearance="brand-action"
-            icon="restaurant"
-            [fullWidth]="true"
-            [hidden]="!isDone()"
-            (click)="addRecipeToMeal()"
-        >
-            {{ 'RECIPE_DETAIL.COOK_MODE.ADD_TO_MEAL' | translate }}
-        </fd-ui-button>
     </section>
 }

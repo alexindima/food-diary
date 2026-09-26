@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5570,
+    "productionFiles": 5571,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 960,
@@ -7450,11 +7450,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.ts",
-      "nonBlankLines": 25,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-lib/entity-card.config.ts",
@@ -11466,11 +11466,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "nonBlankLines": 77,
-      "decisionPoints": 15,
+      "nonBlankLines": 71,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.04
+      "structuralRiskScore": 22.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.ts",
@@ -11482,11 +11482,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail-nutrition.mapper.ts",
-      "nonBlankLines": 172,
-      "decisionPoints": 32,
+      "nonBlankLines": 170,
+      "decisionPoints": 30,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 51.44
+      "structuralRiskScore": 48.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-lib/recipe-detail.config.ts",
@@ -11506,11 +11506,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.ts",
-      "nonBlankLines": 30,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
+      "structuralRiskScore": 0.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
@@ -11682,11 +11682,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.ts",
-      "nonBlankLines": 20,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-lib/recipe-select-dialog.config.ts",
@@ -11759,6 +11759,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.64
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-servings.utils.ts",
+      "nonBlankLines": 17,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/models/recipe.data.ts",
@@ -13050,11 +13058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
-      "nonBlankLines": 112,
-      "decisionPoints": 14,
+      "nonBlankLines": 116,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.24
+      "structuralRiskScore": 26.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
@@ -37002,11 +37010,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "nonBlankLines": 103,
+      "nonBlankLines": 108,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.56
+      "structuralRiskScore": 18.66
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredientProductSnapshot.cs",
@@ -37018,11 +37026,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "nonBlankLines": 108,
+      "nonBlankLines": 111,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.66
+      "structuralRiskScore": 15.72
     },
     {
       "path": "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",

@@ -174,7 +174,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                     step.Instruction,
                     step.ImageUrl,
                     step.ImageAssetId.HasValue ? step.ImageAssetId.Value.Value : null,
-                    step.Ingredients.SelectMany(
+                    step.Ingredients.OrderBy(ingredient => ingredient.Position).SelectMany(
                         ingredient => context.Products.AsNoTracking().Where(product => product.Id == ingredient.ProductId).DefaultIfEmpty(),
                         (ingredient, product) => new RecipeOverviewIngredientReadItem(
                         ingredient.Id.Value,

@@ -36,7 +36,7 @@ export function createRecipeFormValue(): RecipeFormValues {
         prepTime: 0,
         cookTime: null,
         servings: 1,
-        visibility: RecipeVisibility.Public,
+        visibility: RecipeVisibility.Private,
         calculateNutritionAutomatically: true,
         manualCalories: null,
         manualProteins: null,

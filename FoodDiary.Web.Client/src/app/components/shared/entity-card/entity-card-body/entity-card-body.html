@@ -3,6 +3,20 @@
         <div class="entity-card__calories fd-ui-body-sm">
             <span class="entity-card__calories-value">{{ (calories() | number: '1.0-0') ?? '—' }}</span>
             <span class="entity-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+            @if (nutritionNote(); as note) {
+                <button
+                    type="button"
+                    class="entity-card__nutrition-warning fd-inline-center"
+                    [attr.aria-label]="note"
+                    [fdUiHint]="note"
+                    [fdUiHintToggleOnClick]="true"
+                    (click)="$event.stopPropagation()"
+                    (keydown.enter)="$event.stopPropagation()"
+                    (keydown.space)="$event.stopPropagation()"
+                >
+                    <fd-ui-icon name="error_outline" size="sm" />
+                </button>
+            }
         </div>
         <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
             <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
@@ -19,9 +33,6 @@
         }
     </div>
 
-    @if (nutritionNote(); as note) {
-        <div class="fd-ui-caption">{{ note }}</div>
-    }
     @if (calories() !== null) {
         <div class="entity-card__summary-row fd-grid fd-gap-entity-card-header fd-align-center fd-min-w-0">
             <div class="entity-card__nutrients fd-row fd-min-w-0">

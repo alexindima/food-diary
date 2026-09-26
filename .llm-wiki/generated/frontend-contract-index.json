@@ -4,11 +4,11 @@
     "components": 462,
     "componentsWithoutDirectSpecs": 128,
     "inputs": 1497,
-    "outputs": 507,
+    "outputs": 506,
     "apiCalls": 267,
     "templatesWithTranslations": 322,
-    "translationKeys": 1909,
-    "consumerEdges": 1139,
+    "translationKeys": 1907,
+    "consumerEdges": 1140,
     "consumedComponents": 295,
     "unconsumedComponents": 166
   },
@@ -10290,12 +10290,7 @@
           "required": true
         }
       ],
-      "outputs": [
-        {
-          "name": "addToMeal",
-          "type": ""
-        }
-      ],
+      "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.spec.ts"
     },
     {
@@ -20806,7 +20801,6 @@
         "DISABLED_HINTS.FIRST_STEP",
         "DISABLED_HINTS.LAST_STEP",
         "PRODUCT_AI_DIALOG.VIEW_PHOTO",
-        "RECIPE_DETAIL.COOK_MODE.ADD_TO_MEAL",
         "RECIPE_DETAIL.COOK_MODE.EMPTY",
         "RECIPE_DETAIL.COOK_MODE.INGREDIENTS",
         "RECIPE_DETAIL.COOK_MODE.NEXT",
@@ -21006,7 +21000,6 @@
         "COMMON.ADD",
         "NUTRITION_COMPLETENESS.PARTIAL",
         "RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND",
-        "RECIPE_SELECT_DIALOG.SERVINGS",
         "SHARED.NUTRIENTS_SUMMARY.KKAL"
       ]
     },
@@ -21393,7 +21386,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.html",
       "keys": [
-        "NUTRITION_COMPLETENESS.PARTIAL",
+        "NUTRITION_COMPLETENESS.CARD_HINT",
         "RECIPE_CARD.ADD_TO_MEAL",
         "RECIPE_CARD.TO_DIARY"
       ]
@@ -21430,7 +21423,6 @@
       "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
       "keys": [
         "COMMON.CLOSE",
-        "MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE",
         "RECIPE_MANAGE.USE_AS_TEXT"
       ]
     },
@@ -27600,13 +27592,12 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "disabled",
         "disabledReason",
         "fill",
-        "fullWidth",
         "icon",
         "type",
         "variant"
@@ -30900,6 +30891,19 @@
       "occurrences": 1,
       "inputsUsed": [
         "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name",
+        "size"
       ],
       "outputsHandled": []
     },
@@ -37927,9 +37931,7 @@
       "inputsUsed": [
         "recipe"
       ],
-      "outputsHandled": [
-        "addToMeal"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "RecipeDetailIngredientPreviewComponent",

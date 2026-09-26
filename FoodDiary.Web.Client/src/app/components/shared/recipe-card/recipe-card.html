@@ -17,7 +17,7 @@
     [calories]="recipe().totalCalories ?? null"
     [nutritionNote]="
         (recipe().missingIngredientCount ?? 0) > 0
-            ? ('NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: recipe().missingIngredientCount })
+            ? ('NUTRITION_COMPLETENESS.CARD_HINT' | translate: { count: recipe().missingIngredientCount })
             : null
     "
     [showAction]="true"

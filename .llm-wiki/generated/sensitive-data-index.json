@@ -10536,7 +10536,7 @@
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 113
+      "line": 116
     },
     {
       "category": "privateContent",

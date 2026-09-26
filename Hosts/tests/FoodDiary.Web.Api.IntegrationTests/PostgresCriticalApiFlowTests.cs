@@ -452,7 +452,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        var steps = new[] { new { description = "Season", ingredients = new[] { new { textName = "Salt", amountText = "to taste", amount = 0 } } } };
+        var steps = new[] { new { description = "Season", ingredients = new[] { new { textName = "Salt", amountText = "to taste", amount = 0 }, new { textName = "Tomatoes", amountText = "2 pieces", amount = 0 } } } };
         HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/recipes", new {
             name = "Text recipe", servings = 2, visibility = "Private", calculateNutritionAutomatically = true, steps,
         });
@@ -460,11 +460,12 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         using var body = JsonDocument.Parse(await created.Content.ReadAsStringAsync());
         Guid id = body.RootElement.GetProperty("id").GetGuid();
         using var saved = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{id}"));
+        Assert.Equal(new[] { "Salt", "Tomatoes" }, saved.RootElement.GetProperty("steps")[0].GetProperty("ingredients").EnumerateArray().Select(item => item.GetProperty("textName").GetString()), StringComparer.Ordinal);
         JsonElement ingredient = saved.RootElement.GetProperty("steps")[0].GetProperty("ingredients")[0];
         Assert.Multiple(
             () => Assert.Equal("Salt", ingredient.GetProperty("textName").GetString()),
             () => Assert.Equal("to taste", ingredient.GetProperty("amountText").GetString()),
-            () => Assert.Equal(1, saved.RootElement.GetProperty("missingIngredientCount").GetInt32()),
+            () => Assert.Equal(2, saved.RootElement.GetProperty("missingIngredientCount").GetInt32()),
             () => Assert.Equal(JsonValueKind.Null, saved.RootElement.GetProperty("totalCalories").ValueKind));
 
         HttpResponseMessage duplicate = await client.PostAsJsonAsync($"/api/v1/recipes/{id}/duplicate", new { });
@@ -478,7 +479,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         });
         await AssertStatusCodeAsync(HttpStatusCode.Created, nested);
         using var nestedBody = JsonDocument.Parse(await nested.Content.ReadAsStringAsync());
-        Assert.Equal(1, nestedBody.RootElement.GetProperty("missingIngredientCount").GetInt32());
+        Assert.Equal(2, nestedBody.RootElement.GetProperty("missingIngredientCount").GetInt32());
         Assert.Equal(JsonValueKind.Null, nestedBody.RootElement.GetProperty("totalCalories").ValueKind);
 
         Guid copyId = copy.RootElement.GetProperty("id").GetGuid();
@@ -487,6 +488,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
             manualFiber = 0, manualAlcohol = 0, steps,
         });
         await AssertStatusCodeAsync(HttpStatusCode.OK, updated);
+        using var reloaded = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{copyId}"));
+        Assert.Equal(new[] { "Salt", "Tomatoes" }, reloaded.RootElement.GetProperty("steps")[0].GetProperty("ingredients").EnumerateArray().Select(item => item.GetProperty("textName").GetString()), StringComparer.Ordinal);
         using var manual = JsonDocument.Parse(await updated.Content.ReadAsStringAsync());
         Assert.Equal(0, manual.RootElement.GetProperty("missingIngredientCount").GetInt32());
         Assert.Equal(100, manual.RootElement.GetProperty("totalCalories").GetDouble());

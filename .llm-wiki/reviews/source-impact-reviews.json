@@ -493,13 +493,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "09d6d9194c1f3d68546d050775402c68ed0285729e4c0e002b0fc554bbd16f24"
+          "sha256": "52cc95ee074788b4c6ad12d067277c77214112561b729e2996356f1bdd7728ce"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:10.3493269Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T16:42:54.4921799Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -779,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4299172c040b1ee012b85bde925de5b75add2cbec9cdfad204d1b724174a25b9"
+          "sha256": "56e8b5ba6eb744840e03ff8a2f022659fb852e86c37eef2bcf1545bd3448b450"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:11.2142791Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T16:42:54.9060149Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c382c421f3011d026f7f5e58bc2a2274914b1a1f66a1931a9f1f8ad59a5c769"
+          "sha256": "4580a95f6692d266335ea481ab187f5d04fe877b36a379013593711e9b291e79"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Measured V8 coverage for recipes and related cards: 94.19 percent lines, 85.86 percent branches, 389 tests; added unknown/zero nutrition and serving-unit regression tests.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:11.7119214Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T20:36:24.5302961Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10c371264ccb2fd363a3ef123b9bf9014667def49657837f0c10b537080883b7"
+          "sha256": "dac32b2608f0b346302501c2dc9f89b7b0beb7c482208d7af36682a48afa5955"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:12.0635204Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T16:42:55.3620207Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c382c421f3011d026f7f5e58bc2a2274914b1a1f66a1931a9f1f8ad59a5c769"
+          "sha256": "4580a95f6692d266335ea481ab187f5d04fe877b36a379013593711e9b291e79"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10c371264ccb2fd363a3ef123b9bf9014667def49657837f0c10b537080883b7"
+          "sha256": "dac32b2608f0b346302501c2dc9f89b7b0beb7c482208d7af36682a48afa5955"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4299172c040b1ee012b85bde925de5b75add2cbec9cdfad204d1b724174a25b9"
+          "sha256": "56e8b5ba6eb744840e03ff8a2f022659fb852e86c37eef2bcf1545bd3448b450"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Reviewed changed presentation and tests: nutrition hints use escaped text, no new network, credentials, authorization or provider boundary; existing migration and private-default changes retained.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:12.6289573Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T20:36:25.4703890Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0f693dfcdf88dc7c9357611c733780cafd737ac10e605f083d7163dc3bd42ed8"
+          "sha256": "0e292f6a8016bff3e5128991be5e3ac3f800a6a70a6f1c4bec9d7fc8ca48b609"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4272ae0c2bb271530bac6a4f659e92b19200fb14c7a2ab246b4a201bd96ae005"
+          "sha256": "b4d7a1a37de53ff3c30fdb421cfd2a4e997669b7ded32e09e1b70a11e4e2a3c2"
         }
       ],
-      "reason": "Reviewed final free-text recipe UI and contracts: optional text amount, required name, partial nutrition warning and unknown-value placeholders. Focused tests, API/PostgreSQL round-trip and mobile/desktop browser scenarios passed.",
+      "reason": "Traced recipe-card nutritionNote through entity-card body to existing hint directive and shared servings helper through picker, summary and cooking; workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:38:02.3519436Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T20:36:26.5217297Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0f693dfcdf88dc7c9357611c733780cafd737ac10e605f083d7163dc3bd42ed8"
+          "sha256": "0e292f6a8016bff3e5128991be5e3ac3f800a6a70a6f1c4bec9d7fc8ca48b609"
         }
       ],
-      "reason": "Reviewed final free-text recipe UI and contracts: optional text amount, required name, partial nutrition warning and unknown-value placeholders. Focused tests, API/PostgreSQL round-trip and mobile/desktop browser scenarios passed.",
+      "reason": "Reviewed recipe-card to entity-card nutritionNote propagation, accessible hint interaction and RU/EN translations; desktop/mobile browser checks and 389 focused tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:38:01.8868136Z"
+      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
+      "reviewedAtUtc": "2026-09-26T20:36:23.4711194Z"
     },
     {
       "pageId": "workflow.query-context",
