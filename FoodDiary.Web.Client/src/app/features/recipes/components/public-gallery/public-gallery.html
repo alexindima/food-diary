@@ -1,0 +1,22 @@
+@if (activeImage(); as image) {
+    <button type="button" class="gallery-cover" [attr.aria-label]="'PUBLIC_RECIPES.ENLARGE' | translate" (click)="preview()">
+        <img [src]="image" [alt]="name()" />
+    </button>
+    @if (images().length > 1) {
+        <div class="gallery-thumbs">
+            @for (url of images(); track url) {
+                <button
+                    type="button"
+                    [class.selected]="url === image"
+                    [attr.aria-pressed]="url === image"
+                    [attr.aria-label]="'PUBLIC_RECIPES.PHOTO_NUMBER' | translate: { number: $index + 1 }"
+                    (click)="selected.set(url)"
+                >
+                    <img alt="" loading="lazy" [src]="url" />
+                </button>
+            }
+        </div>
+    }
+} @else {
+    <div class="gallery-placeholder"><fd-ui-icon name="restaurant" size="xl" /></div>
+}

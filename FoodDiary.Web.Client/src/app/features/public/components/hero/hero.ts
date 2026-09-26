@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
@@ -11,7 +12,7 @@ import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.se
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslatePipe],
+    imports: [RouterLink, FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslatePipe],
     templateUrl: './hero.html',
     styleUrl: './hero.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

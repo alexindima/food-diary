@@ -7,6 +7,7 @@ import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from
 import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { SERVER_TRANSLATIONS } from './server-translations.token';
 
 type TranslationDictionary = TranslationObject;
 type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
@@ -22,6 +23,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly transferState = inject(TransferState);
     private readonly cache = new Map<string, Observable<TranslationDictionary>>();
+    private readonly serverTranslations = inject(SERVER_TRANSLATIONS, { optional: true });
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
         return this.loadBundles(lang, this.getInitialBundles(this.browserWindow.getPathname() ?? '/'));
@@ -40,6 +42,10 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     }
 
     private loadBundles(lang: string, bundles: readonly TranslationBundle[]): Observable<TranslationDictionary> {
+        const bundled = this.serverTranslations?.[lang];
+        if (bundled !== undefined) {
+            return of(bundled);
+        }
         if (bundles.length === 0) {
             return of({});
         }

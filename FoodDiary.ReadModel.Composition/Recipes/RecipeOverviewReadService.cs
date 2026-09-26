@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Recipes.Domain.Nutrition;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -10,7 +11,7 @@ using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Recipes;
+namespace FoodDiary.ReadModel.Composition.Recipes;
 
 internal sealed class RecipeOverviewReadService(ICompositionReadContext context) : IRecipeOverviewReadService {
     private const string LikeEscapeCharacter = "\\";
@@ -30,6 +31,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
         List<RecipeOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
                 .OrderByDescending(r => r.CreatedOnUtc)
+                .ThenBy(r => r.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "0ee37c57517bb8f219ec7ad47e0764a7e408046d3ed61fb1aaf2e74b7306fb94",
-    "sourceFileCount": 4248
+    "sourceFingerprint": "b3d2efa5aa50595ce89d34c3b5769d07c630a131f5afa47c2c4b698bcf389763",
+    "sourceFileCount": 4263
   },
   "summary": {
-    "composeServices": 17,
+    "composeServices": 18,
     "hostedServices": 15,
     "httpClients": 18,
     "webhooks": 22,
@@ -68,7 +68,8 @@
       "image": "${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}",
       "dockerfile": "Dockerfile",
       "dependsOn": [
-        "api"
+        "api",
+        "client-ssr"
       ],
       "ports": [
         "${CLIENT_HOST_BIND:-127.0.0.1}:${CLIENT_PORT:-4200}:80"
@@ -78,6 +79,30 @@
       ],
       "networks": [],
       "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
+      "evidenceStatus": "declared-in-repository"
+    },
+    {
+      "name": "client-ssr",
+      "image": "${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}",
+      "dockerfile": null,
+      "dependsOn": [
+        "api"
+      ],
+      "ports": [
+        "127.0.0.1:4000:4000"
+      ],
+      "profiles": [
+        "full"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "PORT",
+        "SSR_API_ORIGIN"
+      ],
       "volumeMounts": [],
       "readOnlyRootFilesystem": true,
       "dropsAllCapabilities": true,

@@ -148,7 +148,7 @@ export class LocalizationService {
     }
 
     private getDomainDefaultLanguage(): string | null {
-        const hostname = this.browserWindow.getHostname()?.toLowerCase() ?? '';
+        const hostname = (this.browserWindow.getHostname() ?? this.document.location.hostname).toLowerCase();
         if (hostname.length === 0) {
             return null;
         }

@@ -1,0 +1,29 @@
+.steps-heading,
+.step-navigation {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    justify-content: space-between;
+    margin-bottom: var(--fd-space-md);
+}
+.recipe-step {
+    background: var(--fd-bg-surface);
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-lg);
+    padding: var(--fd-space-lg);
+    margin-bottom: var(--fd-space-md);
+}
+.recipe-step p {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.steps-heading h2 {
+    margin: 0;
+}
+.recipe-step h3 {
+    margin-top: 0;
+}
+.step-gallery {
+    max-width: 420px;
+}

@@ -406,6 +406,32 @@ services:
       - full
       - jobs
 
+  client-ssr:
+    image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
+    entrypoint: ["node", "/app/server/server.mjs"]
+    restart: unless-stopped
+    read_only: true
+    user: "65534:65534"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PORT: "4000"
+      SSR_API_ORIGIN: http://api:5000
+    ports:
+      - "127.0.0.1:4000:4000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/health/ssr').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      api:
+        condition: service_healthy
+    profiles:
+      - full
+
   client:
     image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
     build:
@@ -428,6 +454,8 @@ services:
       - /var/cache/nginx:size=8m,mode=0755,nosuid,nodev
       - /var/run:size=1m,mode=0755,nosuid,nodev
     depends_on:
+      client-ssr:
+        condition: service_healthy
       api:
         condition: service_healthy
     profiles:

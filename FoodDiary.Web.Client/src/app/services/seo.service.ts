@@ -32,6 +32,10 @@ type SoftwareApplicationStructuredData = {
 };
 
 export type SeoData = {
+    title?: string;
+    description?: string;
+    imageUrl?: string;
+    recipeStructuredData?: Record<string, unknown>;
     titleKey?: string | null;
     descriptionKey?: string;
     path?: string;
@@ -52,12 +56,9 @@ export class SeoService {
 
     public update(data: SeoData): void {
         const currentSiteUrl = this.getCurrentSiteUrl();
-        const translatedTitle = data.titleKey !== null && data.titleKey !== undefined ? this.translate.instant(data.titleKey) : null;
-        const pageTitle = translatedTitle !== null && translatedTitle.length > 0 ? `${translatedTitle} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
-        const description =
-            data.descriptionKey !== undefined && data.descriptionKey.length > 0
-                ? this.translate.instant(data.descriptionKey)
-                : this.translate.instant('SEO.DEFAULT_DESCRIPTION');
+        const pageTitle = this.getPageTitle(data);
+        const description = this.getDescription(data);
+        const imageUrl = data.imageUrl ?? `${currentSiteUrl}/assets/pwa/icon-512x512.png`;
         const currentUrl = this.buildSiteUrl(currentSiteUrl, data.path);
 
         this.title.setTitle(pageTitle);
@@ -66,15 +67,15 @@ export class SeoService {
         this.meta.updateTag({ property: 'og:title', content: pageTitle });
         this.meta.updateTag({ property: 'og:description', content: description });
         this.meta.updateTag({ property: 'og:url', content: currentUrl });
-        this.meta.updateTag({ property: 'og:image', content: `${currentSiteUrl}/assets/pwa/icon-512x512.png` });
+        this.meta.updateTag({ property: 'og:image', content: imageUrl });
         this.meta.updateTag({ property: 'og:type', content: 'website' });
         this.meta.updateTag({ property: 'og:site_name', content: DEFAULT_TITLE });
         this.meta.updateTag({ property: 'og:locale', content: this.getOpenGraphLocale() });
 
-        this.meta.updateTag({ name: 'twitter:card', content: 'summary' });
+        this.meta.updateTag({ name: 'twitter:card', content: data.imageUrl === undefined ? 'summary' : 'summary_large_image' });
         this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
         this.meta.updateTag({ name: 'twitter:description', content: description });
-        this.meta.updateTag({ name: 'twitter:image', content: `${currentSiteUrl}/assets/pwa/icon-512x512.png` });
+        this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
 
         this.updateCanonical(currentUrl);
         this.updateAlternateLinks(data.path);
@@ -85,6 +86,15 @@ export class SeoService {
         } else {
             this.meta.removeTag('name="robots"');
         }
+    }
+
+    private getPageTitle(data: SeoData): string {
+        const title = data.title ?? (data.titleKey === null || data.titleKey === undefined ? '' : this.translate.instant(data.titleKey));
+        return title.length > 0 ? `${title} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
+    }
+
+    private getDescription(data: SeoData): string {
+        return data.description ?? this.translate.instant(data.descriptionKey ?? 'SEO.DEFAULT_DESCRIPTION');
     }
 
     public reset(): void {
@@ -220,7 +230,11 @@ export class SeoService {
             ],
         };
 
-        script.textContent = JSON.stringify(structuredData);
+        script.textContent = JSON.stringify(
+            data.recipeStructuredData === undefined
+                ? structuredData
+                : { '@context': 'https://schema.org', ...data.recipeStructuredData, url: currentUrl },
+        ).replaceAll('<', '\\u003c');
     }
 
     private getLandingFeatureList(): string[] {

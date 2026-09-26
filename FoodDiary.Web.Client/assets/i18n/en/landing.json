@@ -48,7 +48,8 @@
         "MOCK_TREND": "This week",
         "MOCK_WEEK": "vs last week",
         "MOCK_MEAL": "Breakfast",
-        "MOCK_CHART": "Progress"
+        "MOCK_CHART": "Progress",
+        "RECIPES": "Browse recipes without signing up"
     },
     "MEALS_PREVIEW": {
         "EYEBROW": "See today",

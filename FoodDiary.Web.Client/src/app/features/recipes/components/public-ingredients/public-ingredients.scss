@@ -1,0 +1,34 @@
+.ingredients {
+    background: var(--fd-bg-surface);
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-lg);
+    padding: var(--fd-space-lg);
+}
+.portion-control {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-md);
+    flex-wrap: wrap;
+}
+.ingredients ul {
+    padding: 0;
+    list-style: none;
+}
+.ingredients li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--fd-space-md);
+    padding-block: var(--fd-space-sm);
+    border-bottom: var(--fd-border-muted);
+    overflow-wrap: anywhere;
+}
+.ingredients li:last-child {
+    border: 0;
+}
+.ingredients a {
+    color: var(--fd-color-primary);
+}
+.ingredient-note {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}

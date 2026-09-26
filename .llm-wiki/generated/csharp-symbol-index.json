@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4247,
-    "symbols": 4178,
+    "sourceFiles": 4262,
+    "symbols": 4193,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2193,
+      "class": 2199,
       "enum": 64,
       "interface": 401,
-      "record": 1400,
+      "record": 1409,
       "record struct": 120
     },
     "roles": {
       "Command": 223,
       "CommandHandler": 218,
       "Configuration": 96,
-      "Controller": 105,
+      "Controller": 106,
       "Entity": 99,
       "Event": 19,
       "Factory": 14,
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1723,
-      "Query": 281,
-      "QueryHandler": 204,
+      "Other": 1728,
+      "Query": 284,
+      "QueryHandler": 206,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 225,
+      "Response": 228,
       "Service": 162,
-      "Validator": 229,
+      "Validator": 230,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -1669,14 +1669,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 42
+      "line": 41
     },
     {
       "name": "RecipeOverviewReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RecipeUsageQuery",
@@ -21811,6 +21811,13 @@
       "line": 7
     },
     {
+      "name": "PublicRecipeMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Mappings/PublicRecipeMappings.cs",
+      "line": 5
+    },
+    {
       "name": "RecipeMappings",
       "kind": "class",
       "role": "Other",
@@ -21823,6 +21830,27 @@
       "role": "Other",
       "path": "Modules/Recipes/Application/Mappings/RecipeOverviewReadMappings.cs",
       "line": 5
+    },
+    {
+      "name": "PublicRecipeIngredientModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/PublicRecipeIngredientModel.cs",
+      "line": 6
+    },
+    {
+      "name": "PublicRecipeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/PublicRecipeModel.cs",
+      "line": 6
+    },
+    {
+      "name": "PublicRecipeStepModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/PublicRecipeStepModel.cs",
+      "line": 6
     },
     {
       "name": "RecipeImageModel",
@@ -21878,6 +21906,41 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetPublicRecipeQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipe/GetPublicRecipeQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetPublicRecipeQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipe/GetPublicRecipeQueryHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "GetPublicRecipesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetPublicRecipesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetPublicRecipesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
       "line": 5
     },
     {
@@ -22294,6 +22357,13 @@
       "line": 4
     },
     {
+      "name": "PublicRecipesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+      "line": 19
+    },
+    {
       "name": "RecipeExploreController",
       "kind": "class",
       "role": "Controller",
@@ -22313,6 +22383,13 @@
       "role": "Other",
       "path": "Modules/Recipes/Presentation/Extensions/RecipesPresentationServiceCollectionExtensions.cs",
       "line": 5
+    },
+    {
+      "name": "PublicRecipeHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpMappings.cs",
+      "line": 7
     },
     {
       "name": "RecipeHttpMappings",
@@ -22371,6 +22448,13 @@
       "line": 5
     },
     {
+      "name": "PublicRecipesHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Recipes/Presentation/Requests/PublicRecipesHttpQuery.cs",
+      "line": 5
+    },
+    {
       "name": "RecipeIngredientHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -22389,6 +22473,27 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "PublicRecipeHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "PublicRecipeIngredientHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeIngredientHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "PublicRecipeStepHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeStepHttpResponse.cs",
       "line": 2
     },
     {

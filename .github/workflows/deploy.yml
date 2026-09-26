@@ -625,6 +625,19 @@ jobs:
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
+          docker compose --profile full up -d --force-recreate --no-deps client-ssr
+          for _ in $(seq 1 20); do
+            if curl -fsS "http://127.0.0.1:4000/health/ssr" >/dev/null; then
+              recipe_ssr_ready=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "${recipe_ssr_ready:-false}" != "true" ]; then
+            docker compose logs --tail=100 --timestamps client-ssr
+            exit 1
+          fi
+
           echo "Waiting for Technology Radar readiness..."
           for _ in $(seq 1 20); do
             if curl -fsS "http://127.0.0.1:${TECH_RADAR_PORT:-4210}/" >/dev/null; then

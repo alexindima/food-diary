@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 462,
-    "componentsWithoutDirectSpecs": 128,
-    "inputs": 1497,
+    "components": 470,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1503,
     "outputs": 506,
-    "apiCalls": 267,
-    "templatesWithTranslations": 322,
-    "translationKeys": 1907,
-    "consumerEdges": 1140,
-    "consumedComponents": 295,
-    "unconsumedComponents": 166
+    "apiCalls": 268,
+    "templatesWithTranslations": 330,
+    "translationKeys": 1952,
+    "consumerEdges": 1163,
+    "consumedComponents": 301,
+    "unconsumedComponents": 168
   },
   "components": [
     {
@@ -10237,6 +10237,121 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.spec.ts"
     },
     {
+      "class": "PublicIngredientsComponent",
+      "selector": "fd-public-ingredients",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.spec.ts"
+    },
+    {
+      "class": "PublicNutritionComponent",
+      "selector": "fd-public-nutrition",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeCardComponent",
+      "selector": "fd-public-recipe-card",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeCatalogComponent",
+      "selector": "fd-public-recipe-catalog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.spec.ts"
+    },
+    {
+      "class": "PublicRecipeDetailComponent",
+      "selector": "fd-public-recipe-detail",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.spec.ts"
+    },
+    {
+      "class": "PublicRecipeGalleryComponent",
+      "selector": "fd-public-recipe-gallery",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.html",
+      "inputs": [
+        {
+          "name": "images",
+          "type": "string[]",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeNavigationComponent",
+      "selector": "fd-public-recipe-navigation",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicStepsComponent",
+      "selector": "fd-public-steps",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.spec.ts"
+    },
+    {
       "class": "RecipeAddComponent",
       "selector": "app-recipe-add",
       "feature": "recipes",
@@ -16482,6 +16597,18 @@
     {
       "feature": "recipes",
       "method": "GET",
+      "responseType": "PublicRecipe",
+      "urlExpression": "encodeURIComponent(id",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.ts",
+      "line": 18,
+      "publicMethod": "getById",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "inject(PUBLIC_RECIPE_API_URL)",
+      "resolvedUrlExpression": "inject(PUBLIC_RECIPE_API_URL)/encodeURIComponent(id"
+    },
+    {
+      "feature": "recipes",
+      "method": "GET",
       "responseType": "Recipe",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
@@ -17325,7 +17452,7 @@
       "responseType": "TranslationDictionary",
       "urlExpression": "url",
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-      "line": 67,
+      "line": 73,
       "publicMethod": "loadBundle",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -20699,6 +20826,7 @@
         "LANDING_HERO.PANEL.SECTION_TITLE",
         "LANDING_HERO.PANEL.TITLE",
         "LANDING_HERO.REASSURANCE",
+        "LANDING_HERO.RECIPES",
         "LANDING_HERO.REGISTER",
         "LANDING_HERO.SEARCH.ARIA_LABEL",
         "LANDING_HERO.SEARCH.TEXT",
@@ -20984,6 +21112,74 @@
     },
     {
       "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
+      "keys": [
+        "PUBLIC_RECIPES.KCAL_SERVING",
+        "PUBLIC_RECIPES.MIN",
+        "PUBLIC_RECIPES.PARTIAL",
+        "PUBLIC_RECIPES.PARTIAL_HINT"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.html",
+      "keys": [
+        "PUBLIC_RECIPES.ENLARGE",
+        "PUBLIC_RECIPES.PHOTO_NUMBER"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.html",
+      "keys": [
+        "PUBLIC_RECIPES.FEWER",
+        "PUBLIC_RECIPES.INGREDIENTS",
+        "PUBLIC_RECIPES.MAX_SERVINGS",
+        "PUBLIC_RECIPES.MIN_SERVINGS",
+        "PUBLIC_RECIPES.MORE",
+        "PUBLIC_RECIPES.NO_INGREDIENTS",
+        "PUBLIC_RECIPES.PORTIONS_HINT",
+        "PUBLIC_RECIPES.PRIVATE_INGREDIENT",
+        "PUBLIC_RECIPES.SERVINGS"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
+      "keys": [
+        "PUBLIC_RECIPES.ABOUT",
+        "PUBLIC_RECIPES.CATALOG",
+        "PUBLIC_RECIPES.LOGIN",
+        "PUBLIC_RECIPES.NAVIGATION"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.html",
+      "keys": [
+        "PUBLIC_RECIPES.COOK",
+        "PUBLIC_RECIPES.MIN",
+        "PUBLIC_RECIPES.NUTRITION",
+        "PUBLIC_RECIPES.PARTIAL_HINT",
+        "PUBLIC_RECIPES.PER_SERVING",
+        "PUBLIC_RECIPES.PREP",
+        "PUBLIC_RECIPES.SERVINGS"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.html",
+      "keys": [
+        "PUBLIC_RECIPES.FIRST_STEP",
+        "PUBLIC_RECIPES.LAST_STEP",
+        "PUBLIC_RECIPES.NEXT",
+        "PUBLIC_RECIPES.PREVIOUS",
+        "PUBLIC_RECIPES.STEP",
+        "PUBLIC_RECIPES.STEPS"
+      ]
+    },
+    {
+      "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "keys": [
         "RECIPE_FAVORITES.LOADING",
@@ -21029,6 +21225,36 @@
         "RECIPE_LIST.SUBTITLE",
         "RECIPE_LIST.TITLE",
         "RECIPE_LIST.TOUR.START_TOUR"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "keys": [
+        "PUBLIC_RECIPES.CATALOG",
+        "PUBLIC_RECIPES.CATEGORY",
+        "PUBLIC_RECIPES.EMPTY",
+        "PUBLIC_RECIPES.EMPTY_HINT",
+        "PUBLIC_RECIPES.ERROR",
+        "PUBLIC_RECIPES.FILTERS",
+        "PUBLIC_RECIPES.MAX_TIME",
+        "PUBLIC_RECIPES.NEWEST",
+        "PUBLIC_RECIPES.RESET",
+        "PUBLIC_RECIPES.RETRY",
+        "PUBLIC_RECIPES.SEARCH",
+        "PUBLIC_RECIPES.SUBTITLE"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "keys": [
+        "PUBLIC_RECIPES.ADD_DIARY",
+        "PUBLIC_RECIPES.CATALOG",
+        "PUBLIC_RECIPES.RETRY",
+        "PUBLIC_RECIPES.SAVED",
+        "PUBLIC_RECIPES.SHARE",
+        "PUBLIC_RECIPES.UNAVAILABLE_HINT"
       ]
     },
     {
@@ -27747,6 +27973,67 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "fill",
+        "icon",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "ariaLabel",
+        "disabled",
+        "disabledReason",
+        "icon",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -27798,6 +28085,36 @@
         "ariaLabel",
         "fill",
         "icon",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 4,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fill",
+        "icon",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -31524,6 +31841,32 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -32723,6 +33066,20 @@
       "component": "FdUiInputComponent",
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "label",
+        "prefixIcon",
+        "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
@@ -33283,6 +33640,16 @@
       "component": "FdUiLoaderComponent",
       "selector": "fd-ui-loader",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiLoaderComponent",
+      "selector": "fd-ui-loader",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
       "occurrences": 1,
@@ -33820,6 +34187,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",
@@ -36963,6 +37346,26 @@
       "component": "PageBodyComponent",
       "selector": "fd-page-body",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/page-body/page-body.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "PageBodyComponent",
+      "selector": "fd-page-body",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/page-body/page-body.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "PageBodyComponent",
+      "selector": "fd-page-body",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/page-body/page-body.ts",
       "consumerFeature": "recommendations",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.html",
       "occurrences": 1,
@@ -37269,6 +37672,32 @@
       "occurrences": 1,
       "inputsUsed": [
         "compactActions",
+        "subtitle",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PageHeaderComponent",
+      "selector": "fd-page-header",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/page-header/page-header.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "subtitle",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PageHeaderComponent",
+      "selector": "fd-page-header",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/page-header/page-header.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "subtitle",
         "title"
       ],
@@ -37781,6 +38210,100 @@
         "nutritionModeChange",
         "openAiRecognition"
       ]
+    },
+    {
+      "component": "PublicIngredientsComponent",
+      "selector": "fd-public-ingredients",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "recipe"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicNutritionComponent",
+      "selector": "fd-public-nutrition",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "recipe"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeCardComponent",
+      "selector": "fd-public-recipe-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "recipe"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeGalleryComponent",
+      "selector": "fd-public-recipe-gallery",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "images",
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeGalleryComponent",
+      "selector": "fd-public-recipe-gallery",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "images",
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeNavigationComponent",
+      "selector": "fd-public-recipe-navigation",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeNavigationComponent",
+      "selector": "fd-public-recipe-navigation",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicStepsComponent",
+      "selector": "fd-public-steps",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "recipe"
+      ],
+      "outputsHandled": []
     },
     {
       "component": "QuickMealDrawerComponent",

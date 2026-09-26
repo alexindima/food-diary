@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 210
+    "documentationPages": 212
   },
   "dotnet": {
     "projects": [
@@ -15705,6 +15705,7 @@
       "docs/adr/0047-test-project-ownership.md",
       "docs/adr/0048-atomic-command-and-nutrition-boundaries.md",
       "docs/adr/0049-owner-nutrition-reads-and-dashboard-composition.md",
+      "docs/adr/0050-public-recipe-read-boundary-and-ssr.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",
@@ -15839,6 +15840,7 @@
       "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
       "docs/frontend/FRONTEND_ARCHITECTURE.md",
       "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+      "docs/frontend/PUBLIC_RECIPES.md",
       "docs/frontend/TEMPLATE_LINTING.md",
       "docs/frontend/angular-22-tech-debt.md",
       "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",

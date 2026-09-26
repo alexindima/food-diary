@@ -23,7 +23,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
-public sealed class RecipePostgresApiFlowTests(PostgresApiWebApplicationFactory factory)
+public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,

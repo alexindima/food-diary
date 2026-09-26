@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1542,
+    "candidateFields": 1546,
     "credential": 156,
     "identity": 174,
-    "health": 700,
+    "health": 702,
     "financial": 129,
-    "privateContent": 383,
-    "boundaryFiles": 201,
+    "privateContent": 385,
+    "boundaryFiles": 202,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2122,21 +2122,21 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 317
+      "line": 319
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 323
+      "line": 325
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 324
+      "line": 326
     },
     {
       "category": "health",
@@ -4877,6 +4877,13 @@
     },
     {
       "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Recipes/Application/Models/PublicRecipeModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
       "path": "Modules/Recipes/Application/Models/RecipeIngredientModel.cs",
@@ -5063,6 +5070,13 @@
       "type": "double?",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
       "line": 20
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "health",
@@ -8247,21 +8261,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 310
+      "line": 312
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 312
+      "line": 314
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 313
+      "line": 315
     },
     {
       "category": "privateContent",
@@ -10337,6 +10351,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Application/Models/PublicRecipeModel.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
       "path": "Modules/Recipes/Application/Models/RecipeImageModel.cs",
@@ -10684,6 +10705,13 @@
       "type": "IReadOnlyList<Guid>?",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
       "line": 27
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",
+      "line": 5
     },
     {
       "category": "privateContent",
@@ -11848,6 +11876,14 @@
         "privateContent"
       ],
       "fieldCount": 9
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Recipes/Presentation/Responses/RecipeHttpResponse.cs",

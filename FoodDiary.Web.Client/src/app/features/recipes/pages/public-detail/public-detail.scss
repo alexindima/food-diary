@@ -1,0 +1,43 @@
+@use 'variables' as variables;
+
+.back-link {
+    color: var(--fd-color-primary);
+    text-decoration: none;
+}
+.recipe-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: var(--fd-space-xl);
+    align-items: start;
+}
+.recipe-summary {
+    min-width: 0;
+}
+.recipe-description {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.recipe-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    margin-top: var(--fd-space-lg);
+}
+.recipe-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    align-items: start;
+    gap: var(--fd-space-xl);
+    margin-top: var(--fd-space-xl);
+}
+.recipe-unavailable {
+    text-align: center;
+    padding-block: var(--fd-space-xxl);
+}
+@media #{variables.$media-tablet} {
+    .recipe-intro,
+    .recipe-body {
+        grid-template-columns: 1fr;
+    }
+}

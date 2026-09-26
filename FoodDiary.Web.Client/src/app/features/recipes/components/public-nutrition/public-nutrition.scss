@@ -1,0 +1,37 @@
+.recipe-facts {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    color: var(--fd-color-text-muted);
+    margin-bottom: var(--fd-space-lg);
+}
+.nutrition {
+    background: var(--fd-bg-surface);
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-lg);
+    padding: var(--fd-space-lg);
+}
+.nutrition h2 {
+    margin-top: 0;
+}
+.nutrition > p {
+    color: var(--fd-color-text-muted);
+}
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--fd-space-lg);
+}
+.nutrition-grid dt {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}
+.nutrition-grid dd {
+    margin: var(--fd-space-xs) 0 0;
+    font-weight: var(--fd-text-section-title-weight);
+}
+.nutrition-warning {
+    border-left: var(--fd-border-width-strong) solid var(--fd-color-notice-warning-action);
+    padding-left: var(--fd-space-md);
+}

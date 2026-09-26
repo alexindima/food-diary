@@ -1,0 +1,39 @@
+<section class="cooking-steps">
+    <div class="steps-heading">
+        <h2>{{ 'PUBLIC_RECIPES.STEPS' | translate }}</h2>
+        <fd-ui-button variant="outline" size="sm" (click)="toggleCooking()">{{
+            (cooking() ? 'PUBLIC_RECIPES.ALL_STEPS' : 'PUBLIC_RECIPES.COOK_MODE') | translate
+        }}</fd-ui-button>
+    </div>
+    @for (step of visibleSteps(); track step.stepNumber) {
+        <article class="recipe-step">
+            <h3>
+                {{ 'PUBLIC_RECIPES.STEP' | translate: { number: step.stepNumber } }}
+                @if (step.title) {
+                    · {{ step.title }}
+                }
+            </h3>
+            <p>{{ step.instruction }}</p>
+            @if (step.images.length > 0) {
+                <fd-public-recipe-gallery class="step-gallery" [images]="step.images" [name]="recipe().name" />
+            }
+        </article>
+    }
+    @if (cooking()) {
+        <div class="step-navigation">
+            <fd-ui-button
+                variant="outline"
+                [disabled]="stepIndex() === 0"
+                [disabledReason]="'PUBLIC_RECIPES.FIRST_STEP' | translate"
+                (click)="moveStep(-1)"
+                >{{ 'PUBLIC_RECIPES.PREVIOUS' | translate }}</fd-ui-button
+            ><span>{{ stepIndex() + 1 }} / {{ recipe().steps.length }}</span
+            ><fd-ui-button
+                [disabled]="stepIndex() >= recipe().steps.length - 1"
+                [disabledReason]="'PUBLIC_RECIPES.LAST_STEP' | translate"
+                (click)="moveStep(1)"
+                >{{ 'PUBLIC_RECIPES.NEXT' | translate }}</fd-ui-button
+            >
+        </div>
+    }
+</section>

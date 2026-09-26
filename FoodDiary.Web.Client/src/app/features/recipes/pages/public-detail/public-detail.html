@@ -1,0 +1,54 @@
+<fd-public-recipe-navigation />
+<div fdPageContainer>
+    <fd-page-header
+        [title]="recipe()?.name ?? ((page().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND') | translate)"
+        [subtitle]="recipe()?.category ?? ''"
+    >
+        <a class="back-link" routerLink="/explore">← {{ 'PUBLIC_RECIPES.CATALOG' | translate }}</a>
+    </fd-page-header>
+    <fd-page-body>
+        @if (recipe(); as item) {
+            <div class="recipe-intro">
+                <fd-public-recipe-gallery [images]="images()" [name]="item.name" />
+                <div class="recipe-summary">
+                    @if (item.description) {
+                        <p class="recipe-description">{{ item.description }}</p>
+                    }
+                    <fd-public-nutrition [recipe]="item" />
+                    <div class="recipe-actions">
+                        <fd-ui-button icon="add" [loading]="busy()" (click)="actAsync('diary')">{{
+                            'PUBLIC_RECIPES.ADD_DIARY' | translate
+                        }}</fd-ui-button>
+                        <fd-ui-button
+                            variant="outline"
+                            icon="star"
+                            [loading]="busy()"
+                            [disabled]="saved()"
+                            [disabledReason]="'PUBLIC_RECIPES.SAVED' | translate"
+                            (click)="actAsync('save')"
+                            >{{ (saved() ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.SAVE') | translate }}</fd-ui-button
+                        >
+                        <fd-ui-button variant="secondary" fill="text" icon="share" (click)="shareAsync()">{{
+                            'PUBLIC_RECIPES.SHARE' | translate
+                        }}</fd-ui-button>
+                    </div>
+                    @if (actionMessage(); as message) {
+                        <p role="status">{{ message | translate }}</p>
+                    }
+                    <a [hidden]="shareUrl() === null" [href]="shareUrl()">{{ shareUrl() }}</a>
+                </div>
+            </div>
+            <div class="recipe-body">
+                <fd-public-ingredients [recipe]="item" />
+                <fd-public-steps [recipe]="item" />
+            </div>
+        } @else {
+            <section class="recipe-unavailable">
+                <p>{{ 'PUBLIC_RECIPES.UNAVAILABLE_HINT' | translate }}</p>
+                @if (page().error === 'error') {
+                    <fd-ui-button variant="outline" (click)="retry()">{{ 'PUBLIC_RECIPES.RETRY' | translate }}</fd-ui-button>
+                }
+            </section>
+        }
+    </fd-page-body>
+</div>

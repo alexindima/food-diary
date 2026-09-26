@@ -48,7 +48,8 @@
         "MOCK_TREND": "Эта неделя",
         "MOCK_WEEK": "к прошлой",
         "MOCK_MEAL": "Завтрак",
-        "MOCK_CHART": "Прогресс"
+        "MOCK_CHART": "Прогресс",
+        "RECIPES": "Посмотреть рецепты без регистрации"
     },
     "MEALS_PREVIEW": {
         "EYEBROW": "Сегодня",

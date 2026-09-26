@@ -95,7 +95,11 @@ export const serverRoutes: ServerRoute[] = [
     },
     {
         path: 'explore',
-        renderMode: RenderMode.Client,
+        renderMode: RenderMode.Server,
+    },
+    {
+        path: 'explore/:id',
+        renderMode: RenderMode.Server,
     },
     {
         path: 'shopping-lists',

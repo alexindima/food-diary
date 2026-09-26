@@ -1,0 +1,8 @@
+@if (!auth.isAuthenticated()) {
+    <nav class="public-navigation" [attr.aria-label]="'PUBLIC_RECIPES.NAVIGATION' | translate">
+        <a class="brand" routerLink="/">FoodDiary</a>
+        <a routerLink="/explore">{{ 'PUBLIC_RECIPES.CATALOG' | translate }}</a>
+        <a class="about" routerLink="/food-diary">{{ 'PUBLIC_RECIPES.ABOUT' | translate }}</a>
+        <fd-ui-button variant="outline" size="sm" (click)="login()">{{ 'PUBLIC_RECIPES.LOGIN' | translate }}</fd-ui-button>
+    </nav>
+}

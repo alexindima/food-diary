@@ -8,11 +8,26 @@ import { describe, expect, it } from 'vitest';
 import { environment } from '../../../environments/environment';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
+import { SERVER_TRANSLATIONS } from './server-translations.token';
 
 const LANGUAGE = 'en';
 const BUILD_VERSION = environment.buildVersion ?? 'dev';
 
 describe('FoodDiaryTranslationLoader routes', () => {
+    it('uses packaged translations on the server without fetching the public hostname', async () => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: SERVER_TRANSLATIONS, useValue: { ru: { PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' } } } },
+            ],
+        });
+        const loader = TestBed.inject(FoodDiaryTranslationLoader);
+        await expect(firstValueFrom(loader.loadRouteTranslations('ru', '/explore'))).resolves.toEqual({
+            PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' },
+        });
+        TestBed.inject(HttpTestingController).verify();
+    });
     it('loads landing bundles for initial public route', async () => {
         const { loader, httpMock } = setup('/');
         const resultPromise = firstValueFrom(loader.getTranslation(LANGUAGE));

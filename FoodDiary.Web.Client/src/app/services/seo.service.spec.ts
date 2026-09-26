@@ -186,3 +186,24 @@ describe('SeoService reset', () => {
         expect(metaService.getTag('name="robots"')).toBeNull();
     });
 });
+
+describe('public recipe metadata', () => {
+    it('uses recipe title and image and escapes script delimiters', () => {
+        service.update({
+            title: 'Soup',
+            description: 'Cook soup',
+            imageUrl: 'https://example.com/soup.jpg',
+            path: '/explore/recipe',
+            recipeStructuredData: { '@type': 'Recipe', name: '</script><script>bad</script>' },
+        });
+        expect(titleService.getTitle()).toBe('Soup | Food Diary');
+        expect(metaService.getTag('property="og:image"')?.content).toBe('https://example.com/soup.jpg');
+        expect(metaService.getTag('name="twitter:card"')?.content).toBe('summary_large_image');
+        const script = document.querySelector('script[data-seo-structured-data="app"]');
+        expect(script?.textContent).not.toContain('</script>');
+        expect(JSON.parse(script?.textContent ?? '{}')).toMatchObject({ '@type': 'Recipe' });
+        service.update({ titleKey: 'SEO.PRODUCTS', noIndex: true });
+        expect(script?.textContent).not.toContain('"@type":"Recipe"');
+        expect(metaService.getTag('name="robots"')?.content).toBe('noindex, nofollow');
+    });
+});

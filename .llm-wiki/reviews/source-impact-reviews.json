@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
+          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
         }
       ],
-      "reason": "Reviewed docs/README.md: only a link to the measured body metrics frontend test audit was added; repository navigation and authority remain accurate.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:23:13.6062657Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:48.6054867Z"
     },
     {
       "pageId": "module.frontend",
@@ -67,22 +67,14 @@
       "pageSha256": "c159de7d87fab3af4797d412e925d9c35188294ad7e4ddd0a25f0a5b256bd8be",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4ec2ef80bcf53ba15ef5809a5c881679c2f821856a387ecb1f53fd45a29f61fc"
-        },
-        {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "de693ebbbe3313b17cb6ae6cf4d9c01711ea39862e354a32e2c2cd974a8aafa4"
+          "sha256": "e7769457e9dec1f87d810bd45256bf8dceeb5ea150ae0810ea626b4b38752d06"
         }
       ],
-      "reason": "Verified owner-request relocation to Meals, scoped Dashboard adapter registration, and all 221 API integration tests. External DTOs and HTTP routes are unchanged; these pages describe the still-valid generic contract and composition rules.",
+      "reason": "Recipes read composition now uses its physical project namespace; AGENTS documents the completed folder migration and IDE0130/FeatureStructureTests enforcement. Host/read-model ownership and module boundaries described by this page are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:33.6205786Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T22:02:14.6841759Z"
     },
     {
       "pageId": "system.architecture",
@@ -121,13 +113,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "b937dbb52046bce01ac76a53c3621777531a100f4aab0911f830e7eec67aa624"
+          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
         }
       ],
-      "reason": "Angular coverage thresholds and runner isolation changed; project routes and build ownership remain unchanged.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cc6fe2ac45340af238a2ad78a10744ad653cefc2",
-      "reviewedAtUtc": "2026-09-19T03:36:18.2183242Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:49.3188505Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -135,14 +127,18 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
+          "path": "docs/adr/README.md",
+          "sha256": "d0dbf28003d00dd58ed8c5aa3e8e3a20e0e9b86f3569f8d4d92a6e3830a9c7cf"
+        },
+        {
           "path": "docs/README.md",
-          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
+          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
         }
       ],
-      "reason": "Reviewed the new body metrics coverage report and docs index: measured tests remain evidence and the report explicitly separates source-review risks from executed coverage; authority and freshness rules are unchanged.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:23:14.9875876Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:49.9309439Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -150,18 +146,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5e50dd5d9e9948ed76762aa1eee0d1ca2514fae791c4567b12b07abadc1b602e"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:34.3900464Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:50.6108696Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -200,13 +192,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "2ec5c717b0f5465748c7c401e6b85019b863b89a6c4028e74c8d6cc60c811b5c"
+          "sha256": "c5b8cbcfbf2bd6f8eb33cce03cf71ca2c7ee3fb9703b5a9af7a04f1a6d880b4a"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:09.3529612Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:51.6756248Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,13 +207,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1be2456ba6a8f017759c2ef731722c3633e7e78a0740422eba1c0840eb364846"
+          "sha256": "1f0d830a5548fe8f8b918ac0ce3eb2362ab6e35db47248e4393aee273b5f0ff0"
         }
       ],
-      "reason": "Recipe step galleries support five owned images with legacy image backfill and unchanged access rules. Verified domain tests, API contract and PostgreSQL image-reference tests, frontend unit tests, desktop and mobile editor journeys, and successful backend/frontend builds.",
+      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d07aa79ed458a9a133a701a1a3958b16349d97ba",
-      "reviewedAtUtc": "2026-09-26T11:50:02.5663475Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:55:13.6555200Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8b84d7df4496594802321771af263f1c57c02c6f21238fdac124013ef6bb5149"
+          "sha256": "1e29572c27f0b08cb7ad21c63646bd3d4d065ca72f988a94a97cbddef3db60f5"
         }
       ],
-      "reason": "Reviewed recipe free-text ingredient contracts, persistence and UI flow. Nullable text fields and completeness count preserve existing structured ingredient payloads; migration adds nullable columns and a zero default only. Domain/application tests, 18 API/PostgreSQL contract tests, frontend unit tests and desktop/mobile save scenarios passed; generated indexes refreshed.",
+      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7f8fde70631384605628e48813319546cfb491f8",
-      "reviewedAtUtc": "2026-09-26T14:37:09.9861205Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:55:15.0116346Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -448,13 +440,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "febfc39db358befa0891cb5fb58b4b1b82ef8563eed70269dbddb1f31266e52d"
+          "sha256": "d0dbf28003d00dd58ed8c5aa3e8e3a20e0e9b86f3569f8d4d92a6e3830a9c7cf"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:36.3507605Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:52:52.6392323Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -779,13 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "56e8b5ba6eb744840e03ff8a2f022659fb852e86c37eef2bcf1545bd3448b450"
+          "sha256": "34fef4fdcf46811b168afb3be514d45e282cd9bee033733b9910ec3398af8ca6"
         }
       ],
-      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
+      "reason": "Reviewed remaining generated-index impacts of the Recipes namespace correction: CLR names/source positions changed, but visibility, private-data projection, persistence operations and runtime services did not. Workflow instructions remain applicable; composition compilation, namespace checks and a PostgreSQL recipe read test passed.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T16:42:54.9060149Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T22:05:42.9954849Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4580a95f6692d266335ea481ab187f5d04fe877b36a379013593711e9b291e79"
+          "sha256": "e703391f1c36be4882cf809c7679dfa272288f8ed21052f1e838258bb3027f8a"
         }
       ],
-      "reason": "Measured V8 coverage for recipes and related cards: 94.19 percent lines, 85.86 percent branches, 389 tests; added unknown/zero nutrition and serving-unit regression tests.",
+      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T20:36:24.5302961Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T22:05:08.5329305Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dac32b2608f0b346302501c2dc9f89b7b0beb7c482208d7af36682a48afa5955"
+          "sha256": "b4d942fe3d4a1c40c7da84d4f4e9f421134c194656180123192e52c3dbc92a03"
         }
       ],
-      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
+      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T16:42:55.3620207Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T22:05:08.9986017Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +906,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4580a95f6692d266335ea481ab187f5d04fe877b36a379013593711e9b291e79"
+          "sha256": "e703391f1c36be4882cf809c7679dfa272288f8ed21052f1e838258bb3027f8a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dac32b2608f0b346302501c2dc9f89b7b0beb7c482208d7af36682a48afa5955"
+          "sha256": "b4d942fe3d4a1c40c7da84d4f4e9f421134c194656180123192e52c3dbc92a03"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "56e8b5ba6eb744840e03ff8a2f022659fb852e86c37eef2bcf1545bd3448b450"
+          "sha256": "34fef4fdcf46811b168afb3be514d45e282cd9bee033733b9910ec3398af8ca6"
         }
       ],
-      "reason": "Reviewed changed presentation and tests: nutrition hints use escaped text, no new network, credentials, authorization or provider boundary; existing migration and private-default changes retained.",
+      "reason": "Namespace migration changes only RecipeOverviewReadService CLR identity and corresponding source references. Regenerated index schemas, risk interpretation and runtime boundaries are unchanged. The composition build, 20 namespace guard cases and PostgreSQL reader test pass; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T20:36:25.4703890Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T22:05:09.6295136Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0e292f6a8016bff3e5128991be5e3ac3f800a6a70a6f1c4bec9d7fc8ca48b609"
+          "sha256": "69d1540f48f1ff0cdbf90178c2ff1affb0e8dc44c7125ce609df4e2c7509d319"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "b4d7a1a37de53ff3c30fdb421cfd2a4e997669b7ded32e09e1b70a11e4e2a3c2"
+          "sha256": "1bf958f64a76e7ed915140af3967662adcf86f9c50ef46927b95209491ad80e9"
         }
       ],
-      "reason": "Traced recipe-card nutritionNote through entity-card body to existing hint directive and shared servings helper through picker, summary and cooking; workflow guidance remains current.",
+      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T20:36:26.5217297Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:55:20.1337067Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0e292f6a8016bff3e5128991be5e3ac3f800a6a70a6f1c4bec9d7fc8ca48b609"
+          "sha256": "69d1540f48f1ff0cdbf90178c2ff1affb0e8dc44c7125ce609df4e2c7509d319"
         }
       ],
-      "reason": "Reviewed recipe-card to entity-card nutritionNote propagation, accessible hint interaction and RU/EN translations; desktop/mobile browser checks and 389 focused tests passed.",
+      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T20:36:23.4711194Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:55:20.9760156Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1186,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "df1ad70dc6f6982d97cf91c96df140479497da33005a4caa2ea9232196745567"
+          "sha256": "d8fbdf5e693d33e1a8b5fe2479c7a3a35233fb7daa26f3fed9835e068eaedc17"
         }
       ],
-      "reason": "Reviewed repository catalog changes for added test files and one narrow test project reference. No runtime file, query ranking, index schema or retrieval rule changed; current retrieval guidance remains valid.",
+      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:50:19.9014199Z"
+      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
+      "reviewedAtUtc": "2026-09-26T21:55:21.6712104Z"
     },
     {
       "pageId": "workflow.review-diff",

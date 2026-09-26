@@ -7,6 +7,7 @@ export function parseRouteSeoData(value: unknown): SeoData | null {
     }
 
     const seoData: SeoData = {};
+    readContentSeo(value, seoData);
 
     if (typeof value['titleKey'] === 'string') {
         seoData.titleKey = value['titleKey'];
@@ -37,4 +38,15 @@ export function parseRouteSeoData(value: unknown): SeoData | null {
     }
 
     return seoData;
+}
+
+function readContentSeo(value: Record<string, unknown>, seoData: SeoData): void {
+    for (const key of ['title', 'description', 'imageUrl'] as const) {
+        if (typeof value[key] === 'string') {
+            seoData[key] = value[key];
+        }
+    }
+    if (isRecord(value['recipeStructuredData'])) {
+        seoData.recipeStructuredData = value['recipeStructuredData'];
+    }
 }

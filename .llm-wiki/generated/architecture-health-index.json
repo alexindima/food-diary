@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 103,
-    "routedStandaloneComponents": 63,
-    "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 37,
+    "routedStandaloneComponents": 65,
+    "componentsWithoutDirectSpecs": 132,
+    "criticalSymbolsWithoutTestReferences": 39,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -4706,6 +4706,69 @@
       "specPath": null
     },
     {
+      "class": "PublicNutritionComponent",
+      "selector": "fd-public-nutrition",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeCardComponent",
+      "selector": "fd-public-recipe-card",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "PublicRecipe",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeGalleryComponent",
+      "selector": "fd-public-recipe-gallery",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.html",
+      "inputs": [
+        {
+          "name": "images",
+          "type": "string[]",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicRecipeNavigationComponent",
+      "selector": "fd-public-recipe-navigation",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "RecipeListRecentComponent",
       "selector": "fd-recipe-list-recent",
       "feature": "recipes",
@@ -5089,6 +5152,16 @@
       "coveredThrough": []
     },
     {
+      "name": "PublicRecipesController",
+      "role": "Controller",
+      "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+      "line": 19,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminAiPromptScenariosQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
@@ -5283,6 +5356,16 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetPublicRecipesQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
+      "line": 5,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -77,9 +77,8 @@ export const routes: Routes = [
     },
     {
         path: 'explore',
-        canActivate: [authGuard],
-        loadChildren: async () => import('./features/explore/explore.routes'),
-        data: { seo: { titleKey: 'SEO.EXPLORE', descriptionKey: 'SEO.EXPLORE_DESCRIPTION', noIndex: true } },
+        loadChildren: async () => import('./features/recipes/public-recipe.routes'),
+        data: { seo: { titleKey: 'PUBLIC_RECIPES.CATALOG', descriptionKey: 'PUBLIC_RECIPES.SUBTITLE' } },
     },
     {
         path: 'shopping-lists',

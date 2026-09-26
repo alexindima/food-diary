@@ -9,6 +9,15 @@ const DEFAULT_PORT = 4000;
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+app.get('/health/ssr', (_req, res) => {
+    res.type('text/plain').send('Healthy');
+});
+
+app.use('/explore', (_req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+});
+
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.

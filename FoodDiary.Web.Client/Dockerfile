@@ -15,6 +15,12 @@ RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin && npm r
 
 FROM nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
 
+# The same immutable client image serves static assets and the separate recipe SSR service.
+RUN apk add --no-cache libstdc++
+COPY --from=build /usr/local/bin/node /usr/local/bin/node
+COPY --from=build /app/dist/server /app/server
+COPY --from=build /app/dist/browser /app/browser
+
 COPY --from=build /app/dist/browser/. /usr/share/nginx/html
 COPY --from=build /app/dist-admin /usr/share/nginx/html-admin
 COPY --from=build /app/dist-storybook /usr/share/nginx/html-storybook

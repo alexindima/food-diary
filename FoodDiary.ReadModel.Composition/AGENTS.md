@@ -10,6 +10,8 @@ Implements cross-module read ports with SQL projections, per ADR 0038. API,
 JobManager and Initializer explicitly register AddReadModelComposition. Modules
 must never reference this assembly. Existing implementation namespaces are retained
 as a deliberate compatibility exception; physical and assembly ownership is here.
+The Recipes folder has completed its namespace migration and uses
+FoodDiary.ReadModel.Composition.Recipes. IDE0130 and FeatureStructureTests enforce it.
 
 ADR 0042 separates the shared runtime root from FoodDiaryDbContext. Readers still
 receive the same scoped complete-model context, resolved lazily on the session's

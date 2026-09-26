@@ -70,15 +70,20 @@
                         },
                         "server": "src/main.server.ts",
                         "security": {
-                            "allowedHosts": []
+                            "allowedHosts": [
+                                "localhost",
+                                "127.0.0.1",
+                                "fooddiary.club",
+                                "www.fooddiary.club",
+                                "xn--b1adbcbrouc8l.xn--p1ai",
+                                "www.xn--b1adbcbrouc8l.xn--p1ai",
+                                "client-ssr"
+                            ]
                         },
                         "ssr": {
                             "entry": "src/server.ts"
                         },
-                        "prerender": {
-                            "discoverRoutes": false,
-                            "routesFile": "src/prerender-routes.txt"
-                        }
+                        "outputMode": "server"
                     },
                     "configurations": {
                         "production": {

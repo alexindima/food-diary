@@ -1,0 +1,37 @@
+@use 'variables' as variables;
+
+.catalog-filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    align-items: center;
+    gap: var(--fd-space-md);
+    margin-block: var(--fd-space-lg);
+}
+.catalog-order {
+    color: var(--fd-color-text-muted);
+    margin-bottom: var(--fd-space-md);
+}
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: var(--fd-space-lg);
+    margin-bottom: var(--fd-space-lg);
+}
+.catalog-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-xxl);
+    text-align: center;
+}
+@media #{variables.$media-tablet} {
+    .catalog-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width: 480px) {
+    .catalog-filters {
+        grid-template-columns: 1fr;
+    }
+}

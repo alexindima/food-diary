@@ -162,8 +162,8 @@ public sealed class TelemetrySecurityGuardrailTests {
             () => Assert.Contains("listen 443 ssl default_server;", nginx, StringComparison.Ordinal),
             () => Assert.Contains("listen 443 quic reuseport default_server;", nginx, StringComparison.Ordinal),
             () => Assert.Contains("ssl_reject_handshake on;", nginx, StringComparison.Ordinal),
-            () => Assert.Equal(2, CountOccurrences(nginx, "proxy_set_header Host $server_name;")),
-            () => Assert.Equal(2, CountOccurrences(nginx, "proxy_set_header X-Forwarded-Host $server_name;")),
+            () => Assert.Equal(3, CountOccurrences(nginx, "proxy_set_header Host $server_name;")),
+            () => Assert.Equal(3, CountOccurrences(nginx, "proxy_set_header X-Forwarded-Host $server_name;")),
             () => Assert.DoesNotContain("proxy_set_header Host $host;", nginx, StringComparison.Ordinal));
     }
 

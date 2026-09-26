@@ -19,6 +19,14 @@ export class BrowserWindowService {
         return this.getWindow() !== null;
     }
 
+    public async copyTextAsync(text: string): Promise<void> {
+        const clipboard = this.getWindow()?.navigator.clipboard;
+        if (clipboard === undefined) {
+            throw new Error('Clipboard unavailable');
+        }
+        await clipboard.writeText(text);
+    }
+
     public getOrigin(): string | undefined {
         return this.getWindow()?.location.origin;
     }

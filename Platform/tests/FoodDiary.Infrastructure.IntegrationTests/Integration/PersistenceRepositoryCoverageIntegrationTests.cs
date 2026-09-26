@@ -91,7 +91,6 @@ using FoodDiary.Modules.Notifications.PersistenceModel;
 using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
-using FoodDiary.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;

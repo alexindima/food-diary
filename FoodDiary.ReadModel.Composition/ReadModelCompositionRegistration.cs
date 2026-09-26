@@ -32,7 +32,6 @@ using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Meals;
-using FoodDiary.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
 using Microsoft.Extensions.DependencyInjection;

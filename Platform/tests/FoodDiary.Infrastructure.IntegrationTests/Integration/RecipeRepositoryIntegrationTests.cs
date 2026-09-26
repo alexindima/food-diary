@@ -16,7 +16,7 @@ using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;
-using FoodDiary.Infrastructure.Persistence.Recipes;
+using FoodDiary.ReadModel.Composition.Recipes;
 using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Results;
 using System.Diagnostics;

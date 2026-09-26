@@ -1,0 +1,43 @@
+<fd-public-recipe-navigation />
+<div fdPageContainer>
+    <fd-page-header [title]="'PUBLIC_RECIPES.CATALOG' | translate" [subtitle]="'PUBLIC_RECIPES.SUBTITLE' | translate" />
+    <fd-page-body>
+        <section class="catalog-filters" [attr.aria-label]="'PUBLIC_RECIPES.FILTERS' | translate">
+            <fd-ui-input prefixIcon="search" [formField]="filterForm.search" [label]="'PUBLIC_RECIPES.SEARCH' | translate" />
+            <fd-ui-input [formField]="filterForm.category" [label]="'PUBLIC_RECIPES.CATEGORY' | translate" />
+            <fd-ui-input type="text" [formField]="filterForm.maxTotalTime" [label]="'PUBLIC_RECIPES.MAX_TIME' | translate" />
+            <fd-ui-button variant="secondary" fill="text" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>
+        </section>
+        <p class="catalog-order">{{ 'PUBLIC_RECIPES.NEWEST' | translate }}</p>
+        @if (loading()) {
+            <div class="catalog-state" aria-live="polite"><fd-ui-loader /></div>
+        } @else if (failed()) {
+            <div class="catalog-state" role="alert">
+                <h2>{{ 'PUBLIC_RECIPES.ERROR' | translate }}</h2>
+                <fd-ui-button variant="outline" (click)="retry()">{{ 'PUBLIC_RECIPES.RETRY' | translate }}</fd-ui-button>
+            </div>
+        } @else if (result(); as page) {
+            @if (page.data.length === 0) {
+                <div class="catalog-state">
+                    <h2>{{ 'PUBLIC_RECIPES.EMPTY' | translate }}</h2>
+                    <p>{{ 'PUBLIC_RECIPES.EMPTY_HINT' | translate }}</p>
+                    <fd-ui-button variant="outline" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>
+                </div>
+            } @else {
+                <div class="catalog-grid">
+                    @for (recipe of page.data; track recipe.id) {
+                        <fd-public-recipe-card [recipe]="recipe" />
+                    }
+                </div>
+                @if (page.totalPages > 1) {
+                    <fd-ui-pagination
+                        [length]="page.totalItems"
+                        [pageSize]="20"
+                        [pageIndex]="page.page - 1"
+                        (pageIndexChange)="changePage($event)"
+                    />
+                }
+            }
+        }
+    </fd-page-body>
+</div>

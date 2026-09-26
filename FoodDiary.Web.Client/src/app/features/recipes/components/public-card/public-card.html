@@ -1,0 +1,32 @@
+<article class="catalog-card">
+    <a class="catalog-card-link" [routerLink]="['/explore', recipe().id]">
+        @if (recipe().imageUrl) {
+            <img loading="lazy" [src]="recipe().imageUrl" [alt]="recipe().name" />
+        } @else {
+            <div class="catalog-placeholder"><fd-ui-icon name="restaurant" size="xl" /></div>
+        }
+        <div class="catalog-card-content">
+            <h2>{{ recipe().name }}</h2>
+            <p>{{ recipe().category }}</p>
+        </div>
+    </a>
+    <div class="catalog-card-meta">
+        <span>{{ calories() === null ? '—' : (calories() | number: '1.0-0') }} {{ 'PUBLIC_RECIPES.KCAL_SERVING' | translate }}</span>
+        @if (recipe().missingIngredientCount > 0) {
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                size="sm"
+                icon="error_outline"
+                [ariaLabel]="'PUBLIC_RECIPES.PARTIAL' | translate"
+                [fdUiHint]="'PUBLIC_RECIPES.PARTIAL_HINT' | translate: { count: recipe().missingIngredientCount }"
+                [fdUiHintToggleOnClick]="true"
+            />
+        }
+        @if (recipe().prepTime !== null || recipe().cookTime !== null) {
+            <span class="catalog-time"
+                >{{ (recipe().prepTime ?? 0) + (recipe().cookTime ?? 0) }} {{ 'PUBLIC_RECIPES.MIN' | translate }}</span
+            >
+        }
+    </div>
+</article>
