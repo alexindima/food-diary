@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 104,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 131,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 11
   },
@@ -387,14 +387,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "specPath": null
-    },
-    {
-      "class": "DashboardAppearanceDialogComponent",
-      "selector": "fd-dashboard-appearance-dialog",
-      "feature": "dashboard",
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.spec.ts"
     },
     {
       "class": "DashboardNotificationSettingsDialogComponent",
@@ -851,6 +843,14 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.html",
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.spec.ts"
+    },
+    {
+      "class": "AppearanceDialogComponent",
+      "selector": "fd-appearance-dialog",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance-dialog.spec.ts"
     },
     {
       "class": "BadgeComponent",
@@ -4751,16 +4751,6 @@
       "specPath": null
     },
     {
-      "class": "PublicRecipeNavigationComponent",
-      "selector": "fd-public-recipe-navigation",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "RecipeLanguageDialogComponent",
       "selector": "fd-recipe-language-dialog",
       "feature": "recipes",
@@ -5157,7 +5147,7 @@
       "name": "PublicRecipesController",
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
-      "line": 19,
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5487,7 +5477,7 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 102,
+      "line": 116,
       "marker": "#pragma warning disable"
     },
     {

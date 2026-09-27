@@ -48,4 +48,20 @@ describe('PublicRecipeCardComponent', () => {
         fixture.detectChanges();
         expect(element.querySelector('img')?.getAttribute('loading')).toBe('eager');
     });
+    it('replaces a failed cover and retries when the image URL changes', () => {
+        const fixture = createCard();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.catalog-cover--loading')).not.toBeNull();
+        element.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+        expect(element.querySelector('img')).toBeNull();
+        expect(element.querySelector('.catalog-placeholder')).not.toBeNull();
+        fixture.componentRef.setInput('recipe', { ...publicRecipeFixture(), imageUrl: 'https://test/new.jpg' });
+        fixture.detectChanges();
+        expect(element.querySelector('.catalog-cover--loading')).not.toBeNull();
+        element.querySelector('img')?.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+        expect(element.querySelector('.catalog-cover--loading')).toBeNull();
+        expect(element.querySelector('.catalog-image--loaded')).not.toBeNull();
+    });
 });

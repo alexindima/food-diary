@@ -852,3 +852,9 @@ The image preview dialog accepts an optional zero-based `initialIndex` for openi
 `fd-ui-input` supports `controlReadonly` for read-only presentation when used with Signal Forms `formField`, which owns the `readonly` binding.
 
 Textarea supports `[stretch]="true"` to fill an available flex/grid height (for example, beside an image gallery). Its default row-based sizing is unchanged.
+
+## fd-ui-autocomplete
+
+`fd-ui-autocomplete` accepts `suffixIcon` (default `search`); use `expand_more` for searchable category pickers. Existing clear and keyboard behavior is unchanged.
+
+`showClear` (default `true`) controls the autocomplete clear action.

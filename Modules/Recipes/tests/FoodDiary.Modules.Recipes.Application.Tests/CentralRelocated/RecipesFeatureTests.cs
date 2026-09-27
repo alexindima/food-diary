@@ -293,6 +293,9 @@ public partial class RecipesFeatureTests {
     private sealed class OverviewRecipeReadService(
         IReadOnlyList<(Recipe Recipe, int UsageCount)>? pagedItems = null,
         IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>? recipesByIdWithUsage = null) : IRecipeOverviewReadService {
+        public Task<IReadOnlyList<string>> GetPublicCategoriesAsync(string? search, string? language, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>>([]);
+
         private readonly IReadOnlyList<(Recipe Recipe, int UsageCount)> _pagedItems = pagedItems ?? [];
         private readonly IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> _recipesByIdWithUsage = recipesByIdWithUsage ?? new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
 

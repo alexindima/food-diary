@@ -322,10 +322,10 @@ export class DashboardComponent {
     }
 
     protected async openAppearanceDialogAsync(): Promise<void> {
-        const { DashboardAppearanceDialogComponent } = await import('../dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog');
+        const { AppearanceDialogComponent } = await import('../../../components/shared/appearance-dialog/appearance-dialog');
 
         this.dialogService
-            .open(DashboardAppearanceDialogComponent, {
+            .open(AppearanceDialogComponent, {
                 size: 'md',
                 data: {
                     theme: this.themeService.theme(),

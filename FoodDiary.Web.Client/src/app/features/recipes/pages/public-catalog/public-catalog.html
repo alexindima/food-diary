@@ -4,7 +4,7 @@
     <fd-page-body>
         <section class="catalog-filters" [attr.aria-label]="'PUBLIC_RECIPES.FILTERS' | translate">
             <fd-ui-input prefixIcon="search" [formField]="filterForm.search" [label]="'PUBLIC_RECIPES.SEARCH' | translate" />
-            <fd-ui-input [formField]="filterForm.category" [label]="'PUBLIC_RECIPES.CATEGORY' | translate" />
+            <fd-public-category-filter [category]="filters().category" [language]="filters().language" (categoryChange)="setCategory($event)" />
             <fd-ui-select
                 [formField]="filterForm.maxTotalTime"
                 [ariaLabel]="'PUBLIC_RECIPES.TIME' | translate"
@@ -23,6 +23,7 @@
             />
             <fd-ui-select
                 [formField]="filterForm.language"
+                [label]="'RECIPE_LANGUAGE.LABEL' | translate"
                 [ariaLabel]="'RECIPE_LANGUAGE.LABEL' | translate"
                 [options]="[
                     { value: '', label: 'RECIPE_LANGUAGE.ALL' | translate },

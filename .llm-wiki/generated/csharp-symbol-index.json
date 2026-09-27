@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4262,
-    "symbols": 4193,
+    "sourceFiles": 4265,
+    "symbols": 4196,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2199,
+      "class": 2201,
       "enum": 64,
       "interface": 401,
-      "record": 1409,
+      "record": 1410,
       "record struct": 120
     },
     "roles": {
@@ -33,15 +33,15 @@
       "Mapping": 4,
       "Options": 70,
       "Other": 1728,
-      "Query": 284,
-      "QueryHandler": 206,
+      "Query": 285,
+      "QueryHandler": 207,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
       "Response": 228,
       "Service": 162,
-      "Validator": 230,
+      "Validator": 231,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -21923,6 +21923,27 @@
       "line": 13
     },
     {
+      "name": "GetPublicRecipeCategoriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipeCategories/GetPublicRecipeCategoriesQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetPublicRecipeCategoriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipeCategories/GetPublicRecipeCategoriesQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "GetPublicRecipeCategoriesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Recipes/Application/Queries/GetPublicRecipeCategories/GetPublicRecipeCategoriesQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetPublicRecipesQuery",
       "kind": "record",
       "role": "Query",
@@ -22361,7 +22382,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "RecipeExploreController",

@@ -1,0 +1,92 @@
+<fd-ui-dialog size="md" [title]="'DASHBOARD.APPEARANCE.TITLE' | translate">
+    <div class="appearance-dialog fd-stack fd-gap-lg" [attr.aria-busy]="appearance.isSaving()">
+        <section class="appearance-dialog__section fd-stack fd-gap-sm" aria-labelledby="appearance-theme-heading">
+            <div class="appearance-dialog__section-header fd-stack fd-gap-xxs">
+                <h3 id="appearance-theme-heading" class="appearance-dialog__section-title fd-ui-card-title">
+                    {{ 'DASHBOARD.APPEARANCE.THEME_LABEL' | translate }}
+                </h3>
+                <p class="appearance-dialog__section-copy fd-ui-body-sm fd-ui-text-muted">
+                    {{ 'DASHBOARD.APPEARANCE.THEME_HINT' | translate }}
+                </p>
+            </div>
+
+            <div class="appearance-dialog__grid fd-grid fd-gap-sm">
+                @for (theme of appearance.themes; track theme.name) {
+                    <button
+                        type="button"
+                        class="appearance-dialog__option appearance-dialog__option--theme fd-stack fd-align-start fd-gap-xs"
+                        [class.is-selected]="appearance.selectedTheme() === theme.name"
+                        [attr.aria-pressed]="appearance.selectedTheme() === theme.name"
+                        (click)="appearance.selectTheme(theme.name)"
+                    >
+                        <span [class]="`appearance-dialog__swatch appearance-dialog__swatch--${theme.name}`"></span>
+                        <span class="appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
+                        <span class="appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
+                            {{ theme.descriptionKey | translate }}
+                        </span>
+                    </button>
+                }
+            </div>
+        </section>
+
+        <section class="appearance-dialog__section fd-stack fd-gap-sm" aria-labelledby="appearance-style-heading">
+            <div class="appearance-dialog__section-header fd-stack fd-gap-xxs">
+                <h3 id="appearance-style-heading" class="appearance-dialog__section-title fd-ui-card-title">
+                    {{ 'DASHBOARD.APPEARANCE.UI_STYLE_LABEL' | translate }}
+                </h3>
+                <p class="appearance-dialog__section-copy fd-ui-body-sm fd-ui-text-muted">
+                    {{ 'DASHBOARD.APPEARANCE.UI_STYLE_HINT' | translate }}
+                </p>
+            </div>
+
+            <div class="appearance-dialog__grid appearance-dialog__grid--styles fd-grid fd-gap-sm">
+                @for (uiStyle of appearance.uiStyles; track uiStyle.name) {
+                    <button
+                        type="button"
+                        class="appearance-dialog__option appearance-dialog__option--style fd-stack fd-align-start fd-gap-xs"
+                        [class.is-selected]="appearance.selectedUiStyle() === uiStyle.name"
+                        [attr.aria-pressed]="appearance.selectedUiStyle() === uiStyle.name"
+                        (click)="appearance.selectUiStyle(uiStyle.name)"
+                    >
+                        <span [class]="`appearance-dialog__style-preview appearance-dialog__style-preview--${uiStyle.name}`">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                        <span class="appearance-dialog__option-title fd-ui-body">{{ uiStyle.labelKey | translate }}</span>
+                        <span class="appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
+                            {{ uiStyle.descriptionKey | translate }}
+                        </span>
+                    </button>
+                }
+            </div>
+        </section>
+
+        <section class="appearance-dialog__section fd-stack fd-gap-sm" aria-labelledby="appearance-surface-heading">
+            <h3 id="appearance-surface-heading" class="appearance-dialog__section-title fd-ui-card-title">
+                {{ 'DASHBOARD.APPEARANCE.SURFACE_LABEL' | translate }}
+            </h3>
+            <fd-ui-segmented-toggle
+                class="appearance-dialog__surface-toggle"
+                appearance="soft"
+                [options]="appearance.surfaceStyles"
+                [selectedValue]="appearance.selectedSurfaceStyle()"
+                [ariaLabel]="'DASHBOARD.APPEARANCE.SURFACE_LABEL' | translate"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [wrapOnNarrow]="true"
+                (selectedValueChange)="appearance.selectSurfaceStyle($event)"
+            />
+            <p class="appearance-dialog__section-copy fd-ui-body-sm fd-ui-text-muted" aria-live="polite">
+                {{ appearance.surfaceDescriptionKey() | translate }}
+            </p>
+            <p class="appearance-dialog__section-copy fd-ui-caption fd-ui-text-muted">
+                {{ appearance.persistenceHintKey | translate }}
+            </p>
+        </section>
+
+        @if (appearance.submitError()) {
+            <p class="appearance-dialog__error" role="alert">{{ appearance.submitError() }}</p>
+        }
+    </div>
+</fd-ui-dialog>

@@ -48,6 +48,8 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
 
     public readonly id = input(`fd-ui-autocomplete-${uniqueId++}`);
     public readonly label = input<string>();
+    public readonly suffixIcon = input('search');
+    public readonly showClear = input(true);
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
@@ -172,8 +174,8 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.value.set(option.value);
         this.touched.set(true);
         this.optionSelected.emit(option);
-        this.closeMenu();
         this.controlRef()?.nativeElement.focus();
+        this.closeMenu();
     }
 
     protected onControlKeydown(event: KeyboardEvent): void {

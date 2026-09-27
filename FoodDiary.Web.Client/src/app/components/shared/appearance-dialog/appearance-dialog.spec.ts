@@ -4,48 +4,62 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { UserFacade } from '../../../../shared/lib/user.facade';
-import { ThemeService } from '../../../../shared/theme/theme.service';
-import { DashboardAppearanceFacade } from './dashboard-appearance.facade';
-import { DashboardAppearanceDialogComponent } from './dashboard-appearance-dialog';
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { UserFacade } from '../../../shared/lib/user.facade';
+import { ThemeService } from '../../../shared/theme/theme.service';
+import { AppearanceFacade } from './appearance.facade';
+import { AppearanceDialogComponent } from './appearance-dialog';
 
-let fixture: ComponentFixture<DashboardAppearanceDialogComponent>;
-let appearance: DashboardAppearanceFacade;
+let fixture: ComponentFixture<AppearanceDialogComponent>;
+let appearance: AppearanceFacade;
 let themeService: ReturnType<typeof createThemeServiceMock>;
 let userService: { updateAppearance: ReturnType<typeof vi.fn> };
 
-describe('DashboardAppearanceDialogComponent', () => {
-    beforeEach(async () => {
-        themeService = createThemeServiceMock();
-        userService = {
-            updateAppearance: vi.fn().mockReturnValue(
-                of({
-                    theme: 'leaf',
-                    uiStyle: 'modern',
-                }),
-            ),
-        };
+beforeEach(async () => {
+    themeService = createThemeServiceMock();
+    userService = {
+        updateAppearance: vi.fn().mockReturnValue(
+            of({
+                theme: 'leaf',
+                uiStyle: 'modern',
+            }),
+        ),
+    };
 
-        await TestBed.configureTestingModule({
-            imports: [DashboardAppearanceDialogComponent],
-            providers: [
-                provideTranslateTesting(),
-                { provide: ThemeService, useValue: themeService },
-                { provide: UserFacade, useValue: userService },
-                {
-                    provide: FD_UI_DIALOG_DATA,
-                    useValue: {
-                        theme: 'ocean',
-                        uiStyle: 'classic',
-                    },
+    await TestBed.configureTestingModule({
+        imports: [AppearanceDialogComponent],
+        providers: [
+            provideTranslateTesting(),
+            { provide: ThemeService, useValue: themeService },
+            { provide: UserFacade, useValue: userService },
+            {
+                provide: FD_UI_DIALOG_DATA,
+                useValue: {
+                    theme: 'ocean',
+                    uiStyle: 'classic',
                 },
-            ],
-        }).compileComponents();
+            },
+        ],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(DashboardAppearanceDialogComponent);
-        appearance = fixture.debugElement.injector.get(DashboardAppearanceFacade);
-        fixture.detectChanges();
+    fixture = TestBed.createComponent(AppearanceDialogComponent);
+    appearance = fixture.debugElement.injector.get(AppearanceFacade);
+    fixture.detectChanges();
+});
+
+describe('AppearanceDialogComponent', () => {
+    it('saves guest preferences locally without calling the account API', () => {
+        TestBed.inject<{ persistence?: string }>(FD_UI_DIALOG_DATA).persistence = 'local';
+        appearance.selectTheme('dark');
+        appearance.selectUiStyle('modern');
+        appearance.selectSurfaceStyle('glass');
+        expect(themeService.setTheme).toHaveBeenCalledWith('dark');
+        expect(themeService.setUiStyle).toHaveBeenCalledWith('modern');
+        expect(themeService.setSurfaceStyle).toHaveBeenCalledWith('glass');
+        expect(userService.updateAppearance).not.toHaveBeenCalled();
+        expect(appearance.hasChanges()).toBe(false);
+        expect(appearance.isSaving()).toBe(false);
+        expect(appearance.submitError()).toBeNull();
     });
 
     it('applies preview when selecting theme and style', () => {

@@ -33,4 +33,12 @@ describe('PublicRecipeService', () => {
         http.expectOne(`${environment.apiUrls.recipes}/public/private`).flush({}, { status: 404, statusText: 'Not Found' });
         expect(error).toHaveBeenCalled();
     });
+    it('searches public categories in the selected recipe language', () => {
+        service.getCategories('Soup', 'en').subscribe();
+        const request = http.expectOne(req => req.url === `${environment.apiUrls.recipes}/public/categories`);
+        expect(request.request.params.get('search')).toBe('Soup');
+        expect(request.request.params.get('language')).toBe('en');
+        request.flush(['Soups']);
+    });
+
 });

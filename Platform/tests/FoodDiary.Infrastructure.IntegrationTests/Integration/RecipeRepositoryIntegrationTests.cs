@@ -33,6 +33,25 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
 
     [RequiresDockerFact]
+    public async Task PublicCategories_ExcludePrivateRecipesAndFilterBeforeLimitAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"categories-{Guid.NewGuid():N}@example.com", "hash");
+        string prefix = Guid.NewGuid().ToString("N");
+        context.Users.Add(user);
+        context.Recipes.AddRange(
+            Recipe.Create(user.Id, "One", 1, category: prefix + " Soup", visibility: Visibility.Public, language: "en"),
+            Recipe.Create(user.Id, "Two", 1, category: prefix + " Soup", visibility: Visibility.Public, language: "en"),
+            Recipe.Create(user.Id, "Private", 1, category: prefix + " Private", visibility: Visibility.Private, language: "en"),
+            Recipe.Create(user.Id, "Russian", 1, category: prefix + " Russian", visibility: Visibility.Public, language: "ru"),
+            Recipe.Create(user.Id, "Wildcard", 1, category: prefix + " %_", visibility: Visibility.Public, language: "en"));
+        await context.SaveChangesAsync();
+        var service = new RecipeOverviewReadService(context);
+        Assert.Equal(new[] { prefix + " %_", prefix + " Soup" }, await service.GetPublicCategoriesAsync(prefix, "en"));
+        Assert.Equal(prefix + " %_", Assert.Single(await service.GetPublicCategoriesAsync(prefix + " %_", language: null)));
+        Assert.Equal(3, (await service.GetPublicCategoriesAsync(prefix, language: null)).Count);
+    }
+
+    [RequiresDockerFact]
     public async Task PublicLanguageFilter_AppliesBeforeCountingAndPaging() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"language-filter-{Guid.NewGuid():N}@example.com", "hash");

@@ -14,6 +14,20 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.ReadModel.Composition.Recipes;
 
 internal sealed class RecipeOverviewReadService(ICompositionReadContext context) : IRecipeOverviewReadService {
+    public async Task<IReadOnlyList<string>> GetPublicCategoriesAsync(string? search, string? language, CancellationToken cancellationToken = default) {
+        IQueryable<Recipe> query = context.Recipes.AsNoTracking().Where(recipe => recipe.Visibility == Visibility.Public);
+        if (language is not null) {
+            query = query.AsNoTracking().Where(recipe => recipe.Language == language);
+        }
+        if (!string.IsNullOrWhiteSpace(search)) {
+            string pattern = $"%{EscapeLikePattern(search.Trim())}%";
+            query = query.AsNoTracking().Where(recipe => recipe.Category != null && EF.Functions.ILike(recipe.Category, pattern, LikeEscapeCharacter));
+        }
+        return await query.AsNoTracking().Where(recipe => recipe.Category != null && recipe.Category.Trim() != "")
+            .Select(recipe => recipe.Category!.Trim()).Distinct().OrderBy(category => category).Take(30)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetPagedAsync(

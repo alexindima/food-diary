@@ -13,7 +13,7 @@ import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import { PublicRecipeCatalogComponent } from './public-catalog';
 
-const facade = { query: vi.fn() };
+const facade = { query: vi.fn(), getCategories: vi.fn().mockReturnValue(of([])) };
 beforeEach(() => {
     facade.query.mockReset().mockReturnValue(of({ data: [publicRecipeFixture()], page: 2, limit: 20, totalPages: 3, totalItems: 41 }));
     TestBed.configureTestingModule({

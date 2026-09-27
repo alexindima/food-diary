@@ -1,0 +1,15 @@
+<fd-ui-autocomplete
+    suffixIcon="expand_more"
+    [label]="'PUBLIC_RECIPES.CATEGORY' | translate"
+    [value]="selected()"
+    [displayWith]="displayCategory"
+    [options]="options()"
+    [loading]="loading()"
+    [showClear]="category() !== '' || search() !== ''"
+    [maximumLength]="64"
+    [error]="failed() ? ('PUBLIC_RECIPES.CATEGORIES_ERROR' | translate) : null"
+    [clearAriaLabel]="'PUBLIC_RECIPES.ANY_CATEGORY' | translate"
+    (queryChange)="search.set($event)"
+    (optionSelected)="selectCategory($event.value.name)"
+    (valueChange)="onValueChange($event)"
+/>

@@ -1,10 +1,19 @@
 <article class="catalog-card">
     <a class="catalog-card-link" [routerLink]="['/explore', recipe().id]">
-        @if (recipe().imageUrl) {
-            <img [attr.loading]="priority() ? 'eager' : 'lazy'" [src]="recipe().imageUrl" [alt]="recipe().name" />
-        } @else {
-            <div class="catalog-placeholder"><fd-ui-icon name="restaurant" /></div>
-        }
+        <div class="catalog-cover" [class.catalog-cover--loading]="recipe().imageUrl && imageState() === 'loading'">
+            @if (recipe().imageUrl && imageState() !== 'error') {
+                <img
+                    [attr.loading]="priority() ? 'eager' : 'lazy'"
+                    [src]="recipe().imageUrl"
+                    [alt]="recipe().name"
+                    [class.catalog-image--loaded]="imageState() === 'loaded'"
+                    (load)="imageState.set('loaded')"
+                    (error)="imageState.set('error')"
+                />
+            } @else {
+                <div class="catalog-placeholder"><fd-ui-icon name="restaurant" /></div>
+            }
+        </div>
         <div class="catalog-card-content">
             <h2 [title]="recipe().name">{{ recipe().name }}</h2>
             <p class="fd-ui-body-sm">

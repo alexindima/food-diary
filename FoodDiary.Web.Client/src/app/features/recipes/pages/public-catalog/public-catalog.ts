@@ -11,6 +11,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PublicRecipeCardComponent } from '../../components/public-card/public-card';
+import { PublicCategoryFilterComponent } from '../../components/public-category-filter/public-category-filter';
 import { PublicRecipeNavigationComponent } from '../../components/public-navigation/public-navigation';
 import { PublicCatalogFavorites } from '../../lib/public-catalog-favorites.facade';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
@@ -26,6 +27,7 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
     imports: [
         PageBodyComponent,
         PublicRecipeCardComponent,
+        PublicCategoryFilterComponent,
         FormField,
         TranslatePipe,
         FdUiButtonComponent,
@@ -140,6 +142,10 @@ export class PublicRecipeCatalogComponent {
                 page: index > 0 ? index + 1 : null,
             },
         });
+    }
+
+    protected setCategory(category: string): void {
+        this.filters.update(filters => ({ ...filters, category }));
     }
 
     protected retry(): void {

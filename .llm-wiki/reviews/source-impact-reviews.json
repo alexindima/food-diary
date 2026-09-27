@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d164642670afa62279a1c014d30dc2b820a951673a092e8a9bf45f466dbd1fef"
+          "sha256": "240060d3de60d5ea0b3273859cd0e8b908d12f31e9d218df4704f0502780b2f9"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:49.7086343Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:48:35.0926571Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d333e684caa5192fe6c856317ebd137e9e958fc3c0f4ff6b05660df0ff9e5bcf"
+          "sha256": "c2fec80ef18f2240d97a4c3b103eb3360543e6d524c4360e23874b9eb318ba35"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:49.8471982Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:51:57.1728181Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "33da931ad800d80f97deb1af25284d95295d192d8c57dd54b7baa76a72287b0f"
+          "sha256": "7b74beff40646a32181ff56452d751687914f522dd585c94de01ba56d80eeda0"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:50.3528576Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:51:57.7923149Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -783,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e84f8cfc76c860a7c036442502aa889c444218209ff36d67aecc550825b027e1"
+          "sha256": "d0aded34bc9580ade327c81ac65ad0ab682c2a55f438b069c22fff183ea5954a"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:50.9383940Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:48:36.2745865Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e285ab8bd8e4ca2d5b478fcfe020102f5994fdd24f5dd3d11236839e9e77efd4"
+          "sha256": "adb4f8aa4ba56f7ec8295f317406850383df55237c1cd0c64ddab190ae38a6a1"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:51.3116124Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:51:58.1990464Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56dc40ca3cd260409d49f85bfb035dc1da02b7f85c52a9e04505a21a438be973"
+          "sha256": "388770682f692f9f0852bd649bd58de43e130f79f2be34ed7277d76a87548f7d"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:51.5213583Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:48:36.8526202Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e285ab8bd8e4ca2d5b478fcfe020102f5994fdd24f5dd3d11236839e9e77efd4"
+          "sha256": "adb4f8aa4ba56f7ec8295f317406850383df55237c1cd0c64ddab190ae38a6a1"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56dc40ca3cd260409d49f85bfb035dc1da02b7f85c52a9e04505a21a438be973"
+          "sha256": "388770682f692f9f0852bd649bd58de43e130f79f2be34ed7277d76a87548f7d"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e84f8cfc76c860a7c036442502aa889c444218209ff36d67aecc550825b027e1"
+          "sha256": "d0aded34bc9580ade327c81ac65ad0ab682c2a55f438b069c22fff183ea5954a"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:51.8981329Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:51:58.5967427Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0fbdd7c74f3c0c4c03138a66623fcb06f8879c076a272826bc721a64a37efcfc"
+          "sha256": "e2b5363f0f20baa877bc918f6dc7c1caae7599b18462e7e694669139dd4cfde4"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6d506d295148dfabcfc022f9f1fb56d62f6352eb92afd1761ff38a596d6d5e2c"
+          "sha256": "43fdbb186384db4d57404e7b767a29d972ba6b14c15538418f61c545dc8b8148"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:52.2360768Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:48:37.9350194Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0fbdd7c74f3c0c4c03138a66623fcb06f8879c076a272826bc721a64a37efcfc"
+          "sha256": "e2b5363f0f20baa877bc918f6dc7c1caae7599b18462e7e694669139dd4cfde4"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:50.7615764Z"
+      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
+      "reviewedAtUtc": "2026-09-27T19:48:35.6666634Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -1924,10 +1924,10 @@
             "HELP_TEXT": "This button restarts the dashboard tour whenever you need a quick reminder."
         },
         "APPEARANCE": {
-            "TITLE": "Adjust your dashboard look",
+            "TITLE": "Appearance",
             "SUBTITLE": "Choose a theme and UI style without leaving the page. Changes preview instantly here on the dashboard.",
             "THEME_LABEL": "Theme",
-            "THEME_HINT": "Pick the mood and color direction that fits how you want the dashboard to feel.",
+            "THEME_HINT": "Choose the colors that feel right for you.",
             "SURFACE_LABEL": "Surfaces",
             "SURFACE_NORMAL": "Normal",
             "SURFACE_MATTE": "Matte",
@@ -1945,7 +1945,8 @@
             "UI_STYLE_DESCRIPTION_MODERN": "Sharper corners and slightly stronger visual accents.",
             "CANCEL": "Keep current look",
             "SAVE": "Save appearance",
-            "ERROR": "Couldn't save the new appearance. Restored your previous look."
+            "ERROR": "Couldn't save the new appearance. Restored your previous look.",
+            "LOCAL_DEVICE_HINT": "Styles cards, panels and navigation. Saved in this browser."
         },
         "NOTIFICATIONS": {
             "TITLE": "Notification settings",
@@ -4071,7 +4072,11 @@
         "MIN_SERVINGS": "At least one serving",
         "MAX_SERVINGS": "Maximum 1000 servings",
         "FIRST_STEP": "This is the first step",
-        "LAST_STEP": "This is the last step"
+        "LAST_STEP": "This is the last step",
+        "INTERFACE_LANGUAGE": "Interface language",
+        "THEME": "Theme",
+        "ANY_CATEGORY": "Any category",
+        "CATEGORIES_ERROR": "Could not load categories. Try searching again."
     },
     "RECIPE_LANGUAGE": {
         "LABEL": "Recipe language",

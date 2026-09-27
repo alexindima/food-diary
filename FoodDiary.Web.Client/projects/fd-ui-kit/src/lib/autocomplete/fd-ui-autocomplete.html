@@ -39,7 +39,7 @@
             (keydown)="onControlKeydown($event)"
         />
 
-        @if (hasSelectedValue() || queryText()) {
+        @if (showClear() && (hasSelectedValue() || queryText())) {
             <button
                 class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
                 type="button"
@@ -51,7 +51,7 @@
             </button>
         } @else {
             <span class="fd-ui-autocomplete__suffix" aria-hidden="true">
-                <fd-ui-icon name="search" />
+                <fd-ui-icon [name]="suffixIcon()" />
             </span>
         }
 

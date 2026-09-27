@@ -1,8 +1,61 @@
 @if (!auth.isAuthenticated()) {
     <nav class="public-navigation" [attr.aria-label]="'PUBLIC_RECIPES.NAVIGATION' | translate">
-        <a class="brand" routerLink="/">FoodDiary</a>
-        <a routerLink="/explore">{{ 'PUBLIC_RECIPES.CATALOG' | translate }}</a>
-        <a class="about" routerLink="/food-diary">{{ 'PUBLIC_RECIPES.ABOUT' | translate }}</a>
-        <fd-ui-button variant="outline" size="sm" (click)="login()">{{ 'PUBLIC_RECIPES.LOGIN' | translate }}</fd-ui-button>
+        <a class="brand" routerLink="/"><span class="brand-mark" aria-hidden="true"></span><span>FoodDiary</span></a>
+        <div class="desktop-links">
+            <a routerLink="/explore" routerLinkActive="active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }">{{
+                'PUBLIC_RECIPES.CATALOG' | translate
+            }}</a>
+            <a routerLink="/food-diary">{{ 'PUBLIC_RECIPES.ABOUT' | translate }}</a>
+        </div>
+        <div class="preferences">
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                size="md"
+                [ariaLabel]="'PUBLIC_RECIPES.INTERFACE_LANGUAGE' | translate"
+                [fdUiMenuTrigger]="languageMenu"
+            >
+                {{ language() | uppercase }}<fd-ui-icon name="expand_more" size="sm" />
+            </fd-ui-button>
+            <fd-ui-menu #languageMenu>
+                <fd-ui-menu-item (itemClick)="changeLanguageAsync('ru')"
+                    ><span lang="ru">Русский</span>
+                    @if (language() === 'ru') {
+                        <fd-ui-icon name="check" size="sm" />
+                    }
+                </fd-ui-menu-item>
+                <fd-ui-menu-item (itemClick)="changeLanguageAsync('en')"
+                    ><span lang="en">English</span>
+                    @if (language() === 'en') {
+                        <fd-ui-icon name="check" size="sm" />
+                    }
+                </fd-ui-menu-item>
+            </fd-ui-menu>
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                size="md"
+                [icon]="themeIcon()"
+                [ariaLabel]="'PUBLIC_RECIPES.THEME' | translate"
+                (click)="openAppearanceDialogAsync()"
+            />
+        </div>
+        <fd-ui-button class="desktop-login" variant="outline" size="sm" (click)="login()">{{
+            'PUBLIC_RECIPES.LOGIN' | translate
+        }}</fd-ui-button>
+        <fd-ui-button
+            class="mobile-menu"
+            variant="secondary"
+            fill="text"
+            size="md"
+            icon="menu"
+            [ariaLabel]="'PUBLIC_RECIPES.NAVIGATION' | translate"
+            [fdUiMenuTrigger]="navigationMenu"
+        />
+        <fd-ui-menu #navigationMenu>
+            <fd-ui-menu-item routerLink="/explore">{{ 'PUBLIC_RECIPES.CATALOG' | translate }}</fd-ui-menu-item>
+            <fd-ui-menu-item routerLink="/food-diary">{{ 'PUBLIC_RECIPES.ABOUT' | translate }}</fd-ui-menu-item>
+            <fd-ui-menu-item (itemClick)="login()">{{ 'PUBLIC_RECIPES.LOGIN' | translate }}</fd-ui-menu-item>
+        </fd-ui-menu>
     </nav>
 }

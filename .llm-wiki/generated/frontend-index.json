@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1776,
-    "symbols": 688,
+    "typescriptFiles": 1779,
+    "symbols": 689,
     "routes": 102,
     "features": 44,
-    "specs": 639,
+    "specs": 641,
     "localeFiles": 5,
     "roles": {
-      "Component": 466,
+      "Component": 467,
       "Directive": 12,
       "Facade": 66,
       "Other": 19,
@@ -477,8 +477,6 @@
         "CycleSummaryCardComponent",
         "DailyAdviceCardComponent",
         "DashboardAdviceBlockComponent",
-        "DashboardAppearanceDialogComponent",
-        "DashboardAppearanceFacade",
         "DashboardBlockContentDirective",
         "DashboardBlockHostDirective",
         "DashboardCardShellComponent",
@@ -522,7 +520,6 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts",
@@ -1120,6 +1117,7 @@
         "FavoriteRecipeRowComponent",
         "FavoriteRecipeService",
         "PublicCatalogFavorites",
+        "PublicCategoryFilterComponent",
         "PublicIngredientsComponent",
         "PublicNutritionComponent",
         "PublicRecipeCardComponent",
@@ -1191,7 +1189,9 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.spec.ts",
@@ -2668,6 +2668,20 @@
       "line": 17
     },
     {
+      "name": "AppearanceDialogComponent",
+      "role": "Component",
+      "selector": "fd-appearance-dialog",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance-dialog.ts",
+      "line": 18
+    },
+    {
+      "name": "AppearanceFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance.facade.ts",
+      "line": 28
+    },
+    {
       "name": "BadgeComponent",
       "role": "Component",
       "selector": "fd-badge",
@@ -3324,20 +3338,6 @@
       "selector": "fd-weight-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
       "line": 36
-    },
-    {
-      "name": "DashboardAppearanceDialogComponent",
-      "role": "Component",
-      "selector": "fd-dashboard-appearance-dialog",
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.ts",
-      "line": 18
-    },
-    {
-      "name": "DashboardAppearanceFacade",
-      "role": "Facade",
-      "selector": null,
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance.facade.ts",
-      "line": 27
     },
     {
       "name": "DashboardNotificationSettingsDialogComponent",
@@ -5125,6 +5125,13 @@
       "line": 16
     },
     {
+      "name": "PublicCategoryFilterComponent",
+      "role": "Component",
+      "selector": "fd-public-category-filter",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.ts",
+      "line": 19
+    },
+    {
       "name": "PublicRecipeGalleryComponent",
       "role": "Component",
       "selector": "fd-public-recipe-gallery",
@@ -5143,7 +5150,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-navigation",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
-      "line": 17
+      "line": 38
     },
     {
       "name": "PublicNutritionComponent",
@@ -5269,7 +5276,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-catalog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.ts",
-      "line": 41
+      "line": 43
     },
     {
       "name": "PublicRecipeDetailComponent",
@@ -6790,8 +6797,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3815,
-      "russianProperties": 3815,
+      "englishProperties": 3820,
+      "russianProperties": 3820,
       "countsMatch": true
     },
     {

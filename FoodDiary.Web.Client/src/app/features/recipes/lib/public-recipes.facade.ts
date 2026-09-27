@@ -19,6 +19,10 @@ export class PublicRecipesFacade {
         return this.api.query(filters);
     }
 
+    public getCategories(search: string, language?: string): Observable<string[]> {
+        return this.api.getCategories(search, language);
+    }
+
     public isFavorite(id: string): Observable<boolean> {
         return this.favorites.isFavorite(id);
     }

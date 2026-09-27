@@ -1,9 +1,9 @@
 @use 'variables' as variables;
 
-.dashboard-appearance-dialog {
-    --dashboard-appearance-option-radius: var(--fd-radius-card);
-    --dashboard-appearance-preview-radius: var(--fd-radius-input);
-    --dashboard-appearance-preview-line-radius: var(--fd-radius-button);
+.appearance-dialog {
+    --appearance-option-radius: var(--fd-radius-card);
+    --appearance-preview-radius: var(--fd-radius-input);
+    --appearance-preview-line-radius: var(--fd-radius-button);
     --dashboard-preview-light-surface: var(--fd-color-white);
     --dashboard-preview-ocean-line: linear-gradient(90deg, var(--fd-color-blue-500), var(--fd-color-sky-500));
     --dashboard-preview-leaf-line: linear-gradient(90deg, var(--fd-color-teal-700), var(--fd-color-green-500));
@@ -14,27 +14,27 @@
     --dashboard-style-preview-line-soft: color-mix(in srgb, var(--fd-color-border-strong) 82%, var(--fd-color-surface-raised));
 }
 
-.dashboard-appearance-dialog__section-title,
-.dashboard-appearance-dialog__section-copy {
+.appearance-dialog__section-title,
+.appearance-dialog__section-copy {
     margin: 0;
 }
 
-.dashboard-appearance-dialog__surface-toggle {
+.appearance-dialog__surface-toggle {
     --fd-radius-toggle: var(--fd-radius-input);
 }
 
-.dashboard-appearance-dialog__grid {
+.appearance-dialog__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.dashboard-appearance-dialog__grid--styles {
+.appearance-dialog__grid--styles {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.dashboard-appearance-dialog__option {
+.appearance-dialog__option {
     appearance: none;
     border: var(--fd-border-muted);
-    border-radius: var(--dashboard-appearance-option-radius);
+    border-radius: var(--appearance-option-radius);
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--fd-color-surface-raised) 96%, var(--fd-color-dialog-surface)),
@@ -65,47 +65,47 @@
     }
 }
 
-.dashboard-appearance-dialog__option-title {
+.appearance-dialog__option-title {
     font-weight: var(--fd-text-card-title-weight);
     color: var(--fd-color-text);
 }
 
-.dashboard-appearance-dialog__swatch {
+.appearance-dialog__swatch {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 5;
     min-height: var(--fd-size-control-xl);
-    border-radius: var(--dashboard-appearance-preview-radius);
+    border-radius: var(--appearance-preview-radius);
     position: relative;
     overflow: hidden;
     box-shadow: var(--fd-shadow-highlight-inset-dialog), var(--fd-shadow-ring-inset-muted);
 }
 
-.dashboard-appearance-dialog__swatch::after {
+.appearance-dialog__swatch::after {
     content: '';
     position: absolute;
     inset: auto calc(var(--fd-space-sm) + var(--fd-space-micro)) var(--fd-space-sm);
     height: var(--fd-size-accent-thickness-active);
-    border-radius: var(--dashboard-appearance-preview-line-radius);
+    border-radius: var(--appearance-preview-line-radius);
     background: var(--dashboard-preview-line);
 }
 
-.dashboard-appearance-dialog__swatch--ocean {
+.appearance-dialog__swatch--ocean {
     --dashboard-preview-line: var(--dashboard-preview-ocean-line);
     background: var(--dashboard-preview-light-surface);
 }
 
-.dashboard-appearance-dialog__swatch--leaf {
+.appearance-dialog__swatch--leaf {
     --dashboard-preview-line: var(--dashboard-preview-leaf-line);
     background: var(--dashboard-preview-light-surface);
 }
 
-.dashboard-appearance-dialog__swatch--dark {
+.appearance-dialog__swatch--dark {
     --dashboard-preview-line: var(--dashboard-preview-dark-line);
     background: var(--dashboard-preview-dark-surface);
 }
 
-.dashboard-appearance-dialog__style-preview {
+.appearance-dialog__style-preview {
     --dashboard-style-preview-surface-radius: 14px;
     --dashboard-style-preview-line-radius: 999px;
     --dashboard-style-preview-line-gap: var(--fd-space-xxs);
@@ -126,54 +126,54 @@
     box-shadow: var(--fd-shadow-highlight-inset-dialog), var(--fd-shadow-ring-inset-muted);
 }
 
-.dashboard-appearance-dialog__style-preview span {
+.appearance-dialog__style-preview span {
     display: block;
     height: 8px;
     border-radius: var(--dashboard-style-preview-line-radius);
 }
 
-.dashboard-appearance-dialog__style-preview--classic {
+.appearance-dialog__style-preview--classic {
     --dashboard-style-preview-surface-radius: 20px;
     --dashboard-style-preview-line-radius: 12px;
     --dashboard-style-preview-line-gap: var(--fd-space-xs);
 }
 
-.dashboard-appearance-dialog__style-preview--classic span:nth-child(1) {
+.appearance-dialog__style-preview--classic span:nth-child(1) {
     width: 72%;
     background: var(--dashboard-style-preview-line-strong);
 }
 
-.dashboard-appearance-dialog__style-preview--classic span:nth-child(2) {
+.appearance-dialog__style-preview--classic span:nth-child(2) {
     width: 88%;
     background: var(--dashboard-style-preview-line-mid);
 }
 
-.dashboard-appearance-dialog__style-preview--classic span:nth-child(3) {
+.appearance-dialog__style-preview--classic span:nth-child(3) {
     width: 58%;
     background: var(--dashboard-style-preview-line-soft);
 }
 
-.dashboard-appearance-dialog__style-preview--modern {
+.appearance-dialog__style-preview--modern {
     --dashboard-style-preview-surface-radius: 8px;
     --dashboard-style-preview-line-radius: 6px;
 }
 
-.dashboard-appearance-dialog__style-preview--modern span:nth-child(1) {
+.appearance-dialog__style-preview--modern span:nth-child(1) {
     width: 82%;
     background: var(--dashboard-style-preview-line-strong);
 }
 
-.dashboard-appearance-dialog__style-preview--modern span:nth-child(2) {
+.appearance-dialog__style-preview--modern span:nth-child(2) {
     width: 64%;
     background: var(--dashboard-style-preview-line-mid);
 }
 
-.dashboard-appearance-dialog__style-preview--modern span:nth-child(3) {
+.appearance-dialog__style-preview--modern span:nth-child(3) {
     width: 92%;
     background: var(--dashboard-style-preview-line-soft);
 }
 
-.dashboard-appearance-dialog__error {
+.appearance-dialog__error {
     margin: 0;
     color: var(--fd-color-danger);
     font-size: var(--fd-text-body-sm-size);
@@ -182,12 +182,12 @@
 }
 
 @media #{variables.$media-mobile} {
-    .dashboard-appearance-dialog__grid,
-    .dashboard-appearance-dialog__grid--styles {
+    .appearance-dialog__grid,
+    .appearance-dialog__grid--styles {
         grid-template-columns: 1fr;
     }
 
-    .dashboard-appearance-dialog__option {
+    .appearance-dialog__option {
         display: grid;
         grid-template-columns: var(--fd-size-control-xl) minmax(0, 1fr);
         column-gap: var(--fd-space-sm);
@@ -195,25 +195,25 @@
         align-items: center;
     }
 
-    .dashboard-appearance-dialog__swatch,
-    .dashboard-appearance-dialog__style-preview {
+    .appearance-dialog__swatch,
+    .appearance-dialog__style-preview {
         grid-row: 1 / 3;
         aspect-ratio: 1;
     }
 
-    .dashboard-appearance-dialog__option-title,
-    .dashboard-appearance-dialog__option-copy {
+    .appearance-dialog__option-title,
+    .appearance-dialog__option-copy {
         grid-column: 2;
     }
 
-    .dashboard-appearance-dialog__option-copy {
+    .appearance-dialog__option-copy {
         font-size: var(--fd-text-caption-size);
         line-height: var(--fd-text-caption-line-height);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .dashboard-appearance-dialog__option {
+    .appearance-dialog__option {
         transition: none;
         transform: none;
     }

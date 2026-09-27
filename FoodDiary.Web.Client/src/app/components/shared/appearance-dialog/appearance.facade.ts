@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { finalize } from 'rxjs';
 
-import { UserFacade } from '../../../../shared/lib/user.facade';
-import { UpdateUserAppearanceDto } from '../../../../shared/models/user.data';
-import { ThemeService } from '../../../../shared/theme/theme.service';
+import { UserFacade } from '../../../shared/lib/user.facade';
+import { UpdateUserAppearanceDto } from '../../../shared/models/user.data';
+import { ThemeService } from '../../../shared/theme/theme.service';
 import {
     APP_SURFACE_STYLES,
     APP_THEMES,
@@ -16,22 +16,26 @@ import {
     isAppSurfaceStyleName,
     isAppThemeName,
     isAppUiStyleName,
-} from '../../../../theme/app-theme.config';
+} from '../../../theme/app-theme.config';
 
-export type DashboardAppearanceDialogData = {
+export type AppearanceDialogData = {
     theme: AppThemeName;
     uiStyle: AppUiStyleName;
+    persistence?: 'account' | 'local';
 };
 
 @Injectable()
-export class DashboardAppearanceFacade {
+export class AppearanceFacade {
     private readonly themeService = inject(ThemeService);
     private readonly userFacade = inject(UserFacade);
     private readonly translateService = inject(TranslateService);
-    private readonly data = inject<DashboardAppearanceDialogData>(FD_UI_DIALOG_DATA);
+    private readonly data = inject<AppearanceDialogData>(FD_UI_DIALOG_DATA);
     private readonly initialTheme = this.data.theme;
     private readonly initialUiStyle = this.data.uiStyle;
     private pendingPersist = false;
+
+    public readonly persistenceHintKey =
+        this.data.persistence === 'local' ? 'DASHBOARD.APPEARANCE.LOCAL_DEVICE_HINT' : 'DASHBOARD.APPEARANCE.SURFACE_DEVICE_HINT';
 
     public readonly themes = APP_THEMES.map(theme => ({
         ...theme,
@@ -99,6 +103,13 @@ export class DashboardAppearanceFacade {
 
     private persistSelection(): void {
         if (!this.hasChanges()) {
+            return;
+        }
+
+        if (this.data.persistence === 'local') {
+            this.persistedTheme.set(this.selectedTheme());
+            this.persistedUiStyle.set(this.selectedUiStyle());
+            this.persistedSurfaceStyle.set(this.selectedSurfaceStyle());
             return;
         }
 

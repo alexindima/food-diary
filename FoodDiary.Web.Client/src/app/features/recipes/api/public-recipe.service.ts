@@ -14,6 +14,10 @@ export class PublicRecipeService extends ApiService {
         return this.get<PageOf<PublicRecipe>>('', { ...filters, limit: 20 });
     }
 
+    public getCategories(search: string, language?: string): Observable<string[]> {
+        return this.get<string[]>('categories', { search, language });
+    }
+
     public getById(id: string): Observable<PublicRecipe> {
         return this.get<PublicRecipe>(encodeURIComponent(id));
     }
