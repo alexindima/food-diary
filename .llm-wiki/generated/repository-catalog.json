@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 213
+    "documentationPages": 214
   },
   "dotnet": {
     "projects": [
@@ -15852,6 +15852,7 @@
       "docs/backend/BACKEND_SECURITY_HARDENING.md",
       "docs/backend/BACKEND_TIME_POLICY.md",
       "docs/backend/BUG_TRIAGE.md",
+      "docs/backend/JOB_MANAGER_CRASH_DUMPS.md",
       "docs/backend/MAILINBOX_DATA_LIFECYCLE.md",
       "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
       "docs/backend/MODULE_EXTRACTION_READINESS.md",

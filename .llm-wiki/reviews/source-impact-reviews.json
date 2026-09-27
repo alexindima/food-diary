@@ -22,14 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
+          "path": "docs/README.md",
+          "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:44.5541339Z"
+      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
+      "reviewedAtUtc": "2026-09-27T14:51:47.5303780Z"
     },
     {
       "pageId": "module.frontend",
@@ -143,14 +143,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
+          "path": "docs/README.md",
+          "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:47.0892376Z"
+      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
+      "reviewedAtUtc": "2026-09-27T14:51:47.7676233Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d84c4bd805a7ba510872f3287ae9895bf554623bfca5a6818a0d7da0e01dcc63"
+          "sha256": "65226bafccc477ce17b7b897542aab569a83783a9a791575492a6363831bbc76"
         }
       ],
-      "reason": "Existing navigation and runtime ownership remain accurate. Select appearance is documented in COMPONENTS and Storybook; no services, background jobs, dependencies or persistence schema were added.",
+      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:04.3170702Z"
+      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
+      "reviewedAtUtc": "2026-09-27T14:51:48.6320801Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,17 +922,17 @@
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d84c4bd805a7ba510872f3287ae9895bf554623bfca5a6818a0d7da0e01dcc63"
+          "sha256": "65226bafccc477ce17b7b897542aab569a83783a9a791575492a6363831bbc76"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "d8a36c72c58d08c301835c11dfcec9fe468e09525fcea639f2e12d8fa0aa1b2a"
         }
       ],
-      "reason": "Public projection and anonymous visibility remain unchanged; PostgreSQL test excludes a private recipe. Auth dialog receives only a translation key, with no new credentials, storage or external transfer.",
+      "reason": "Reviewed incoming crash-dump runbook, entrypoint and compose settings: protected dedicated volume and bounded retention are preserved; no diagnostics are copied or exposed by this merge.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:04.8673293Z"
+      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
+      "reviewedAtUtc": "2026-09-27T14:51:49.2618196Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1186,13 +1186,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7b192f30221c4892a375a2bd8ed1c3312dfa5d99e13a4c16726200ab5aacf071"
+          "sha256": "bd8d61e16c62a3f1a9f559ed249f7394cde1fe4ce02401c4ecbd73ef88ff157c"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:50.4374963Z"
+      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
+      "reviewedAtUtc": "2026-09-27T14:51:48.2067906Z"
     },
     {
       "pageId": "workflow.review-diff",
