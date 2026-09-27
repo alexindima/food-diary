@@ -2,7 +2,7 @@
 
 .catalog-filters {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 6rem;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     align-items: center;
     gap: var(--fd-space-md);
 }
@@ -40,8 +40,5 @@
 @media (max-width: 480px) {
     .catalog-filters {
         grid-template-columns: 1fr;
-    }
-    .catalog-reset:empty {
-        display: none;
     }
 }

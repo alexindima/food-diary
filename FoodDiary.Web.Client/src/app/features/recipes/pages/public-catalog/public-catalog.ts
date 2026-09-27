@@ -43,11 +43,6 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
 export class PublicRecipeCatalogComponent {
     protected readonly favorites = inject(PublicCatalogFavorites);
     protected readonly timePresets = ['15', '30', '60'];
-    protected readonly hasFilters = computed(
-        () =>
-            [this.filters().search, this.filters().category, this.filters().maxTotalTime].some(value => value.trim().length > 0) ||
-            this.filters().language !== normalizeRecipeLanguage(this.language()),
-    );
     protected readonly customTime = computed(() => {
         const value = this.positiveNumber(this.filters().maxTotalTime);
         return value !== null && !this.timePresets.includes(String(value)) ? value : null;

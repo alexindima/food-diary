@@ -56,12 +56,12 @@ it('loads bookmarked filters and page without resetting to the first page', asyn
         language: 'en',
     });
 });
-it('shows total results and hides reset for an unfiltered catalog', async () => {
+it('shows total results without a reset action in the filter bar', async () => {
     const harness = await RouterTestingHarness.create('/explore');
     expect(harness.routeNativeElement?.querySelector('.catalog-summary')?.textContent).toContain('PUBLIC_RECIPES.COUNT_OTHER');
-    expect(harness.routeNativeElement?.querySelector('.catalog-reset button')).toBeNull();
+    expect(harness.routeNativeElement?.querySelector('.catalog-filters fd-ui-button')).toBeNull();
     await harness.navigateByUrl('/explore?maxTotalTime=37');
-    expect(harness.routeNativeElement?.querySelector('.catalog-reset button')).not.toBeNull();
+    expect(harness.routeNativeElement?.querySelector('.catalog-filters fd-ui-button')).toBeNull();
     expect(facade.query).toHaveBeenLastCalledWith({
         page: 1,
         search: '',

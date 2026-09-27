@@ -7,6 +7,7 @@
             <fd-public-category-filter [category]="filters().category" (categoryChange)="setCategory($event)" />
             <fd-ui-select
                 [formField]="filterForm.maxTotalTime"
+                [label]="'PUBLIC_RECIPES.TIME' | translate"
                 [ariaLabel]="'PUBLIC_RECIPES.TIME' | translate"
                 [options]="
                     [
@@ -31,11 +32,6 @@
                     { value: 'en', label: 'RECIPE_LANGUAGE.EN' | translate },
                 ]"
             />
-            <div class="catalog-reset">
-                @if (hasFilters()) {
-                    <fd-ui-button variant="secondary" fill="text" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>
-                }
-            </div>
         </section>
         <div class="catalog-summary" aria-live="polite">
             <span [style.visibility]="showCount() ? 'visible' : 'hidden'">{{
