@@ -4,7 +4,7 @@ export function publicRecipeFixture(): PublicRecipe {
         id: 'recipe',
         name: 'Soup',
         description: 'A soup',
-        category: 'Dinner',
+        category: 'main_courses',
         imageUrl: 'cover.jpg',
         images: ['cover.jpg', 'second.jpg'],
         prepTime: 10,

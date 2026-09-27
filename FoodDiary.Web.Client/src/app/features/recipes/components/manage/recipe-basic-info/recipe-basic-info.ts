@@ -10,6 +10,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
 import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
@@ -40,6 +41,7 @@ export class RecipeBasicInfoComponent {
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
     public readonly photosUploading = output<boolean>();
+    protected readonly categoryOptions = injectRecipeCategoryOptions();
     protected readonly photos = computed(() => {
         const value = this.form()().value();
         return value.images ?? (value.imageUrl !== null && (value.imageUrl.url?.length ?? 0) > 0 ? [value.imageUrl] : []);

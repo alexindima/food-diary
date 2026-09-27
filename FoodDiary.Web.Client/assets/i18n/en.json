@@ -7360,5 +7360,22 @@
         "BACK": "Back to editing",
         "KEEP": "Keep {{selected}} and save",
         "CHANGE": "Change to {{detected}} and save"
+    },
+    "RECIPE_CATEGORIES": {
+        "other": "Other",
+        "breakfast": "Breakfast",
+        "soups": "Soups",
+        "salads": "Salads",
+        "main_courses": "Main courses",
+        "side_dishes": "Side dishes",
+        "appetizers": "Appetizers",
+        "sandwiches": "Sandwiches & burgers",
+        "pasta": "Pasta & noodles",
+        "baking": "Baking",
+        "desserts": "Desserts",
+        "drinks": "Drinks",
+        "sauces": "Sauces & dressings",
+        "snacks": "Snacks",
+        "preserves": "Preserves"
     }
 }

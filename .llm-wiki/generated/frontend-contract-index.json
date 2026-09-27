@@ -3,12 +3,12 @@
   "summary": {
     "components": 472,
     "componentsWithoutDirectSpecs": 131,
-    "inputs": 1511,
+    "inputs": 1510,
     "outputs": 508,
     "apiCalls": 269,
     "templatesWithTranslations": 332,
-    "translationKeys": 1970,
-    "consumerEdges": 1171,
+    "translationKeys": 1966,
+    "consumerEdges": 1172,
     "consumedComponents": 302,
     "unconsumedComponents": 169
   },
@@ -10250,11 +10250,6 @@
       "inputs": [
         {
           "name": "category",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "language",
           "type": "",
           "required": false
         }
@@ -21065,7 +21060,6 @@
         "RECIPE_LIST.FILTER_CALORIES_FROM",
         "RECIPE_LIST.FILTER_CALORIES_TO",
         "RECIPE_LIST.FILTER_CATEGORY",
-        "RECIPE_LIST.FILTER_CATEGORY_PLACEHOLDER",
         "RECIPE_LIST.FILTER_DETAILS",
         "RECIPE_LIST.FILTER_MAX_TOTAL_TIME",
         "RECIPE_LIST.FILTER_MEDIA",
@@ -21110,7 +21104,6 @@
         "RECIPE_LANGUAGE.RU",
         "RECIPE_MANAGE.ADVANCED_TITLE",
         "RECIPE_MANAGE.CATEGORY",
-        "RECIPE_MANAGE.CATEGORY_PLACEHOLDER",
         "RECIPE_MANAGE.COMMENT",
         "RECIPE_MANAGE.COMMENT_PLACEHOLDER",
         "RECIPE_MANAGE.COOK_TIME",
@@ -21198,8 +21191,6 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.html",
       "keys": [
-        "PUBLIC_RECIPES.ANY_CATEGORY",
-        "PUBLIC_RECIPES.CATEGORIES_ERROR",
         "PUBLIC_RECIPES.CATEGORY"
       ]
     },
@@ -24946,31 +24937,6 @@
       "outputsHandled": [
         "optionSelected",
         "queryChange"
-      ]
-    },
-    {
-      "component": "FdUiAutocompleteComponent",
-      "selector": "fd-ui-autocomplete",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "clearAriaLabel",
-        "displayWith",
-        "error",
-        "label",
-        "loading",
-        "maximumLength",
-        "options",
-        "showClear",
-        "suffixIcon",
-        "value"
-      ],
-      "outputsHandled": [
-        "optionSelected",
-        "queryChange",
-        "valueChange"
       ]
     },
     {
@@ -33124,10 +33090,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
-      "occurrences": 4,
+      "occurrences": 3,
       "inputsUsed": [
         "label",
-        "placeholder",
         "size",
         "type",
         "value"
@@ -33142,7 +33107,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.html",
-      "occurrences": 5,
+      "occurrences": 4,
       "inputsUsed": [
         "error",
         "label",
@@ -35277,8 +35242,25 @@
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options",
+        "size",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "error",
         "label",
@@ -35298,6 +35280,22 @@
         "ariaLabel",
         "options",
         "size",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options",
         "value"
       ],
       "outputsHandled": [
@@ -38443,8 +38441,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
       "occurrences": 1,
       "inputsUsed": [
-        "category",
-        "language"
+        "category"
       ],
       "outputsHandled": [
         "categoryChange"

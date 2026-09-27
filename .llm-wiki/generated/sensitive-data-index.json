@@ -2122,21 +2122,21 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 343
+      "line": 329
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 349
+      "line": 335
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 350
+      "line": 336
     },
     {
       "category": "health",
@@ -4978,28 +4978,28 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 63
+      "line": 64
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 69
+      "line": 70
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 70
+      "line": 71
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 537
+      "line": 534
     },
     {
       "category": "health",
@@ -8261,21 +8261,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 336
+      "line": 322
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 338
+      "line": 324
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 339
+      "line": 325
     },
     {
       "category": "privateContent",
@@ -10459,70 +10459,70 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 47
+      "line": 48
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 49
+      "line": 50
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 50
+      "line": 51
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 109
+      "line": 110
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 111
+      "line": 112
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 158
+      "line": 159
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "update.ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 160
+      "line": 161
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 324
+      "line": 326
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 389
+      "line": 386
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 508
+      "line": 505
     },
     {
       "category": "privateContent",
@@ -10564,21 +10564,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",

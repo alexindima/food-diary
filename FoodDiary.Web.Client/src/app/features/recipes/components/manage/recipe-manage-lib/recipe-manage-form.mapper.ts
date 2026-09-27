@@ -1,6 +1,7 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../models/recipe.data';
+import { isRecipeCategory } from '../../../models/recipe-category';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
 export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;
@@ -32,7 +33,7 @@ export function createRecipeFormValue(language = 'en'): RecipeFormValues {
         name: '',
         description: '',
         comment: null,
-        category: null,
+        category: 'other',
         imageUrl: null,
         prepTime: 0,
         cookTime: null,
@@ -99,7 +100,7 @@ export function buildRecipeDto(
         name: formValue.name,
         description: formValue.description ?? null,
         comment: formValue.comment ?? null,
-        category: formValue.category ?? null,
+        category: isRecipeCategory(formValue.category) ? formValue.category : 'other',
         imageUrl: formValue.imageUrl?.url ?? null,
         imageAssetId: formValue.imageUrl?.assetId ?? null,
         ...(formValue.images?.every(image => image.assetId !== null) === true
@@ -124,7 +125,7 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
         name: recipeData.name,
         description: recipeData.description ?? '',
         comment: toNullable(recipeData.comment),
-        category: toNullable(recipeData.category),
+        category: recipeData.category ?? 'other',
         imageUrl: {
             url: toNullable(recipeData.imageUrl),
             assetId: toNullable(recipeData.imageAssetId),

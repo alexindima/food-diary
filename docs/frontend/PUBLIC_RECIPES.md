@@ -31,7 +31,7 @@ bound only to host loopback. Both nginx configurations forward `/explore` paths 
 The deployment workflow starts it after API readiness and checks `/health/ssr`.
 
 Roll out the API, client image, Compose configuration and nginx configuration together.
-There is no database migration. Verify a public URL returns populated HTML with HTTP
+Apply pending database migrations before starting the matching API. Verify a public URL returns populated HTML with HTTP
 200, a private URL returns 404 without private content, and static assets still load.
 Rollback must restore the matching client/nginx configuration before stopping SSR.
 Local SSR uses `npm run build:prod` then `npm run serve:ssr:food-diary-web-client`;
@@ -45,3 +45,22 @@ the default API origin is `http://localhost:5300`.
 - Frontend tests cover requests, URL filters, pagination, resolver errors, metadata,
   ingredient scaling, galleries, cooking steps and actions following sign-in.
 - Manual checks include guest desktop/mobile navigation and production SSR HTML/status.
+
+## Fixed recipe categories
+
+Recipes store a non-null category code. `other` is the default. The editor, private
+list and public catalog use the same 15 localized choices. API category filters
+accept exact codes; unknown codes return HTTP 400. The public categories endpoint
+returns the fixed code list, independent of recipe visibility, language or contents.
+RU/EN display names belong to `RECIPE_CATEGORIES` in the frontend locale files.
+
+Codes: `other`, `breakfast`, `soups`, `salads`, `main_courses`, `side_dishes`,
+`appetizers`, `sandwiches`, `pasta`, `baking`, `desserts`, `drinks`, `sauces`,
+`snacks`, `preserves`.
+
+`AddFixedRecipeCategories` maps known legacy Russian/English labels to codes and
+maps blank, unknown or ambiguous values to `other` before enforcing the database
+constraint. This normalization is irreversible: the down migration restores the
+old column shape, not the original free text. Back up production data before the
+migration; deploy the API and frontend together because old clients may send free
+text. Migration safety tests cover legacy mapping and a clean migration chain.

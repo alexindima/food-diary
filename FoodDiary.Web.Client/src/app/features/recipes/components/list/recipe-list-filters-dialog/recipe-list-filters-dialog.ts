@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -9,6 +10,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
+import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
 import type { RecipeListFiltersDialogData, RecipeListFiltersDialogResult } from './recipe-list-filters-dialog.types';
 
 @Component({
@@ -18,6 +20,7 @@ import type { RecipeListFiltersDialogData, RecipeListFiltersDialogResult } from 
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
+        FdUiSelectComponent,
         FdUiHintDirective,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
@@ -42,7 +45,8 @@ export class RecipeListFiltersDialogComponent {
     ];
 
     protected visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
-    protected categoryValue: string | number | null = this.data.category;
+    protected readonly categoryOptions = injectRecipeCategoryOptions(true);
+    protected categoryValue: string = this.data.category ?? '';
     protected maxTotalTimeValue: string | number | null = this.data.maxTotalTime;
     protected caloriesFromValue: string | number | null = this.data.caloriesFrom;
     protected caloriesToValue: string | number | null = this.data.caloriesTo;

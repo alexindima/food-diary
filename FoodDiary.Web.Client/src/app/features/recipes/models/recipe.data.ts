@@ -2,6 +2,7 @@ import type { NutrientData } from '../../../shared/models/charts.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import type { MeasurementUnit } from '../../products/models/product.data';
+import type { RecipeCategory } from './recipe-category';
 
 export enum RecipeVisibility {
     Private = 'Private',
@@ -15,7 +16,7 @@ export type Recipe = {
     name: string;
     description?: string | null;
     comment?: string | null;
-    category?: string | null;
+    category?: RecipeCategory | null;
     imageUrl?: string | null;
     images?: Array<{ imageAssetId: string; imageUrl: string }>;
     imageAssetId?: string | null;
@@ -126,7 +127,7 @@ export type RecipeDto = {
     name: string;
     description?: string | null;
     comment?: string | null;
-    category?: string | null;
+    category?: RecipeCategory | null;
     imageUrl?: string | null;
     imageAssetIds?: string[];
     imageAssetId?: string | null;

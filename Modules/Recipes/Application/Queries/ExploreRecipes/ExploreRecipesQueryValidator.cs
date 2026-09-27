@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FluentValidation;
 using FoodDiary.Application.Contracts.Common.Validation;
 
@@ -7,6 +8,7 @@ public sealed class ExploreRecipesQueryValidator : AbstractValidator<ExploreReci
     private static readonly string[] ValidSortValues = ["newest", "popular"];
 
     public ExploreRecipesQueryValidator() {
+        RuleFor(query => query.Category).Must(code => code is null || RecipeCategoryCodes.IsValid(code)).WithErrorCode("Validation.Invalid");
         RuleFor(x => x.Page)
             .InclusiveBetween(PaginationPolicy.DefaultPage, PaginationPolicy.MaxPageNumber)
             .WithErrorCode("Validation.Invalid")

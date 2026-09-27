@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Events;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -55,13 +56,13 @@ public class RecipeInvariantAndEventsTests {
             servings: 2,
             description: "   ",
             comment: "   ",
-            category: "   ",
+            category: null,
             imageUrl: "   ");
 
         Assert.Multiple(
             () => Assert.Null(recipe.Description),
             () => Assert.Null(recipe.Comment),
-            () => Assert.Null(recipe.Category),
+            () => Assert.Equal(RecipeCategory.Other, recipe.Category),
             () => Assert.Null(recipe.ImageUrl));
     }
 
@@ -118,7 +119,7 @@ public class RecipeInvariantAndEventsTests {
             servings: 2,
             description: "Desc",
             comment: "Comment",
-            category: "Category",
+            category: "main_courses",
             imageUrl: "https://img",
             prepTime: 10,
             cookTime: 20,
@@ -128,7 +129,7 @@ public class RecipeInvariantAndEventsTests {
             Name: " Soup ",
             Description: "Desc",
             Comment: "Comment",
-            Category: "Category",
+            Category: "main_courses",
             ImageUrl: " https://img ",
             PrepTime: 10,
             CookTime: 20,
@@ -178,13 +179,13 @@ public class RecipeInvariantAndEventsTests {
             name: "  New Soup  ",
             description: "  New Desc  ",
             comment: "  ",
-            category: "  Main  ");
+            category: "main_courses");
 
         Assert.Multiple(
             () => Assert.Equal("New Soup", recipe.Name),
             () => Assert.Equal("New Desc", recipe.Description),
             () => Assert.Null(recipe.Comment),
-            () => Assert.Equal("Main", recipe.Category));
+            () => Assert.Equal(RecipeCategory.MainCourses, recipe.Category));
     }
 
     [Fact]
@@ -195,14 +196,14 @@ public class RecipeInvariantAndEventsTests {
             2,
             description: "Desc",
             comment: "Comment",
-            category: "Main");
+            category: "main_courses");
 
         recipe.UpdateIdentity(clearDescription: true, clearComment: true, clearCategory: true);
 
         Assert.Multiple(
             () => Assert.Null(recipe.Description),
             () => Assert.Null(recipe.Comment),
-            () => Assert.Null(recipe.Category));
+            () => Assert.Equal(RecipeCategory.Other, recipe.Category));
     }
 
     [Fact]

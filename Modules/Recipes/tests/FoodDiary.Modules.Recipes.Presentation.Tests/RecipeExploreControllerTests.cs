@@ -28,7 +28,7 @@ public sealed class RecipeExploreControllerTests {
             Page: 2,
             Limit: 5,
             Search: "soup",
-            Category: "lunch",
+            Category: "main_courses",
             MaxPrepTime: 20,
             SortBy: "popular");
 
@@ -49,7 +49,7 @@ public sealed class RecipeExploreControllerTests {
         Assert.Equal(2, sentQuery.Page);
         Assert.Equal(5, sentQuery.Limit);
         Assert.Equal("soup", sentQuery.Search);
-        Assert.Equal("lunch", sentQuery.Category);
+        Assert.Equal("main_courses", sentQuery.Category);
         Assert.Equal(20, sentQuery.MaxPrepTime);
         Assert.Equal("popular", sentQuery.SortBy);
     }
@@ -67,7 +67,7 @@ public sealed class RecipeExploreControllerTests {
             "Tomato soup",
             Description: "Rich tomato soup",
             Comment: null,
-            Category: "Lunch",
+            Category: "main_courses",
             ImageUrl: null,
             ImageAssetId: null,
             PrepTime: 10,

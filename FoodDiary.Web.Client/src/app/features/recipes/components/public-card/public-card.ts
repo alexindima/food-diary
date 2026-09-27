@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import type { PublicRecipe } from '../../models/public-recipe.data';
+import { recipeCategoryKey } from '../../models/recipe-category';
 
 @Component({
     selector: 'fd-public-recipe-card',
@@ -14,6 +15,7 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
     imports: [DecimalPipe, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent],
 })
 export class PublicRecipeCardComponent {
+    protected readonly recipeCategoryKey = recipeCategoryKey;
     public readonly recipe = input.required<PublicRecipe>();
     public readonly priority = input(false);
     public readonly saved = input(false);

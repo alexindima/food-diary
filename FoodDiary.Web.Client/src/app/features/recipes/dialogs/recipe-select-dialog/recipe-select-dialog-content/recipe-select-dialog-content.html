@@ -20,7 +20,7 @@
                         <div class="recipe-select__name fd-ui-action-text fd-truncate">{{ item.recipe.name }}</div>
                         <div class="recipe-select__meta fd-ui-caption fd-truncate">
                             @if (item.recipe.category) {
-                                {{ item.recipe.category }} ·
+                                {{ recipeCategoryKey(item.recipe.category) | translate }} ·
                             }
                             {{ item.recipe.totalCalories ?? '—' }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} ·
                             {{ item.recipe.servings }} {{ servingsUnitKey(item.recipe.servings) | translate }}

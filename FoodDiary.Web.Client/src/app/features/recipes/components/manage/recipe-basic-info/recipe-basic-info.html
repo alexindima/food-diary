@@ -20,11 +20,11 @@
             />
         </div>
         <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
-            <fd-ui-input
+            <fd-ui-select
                 size="lg"
+                [options]="categoryOptions()"
                 [formField]="recipeForm.category"
                 [label]="'RECIPE_MANAGE.CATEGORY' | translate"
-                [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
             />
         </div>
         <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">

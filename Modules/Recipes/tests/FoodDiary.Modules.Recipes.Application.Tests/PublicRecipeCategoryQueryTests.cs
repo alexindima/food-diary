@@ -1,6 +1,4 @@
 using FoodDiary.Modules.Recipes.Application.Queries.GetPublicRecipeCategories;
-using FoodDiary.Modules.Recipes.Contracts.Common;
-using FoodDiary.Results;
 using ResultAssert = FoodDiary.Testing.Assertions.ResultAssert;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests;
@@ -19,12 +17,13 @@ public sealed class PublicRecipeCategoryQueryTests {
     }
 
     [Fact]
-    public async Task Categories_ForwardSearchLanguageAndCancellationAsync() {
-        IRecipeOverviewReadService read = Substitute.For<IRecipeOverviewReadService>();
-        using var cancellation = new CancellationTokenSource();
-        read.GetPublicCategoriesAsync("soup", "en", cancellation.Token).Returns((IReadOnlyList<string>)["Soups"]);
-        Result<IReadOnlyList<string>> result = await new GetPublicRecipeCategoriesQueryHandler(read).Handle(new GetPublicRecipeCategoriesQuery("soup", "en"), cancellation.Token);
-        Assert.Equal("Soups", Assert.Single(ResultAssert.Success(result)));
-        await read.Received(1).GetPublicCategoriesAsync("soup", "en", cancellation.Token);
+    public async Task Categories_ReturnStableCodesIndependentOfRecipeLanguageAsync() {
+        var handler = new GetPublicRecipeCategoriesQueryHandler();
+        IReadOnlyList<string> english = ResultAssert.Success(await handler.Handle(new GetPublicRecipeCategoriesQuery(Language: "en"), CancellationToken.None));
+        IReadOnlyList<string> russian = ResultAssert.Success(await handler.Handle(new GetPublicRecipeCategoriesQuery(Language: "ru"), CancellationToken.None));
+        Assert.Equal(15, english.Count);
+        Assert.Equal(english, russian, StringComparer.Ordinal);
+        Assert.Contains("other", english, StringComparer.Ordinal);
+        Assert.Equal("soups", Assert.Single(ResultAssert.Success(await handler.Handle(new GetPublicRecipeCategoriesQuery("SOUP"), CancellationToken.None))));
     }
 }

@@ -512,7 +512,7 @@
       "name": "Recipe",
       "role": "entity",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 11
+      "line": 12
     },
     {
       "area": "FoodDiary",
@@ -1198,7 +1198,7 @@
       "name": "RecipeDetailsState",
       "role": "value-object",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 5
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -4189,84 +4189,84 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A recipe can have up to five distinct images.\", nameof(images))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 23
+      "line": 24
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(language), \"Recipe language must be en or ru.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 40
+      "line": 41
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Step number must be unique within recipe.\", nameof(stepNumber))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 228
+      "line": 230
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(step)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 247
+      "line": 249
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipe name is required.\", nameof(value))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 564
+      "line": 561
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recipe name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 569
+      "line": 566
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 577
+      "line": 574
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\"),",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 584
+      "line": 581
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 596
+      "line": 593
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 602
+      "line": 599
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 609
+      "line": 606
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 616
+      "line": 613
     },
     {
       "area": "FoodDiary",

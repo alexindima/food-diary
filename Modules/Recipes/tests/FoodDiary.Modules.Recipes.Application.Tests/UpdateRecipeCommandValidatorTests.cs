@@ -169,7 +169,7 @@ public class UpdateRecipeCommandValidatorTests {
             ClearDescription: false,
             Comment: "Comment",
             ClearComment: false,
-            Category: "Category",
+            Category: "main_courses",
             ClearCategory: false,
             ImageUrl: null,
             ClearImageUrl: false,

@@ -11,10 +11,10 @@
 
     <section class="recipe-list-filters-dialog__section fd-grid fd-gap-xs">
         <h3 class="recipe-list-filters-dialog__section-title">{{ 'RECIPE_LIST.FILTER_DETAILS' | translate }}</h3>
-        <fd-ui-input
+        <fd-ui-select
             size="sm"
+            [options]="categoryOptions()"
             [label]="'RECIPE_LIST.FILTER_CATEGORY' | translate"
-            [placeholder]="'RECIPE_LIST.FILTER_CATEGORY_PLACEHOLDER' | translate"
             [(value)]="categoryValue"
         />
         <fd-ui-input

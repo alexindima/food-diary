@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FluentValidation;
 using FoodDiary.Application.Contracts.Common.Validation;
 
@@ -5,6 +6,7 @@ namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryValidator : AbstractValidator<GetRecipesOverviewQuery> {
     public GetRecipesOverviewQueryValidator() {
+        RuleFor(query => query.Category).Must(code => code is null || RecipeCategoryCodes.IsValid(code)).WithErrorCode("Validation.Invalid");
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

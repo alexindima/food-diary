@@ -26,7 +26,7 @@ public partial class RecipesFeatureTests {
             ClearDescription: true,
             Comment: "comment",
             ClearComment: true,
-            Category: "category",
+            Category: "main_courses",
             ClearCategory: true,
             ImageUrl: "https://cdn.test/soup.png",
             ClearImageUrl: true,

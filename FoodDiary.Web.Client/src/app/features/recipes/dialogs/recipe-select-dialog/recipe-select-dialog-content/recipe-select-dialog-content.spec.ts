@@ -59,7 +59,7 @@ function createRecipe(): Recipe {
     return {
         id: 'recipe-1',
         name: 'Recipe',
-        category: 'Dinner',
+        category: 'main_courses',
         totalCalories: 240,
         servings: 2,
         visibility: RecipeVisibility.Private,

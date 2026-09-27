@@ -18,7 +18,7 @@
             <h2 [title]="recipe().name">{{ recipe().name }}</h2>
             <p class="fd-ui-body-sm">
                 @if (recipe().category) {
-                    {{ recipe().category }} ·
+                    {{ recipeCategoryKey(recipe().category) | translate }} ·
                 }
                 {{ (recipe().language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN') | translate }}
             </p>

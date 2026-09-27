@@ -78,7 +78,7 @@ public partial class RecipesFeatureTests {
             servings: 2,
             description: "Rich soup",
             comment: "Original note",
-            category: "Dinner",
+            category: "main_courses",
             imageUrl: "https://cdn.test/original-soup.png",
             imageAssetId: ImageAssetId.New(),
             prepTime: 15,

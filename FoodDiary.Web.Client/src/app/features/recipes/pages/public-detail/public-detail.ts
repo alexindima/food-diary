@@ -18,6 +18,7 @@ import { PublicNutritionComponent } from '../../components/public-nutrition/publ
 import { PublicStepsComponent } from '../../components/public-steps/public-steps';
 import { recipeImages } from '../../lib/public-recipe.utils';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
+import { recipeCategoryKey } from '../../models/recipe-category';
 import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolver';
 
 @Component({
@@ -41,6 +42,7 @@ import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolve
     ],
 })
 export class PublicRecipeDetailComponent {
+    protected readonly recipeCategoryKey = recipeCategoryKey;
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly facade = inject(PublicRecipesFacade);

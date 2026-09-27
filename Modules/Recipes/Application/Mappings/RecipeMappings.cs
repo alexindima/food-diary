@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.Nutrition;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Recipes.Application.Models;
@@ -32,7 +33,7 @@ public static class RecipeMappings {
             recipe.Name,
             recipe.Description,
             isOwnedByCurrentUser ? recipe.Comment : null,
-            recipe.Category,
+            recipe.Category.ToCode(),
             recipe.ImageUrl,
             recipe.ImageAssetId?.Value,
             recipe.PrepTime,

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Events;
@@ -45,7 +46,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Comment { get; private set; }
-    public string? Category { get; private set; }
+    public RecipeCategory Category { get; private set; } = RecipeCategory.Other;
     public string? ImageUrl { get; private set; }
     public ImageAssetId? ImageAssetId { get; private set; }
     public int? PrepTime { get; private set; }
@@ -107,7 +108,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             Name: NormalizeRequiredName(name),
             Description: NormalizeOptionalText(description, DescriptionMaxLength, nameof(description)),
             Comment: NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
-            Category: NormalizeOptionalText(category, CategoryMaxLength, nameof(category)),
+            Category: category is null ? RecipeCategory.Other : RecipeCategoryCodes.Parse(category),
             ImageUrl: NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
             ImageAssetId: imageAssetId,
             PrepTime: NormalizeOptionalNonNegative(prepTime, nameof(prepTime)),
@@ -162,6 +163,9 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         EnsureClearConflict(update.ClearDescription, normalizedDescription, nameof(update.ClearDescription), nameof(update.Description));
         EnsureClearConflict(update.ClearComment, normalizedComment, nameof(update.ClearComment), nameof(update.Comment));
         EnsureClearConflict(update.ClearCategory, normalizedCategory, nameof(update.ClearCategory), nameof(update.Category));
+        if (update.Category is not null) {
+            RecipeCategoryCodes.Parse(update.Category);
+        }
         EnsureClearConflict(update.ClearImageUrl, normalizedImageUrl, nameof(update.ClearImageUrl), nameof(update.ImageUrl));
         EnsureClearConflict(update.ClearImageAssetId, update.ImageAssetId, nameof(update.ClearImageAssetId), nameof(update.ImageAssetId));
 
@@ -360,16 +364,15 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             }
         }
 
+        RecipeCategory nextCategory = state.Category;
         if (clearCategory) {
-            if (state.Category is not null) {
-                state = state with { Category = null };
-                changed = true;
-            }
+            nextCategory = RecipeCategory.Other;
         } else if (category is not null) {
-            if (!string.Equals(state.Category, normalizedCategory, StringComparison.Ordinal)) {
-                state = state with { Category = normalizedCategory };
-                changed = true;
-            }
+            nextCategory = RecipeCategoryCodes.Parse(category);
+        }
+        if (state.Category != nextCategory) {
+            state = state with { Category = nextCategory };
+            changed = true;
         }
 
         if (changed) {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.Nutrition;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -14,20 +15,6 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.ReadModel.Composition.Recipes;
 
 internal sealed class RecipeOverviewReadService(ICompositionReadContext context) : IRecipeOverviewReadService {
-    public async Task<IReadOnlyList<string>> GetPublicCategoriesAsync(string? search, string? language, CancellationToken cancellationToken = default) {
-        IQueryable<Recipe> query = context.Recipes.AsNoTracking().Where(recipe => recipe.Visibility == Visibility.Public);
-        if (language is not null) {
-            query = query.AsNoTracking().Where(recipe => recipe.Language == language);
-        }
-        if (!string.IsNullOrWhiteSpace(search)) {
-            string pattern = $"%{EscapeLikePattern(search.Trim())}%";
-            query = query.AsNoTracking().Where(recipe => recipe.Category != null && EF.Functions.ILike(recipe.Category, pattern, LikeEscapeCharacter));
-        }
-        return await query.AsNoTracking().Where(recipe => recipe.Category != null && recipe.Category.Trim() != "")
-            .Select(recipe => recipe.Category!.Trim()).Distinct().OrderBy(category => category).Take(30)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetPagedAsync(
@@ -125,13 +112,12 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             string normalized = $"%{EscapeLikePattern(filters.Search.Trim())}%";
             query = query.AsNoTracking().Where(r =>
                 EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
-                EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
         }
 
         if (!string.IsNullOrWhiteSpace(filters.Category)) {
-            string category = $"%{EscapeLikePattern(filters.Category.Trim())}%";
-            query = query.AsNoTracking().Where(r => EF.Functions.ILike(r.Category ?? string.Empty, category, LikeEscapeCharacter));
+            RecipeCategory category = RecipeCategoryCodes.Parse(filters.Category);
+            query = query.AsNoTracking().Where(r => r.Category == category);
         }
 
         if (filters.MaxTotalTime.HasValue) {
@@ -165,12 +151,12 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             string pattern = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.AsNoTracking().Where(r =>
                 EF.Functions.ILike(r.Name, pattern, LikeEscapeCharacter) ||
-                (r.Category != null && EF.Functions.ILike(r.Category, pattern, LikeEscapeCharacter)) ||
                 (r.Description != null && EF.Functions.ILike(r.Description, pattern, LikeEscapeCharacter)));
         }
 
         if (!string.IsNullOrWhiteSpace(category)) {
-            query = query.AsNoTracking().Where(r => r.Category != null && EF.Functions.ILike(r.Category, category, LikeEscapeCharacter));
+            RecipeCategory selectedCategory = RecipeCategoryCodes.Parse(category);
+            query = query.AsNoTracking().Where(r => r.Category == selectedCategory);
         }
 
         if (maxPrepTime.HasValue) {
@@ -244,7 +230,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             row.Name,
             row.Description,
             isOwnedByCurrentUser ? row.Comment : null,
-            row.Category,
+            row.Category.ToCode(),
             row.ImageUrl,
             row.ImageAssetId,
             row.PrepTime,
@@ -334,7 +320,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         string Name,
         string? Description,
         string? Comment,
-        string? Category,
+        RecipeCategory Category,
         string? ImageUrl,
         ImageAssetId? ImageAssetId,
         int? PrepTime,

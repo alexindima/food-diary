@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c2fec80ef18f2240d97a4c3b103eb3360543e6d524c4360e23874b9eb318ba35"
+          "sha256": "f5fe43cc7462a943a6adf0dddd67d4b3b20a15a5617295518e81473427acee79"
         }
       ],
-      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:51:57.1728181Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:21.6270739Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7b74beff40646a32181ff56452d751687914f522dd585c94de01ba56d80eeda0"
+          "sha256": "7b4aeea8aa9c9a0035200fcf533cf6a727959032a305e24b9843b972954b1f01"
         }
       ],
-      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:51:57.7923149Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:23.0984192Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +497,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "682ed32790f7b520b2a79ec9bf50da391fb6474cd122e495dbbea212fb56baea"
+          "sha256": "ebaddc073dd5fb1dfd89b5df0735cd453c5d9ec9a2e482ae1fe445c25204812e"
         }
       ],
-      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
-      "reviewedAtUtc": "2026-09-27T15:34:50.5030529Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:23.8039169Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -783,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d0aded34bc9580ade327c81ac65ad0ab682c2a55f438b069c22fff183ea5954a"
+          "sha256": "b92f4fca98f02da9a3d8300273309eebb944283f567dbdb3c5c3565151a3ad91"
         }
       ],
-      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:48:36.2745865Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:25.5231020Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "adb4f8aa4ba56f7ec8295f317406850383df55237c1cd0c64ddab190ae38a6a1"
+          "sha256": "9d58f700a0af4c859758c9484fcf001feb5056e61a73684d1b529e1b5a32bd66"
         }
       ],
-      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:51:58.1990464Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:26.6257228Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "388770682f692f9f0852bd649bd58de43e130f79f2be34ed7277d76a87548f7d"
+          "sha256": "48e196e27cb20896538340bda2f809e11dce6af39ef3016e560072996e876baa"
         }
       ],
-      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:48:36.8526202Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:27.7998129Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "adb4f8aa4ba56f7ec8295f317406850383df55237c1cd0c64ddab190ae38a6a1"
+          "sha256": "9d58f700a0af4c859758c9484fcf001feb5056e61a73684d1b529e1b5a32bd66"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "388770682f692f9f0852bd649bd58de43e130f79f2be34ed7277d76a87548f7d"
+          "sha256": "48e196e27cb20896538340bda2f809e11dce6af39ef3016e560072996e876baa"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d0aded34bc9580ade327c81ac65ad0ab682c2a55f438b069c22fff183ea5954a"
+          "sha256": "b92f4fca98f02da9a3d8300273309eebb944283f567dbdb3c5c3565151a3ad91"
         }
       ],
-      "reason": "Reviewed updated source indexes and additive public categories endpoint snapshot against current code. Public-only visibility, language and bounded category search do not change existing recipe ownership or write flows. Shared autocomplete and public card changes preserve documented frontend boundaries.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:51:58.5967427Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:29.0747857Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e2b5363f0f20baa877bc918f6dc7c1caae7599b18462e7e694669139dd4cfde4"
+          "sha256": "5ec98bc1058989ccfe131fa3f5ece6ebedc4382a43ae6acea07025eec41065d4"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "43fdbb186384db4d57404e7b767a29d972ba6b14c15538418f61c545dc8b8148"
+          "sha256": "79a12d0e0f74d0dcdd902f58b1c7716b76b1323e9c061d0cf4022685be29ccca"
         }
       ],
-      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:48:37.9350194Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:30.4182494Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e2b5363f0f20baa877bc918f6dc7c1caae7599b18462e7e694669139dd4cfde4"
+          "sha256": "5ec98bc1058989ccfe131fa3f5ece6ebedc4382a43ae6acea07025eec41065d4"
         }
       ],
-      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
+      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:48:35.6666634Z"
+      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
+      "reviewedAtUtc": "2026-09-27T20:22:24.7612598Z"
     },
     {
       "pageId": "workflow.query-context",

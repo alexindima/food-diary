@@ -27,7 +27,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             context.Recipes.Add(Recipe.Create(user.Id, language ?? "fallback", servings: 1));
         }
         await context.SaveChangesAsync();
-        string previous = context.Database.GetMigrations().Last(value => !value.EndsWith("_AddRecipeLanguage", StringComparison.Ordinal));
+        string previous = context.Database.GetMigrations().TakeWhile(value => !value.EndsWith("_AddRecipeLanguage", StringComparison.Ordinal)).Last();
         await context.GetService<IMigrator>().MigrateAsync(previous);
         await context.Database.MigrateAsync();
         context.ChangeTracker.Clear();
@@ -37,6 +37,30 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             Assert.Equal(string.Equals(recipe.Name, "ru", StringComparison.Ordinal) ? "ru" : "en", recipe.Language);
             Assert.False(recipe.LanguageConfirmed);
         }
+    }
+
+    [RequiresDockerFact]
+    public async Task RecipeCategories_NormalizeLegacyValuesOnUpgrade() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+        await context.Database.MigrateAsync();
+        var user = User.Create($"categories-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        string?[] legacyValues = [null, "", "  Салаты  ", "SOUPS", "Dinner", "unknown", "pasta"];
+        foreach (int index in Enumerable.Range(0, legacyValues.Length)) {
+            context.Recipes.Add(Recipe.Create(user.Id, index.ToString(System.Globalization.CultureInfo.InvariantCulture), servings: 1));
+        }
+        await context.SaveChangesAsync();
+        await context.GetService<IMigrator>().MigrateAsync("20260927150611_AddRecipeLanguage");
+        for (int index = 0; index < legacyValues.Length; index++) {
+            string name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            await context.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"Recipes\" SET \"Category\" = {legacyValues[index]} WHERE \"Name\" = {name}");
+        }
+        await context.Database.MigrateAsync();
+        context.ChangeTracker.Clear();
+        List<Recipe> recipes = await context.Recipes.OrderBy(recipe => recipe.Name).ToListAsync();
+        Assert.Equal(new[] { "other", "other", "salads", "soups", "other", "other", "pasta" },
+            recipes.Select(recipe => FoodDiary.Modules.Recipes.Domain.Contracts.Enums.RecipeCategoryCodes.ToCode(recipe.Category)), StringComparer.Ordinal);
     }
 
     [Fact]

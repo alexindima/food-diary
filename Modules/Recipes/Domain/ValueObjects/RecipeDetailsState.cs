@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 
@@ -7,7 +8,7 @@ public readonly record struct RecipeDetailsState(
     string Name,
     string? Description,
     string? Comment,
-    string? Category,
+    RecipeCategory Category,
     string? ImageUrl,
     ImageAssetId? ImageAssetId,
     int? PrepTime,

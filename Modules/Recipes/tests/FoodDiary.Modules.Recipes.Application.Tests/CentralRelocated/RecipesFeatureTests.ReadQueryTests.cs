@@ -92,7 +92,7 @@ public partial class RecipesFeatureTests {
             servings: 3,
             description: "Rich broth",
             comment: "Private note",
-            category: "Lunch",
+            category: "main_courses",
             visibility: Visibility.Private);
         recipe.AddStep(1, "Prepare ingredients");
 
@@ -152,7 +152,7 @@ public partial class RecipesFeatureTests {
             user.Id,
             "Breakfast Bowl",
             servings: 1,
-            category: "Breakfast",
+            category: "breakfast",
             visibility: Visibility.Private);
         breakfast.AddStep(1, "Mix ingredients");
 
@@ -160,7 +160,7 @@ public partial class RecipesFeatureTests {
             user.Id,
             "Dinner Soup",
             servings: 2,
-            category: "Dinner",
+            category: "main_courses",
             visibility: Visibility.Private);
         dinner.AddStep(1, "Cook soup");
 
@@ -220,7 +220,7 @@ public partial class RecipesFeatureTests {
             user.Id,
             "Protein Pancakes",
             servings: 2,
-            category: "Breakfast",
+            category: "breakfast",
             visibility: Visibility.Private);
         recipe.AddStep(1, "Cook pancakes");
 
@@ -298,14 +298,14 @@ public partial class RecipesFeatureTests {
             userId,
             "Owned Soup",
             servings: 2,
-            category: "Lunch",
+            category: "main_courses",
             visibility: Visibility.Private);
         owned.AddStep(1, "Cook soup");
         var publicRecipe = Recipe.Create(
             UserId.New(),
             "Public Pancakes",
             servings: 3,
-            category: "Breakfast",
+            category: "breakfast",
             visibility: Visibility.Public);
         publicRecipe.AddStep(1, "Cook pancakes");
         var missingRecipeId = RecipeId.New();
@@ -343,7 +343,7 @@ public partial class RecipesFeatureTests {
         var handler = new ExploreRecipesQueryHandler(readService);
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(
-            new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "Lunch", MaxPrepTime: 20, SortBy: "popular"),
+            new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "main_courses", MaxPrepTime: 20, SortBy: "popular"),
             CancellationToken.None);
 
         ResultAssert.Success(result);

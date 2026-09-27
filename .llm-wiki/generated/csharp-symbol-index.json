@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4265,
-    "symbols": 4196,
+    "sourceFiles": 4267,
+    "symbols": 4198,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2201,
-      "enum": 64,
+      "class": 2202,
+      "enum": 65,
       "interface": 401,
       "record": 1410,
       "record struct": 120
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1728,
+      "Other": 1730,
       "Query": 285,
       "QueryHandler": 207,
       "ReadModelRepository": 33,
@@ -1676,7 +1676,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RecipeUsageQuery",
@@ -21640,7 +21640,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "CreateRecipeValuePreparer",
@@ -21696,7 +21696,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "DuplicateRecipeCommandValidator",
@@ -21738,7 +21738,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UpdateRecipeValuePreparer",
@@ -21822,7 +21822,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Mappings/RecipeMappings.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeOverviewReadMappings",
@@ -21906,7 +21906,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetPublicRecipeQuery",
@@ -21962,7 +21962,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetRecentRecipesQuery",
@@ -22046,7 +22046,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RecentRecipeLoader",
@@ -22168,6 +22168,20 @@
       "line": 2
     },
     {
+      "name": "RecipeCategory",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Recipes/Domain.Contracts/Enums/RecipeCategory.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeCategoryCodes",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Domain.Contracts/Enums/RecipeCategoryCodes.cs",
+      "line": 2
+    },
+    {
       "name": "RecipeId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -22193,7 +22207,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "RecipeImage",
@@ -22263,7 +22277,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RecipeNutrition",
@@ -22354,7 +22368,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipeConfiguration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "RecipeIngredientConfiguration",

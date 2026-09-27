@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
@@ -35,6 +36,9 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
+        builder.Property(e => e.Category).HasConversion(category => category.ToCode(), code => RecipeCategoryCodes.Parse(code))
+            .HasMaxLength(Recipe.CategoryMaxLength).IsRequired().HasDefaultValue(RecipeCategory.Other);
+        builder.ToTable(table => table.HasCheckConstraint("CK_Recipes_Category", "\"Category\" IN ('other', 'breakfast', 'soups', 'salads', 'main_courses', 'side_dishes', 'appetizers', 'sandwiches', 'pasta', 'baking', 'desserts', 'drinks', 'sauces', 'snacks', 'preserves')"));
         builder.Property(e => e.Language).HasMaxLength(2).IsRequired().HasDefaultValue("en");
         builder.HasIndex(e => new { e.Visibility, e.Language, e.CreatedOnUtc });
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);

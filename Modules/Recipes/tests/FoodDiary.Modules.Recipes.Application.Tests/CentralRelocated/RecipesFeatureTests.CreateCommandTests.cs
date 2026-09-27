@@ -320,7 +320,7 @@ public partial class RecipesFeatureTests {
                 Name: "Tomato Soup",
                 Description: "Creamy soup",
                 Comment: "Serve warm",
-                Category: "Dinner",
+                Category: "main_courses",
                 ImageUrl: "https://cdn.test/soup.png",
                 ImageAssetId: null,
                 PrepTime: 15,

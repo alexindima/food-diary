@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1283,
     "ambiguousContracts": 2,
-    "consumerEdges": 10031,
-    "productionConsumerEdges": 5727,
-    "testConsumerEdges": 4304,
+    "consumerEdges": 10029,
+    "productionConsumerEdges": 5726,
+    "testConsumerEdges": 4303,
     "consumedContracts": 1283,
     "unconsumedContracts": 0
   },
@@ -49814,7 +49814,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/PublicRecipeCategoryQueryTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "GetPublicRecipeQuery",
@@ -101863,19 +101863,6 @@
         "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Application/Queries/GetPublicRecipeCategories/GetPublicRecipeCategoriesQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecipeOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -101970,19 +101957,6 @@
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "IRecipeOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/PublicRecipeCategoryQueryTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IRecipeOverviewReadService",

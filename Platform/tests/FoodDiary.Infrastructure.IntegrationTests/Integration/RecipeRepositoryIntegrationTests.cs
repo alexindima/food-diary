@@ -33,25 +33,6 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
 
     [RequiresDockerFact]
-    public async Task PublicCategories_ExcludePrivateRecipesAndFilterBeforeLimitAsync() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var user = User.Create($"categories-{Guid.NewGuid():N}@example.com", "hash");
-        string prefix = Guid.NewGuid().ToString("N");
-        context.Users.Add(user);
-        context.Recipes.AddRange(
-            Recipe.Create(user.Id, "One", 1, category: prefix + " Soup", visibility: Visibility.Public, language: "en"),
-            Recipe.Create(user.Id, "Two", 1, category: prefix + " Soup", visibility: Visibility.Public, language: "en"),
-            Recipe.Create(user.Id, "Private", 1, category: prefix + " Private", visibility: Visibility.Private, language: "en"),
-            Recipe.Create(user.Id, "Russian", 1, category: prefix + " Russian", visibility: Visibility.Public, language: "ru"),
-            Recipe.Create(user.Id, "Wildcard", 1, category: prefix + " %_", visibility: Visibility.Public, language: "en"));
-        await context.SaveChangesAsync();
-        var service = new RecipeOverviewReadService(context);
-        Assert.Equal(new[] { prefix + " %_", prefix + " Soup" }, await service.GetPublicCategoriesAsync(prefix, "en"));
-        Assert.Equal(prefix + " %_", Assert.Single(await service.GetPublicCategoriesAsync(prefix + " %_", language: null)));
-        Assert.Equal(3, (await service.GetPublicCategoriesAsync(prefix, language: null)).Count);
-    }
-
-    [RequiresDockerFact]
     public async Task PublicLanguageFilter_AppliesBeforeCountingAndPaging() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"language-filter-{Guid.NewGuid():N}@example.com", "hash");
@@ -176,7 +157,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         IReadOnlyList<RecipeId> saladIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
-            Category: "salad"));
+            Category: "salads"));
         IReadOnlyList<RecipeId> quickIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             MaxTotalTime: 25));
@@ -435,16 +416,16 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             userId,
             "Quick salad",
             servings: 2,
-            category: "Salad",
+            category: "salads",
             imageUrl: "https://cdn.example.com/salad.webp",
             prepTime: 10,
             cookTime: 0);
         quickSaladWithImage.ApplyComputedNutrition(180, 6, 9, 20, 6, 0);
 
-        var longSaladNoImage = Recipe.Create(userId, "Roasted salad", servings: 2, category: "Salad", prepTime: 20, cookTime: 45);
+        var longSaladNoImage = Recipe.Create(userId, "Roasted salad", servings: 2, category: "salads", prepTime: 20, cookTime: 45);
         longSaladNoImage.ApplyComputedNutrition(520, 18, 31, 42, 8, 0);
 
-        var quickSoupNoImage = Recipe.Create(userId, "Tomato soup", servings: 4, category: "Soup", prepTime: 5, cookTime: 20);
+        var quickSoupNoImage = Recipe.Create(userId, "Tomato soup", servings: 4, category: "soups", prepTime: 5, cookTime: 20);
         quickSoupNoImage.ApplyComputedNutrition(240, 7, 6, 40, 7, 0);
 
         context.Recipes.AddRange(quickSaladWithImage, longSaladNoImage, quickSoupNoImage);

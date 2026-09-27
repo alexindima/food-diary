@@ -40,7 +40,7 @@ describe('ExploreService query', () => {
         service
             .query(PAGE, LIMIT, {
                 search: '  soup  ',
-                category: 'Dinner',
+                category: 'main_courses',
                 maxPrepTime: PREP_TIME,
                 sortBy: 'popular',
             })
@@ -92,7 +92,7 @@ function createRecipe(): Recipe {
         name: 'Soup',
         description: null,
         comment: null,
-        category: 'Dinner',
+        category: 'main_courses',
         imageUrl: null,
         imageAssetId: null,
         prepTime: PREP_TIME,

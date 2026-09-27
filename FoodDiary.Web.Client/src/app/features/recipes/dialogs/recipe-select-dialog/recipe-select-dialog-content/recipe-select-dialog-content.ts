@@ -7,6 +7,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { resolveServingsUnitKey } from '../../../lib/recipe-servings.utils';
 import type { Recipe } from '../../../models/recipe.data';
+import { recipeCategoryKey } from '../../../models/recipe-category';
 import type { RecipeSelectItemViewModel } from '../recipe-select-dialog-lib/recipe-select-dialog.types';
 
 @Component({
@@ -17,6 +18,7 @@ import type { RecipeSelectItemViewModel } from '../recipe-select-dialog-lib/reci
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeSelectDialogContentComponent {
+    protected readonly recipeCategoryKey = recipeCategoryKey;
     protected readonly servingsUnitKey = resolveServingsUnitKey;
     public readonly isLoading = input.required<boolean>();
     public readonly items = input.required<readonly RecipeSelectItemViewModel[]>();

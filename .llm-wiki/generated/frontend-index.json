@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1779,
+    "typescriptFiles": 1781,
     "symbols": 689,
     "routes": 102,
     "features": 44,
@@ -5045,7 +5045,7 @@
       "role": "Component",
       "selector": "fd-recipe-list-filters-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
-      "line": 29
+      "line": 32
     },
     {
       "name": "RecipeListFavoritesComponent",
@@ -5073,7 +5073,7 @@
       "role": "Component",
       "selector": "fd-recipe-basic-info",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "RecipeNutritionFormManager",
@@ -5122,14 +5122,14 @@
       "role": "Component",
       "selector": "fd-public-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "PublicCategoryFilterComponent",
       "role": "Component",
       "selector": "fd-public-category-filter",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.ts",
-      "line": 19
+      "line": 13
     },
     {
       "name": "PublicRecipeGalleryComponent",
@@ -5185,7 +5185,7 @@
       "role": "Component",
       "selector": "fd-recipe-select-dialog-content",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "RecipeSelectDialogComponent",
@@ -5283,7 +5283,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "ClientTasksService",
@@ -6797,8 +6797,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3820,
-      "russianProperties": 3820,
+      "englishProperties": 3836,
+      "russianProperties": 3836,
       "countsMatch": true
     },
     {

@@ -1,3 +1,4 @@
+import type { RecipeCategory } from './recipe-category';
 export type PublicRecipeIngredient = {
     name: string | null;
     amount: number | null;
@@ -20,7 +21,7 @@ export type PublicRecipe = {
     id: string;
     name: string;
     description: string | null;
-    category: string | null;
+    category: RecipeCategory | null;
     imageUrl: string | null;
     images: string[];
     prepTime: number | null;

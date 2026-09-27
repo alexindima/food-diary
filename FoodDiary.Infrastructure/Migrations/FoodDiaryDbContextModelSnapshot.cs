@@ -1894,7 +1894,11 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("uuid");
 
                 b.Property<string>("Category")
-                    .HasColumnType("text");
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)")
+                    .HasDefaultValue("other");
 
                 b.Property<string>("Comment")
                     .HasColumnType("text");
@@ -2016,7 +2020,9 @@ namespace FoodDiary.Infrastructure.Migrations {
 
                 b.HasIndex("Visibility", "Language", "CreatedOnUtc");
 
-                b.ToTable("Recipes");
+                b.ToTable("Recipes", t => {
+                    t.HasCheckConstraint("CK_Recipes_Category", "\"Category\" IN ('other', 'breakfast', 'soups', 'salads', 'main_courses', 'side_dishes', 'appetizers', 'sandwiches', 'pasta', 'baking', 'desserts', 'drinks', 'sauces', 'snacks', 'preserves')");
+                });
             });
 
             modelBuilder.Entity("FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes.RecipeComment", b => {
@@ -5248,39 +5254,38 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b => {
-                b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 =>
-                        {
-                            b1.Property<Guid>("RecipeStepId")
-                                .HasColumnType("uuid");
+                b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 => {
+                    b1.Property<Guid>("RecipeStepId")
+                        .HasColumnType("uuid");
 
-                            b1.Property<Guid>("ImageAssetId")
-                                .HasColumnType("uuid");
+                    b1.Property<Guid>("ImageAssetId")
+                        .HasColumnType("uuid");
 
-                            b1.Property<string>("ImageUrl")
-                                .IsRequired()
-                                .HasMaxLength(2048)
-                                .HasColumnType("character varying(2048)");
+                    b1.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
-                            b1.Property<int>("Position")
-                                .HasColumnType("integer");
+                    b1.Property<int>("Position")
+                        .HasColumnType("integer");
 
-                            b1.HasKey("RecipeStepId", "ImageAssetId");
+                    b1.HasKey("RecipeStepId", "ImageAssetId");
 
-                            b1.HasIndex("ImageAssetId");
+                    b1.HasIndex("ImageAssetId");
 
-                            b1.ToTable("RecipeStepImages", (string)null);
+                    b1.ToTable("RecipeStepImages", (string)null);
 
-                            b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
-                                .WithMany()
-                                .HasForeignKey("ImageAssetId")
-                                .OnDelete(DeleteBehavior.ClientNoAction)
-                                .IsRequired();
+                    b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
 
-                            b1.WithOwner()
-                                .HasForeignKey("RecipeStepId");
-                        });
+                    b1.WithOwner()
+                        .HasForeignKey("RecipeStepId");
+                });
 
-                    b.Navigation("Images");
+                b.Navigation("Images");
 
                 b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
@@ -5705,39 +5710,38 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("NestedRecipeUsages");
 
                 b.Navigation("Steps");
-                    b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 =>
-                        {
-                            b1.Property<Guid>("RecipeId")
-                                .HasColumnType("uuid");
+                b.OwnsMany("FoodDiary.Modules.Recipes.Domain.Entities.RecipeImage", "Images", b1 => {
+                    b1.Property<Guid>("RecipeId")
+                        .HasColumnType("uuid");
 
-                            b1.Property<Guid>("ImageAssetId")
-                                .HasColumnType("uuid");
+                    b1.Property<Guid>("ImageAssetId")
+                        .HasColumnType("uuid");
 
-                            b1.Property<string>("ImageUrl")
-                                .IsRequired()
-                                .HasMaxLength(2048)
-                                .HasColumnType("character varying(2048)");
+                    b1.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
-                            b1.Property<int>("Position")
-                                .HasColumnType("integer");
+                    b1.Property<int>("Position")
+                        .HasColumnType("integer");
 
-                            b1.HasKey("RecipeId", "ImageAssetId");
+                    b1.HasKey("RecipeId", "ImageAssetId");
 
-                            b1.HasIndex("ImageAssetId");
+                    b1.HasIndex("ImageAssetId");
 
-                            b1.ToTable("RecipeImages", (string)null);
+                    b1.ToTable("RecipeImages", (string)null);
 
-                            b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
-                                .WithMany()
-                                .HasForeignKey("ImageAssetId")
-                                .OnDelete(DeleteBehavior.ClientNoAction)
-                                .IsRequired();
+                    b1.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
 
-                            b1.WithOwner()
-                                .HasForeignKey("RecipeId");
-                        });
+                    b1.WithOwner()
+                        .HasForeignKey("RecipeId");
+                });
 
-                    b.Navigation("Images");
+                b.Navigation("Images");
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b => {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Common.Validators;
@@ -42,8 +43,7 @@ public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecip
         RuleFor(x => x.Comment)
             .MaximumLength(Recipe.CommentMaxLength);
 
-        RuleFor(x => x.Category)
-            .MaximumLength(Recipe.CategoryMaxLength);
+        RuleFor(x => x.Category).Must(code => code is null || RecipeCategoryCodes.IsValid(code)).WithErrorCode("Validation.Invalid");
 
         RuleFor(x => x.ImageUrl)
             .MaximumLength(Recipe.ImageUrlMaxLength);

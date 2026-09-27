@@ -176,7 +176,7 @@ public class CreateRecipeCommandValidatorTests {
             Name: "Soup",
             Description: "Desc",
             Comment: "Comment",
-            Category: "Main",
+            Category: "main_courses",
             ImageUrl: null,
             ImageAssetId: null,
             PrepTime: 10,

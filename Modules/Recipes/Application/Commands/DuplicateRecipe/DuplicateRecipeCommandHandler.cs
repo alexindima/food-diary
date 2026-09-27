@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -75,7 +76,7 @@ public sealed class DuplicateRecipeCommandHandler(
             original.Servings,
             original.Description,
             isOwnerDuplicate ? original.Comment : null,
-            original.Category,
+            original.Category.ToCode(),
             original.ImageUrl,
             imageAssetId: null,
             original.PrepTime,

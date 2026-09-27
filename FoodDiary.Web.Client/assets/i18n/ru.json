@@ -7360,5 +7360,22 @@
         "BACK": "Вернуться к редактированию",
         "KEEP": "Оставить «{{selected}}» и сохранить",
         "CHANGE": "Изменить на «{{detected}}» и сохранить"
+    },
+    "RECIPE_CATEGORIES": {
+        "other": "Другое",
+        "breakfast": "Завтраки",
+        "soups": "Супы",
+        "salads": "Салаты",
+        "main_courses": "Основные блюда",
+        "side_dishes": "Гарниры",
+        "appetizers": "Закуски",
+        "sandwiches": "Сэндвичи и бургеры",
+        "pasta": "Паста и лапша",
+        "baking": "Выпечка",
+        "desserts": "Десерты",
+        "drinks": "Напитки",
+        "sauces": "Соусы и заправки",
+        "snacks": "Перекусы",
+        "preserves": "Заготовки"
     }
 }

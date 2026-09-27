@@ -5,7 +5,6 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Recipes.Contracts.Common;
 
 public interface IRecipeOverviewReadService {
-    Task<IReadOnlyList<string>> GetPublicCategoriesAsync(string? search, string? language, CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
