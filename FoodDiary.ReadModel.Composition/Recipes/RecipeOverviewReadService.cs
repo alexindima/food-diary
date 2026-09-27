@@ -98,10 +98,14 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                 : r => r.UserId == userId);
 
     private static IOrderedQueryable<Recipe> ApplyOrdering(IQueryable<Recipe> query, string sortBy) => sortBy switch {
+        "oldest" => query.AsNoTracking().OrderBy(r => r.CreatedOnUtc).ThenBy(r => r.Id),
+        "slowest" => query.AsNoTracking().OrderBy(r => r.PrepTime == null && r.CookTime == null)
+            .ThenByDescending(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
         "fastest" => query.AsNoTracking().OrderBy(r => r.PrepTime == null && r.CookTime == null)
             .ThenBy(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
 #pragma warning disable MA0011 // EF translates parameterless ToLower to PostgreSQL lower; culture overloads cannot be translated.
         "name" => query.AsNoTracking().OrderBy(r => r.Name.ToLower()).ThenBy(r => r.Id),
+        "name_desc" => query.AsNoTracking().OrderByDescending(r => r.Name.ToLower()).ThenBy(r => r.Id),
 #pragma warning restore MA0011
         _ => query.AsNoTracking().OrderByDescending(r => r.CreatedOnUtc).ThenBy(r => r.Id),
     };

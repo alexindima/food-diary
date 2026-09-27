@@ -45,7 +45,7 @@ it('loads bookmarked filters and page without resetting to the first page', asyn
         sortBy: 'newest',
         language: 'en',
     });
-    expect(harness.routeNativeElement?.querySelector('a[href="/explore/recipe"]')).not.toBeNull();
+    expect(harness.routeNativeElement?.querySelector('a[href^="/explore/recipe?"]')).not.toBeNull();
     await harness.navigateByUrl('/explore?page=3&search=Soup&category=Dinner&maxTotalTime=30');
     expect(facade.query).toHaveBeenLastCalledWith({
         page: 3,
@@ -84,6 +84,10 @@ it('preserves server sorting on bookmarked pages and normalizes unknown orders',
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, sortBy: 'fastest' }));
     await harness.navigateByUrl('/explore?page=3&sortBy=name');
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 3, sortBy: 'name' }));
+    for (const sortBy of ['oldest', 'slowest', 'name_desc']) {
+        await harness.navigateByUrl(`/explore?page=2&sortBy=${sortBy}`);
+        expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, sortBy }));
+    }
     await harness.navigateByUrl('/explore?sortBy=unknown');
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, sortBy: 'newest' }));
 });

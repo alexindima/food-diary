@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -24,6 +24,11 @@ describe('public recipe account actions', () => {
             providers: [
                 provideRouter([
                     {
+                        path: 'explore',
+                        component: PublicRecipeDetailComponent,
+                        data: { seo: { recipe: publicRecipeFixture(), error: null } },
+                    },
+                    {
                         path: 'explore/:id',
                         component: PublicRecipeDetailComponent,
                         data: { seo: { recipe: publicRecipeFixture(), error: null } },
@@ -37,6 +42,13 @@ describe('public recipe account actions', () => {
         TestBed.overrideComponent(PublicRecipeDetailComponent, {
             set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }] },
         });
+    });
+    it('keeps catalog filters and pagination when returning', async () => {
+        const harness = await RouterTestingHarness.create('/explore/recipe?page=2&category=salads&language=all&sortBy=fastest');
+        harness.routeNativeElement?.querySelector<HTMLButtonElement>('button[aria-label="PUBLIC_RECIPES.CATALOG"]')?.click();
+        await waitForAsyncTasksAsync();
+        await harness.fixture.whenStable();
+        expect(TestBed.inject(Router).url).toBe('/explore?page=2&category=salads&language=all&sortBy=fastest');
     });
     it('prompts guests and retains the recipe URL without writing favorites', async () => {
         dialog.openAsync.mockResolvedValue(null);

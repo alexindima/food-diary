@@ -18,6 +18,9 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 public sealed class PublicRecipeQueryTests {
     [Theory]
     [InlineData("newest", true)]
+    [InlineData("oldest", true)]
+    [InlineData("slowest", true)]
+    [InlineData("name_desc", true)]
     [InlineData("fastest", true)]
     [InlineData("name", true)]
     [InlineData("popular", false)]

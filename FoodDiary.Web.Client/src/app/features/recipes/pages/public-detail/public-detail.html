@@ -1,11 +1,12 @@
 <fd-public-recipe-navigation />
-<div fdPageContainer>
+<div fdPageContainer [fullHeight]="false">
     <fd-page-header
+        [backVisible]="true"
+        [backAriaLabel]="'PUBLIC_RECIPES.CATALOG' | translate"
         [title]="recipe()?.name ?? ((page().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND') | translate)"
         [subtitle]="recipeCategoryKey(recipe()?.category) | translate"
-    >
-        <a class="back-link" routerLink="/explore">← {{ 'PUBLIC_RECIPES.CATALOG' | translate }}</a>
-    </fd-page-header>
+        (back)="backToCatalogAsync()"
+    />
     <fd-page-body>
         @if (recipe(); as item) {
             <div class="recipe-intro">

@@ -162,7 +162,7 @@ export class PublicRecipeCatalogComponent {
     }
 
     private normalizeSort(value: string | null): string {
-        return value === 'fastest' || value === 'name' ? value : 'newest';
+        return value !== null && ['newest', 'oldest', 'fastest', 'slowest', 'name', 'name_desc'].includes(value) ? value : 'newest';
     }
 
     private positiveNumber(value: string | null): number | null {

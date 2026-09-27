@@ -1,9 +1,5 @@
 @use 'variables' as variables;
 
-.back-link {
-    color: var(--fd-color-primary);
-    text-decoration: none;
-}
 .recipe-intro {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);

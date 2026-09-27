@@ -1,5 +1,5 @@
 <fd-public-recipe-navigation />
-<div fdPageContainer>
+<div fdPageContainer [fullHeight]="false">
     <fd-page-header [title]="'PUBLIC_RECIPES.CATALOG' | translate" [subtitle]="'PUBLIC_RECIPES.SUBTITLE' | translate" />
     <fd-page-body>
         <section class="catalog-filters" [attr.aria-label]="'PUBLIC_RECIPES.FILTERS' | translate">
@@ -43,8 +43,11 @@
                 [ariaLabel]="'PUBLIC_RECIPES.SORT' | translate"
                 [options]="[
                     { value: 'newest', label: 'PUBLIC_RECIPES.NEWEST' | translate },
+                    { value: 'oldest', label: 'PUBLIC_RECIPES.OLDEST' | translate },
                     { value: 'fastest', label: 'PUBLIC_RECIPES.FASTEST' | translate },
+                    { value: 'slowest', label: 'PUBLIC_RECIPES.SLOWEST' | translate },
                     { value: 'name', label: 'PUBLIC_RECIPES.BY_NAME' | translate },
+                    { value: 'name_desc', label: 'PUBLIC_RECIPES.BY_NAME_DESC' | translate },
                 ]"
             />
         </div>

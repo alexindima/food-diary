@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, input } from '@angular/core';
 
 @Directive({
     selector: '[fdPageContainer]',
@@ -7,7 +7,7 @@ import { Directive } from '@angular/core';
         '[style.display]': '"flex"',
         '[style.flex-direction]': '"column"',
         '[style.flex]': '"1 1 auto"',
-        '[style.min-height]': '"100%"',
+        '[style.min-height]': 'fullHeight() ? "100%" : "auto"',
         '[style.gap]': '"var(--fd-page-body-gap)"',
         '[style.width]': '"100%"',
         '[style.max-width]': '"var(--fd-layout-page-content-max-width)"',
@@ -15,4 +15,6 @@ import { Directive } from '@angular/core';
         '[style.padding]': '"var(--fd-page-container-padding)"',
     },
 })
-export class FdPageContainerDirective {}
+export class FdPageContainerDirective {
+    public readonly fullHeight = input(true);
+}

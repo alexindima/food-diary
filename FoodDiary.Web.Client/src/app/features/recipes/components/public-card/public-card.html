@@ -1,5 +1,5 @@
 <article class="catalog-card">
-    <a class="catalog-card-link" [routerLink]="['/explore', recipe().id]">
+    <a class="catalog-card-link" queryParamsHandling="preserve" [routerLink]="['/explore', recipe().id]">
         <div class="catalog-cover" [class.catalog-cover--loading]="recipe().imageUrl && imageState() === 'loading'">
             @if (recipe().imageUrl && imageState() !== 'error') {
                 <img

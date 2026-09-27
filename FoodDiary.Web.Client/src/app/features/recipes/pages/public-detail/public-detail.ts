@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
 import { firstValueFrom } from 'rxjs';
@@ -33,7 +33,6 @@ import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolve
         PublicNutritionComponent,
         PublicIngredientsComponent,
         PublicStepsComponent,
-        RouterLink,
         TranslatePipe,
         FdUiButtonComponent,
         FdPageContainerDirective,
@@ -78,6 +77,10 @@ export class PublicRecipeDetailComponent {
                 });
             }
         });
+    }
+
+    protected async backToCatalogAsync(): Promise<void> {
+        await this.router.navigate(['/explore'], { queryParamsHandling: 'preserve' });
     }
 
     protected async actAsync(action: 'save' | 'diary'): Promise<void> {
