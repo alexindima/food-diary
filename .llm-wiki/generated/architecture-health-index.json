@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 103,
+    "selectorUnreferencedComponents": 104,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 132,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 11
   },
@@ -811,6 +811,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts"
+    },
+    {
+      "class": "RecipeLanguageDialogComponent",
+      "selector": "fd-recipe-language-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "specPath": null
     },
     {
       "class": "RecipeListFavoritesComponent",
@@ -4748,6 +4756,16 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "RecipeLanguageDialogComponent",
+      "selector": "fd-recipe-language-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

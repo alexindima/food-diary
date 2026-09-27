@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 470,
-    "componentsWithoutDirectSpecs": 131,
+    "components": 471,
+    "componentsWithoutDirectSpecs": 132,
     "inputs": 1507,
     "outputs": 507,
     "apiCalls": 268,
-    "templatesWithTranslations": 330,
-    "translationKeys": 1958,
-    "consumerEdges": 1164,
+    "templatesWithTranslations": 331,
+    "translationKeys": 1967,
+    "consumerEdges": 1166,
     "consumedComponents": 301,
-    "unconsumedComponents": 168
+    "unconsumedComponents": 169
   },
   "components": [
     {
@@ -10537,6 +10537,16 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts"
     },
     {
+      "class": "RecipeLanguageDialogComponent",
+      "selector": "fd-recipe-language-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "RecipeListComponent",
       "selector": "fd-recipe-list",
       "feature": "recipes",
@@ -21060,6 +21070,9 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.html",
       "keys": [
+        "RECIPE_LANGUAGE.EN",
+        "RECIPE_LANGUAGE.LABEL",
+        "RECIPE_LANGUAGE.RU",
         "RECIPE_MANAGE.ADVANCED_TITLE",
         "RECIPE_MANAGE.CATEGORY",
         "RECIPE_MANAGE.CATEGORY_PLACEHOLDER",
@@ -21217,6 +21230,18 @@
     },
     {
       "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "keys": [
+        "COMMON.CLOSE",
+        "RECIPE_LANGUAGE.BACK",
+        "RECIPE_LANGUAGE.CHANGE",
+        "RECIPE_LANGUAGE.CHECK_TITLE",
+        "RECIPE_LANGUAGE.KEEP",
+        "RECIPE_LANGUAGE.MISMATCH"
+      ]
+    },
+    {
+      "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "keys": [
         "COMMON.ADD",
@@ -21273,7 +21298,11 @@
         "PUBLIC_RECIPES.SORT",
         "PUBLIC_RECIPES.SUBTITLE",
         "PUBLIC_RECIPES.TIME",
-        "PUBLIC_RECIPES.TIME_UP_TO"
+        "PUBLIC_RECIPES.TIME_UP_TO",
+        "RECIPE_LANGUAGE.ALL",
+        "RECIPE_LANGUAGE.EN",
+        "RECIPE_LANGUAGE.LABEL",
+        "RECIPE_LANGUAGE.RU"
       ]
     },
     {
@@ -21285,7 +21314,8 @@
         "PUBLIC_RECIPES.RETRY",
         "PUBLIC_RECIPES.SAVED",
         "PUBLIC_RECIPES.SHARE",
-        "PUBLIC_RECIPES.UNAVAILABLE_HINT"
+        "PUBLIC_RECIPES.UNAVAILABLE_HINT",
+        "RECIPE_LANGUAGE.LABEL"
       ]
     },
     {
@@ -28079,6 +28109,19 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -30361,6 +30404,19 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "closeAriaLabel",
         "title"
       ],
       "outputsHandled": []
@@ -35100,7 +35156,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-basic-info/recipe-basic-info.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "error",
         "label",
@@ -35132,7 +35188,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "appearance",
         "ariaLabel",

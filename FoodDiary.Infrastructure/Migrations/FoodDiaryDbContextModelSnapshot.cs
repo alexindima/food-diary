@@ -1940,6 +1940,15 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Property<DateTime?>("ModifiedOnUtc")
                     .HasColumnType("timestamp with time zone");
 
+                b.Property<string>("Language")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .HasMaxLength(2)
+                    .HasColumnType("character varying(2)")
+                    .HasDefaultValue("en");
+
+                b.Property<bool>("LanguageConfirmed")
+                    .HasColumnType("boolean");
                 b.Property<string>("Name")
                     .IsRequired()
                     .HasColumnType("text");
@@ -2004,6 +2013,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasIndex("UserId", "CreatedOnUtc");
 
                 b.HasIndex("Visibility", "CreatedOnUtc");
+
+                b.HasIndex("Visibility", "Language", "CreatedOnUtc");
 
                 b.ToTable("Recipes");
             });

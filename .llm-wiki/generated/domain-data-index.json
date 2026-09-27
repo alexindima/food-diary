@@ -4,9 +4,9 @@
     "domainTypes": 228,
     "entities": 88,
     "valueObjects": 92,
-    "invariants": 524,
+    "invariants": 525,
     "persistenceMappings": 92,
-    "indexes": 172,
+    "indexes": 173,
     "relationships": 36
   },
   "domainTypes": [
@@ -512,7 +512,7 @@
       "name": "Recipe",
       "role": "entity",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 10
+      "line": 11
     },
     {
       "area": "FoodDiary",
@@ -4189,77 +4189,84 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A recipe can have up to five distinct images.\", nameof(images))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 22
+      "line": 23
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(language), \"Recipe language must be en or ru.\")",
+      "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
+      "line": 40
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Step number must be unique within recipe.\", nameof(stepNumber))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 216
+      "line": 228
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(step)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 235
+      "line": 247
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipe name is required.\", nameof(value))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 552
+      "line": 564
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recipe name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 557
+      "line": 569
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 565
+      "line": 577
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\"),",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 572
+      "line": 584
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 584
+      "line": 596
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 590
+      "line": 602
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 597
+      "line": 609
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 604
+      "line": 616
     },
     {
       "area": "FoodDiary",
@@ -6023,7 +6030,8 @@
         "e => e.ImageAssetId)",
         "e => e.Name)",
         "e => new { e.UserId, e.CreatedOnUtc })",
-        "e => new { e.Visibility, e.CreatedOnUtc })"
+        "e => new { e.Visibility, e.CreatedOnUtc })",
+        "e => new { e.Visibility, e.Language, e.CreatedOnUtc })"
       ],
       "relationships": [],
       "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipeConfiguration.cs"

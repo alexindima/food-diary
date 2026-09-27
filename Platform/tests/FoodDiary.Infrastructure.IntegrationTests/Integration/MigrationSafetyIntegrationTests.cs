@@ -15,6 +15,30 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     private const string InitialMigration = "20251108210736_InitialCreate";
     private const string BeforeFastingProtocolRenameMigration = "20260810221016_AddWeeklyGoals";
 
+    [RequiresDockerFact]
+    public async Task RecipeLanguage_BackfillsAuthorPreferenceOnUpgrade() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+        await context.Database.MigrateAsync();
+        foreach (string? language in new string?[] { "ru", "en", null }) {
+            var user = User.Create($"language-{Guid.NewGuid():N}@example.com", "hash");
+            if (language is not null) { user.SetLanguage(language); }
+            context.Users.Add(user);
+            context.Recipes.Add(Recipe.Create(user.Id, language ?? "fallback", servings: 1));
+        }
+        await context.SaveChangesAsync();
+        string previous = context.Database.GetMigrations().Last(value => !value.EndsWith("_AddRecipeLanguage", StringComparison.Ordinal));
+        await context.GetService<IMigrator>().MigrateAsync(previous);
+        await context.Database.MigrateAsync();
+        context.ChangeTracker.Clear();
+        List<Recipe> recipes = await context.Recipes.ToListAsync();
+        Assert.Equal(3, recipes.Count);
+        foreach (Recipe recipe in recipes) {
+            Assert.Equal(string.Equals(recipe.Name, "ru", StringComparison.Ordinal) ? "ru" : "en", recipe.Language);
+            Assert.False(recipe.LanguageConfirmed);
+        }
+    }
+
     [Fact]
     public void MigrationTypes_AreExcludedFromCodeCoverage() {
         string?[] migrationTypesMissingAttribute = [.. typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly

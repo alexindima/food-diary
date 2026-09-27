@@ -21,7 +21,7 @@ public sealed class PublicRecipesController(ISender mediator) : BaseApiControlle
     [ProducesResponseType<PagedHttpResponse<PublicRecipeHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAll([FromQuery] PublicRecipesHttpQuery query) =>
-        HandleOk(new GetPublicRecipesQuery(query.Page, query.Limit, query.Search, query.Category, query.MaxTotalTime, query.SortBy),
+        HandleOk(new GetPublicRecipesQuery(query.Page, query.Limit, query.Search, query.Category, query.MaxTotalTime, query.SortBy, query.Language),
             static page => page.ToHttpResponse());
 
     [HttpGet("{id:guid}")]

@@ -29,7 +29,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         IQueryable<Recipe> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
         int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
-        List<RecipeOverviewReadRow> rows = await ProjectRows(ApplyOrdering(query.AsNoTracking(), filters.SortBy)
+        List<RecipeOverviewReadRow> rows = await ProjectRows(ApplyOrdering(query.AsNoTracking(), filters.SortBy).AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -97,15 +97,16 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                 : r => r.UserId == userId);
 
     private static IOrderedQueryable<Recipe> ApplyOrdering(IQueryable<Recipe> query, string sortBy) => sortBy switch {
-        "fastest" => query.OrderBy(r => r.PrepTime == null && r.CookTime == null)
+        "fastest" => query.AsNoTracking().OrderBy(r => r.PrepTime == null && r.CookTime == null)
             .ThenBy(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
 #pragma warning disable MA0011 // EF translates parameterless ToLower to PostgreSQL lower; culture overloads cannot be translated.
-        "name" => query.OrderBy(r => r.Name.ToLower()).ThenBy(r => r.Id),
+        "name" => query.AsNoTracking().OrderBy(r => r.Name.ToLower()).ThenBy(r => r.Id),
 #pragma warning restore MA0011
-        _ => query.OrderByDescending(r => r.CreatedOnUtc).ThenBy(r => r.Id),
+        _ => query.AsNoTracking().OrderByDescending(r => r.CreatedOnUtc).ThenBy(r => r.Id),
     };
 
     private static IQueryable<Recipe> ApplyFilters(IQueryable<Recipe> query, RecipeQueryFilters filters) {
+        if (filters.Language is not null) { query = query.AsNoTracking().Where(r => r.Language == filters.Language); }
         if (!string.IsNullOrWhiteSpace(filters.Search)) {
             string normalized = $"%{EscapeLikePattern(filters.Search.Trim())}%";
             query = query.AsNoTracking().Where(r =>
@@ -167,7 +168,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
     private IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
         query.AsNoTracking().Select(recipe => new RecipeOverviewReadRow(
-            recipe.Id, recipe.UserId, recipe.Name, recipe.Description, recipe.Comment,
+            recipe.Id, recipe.UserId, recipe.Language, recipe.LanguageConfirmed, recipe.Name, recipe.Description, recipe.Comment,
             recipe.Category, recipe.ImageUrl, recipe.ImageAssetId, recipe.PrepTime, recipe.CookTime,
             recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs,
             recipe.TotalFiber, recipe.TotalAlcohol, recipe.IsNutritionAutoCalculated,
@@ -254,7 +255,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            SanitizeSteps(row.Steps)) { MissingIngredientCount = row.IsNutritionAutoCalculated ? row.Steps.SelectMany(step => step.Ingredients).Sum(ingredient => ingredient.TextName != null ? 1 : ingredient.NestedRecipeMissingIngredientCount) : 0, Images = row.Images };
+            SanitizeSteps(row.Steps)) { LanguageConfirmed = row.LanguageConfirmed, Language = row.Language, MissingIngredientCount = row.IsNutritionAutoCalculated ? row.Steps.SelectMany(step => step.Ingredients).Sum(ingredient => ingredient.TextName != null ? 1 : ingredient.NestedRecipeMissingIngredientCount) : 0, Images = row.Images };
     }
 
     private static IReadOnlyList<RecipeOverviewStepReadItem> SanitizeSteps(
@@ -314,6 +315,8 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
     private sealed record RecipeOverviewReadRow(
         RecipeId Id,
         UserId UserId,
+        string Language,
+        bool LanguageConfirmed,
         string Name,
         string? Description,
         string? Comment,

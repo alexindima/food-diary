@@ -7,7 +7,12 @@
         }
         <div class="catalog-card-content">
             <h2 [title]="recipe().name">{{ recipe().name }}</h2>
-            <p>{{ recipe().category }}</p>
+            <p class="fd-ui-body-sm">
+                @if (recipe().category) {
+                    {{ recipe().category }} ·
+                }
+                {{ (recipe().language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN') | translate }}
+            </p>
         </div>
     </a>
     <fd-ui-button

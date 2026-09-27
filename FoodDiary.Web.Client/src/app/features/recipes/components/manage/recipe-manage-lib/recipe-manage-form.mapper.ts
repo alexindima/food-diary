@@ -26,8 +26,9 @@ type RecipeIngredientGroupInput = {
     nestedRecipeName?: string | null;
 };
 
-export function createRecipeFormValue(): RecipeFormValues {
+export function createRecipeFormValue(language = 'en'): RecipeFormValues {
     return {
+        language,
         name: '',
         description: '',
         comment: null,
@@ -94,6 +95,7 @@ export function buildRecipeDto(
     toRecipeTotal: (value: number | null | undefined, scaleMode: NutritionScaleMode, servings: number) => number,
 ): RecipeDto {
     return {
+        language: formValue.language,
         name: formValue.name,
         description: formValue.description ?? null,
         comment: formValue.comment ?? null,
@@ -115,6 +117,7 @@ export function buildRecipeDto(
 
 export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
     return {
+        language: recipeData.language ?? 'en',
         ...((recipeData.images?.length ?? 0) > 0
             ? { images: (recipeData.images ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl })) }
             : {}),

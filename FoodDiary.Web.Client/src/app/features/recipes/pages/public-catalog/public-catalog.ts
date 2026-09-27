@@ -14,6 +14,7 @@ import { PublicRecipeCardComponent } from '../../components/public-card/public-c
 import { PublicRecipeNavigationComponent } from '../../components/public-navigation/public-navigation';
 import { PublicCatalogFavorites } from '../../lib/public-catalog-favorites.facade';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
+import { normalizeRecipeLanguage } from '../../lib/recipe-language.utils';
 import type { PublicRecipe } from '../../models/public-recipe.data';
 
 @Component({
@@ -40,8 +41,10 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
 export class PublicRecipeCatalogComponent {
     protected readonly favorites = inject(PublicCatalogFavorites);
     protected readonly timePresets = ['15', '30', '60'];
-    protected readonly hasFilters = computed(() =>
-        [this.filters().search, this.filters().category, this.filters().maxTotalTime].some(value => value.trim().length > 0),
+    protected readonly hasFilters = computed(
+        () =>
+            [this.filters().search, this.filters().category, this.filters().maxTotalTime].some(value => value.trim().length > 0) ||
+            this.filters().language !== normalizeRecipeLanguage(this.language()),
     );
     protected readonly customTime = computed(() => {
         const value = this.positiveNumber(this.filters().maxTotalTime);
@@ -58,7 +61,13 @@ export class PublicRecipeCatalogComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
-    protected readonly filters = signal({ search: '', category: '', maxTotalTime: '', sortBy: 'newest' });
+    protected readonly filters = signal({
+        search: '',
+        category: '',
+        maxTotalTime: '',
+        sortBy: 'newest',
+        language: String(normalizeRecipeLanguage(this.language())),
+    });
     protected readonly filterForm = form(this.filters);
     private readonly reload = new Subject<void>();
     private readonly searchDebounceMs = 350;
@@ -68,7 +77,7 @@ export class PublicRecipeCatalogComponent {
     protected readonly showCount = computed(() => !this.loading() && !this.failed() && this.result() !== null);
 
     public constructor() {
-        combineLatest([this.route.queryParamMap, this.reload.pipe(startWith(undefined))])
+        combineLatest([this.route.queryParamMap, this.reload.pipe(startWith(undefined)), toObservable(this.language)])
             .pipe(
                 tap(([params]) => {
                     this.filters.set({
@@ -76,6 +85,7 @@ export class PublicRecipeCatalogComponent {
                         category: params.get('category') ?? '',
                         maxTotalTime: params.get('maxTotalTime') ?? '',
                         sortBy: this.normalizeSort(params.get('sortBy')),
+                        language: this.catalogLanguage(params.get('language')),
                     });
                     this.loading.set(true);
                     this.failed.set(false);
@@ -86,6 +96,7 @@ export class PublicRecipeCatalogComponent {
                             page: this.positiveNumber(params.get('page')) ?? 1,
                             ...this.filters(),
                             maxTotalTime: this.positiveNumber(this.filters().maxTotalTime) ?? undefined,
+                            language: this.filters().language === '' ? undefined : this.filters().language,
                         })
                         .pipe(
                             catchError(() => {
@@ -108,7 +119,8 @@ export class PublicRecipeCatalogComponent {
                     filters.search !== (params.get('search') ?? '') ||
                     filters.category !== (params.get('category') ?? '') ||
                     filters.maxTotalTime !== (params.get('maxTotalTime') ?? '') ||
-                    filters.sortBy !== this.normalizeSort(params.get('sortBy'))
+                    filters.sortBy !== this.normalizeSort(params.get('sortBy')) ||
+                    filters.language !== this.catalogLanguage(params.get('language'))
                 ) {
                     this.changePage(0);
                 }
@@ -124,6 +136,7 @@ export class PublicRecipeCatalogComponent {
                 category: filters.category.trim().length > 0 ? filters.category.trim() : null,
                 maxTotalTime: this.positiveNumber(filters.maxTotalTime),
                 sortBy: filters.sortBy === 'newest' ? null : filters.sortBy,
+                language: filters.language === '' ? 'all' : filters.language,
                 page: index > 0 ? index + 1 : null,
             },
         });
@@ -134,7 +147,17 @@ export class PublicRecipeCatalogComponent {
     }
 
     protected reset(): void {
-        this.filters.update(value => ({ search: '', category: '', maxTotalTime: '', sortBy: value.sortBy }));
+        this.filters.update(value => ({
+            search: '',
+            category: '',
+            maxTotalTime: '',
+            sortBy: value.sortBy,
+            language: String(normalizeRecipeLanguage(this.language())),
+        }));
+    }
+
+    private catalogLanguage(value: string | null): string {
+        return value === 'all' ? '' : value === 'en' || value === 'ru' ? value : normalizeRecipeLanguage(this.language());
     }
 
     private normalizeSort(value: string | null): string {

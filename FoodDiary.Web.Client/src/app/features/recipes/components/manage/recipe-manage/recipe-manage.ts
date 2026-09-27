@@ -16,6 +16,7 @@ import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '..
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
+import { detectRecipeLanguage, hasSubstantiallyChangedRecipeText, recipeLanguageText } from '../../../lib/recipe-language.utils';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
@@ -73,6 +74,7 @@ export class RecipeManageComponent {
     private readonly stepFormManager: RecipeStepFormManager;
     private readonly nutritionFormManager: RecipeNutritionFormManager;
     private lastRecipe: Recipe | null = null;
+    private readonly checkingLanguage = signal(false);
 
     private readonly recipeManageFacade = inject(RecipeManageFacade);
     private readonly languageVersion = signal(0);
@@ -94,7 +96,7 @@ export class RecipeManageComponent {
     protected readonly importErrorKey = signal<string | null>(null);
     protected readonly isImportPanelVisible = computed(() => this.recipe() === null);
 
-    protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
+    protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue(this.recipeManageFacade.preferredLanguage()));
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
         min(path.prepTime, 0);
@@ -325,7 +327,7 @@ export class RecipeManageComponent {
     }
 
     protected onSubmit(): void {
-        if (this.isSubmitting() || this.photosUploading() || this.stepPhotosUploading()) {
+        if (this.isSubmitting() || this.checkingLanguage() || this.photosUploading() || this.stepPhotosUploading()) {
             return;
         }
 
@@ -341,9 +343,54 @@ export class RecipeManageComponent {
             return;
         }
 
-        const recipeData = this.prepareRecipeDto();
-        const existingRecipe = this.recipe();
+        this.saveWithLanguageCheck(this.prepareRecipeDto());
+    }
 
+    private saveWithLanguageCheck(recipeData: RecipeDto): void {
+        const previous = this.recipe();
+        const text = recipeLanguageText(recipeData);
+        const detected = detectRecipeLanguage(text);
+        const acknowledged =
+            (this.languageAcknowledgement !== null &&
+                this.languageAcknowledgement.language === recipeData.language &&
+                !hasSubstantiallyChangedRecipeText(this.languageAcknowledgement.text, text)) ||
+            (previous?.languageConfirmed === true &&
+                previous.language === recipeData.language &&
+                !hasSubstantiallyChangedRecipeText(recipeLanguageText(previous), text));
+        if (!acknowledged && detected !== null && detected !== recipeData.language) {
+            void this.confirmLanguageAndSaveAsync(recipeData, detected);
+            return;
+        }
+        this.persistRecipe({ ...recipeData, languageConfirmed: acknowledged });
+    }
+
+    private languageAcknowledgement: { language: string; text: string } | null = null;
+
+    private async confirmLanguageAndSaveAsync(data: RecipeDto, detected: string): Promise<void> {
+        this.checkingLanguage.set(true);
+        try {
+            const choice = await this.recipeManageFacade.confirmRecipeLanguageAsync(detected, data.language ?? 'en');
+            if (choice === undefined) {
+                return;
+            }
+            // Re-read on another save if the form changed while the dialog was open.
+            if (
+                recipeLanguageText(this.prepareRecipeDto()) !== recipeLanguageText(data) ||
+                this.recipeFormModel().language !== data.language
+            ) {
+                return;
+            }
+            const language = choice === 'change' ? detected : (data.language ?? 'en');
+            this.languageAcknowledgement = choice === 'keep' ? { language, text: recipeLanguageText(data) } : null;
+            this.patchRecipeFormModel({ language });
+            this.persistRecipe({ ...data, language, languageConfirmed: choice === 'keep' });
+        } finally {
+            this.checkingLanguage.set(false);
+        }
+    }
+
+    private persistRecipe(recipeData: RecipeDto): void {
+        const existingRecipe = this.recipe();
         this.recipeManageFacade.clearGlobalError();
 
         if (existingRecipe !== null) {

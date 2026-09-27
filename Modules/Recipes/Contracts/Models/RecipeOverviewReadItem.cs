@@ -37,6 +37,8 @@ public sealed record RecipeOverviewReadItem(
     int QualityScore,
     string QualityGrade,
     IReadOnlyList<RecipeOverviewStepReadItem> Steps) {
+    public bool LanguageConfirmed { get; init; }
+    public string Language { get; init; } = "en";
     public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageReadItem> Images { get; init; } = [];
 }

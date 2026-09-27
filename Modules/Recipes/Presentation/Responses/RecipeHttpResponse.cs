@@ -33,6 +33,8 @@ public sealed record RecipeHttpResponse(
     IReadOnlyList<RecipeStepHttpResponse> Steps,
     bool IsFavorite,
     Guid? FavoriteRecipeId) {
+    public bool LanguageConfirmed { get; init; }
+    public string Language { get; init; } = "en";
     public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageHttpResponse> Images { get; init; } = [];
 }

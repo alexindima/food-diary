@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1282,
     "ambiguousContracts": 2,
-    "consumerEdges": 10021,
-    "productionConsumerEdges": 5720,
-    "testConsumerEdges": 4301,
+    "consumerEdges": 10023,
+    "productionConsumerEdges": 5721,
+    "testConsumerEdges": 4302,
     "consumedContracts": 1282,
     "unconsumedContracts": 0
   },
@@ -68569,7 +68569,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -120891,6 +120891,19 @@
         "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Common/UserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -121024,6 +121037,19 @@
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistResidualCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IUserProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IUserProfileReadService",

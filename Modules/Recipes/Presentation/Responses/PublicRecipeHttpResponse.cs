@@ -5,4 +5,6 @@ public sealed record PublicRecipeHttpResponse(
     string? ImageUrl, IReadOnlyList<string> Images, int? PrepTime, int? CookTime, int Servings,
     double? TotalCalories, double? TotalProteins, double? TotalFats, double? TotalCarbs,
     double? TotalFiber, double? TotalAlcohol, int MissingIngredientCount,
-    IReadOnlyList<PublicRecipeStepHttpResponse> Steps);
+    IReadOnlyList<PublicRecipeStepHttpResponse> Steps) {
+    public string Language { get; init; } = "en";
+}

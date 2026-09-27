@@ -16,6 +16,7 @@ export type PublicRecipeStep = {
 };
 
 export type PublicRecipe = {
+    language?: string;
     id: string;
     name: string;
     description: string | null;
@@ -35,4 +36,11 @@ export type PublicRecipe = {
     steps: PublicRecipeStep[];
 };
 
-export type PublicRecipeFilters = { page: number; search: string; category: string; maxTotalTime?: number; sortBy?: string };
+export type PublicRecipeFilters = {
+    page: number;
+    search: string;
+    category: string;
+    maxTotalTime?: number;
+    sortBy?: string;
+    language?: string;
+};

@@ -11,7 +11,7 @@ public static class PublicRecipeMappings {
         recipe.TotalAlcohol, recipe.MissingIngredientCount,
         recipe.Steps.Select(step => new PublicRecipeStepModel(step.StepNumber, step.Title, step.Instruction,
             GetStepImages(step),
-            step.Ingredients.Select(ToPublicIngredient).ToArray())).ToArray());
+            step.Ingredients.Select(ToPublicIngredient).ToArray())).ToArray()) { Language = recipe.Language };
 
     private static IReadOnlyList<string> GetStepImages(RecipeOverviewStepReadItem step) {
         if (step.Images.Count > 0) {

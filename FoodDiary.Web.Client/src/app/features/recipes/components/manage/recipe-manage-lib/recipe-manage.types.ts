@@ -3,6 +3,7 @@ import type { Product } from '../../../../products/models/product.data';
 import type { Recipe, RecipeVisibility } from '../../../models/recipe.data';
 
 export type RecipeFormValues = {
+    language: string;
     name: string;
     description: string | null;
     comment: string | null;

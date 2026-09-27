@@ -21,6 +21,15 @@
                     )
                 "
             />
+            <fd-ui-select
+                [formField]="filterForm.language"
+                [ariaLabel]="'RECIPE_LANGUAGE.LABEL' | translate"
+                [options]="[
+                    { value: '', label: 'RECIPE_LANGUAGE.ALL' | translate },
+                    { value: 'ru', label: 'RECIPE_LANGUAGE.RU' | translate },
+                    { value: 'en', label: 'RECIPE_LANGUAGE.EN' | translate },
+                ]"
+            />
             <div class="catalog-reset">
                 @if (hasFilters()) {
                     <fd-ui-button variant="secondary" fill="text" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>

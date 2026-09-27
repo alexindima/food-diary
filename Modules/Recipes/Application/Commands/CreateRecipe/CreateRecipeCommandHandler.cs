@@ -23,7 +23,8 @@ public sealed class CreateRecipeCommandHandler(
     IImageAssetAccessService imageAssetAccessService,
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService,
-    IRecipeMutationTransactionRunner transactionRunner)
+    IRecipeMutationTransactionRunner transactionRunner,
+    IUserProfileReadService userProfileReadService)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) =>
         transactionRunner.ExecuteAsync(
@@ -44,6 +45,14 @@ public sealed class CreateRecipeCommandHandler(
         Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
         if (gallery.IsFailure) { return Result.Failure<RecipeModel>(gallery.Error); }
         Recipe recipe = RecipeCreateFactory.Create(command, values);
+        string language = command.Language ?? "en";
+        if (command.Language is null) {
+            Result<FoodDiary.Modules.Users.Contracts.Models.UserModel> profile = await userProfileReadService.GetUserAsync(values.UserId, cancellationToken).ConfigureAwait(false);
+            if (profile.IsFailure) { return Result.Failure<RecipeModel>(profile.Error); }
+            language = FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.LanguageCode.FromPreferred(profile.Value.Language).Value;
+        }
+        recipe.ChangeLanguage(language);
+        recipe.SetLanguageConfirmation(command.LanguageConfirmed);
         if (gallery.Value is { } images) { recipe.ReplaceImages(images); }
         Result stepsResult = await RecipeStepAppender.AddAsync(
             recipe,

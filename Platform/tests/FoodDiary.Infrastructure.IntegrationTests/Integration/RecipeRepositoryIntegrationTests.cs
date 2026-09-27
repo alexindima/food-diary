@@ -33,6 +33,28 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
 
     [RequiresDockerFact]
+    public async Task PublicLanguageFilter_AppliesBeforeCountingAndPaging() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"language-filter-{Guid.NewGuid():N}@example.com", "hash");
+        string prefix = Guid.NewGuid().ToString();
+        context.Users.Add(user);
+        context.Recipes.AddRange(
+            Recipe.Create(user.Id, prefix + " A", 1, visibility: Visibility.Public, language: "ru"),
+            Recipe.Create(user.Id, prefix + " B", 1, visibility: Visibility.Public, language: "ru"),
+            Recipe.Create(user.Id, prefix + " C", 1, visibility: Visibility.Public, language: "en"),
+            Recipe.Create(user.Id, prefix + " D", 1, visibility: Visibility.Private, language: "ru"));
+        await context.SaveChangesAsync();
+        RecipeOverviewReadService service = new(context);
+        (IReadOnlyList<RecipeOverviewReadItem> items, int total) = await service.GetPagedAsync(
+            UserId.Empty, includePublic: true, page: 2, limit: 1,
+            filters: new RecipeQueryFilters(Search: prefix, SortBy: "name", Language: "ru"));
+        Assert.Equal(2, total);
+        RecipeOverviewReadItem item = Assert.Single(items);
+        Assert.Equal(prefix + " B", item.Name);
+        Assert.Equal("ru", item.Language);
+    }
+
+    [RequiresDockerFact]
     public async Task MealRecipeSnapshot_SurvivesRecipeNutritionChangeWithoutInverseNavigations() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipe-snapshot-{Guid.NewGuid():N}@example.com", "hash");

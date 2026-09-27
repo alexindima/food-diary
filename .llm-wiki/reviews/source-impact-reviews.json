@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "41f0fe49c9d3b1d9a351ecf2bf0af2c6d16851050c54107e87874bead91494ee"
+          "sha256": "d164642670afa62279a1c014d30dc2b820a951673a092e8a9bf45f466dbd1fef"
         }
       ],
-      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:01.8738294Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:49.7086343Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "80cf05580f6bc4c39efa44c56844832f50cbb802e753579fd7d75210ba77b6a2"
+          "sha256": "d333e684caa5192fe6c856317ebd137e9e958fc3c0f4ff6b05660df0ff9e5bcf"
         }
       ],
-      "reason": "Verified catalog URL navigation, locale plural forms, selector keyboard interaction, and recipe ordering with focused frontend, application and PostgreSQL tests; UI kit and application builds pass.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:02.1305685Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:49.8471982Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "4b02111caa40eb9ed5b85e48e98ac7b2f2216efc03b70283b322993af3943613"
+          "sha256": "33da931ad800d80f97deb1af25284d95295d192d8c57dd54b7baa76a72287b0f"
         }
       ],
-      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:02.7332357Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:50.3528576Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +497,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "52cc95ee074788b4c6ad12d067277c77214112561b729e2996356f1bdd7728ce"
+          "sha256": "682ed32790f7b520b2a79ec9bf50da391fb6474cd122e495dbbea212fb56baea"
         }
       ],
-      "reason": "Reviewed recipe QA corrections: persisted ingredient positions with deterministic legacy backfill, unchanged wire shape and ownership, private new-form default, context-specific picker title and hidden empty action, single cook-mode meal action. 337 frontend, 91 domain, 165 application, PostgreSQL API round-trip and five migration tests passed. Real desktop/mobile browser create-edit-save preserved order.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "fb62fa9a9da9dcaf51b4b6705ee1da56a7c48808",
-      "reviewedAtUtc": "2026-09-26T16:42:54.4921799Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:50.5030529Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -783,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d8a36c72c58d08c301835c11dfcec9fe468e09525fcea639f2e12d8fa0aa1b2a"
+          "sha256": "e84f8cfc76c860a7c036442502aa889c444218209ff36d67aecc550825b027e1"
         }
       ],
-      "reason": "Public projection and anonymous visibility remain unchanged; PostgreSQL test excludes a private recipe. Auth dialog receives only a translation key, with no new credentials, storage or external transfer.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:03.4973572Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:50.9383940Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8f69b39c20fabeff560ef23691ce8810239934bdf65a3a80453af857c142e852"
+          "sha256": "e285ab8bd8e4ca2d5b478fcfe020102f5994fdd24f5dd3d11236839e9e77efd4"
         }
       ],
-      "reason": "Verified catalog URL navigation, locale plural forms, selector keyboard interaction, and recipe ordering with focused frontend, application and PostgreSQL tests; UI kit and application builds pass.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:03.9935037Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:51.3116124Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65226bafccc477ce17b7b897542aab569a83783a9a791575492a6363831bbc76"
+          "sha256": "56dc40ca3cd260409d49f85bfb035dc1da02b7f85c52a9e04505a21a438be973"
         }
       ],
-      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:48.6320801Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:51.5213583Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8f69b39c20fabeff560ef23691ce8810239934bdf65a3a80453af857c142e852"
+          "sha256": "e285ab8bd8e4ca2d5b478fcfe020102f5994fdd24f5dd3d11236839e9e77efd4"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65226bafccc477ce17b7b897542aab569a83783a9a791575492a6363831bbc76"
+          "sha256": "56dc40ca3cd260409d49f85bfb035dc1da02b7f85c52a9e04505a21a438be973"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d8a36c72c58d08c301835c11dfcec9fe468e09525fcea639f2e12d8fa0aa1b2a"
+          "sha256": "e84f8cfc76c860a7c036442502aa889c444218209ff36d67aecc550825b027e1"
         }
       ],
-      "reason": "Reviewed incoming crash-dump runbook, entrypoint and compose settings: protected dedicated volume and bounded retention are preserved; no diagnostics are copied or exposed by this merge.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:49.2618196Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:51.8981329Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c5a3545267d767129c5717ece72f994b20f4993eaf02fe58b052e0f7d1cc9f63"
+          "sha256": "0fbdd7c74f3c0c4c03138a66623fcb06f8879c076a272826bc721a64a37efcfc"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "ccc4179085e3e0101f1d99c4c5d818c32df452670fa8a109b8aaa2d944687d54"
+          "sha256": "6d506d295148dfabcfc022f9f1fb56d62f6352eb92afd1761ff38a596d6d5e2c"
         }
       ],
-      "reason": "Existing navigation and runtime ownership remain accurate. Select appearance is documented in COMPONENTS and Storybook; no services, background jobs, dependencies or persistence schema were added.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:05.3621488Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:52.2360768Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c5a3545267d767129c5717ece72f994b20f4993eaf02fe58b052e0f7d1cc9f63"
+          "sha256": "0fbdd7c74f3c0c4c03138a66623fcb06f8879c076a272826bc721a64a37efcfc"
         }
       ],
-      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
+      "reason": "Reviewed recipe language persistence, author backfill, public filtering, local mismatch confirmation and regression tests; ownership and private fields preserved.",
       "baseRef": "HEAD",
-      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
-      "reviewedAtUtc": "2026-09-27T14:44:03.1371084Z"
+      "gitHead": "9f80bb7e0f6a9f7e612605ae130ddfcad58ea782",
+      "reviewedAtUtc": "2026-09-27T15:34:50.7615764Z"
     },
     {
       "pageId": "workflow.query-context",

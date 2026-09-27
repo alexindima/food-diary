@@ -36,7 +36,7 @@ public static class RecipeHttpMappings {
                 ManualCarbs: request.ManualCarbs,
                 ManualFiber: request.ManualFiber,
                 ManualAlcohol: request.ManualAlcohol,
-                Steps: MapSteps(request.Steps)) { ImageAssetIds = request.ImageAssetIds };
+                Steps: MapSteps(request.Steps)) { LanguageConfirmed = request.LanguageConfirmed, Language = request.Language, ImageAssetIds = request.ImageAssetIds };
         }
     }
 
@@ -67,7 +67,7 @@ public static class RecipeHttpMappings {
                 ManualCarbs: request.ManualCarbs,
                 ManualFiber: request.ManualFiber,
                 ManualAlcohol: request.ManualAlcohol,
-                Steps: request.Steps is null ? null : MapSteps(request.Steps)) { ImageAssetIds = request.ImageAssetIds };
+                Steps: request.Steps is null ? null : MapSteps(request.Steps)) { LanguageConfirmed = request.LanguageConfirmed, Language = request.Language, ImageAssetIds = request.ImageAssetIds };
         }
     }
 

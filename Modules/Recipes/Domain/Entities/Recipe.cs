@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Events;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -29,6 +30,16 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         ImageAssetId = images.Count > 0 ? images[0].ImageAssetId : null;
         ImageUrl = images.Count > 0 ? images[0].ImageUrl : null;
         SetModified();
+    }
+
+    public bool LanguageConfirmed { get; private set; }
+    public void SetLanguageConfirmation(bool confirmed) { if (LanguageConfirmed != confirmed) { LanguageConfirmed = confirmed; SetModified(); } }
+    public string Language { get; private set; } = "en";
+    public void ChangeLanguage(string language) {
+        if (!LanguageCode.TryParse(language, out LanguageCode code)) {
+            throw new ArgumentOutOfRangeException(nameof(language), "Recipe language must be en or ru.");
+        }
+        if (!string.Equals(Language, code.Value, StringComparison.Ordinal)) { Language = code.Value; LanguageConfirmed = false; SetModified(); }
     }
 
     public string Name { get; private set; } = string.Empty;
@@ -84,7 +95,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         ImageAssetId? imageAssetId = null,
         int? prepTime = null,
         int? cookTime = null,
-        Visibility visibility = Visibility.Public) {
+        Visibility visibility = Visibility.Public, string language = "en") {
         EnsureUserId(userId);
         DomainGuard.Defined(visibility, nameof(visibility));
 
@@ -105,6 +116,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             Visibility: visibility));
         recipe.ApplyNutritionState(RecipeNutritionState.CreateInitial());
 
+        recipe.ChangeLanguage(language);
         recipe.SetCreated();
         return recipe;
     }

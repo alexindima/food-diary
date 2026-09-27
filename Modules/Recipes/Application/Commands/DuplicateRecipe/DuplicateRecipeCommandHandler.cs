@@ -80,11 +80,12 @@ public sealed class DuplicateRecipeCommandHandler(
             imageAssetId: null,
             original.PrepTime,
             original.CookTime,
-            original.Visibility);
+            original.Visibility, original.Language);
 
         if (isOwnerDuplicate && original.Images.Count > 0) {
             duplicate.ReplaceImages(original.Images.OrderBy(image => image.Position).ToList());
         }
+        duplicate.SetLanguageConfirmation(original.LanguageConfirmed);
         AddStepsFromOriginal(duplicate, original, isOwnerDuplicate);
         ApplyNutritionSettings(duplicate, original);
         return duplicate;

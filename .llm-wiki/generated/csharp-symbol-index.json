@@ -22172,7 +22172,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "RecipeImage",

@@ -40,7 +40,7 @@ public static class RecipeOverviewReadMappings {
             recipe.QualityGrade,
             [.. recipe.Steps.Select(ToStepModel)],
             isFavorite,
-            favoriteRecipeId) { MissingIngredientCount = recipe.MissingIngredientCount, Images = recipe.Images.Select(image => new RecipeImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
+            favoriteRecipeId) { LanguageConfirmed = recipe.LanguageConfirmed, Language = recipe.Language, MissingIngredientCount = recipe.MissingIngredientCount, Images = recipe.Images.Select(image => new RecipeImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
 
     private static RecipeStepModel ToStepModel(RecipeOverviewStepReadItem step) =>
         new(

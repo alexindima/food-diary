@@ -22,6 +22,9 @@ internal static class RecipeUpdateApplier {
             cookTime: command.CookTime,
             servings: command.Servings);
 
+        if (command.Language is not null) { recipe.ChangeLanguage(command.Language); }
+
+        recipe.SetLanguageConfirmation(command.LanguageConfirmed);
         if (values.Visibility.HasValue) {
             recipe.ChangeVisibility(values.Visibility.Value);
         }

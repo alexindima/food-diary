@@ -9,6 +9,8 @@ export enum RecipeVisibility {
 }
 
 export type Recipe = {
+    language?: string;
+    languageConfirmed?: boolean;
     id: string;
     name: string;
     description?: string | null;
@@ -119,6 +121,8 @@ export type FavoriteRecipe = {
 };
 
 export type RecipeDto = {
+    language?: string;
+    languageConfirmed?: boolean;
     name: string;
     description?: string | null;
     comment?: string | null;

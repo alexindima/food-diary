@@ -1,0 +1,8 @@
+<fd-ui-dialog [title]="'RECIPE_LANGUAGE.CHECK_TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+    <p>{{ 'RECIPE_LANGUAGE.MISMATCH' | translate: data }}</p>
+    <div fdUiDialogFooter class="fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button variant="secondary" fill="text" (click)="dialog.close()">{{ 'RECIPE_LANGUAGE.BACK' | translate }}</fd-ui-button>
+        <fd-ui-button variant="outline" (click)="dialog.close('keep')">{{ 'RECIPE_LANGUAGE.KEEP' | translate: data }}</fd-ui-button>
+        <fd-ui-button (click)="dialog.close('change')">{{ 'RECIPE_LANGUAGE.CHANGE' | translate: data }}</fd-ui-button>
+    </div>
+</fd-ui-dialog>

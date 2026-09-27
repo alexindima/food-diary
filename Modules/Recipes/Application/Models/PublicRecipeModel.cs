@@ -8,4 +8,6 @@ public sealed record PublicRecipeModel(
     string? ImageUrl, IReadOnlyList<string> Images, int? PrepTime, int? CookTime, int Servings,
     double? TotalCalories, double? TotalProteins, double? TotalFats, double? TotalCarbs,
     double? TotalFiber, double? TotalAlcohol, int MissingIngredientCount,
-    IReadOnlyList<PublicRecipeStepModel> Steps);
+    IReadOnlyList<PublicRecipeStepModel> Steps) {
+    public string Language { get; init; } = "en";
+}

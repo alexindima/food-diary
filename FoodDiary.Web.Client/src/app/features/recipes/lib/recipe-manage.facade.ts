@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -15,9 +15,16 @@ import type {
     ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
+import { UserFacade } from '../../../shared/lib/user.facade';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues, NutritionScaleMode, StepFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
+import {
+    type RecipeLanguageChoice,
+    RecipeLanguageDialogComponent,
+    type RecipeLanguageDialogData,
+} from '../dialogs/recipe-language-dialog/recipe-language-dialog';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
+import { normalizeRecipeLanguage } from './recipe-language.utils';
 
 export type RecipeNutritionSummary = {
     calories: number;
@@ -42,6 +49,21 @@ export class RecipeManageFacade {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly dialogRef = inject(FdUiDialogRef<unknown, Recipe | null>, { optional: true });
 
+    private readonly userFacade = inject(UserFacade);
+    public readonly preferredLanguage = computed(() => normalizeRecipeLanguage(this.userFacade.user()?.language));
+    public async confirmRecipeLanguageAsync(detected: string, selected: string): Promise<RecipeLanguageChoice | undefined> {
+        return firstValueFrom(
+            this.dialogService
+                .open<RecipeLanguageDialogComponent, RecipeLanguageDialogData, RecipeLanguageChoice>(RecipeLanguageDialogComponent, {
+                    size: 'md',
+                    data: {
+                        detected: this.translateService.instant(`RECIPE_LANGUAGE.${detected.toUpperCase()}`),
+                        selected: this.translateService.instant(`RECIPE_LANGUAGE.${selected.toUpperCase()}`),
+                    },
+                })
+                .afterClosed(),
+        );
+    }
     public readonly globalError = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
 

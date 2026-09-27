@@ -59,7 +59,7 @@ public static class RecipeMappings {
             quality.Grade.ToString().ToLowerInvariant(),
             steps,
             isFavorite,
-            favoriteRecipeId) { MissingIngredientCount = recipe.IsNutritionAutoCalculated ? recipe.MissingIngredientCount : 0, Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
+            favoriteRecipeId) { LanguageConfirmed = recipe.LanguageConfirmed, Language = recipe.Language, MissingIngredientCount = recipe.IsNutritionAutoCalculated ? recipe.MissingIngredientCount : 0, Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
     private static RecipeStepModel ToStepModel(RecipeStep step) {

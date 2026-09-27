@@ -139,6 +139,7 @@ describe('recipe manage DTO mapping', () => {
         const formValue = createManualRecipeFormValue();
 
         expect(buildRecipeDto(formValue, 'portion', DEFAULT_SERVINGS, scaleValue)).toEqual({
+            language: 'en',
             name: formValue.name,
             description: formValue.description,
             comment: null,
@@ -224,6 +225,7 @@ describe('recipe manage DTO mapping', () => {
 describe('recipe manage edit mapping', () => {
     it('should build form patch from existing recipe and prefer manual values over totals', () => {
         expect(buildRecipeFormPatchValue(RECIPE)).toEqual({
+            language: 'en',
             name: RECIPE.name,
             description: RECIPE.description,
             comment: RECIPE.comment,
@@ -315,6 +317,7 @@ function scaleValue(value: number | null | undefined, scaleMode: NutritionScaleM
 function createManualRecipeFormValue(): RecipeFormValues {
     return {
         name: 'Recipe',
+        language: 'en',
         description: '',
         comment: null,
         category: 'Dinner',

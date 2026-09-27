@@ -77,6 +77,8 @@
       "isFavorite",
       "isNutritionAutoCalculated",
       "isOwnedByCurrentUser",
+      "language",
+      "languageConfirmed",
       "manualAlcohol",
       "manualCalories",
       "manualCarbs",

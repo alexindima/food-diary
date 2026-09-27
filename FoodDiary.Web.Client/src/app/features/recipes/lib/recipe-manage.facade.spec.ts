@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { Injector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,6 +11,7 @@ import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { NavigationService } from '../../../services/navigation.service';
 import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
+import { UserFacade } from '../../../shared/lib/user.facade';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
@@ -69,6 +71,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         providers: [
             RecipeManageFacade,
+            { provide: UserFacade, useValue: { user: signal({ language: 'en' }) } },
             { provide: RecipeService, useValue: recipeService },
             { provide: NavigationService, useValue: navigationService },
             { provide: FdUiDialogService, useValue: dialogService },

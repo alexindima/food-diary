@@ -10,6 +10,7 @@ namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 
 public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
     public UpdateRecipeCommandValidator() {
+        RuleFor(x => x.Language).Must(value => value is null or "en" or "ru").WithErrorCode("Validation.Invalid");
         ConfigureIdentityRules();
         ConfigureBaseRecipeRules();
         ConfigureClearRules();

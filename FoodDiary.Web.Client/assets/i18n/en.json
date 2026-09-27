@@ -7344,5 +7344,16 @@
         "MAX_SERVINGS": "Maximum 1000 servings",
         "FIRST_STEP": "This is the first step",
         "LAST_STEP": "This is the last step"
+    },
+    "RECIPE_LANGUAGE": {
+        "LABEL": "Recipe language",
+        "EN": "English",
+        "RU": "Русский",
+        "ALL": "All languages",
+        "CHECK_TITLE": "Check recipe language?",
+        "MISMATCH": "The text appears to be mostly in {{detected}}, but the recipe language is set to {{selected}}.",
+        "BACK": "Back to editing",
+        "KEEP": "Keep {{selected}} and save",
+        "CHANGE": "Change to {{detected}} and save"
     }
 }

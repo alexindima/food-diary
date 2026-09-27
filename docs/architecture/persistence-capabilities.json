@@ -1163,7 +1163,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. Usage counts delegate to IRecipeUsageQuery in host composition. Ingredient product snapshots are transient immutable projections from the owner batch port; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "8061e8d87bb7014867a064206b857f8b6fcf6478cc4ee6aa7ff5a7bf744da135"
+      "technicalSourceSha256": "67ef280bf63757794740e3638ed30b8860cf0f4a455b216142456a4246d52374"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",

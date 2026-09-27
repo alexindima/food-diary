@@ -35,6 +35,8 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
+        builder.Property(e => e.Language).HasMaxLength(2).IsRequired().HasDefaultValue("en");
+        builder.HasIndex(e => new { e.Visibility, e.Language, e.CreatedOnUtc });
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });

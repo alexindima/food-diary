@@ -56,8 +56,16 @@ public partial class RecipesFeatureTests {
             imageAssetAccessService,
             productLookupService,
             recipeLookupService,
-            new ImmediateRecipeMutationTransactionRunner());
+            new ImmediateRecipeMutationTransactionRunner(), CreateUserProfileReadService(currentUserAccessService));
 
+    private static IUserProfileReadService CreateUserProfileReadService(ICurrentUserAccessService access) {
+        IUserProfileReadService service = Substitute.For<IUserProfileReadService>();
+        string? language = (access as StubUserRepository)?.Language;
+        string json = System.Text.Json.JsonSerializer.Serialize(new { Language = language });
+        FoodDiary.Modules.Users.Contracts.Models.UserModel model = System.Text.Json.JsonSerializer.Deserialize<FoodDiary.Modules.Users.Contracts.Models.UserModel>(json)!;
+        service.GetUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(Result.Success(model));
+        return service;
+    }
     private static DeleteRecipeCommandHandler DeleteRecipeHandler(
         IRecipeRepository repository,
         IImageAssetCleanupService imageAssetCleanupService,
@@ -600,6 +608,7 @@ public partial class RecipesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User user) : ICurrentUserAccessService {
+        public string? Language => user.Language;
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             Error? error = user switch {
                 { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,

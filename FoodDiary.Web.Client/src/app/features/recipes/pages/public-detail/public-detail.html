@@ -11,6 +11,10 @@
             <div class="recipe-intro">
                 <fd-public-recipe-gallery [images]="images()" [name]="item.name" />
                 <div class="recipe-summary">
+                    <p>
+                        {{ 'RECIPE_LANGUAGE.LABEL' | translate }}:
+                        {{ (item.language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN') | translate }}
+                    </p>
                     @if (item.description) {
                         <p class="recipe-description">{{ item.description }}</p>
                     }

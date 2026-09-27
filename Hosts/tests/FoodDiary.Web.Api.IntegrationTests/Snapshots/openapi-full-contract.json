@@ -14667,6 +14667,12 @@
               "MaxLength": 64
             },
             {
+              "Name": "Language",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -24234,6 +24240,18 @@
           "Nullable": true
         },
         {
+          "Name": "language",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "languageConfirmed",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "manualAlcohol",
           "Required": false,
           "Type": "number",
@@ -30451,6 +30469,12 @@
           "ItemType": "string"
         },
         {
+          "Name": "language",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "missingIngredientCount",
           "Required": false,
           "Type": "integer",
@@ -30836,6 +30860,18 @@
         },
         {
           "Name": "isOwnedByCurrentUser",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "language",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "languageConfirmed",
           "Required": false,
           "Type": "boolean",
           "Nullable": false
@@ -33554,6 +33590,18 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "language",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "languageConfirmed",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
         },
         {
           "Name": "manualAlcohol",

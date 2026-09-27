@@ -80,6 +80,15 @@
     <details class="recipe-basic-info__additional">
         <summary class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.ADVANCED_TITLE' | translate }} · {{ selectedVisibility() }}</summary>
         <div class="recipe-basic-info__basic-grid fd-grid fd-gap-lg">
+            <fd-ui-select
+                size="lg"
+                [formField]="recipeForm.language"
+                [label]="'RECIPE_LANGUAGE.LABEL' | translate"
+                [options]="[
+                    { value: 'ru', label: 'RECIPE_LANGUAGE.RU' | translate },
+                    { value: 'en', label: 'RECIPE_LANGUAGE.EN' | translate },
+                ]"
+            />
             <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
                 <fd-ui-select
                     size="lg"

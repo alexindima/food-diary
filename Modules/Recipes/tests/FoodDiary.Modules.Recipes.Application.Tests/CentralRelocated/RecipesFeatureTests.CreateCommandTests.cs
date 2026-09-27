@@ -302,9 +302,13 @@ public partial class RecipesFeatureTests {
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
 
-    [Fact]
-    public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel() {
+    [Theory]
+    [InlineData("ru", null, "ru")]
+    [InlineData("ru", "en", "en")]
+    [InlineData(null, null, "en")]
+    public async Task CreateRecipeCommandHandler_WithValidCommand_PersistsAndReturnsOwnedModel(string? accountLanguage, string? requestedLanguage, string expectedLanguage) {
         var user = User.Create("create-recipe@example.com", "hash");
+        if (accountLanguage is not null) { user.SetLanguage(accountLanguage); }
         var repository = new SingleRecipeRepositoryForCreate();
         CreateRecipeCommandHandler handler = CreateRecipeHandler(repository, new StubUserRepository(user), FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
@@ -333,7 +337,7 @@ public partial class RecipesFeatureTests {
                 Steps: [
                     CreateRecipeCreateStep(order: 1, "Chop vegetables"),
                     CreateRecipeCreateStep(order: 2, "Boil soup"),
-                ]),
+                ]) { Language = requestedLanguage },
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -342,6 +346,7 @@ public partial class RecipesFeatureTests {
         Assert.Equal(2, repository.LastAddedRecipe.Steps.Count);
         Assert.True(result.Value.IsOwnedByCurrentUser);
         Assert.Equal("Serve warm", result.Value.Comment);
+        Assert.Equal(expectedLanguage, result.Value.Language);
         Assert.Equal(2, result.Value.Steps.Count);
     }
 
