@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
+          "sha256": "d9137f558ee4e9ae447f74532a869e5c736bab00205e9e51e20657a75762d27e"
         }
       ],
-      "reason": "Reviewed docs/README.md: only a link to the measured body metrics frontend test audit was added; repository navigation and authority remain accurate.",
+      "reason": "Reviewed affected index and runtime workflow pages; generated catalog and topology now discover the new runbook, settings, and volume without requiring prose changes.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:23:13.6062657Z"
+      "gitHead": "12615434c8ed30f982da17c203e0be8fff963011",
+      "reviewedAtUtc": "2026-09-27T09:53:40.7707718Z"
     },
     {
       "pageId": "module.frontend",
@@ -136,13 +136,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "5aa2c403acca63435bc5229b8d978c496079ec747a532907c15641447f1eac46"
+          "sha256": "d9137f558ee4e9ae447f74532a869e5c736bab00205e9e51e20657a75762d27e"
         }
       ],
-      "reason": "Reviewed the new body metrics coverage report and docs index: measured tests remain evidence and the report explicitly separates source-review risks from executed coverage; authority and freshness rules are unchanged.",
+      "reason": "Reviewed affected index and runtime workflow pages; generated catalog and topology now discover the new runbook, settings, and volume without requiring prose changes.",
       "baseRef": "HEAD",
-      "gitHead": "98ec62da61e25c859aa7b33b2c85ee495ed3eeeb",
-      "reviewedAtUtc": "2026-09-20T11:23:14.9875876Z"
+      "gitHead": "12615434c8ed30f982da17c203e0be8fff963011",
+      "reviewedAtUtc": "2026-09-27T09:53:41.1297748Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0bbcce4370471a082450a0f2504e1005ac41aa6471bd926e60cbd3f5d788389f"
+          "sha256": "b21ea83cb5e0786b8d39594997c38259aacdf8d3437c4371967cb489c7af0398"
         }
       ],
-      "reason": "Runtime topology changed only its source fingerprint after the HTTP compatibility adapter was added. Worker, provider, transaction and retry declarations are unchanged; existing runtime review guidance remains applicable.",
+      "reason": "Reviewed affected index and runtime workflow pages; generated catalog and topology now discover the new runbook, settings, and volume without requiring prose changes.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:44.1079746Z"
+      "gitHead": "12615434c8ed30f982da17c203e0be8fff963011",
+      "reviewedAtUtc": "2026-09-27T09:53:42.2009959Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -917,14 +917,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "42f93a4f8e883940ac5726b2fdbdd73808112e40d37a179cc9fede76be9d5ad6"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "b21ea83cb5e0786b8d39594997c38259aacdf8d3437c4371967cb489c7af0398"
         }
       ],
-      "reason": "Reviewed quality-index delta limited to read-only snapshot guard metrics; security review scope, ownership and obligations are unchanged.",
+      "reason": "Reviewed the security workflow; runtime topology now correctly exposes the dedicated sensitive diagnostics volume and no automated export path.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:09:52.1086674Z"
+      "gitHead": "12615434c8ed30f982da17c203e0be8fff963011",
+      "reviewedAtUtc": "2026-09-27T09:53:42.7230522Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1182,13 +1182,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "df1ad70dc6f6982d97cf91c96df140479497da33005a4caa2ea9232196745567"
+          "sha256": "c1821989a2931e2921e9e9318b01e605b133e2254006c8e44e006d3aadfbaa04"
         }
       ],
-      "reason": "Reviewed repository catalog changes for added test files and one narrow test project reference. No runtime file, query ranking, index schema or retrieval rule changed; current retrieval guidance remains valid.",
+      "reason": "Reviewed affected index and runtime workflow pages; generated catalog and topology now discover the new runbook, settings, and volume without requiring prose changes.",
       "baseRef": "HEAD",
-      "gitHead": "c1ba3e75d8dfd5b0727f27b0f764794cd67b92f3",
-      "reviewedAtUtc": "2026-09-25T20:50:19.9014199Z"
+      "gitHead": "12615434c8ed30f982da17c203e0be8fff963011",
+      "reviewedAtUtc": "2026-09-27T09:53:41.6773839Z"
     },
     {
       "pageId": "workflow.review-diff",

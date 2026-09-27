@@ -27,6 +27,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/AI_RECOGNITION_JOBS.md` - durable photo recognition, recovery, paid-call semantics, and rollout.
 - `backend/TELEGRAM_CLIENT_RUNBOOK.md` - Telegram client configuration, release order, key recovery and compatible rollback.
 - `backend/TELEGRAM_TEST_STAND.md` - isolated Telegram test environment configuration and pending live acceptance prerequisites.
+- `backend/JOB_MANAGER_CRASH_DUMPS.md` - protected native crash-dump capture, retention, retrieval, analysis, and deletion runbook.
 
 - `backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md`
 - `backend/MODULE_EXTRACTION_READINESS.md`
