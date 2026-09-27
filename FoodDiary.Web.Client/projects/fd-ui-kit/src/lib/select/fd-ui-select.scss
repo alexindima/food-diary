@@ -209,3 +209,18 @@
     color: var(--fd-color-primary-700);
     font-weight: var(--fd-font-weight-bold);
 }
+
+.fd-ui-select--appearance-text {
+    .fd-ui-select__control-wrap {
+        min-height: var(--fd-size-control-sm);
+        border-color: transparent;
+        background: transparent;
+        padding-left: var(--fd-space-sm);
+    }
+    .fd-ui-select__control-wrap:hover {
+        background: var(--fd-bg-surface-raised);
+    }
+    .fd-ui-select__control-wrap:focus-within {
+        box-shadow: var(--fd-shadow-focus);
+    }
+}

@@ -5,5 +5,5 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Recipes.Application.Queries.GetPublicRecipes;
 
-public sealed record GetPublicRecipesQuery(int Page, int Limit, string? Search, string? Category, int? MaxTotalTime)
+public sealed record GetPublicRecipesQuery(int Page, int Limit, string? Search, string? Category, int? MaxTotalTime, string SortBy = "newest")
     : IQuery<Result<PagedResponse<PublicRecipeModel>>>;

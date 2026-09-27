@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1770,
-    "symbols": 686,
+    "typescriptFiles": 1773,
+    "symbols": 687,
     "routes": 102,
     "features": 44,
-    "specs": 636,
+    "specs": 638,
     "localeFiles": 5,
     "roles": {
       "Component": 465,
@@ -20,7 +20,7 @@
       "Facade": 66,
       "Other": 19,
       "Pipe": 4,
-      "Service": 120
+      "Service": 121
     }
   },
   "features": [
@@ -1119,6 +1119,7 @@
       "symbols": [
         "FavoriteRecipeRowComponent",
         "FavoriteRecipeService",
+        "PublicCatalogFavorites",
         "PublicIngredientsComponent",
         "PublicNutritionComponent",
         "PublicRecipeCardComponent",
@@ -1188,6 +1189,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts",
@@ -1195,6 +1197,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/detail/recipe-detail.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipe.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-image.util.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.spec.ts",
@@ -4921,7 +4924,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "PublicAuthNavigationService",
@@ -5190,6 +5193,13 @@
       "line": 9
     },
     {
+      "name": "PublicCatalogFavorites",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.facade.ts",
+      "line": 11
+    },
+    {
       "name": "PublicRecipesFacade",
       "role": "Facade",
       "selector": null,
@@ -5250,7 +5260,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-catalog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.ts",
-      "line": 38
+      "line": 40
     },
     {
       "name": "PublicRecipeDetailComponent",
@@ -6771,8 +6781,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3790,
-      "russianProperties": 3790,
+      "englishProperties": 3805,
+      "russianProperties": 3805,
       "countsMatch": true
     },
     {

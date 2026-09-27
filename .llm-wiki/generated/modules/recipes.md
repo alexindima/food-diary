@@ -76,6 +76,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.GalleryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs`
@@ -93,14 +94,13 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestProductOverview.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestRecipeOverview.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Gallery.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Media.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Validation.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeDirectCycleTests.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeGalleryTests.cs`
 
 ## Working Rule
 

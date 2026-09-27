@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "c5b8cbcfbf2bd6f8eb33cce03cf71ca2c7ee3fb9703b5a9af7a04f1a6d880b4a"
+          "sha256": "41f0fe49c9d3b1d9a351ecf2bf0af2c6d16851050c54107e87874bead91494ee"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:51.6756248Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:01.8738294Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,17 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ce5d5683541933540620add252b0bf8ad08b3b98ab3fb5bb00711ebeba630f92"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
+          "sha256": "80cf05580f6bc4c39efa44c56844832f50cbb802e753579fd7d75210ba77b6a2"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Verified catalog URL navigation, locale plural forms, selector keyboard interaction, and recipe ordering with focused frontend, application and PostgreSQL tests; UI kit and application builds pass.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:48.2253485Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:02.1305685Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -237,18 +233,14 @@
       "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
       "sources": [
         {
-          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
-          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
-        },
-        {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "4b02111caa40eb9ed5b85e48e98ac7b2f2216efc03b70283b322993af3943613"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:48.6830295Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:02.7332357Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -791,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "34fef4fdcf46811b168afb3be514d45e282cd9bee033733b9910ec3398af8ca6"
+          "sha256": "d8a36c72c58d08c301835c11dfcec9fe468e09525fcea639f2e12d8fa0aa1b2a"
         }
       ],
-      "reason": "Reviewed remaining generated-index impacts of the Recipes namespace correction: CLR names/source positions changed, but visibility, private-data projection, persistence operations and runtime services did not. Workflow instructions remain applicable; composition compilation, namespace checks and a PostgreSQL recipe read test passed.",
+      "reason": "Public projection and anonymous visibility remain unchanged; PostgreSQL test excludes a private recipe. Auth dialog receives only a translation key, with no new credentials, storage or external transfer.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T22:05:42.9954849Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:03.4973572Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -836,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c37d7e96e1c747ed26943466998ffbf376f9f2fc16362ca68eb8e153389ad16"
+          "sha256": "8f69b39c20fabeff560ef23691ce8810239934bdf65a3a80453af857c142e852"
         }
       ],
-      "reason": "Quality index adds direct references from the new Create/Update recipe gallery tests. No production complexity or risk classification changed; execution coverage is separately verified with dotCover.",
+      "reason": "Verified catalog URL navigation, locale plural forms, selector keyboard interaction, and recipe ordering with focused frontend, application and PostgreSQL tests; UI kit and application builds pass.",
       "baseRef": "HEAD",
-      "gitHead": "ac6508cbcb815f9c4b1b2d13e1f519dd1f5d5a5f",
-      "reviewedAtUtc": "2026-09-27T00:50:04.6288171Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:03.9935037Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -911,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9a5c4bee60b57236175f08d3018195182750c1e01c64b4de8ef15d062e7cc71a"
+          "sha256": "d84c4bd805a7ba510872f3287ae9895bf554623bfca5a6818a0d7da0e01dcc63"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Existing navigation and runtime ownership remain accurate. Select appearance is documented in COMPONENTS and Storybook; no services, background jobs, dependencies or persistence schema were added.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:50.7924802Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:04.3170702Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -926,13 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c37d7e96e1c747ed26943466998ffbf376f9f2fc16362ca68eb8e153389ad16"
+          "sha256": "8f69b39c20fabeff560ef23691ce8810239934bdf65a3a80453af857c142e852"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d84c4bd805a7ba510872f3287ae9895bf554623bfca5a6818a0d7da0e01dcc63"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "d8a36c72c58d08c301835c11dfcec9fe468e09525fcea639f2e12d8fa0aa1b2a"
         }
       ],
-      "reason": "Reviewed quality-index delta limited to added recipe gallery test references. No security-sensitive production or runtime change; review guidance remains valid.",
+      "reason": "Public projection and anonymous visibility remain unchanged; PostgreSQL test excludes a private recipe. Auth dialog receives only a translation key, with no new credentials, storage or external transfer.",
       "baseRef": "HEAD",
-      "gitHead": "ac6508cbcb815f9c4b1b2d13e1f519dd1f5d5a5f",
-      "reviewedAtUtc": "2026-09-27T00:50:06.5871257Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:04.8673293Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "69d1540f48f1ff0cdbf90178c2ff1affb0e8dc44c7125ce609df4e2c7509d319"
+          "sha256": "c5a3545267d767129c5717ece72f994b20f4993eaf02fe58b052e0f7d1cc9f63"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "1bf958f64a76e7ed915140af3967662adcf86f9c50ef46927b95209491ad80e9"
+          "sha256": "ccc4179085e3e0101f1d99c4c5d818c32df452670fa8a109b8aaa2d944687d54"
         }
       ],
-      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
+      "reason": "Existing navigation and runtime ownership remain accurate. Select appearance is documented in COMPONENTS and Storybook; no services, background jobs, dependencies or persistence schema were added.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:55:20.1337067Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:05.3621488Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "69d1540f48f1ff0cdbf90178c2ff1affb0e8dc44c7125ce609df4e2c7509d319"
+          "sha256": "c5a3545267d767129c5717ece72f994b20f4993eaf02fe58b052e0f7d1cc9f63"
         }
       ],
-      "reason": "Generated indexes now include public recipe DTOs, UI components, tests and client-ssr topology. Index schemas and query/trace mechanisms are unchanged; these workflow pages remain applicable. Visibility/private-source boundaries were exercised with PostgreSQL; SSR status/localization and guest UI were checked; existing unrelated architecture failures are disclosed rather than treated as passing coverage.",
+      "reason": "Public recipe SortBy is optional with newest default; read model sorts before paging and public visibility is preserved. Full OpenAPI snapshot adds only this query parameter; application and PostgreSQL tests passed. Deploy API before frontend sorting controls.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:55:20.9760156Z"
+      "gitHead": "138785ecf057de64784c543cf0520329f58d2801",
+      "reviewedAtUtc": "2026-09-27T14:44:03.1371084Z"
     },
     {
       "pageId": "workflow.query-context",

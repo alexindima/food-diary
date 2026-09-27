@@ -34,6 +34,7 @@ describe('AuthDialogComponent', () => {
                     provide: FD_UI_DIALOG_DATA,
                     useValue: {
                         mode: 'register',
+                        messageKey: 'PUBLIC_RECIPES.SIGN_IN_TO_SAVE',
                         returnUrl: '/meals',
                         adminReturnUrl: '/admin/users',
                     },
@@ -54,6 +55,7 @@ describe('AuthDialogComponent', () => {
             .componentInstance as AuthDialogAuthStubComponent;
 
         expect(closeButton?.getAttribute('aria-label')).toBe('COMMON.CLOSE');
+        expect(root.querySelector('.auth-dialog__context')?.textContent).toContain('PUBLIC_RECIPES.SIGN_IN_TO_SAVE');
         expect(authStub.useRouting()).toBe(false);
         expect(authStub.initialMode()).toBe('register');
         expect(authStub.initialReturnUrl()).toBe('/meals');

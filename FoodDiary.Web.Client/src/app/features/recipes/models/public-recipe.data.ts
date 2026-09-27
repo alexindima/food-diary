@@ -35,4 +35,4 @@ export type PublicRecipe = {
     steps: PublicRecipeStep[];
 };
 
-export type PublicRecipeFilters = { page: number; search: string; category: string; maxTotalTime?: number };
+export type PublicRecipeFilters = { page: number; search: string; category: string; maxTotalTime?: number; sortBy?: string };

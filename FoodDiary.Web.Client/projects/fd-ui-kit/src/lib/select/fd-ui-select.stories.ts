@@ -7,6 +7,7 @@ const meta: Meta<FdUiSelectComponent<string>> = {
     component: FdUiSelectComponent,
     tags: ['autodocs'],
     argTypes: {
+        appearance: { control: 'select', options: ['field', 'text'] },
         label: { control: 'text' },
         placeholder: { control: 'text' },
         error: { control: 'text' },
@@ -84,5 +85,18 @@ export const Large: Story = {
         placeholder: 'Select',
         options: mealOptions,
         size: 'lg',
+    },
+};
+
+export const Text: Story = {
+    args: {
+        appearance: 'text',
+        ariaLabel: 'Sort recipes',
+        value: 'newest',
+        options: [
+            { value: 'newest', label: 'Newest first' },
+            { value: 'fastest', label: 'Quickest first' },
+            { value: 'name', label: 'By name' },
+        ],
     },
 };

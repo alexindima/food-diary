@@ -18,10 +18,11 @@ describe('PublicRecipeService', () => {
         http.verify();
     });
     it('requests an explicitly public paginated catalog', () => {
-        service.query({ page: 2, search: 'Soup', category: 'Dinner', maxTotalTime: 30 }).subscribe();
+        service.query({ page: 2, search: 'Soup', category: 'Dinner', maxTotalTime: 30, sortBy: 'fastest' }).subscribe();
         const request = http.expectOne(req => req.url === `${environment.apiUrls.recipes}/public/`);
         expect(request.request.params.get('limit')).toBe('20');
         expect(request.request.params.get('page')).toBe('2');
+        expect(request.request.params.get('sortBy')).toBe('fastest');
         expect(request.request.params.get('maxTotalTime')).toBe('30');
         expect(request.request.params.has('includePublic')).toBe(false);
         request.flush({ data: [], totalItems: 0, totalPages: 0, page: 2, limit: 20 });

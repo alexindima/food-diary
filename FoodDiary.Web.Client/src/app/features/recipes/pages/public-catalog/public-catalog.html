@@ -5,10 +5,44 @@
         <section class="catalog-filters" [attr.aria-label]="'PUBLIC_RECIPES.FILTERS' | translate">
             <fd-ui-input prefixIcon="search" [formField]="filterForm.search" [label]="'PUBLIC_RECIPES.SEARCH' | translate" />
             <fd-ui-input [formField]="filterForm.category" [label]="'PUBLIC_RECIPES.CATEGORY' | translate" />
-            <fd-ui-input type="text" [formField]="filterForm.maxTotalTime" [label]="'PUBLIC_RECIPES.MAX_TIME' | translate" />
-            <fd-ui-button variant="secondary" fill="text" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>
+            <fd-ui-select
+                [formField]="filterForm.maxTotalTime"
+                [ariaLabel]="'PUBLIC_RECIPES.TIME' | translate"
+                [options]="
+                    [
+                        { value: '', label: 'PUBLIC_RECIPES.ANY_TIME' | translate },
+                        { value: '15', label: 'PUBLIC_RECIPES.TIME_UP_TO' | translate: { minutes: 15 } },
+                        { value: '30', label: 'PUBLIC_RECIPES.TIME_UP_TO' | translate: { minutes: 30 } },
+                        { value: '60', label: 'PUBLIC_RECIPES.TIME_UP_TO' | translate: { minutes: 60 } },
+                    ].concat(
+                        customTime() === null
+                            ? []
+                            : [{ value: filters().maxTotalTime, label: 'PUBLIC_RECIPES.TIME_UP_TO' | translate: { minutes: customTime() } }]
+                    )
+                "
+            />
+            <div class="catalog-reset">
+                @if (hasFilters()) {
+                    <fd-ui-button variant="secondary" fill="text" (click)="reset()">{{ 'PUBLIC_RECIPES.RESET' | translate }}</fd-ui-button>
+                }
+            </div>
         </section>
-        <p class="catalog-order">{{ 'PUBLIC_RECIPES.NEWEST' | translate }}</p>
+        <div class="catalog-summary" aria-live="polite">
+            <span [style.visibility]="showCount() ? 'visible' : 'hidden'">{{
+                countKey() | translate: { count: result()?.totalItems }
+            }}</span>
+            <fd-ui-select
+                appearance="text"
+                [formField]="filterForm.sortBy"
+                [ariaLabel]="'PUBLIC_RECIPES.SORT' | translate"
+                [options]="[
+                    { value: 'newest', label: 'PUBLIC_RECIPES.NEWEST' | translate },
+                    { value: 'fastest', label: 'PUBLIC_RECIPES.FASTEST' | translate },
+                    { value: 'name', label: 'PUBLIC_RECIPES.BY_NAME' | translate },
+                ]"
+            />
+        </div>
+        <p role="status" [hidden]="!favorites.message()">{{ favorites.message() ?? '' | translate }}</p>
         @if (loading()) {
             <div class="catalog-state" aria-live="polite"><fd-ui-loader /></div>
         } @else if (failed()) {
@@ -26,7 +60,13 @@
             } @else {
                 <div class="catalog-grid">
                     @for (recipe of page.data; track recipe.id) {
-                        <fd-public-recipe-card [recipe]="recipe" />
+                        <fd-public-recipe-card
+                            [recipe]="recipe"
+                            [priority]="$first"
+                            [saved]="favorites.savedIds().has(recipe.id)"
+                            [busy]="favorites.busyIds().has(recipe.id)"
+                            (favoriteRequested)="favorites.toggleAsync(recipe)"
+                        />
                     }
                 </div>
                 @if (page.totalPages > 1) {

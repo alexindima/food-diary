@@ -12,9 +12,9 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 103,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 132,
-    "criticalSymbolsWithoutTestReferences": 39,
-    "explicitDebtMarkers": 10
+    "componentsWithoutDirectSpecs": 131,
+    "criticalSymbolsWithoutTestReferences": 38,
+    "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -4722,22 +4722,6 @@
       "specPath": null
     },
     {
-      "class": "PublicRecipeCardComponent",
-      "selector": "fd-public-recipe-card",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
-      "inputs": [
-        {
-          "name": "recipe",
-          "type": "PublicRecipe",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "PublicRecipeGalleryComponent",
       "selector": "fd-public-recipe-gallery",
       "feature": "recipes",
@@ -5362,16 +5346,6 @@
       "coveredThrough": []
     },
     {
-      "name": "GetPublicRecipesQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
@@ -5492,6 +5466,11 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "line": 102,
+      "marker": "#pragma warning disable"
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",

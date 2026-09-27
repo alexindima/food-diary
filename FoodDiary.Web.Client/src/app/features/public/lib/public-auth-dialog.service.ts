@@ -9,6 +9,7 @@ export type PublicAuthDialogOptions = {
     returnUrl?: string | null;
     adminReturnUrl?: string | null;
     destroyRef?: DestroyRef;
+    messageKey?: string;
 };
 
 export type PublicAuthDialogRef = {
@@ -24,6 +25,7 @@ export class PublicAuthDialogService {
         returnUrl = null,
         adminReturnUrl = null,
         destroyRef,
+        messageKey,
     }: PublicAuthDialogOptions): Promise<PublicAuthDialogRef | null> {
         const { AuthDialogComponent } = await import('../../auth/dialogs/auth-dialog/auth-dialog');
         if (destroyRef?.destroyed === true) {
@@ -33,7 +35,7 @@ export class PublicAuthDialogService {
         return this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',
             autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
-            data: { mode, returnUrl, adminReturnUrl },
+            data: { mode, returnUrl, adminReturnUrl, messageKey },
         });
     }
 }

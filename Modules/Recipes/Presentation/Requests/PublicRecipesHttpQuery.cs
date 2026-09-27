@@ -8,4 +8,5 @@ public sealed record PublicRecipesHttpQuery(
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumRecentItems)] int Limit = 20,
     [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null,
     [MaxLength(PresentationQueryLimits.MaximumCategoryLength)] string? Category = null,
-    [OpenApiNumericRange(1)] int? MaxTotalTime = null);
+    [OpenApiNumericRange(1)] int? MaxTotalTime = null,
+    [RegularExpression("^(newest|fastest|name)$")] string SortBy = "newest");

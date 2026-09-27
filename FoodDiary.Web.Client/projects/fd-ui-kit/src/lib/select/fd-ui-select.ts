@@ -47,6 +47,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
+    public readonly appearance = input<'field' | 'text'>('field');
     public readonly label = input<string>();
     public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
@@ -79,7 +80,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     });
     protected readonly hostClass = computed(
         () =>
-            `fd-ui-select ${this.sizeClass()}${this.hasError() ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
+            `fd-ui-select fd-ui-select--appearance-${this.appearance()} ${this.sizeClass()}${this.hasError() ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
     );
     protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
 

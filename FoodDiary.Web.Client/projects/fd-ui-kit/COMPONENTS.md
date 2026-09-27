@@ -226,6 +226,8 @@ Multi-line input.
 
 Dropdown select based on the design-system menu/overlay primitives.
 
+Use `appearance="text"` with `ariaLabel` and no visible `label` for compact toolbar sorting. It preserves the selected value, chevron, focus ring, listbox and keyboard behavior without an input background or border. The default `appearance="field"` is unchanged.
+
 **Inputs**
 
 - `label?: string`

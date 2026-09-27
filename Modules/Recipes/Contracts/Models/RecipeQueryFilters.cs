@@ -6,4 +6,5 @@ public sealed record RecipeQueryFilters(
     int? MaxTotalTime = null,
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
-    bool? HasImage = null);
+    bool? HasImage = null,
+    string SortBy = "newest");

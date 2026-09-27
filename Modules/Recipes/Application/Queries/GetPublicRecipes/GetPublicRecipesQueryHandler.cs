@@ -16,7 +16,7 @@ public sealed class GetPublicRecipesQueryHandler(IRecipeOverviewReadService reci
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 20, maxPageSize: 50);
         (IReadOnlyList<RecipeOverviewReadItem> items, int total) = await recipes.GetPagedAsync(UserId.Empty, includePublic: true, page, limit,
-            new RecipeQueryFilters(query.Search, query.Category, query.MaxTotalTime), cancellationToken).ConfigureAwait(false);
+            new RecipeQueryFilters(query.Search, query.Category, query.MaxTotalTime, SortBy: query.SortBy), cancellationToken).ConfigureAwait(false);
         return Result.Success(new PagedResponse<PublicRecipeModel>(items.Select(item => item.ToPublicModel()).ToList(),
             page, limit, (int)Math.Ceiling(total / (double)limit), total));
     }

@@ -18,7 +18,7 @@ export class AuthDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<AuthDialogComponent>, { optional: true });
     protected readonly data = inject<AuthDialogData | null>(FD_UI_DIALOG_DATA, {
         optional: true,
-    }) ?? { mode: 'login', returnUrl: null, adminReturnUrl: null };
+    }) ?? { mode: 'login', returnUrl: null, adminReturnUrl: null, messageKey: undefined };
 
     protected close(): void {
         this.dialogRef?.close();
@@ -29,4 +29,5 @@ type AuthDialogData = {
     mode: 'login' | 'register';
     returnUrl?: string | null;
     adminReturnUrl?: string | null;
+    messageKey?: string;
 };

@@ -48,6 +48,24 @@ describe('FdUiSelectComponent', () => {
 });
 
 describe('FdUiSelectComponent rendering', () => {
+    it('supports keyboard selection in text appearance without a visible label', async () => {
+        const { fixture, component, requireElement, host } = await setupSelectAsync();
+        fixture.componentRef.setInput('appearance', 'text');
+        fixture.componentRef.setInput('ariaLabel', 'Sort recipes');
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        expect(host().querySelector('.fd-ui-select--appearance-text')).not.toBeNull();
+        const control = requireElement('.fd-ui-select__control');
+        expect(control.getAttribute('aria-label')).toBe('Sort recipes');
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        fixture.detectChanges();
+        const menu = document.querySelector('[role="listbox"]');
+        expect(menu).not.toBeNull();
+        menu?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        fixture.detectChanges();
+        expect(component.value()).toBe('apple');
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+    });
     it('should render label', async () => {
         const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('label', 'Fruit');

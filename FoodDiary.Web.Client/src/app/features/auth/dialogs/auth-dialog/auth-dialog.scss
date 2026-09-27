@@ -37,3 +37,9 @@
 .auth-dialog__auth {
     display: block;
 }
+
+.auth-dialog__context {
+    margin: var(--fd-space-lg) var(--fd-space-md) 0;
+    text-align: center;
+    color: var(--fd-color-text-muted);
+}

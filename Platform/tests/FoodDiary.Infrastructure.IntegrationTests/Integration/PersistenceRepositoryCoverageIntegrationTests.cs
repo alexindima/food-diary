@@ -112,6 +112,34 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     private static readonly TimeProvider FixedTime = new FixedDateTimeProvider(FixedNow);
 
     [RequiresDockerFact]
+    public async Task PublicRecipeOrdering_AppliesBeforePagingAndKeepsUnknownTimeLastAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"sort-{Guid.NewGuid():N}@example.com", "hash");
+        string prefix = Guid.NewGuid().ToString("N");
+        var slow = Recipe.Create(owner.Id, prefix + "-Alpha", 1, prepTime: 20, cookTime: 30);
+        var fast = Recipe.Create(owner.Id, prefix + "-Zulu", 1, prepTime: 5, cookTime: 5);
+        var tied = Recipe.Create(owner.Id, prefix + "-Beta", 1, prepTime: 10);
+        var unknown = Recipe.Create(owner.Id, prefix + "-Unknown", 1);
+        var hidden = Recipe.Create(owner.Id, prefix + "-Private", 1, prepTime: 1, visibility: Visibility.Private);
+        context.Users.Add(owner);
+        context.Recipes.AddRange(slow, fast, tied, unknown, hidden);
+        await context.SaveChangesAsync();
+        var reader = new RecipeOverviewReadService(context);
+        Recipe[] knownFast = [fast, tied];
+        RecipeId[] expectedFast = [.. knownFast.OrderBy(recipe => recipe.Id.Value).Select(recipe => recipe.Id), slow.Id, unknown.Id];
+        var filters = new RecipeQueryFilters(prefix, SortBy: "fastest");
+        (IReadOnlyList<RecipeOverviewReadItem> first, int total) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 1, 2, filters);
+        (IReadOnlyList<RecipeOverviewReadItem> second, _) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 2, 2, filters);
+        Assert.Equal(4, total);
+        Assert.Equal(expectedFast, first.Concat(second).Select(item => item.Id));
+        (IReadOnlyList<RecipeOverviewReadItem> names, _) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 1, 20, filters with { SortBy = "name" });
+        Assert.Equal(new[] { slow.Id, tied.Id, unknown.Id, fast.Id }, names.Select(item => item.Id));
+        (IReadOnlyList<RecipeOverviewReadItem> newest, _) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 1, 20, filters with { SortBy = "newest" });
+        Recipe[] visible = [slow, fast, tied, unknown];
+        Assert.Equal(visible.OrderByDescending(recipe => recipe.CreatedOnUtc).ThenBy(recipe => recipe.Id.Value).Select(recipe => recipe.Id), newest.Select(item => item.Id));
+    }
+
+    [RequiresDockerFact]
     public async Task RefreshSession_ConcurrentRotationAndLogout_LeavesSessionRevoked() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         var user = User.Create($"session-race-{Guid.NewGuid():N}@example.com", "hash");

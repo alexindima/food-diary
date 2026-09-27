@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiInputComponent, FdUiLoaderComponent, FdUiPaginationComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, debounceTime, of, skip, startWith, Subject, switchMap, tap } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent, FdUiInputComponent, FdUiLoaderComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
+import { catchError, combineLatest, debounceTime, map, of, skip, startWith, Subject, switchMap, tap } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -12,6 +12,7 @@ import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PublicRecipeCardComponent } from '../../components/public-card/public-card';
 import { PublicRecipeNavigationComponent } from '../../components/public-navigation/public-navigation';
+import { PublicCatalogFavorites } from '../../lib/public-catalog-favorites.facade';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import type { PublicRecipe } from '../../models/public-recipe.data';
 
@@ -20,7 +21,7 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
     templateUrl: './public-catalog.html',
     styleUrl: './public-catalog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [PublicRecipesFacade],
+    providers: [PublicRecipesFacade, PublicCatalogFavorites],
     imports: [
         PageBodyComponent,
         PublicRecipeCardComponent,
@@ -30,23 +31,41 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
         FdUiInputComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
+        FdUiSelectComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
         PublicRecipeNavigationComponent,
     ],
 })
 export class PublicRecipeCatalogComponent {
+    protected readonly favorites = inject(PublicCatalogFavorites);
+    protected readonly timePresets = ['15', '30', '60'];
+    protected readonly hasFilters = computed(() =>
+        [this.filters().search, this.filters().category, this.filters().maxTotalTime].some(value => value.trim().length > 0),
+    );
+    protected readonly customTime = computed(() => {
+        const value = this.positiveNumber(this.filters().maxTotalTime);
+        return value !== null && !this.timePresets.includes(String(value)) ? value : null;
+    });
+    private readonly translate = inject(TranslateService);
+    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: this.translate.getCurrentLang() ?? 'en',
+    });
+    protected readonly countKey = computed(
+        () => `PUBLIC_RECIPES.COUNT_${new Intl.PluralRules(this.language()).select(this.result()?.totalItems ?? 0).toUpperCase()}`,
+    );
     private readonly facade = inject(PublicRecipesFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
-    protected readonly filters = signal({ search: '', category: '', maxTotalTime: '' });
+    protected readonly filters = signal({ search: '', category: '', maxTotalTime: '', sortBy: 'newest' });
     protected readonly filterForm = form(this.filters);
     private readonly reload = new Subject<void>();
     private readonly searchDebounceMs = 350;
     protected readonly result = signal<PageOf<PublicRecipe> | null>(null);
     protected readonly loading = signal(true);
     protected readonly failed = signal(false);
+    protected readonly showCount = computed(() => !this.loading() && !this.failed() && this.result() !== null);
 
     public constructor() {
         combineLatest([this.route.queryParamMap, this.reload.pipe(startWith(undefined))])
@@ -56,6 +75,7 @@ export class PublicRecipeCatalogComponent {
                         search: params.get('search') ?? '',
                         category: params.get('category') ?? '',
                         maxTotalTime: params.get('maxTotalTime') ?? '',
+                        sortBy: this.normalizeSort(params.get('sortBy')),
                     });
                     this.loading.set(true);
                     this.failed.set(false);
@@ -87,7 +107,8 @@ export class PublicRecipeCatalogComponent {
                 if (
                     filters.search !== (params.get('search') ?? '') ||
                     filters.category !== (params.get('category') ?? '') ||
-                    filters.maxTotalTime !== (params.get('maxTotalTime') ?? '')
+                    filters.maxTotalTime !== (params.get('maxTotalTime') ?? '') ||
+                    filters.sortBy !== this.normalizeSort(params.get('sortBy'))
                 ) {
                     this.changePage(0);
                 }
@@ -102,6 +123,7 @@ export class PublicRecipeCatalogComponent {
                 search: filters.search.trim().length > 0 ? filters.search.trim() : null,
                 category: filters.category.trim().length > 0 ? filters.category.trim() : null,
                 maxTotalTime: this.positiveNumber(filters.maxTotalTime),
+                sortBy: filters.sortBy === 'newest' ? null : filters.sortBy,
                 page: index > 0 ? index + 1 : null,
             },
         });
@@ -112,7 +134,11 @@ export class PublicRecipeCatalogComponent {
     }
 
     protected reset(): void {
-        this.filters.set({ search: '', category: '', maxTotalTime: '' });
+        this.filters.update(value => ({ search: '', category: '', maxTotalTime: '', sortBy: value.sortBy }));
+    }
+
+    private normalizeSort(value: string | null): string {
+        return value === 'fastest' || value === 'name' ? value : 'newest';
     }
 
     private positiveNumber(value: string | null): number | null {

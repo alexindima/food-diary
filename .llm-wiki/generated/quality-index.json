@@ -5,13 +5,13 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5603,
+    "productionFiles": 5604,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 964,
-    "criticalSymbolsWithTestReferences": 925,
-    "criticalSymbolsWithoutTestReferences": 39,
-    "debtMarkers": 10
+    "criticalSymbolsWithTestReferences": 926,
+    "criticalSymbolsWithoutTestReferences": 38,
+    "debtMarkers": 11
   },
   "hotspots": [
     {
@@ -4362,11 +4362,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 303,
-      "decisionPoints": 41,
+      "nonBlankLines": 309,
+      "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.56
+      "structuralRiskScore": 73.68
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
@@ -5818,19 +5818,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.stories.ts",
-      "nonBlankLines": 78,
+      "nonBlankLines": 91,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.56
+      "structuralRiskScore": 1.82
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "nonBlankLines": 219,
+      "nonBlankLines": 220,
       "decisionPoints": 32,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 52.38
+      "structuralRiskScore": 52.4
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.ts",
@@ -8002,11 +8002,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.ts",
-      "nonBlankLines": 28,
+      "nonBlankLines": 29,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
+      "structuralRiskScore": 2.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/guards/required-password-change.guard.ts",
@@ -11354,11 +11354,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts",
-      "nonBlankLines": 33,
+      "nonBlankLines": 35,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
+      "structuralRiskScore": 2.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-navigation.service.ts",
@@ -11690,11 +11690,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
-      "nonBlankLines": 20,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
@@ -11791,6 +11791,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.9
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.facade.ts",
+      "nonBlankLines": 98,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.96
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipe.test-helper.ts",
@@ -11922,11 +11930,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.ts",
-      "nonBlankLines": 115,
-      "decisionPoints": 12,
+      "nonBlankLines": 140,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.3
+      "structuralRiskScore": 31.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
@@ -36930,11 +36938,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
@@ -37162,11 +37170,11 @@
     },
     {
       "path": "Modules/Recipes/Contracts/Models/RecipeQueryFilters.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeId.cs",
@@ -37530,11 +37538,11 @@
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/PublicRecipesHttpQuery.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/RecipeIngredientHttpRequest.cs",
@@ -53884,9 +53892,11 @@
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQueryValidator.cs",
       "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/PublicRecipeQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -58106,6 +58116,11 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "line": 102,
+      "marker": "#pragma warning disable"
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",

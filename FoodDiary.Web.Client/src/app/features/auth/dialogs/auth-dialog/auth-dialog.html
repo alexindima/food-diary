@@ -2,6 +2,9 @@
     <button type="button" class="auth-dialog__close" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
         <fd-ui-icon name="close" />
     </button>
+    @if (data.messageKey) {
+        <p class="auth-dialog__context">{{ data.messageKey | translate }}</p>
+    }
     <fd-auth
         class="auth-dialog__auth"
         [useRouting]="false"

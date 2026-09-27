@@ -16,6 +16,17 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class PublicRecipeQueryTests {
+    [Theory]
+    [InlineData("newest", true)]
+    [InlineData("fastest", true)]
+    [InlineData("name", true)]
+    [InlineData("popular", false)]
+    [InlineData("", false)]
+    public void PublicCatalog_ValidatesSortOrder(string sortBy, bool valid) {
+        var validator = new GetPublicRecipesQueryValidator();
+        Assert.Equal(valid, validator.Validate(new GetPublicRecipesQuery(1, 20, Search: null, Category: null, MaxTotalTime: null, SortBy: sortBy)).IsValid);
+    }
+
     [Fact]
     public void Projection_PreservesGalleryOrderAndPrefersStepGalleryOverLegacyCover() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
@@ -63,12 +74,12 @@ public sealed class PublicRecipeQueryTests {
         read.GetPagedAsync(UserId.Empty, includePublic: true, 2, 20, Arg.Any<RecipeQueryFilters>(), Arg.Any<CancellationToken>())
             .Returns(((IReadOnlyList<RecipeOverviewReadItem>)[TestRecipeOverview.From(recipe, UserId.Empty)], 41));
 
-        Result<PagedResponse<PublicRecipeModel>> result = await new GetPublicRecipesQueryHandler(read).Handle(new GetPublicRecipesQuery(2, 20, "Soup", "Dinner", 30), CancellationToken.None);
+        Result<PagedResponse<PublicRecipeModel>> result = await new GetPublicRecipesQueryHandler(read).Handle(new GetPublicRecipesQuery(2, 20, "Soup", "Dinner", 30, "fastest"), CancellationToken.None);
 
         PagedResponse<PublicRecipeModel> page = ResultAssert.Success(result);
         Assert.Multiple(() => Assert.Equal(3, page.TotalPages), () => Assert.Equal(41, page.TotalItems), () => Assert.Single(page.Data));
         await read.Received(1).GetPagedAsync(UserId.Empty, includePublic: true, 2, 20,
-            Arg.Is<RecipeQueryFilters>(filter => filter.Search == "Soup" && filter.Category == "Dinner" && filter.MaxTotalTime == 30), Arg.Any<CancellationToken>());
+            Arg.Is<RecipeQueryFilters>(filter => filter.Search == "Soup" && filter.Category == "Dinner" && filter.MaxTotalTime == 30 && filter.SortBy == "fastest"), Arg.Any<CancellationToken>());
     }
 
     [Fact]

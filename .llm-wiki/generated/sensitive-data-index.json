@@ -2122,21 +2122,21 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 319
+      "line": 326
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 325
+      "line": 332
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 326
+      "line": 333
     },
     {
       "category": "health",
@@ -8261,21 +8261,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 312
+      "line": 319
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 314
+      "line": 321
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 315
+      "line": 322
     },
     {
       "category": "privateContent",

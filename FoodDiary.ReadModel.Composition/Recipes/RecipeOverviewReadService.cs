@@ -29,9 +29,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         IQueryable<Recipe> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
         int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
-        List<RecipeOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
-                .OrderByDescending(r => r.CreatedOnUtc)
-                .ThenBy(r => r.Id)
+        List<RecipeOverviewReadRow> rows = await ProjectRows(ApplyOrdering(query.AsNoTracking(), filters.SortBy)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -97,6 +95,15 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
+
+    private static IOrderedQueryable<Recipe> ApplyOrdering(IQueryable<Recipe> query, string sortBy) => sortBy switch {
+        "fastest" => query.OrderBy(r => r.PrepTime == null && r.CookTime == null)
+            .ThenBy(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
+#pragma warning disable MA0011 // EF translates parameterless ToLower to PostgreSQL lower; culture overloads cannot be translated.
+        "name" => query.OrderBy(r => r.Name.ToLower()).ThenBy(r => r.Id),
+#pragma warning restore MA0011
+        _ => query.OrderByDescending(r => r.CreatedOnUtc).ThenBy(r => r.Id),
+    };
 
     private static IQueryable<Recipe> ApplyFilters(IQueryable<Recipe> query, RecipeQueryFilters filters) {
         if (!string.IsNullOrWhiteSpace(filters.Search)) {
