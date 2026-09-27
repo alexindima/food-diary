@@ -16,6 +16,21 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class PublicRecipeQueryTests {
+    [Fact]
+    public void Projection_PreservesGalleryOrderAndPrefersStepGalleryOverLegacyCover() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+        RecipeImageReadItem[] images = [new(Guid.NewGuid(), "https://test/second"), new(Guid.NewGuid(), "https://test/first")];
+        RecipeOverviewReadItem overview = TestRecipeOverview.From(recipe, recipe.UserId) with {
+            Images = images,
+            Steps = [new RecipeOverviewStepReadItem(Guid.NewGuid(), 1, Title: null, "Cook", "https://test/legacy", ImageAssetId: null, []) { Images = images }],
+        };
+        PublicRecipeModel model = overview.ToPublicModel();
+        Assert.Equal(images.Select(image => image.ImageUrl), model.Images, StringComparer.Ordinal);
+        Assert.Equal(images.Select(image => image.ImageUrl), Assert.Single(model.Steps).Images, StringComparer.Ordinal);
+        PublicRecipeModel noImages = (overview with { Steps = [overview.Steps[0] with { Images = [], ImageUrl = null }] }).ToPublicModel();
+        Assert.Empty(Assert.Single(noImages.Steps).Images);
+    }
+
     [Theory]
     [InlineData(Visibility.Private, false)]
     [InlineData(Visibility.Public, true)]

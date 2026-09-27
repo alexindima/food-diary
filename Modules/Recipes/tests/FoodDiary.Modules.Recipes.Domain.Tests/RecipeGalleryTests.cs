@@ -7,6 +7,28 @@ namespace FoodDiary.Modules.Recipes.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecipeGalleryTests {
     [Fact]
+    public void Image_RejectsEmptyAssetId() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new RecipeImage(default, "https://test/image", 0));
+        Assert.Equal("imageAssetId", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void Image_RejectsMissingUrl(string? url) {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new RecipeImage(ImageAssetId.New(), url!, 0));
+        Assert.Equal("imageUrl", exception.ParamName);
+    }
+
+    [Fact]
+    public void Image_EnforcesUrlLengthBoundary() {
+        string url = new('a', Recipe.ImageUrlMaxLength);
+        Assert.Equal(url, new RecipeImage(ImageAssetId.New(), url, 0).ImageUrl);
+        Assert.Equal("imageUrl", Assert.Throws<ArgumentException>(() => new RecipeImage(ImageAssetId.New(), url + "a", 0)).ParamName);
+    }
+
+    [Fact]
     public void StepGallery_PreservesOrderAndEnforcesLimit() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Cook");

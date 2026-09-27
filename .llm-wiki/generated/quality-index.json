@@ -46288,9 +46288,10 @@
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
       "line": 18,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.GalleryTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -48204,10 +48205,11 @@
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
       "line": 17,
-      "testReferenceCount": 8,
+      "testReferenceCount": 9,
       "testReferences": [
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Gallery.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Media.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.NestedIngredients.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",

@@ -105,7 +105,7 @@
       "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
       "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:45.9306690Z"
+      "reviewedAtUtc": "2026-09-26T22:55:45.930669Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -120,7 +120,7 @@
       "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
       "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:46.4874000Z"
+      "reviewedAtUtc": "2026-09-26T22:55:46.4874Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -165,7 +165,7 @@
       "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
       "baseRef": "HEAD",
       "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:47.7879690Z"
+      "reviewedAtUtc": "2026-09-26T22:55:47.787969Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -836,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d33fe5186605c5b4db46b546a6054b6f8f0c78ba6e81da8f9af126b3f2a2280f"
+          "sha256": "3c37d7e96e1c747ed26943466998ffbf376f9f2fc16362ca68eb8e153389ad16"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Quality index adds direct references from the new Create/Update recipe gallery tests. No production complexity or risk classification changed; execution coverage is separately verified with dotCover.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:49.8219218Z"
+      "gitHead": "ac6508cbcb815f9c4b1b2d13e1f519dd1f5d5a5f",
+      "reviewedAtUtc": "2026-09-27T00:50:04.6288171Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -926,17 +926,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d33fe5186605c5b4db46b546a6054b6f8f0c78ba6e81da8f9af126b3f2a2280f"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9a5c4bee60b57236175f08d3018195182750c1e01c64b4de8ef15d062e7cc71a"
+          "sha256": "3c37d7e96e1c747ed26943466998ffbf376f9f2fc16362ca68eb8e153389ad16"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed quality-index delta limited to added recipe gallery test references. No security-sensitive production or runtime change; review guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:51.8195049Z"
+      "gitHead": "ac6508cbcb815f9c4b1b2d13e1f519dd1f5d5a5f",
+      "reviewedAtUtc": "2026-09-27T00:50:06.5871257Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

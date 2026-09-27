@@ -11,6 +11,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Domain.Primitives;
@@ -28,6 +29,28 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task BatchRead_EmptyIdsAndVisibilityFiltering_DoNotTrackRecipesAsync() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
+        var owner = User.Create("batch-owner@example.com", "hash");
+        var stranger = User.Create("batch-stranger@example.com", "hash");
+        var own = Recipe.Create(owner.Id, "Own", 1);
+        var visible = Recipe.Create(stranger.Id, "Public", 1, visibility: Visibility.Public);
+        var hidden = Recipe.Create(stranger.Id, "Private", 1, visibility: Visibility.Private);
+        database.AddRange(owner, stranger, own, visible, hidden);
+        await database.SaveChangesAsync();
+        IRecipeReadRepository reader = provider.GetRequiredService<IRecipeReadRepository>();
+        Assert.Empty(await reader.GetByIdsAsync([], owner.Id));
+        RecipeId[] ids = [own.Id, visible.Id, hidden.Id, own.Id];
+        IReadOnlyDictionary<RecipeId, Recipe> publicResults = await reader.GetByIdsAsync(ids, owner.Id, includePublic: true);
+        Assert.Equal(2, publicResults.Count);
+        Assert.True(publicResults.ContainsKey(own.Id));
+        Assert.True(publicResults.ContainsKey(visible.Id));
+        Assert.Equal(own.Id, Assert.Single(await reader.GetByIdsAsync(ids, owner.Id, includePublic: false)).Key);
+        Assert.Empty(provider.GetRequiredService<RecipesDbContext>().ChangeTracker.Entries<Recipe>());
+    }
+
     [RequiresDockerFact]
     public async Task SharedSaveAndIntermediateMutationFlushUseOwnerContextAsync() {
         await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
@@ -47,7 +70,8 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
         await writes.AddAsync(recipe);
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await unitOfWork.SaveChangesAsync();
-        Assert.Equal(3, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(5, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(2, owned.Model.GetEntityTypes().Count(entity => entity.ClrType == typeof(RecipeImage) && entity.IsOwned()));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<Recipe>());
         Assert.Equal(2, await database.Recipes.CountAsync());
