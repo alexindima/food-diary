@@ -655,26 +655,14 @@
       "pageSha256": "000054ea23026be502d7a9dcdd58d580effcf60c47aa69f2bd3795e7268be174",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "4280492d35abdc27ecca58f0967921becd5c69f22aa99823fdee67eaff31f556"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-snapshot.mjs",
-          "sha256": "c6cdcc34fd0f9416f6e0676d1eb56c31845b0c6cc9ab9ffa2dbf1a459953af25"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-snapshot.test.mjs",
-          "sha256": "61df25c60835fcd6a20564b2ae3ba6490c998204e695de0c8f6a42c778321543"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "abfcc040124fea145f6bf98a8ff9f2537039cf87fcd31dc9ddb3cab81bfb961a"
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "9f526f638661b2e52217ab00f5bcc8c94b579bd9456402c9eab91222b718beb0"
         }
       ],
-      "reason": "Documented consistent SQLite online backup and snapshot schema invalidation; WAL regression and isolation smoke passed.",
-      "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:03:09.2475134Z"
+      "reason": "Reviewed Core audit topology assertions against docker-compose.yml: 18 services include client-ssr and client depends on client-ssr. The documented pipeline and audit shard behavior remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
+      "reviewedAtUtc": "2026-09-28T01:17:46.7989499Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -852,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "06c9b752522a5efd324e245a00fe61ca3bcf89dc18788cd74c86b530b5a0b151"
+          "sha256": "3f23c0a5f9104cd9576d12922c97717d8793c569255a6af4e576696c8f3a10d0"
         }
       ],
-      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
+      "reason": "Reviewed regenerated quality-index diff: only extraction-readiness structural counts changed for the shared-contract exclusion. Hotspot classification, test-reference limitations and query behavior remain accurate.",
       "baseRef": "origin/master",
-      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
-      "reviewedAtUtc": "2026-09-28T00:36:22.707108Z"
+      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
+      "reviewedAtUtc": "2026-09-28T01:25:51.6853887Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -942,25 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "06c9b752522a5efd324e245a00fe61ca3bcf89dc18788cd74c86b530b5a0b151"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "71fffa75bced6a272af5af119556d24c6d668f353aacd89bd8a07fcf3fa39c2d"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
+          "sha256": "3f23c0a5f9104cd9576d12922c97717d8793c569255a6af4e576696c8f3a10d0"
         }
       ],
-      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
+      "reason": "Reviewed regenerated quality-index diff: one namespace-classification condition changes structural metrics only. Security evidence boundaries and documented limitations remain accurate.",
       "baseRef": "origin/master",
-      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
-      "reviewedAtUtc": "2026-09-28T00:36:24.3518088Z"
+      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
+      "reviewedAtUtc": "2026-09-28T01:25:52.2387349Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

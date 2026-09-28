@@ -8,40 +8,70 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import { PublicRecipeDetailComponent } from './public-detail';
 
+const authenticated = signal(false);
+const facade = { isFavorite: vi.fn(() => of(false)), saveAsync: vi.fn(), addToDiaryAsync: vi.fn() };
+const dialog = { openAsync: vi.fn() };
+const browser = { getOrigin: vi.fn<() => string | undefined>(), copyTextAsync: vi.fn() };
+beforeEach(() => {
+    authenticated.set(false);
+    vi.clearAllMocks();
+    browser.getOrigin.mockReturnValue('https://fooddiary.test');
+    browser.copyTextAsync.mockResolvedValue(undefined);
+    TestBed.configureTestingModule({
+        providers: [
+            provideRouter([
+                {
+                    path: 'explore',
+                    component: PublicRecipeDetailComponent,
+                    data: { seo: { recipe: publicRecipeFixture(), error: null } },
+                },
+                {
+                    path: 'explore/:id',
+                    component: PublicRecipeDetailComponent,
+                    data: { seo: { recipe: publicRecipeFixture(), error: null } },
+                },
+            ]),
+            provideTranslateTesting(),
+            { provide: AuthService, useValue: { isAuthenticated: authenticated } },
+            { provide: PublicAuthDialogService, useValue: dialog },
+            { provide: BrowserWindowService, useValue: browser },
+        ],
+    });
+    TestBed.overrideComponent(PublicRecipeDetailComponent, {
+        set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }] },
+    });
+});
 describe('public recipe account actions', () => {
-    const authenticated = signal(false);
-    const facade = { isFavorite: vi.fn(() => of(false)), saveAsync: vi.fn(), addToDiaryAsync: vi.fn() };
-    const dialog = { openAsync: vi.fn() };
-    beforeEach(() => {
-        authenticated.set(false);
-        vi.clearAllMocks();
-        TestBed.configureTestingModule({
-            providers: [
-                provideRouter([
-                    {
-                        path: 'explore',
-                        component: PublicRecipeDetailComponent,
-                        data: { seo: { recipe: publicRecipeFixture(), error: null } },
-                    },
-                    {
-                        path: 'explore/:id',
-                        component: PublicRecipeDetailComponent,
-                        data: { seo: { recipe: publicRecipeFixture(), error: null } },
-                    },
-                ]),
-                provideTranslateTesting(),
-                { provide: AuthService, useValue: { isAuthenticated: authenticated } },
-                { provide: PublicAuthDialogService, useValue: dialog },
-            ],
-        });
-        TestBed.overrideComponent(PublicRecipeDetailComponent, {
-            set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }] },
-        });
+    it('copies the recipe URL without catalog filters', async () => {
+        const harness = await RouterTestingHarness.create('/explore/recipe?page=2&category=salads');
+        harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('.recipe-actions button')[2].click();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(browser.copyTextAsync).toHaveBeenCalledWith('https://fooddiary.test/explore/recipe');
+        expect(harness.routeNativeElement?.querySelector('[role="status"]')?.textContent).toContain('PUBLIC_RECIPES.COPIED');
+    });
+    it('shows a selectable link when clipboard access fails', async () => {
+        browser.copyTextAsync.mockRejectedValue(new Error('Clipboard unavailable'));
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('.recipe-actions button')[2].click();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(harness.routeNativeElement?.querySelector('a[href="https://fooddiary.test/explore/recipe"]')?.textContent).toContain(
+            'https://fooddiary.test/explore/recipe',
+        );
+    });
+    it('does not copy a URL when the browser origin is unavailable', async () => {
+        browser.getOrigin.mockReturnValue(undefined);
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('.recipe-actions button')[2].click();
+        await harness.fixture.whenStable();
+        expect(browser.copyTextAsync).not.toHaveBeenCalled();
     });
     it('keeps catalog filters and pagination when returning', async () => {
         const harness = await RouterTestingHarness.create('/explore/recipe?page=2&category=salads&language=all&sortBy=fastest');

@@ -82,6 +82,11 @@ try {
             throw "Contract or lookalike namespace must not become an application implementation dependency: $contractLayer."
         }
     }
+    [IO.File]::WriteAllText($fixturePath, "using FoodDiary.Application.Contracts.Common;`nnamespace FoodDiary.Modules.Dietologist.Application.Tests;`ninternal sealed class SharedContractConsumer;`n", [Text.UTF8Encoding]::new($false))
+    $sharedContract = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -DependencyFixturePath $relativeFixture -Format Json | ConvertFrom-Json
+    if (@($sharedContract.dependencyReadiness.actualModules) -contains 'Contracts' -or -not $sharedContract.moduleReadiness.ready) {
+        throw 'Shared Application.Contracts must not be classified as a legacy business module implementation.'
+    }
 } finally {
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }

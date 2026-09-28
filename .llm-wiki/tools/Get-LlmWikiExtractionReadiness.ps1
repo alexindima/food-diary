@@ -89,6 +89,7 @@ foreach ($path in $moduleSourcePaths) {
     $text = $sourceText[$path]
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
     foreach ($match in [regex]::Matches($scanText, '\bFoodDiary\.(?:Application\.(?<module>[A-Z][A-Za-z0-9_]+)|Modules\.(?<module>[A-Z][A-Za-z0-9_]+)\.Application(?![A-Za-z0-9_]|\.Abstractions(?:\.|\b)))(?:\.[A-Za-z0-9_]+)*')) {
+        if ($match.Value -match '^FoodDiary\.Application\.Contracts(?:\.|$)') { continue }
         $dependencyModule = $match.Groups['module'].Value
         if ($dependencyModule -in @($Module, 'Abstractions') -or $internalFeatureNamespaces.Contains($dependencyModule)) { continue }
         $line = 1 + ($text.Substring(0, $match.Index) -split "`n").Count - 1

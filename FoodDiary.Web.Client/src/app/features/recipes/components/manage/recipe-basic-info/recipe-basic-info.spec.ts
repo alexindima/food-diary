@@ -1,15 +1,52 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, required } from '@angular/forms/signals';
+import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeBasicInfoComponent } from './recipe-basic-info';
 
 describe('RecipeBasicInfoComponent', () => {
+    it('keeps the cover and photo order in sync when photos are added, reordered and removed', () => {
+        const { fixture, formModel } = setupComponent();
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
+            .componentInstance as ImageGalleryEditorComponent;
+        const first = { url: '/first.jpg', assetId: 'first' };
+        const second = { url: '/second.jpg', assetId: 'second' };
+        gallery.photos.set([first, second]);
+        fixture.detectChanges();
+        expect(formModel().imageUrl).toEqual(first);
+        gallery.cover.set(second);
+        fixture.detectChanges();
+        expect(formModel().images).toEqual([second, first]);
+        expect(formModel().imageUrl).toEqual(second);
+        gallery.cover.set(null);
+        expect(formModel().images).toEqual([second, first]);
+        gallery.photos.set([]);
+        fixture.detectChanges();
+        expect(formModel().images).toEqual([]);
+        expect(formModel().imageUrl).toBeNull();
+    });
+
+    it('refreshes visibility labels after switching language', () => {
+        const { component, fixture } = setupComponent();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { RECIPE_VISIBILITY: { Private: 'Private', Public: 'Public' } });
+        translate.setTranslation('ru', { RECIPE_VISIBILITY: { Private: 'Личный', Public: 'Публичный' } });
+        translate.use('en');
+        fixture.detectChanges();
+        expect(component['visibilitySelectOptions']()[0].label).toBe('Private');
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(component['visibilitySelectOptions']()[0].label).toBe('Личный');
+    });
     it('builds visibility options inside the component', () => {
         const { component } = setupComponent();
 
@@ -37,7 +74,7 @@ function setupComponent(): {
 } {
     TestBed.configureTestingModule({
         imports: [RecipeBasicInfoComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideTranslateTesting(), provideRouter([])],
     });
 
     const fixture = TestBed.createComponent(RecipeBasicInfoComponent);

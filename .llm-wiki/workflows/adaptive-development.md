@@ -94,6 +94,8 @@ Namespace discovery supports both `FoodDiary.Application.<Owner>` and
 `FoodDiary.Modules.<Owner>.Application`. Module-qualified contracts and
 `Application.Abstractions` are distinct from implementation references; similarly
 named roots such as `ApplicationExtra` do not match the application layer.
+The shared `FoodDiary.Application.Contracts` namespace is not a legacy business
+module implementation dependency.
 The
 physical source set is authoritative for ownership: multiple logical feature
 namespaces compiled into the same target project are reported as internal

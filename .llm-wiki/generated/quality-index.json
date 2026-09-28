@@ -160,11 +160,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-      "nonBlankLines": 364,
-      "decisionPoints": 90,
+      "nonBlankLines": 365,
+      "decisionPoints": 91,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 144.28
+      "structuralRiskScore": 145.8
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
@@ -1234,11 +1234,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-      "nonBlankLines": 364,
-      "decisionPoints": 90,
+      "nonBlankLines": 365,
+      "decisionPoints": 91,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 144.28
+      "structuralRiskScore": 145.8
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1",
