@@ -860,9 +860,9 @@ $affectedFrontendTestPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/example/example.spec.ts'
 $affectedFrontendTestPlanText = $affectedFrontendTestPlan -join [Environment]::NewLine
 Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiQualityIndex.ps1') 'Affected frontend test plan omitted the quality index.'
-Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Affected frontend test plan included the unrelated architecture health index.'
-Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendIndex.ps1') 'Affected frontend test plan included the unrelated frontend source index.'
-Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan included the unrelated frontend contract index.'
+Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Affected frontend test plan omitted downstream architecture test-gap counts.'
+Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiFrontendIndex.ps1') 'Affected frontend test plan omitted the frontend spec inventory.'
+Assert-Wiki ($affectedFrontendTestPlanText -match 'Build-LlmWikiFrontendContractIndex.ps1') 'Affected frontend test plan omitted component direct-spec links.'
 Assert-Wiki ($affectedFrontendTestPlanText -notmatch 'Build-LlmWikiSensitiveDataIndex.ps1') 'Affected frontend test plan included the unrelated sensitive-data index.'
 
 $qualityBuilderText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Build-LlmWikiQualityIndex.ps1') -Raw

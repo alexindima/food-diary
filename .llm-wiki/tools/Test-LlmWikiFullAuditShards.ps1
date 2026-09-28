@@ -9,9 +9,9 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 # Frozen from the unsharded audit at 45e8de30e. Updating assertions requires an
 # intentional inventory refresh, never silently dropping coverage during moves.
 $expected = @{
-    # Compared with 4a7908255: Compose count is 18 and two assertions verify
-    # client-ssr uniqueness and the client dependency. Existing assertions remain.
-    Core = @{ count = 335; hash = '4427e2744ee03a73d70a85b08968a7474a024c66cd9d9037560bab93c8861240' }
+    # Compared with c40a7a51d: three frontend-test assertions now require the
+    # spec inventory, direct-spec links and downstream test-gap counts; none removed.
+    Core = @{ count = 335; hash = 'c75d472cde15e5bab15d49e3f789629969a2b8bc1b2f60094e42f4bb1f80abf0' }
     # Daily metrics assertion now verifies the exact UTC dates and total across midnight;
     # no assertions were removed or relaxed.
     Governed = @{ count = 376; hash = '9a0737e2c64b6e66529ce281c5e186137475102dbb50a6de9b537d372051b221' }

@@ -237,7 +237,7 @@
       "reason": "Reviewed regenerated architecture health: PublicRecipeGalleryComponent now has a direct spec and leaves the missing-spec list; dependency graph and enforcement are unchanged.",
       "baseRef": "origin/master",
       "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:58.1801220Z"
+      "reviewedAtUtc": "2026-09-28T01:46:58.180122Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -648,17 +648,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "000054ea23026be502d7a9dcdd58d580effcf60c47aa69f2bd3795e7268be174",
+      "pageSha256": "fe774ed8067f265672ee7a60614a941021605e090f88e4946a41a7750a30ded7",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "9cf508d204705dc2b55ef7d6559b888abc36a37b42c3103b9b0e49c7284965f5"
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "9f526f638661b2e52217ab00f5bcc8c94b579bd9456402c9eab91222b718beb0"
+          "sha256": "e617db3ca389d0a275e4dfc5a5c1dd060233da6f8b038ee4c83ca010a9e3363f"
         }
       ],
-      "reason": "Reviewed Core audit topology assertions against docker-compose.yml: 18 services include client-ssr and client depends on client-ssr. The documented pipeline and audit shard behavior remains accurate.",
+      "reason": "Reviewed the Core audit assertions and frozen inventory: all 335 Core assertions remain, with three expectations aligned to the documented frontend spec inventory, direct-spec links and downstream architecture test-gap refresh. No production behavior or coverage is removed.",
       "baseRef": "origin/master",
-      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
-      "reviewedAtUtc": "2026-09-28T01:17:46.7989499Z"
+      "gitHead": "c40a7a51dfffc826e73df58a706558632796b882",
+      "reviewedAtUtc": "2026-09-28T02:53:31.8918101Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
