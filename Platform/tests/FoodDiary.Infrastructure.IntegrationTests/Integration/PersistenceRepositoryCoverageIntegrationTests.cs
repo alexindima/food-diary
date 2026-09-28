@@ -126,7 +126,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
         var reader = new RecipeOverviewReadService(context);
         Recipe[] knownFast = [fast, tied];
-        RecipeId[] expectedFast = [.. knownFast.OrderBy(recipe => recipe.Id.Value).Select(recipe => recipe.Id), slow.Id, unknown.Id];
+        RecipeId[] expectedFast = [.. knownFast
+            .OrderBy(recipe => recipe.Id.Value.ToString("N"), StringComparer.Ordinal)
+            .Select(recipe => recipe.Id), slow.Id, unknown.Id];
         var filters = new RecipeQueryFilters(prefix, SortBy: "fastest");
         (IReadOnlyList<RecipeOverviewReadItem> first, int total) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 1, 2, filters);
         (IReadOnlyList<RecipeOverviewReadItem> second, _) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 2, 2, filters);
