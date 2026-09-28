@@ -22,14 +22,18 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
+        },
+        {
           "path": "docs/README.md",
           "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
         }
       ],
-      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
-      "baseRef": "HEAD",
-      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:47.530378Z"
+      "reason": "Reviewed current architecture and documentation navigation: canonical project namespaces and public recipe SSR documentation retain module ownership and source authority.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:27.8389583Z"
     },
     {
       "pageId": "module.frontend",
@@ -143,14 +147,18 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
+          "path": "docs/adr/README.md",
+          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
+        },
+        {
           "path": "docs/README.md",
           "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
         }
       ],
-      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
-      "baseRef": "HEAD",
-      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:47.7676233Z"
+      "reason": "Reviewed new accepted namespace and public recipe ADR entries; source authority and historical ADR lifecycle guidance remain accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:24.2194014Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -160,12 +168,16 @@
         {
           "path": "Directory.Build.props",
           "sha256": "de6204a7f5a4aeac7f9791a9bac3f361870863d612dc271b342bb16c2d09068d"
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
-      "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:47.787969Z"
+      "reason": "Reviewed global analyzer-visible namespace properties and Angular server output/allowed hosts. Refreshed full project and frontend catalog still matches the documented inventory and its limits.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:27.3125031Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -220,12 +232,16 @@
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
           "sha256": "01008ac6842c321c25b7af792dfb8c2662f8025ef065640f1270a1bbc91e8ea3"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
         }
       ],
-      "reason": "Reviewed generated health changes: controller convention coverage now references PublicRecipesController, no project dependency changes or cycles, and 2111 architecture tests passed.",
-      "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:10.6021612Z"
+      "reason": "Reviewed explicit shared-contract references after canonical namespace migration and regenerated architecture index. Dependency matrix remains enforced; focused architecture suite passed 2111 tests.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:26.7290065Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -235,12 +251,20 @@
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
           "sha256": "5ae874e3007773b3336826ada723f2172698f79b4353327e2cdf264b5bcc7c5e"
+        },
+        {
+          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
+          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
         }
       ],
-      "reason": "Public recipe query construction moved into owner presentation mappings with identical fields; new edges are mapping and regression-test references. Existing HTTP behavior and 39 recipe-related API tests passed.",
-      "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:11.9441292Z"
+      "reason": "Reviewed canonical shared contract namespaces and public recipe query mappings, length constraints and OpenAPI snapshot. Owner contract guidance remains current; API compatibility against the last successful CI baseline passed.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:26.0644741Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +521,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "ebaddc073dd5fb1dfd89b5df0735cd453c5d9ec9a2e482ae1fe445c25204812e"
+          "sha256": "d2ced64d77c888eb3848e13f01aa2949246dddcd8be4701098c4a461a0dd4f68"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
-      "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:23.8039169Z"
+      "reason": "Reviewed regenerated recipe invariant locations against current Recipe.cs. Domain constructors, language/category guards and real PostgreSQL persistence are covered by the successful focused and full integration runs.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:28.3999606Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -917,14 +941,26 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
         }
       ],
-      "reason": "Reviewed existing recipe access identity rule using translated query terms. Shared Node and .NET policy semantics remain aligned; source navigation, security-evidence limits, corpus thresholds and ranking rule counts are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "ef1d724d6ed831a224c96ba6ce24e061af2f5161",
-      "reviewedAtUtc": "2026-09-28T00:17:25.7705622Z"
+      "reason": "Reviewed public recipe visibility and private ingredient tests, query constraints, refreshed runtime/privacy indexes and translated recipe access navigation. Navigation evidence remains distinct from security conclusions.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:29.1951879Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1101,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5ec98bc1058989ccfe131fa3f5ece6ebedc4382a43ae6acea07025eec41065d4"
+          "sha256": "c6e3a1d4789fcaf787bdd90ef18d25b628e95c1e808a7bb05dff61ea288b194d"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "79a12d0e0f74d0dcdd902f58b1c7716b76b1323e9c061d0cf4022685be29ccca"
+          "sha256": "51cca857942a674032ca17d12c57cc623f837b37d8273d1f94f78ae0a745fd03"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
-      "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:30.4182494Z"
+      "reason": "Reviewed refreshed frontend route/component/spec and consumer indexes for public recipes. Existing frontend and backend trace guidance remains valid for the current source owners.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:23.4637356Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1199,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5ec98bc1058989ccfe131fa3f5ece6ebedc4382a43ae6acea07025eec41065d4"
+          "sha256": "c6e3a1d4789fcaf787bdd90ef18d25b628e95c1e808a7bb05dff61ea288b194d"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
-      "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:24.7612598Z"
+      "reason": "Reviewed generated public catalog sort translation keys, detail servings text, page-header bindings and consumer counts against current templates. Existing contract and trace workflow guidance remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
+      "reviewedAtUtc": "2026-09-28T00:19:25.018934Z"
     },
     {
       "pageId": "workflow.query-context",
