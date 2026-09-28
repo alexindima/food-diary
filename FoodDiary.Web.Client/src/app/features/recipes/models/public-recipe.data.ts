@@ -17,6 +17,7 @@ export type PublicRecipeStep = {
 };
 
 export type PublicRecipe = {
+    authorName?: string | null;
     language?: string;
     id: string;
     name: string;
@@ -34,6 +35,7 @@ export type PublicRecipe = {
     totalFiber: number | null;
     totalAlcohol: number | null;
     missingIngredientCount: number;
+    missingIngredientNames?: string[];
     steps: PublicRecipeStep[];
 };
 

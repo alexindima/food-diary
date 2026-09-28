@@ -11,7 +11,16 @@ public static class PublicRecipeMappings {
         recipe.TotalAlcohol, recipe.MissingIngredientCount,
         recipe.Steps.Select(step => new PublicRecipeStepModel(step.StepNumber, step.Title, step.Instruction,
             GetStepImages(step),
-            step.Ingredients.Select(ToPublicIngredient).ToArray())).ToArray()) { Language = recipe.Language };
+            step.Ingredients.Select(ToPublicIngredient).ToArray())).ToArray()) {
+        AuthorName = recipe.AuthorName,
+        Language = recipe.Language,
+        MissingIngredientNames = recipe.MissingIngredientCount > 0
+            ? recipe.Steps.SelectMany(step => step.Ingredients)
+                .Where(ingredient => ingredient.ProductIsAccessible && ingredient.NestedRecipeIsAccessible
+                    && ingredient.TextName is not null)
+                .Select(ingredient => ingredient.TextName!).ToArray()
+            : [],
+    };
 
     private static IReadOnlyList<string> GetStepImages(RecipeOverviewStepReadItem step) {
         if (step.Images.Count > 0) {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, signal } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
 
-import type { PublicRecipe } from '../../models/public-recipe.data';
+import type { PublicRecipe, PublicRecipeStep } from '../../models/public-recipe.data';
 import { PublicRecipeGalleryComponent } from '../public-gallery/public-gallery';
 
 @Component({
@@ -25,5 +25,11 @@ export class PublicStepsComponent {
     }
     protected moveStep(delta: number): void {
         this.stepIndex.update(value => Math.max(0, Math.min(this.recipe().steps.length - 1, value + delta)));
+    }
+    protected stepNumber(step: PublicRecipeStep): string {
+        return String(step.stepNumber).padStart(2, '0');
+    }
+    protected ingredientNames(step: PublicRecipeStep): string {
+        return [...new Set(step.ingredients.filter(item => item.isAvailable && item.name !== null).map(item => item.name))].join(' · ');
     }
 }

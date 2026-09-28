@@ -109,4 +109,11 @@ describe('public recipe account actions', () => {
         expect(facade.addToDiaryAsync).toHaveBeenCalledWith('recipe');
         expect(dialog.openAsync).not.toHaveBeenCalled();
     });
+    it('keeps the hero servings in sync with the ingredient control', async () => {
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        harness.routeNativeElement?.querySelector<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.MORE"]')?.click();
+        harness.detectChanges();
+        expect(harness.routeNativeElement?.querySelector('.recipe-facts')?.textContent).toContain('3 PUBLIC_RECIPES.SERVINGS_OTHER');
+        expect(harness.routeNativeElement?.querySelector('.nutrition-warning fd-ui-icon')).not.toBeNull();
+    });
 });

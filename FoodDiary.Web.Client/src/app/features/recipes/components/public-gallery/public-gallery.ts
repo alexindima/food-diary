@@ -12,6 +12,7 @@ import { FdUiDialogService, FdUiIconComponent, FdUiImagePreviewDialogComponent }
 export class PublicRecipeGalleryComponent {
     public readonly images = input.required<string[]>();
     public readonly name = input.required<string>();
+    public readonly aspect = input<'square' | 'wide'>('square');
     protected readonly selected = signal<string | null>(null);
     protected readonly activeImage = computed(() => {
         const selected = this.selected();

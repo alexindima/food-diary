@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit';
-import { firstValueFrom } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
+import { firstValueFrom, map } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
-import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { AuthService } from '../../../../services/auth.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
-import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
 import { PublicRecipeGalleryComponent } from '../../components/public-gallery/public-gallery';
 import { PublicIngredientsComponent } from '../../components/public-ingredients/public-ingredients';
@@ -29,13 +27,12 @@ import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolve
     providers: [PublicRecipesFacade],
     imports: [
         PageBodyComponent,
-        PageHeaderComponent,
         PublicNutritionComponent,
         PublicIngredientsComponent,
         PublicStepsComponent,
         TranslatePipe,
         FdUiButtonComponent,
-        FdPageContainerDirective,
+        FdUiIconComponent,
         PublicRecipeGalleryComponent,
         PublicRecipeNavigationComponent,
     ],
@@ -48,6 +45,7 @@ export class PublicRecipeDetailComponent {
     private readonly auth = inject(AuthService);
     private readonly authDialog = inject(PublicAuthDialogService);
     private readonly browser = inject(BrowserWindowService);
+    private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly routeData = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
     protected readonly page = computed(() => readPublicRecipePage(this.routeData()['seo']));
@@ -58,9 +56,36 @@ export class PublicRecipeDetailComponent {
     });
     protected readonly saved = signal(false);
     protected readonly busy = signal(false);
+    protected readonly servings = signal(1);
     protected readonly actionMessage = signal<string | null>(null);
     protected readonly shareUrl = signal<string | null>(null);
+    protected readonly totalTime = computed(() => {
+        const recipe = this.recipe();
+        if (recipe === null || (recipe.prepTime === null && recipe.cookTime === null)) {
+            return null;
+        }
+        return (recipe.prepTime ?? 0) + (recipe.cookTime ?? 0);
+    });
+    protected readonly recipeLanguageKey = computed(() => (this.recipe()?.language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN'));
+    protected readonly saveLabelKey = computed(() => (this.saved() ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.SAVE'));
+    protected readonly unavailableTitleKey = computed(() =>
+        this.page().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND',
+    );
+    protected readonly showTimeSeparator = computed(() => {
+        const recipe = this.recipe();
+        return recipe?.prepTime !== null && recipe?.cookTime !== null;
+    });
+    protected readonly actionMessageKey = computed(() => this.actionMessage() ?? '');
+    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: this.translate.getCurrentLang() ?? 'en',
+    });
+    protected readonly servingsKey = computed(
+        () => `PUBLIC_RECIPES.SERVINGS_${new Intl.PluralRules(this.language()).select(this.servings()).toUpperCase()}`,
+    );
     public constructor() {
+        effect(() => {
+            this.servings.set(this.recipe()?.servings ?? 1);
+        });
         effect(onCleanup => {
             const recipe = this.recipe();
             this.saved.set(false);

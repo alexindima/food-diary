@@ -10,6 +10,9 @@
     overflow: hidden;
     background: var(--fd-bg-surface-raised);
 }
+.gallery-cover-wide {
+    aspect-ratio: 16 / 9;
+}
 button {
     display: block;
     padding: 0;

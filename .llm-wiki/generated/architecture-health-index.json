@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 104,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 37,
     "explicitDebtMarkers": 11
   },
@@ -4710,22 +4710,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
       "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "PublicNutritionComponent",
-      "selector": "fd-public-nutrition",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.html",
-      "inputs": [
-        {
-          "name": "recipe",
-          "type": "PublicRecipe",
-          "required": true
-        }
-      ],
       "outputs": [],
       "specPath": null
     },

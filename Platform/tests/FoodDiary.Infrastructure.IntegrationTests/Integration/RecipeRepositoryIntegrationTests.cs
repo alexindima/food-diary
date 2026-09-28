@@ -33,6 +33,25 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
 
     [RequiresDockerFact]
+    public async Task PublicOverview_ProjectsOnlyAuthorFirstNameAndAllowsMissingName() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var author = User.Create($"recipe-author-{Guid.NewGuid():N}@example.com", "hash");
+        author.UpdatePersonalInfo(firstName: "Dima", lastName: "Private surname");
+        var unnamed = User.Create($"unnamed-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(author.Id, "Public recipe", 1, visibility: Visibility.Public);
+        var other = Recipe.Create(unnamed.Id, "Unnamed recipe", 1, visibility: Visibility.Public);
+        context.Users.AddRange(author, unnamed);
+        context.Recipes.AddRange(recipe, other);
+        await context.SaveChangesAsync();
+
+        RecipeOverviewReadService service = new(context);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> result = await service.GetByIdsWithUsageAsync([recipe.Id, other.Id], UserId.Empty);
+
+        Assert.Equal("Dima", result[recipe.Id].AuthorName);
+        Assert.Null(result[other.Id].AuthorName);
+    }
+
+    [RequiresDockerFact]
     public async Task OverviewSorting_OrdersBeforePagingAndPlacesUnknownTimesLast() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipe-sorting-{Guid.NewGuid():N}@example.com", "hash");

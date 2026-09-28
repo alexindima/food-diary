@@ -22,21 +22,34 @@ describe('public ingredient quantities', () => {
         ];
         const fixture = TestBed.createComponent(PublicIngredientsComponent);
         fixture.componentRef.setInput('recipe', recipe);
+        fixture.componentRef.setInput('servings', recipe.servings);
         fixture.detectChanges();
         const element: unknown = fixture.nativeElement;
         if (!(element instanceof HTMLElement)) {
             throw new Error('Expected component element');
         }
-        const buttons = element.querySelectorAll<HTMLButtonElement>('button');
-        buttons[1].click();
+        const decrease = element.querySelector<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.FEWER"]');
+        const increase = element.querySelector<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.MORE"]');
+        increase?.click();
         fixture.detectChanges();
         expect(element.textContent).toContain('150');
         expect(element.textContent).toContain('to taste');
         expect(element.textContent).toContain('PUBLIC_RECIPES.PRIVATE_INGREDIENT');
         expect(element.querySelectorAll('li a')).toHaveLength(0);
-        buttons[0].click();
-        buttons[0].click();
+        decrease?.click();
+        decrease?.click();
         fixture.detectChanges();
-        expect(buttons[0].disabled).toBe(true);
+        expect(decrease?.disabled).toBe(true);
+    });
+
+    it('hides the portions hint when the recipe has no ingredients', () => {
+        const recipe = publicRecipeFixture();
+        const fixture = TestBed.createComponent(PublicIngredientsComponent);
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.componentRef.setInput('servings', recipe.servings);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('[aria-label="PUBLIC_RECIPES.PORTIONS_HINT"]')).toBeNull();
+        expect(element.textContent).toContain('PUBLIC_RECIPES.NO_INGREDIENTS');
     });
 });

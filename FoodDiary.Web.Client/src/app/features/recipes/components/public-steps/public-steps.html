@@ -1,22 +1,25 @@
 <section class="cooking-steps">
     <div class="steps-heading">
         <h2>{{ 'PUBLIC_RECIPES.STEPS' | translate }}</h2>
-        <fd-ui-button variant="outline" size="sm" (click)="toggleCooking()">{{
+        <fd-ui-button variant="outline" size="sm" [icon]="cooking() ? 'view_list' : 'play_arrow'" (click)="toggleCooking()">{{
             (cooking() ? 'PUBLIC_RECIPES.ALL_STEPS' : 'PUBLIC_RECIPES.COOK_MODE') | translate
         }}</fd-ui-button>
     </div>
     @for (step of visibleSteps(); track step.stepNumber) {
-        <article class="recipe-step">
-            <h3>
-                {{ 'PUBLIC_RECIPES.STEP' | translate: { number: step.stepNumber } }}
-                @if (step.title) {
-                    · {{ step.title }}
+        <article class="recipe-step" [class.has-media]="step.images.length > 0">
+            <div class="step-number" aria-hidden="true">{{ stepNumber(step) }}</div>
+            <div class="step-content">
+                <h3>{{ step.title ?? ('PUBLIC_RECIPES.STEP' | translate: { number: step.stepNumber }) }}</h3>
+                @if (step.images.length > 0) {
+                    <fd-public-recipe-gallery class="step-gallery" aspect="wide" [images]="step.images" [name]="recipe().name" />
                 }
-            </h3>
-            <p>{{ step.instruction }}</p>
-            @if (step.images.length > 0) {
-                <fd-public-recipe-gallery class="step-gallery" [images]="step.images" [name]="recipe().name" />
-            }
+                <div class="step-copy">
+                    <p class="step-instruction">{{ step.instruction }}</p>
+                    @if (ingredientNames(step); as names) {
+                        <p class="step-ingredients">{{ 'PUBLIC_RECIPES.STEP_INGREDIENTS' | translate }} {{ names }}</p>
+                    }
+                </div>
+            </div>
         </article>
     }
     @if (cooking()) {

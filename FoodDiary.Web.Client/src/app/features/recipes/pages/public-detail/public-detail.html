@@ -1,24 +1,48 @@
 <fd-public-recipe-navigation />
-<div fdPageContainer [fullHeight]="false">
-    <fd-page-header
-        [backVisible]="true"
-        [backAriaLabel]="'PUBLIC_RECIPES.CATALOG' | translate"
-        [title]="recipe()?.name ?? ((page().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND') | translate)"
-        [subtitle]="recipeCategoryKey(recipe()?.category) | translate"
-        (back)="backToCatalogAsync()"
-    />
+<div class="recipe-page fd-page-container">
+    <fd-ui-button
+        class="recipe-page-header"
+        variant="secondary"
+        fill="text"
+        icon="arrow_back"
+        [ariaLabel]="'PUBLIC_RECIPES.CATALOG' | translate"
+        (click)="backToCatalogAsync()"
+        >{{ 'PUBLIC_RECIPES.CATALOG' | translate }}</fd-ui-button
+    >
     <fd-page-body>
         @if (recipe(); as item) {
             <div class="recipe-intro">
                 <fd-public-recipe-gallery [images]="images()" [name]="item.name" />
                 <div class="recipe-summary">
-                    <p>
-                        {{ 'RECIPE_LANGUAGE.LABEL' | translate }}:
-                        {{ (item.language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN') | translate }}
-                    </p>
-                    @if (item.description) {
-                        <p class="recipe-description">{{ item.description }}</p>
+                    <p class="recipe-category">{{ recipeCategoryKey(item.category) | translate }}</p>
+                    <h1>{{ item.name }}</h1>
+                    @if (item.authorName) {
+                        <p class="recipe-author">{{ 'PUBLIC_RECIPES.AUTHOR' | translate: { name: item.authorName } }}</p>
                     }
+                    <p class="recipe-description" [hidden]="!item.description">{{ item.description }}</p>
+                    <div class="recipe-facts">
+                        <div class="recipe-fact" [hidden]="totalTime() === null">
+                            <fd-ui-icon name="schedule" />
+                            <strong>{{ totalTime() }} {{ 'PUBLIC_RECIPES.MIN' | translate }}</strong>
+                        </div>
+                        <div class="recipe-fact">
+                            <fd-ui-icon name="restaurant" />
+                            <strong>{{ servings() }} {{ servingsKey() | translate }}</strong>
+                        </div>
+                        <div class="recipe-fact">
+                            <fd-ui-icon name="language" />
+                            <strong>{{ recipeLanguageKey() | translate }}</strong>
+                        </div>
+                    </div>
+                    <p class="recipe-time-breakdown" [hidden]="item.prepTime === null && item.cookTime === null">
+                        <span [hidden]="item.prepTime === null">{{
+                            'PUBLIC_RECIPES.PREP_DETAIL' | translate: { minutes: item.prepTime }
+                        }}</span>
+                        <span aria-hidden="true" [hidden]="!showTimeSeparator()">·</span>
+                        <span [hidden]="item.cookTime === null">{{
+                            'PUBLIC_RECIPES.COOK_DETAIL' | translate: { minutes: item.cookTime }
+                        }}</span>
+                    </p>
                     <fd-public-nutrition [recipe]="item" />
                     <div class="recipe-actions">
                         <fd-ui-button icon="add" [loading]="busy()" (click)="actAsync('diary')">{{
@@ -31,28 +55,27 @@
                             [disabled]="saved()"
                             [disabledReason]="'PUBLIC_RECIPES.SAVED' | translate"
                             (click)="actAsync('save')"
-                            >{{ (saved() ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.SAVE') | translate }}</fd-ui-button
+                            >{{ saveLabelKey() | translate }}</fd-ui-button
                         >
                         <fd-ui-button variant="secondary" fill="text" icon="share" (click)="shareAsync()">{{
                             'PUBLIC_RECIPES.SHARE' | translate
                         }}</fd-ui-button>
                     </div>
-                    @if (actionMessage(); as message) {
-                        <p role="status">{{ message | translate }}</p>
-                    }
+                    <p role="status" [hidden]="actionMessage() === null">{{ actionMessageKey() | translate }}</p>
                     <a [hidden]="shareUrl() === null" [href]="shareUrl()">{{ shareUrl() }}</a>
                 </div>
             </div>
             <div class="recipe-body">
-                <fd-public-ingredients [recipe]="item" />
+                <fd-public-ingredients [recipe]="item" [servings]="servings()" (servingsChange)="servings.set($event)" />
                 <fd-public-steps [recipe]="item" />
             </div>
         } @else {
             <section class="recipe-unavailable">
+                <h1>{{ unavailableTitleKey() | translate }}</h1>
                 <p>{{ 'PUBLIC_RECIPES.UNAVAILABLE_HINT' | translate }}</p>
-                @if (page().error === 'error') {
-                    <fd-ui-button variant="outline" (click)="retry()">{{ 'PUBLIC_RECIPES.RETRY' | translate }}</fd-ui-button>
-                }
+                <fd-ui-button variant="outline" [hidden]="page().error !== 'error'" (click)="retry()">{{
+                    'PUBLIC_RECIPES.RETRY' | translate
+                }}</fd-ui-button>
             </section>
         }
     </fd-page-body>

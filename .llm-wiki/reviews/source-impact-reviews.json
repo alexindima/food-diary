@@ -207,14 +207,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "8800af2866b6a57df60f5d3346c27f0307142af9aafd65c7f50f40ed91bd4109"
         }
       ],
-      "reason": "CI now verifies the selected API baseline contains the OpenAPI snapshot, preserving bootstrap fallback while clearing the expected native probe exit code; no API contract changed.",
+      "reason": "Reviewed additive nullable authorName in PublicRecipeHttpResponse. Full OpenAPI snapshot updated and SwaggerJson_MatchesFullPresentationContractSnapshot passed; existing fields and routes are unchanged. The API compatibility workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
-      "reviewedAtUtc": "2026-09-28T10:29:00.9249991Z"
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:33:37.0275042Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -783,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
+          "sha256": "4bfb178da2d30bb8b9bb6dc57ab9522ebb31a11824b02b7cbeb6a9a48bd9e3d6"
         }
       ],
-      "reason": "Sensitive-data index changes only refresh source line locations. Public recipe tests verify hidden private ingredients and absence of owner identifiers and comments; no data lifecycle or provider changes.",
+      "reason": "Public author field selects first name only, with no email or surname fallback and null when absent. Anonymous visibility is preserved and integration test passes. Privacy workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:13.0219088Z"
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:35:49.3782147Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
+          "sha256": "ed427f093436b75cbcbc7f9d2a730e6a1c77f4e18ffb995a30c759a20f16ba4c"
         }
       ],
-      "reason": "Updated the generated quality index after the dependency-triggered lint compatibility change; the boolean behavior remains unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
-      "reviewedAtUtc": "2026-09-28T07:48:05.3599619Z"
+      "reason": "Regenerated quality index includes author read integration test and existing recipe tests. Test references remain navigation evidence; executed validation includes PostgreSQL projection, API snapshot, 17 frontend tests and 2111 architecture tests. Quality risk workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:36:22.2385198Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
+          "sha256": "e3229a2a43d03ed7b21a2151256b216ec3398b2ba3adec52826cd9b815377271"
         }
       ],
-      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
-      "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:57.1335445Z"
+      "reason": "Author projection uses the existing scoped read context. No provider, host registration, job, or endpoint route changes. API build and 2111 architecture tests passed. Runtime impact workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:35:56.8136969Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
+          "sha256": "ed427f093436b75cbcbc7f9d2a730e6a1c77f4e18ffb995a30c759a20f16ba4c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
+          "sha256": "e3229a2a43d03ed7b21a2151256b216ec3398b2ba3adec52826cd9b815377271"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "4bfb178da2d30bb8b9bb6dc57ab9522ebb31a11824b02b7cbeb6a9a48bd9e3d6"
         }
       ],
-      "reason": "No privacy or security boundary changed.",
-      "baseRef": "origin/master",
-      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
-      "reviewedAtUtc": "2026-09-28T07:48:05.8368245Z"
+      "reason": "Author first name is read through the existing composition projection; generated indexes add no new provider, credentials, or foreign writes. Integration tests verify first-name-only output and missing names. Existing workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:34:58.1742990Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
+          "sha256": "5c50367c084dd198801daf7068345266e3bb360b25654225a9f17b50edcdbef2"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d5e25df0563bbb8e58ab56cfe48e8db64eaa8681e6f9aef117ba1bb357db58e8"
+          "sha256": "110783a3381a01c20cd7656ebf697da7cf51ebca1658d41ac8bb642ad173e79a"
         }
       ],
-      "reason": "Reviewed frontend inventory diff: two new Recipes spec files and the public gallery direct-spec link are now discoverable. Existing trace behavior and evidence limitations remain accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:56.1880684Z"
+      "reason": "Generated frontend indexes reflect optional authorName and nutrition styling. Existing public recipe routes, resolver and facade are unchanged. Existing workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:35:00.0944594Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1167,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
+          "sha256": "5c50367c084dd198801daf7068345266e3bb360b25654225a9f17b50edcdbef2"
         }
       ],
-      "reason": "Reviewed frontend contract diff: the public gallery direct spec link is now indexed and missing-spec count decreases by one. Inputs, outputs and consumer edges are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:57.2541167Z"
+      "reason": "Optional authorName is additive and rendered conditionally; existing routes and controls unchanged. Browser checks pass RU/EN and mobile; 17 frontend tests pass. Contract review instructions remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-09-28T19:35:38.9895537Z"
     },
     {
       "pageId": "workflow.query-context",

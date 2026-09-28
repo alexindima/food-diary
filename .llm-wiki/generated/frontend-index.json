@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1784,
+    "typescriptFiles": 1785,
     "symbols": 689,
     "routes": 102,
     "features": 44,
-    "specs": 644,
+    "specs": 645,
     "localeFiles": 5,
     "roles": {
       "Component": 467,
@@ -1193,6 +1193,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.spec.ts",
@@ -5160,7 +5161,7 @@
       "role": "Component",
       "selector": "fd-public-nutrition",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-nutrition/public-nutrition.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "PublicStepsComponent",
@@ -5286,7 +5287,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
-      "line": 43
+      "line": 40
     },
     {
       "name": "ClientTasksService",
@@ -6800,8 +6801,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3840,
-      "russianProperties": 3840,
+      "englishProperties": 3853,
+      "russianProperties": 3853,
       "countsMatch": true
     },
     {

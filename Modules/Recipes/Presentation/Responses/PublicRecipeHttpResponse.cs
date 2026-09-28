@@ -6,5 +6,7 @@ public sealed record PublicRecipeHttpResponse(
     double? TotalCalories, double? TotalProteins, double? TotalFats, double? TotalCarbs,
     double? TotalFiber, double? TotalAlcohol, int MissingIngredientCount,
     IReadOnlyList<PublicRecipeStepHttpResponse> Steps) {
+    public string? AuthorName { get; init; }
     public string Language { get; init; } = "en";
+    public IReadOnlyList<string> MissingIngredientNames { get; init; } = [];
 }

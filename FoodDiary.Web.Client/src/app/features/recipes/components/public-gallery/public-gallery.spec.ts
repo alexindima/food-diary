@@ -12,8 +12,10 @@ describe('PublicRecipeGalleryComponent', () => {
         const fixture = TestBed.createComponent(PublicRecipeGalleryComponent);
         fixture.componentRef.setInput('images', ['/first.jpg', '/second.jpg']);
         fixture.componentRef.setInput('name', 'Soup');
+        fixture.componentRef.setInput('aspect', 'wide');
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.gallery-cover-wide')).not.toBeNull();
         element.querySelectorAll<HTMLButtonElement>('.gallery-thumbs button')[1].click();
         fixture.detectChanges();
         expect(element.querySelector('.gallery-cover img')?.getAttribute('src')).toBe('/second.jpg');

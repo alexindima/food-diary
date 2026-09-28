@@ -1422,9 +1422,10 @@
       "capabilities": [
         "entity:MealItem",
         "entity:Product",
-        "entity:Recipe"
+        "entity:Recipe",
+        "entity:User"
       ],
-      "reason": "ADR 0038: host-composed no-tracking SQL projection. Recipes overview projects MealItem usage counters; no Meals writes."
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Recipes overview projects MealItem usage counters; author first name from Users; no foreign writes."
     },
     "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs": {
       "module": "ReadModelComposition",

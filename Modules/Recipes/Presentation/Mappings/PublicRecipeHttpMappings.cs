@@ -12,7 +12,11 @@ public static class PublicRecipeHttpMappings {
         recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol, recipe.MissingIngredientCount,
         recipe.Steps.Select(step => new PublicRecipeStepHttpResponse(step.StepNumber, step.Title, step.Instruction,
             step.Images, step.Ingredients.Select(item => new PublicRecipeIngredientHttpResponse(item.Name, item.Amount,
-                item.Unit, item.AmountText, item.RecipeId, item.IsAvailable)).ToArray())).ToArray()) { Language = recipe.Language };
+                item.Unit, item.AmountText, item.RecipeId, item.IsAvailable)).ToArray())).ToArray()) {
+        AuthorName = recipe.AuthorName,
+        Language = recipe.Language,
+        MissingIngredientNames = recipe.MissingIngredientNames,
+    };
 
     public static PagedHttpResponse<PublicRecipeHttpResponse> ToHttpResponse(this PagedResponse<PublicRecipeModel> page) =>
         new(page.Data.Select(item => item.ToHttpResponse()).ToArray(), page.Page, page.Limit, page.TotalPages, page.TotalItems);

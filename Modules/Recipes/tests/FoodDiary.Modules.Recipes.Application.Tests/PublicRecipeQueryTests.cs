@@ -35,10 +35,12 @@ public sealed class PublicRecipeQueryTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeImageReadItem[] images = [new(Guid.NewGuid(), "https://test/second"), new(Guid.NewGuid(), "https://test/first")];
         RecipeOverviewReadItem overview = TestRecipeOverview.From(recipe, recipe.UserId) with {
+            AuthorName = "Dima",
             Images = images,
             Steps = [new RecipeOverviewStepReadItem(Guid.NewGuid(), 1, Title: null, "Cook", "https://test/legacy", ImageAssetId: null, []) { Images = images }],
         };
         PublicRecipeModel model = overview.ToPublicModel();
+        Assert.Equal("Dima", model.AuthorName);
         Assert.Equal(images.Select(image => image.ImageUrl), model.Images, StringComparer.Ordinal);
         Assert.Equal(images.Select(image => image.ImageUrl), Assert.Single(model.Steps).Images, StringComparer.Ordinal);
         PublicRecipeModel noImages = (overview with { Steps = [overview.Steps[0] with { Images = [], ImageUrl = null }] }).ToPublicModel();
@@ -93,8 +95,10 @@ public sealed class PublicRecipeQueryTests {
             NestedRecipeId: null, NestedRecipeName: null, NestedRecipeServings: null, NestedRecipeTotalCalories: null, NestedRecipeTotalProteins: null,
             NestedRecipeTotalFats: null, NestedRecipeTotalCarbs: null, NestedRecipeTotalFiber: null, NestedRecipeTotalAlcohol: null, ProductIsAccessible: false);
         RecipeOverviewReadItem overview = TestRecipeOverview.From(recipe, recipe.UserId) with {
+            MissingIngredientCount = 2,
             Steps = [new RecipeOverviewStepReadItem(Guid.NewGuid(), 1, "Cook", "Boil", "https://example.com/step.jpg", Guid.NewGuid(),
-                [source, source with { ProductId = null, ProductIsAccessible = true, TextName = "Salt", AmountText = "to taste" }])],
+                [source, source with { ProductId = null, ProductIsAccessible = true, TextName = "Salt", AmountText = "to taste" },
+                    source with { ProductId = null, TextName = "Hidden seasoning" }])],
         };
 
         PublicRecipeModel result = overview.ToPublicModel();
@@ -105,5 +109,7 @@ public sealed class PublicRecipeQueryTests {
             () => Assert.Null(hidden.Unit), () => Assert.Null(hidden.RecipeId),
             () => Assert.Equal("Salt", text.Name), () => Assert.Equal("to taste", text.AmountText), () => Assert.Null(text.Amount),
             () => Assert.Equal("https://example.com/step.jpg", Assert.Single(result.Steps[0].Images)));
+        Assert.Equal("Salt", Assert.Single(result.MissingIngredientNames));
+        Assert.Empty((overview with { MissingIngredientCount = 0 }).ToPublicModel().MissingIngredientNames);
     }
 }

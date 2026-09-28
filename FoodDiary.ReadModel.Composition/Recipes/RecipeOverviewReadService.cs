@@ -172,7 +172,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
     private IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
         query.AsNoTracking().Select(recipe => new RecipeOverviewReadRow(
-            recipe.Id, recipe.UserId, recipe.Language, recipe.LanguageConfirmed, recipe.Name, recipe.Description, recipe.Comment,
+            recipe.Id, recipe.UserId, context.Users.AsNoTracking().Where(user => user.Id == recipe.UserId).Select(user => user.FirstName).FirstOrDefault(), recipe.Language, recipe.LanguageConfirmed, recipe.Name, recipe.Description, recipe.Comment,
             recipe.Category, recipe.ImageUrl, recipe.ImageAssetId, recipe.PrepTime, recipe.CookTime,
             recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs,
             recipe.TotalFiber, recipe.TotalAlcohol, recipe.IsNutritionAutoCalculated,
@@ -259,7 +259,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            SanitizeSteps(row.Steps)) { LanguageConfirmed = row.LanguageConfirmed, Language = row.Language, MissingIngredientCount = row.IsNutritionAutoCalculated ? row.Steps.SelectMany(step => step.Ingredients).Sum(ingredient => ingredient.TextName != null ? 1 : ingredient.NestedRecipeMissingIngredientCount) : 0, Images = row.Images };
+            SanitizeSteps(row.Steps)) { AuthorName = string.IsNullOrWhiteSpace(row.AuthorName) ? null : row.AuthorName.Trim(), LanguageConfirmed = row.LanguageConfirmed, Language = row.Language, MissingIngredientCount = row.IsNutritionAutoCalculated ? row.Steps.SelectMany(step => step.Ingredients).Sum(ingredient => ingredient.TextName != null ? 1 : ingredient.NestedRecipeMissingIngredientCount) : 0, Images = row.Images };
     }
 
     private static IReadOnlyList<RecipeOverviewStepReadItem> SanitizeSteps(
@@ -319,6 +319,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
     private sealed record RecipeOverviewReadRow(
         RecipeId Id,
         UserId UserId,
+        string? AuthorName,
         string Language,
         bool LanguageConfirmed,
         string Name,

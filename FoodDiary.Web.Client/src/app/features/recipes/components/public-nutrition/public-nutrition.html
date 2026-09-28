@@ -1,27 +1,45 @@
-<div class="recipe-facts">
-    @if (recipe().prepTime !== null) {
-        <span>{{ 'PUBLIC_RECIPES.PREP' | translate }}: {{ recipe().prepTime }} {{ 'PUBLIC_RECIPES.MIN' | translate }}</span>
-    }
-    @if (recipe().cookTime !== null) {
-        <span>{{ 'PUBLIC_RECIPES.COOK' | translate }}: {{ recipe().cookTime }} {{ 'PUBLIC_RECIPES.MIN' | translate }}</span>
-    }
-    <span>{{ 'PUBLIC_RECIPES.ORIGINAL_SERVINGS' | translate }}: {{ recipe().servings }}</span>
-</div>
 <section class="nutrition">
-    <h2>{{ 'PUBLIC_RECIPES.NUTRITION' | translate }}</h2>
-    <p>{{ 'PUBLIC_RECIPES.PER_SERVING' | translate }}</p>
-    <dl class="nutrition-grid">
-        @for (nutrient of nutrients(); track nutrient.key) {
-            <div>
-                <dt>{{ `PUBLIC_RECIPES.${nutrient.key}` | translate }}</dt>
-                <dd>
-                    {{ nutrient.value === null ? '—' : (nutrient.value | number: '1.0-1') }}
-                    {{ `PUBLIC_RECIPES.${nutrient.unit}` | translate }}
-                </dd>
-            </div>
+    <header>
+        <div class="nutrition-heading">
+            <h2>{{ 'PUBLIC_RECIPES.NUTRITION' | translate }}</h2>
+            @if (isPartial()) {
+                <fd-ui-button
+                    class="nutrition-warning"
+                    variant="secondary"
+                    fill="text"
+                    size="sm"
+                    icon="warning_amber"
+                    [fdUiHint]="partialHint().key | translate: partialHint().params"
+                    [fdUiHintToggleOnClick]="true"
+                    >{{ 'PUBLIC_RECIPES.PARTIAL_SHORT' | translate }}</fd-ui-button
+                >
+            }
+        </div>
+        @if (hasNutrition()) {
+            <p>{{ 'PUBLIC_RECIPES.PER_SERVING' | translate }}</p>
         }
-    </dl>
-    @if (recipe().missingIngredientCount > 0) {
-        <p class="nutrition-warning">{{ 'PUBLIC_RECIPES.PARTIAL_HINT' | translate: { count: recipe().missingIngredientCount } }}</p>
+    </header>
+    @if (hasNutrition()) {
+        <dl class="nutrition-grid">
+            @for (nutrient of nutrients(); track nutrient.key) {
+                <div [class.primary-nutrient]="$first">
+                    <dd>
+                        {{ nutrient.value === null ? '—' : (nutrient.value | localizedNumber: language() : 0 : 1) }}
+                        {{ `PUBLIC_RECIPES.${nutrient.unit}` | translate }}
+                    </dd>
+                    <dt>{{ `PUBLIC_RECIPES.${nutrient.key}` | translate }}</dt>
+                </div>
+            }
+        </dl>
+    } @else {
+        <p class="nutrition-empty">
+            <fd-ui-icon name="warning_amber" />
+            <span>{{ 'PUBLIC_RECIPES.NUTRITION_INSUFFICIENT' | translate }}</span>
+        </p>
+        @if (recipe().missingIngredientCount > 0) {
+            <p class="nutrition-empty-detail">
+                {{ 'PUBLIC_RECIPES.NUTRITION_EXCLUDED' | translate: { count: recipe().missingIngredientCount } }}
+            </p>
+        }
     }
 </section>

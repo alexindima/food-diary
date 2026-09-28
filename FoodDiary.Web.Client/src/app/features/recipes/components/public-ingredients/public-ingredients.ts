@@ -1,8 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
 import { scaleIngredient } from '../../lib/public-recipe.utils';
 import type { PublicRecipe, PublicRecipeIngredient } from '../../models/public-recipe.data';
@@ -12,13 +12,12 @@ import type { PublicRecipe, PublicRecipeIngredient } from '../../models/public-r
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './public-ingredients.html',
     styleUrl: './public-ingredients.scss',
-    imports: [DecimalPipe, RouterLink, TranslatePipe, FdUiButtonComponent],
+    imports: [DecimalPipe, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiHintDirective],
 })
 export class PublicIngredientsComponent {
     public readonly recipe = input.required<PublicRecipe>();
+    public readonly servings = model.required<number>();
     protected readonly maxServings = 1000;
-    protected readonly offset = signal(0);
-    protected readonly servings = computed(() => this.recipe().servings + this.offset());
     protected readonly ingredients = computed(() => this.recipe().steps.flatMap(step => step.ingredients));
     protected amount(ingredient: PublicRecipeIngredient): number | null {
         return scaleIngredient(ingredient, this.servings(), this.recipe().servings);
@@ -41,6 +40,6 @@ export class PublicIngredientsComponent {
         return key === undefined ? '' : `PUBLIC_RECIPES.${key}`;
     }
     protected changeServings(delta: number): void {
-        this.offset.set(Math.min(this.maxServings, Math.max(1, this.servings() + delta)) - this.recipe().servings);
+        this.servings.set(Math.min(this.maxServings, Math.max(1, this.servings() + delta)));
     }
 }

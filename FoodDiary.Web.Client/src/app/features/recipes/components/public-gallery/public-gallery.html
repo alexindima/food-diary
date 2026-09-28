@@ -1,5 +1,11 @@
 @if (activeImage(); as image) {
-    <button type="button" class="gallery-cover" [attr.aria-label]="'PUBLIC_RECIPES.ENLARGE' | translate" (click)="preview()">
+    <button
+        type="button"
+        class="gallery-cover"
+        [class.gallery-cover-wide]="aspect() === 'wide'"
+        [attr.aria-label]="'PUBLIC_RECIPES.ENLARGE' | translate"
+        (click)="preview()"
+    >
         <img [src]="image" [alt]="name()" />
     </button>
     @if (images().length > 1) {

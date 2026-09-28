@@ -1,27 +1,41 @@
 <section class="ingredients">
-    <h2>{{ 'PUBLIC_RECIPES.INGREDIENTS' | translate }}</h2>
-    <div class="portion-control">
-        <span>{{ 'PUBLIC_RECIPES.SERVINGS' | translate }}</span
-        ><fd-ui-button
-            variant="outline"
-            size="sm"
-            icon="remove"
-            [disabled]="servings() <= 1"
-            [disabledReason]="'PUBLIC_RECIPES.MIN_SERVINGS' | translate"
-            [ariaLabel]="'PUBLIC_RECIPES.FEWER' | translate"
-            (click)="changeServings(-1)"
-        /><strong aria-live="polite">{{ servings() }}</strong
-        ><fd-ui-button
-            variant="outline"
-            size="sm"
-            icon="add"
-            [disabled]="servings() >= maxServings"
-            [disabledReason]="'PUBLIC_RECIPES.MAX_SERVINGS' | translate"
-            [ariaLabel]="'PUBLIC_RECIPES.MORE' | translate"
-            (click)="changeServings(1)"
-        />
+    <div class="ingredients-heading">
+        <h2>{{ 'PUBLIC_RECIPES.INGREDIENTS' | translate }}</h2>
+        <div class="portion-control">
+            <span>{{ 'PUBLIC_RECIPES.SERVINGS' | translate }}</span>
+            @if (ingredients().length > 0) {
+                <fd-ui-button
+                    appearance="plain-icon"
+                    fill="text"
+                    size="xs"
+                    icon="info"
+                    [ariaLabel]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
+                    [fdUiHint]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
+                    [fdUiHintToggleOnClick]="true"
+                />
+            }
+            <fd-ui-button
+                variant="outline"
+                size="sm"
+                icon="remove"
+                [disabled]="servings() <= 1"
+                [disabledReason]="'PUBLIC_RECIPES.MIN_SERVINGS' | translate"
+                [ariaLabel]="'PUBLIC_RECIPES.FEWER' | translate"
+                (click)="changeServings(-1)"
+            />
+            <strong aria-live="polite">{{ servings() }}</strong>
+            <fd-ui-button
+                variant="outline"
+                size="sm"
+                icon="add"
+                [disabled]="servings() >= maxServings"
+                [disabledReason]="'PUBLIC_RECIPES.MAX_SERVINGS' | translate"
+                [ariaLabel]="'PUBLIC_RECIPES.MORE' | translate"
+                (click)="changeServings(1)"
+            />
+        </div>
     </div>
-    <ul>
+    <ul class="ingredient-list">
         @for (ingredient of ingredients(); track $index) {
             <li>
                 <span>
@@ -43,7 +57,6 @@
         }
     </ul>
     @if (ingredients().length === 0) {
-        <p>{{ 'PUBLIC_RECIPES.NO_INGREDIENTS' | translate }}</p>
+        <p class="ingredients-empty">{{ 'PUBLIC_RECIPES.NO_INGREDIENTS' | translate }}</p>
     }
-    <p class="ingredient-note">{{ 'PUBLIC_RECIPES.PORTIONS_HINT' | translate }}</p>
 </section>

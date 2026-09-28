@@ -30491,6 +30491,12 @@
       "Name": "PublicRecipeHttpResponse",
       "Properties": [
         {
+          "Name": "authorName",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "category",
           "Required": false,
           "Type": "string",
@@ -30541,6 +30547,13 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "missingIngredientNames",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         },
         {
           "Name": "name",
