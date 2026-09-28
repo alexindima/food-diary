@@ -2469,12 +2469,30 @@ test.describe('recipe text ingredients', () => {
             await page.setViewportSize({ width, height: 1000 });
             await authenticateUserAsync(page);
             await mockAuthenticatedClientApiAsync(page);
-            const recipe = { ...createRecipeRedesignFixtures().recipe, totalCalories: null, totalProteins: null, totalFats: null, totalCarbs: null,
-                missingIngredientCount: 1, isNutritionAutoCalculated: true, isOwnedByCurrentUser: true, usageCount: 0,
-                steps: [{ id: 'step', stepNumber: 1, instruction: 'Season the soup.', ingredients: [{ id: 'salt', textName: 'Salt', amountText: 'to taste', amount: 0 }] }] };
+            const recipe = {
+                ...createRecipeRedesignFixtures().recipe,
+                totalCalories: null,
+                totalProteins: null,
+                totalFats: null,
+                totalCarbs: null,
+                missingIngredientCount: 1,
+                isNutritionAutoCalculated: true,
+                isOwnedByCurrentUser: true,
+                usageCount: 0,
+                steps: [
+                    {
+                        id: 'step',
+                        stepNumber: 1,
+                        instruction: 'Season the soup.',
+                        ingredients: [{ id: 'salt', textName: 'Salt', amountText: 'to taste', amount: 0 }],
+                    },
+                ],
+            };
             let saved: Record<string, unknown> | null = null;
             await page.route('**/api/v1/recipes/recipe-1**', async route => {
-                if (route.request().method() === 'PATCH') { saved = route.request().postDataJSON() as Record<string, unknown>; }
+                if (route.request().method() === 'PATCH') {
+                    saved = route.request().postDataJSON() as Record<string, unknown>;
+                }
                 await route.fulfill({ json: recipe });
             });
             await page.goto('/recipes/recipe-1/edit');
@@ -2503,13 +2521,42 @@ test.describe('recipe step galleries', () => {
             await authenticateUserAsync(page);
             await mockAuthenticatedClientApiAsync(page);
             const recipe = createRecipeRedesignFixtures().recipe;
-            const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({ imageAssetId: `step-photo-${index}`, imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length] }));
-            const ingredient = { id: 'ingredient-1', productId: 'product-1', productName: 'Rice', productBaseUnit: 'G', productBaseAmount: 100, amount: 100 };
+            const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({
+                imageAssetId: `step-photo-${index}`,
+                imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
+            }));
+            const ingredient = {
+                id: 'ingredient-1',
+                productId: 'product-1',
+                productName: 'Rice',
+                productBaseUnit: 'G',
+                productBaseAmount: 100,
+                amount: 100,
+            };
             const steps = [
-                { id: 'first', stepNumber: 1, title: 'Prepare vegetables', instruction: 'Wash and slice the vegetables.', imageUrl: images[0].imageUrl, imageAssetId: images[0].imageAssetId, images, ingredients: [ingredient] },
-                { id: 'second', stepNumber: 2, title: 'Cook', instruction: 'Cook until tender.', imageUrl: null, images: [], ingredients: [] },
+                {
+                    id: 'first',
+                    stepNumber: 1,
+                    title: 'Prepare vegetables',
+                    instruction: 'Wash and slice the vegetables.',
+                    imageUrl: images[0].imageUrl,
+                    imageAssetId: images[0].imageAssetId,
+                    images,
+                    ingredients: [ingredient],
+                },
+                {
+                    id: 'second',
+                    stepNumber: 2,
+                    title: 'Cook',
+                    instruction: 'Cook until tender.',
+                    imageUrl: null,
+                    images: [],
+                    ingredients: [],
+                },
             ];
-            await page.route('**/api/v1/recipes/recipe-1**', async route => route.fulfill({ json: { ...recipe, steps, isOwnedByCurrentUser: true, usageCount: 0 } }));
+            await page.route('**/api/v1/recipes/recipe-1**', async route =>
+                route.fulfill({ json: { ...recipe, steps, isOwnedByCurrentUser: true, usageCount: 0 } }),
+            );
             await page.goto('/recipes/recipe-1/edit');
             const cards = page.locator('fd-recipe-step-card');
             await expect(cards).toHaveCount(steps.length);
@@ -2538,7 +2585,6 @@ test.describe('recipe step galleries', () => {
             await cards.last().getByRole('button', { name: 'Step actions', exact: true }).click();
             await page.getByRole('menuitem', { name: 'Remove step', exact: true }).click();
             await expect(cards).toHaveCount(steps.length);
-
         });
     }
 });

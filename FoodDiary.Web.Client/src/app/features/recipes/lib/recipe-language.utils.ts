@@ -7,7 +7,7 @@ export function normalizeRecipeLanguage(value: string | null | undefined): Recip
 type RecipeText = {
     name: string;
     description?: string | null;
-    steps: readonly { instruction?: string; description?: string; title?: string | null }[];
+    steps: ReadonlyArray<{ instruction?: string; description?: string; title?: string | null }>;
 };
 
 export function recipeLanguageText(recipe: RecipeText): string {
@@ -40,6 +40,12 @@ function words(text: string): string[] {
     return text.toLowerCase().match(/\p{L}+/gu) ?? [];
 }
 
+function detectScriptLanguage(letters: string): RecipeLanguage | null {
+    const latin = (letters.match(/[a-z]/gu) ?? []).length;
+    const cyrillic = (letters.match(/[а-яё]/gu) ?? []).length;
+    return latin / letters.length >= SCRIPT_CONFIDENCE ? 'en' : cyrillic / letters.length >= SCRIPT_CONFIDENCE ? 'ru' : null;
+}
+
 /** Abstains on short, mixed-script or lexically ambiguous text; never sends recipe content off-device. */
 export function detectRecipeLanguage(text: string): RecipeLanguage | null {
     const tokens = words(text);
@@ -47,9 +53,7 @@ export function detectRecipeLanguage(text: string): RecipeLanguage | null {
     if (letters.length < MIN_LETTERS || tokens.length < MIN_WORDS || /[іїєґў]/u.test(letters)) {
         return null;
     }
-    const latin = (letters.match(/[a-z]/gu) ?? []).length;
-    const cyrillic = (letters.match(/[а-яё]/gu) ?? []).length;
-    const candidate = latin / letters.length >= SCRIPT_CONFIDENCE ? 'en' : cyrillic / letters.length >= SCRIPT_CONFIDENCE ? 'ru' : null;
+    const candidate = detectScriptLanguage(letters);
     if (candidate === null) {
         return null;
     }

@@ -40,5 +40,4 @@ describe('PublicRecipeService', () => {
         expect(request.request.params.get('language')).toBe('en');
         request.flush(['Soups']);
     });
-
 });

@@ -521,13 +521,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d2ced64d77c888eb3848e13f01aa2949246dddcd8be4701098c4a461a0dd4f68"
+          "sha256": "dbbf1bc7b2f20f1a2b24efdfc6e6c15fabb70bbc8d63ff2eec8240f5492ca150"
         }
       ],
-      "reason": "Reviewed regenerated recipe invariant locations against current Recipe.cs. Domain constructors, language/category guards and real PostgreSQL persistence are covered by the successful focused and full integration runs.",
+      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:28.3999606Z"
+      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
+      "reviewedAtUtc": "2026-09-28T00:36:21.7035177Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -852,13 +852,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
+          "sha256": "06c9b752522a5efd324e245a00fe61ca3bcf89dc18788cd74c86b530b5a0b151"
         }
       ],
-      "reason": "Reviewed regenerated metrics and stale baseline line counts; new tests cover recipe language transitions, gallery cleanup and missing profiles. Static reference counts are kept distinct from dotCover execution evidence.",
-      "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:14.300341Z"
+      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
+      "baseRef": "origin/master",
+      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
+      "reviewedAtUtc": "2026-09-28T00:36:22.707108Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -927,13 +927,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
+          "sha256": "71fffa75bced6a272af5af119556d24c6d668f353aacd89bd8a07fcf3fa39c2d"
         }
       ],
-      "reason": "Runtime topology changes only its source fingerprint and file count for the new presentation mapping. Services, workers, clients, deployment configuration and cancellation propagation are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:15.3297702Z"
+      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
+      "baseRef": "origin/master",
+      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
+      "reviewedAtUtc": "2026-09-28T00:36:23.4552172Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -942,11 +942,11 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
+          "sha256": "06c9b752522a5efd324e245a00fe61ca3bcf89dc18788cd74c86b530b5a0b151"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
+          "sha256": "71fffa75bced6a272af5af119556d24c6d668f353aacd89bd8a07fcf3fa39c2d"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
@@ -957,10 +957,10 @@
           "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
         }
       ],
-      "reason": "Reviewed public recipe visibility and private ingredient tests, query constraints, refreshed runtime/privacy indexes and translated recipe access navigation. Navigation evidence remains distinct from security conclusions.",
+      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:29.1951879Z"
+      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
+      "reviewedAtUtc": "2026-09-28T00:36:24.3518088Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

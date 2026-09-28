@@ -78,6 +78,7 @@ export const Readonly: Story = {
 
 export const Stretch: Story = {
     render: () => ({
-        template: '<div style="display: flex; height: 300px"><fd-ui-textarea style="flex: 1" label="Step description" [stretch]="true" /></div>',
+        template:
+            '<div style="display: flex; height: 300px"><fd-ui-textarea style="flex: 1" label="Step description" [stretch]="true" /></div>',
     }),
 };

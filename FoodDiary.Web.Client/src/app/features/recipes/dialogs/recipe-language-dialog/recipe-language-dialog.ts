@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiDialogRef, FD_UI_DIALOG_DATA } from 'fd-ui-kit';
+import { FD_UI_DIALOG_DATA, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiDialogRef } from 'fd-ui-kit';
 
 export type RecipeLanguageChoice = 'change' | 'keep';
 export type RecipeLanguageDialogData = { detected: string; selected: string };

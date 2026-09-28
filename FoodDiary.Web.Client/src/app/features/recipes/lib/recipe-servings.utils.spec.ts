@@ -7,7 +7,15 @@ const ELEVEN = 11;
 const TWENTY_ONE = 21;
 const HALF = 0.5;
 const ONE_AND_HALF = 1.5;
-const CASES = [[1, 'ONE'], [2, 'FEW'], [FIVE, 'MANY'], [ELEVEN, 'MANY'], [TWENTY_ONE, 'ONE'], [HALF, 'FEW'], [ONE_AND_HALF, 'FEW']] as const;
+const CASES = [
+    [1, 'ONE'],
+    [2, 'FEW'],
+    [FIVE, 'MANY'],
+    [ELEVEN, 'MANY'],
+    [TWENTY_ONE, 'ONE'],
+    [HALF, 'FEW'],
+    [ONE_AND_HALF, 'FEW'],
+] as const;
 
 describe('resolveServingsUnitKey', () => {
     it.each(CASES)('formats %s servings', (count, suffix) => {

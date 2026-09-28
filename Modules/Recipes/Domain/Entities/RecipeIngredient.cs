@@ -80,8 +80,10 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
             throw new ArgumentException("Text ingredient exceeds the length limit.", nameof(name));
         }
         var ingredient = new RecipeIngredient {
-            Id = RecipeIngredientId.New(), RecipeStepId = recipeStepId,
-            TextName = normalizedName, AmountText = normalizedAmount,
+            Id = RecipeIngredientId.New(),
+            RecipeStepId = recipeStepId,
+            TextName = normalizedName,
+            AmountText = normalizedAmount,
         };
         ingredient.SetCreated();
         return ingredient;

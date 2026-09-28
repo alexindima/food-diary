@@ -61,7 +61,12 @@ export class PublicCatalogFavorites {
         if (this.auth.isAuthenticated()) {
             return true;
         }
-        const ref = await this.dialog.openAsync({ mode: 'login', messageKey: 'PUBLIC_RECIPES.SIGN_IN_TO_SAVE', returnUrl: this.router.url, destroyRef: this.destroyRef });
+        const ref = await this.dialog.openAsync({
+            mode: 'login',
+            messageKey: 'PUBLIC_RECIPES.SIGN_IN_TO_SAVE',
+            returnUrl: this.router.url,
+            destroyRef: this.destroyRef,
+        });
         if (ref !== null) {
             await firstValueFrom(ref.afterClosed());
         }

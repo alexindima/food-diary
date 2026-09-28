@@ -106,7 +106,7 @@ function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()
         state: {
             title: { value: step.title, error: null },
             imageUrl: { value: step.imageUrl, error: null },
-        images: step.images,
+            images: step.images,
             description: { value: step.description, error: null },
             ingredients: step.ingredients.map(ingredient => ({
                 amount: { value: ingredient.amount, error: null },

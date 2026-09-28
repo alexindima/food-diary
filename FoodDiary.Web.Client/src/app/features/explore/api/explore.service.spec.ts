@@ -52,7 +52,7 @@ describe('ExploreService query', () => {
         expect(req.request.params.get('page')).toBe(String(PAGE));
         expect(req.request.params.get('limit')).toBe(String(LIMIT));
         expect(req.request.params.get('search')).toBe('soup');
-        expect(req.request.params.get('category')).toBe('Dinner');
+        expect(req.request.params.get('category')).toBe('main_courses');
         expect(req.request.params.get('maxPrepTime')).toBe(String(PREP_TIME));
         expect(req.request.params.get('sortBy')).toBe('popular');
         req.flush(page);
