@@ -299,7 +299,7 @@ export class AuthComponent {
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
-        const rememberMe = this.authMode === 'login' ? this.loginModel().rememberMe : false;
+        const rememberMe = this.authMode === 'login' && this.loginModel().rememberMe;
         const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
         this.authFlowFacade.loginWithGoogle(request).subscribe(result => {
             this.isSubmitting.set(false);

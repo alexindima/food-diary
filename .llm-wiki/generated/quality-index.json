@@ -743,6 +743,14 @@
       "structuralRiskScore": 81.68
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
+      "nonBlankLines": 462,
+      "decisionPoints": 48,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 81.24
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
       "nonBlankLines": 282,
       "decisionPoints": 49,
@@ -773,14 +781,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 79.92
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "nonBlankLines": 462,
-      "decisionPoints": 47,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.74
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -8003,10 +8003,10 @@
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
       "nonBlankLines": 462,
-      "decisionPoints": 47,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.74
+      "structuralRiskScore": 81.24
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",

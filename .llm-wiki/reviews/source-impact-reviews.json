@@ -832,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "86c323ece41cf9e99ec238f7723048fde6288c3ffbdfe4dd1d282eef3e577124"
+          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
         }
       ],
-      "reason": "Reviewed quality index regeneration after adding frontend test inventory selection: only pipeline line count and structural risk score change; hotspot interpretation stays accurate.",
+      "reason": "Updated the generated quality index after the dependency-triggered lint compatibility change; the boolean behavior remains unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:56.781417Z"
+      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
+      "reviewedAtUtc": "2026-09-28T07:48:05.3599619Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -921,14 +921,18 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
+        },
+        {
           "path": ".llm-wiki/generated/runtime-topology.json",
           "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
         }
       ],
-      "reason": "Removed automatic sensitive dump creation while leaving existing production artifacts untouched for separate authorized cleanup.",
+      "reason": "No privacy or security boundary changed.",
       "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:57.5837423Z"
+      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
+      "reviewedAtUtc": "2026-09-28T07:48:05.8368245Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
