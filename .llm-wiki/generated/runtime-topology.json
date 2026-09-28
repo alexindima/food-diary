@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "bab81b5e4b23cb726192693cf592389200a0a1f73f385967fbd67ffe5b5c228e",
+    "sourceFingerprint": "12f7882f61c3e613b4a2ce22d490a5970c37cf4d673526014abe3f5751244456",
     "sourceFileCount": 4269
   },
   "summary": {
@@ -150,17 +150,11 @@
       "networks": [],
       "environmentKeys": [
         "ConnectionStrings__DefaultConnection",
-        "DOTNET_DbgEnableMiniDump",
-        "DOTNET_DbgMiniDumpName",
-        "DOTNET_DbgMiniDumpType",
-        "DOTNET_EnableCrashReport",
         "MailRelayClient__AllowInsecureHttp",
         "MailRelayClient__ApiKey",
         "MailRelayClient__BaseUrl"
       ],
-      "volumeMounts": [
-        "job-manager-crash-dumps:/var/lib/fooddiary/job-manager-crashdumps"
-      ],
+      "volumeMounts": [],
       "readOnlyRootFilesystem": true,
       "dropsAllCapabilities": true,
       "noNewPrivileges": true,

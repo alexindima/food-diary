@@ -466,10 +466,6 @@ RUN apk add --no-cache \
     libcom_err=1.47.4-r0 \
     libverto=0.3.2-r2
 COPY --from=build /app/publish .
-COPY FoodDiary.JobManager/job-manager-entrypoint.sh /usr/local/bin/job-manager-entrypoint
-RUN chmod 0500 /usr/local/bin/job-manager-entrypoint && \
-    install -d -o root -g root -m 0700 /var/lib/fooddiary/job-manager-crashdumps
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
-ENTRYPOINT ["/usr/local/bin/job-manager-entrypoint"]
-CMD ["dotnet", "FoodDiary.JobManager.dll"]
+ENTRYPOINT ["dotnet", "FoodDiary.JobManager.dll"]

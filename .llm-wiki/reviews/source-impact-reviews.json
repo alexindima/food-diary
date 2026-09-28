@@ -22,18 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
+          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
         }
       ],
-      "reason": "Reviewed current architecture and documentation navigation: canonical project namespaces and public recipe SSR documentation retain module ownership and source authority.",
+      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:27.8389583Z"
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:55.7922835Z"
     },
     {
       "pageId": "module.frontend",
@@ -147,18 +143,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "ab4a454c4f90920bdef98a88dc0d90eeb4afc54cb08a045d752b3fd83de3ae5d"
+          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
         }
       ],
-      "reason": "Reviewed new accepted namespace and public recipe ADR entries; source authority and historical ADR lifecycle guidance remain accurate.",
+      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:24.2194014Z"
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:56.0078495Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -577,13 +569,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "e24387d80d23263e5628b8e2525238293f3f526e409e79331673839119f54a94"
+          "sha256": "ae32ab18da9b1d0b7bf38891f8456562af74891f3ae9f21581f07c30239ff15d"
         }
       ],
-      "reason": "Reviewed refreshed frontend/test indexes and unchanged workflow guidance against meals hardening. Focused V8 suite: 441 passing tests; browser favorites regression passed at 390px and 1280px; nine timezone suites passed. Package change adds a test script only; no dependencies, API or security boundary changes.",
-      "baseRef": "HEAD",
-      "gitHead": "4d2fb3fa30685ff4cb28f6b5a2c130e19f7144d3",
-      "reviewedAtUtc": "2026-09-22T21:33:18.4554799Z"
+      "reason": "Regenerated catalog and runtime topology and added a focused architecture guardrail for the reverted Job Manager configuration.",
+      "baseRef": "origin/master",
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:56.2749191Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -915,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "71fffa75bced6a272af5af119556d24c6d668f353aacd89bd8a07fcf3fa39c2d"
+          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
         }
       ],
-      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
+      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
       "baseRef": "origin/master",
-      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
-      "reviewedAtUtc": "2026-09-28T00:36:23.4552172Z"
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:57.1335445Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -929,14 +921,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "86c323ece41cf9e99ec238f7723048fde6288c3ffbdfe4dd1d282eef3e577124"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
         }
       ],
-      "reason": "Reviewed quality index regeneration: index selection has two additional generator calls; no security control classification or runtime boundary changes.",
+      "reason": "Removed automatic sensitive dump creation while leaving existing production artifacts untouched for separate authorized cleanup.",
       "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:57.7949365Z"
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:57.5837423Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1190,13 +1182,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "bd8d61e16c62a3f1a9f559ed249f7394cde1fe4ce02401c4ecbd73ef88ff157c"
+          "sha256": "7b192f30221c4892a375a2bd8ed1c3312dfa5d99e13a4c16726200ab5aacf071"
         }
       ],
-      "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
-      "baseRef": "HEAD",
-      "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:48.2067906Z"
+      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
+      "baseRef": "origin/master",
+      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
+      "reviewedAtUtc": "2026-09-28T07:18:56.7045268Z"
     },
     {
       "pageId": "workflow.review-diff",

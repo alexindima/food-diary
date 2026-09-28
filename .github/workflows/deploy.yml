@@ -600,35 +600,6 @@ jobs:
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager
 
-          echo "Verifying protected Job Manager crash-dump capture..."
-          job_manager_dump_ready=false
-          for _ in $(seq 1 10); do
-            if docker compose exec -T job-manager sh -eu -c '
-              dump_directory=/var/lib/fooddiary/job-manager-crashdumps
-              test -d "$dump_directory"
-              test "$(stat -c "%a:%u:%g" "$dump_directory")" = "700:0:0"
-              writability_probe="$dump_directory/.deploy-writability-probe.$$"
-              trap "rm -f $writability_probe" EXIT
-              : > "$writability_probe"
-              rm -f "$writability_probe"
-              trap - EXIT
-              test "$DOTNET_DbgEnableMiniDump" = "1"
-              test "$DOTNET_DbgMiniDumpType" = "3"
-              test "$DOTNET_EnableCrashReport" = "1"
-              test "$DOTNET_DbgMiniDumpName" = "$dump_directory/job-manager.%t.%p.%e"
-            '; then
-              job_manager_dump_ready=true
-              break
-            fi
-            sleep 1
-          done
-          if [ "$job_manager_dump_ready" != "true" ]; then
-            echo "Job Manager protected crash-dump capture is not ready."
-            docker compose ps job-manager
-            docker compose logs --tail=100 --timestamps job-manager
-            exit 1
-          fi
-
           docker compose --profile full up -d --force-recreate --no-deps tech-radar
 
           echo "Waiting for deployed API readiness..."

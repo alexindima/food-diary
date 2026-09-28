@@ -393,22 +393,12 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      DOTNET_DbgEnableMiniDump: "1"
-      DOTNET_DbgMiniDumpName: /var/lib/fooddiary/job-manager-crashdumps/job-manager.%t.%p.%e
-      DOTNET_DbgMiniDumpType: "3"
-      DOTNET_EnableCrashReport: "1"
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailRelayClient__AllowInsecureHttp: "true"
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
     env_file:
       - .env
-    volumes:
-      - job-manager-crash-dumps:/var/lib/fooddiary/job-manager-crashdumps
-    ulimits:
-      fsize:
-        soft: 67108864
-        hard: 67108864
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -536,7 +526,3 @@ volumes:
   mailinbox-postgres-server-tls:
   mailinbox-postgres-client-ca:
   api-data-protection-keys:
-  job-manager-crash-dumps:
-    labels:
-      club.fooddiary.data-classification: sensitive-diagnostics
-      club.fooddiary.retention-policy: four-artifacts-seven-days

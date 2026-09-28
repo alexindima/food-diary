@@ -117,45 +117,24 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
-    public void JobManager_CrashDumpCapture_IsProtectedAndRetentionBounded() {
+    public void JobManager_DoesNotEnableAutomaticCrashDumpCapture() {
         string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
         string dockerfile = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Dockerfile"));
-        string entrypoint = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+        string entrypointPath = ArchitectureTestPaths.FromRoot(
             "FoodDiary.JobManager",
-            "job-manager-entrypoint.sh"));
+            "job-manager-entrypoint.sh");
         string workflow = ReadDeployWorkflow();
-        int verificationStart = workflow.IndexOf(
-            "Verifying protected Job Manager crash-dump capture",
-            StringComparison.Ordinal);
-        int verificationEnd = workflow.IndexOf(
-            "docker compose --profile full up -d --force-recreate --no-deps tech-radar",
-            verificationStart,
-            StringComparison.Ordinal);
-        Assert.True(verificationStart >= 0, "Job Manager crash-dump deployment verification is missing.");
-        Assert.True(verificationEnd > verificationStart, "Job Manager crash-dump verification must finish before the next service starts.");
-        string verificationBlock = workflow[verificationStart..verificationEnd];
 
         Assert.Multiple(
-            () => Assert.Contains("DOTNET_DbgEnableMiniDump: \"1\"", compose, StringComparison.Ordinal),
-            () => Assert.Contains("DOTNET_DbgMiniDumpType: \"3\"", compose, StringComparison.Ordinal),
-            () => Assert.Contains("DOTNET_EnableCrashReport: \"1\"", compose, StringComparison.Ordinal),
-            () => Assert.Contains("job-manager-crash-dumps:/var/lib/fooddiary/job-manager-crashdumps", compose, StringComparison.Ordinal),
-            () => Assert.Contains("soft: 67108864", compose, StringComparison.Ordinal),
-            () => Assert.Contains("hard: 67108864", compose, StringComparison.Ordinal),
-            () => Assert.Contains("data-classification: sensitive-diagnostics", compose, StringComparison.Ordinal),
-            () => Assert.Contains("install -d -o root -g root -m 0700 /var/lib/fooddiary/job-manager-crashdumps", dockerfile, StringComparison.Ordinal),
-            () => Assert.Contains("ENTRYPOINT [\"/usr/local/bin/job-manager-entrypoint\"]", dockerfile, StringComparison.Ordinal),
-            () => Assert.Contains("readonly maximum_artifacts=4", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("readonly maximum_age_days=7", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("readonly prune_interval_seconds=3600", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("-mmin \"+$((maximum_age_days * 1440))\"", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("700:0:0", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains(".writability-probe.$$", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("umask 077", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("exec \"$@\"", entrypoint, StringComparison.Ordinal),
-            () => Assert.Contains("docker compose exec -T job-manager sh -eu -c", verificationBlock, StringComparison.Ordinal),
-            () => Assert.Contains(".deploy-writability-probe.$$", verificationBlock, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("docker cp", verificationBlock, StringComparison.Ordinal));
+            () => Assert.Contains("ENTRYPOINT [\"dotnet\", \"FoodDiary.JobManager.dll\"]", dockerfile, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("job-manager-entrypoint", dockerfile, StringComparison.Ordinal),
+            () => Assert.False(File.Exists(entrypointPath), "The obsolete Job Manager crash-dump entrypoint must stay removed."),
+            () => Assert.DoesNotContain("DOTNET_DbgEnableMiniDump", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("DOTNET_DbgMiniDumpName", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("DOTNET_DbgMiniDumpType", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("DOTNET_EnableCrashReport", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("job-manager-crash-dumps", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Verifying protected Job Manager crash-dump capture", workflow, StringComparison.Ordinal));
     }
 
     [Fact]
