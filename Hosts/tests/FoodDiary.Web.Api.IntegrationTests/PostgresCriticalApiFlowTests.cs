@@ -374,7 +374,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                 "Recipe With Assets",
                 "Relational image usage",
                 Comment: null,
-                "Dinner",
+                "main_courses",
                 recipeAsset.FileUrl,
                 recipeAsset.AssetId,
                 10,
@@ -454,7 +454,11 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         var steps = new[] { new { description = "Season", ingredients = new[] { new { textName = "Salt", amountText = "to taste", amount = 0 }, new { textName = "Tomatoes", amountText = "2 pieces", amount = 0 } } } };
         HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/recipes", new {
-            name = "Text recipe", servings = 2, visibility = "Private", calculateNutritionAutomatically = true, steps,
+            name = "Text recipe",
+            servings = 2,
+            visibility = "Private",
+            calculateNutritionAutomatically = true,
+            steps,
         });
         await AssertStatusCodeAsync(HttpStatusCode.Created, created);
         using var body = JsonDocument.Parse(await created.Content.ReadAsStringAsync());
@@ -474,7 +478,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal("Salt", copy.RootElement.GetProperty("steps")[0].GetProperty("ingredients")[0].GetProperty("textName").GetString());
 
         HttpResponseMessage nested = await client.PostAsJsonAsync("/api/v1/recipes", new {
-            name = "Nested text recipe", servings = 1, visibility = "Private", calculateNutritionAutomatically = true,
+            name = "Nested text recipe",
+            servings = 1,
+            visibility = "Private",
+            calculateNutritionAutomatically = true,
             steps = new[] { new { description = "Mix", ingredients = new[] { new { nestedRecipeId = id, amount = 1 } } } },
         });
         await AssertStatusCodeAsync(HttpStatusCode.Created, nested);
@@ -484,8 +491,14 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Guid copyId = copy.RootElement.GetProperty("id").GetGuid();
         HttpResponseMessage updated = await client.PatchAsJsonAsync($"/api/v1/recipes/{copyId}", new {
-            calculateNutritionAutomatically = false, manualCalories = 100, manualProteins = 5, manualFats = 4, manualCarbs = 10,
-            manualFiber = 0, manualAlcohol = 0, steps,
+            calculateNutritionAutomatically = false,
+            manualCalories = 100,
+            manualProteins = 5,
+            manualFats = 4,
+            manualCarbs = 10,
+            manualFiber = 0,
+            manualAlcohol = 0,
+            steps,
         });
         await AssertStatusCodeAsync(HttpStatusCode.OK, updated);
         using var reloaded = JsonDocument.Parse(await client.GetStringAsync($"/api/v1/recipes/{copyId}"));
@@ -495,7 +508,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(100, manual.RootElement.GetProperty("totalCalories").GetDouble());
 
         HttpResponseMessage partial = await client.PostAsJsonAsync("/api/v1/recipes", new {
-            name = "Partial recipe", servings = 1, visibility = "Private", calculateNutritionAutomatically = true,
+            name = "Partial recipe",
+            servings = 1,
+            visibility = "Private",
+            calculateNutritionAutomatically = true,
             steps = new[] { new { description = "Mix", ingredients = new RecipeIngredientHttpRequest[] {
                 new(ProductId: null, NestedRecipeId: copyId, Amount: 1),
                 new(ProductId: null, NestedRecipeId: null, Amount: 0) { TextName = "Pepper" },

@@ -13,6 +13,28 @@ namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 public partial class RecipesFeatureTests {
 
     [Fact]
+    public async Task DeleteRecipeCommandHandler_CleansRecipeAndStepGalleryAssets() {
+        var userId = UserId.New();
+        var first = ImageAssetId.New();
+        var second = ImageAssetId.New();
+        var recipe = Recipe.Create(userId, "Gallery soup", 2);
+        recipe.ReplaceImages([new RecipeImage(first, "https://test/first", 0)]);
+        recipe.AddStep(1, "Cook").ReplaceImages([
+            new RecipeImage(first, "https://test/first", 0),
+            new RecipeImage(second, "https://test/second", 1),
+        ]);
+        var repository = new SingleRecipeRepository(recipe);
+        var cleanup = new RecordingCleanupService();
+
+        Result result = await DeleteRecipeHandler(repository, cleanup)
+            .Handle(new DeleteRecipeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(repository.DeleteCalled);
+        Assert.Equal([first, second], cleanup.RequestedAssetIds.Distinct());
+    }
+
+    [Fact]
     public async Task DeleteRecipeCommandHandler_WhenCleanupFails_StillDeletesRecipeAndReturnsSuccess() {
         var userId = UserId.New();
         var recipeAssetId = ImageAssetId.New();

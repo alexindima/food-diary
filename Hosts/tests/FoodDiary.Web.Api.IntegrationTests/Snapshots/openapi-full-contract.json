@@ -14670,7 +14670,8 @@
               "Name": "Language",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 10
             },
             {
               "Name": "Limit",
@@ -14712,7 +14713,8 @@
               "Location": "query",
               "Required": false,
               "Type": "string",
-              "Default": "\u0022newest\u0022"
+              "Default": "\u0022newest\u0022",
+              "MaxLength": 32
             }
           ],
           "PathParameters": [

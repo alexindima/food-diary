@@ -10,6 +10,44 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
+    [Fact]
+    public async Task Create_WhenPreferredLanguageLookupFails_DoesNotSaveRecipe() {
+        var user = User.Create("profile-error@example.com", "hash");
+        var repository = new SingleRecipeRepositoryForCreate();
+        FoodDiary.Modules.Users.Contracts.Common.IUserProfileReadService profiles = Substitute.For<FoodDiary.Modules.Users.Contracts.Common.IUserProfileReadService>();
+        var error = new Error("User.NotFound", "Profile unavailable");
+        profiles.GetUserAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<FoodDiary.Modules.Users.Contracts.Models.UserModel>(error));
+        var handler = new CreateRecipeCommandHandler(repository, repository, new StubUserRepository(user),
+            AllowImageAssetAccessService.Instance, new AllowAllProductLookupService(), new AllowAllRecipeLookupService(),
+            new ImmediateRecipeMutationTransactionRunner(), profiles);
+
+        Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+        Assert.Null(repository.LastAddedRecipe);
+    }
+
+    [Fact]
+    public async Task Create_WithAccessibleGallery_PreservesOrderAndConfirmsLanguage() {
+        var user = User.Create("create-gallery@example.com", "hash");
+        var repository = new SingleRecipeRepositoryForCreate();
+        Guid[] assets = [Guid.NewGuid(), Guid.NewGuid()];
+        CreateRecipeCommandHandler handler = CreateRecipeHandler(repository, new StubUserRepository(user), AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(), new AllowAllRecipeLookupService());
+
+        RecipeModel model = ResultAssert.Success(await handler.Handle(CreateRecipeCommand(user.Id.Value) with {
+            ImageAssetIds = assets,
+            Language = "ru",
+            LanguageConfirmed = true,
+        }, CancellationToken.None));
+
+        Assert.Equal(assets, model.Images.Select(image => image.ImageAssetId));
+        Assert.Equal("ru", model.Language);
+        Assert.True(repository.LastAddedRecipe!.LanguageConfirmed);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(1)]

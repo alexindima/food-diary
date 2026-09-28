@@ -934,11 +934,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await using var owned = new RecipesDbContext(new DbContextOptionsBuilder<RecipesDbContext>()
             .UseNpgsql(context.Database.GetDbConnection()).Options);
         var repository = new RecipeRepository(owned, new ProductSnapshotReadService(context.Products), new RecipeUsageQuery(context));
-        var publicRecipe = Recipe.Create(owner.Id, "100% Pancake", servings: 2, description: "Breakfast_Recipe", category: "Breakfast", prepTime: 15);
+        var publicRecipe = Recipe.Create(owner.Id, "100% Pancake", servings: 2, description: "Breakfast_Recipe", category: "breakfast", prepTime: 15);
         publicRecipe.AddStep(stepNumber: 1, instruction: "Mix ingredients");
         publicRecipe.ApplyComputedNutrition(200, 8, 4, 30, 3, 0);
         var privateRecipe = Recipe.Create(owner.Id, "Private soup", servings: 1, visibility: Visibility.Private);
-        var otherPublic = Recipe.Create(other.Id, "Public salad", servings: 1, category: "Salad", prepTime: 5);
+        var otherPublic = Recipe.Create(other.Id, "Public salad", servings: 1, category: "salads", prepTime: 5);
         await repository.AddAsync(publicRecipe);
         await repository.AddAsync(privateRecipe);
         await repository.AddAsync(otherPublic);
@@ -1286,7 +1286,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> emptyUsage = await recipeOverviewReadService.GetByIdsWithUsageAsync([], ownerId);
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> usage = await recipeOverviewReadService.GetByIdsWithUsageAsync([publicRecipe.Id], ownerId);
         (IReadOnlyList<RecipeOverviewReadItem> exploreItems, int exploreTotal) =
-            await recipeOverviewReadService.GetExplorePagedAsync(ownerId, page: 1, limit: 10, search: "Public", category: "Salad", maxPrepTime: 10, sortBy: "popular");
+            await recipeOverviewReadService.GetExplorePagedAsync(ownerId, page: 1, limit: 10, search: "Public", category: "salads", maxPrepTime: 10, sortBy: "popular");
 
         await repository.DeleteAsync(privateRecipe);
         await owned.SaveChangesAsync();

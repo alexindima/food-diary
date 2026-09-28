@@ -9,5 +9,5 @@ public sealed record PublicRecipesHttpQuery(
     [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null,
     [MaxLength(PresentationQueryLimits.MaximumCategoryLength)] string? Category = null,
     [OpenApiNumericRange(1)] int? MaxTotalTime = null,
-    [RegularExpression("^(newest|oldest|fastest|slowest|name|name_desc)$")] string SortBy = "newest",
-    [RegularExpression("^(en|ru)$")] string? Language = null);
+    [Required, MaxLength(PresentationQueryLimits.MaximumSortLength), RegularExpression("^(newest|oldest|fastest|slowest|name|name_desc)$")] string SortBy = "newest",
+    [MaxLength(PresentationQueryLimits.MaximumLocaleLength), RegularExpression("^(en|ru)$")] string? Language = null);

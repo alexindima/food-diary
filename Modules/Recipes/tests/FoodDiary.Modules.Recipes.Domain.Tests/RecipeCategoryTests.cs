@@ -7,6 +7,11 @@ namespace FoodDiary.Modules.Recipes.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecipeCategoryTests {
     [Fact]
+    public void UndefinedCategory_CannotBeSerializedAsAStableCode() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => ((RecipeCategory)int.MaxValue).ToCode());
+    }
+
+    [Fact]
     public void EveryCategory_RoundTripsThroughItsStableCode() {
         Assert.Equal(15, RecipeCategoryCodes.All.Count);
         foreach (RecipeCategory category in Enum.GetValues<RecipeCategory>()) {

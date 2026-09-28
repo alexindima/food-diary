@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4267,
-    "symbols": 4198,
+    "sourceFiles": 4268,
+    "symbols": 4199,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2202,
+      "class": 2203,
       "enum": 65,
       "interface": 401,
       "record": 1410,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1730,
+      "Other": 1731,
       "Query": 285,
       "QueryHandler": 207,
       "ReadModelRepository": 33,
@@ -22396,7 +22396,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
-      "line": 20
+      "line": 17
     },
     {
       "name": "RecipeExploreController",
@@ -22424,6 +22424,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "PublicRecipeHttpQueryMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpQueryMappings.cs",
       "line": 7
     },
     {

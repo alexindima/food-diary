@@ -204,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "240060d3de60d5ea0b3273859cd0e8b908d12f31e9d218df4704f0502780b2f9"
+          "sha256": "46202a6508afae8afe554b3da37922a703391634986581ff6242c8302635396e"
         }
       ],
-      "reason": "Verified current public catalog sources: public category query filters Visibility.Public and optional language, bounds search to 64 characters and suggestions to 30, preserves existing paged catalog; card loading/error rendering and shared autocomplete focus behavior are covered by focused tests. Shared appearance dialog retains account versus local persistence. Existing architecture and ownership guidance remains accurate.",
+      "reason": "Reviewed public recipe snapshot changes: SortBy maxLength 32 and Language maxLength 10 document existing finite validator sets (six sort codes, en/ru); routes, defaults, payloads and supported values are unchanged. API contract tests pass; compatibility workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "dfe1f3aca103bc966f06f23a8b1f4dc4410a1c36",
-      "reviewedAtUtc": "2026-09-27T19:48:35.0926571Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:47:01.7027926Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f5fe43cc7462a943a6adf0dddd67d4b3b20a15a5617295518e81473427acee79"
+          "sha256": "01008ac6842c321c25b7af792dfb8c2662f8025ef065640f1270a1bbc91e8ea3"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Reviewed generated health changes: controller convention coverage now references PublicRecipesController, no project dependency changes or cycles, and 2111 architecture tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:21.6270739Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:10.6021612Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7b4aeea8aa9c9a0035200fcf533cf6a727959032a305e24b9843b972954b1f01"
+          "sha256": "5ae874e3007773b3336826ada723f2172698f79b4353327e2cdf264b5bcc7c5e"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Public recipe query construction moved into owner presentation mappings with identical fields; new edges are mapping and regression-test references. Existing HTTP behavior and 39 recipe-related API tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:23.0984192Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:11.9441292Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -783,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b92f4fca98f02da9a3d8300273309eebb944283f567dbdb3c5c3565151a3ad91"
+          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Sensitive-data index changes only refresh source line locations. Public recipe tests verify hidden private ingredients and absence of owner identifiers and comments; no data lifecycle or provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:25.5231020Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:13.0219088Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9d58f700a0af4c859758c9484fcf001feb5056e61a73684d1b529e1b5a32bd66"
+          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Reviewed regenerated metrics and stale baseline line counts; new tests cover recipe language transitions, gallery cleanup and missing profiles. Static reference counts are kept distinct from dotCover execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:26.6257228Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:14.3003410Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "48e196e27cb20896538340bda2f809e11dce6af39ef3016e560072996e876baa"
+          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Runtime topology changes only its source fingerprint and file count for the new presentation mapping. Services, workers, clients, deployment configuration and cancellation propagation are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:27.7998129Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:15.3297702Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9d58f700a0af4c859758c9484fcf001feb5056e61a73684d1b529e1b5a32bd66"
+          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "48e196e27cb20896538340bda2f809e11dce6af39ef3016e560072996e876baa"
+          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b92f4fca98f02da9a3d8300273309eebb944283f567dbdb3c5c3565151a3ad91"
+          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
         }
       ],
-      "reason": "Verified fixed recipe categories in domain enum, validators, EF converter/check constraint, localized selectors and exact read filters. Public route and DTO shapes remain unchanged; category value semantics and rollout are documented in docs/frontend/PUBLIC_RECIPES.md. PostgreSQL clean/upgrade probe, 302 module tests, 389 frontend tests and 2111 architecture tests passed; no ownership or privacy boundary changes.",
+      "reason": "Reviewed topology, privacy and quality index refreshes. Exact public-controller allowlist preserves anonymous catalog access while API tests retain private-recipe and ingredient protections; no new external trust boundary.",
       "baseRef": "HEAD",
-      "gitHead": "3346bbb9e5a8aa4e1debfaf0e8e6ce1a90f1b445",
-      "reviewedAtUtc": "2026-09-27T20:22:29.0747857Z"
+      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
+      "reviewedAtUtc": "2026-09-27T23:48:16.4293104Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

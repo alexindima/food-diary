@@ -33,6 +33,44 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
 
     [RequiresDockerFact]
+    public async Task OverviewSorting_OrdersBeforePagingAndPlacesUnknownTimesLast() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"recipe-sorting-{Guid.NewGuid():N}@example.com", "hash");
+        string prefix = Guid.NewGuid().ToString();
+        Recipe[] recipes = [
+            Recipe.Create(user.Id, prefix + " Bravo", 1, prepTime: 10, cookTime: 20),
+            Recipe.Create(user.Id, prefix + " alpha", 1, cookTime: 5),
+            Recipe.Create(user.Id, prefix + " Charlie", 1),
+        ];
+        context.Users.Add(user);
+        context.Recipes.AddRange(recipes);
+        await context.SaveChangesAsync();
+        DateTime created = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        for (int index = 0; index < recipes.Length; index++) {
+            RecipeId id = recipes[index].Id;
+            DateTime timestamp = created.AddDays(index);
+            await context.Recipes.Where(recipe => recipe.Id == id)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(recipe => recipe.CreatedOnUtc, timestamp));
+        }
+
+        RecipeOverviewReadService service = new(context);
+        (string Sort, int[] Order)[] cases = [
+            ("oldest", [0, 1, 2]), ("newest", [2, 1, 0]),
+            ("fastest", [1, 0, 2]), ("slowest", [0, 1, 2]),
+            ("name", [1, 0, 2]), ("name_desc", [2, 0, 1]),
+        ];
+        foreach ((string sort, int[] order) in cases) {
+            for (int page = 1; page <= recipes.Length; page++) {
+                (IReadOnlyList<RecipeOverviewReadItem> items, int total) = await service.GetPagedAsync(
+                    user.Id, includePublic: false, page, limit: 1,
+                    filters: new RecipeQueryFilters(Search: prefix, SortBy: sort));
+                Assert.Equal(recipes.Length, total);
+                Assert.Equal(recipes[order[page - 1]].Name, Assert.Single(items).Name);
+            }
+        }
+    }
+
+    [RequiresDockerFact]
     public async Task PublicLanguageFilter_AppliesBeforeCountingAndPaging() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"language-filter-{Guid.NewGuid():N}@example.com", "hash");

@@ -38,6 +38,22 @@ public sealed partial class RecipePostgresApiFlowTests {
         using var filtered = JsonDocument.Parse(await guest.GetStringAsync($"/api/v1/recipes/public?search={Uri.EscapeDataString(name)}&maxTotalTime=15"));
         Assert.Equal(0, filtered.RootElement.GetProperty("totalItems").GetInt32());
         Assert.Equal(HttpStatusCode.BadRequest, (await guest.GetAsync("/api/v1/recipes/public?limit=51")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await guest.GetAsync("/api/v1/recipes/public?sortBy=unknown")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await guest.GetAsync("/api/v1/recipes/public?language=de")).StatusCode);
+        string[]? categories = await guest.GetFromJsonAsync<string[]>("/api/v1/recipes/public/categories?language=ru");
+        Assert.NotNull(categories);
+        Assert.Contains("main_courses", categories, StringComparer.Ordinal);
+
+        (await owner.PatchAsJsonAsync($"/api/v1/recipes/{recipeId}", new {
+            language = "ru",
+            languageConfirmed = true,
+            calculateNutritionAutomatically = true,
+            steps,
+        })).EnsureSuccessStatusCode();
+        using var translated = JsonDocument.Parse(await guest.GetStringAsync($"/api/v1/recipes/public/{recipeId}"));
+        Assert.Equal("ru", translated.RootElement.GetProperty("language").GetString());
+        using var wrongLanguage = JsonDocument.Parse(await guest.GetStringAsync($"/api/v1/recipes/public?search={Uri.EscapeDataString(name)}&language=en"));
+        Assert.Equal(0, wrongLanguage.RootElement.GetProperty("totalItems").GetInt32());
 
         (await owner.PatchAsJsonAsync($"/api/v1/recipes/{recipeId}", new { visibility = "Private", calculateNutritionAutomatically = true, steps })).EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.NotFound, (await guest.GetAsync($"/api/v1/recipes/public/{recipeId}")).StatusCode);

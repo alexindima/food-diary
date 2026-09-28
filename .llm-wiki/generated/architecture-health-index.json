@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 104,
     "routedStandaloneComponents": 65,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 38,
+    "criticalSymbolsWithoutTestReferences": 37,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -5144,16 +5144,6 @@
       "coveredThrough": []
     },
     {
-      "name": "PublicRecipesController",
-      "role": "Controller",
-      "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
-      "line": 20,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "GetAdminAiPromptScenariosQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
@@ -5477,7 +5467,7 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 103,
+      "line": 106,
       "marker": "#pragma warning disable"
     },
     {

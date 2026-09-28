@@ -100,7 +100,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         Assert.NotNull(product);
 
         HttpResponseMessage createRecipeResponse = await client.PostAsJsonAsync("/api/v1/recipes", new CreateRecipeHttpRequest(
-            "Original Soup", "Test recipe", Comment: null, "Dinner", ImageUrl: null, ImageAssetId: null,
+            "Original Soup", "Test recipe", Comment: null, "main_courses", ImageUrl: null, ImageAssetId: null,
             15, 30, 2, "private", CalculateNutritionAutomatically: true, ManualCalories: null, ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
             [new RecipeStepHttpRequest("Boil", "Boil water",
                 [new RecipeIngredientHttpRequest(product.Id, NestedRecipeId: null, 200)], ImageUrl: null, ImageAssetId: null)]));

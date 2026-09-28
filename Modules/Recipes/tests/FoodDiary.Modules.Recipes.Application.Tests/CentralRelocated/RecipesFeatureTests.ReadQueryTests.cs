@@ -18,6 +18,17 @@ using FoodDiary.Application.Contracts.Common.Models;
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
+    [Fact]
+    public async Task GetRecipeByIdQueryHandler_WhenMissing_ReturnsNotFound() {
+        var user = User.Create("missing-recipe@example.com", "hash");
+        var handler = new GetRecipeByIdQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(user));
+
+        Result<RecipeModel> result = await handler.Handle(
+            new GetRecipeByIdQuery(user.Id.Value, Guid.NewGuid(), IncludePublic: true), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Recipe.NotFound", result.Error.Code);
+    }
 
     [Fact]
     public async Task GetRecentRecipesQueryValidator_WithEmptyUserId_Fails() {

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1283,
     "ambiguousContracts": 2,
-    "consumerEdges": 10029,
-    "productionConsumerEdges": 5726,
-    "testConsumerEdges": 4303,
+    "consumerEdges": 10032,
+    "productionConsumerEdges": 5727,
+    "testConsumerEdges": 4305,
     "consumedContracts": 1283,
     "unconsumedContracts": 0
   },
@@ -32787,7 +32787,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.GalleryTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "CreateRecipeCommand",
@@ -36128,7 +36128,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "DeleteRecipeCommentCommand",
@@ -49799,7 +49799,7 @@
         "Modules/Recipes/Application/Queries/GetPublicRecipeCategories/GetPublicRecipeCategoriesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49838,7 +49838,7 @@
         "Modules/Recipes/Application/Queries/GetPublicRecipe/GetPublicRecipeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49890,7 +49890,7 @@
         "Modules/Recipes/Application/Queries/GetPublicRecipes/GetPublicRecipesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50191,7 +50191,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "GetRecipeByIdQuery",
@@ -121155,6 +121155,19 @@
         "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.GalleryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -134522,6 +134535,32 @@
       "consumerPath": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "PublicRecipesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/PublicRecipesHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpQueryMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PublicRecipesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/PublicRecipesHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/PublicRecipesHttpQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "PublicRecipeStepHttpResponse",

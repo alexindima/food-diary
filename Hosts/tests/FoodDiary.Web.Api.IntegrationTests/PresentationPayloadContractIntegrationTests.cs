@@ -92,7 +92,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             "Integration Recipe",
             "Contract test recipe",
             Comment: null,
-            "Dinner",
+            "main_courses",
             ImageUrl: null,
             ImageAssetId: null,
             10,

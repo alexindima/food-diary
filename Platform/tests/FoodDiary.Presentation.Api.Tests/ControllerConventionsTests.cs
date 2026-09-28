@@ -194,6 +194,7 @@ public sealed class ControllerConventionsTests {
             "BillingWebhookController",
             "LogsController",
             "MarketingAttributionController.Create",
+            "PublicRecipesController",
             "TelegramOperationsController",
             "VersionController",
         ];
@@ -452,6 +453,7 @@ public sealed class ControllerConventionsTests {
             "FoodDiary.Modules.Billing.Presentation.Controllers.BillingWebhookController" or
             "FoodDiary.Modules.Fasting.Presentation.Features.Logs.LogsController" or
             "FoodDiary.Modules.Marketing.Presentation.Controllers.MarketingAttributionController" or
+            "FoodDiary.Modules.Recipes.Presentation.Controllers.PublicRecipesController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";
 
     private static bool IsNonStandardInfrastructureController(Type? type) =>

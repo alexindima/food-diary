@@ -88,7 +88,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
                 name,
                 "Recipe description",
                 "Recipe comment",
-                "Dinner",
+                "main_courses",
                 ImageUrl: null,
                 ImageAssetId: null,
                 10,
@@ -126,7 +126,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
         stranger.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer", await RegisterAndGetAccessTokenAsync(stranger));
         ProductPayload product = await CreateIngredientProductAsync(owner);
-        var expected = new ExpectedRecipe("Nested base", "Description", "Private note", "Dinner",
+        var expected = new ExpectedRecipe("Nested base", "Description", "Private note", "main_courses",
             5, 10, 4, "Private", "Cook", "Cook ingredient", 100, 400, 20, 10, 60, 8, 0);
         CreateRecipeHttpRequest baseRequest = CreateRecipeRequest(expected, product.Id) with {
             CalculateNutritionAutomatically = false,
@@ -217,7 +217,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
             Name: "Postgres Recipe Flow",
             Description: "Created recipe description",
             Comment: "Created recipe comment",
-            Category: "Dinner",
+            Category: "main_courses",
             PrepTime: 5,
             CookTime: 25,
             Servings: 2,
@@ -247,7 +247,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
             Name: "Postgres Recipe Flow Updated",
             Description: "Updated recipe description",
             Comment: "Updated recipe comment",
-            Category: "Lunch",
+            Category: "soups",
             PrepTime: 8,
             CookTime: 30,
             Servings: 3,
