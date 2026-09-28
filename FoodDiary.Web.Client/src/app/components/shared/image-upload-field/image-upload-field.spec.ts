@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
@@ -23,6 +23,16 @@ type ImageUploadFieldTestContext = {
 
 const TINY_MAX_SIZE_MB = 0.000001;
 const CROP_SHIFTED_X = 20;
+const PREVIEW_URL = 'blob:image-upload-preview';
+
+beforeEach(() => {
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue(PREVIEW_URL);
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    vi.restoreAllMocks();
+});
 
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
     const imageUploadService = {
