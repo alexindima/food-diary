@@ -16,7 +16,9 @@
                 <div class="step-copy">
                     <p class="step-instruction">{{ step.instruction }}</p>
                     @if (ingredientNames(step); as names) {
-                        <p class="step-ingredients">{{ 'PUBLIC_RECIPES.STEP_INGREDIENTS' | translate }} {{ names }}</p>
+                        <p class="step-ingredients">
+                            <strong>{{ 'PUBLIC_RECIPES.STEP_INGREDIENTS' | translate }}</strong> {{ names }}
+                        </p>
                     }
                 </div>
             </div>

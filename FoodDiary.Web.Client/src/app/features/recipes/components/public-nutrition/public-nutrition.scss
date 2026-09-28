@@ -15,6 +15,12 @@
     margin: 0;
     font-size: var(--fd-text-section-title-size);
 }
+.nutrition--empty {
+    padding: var(--fd-space-sm) var(--fd-space-md);
+}
+.nutrition--empty header {
+    margin-bottom: var(--fd-space-xs);
+}
 .nutrition-heading {
     display: flex;
     flex-wrap: wrap;
@@ -80,12 +86,15 @@
     gap: var(--fd-space-sm);
     margin: 0;
 }
-.nutrition-empty fd-ui-icon {
+.nutrition-empty-icon {
+    display: inline-flex;
+    align-items: center;
+    height: 1lh;
     color: var(--fd-color-notice-warning-action);
     flex-shrink: 0;
 }
 .nutrition-empty-detail {
-    margin: var(--fd-space-sm) 0 0;
+    margin: var(--fd-space-xs) 0 0;
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-sm-size);
 }

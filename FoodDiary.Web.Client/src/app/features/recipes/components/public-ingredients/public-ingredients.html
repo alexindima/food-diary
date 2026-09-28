@@ -2,18 +2,19 @@
     <div class="ingredients-heading">
         <h2>{{ 'PUBLIC_RECIPES.INGREDIENTS' | translate }}</h2>
         <div class="portion-control">
-            <span>{{ 'PUBLIC_RECIPES.SERVINGS' | translate }}</span>
-            @if (ingredients().length > 0) {
-                <fd-ui-button
-                    appearance="plain-icon"
-                    fill="text"
-                    size="xs"
-                    icon="info"
-                    [ariaLabel]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
-                    [fdUiHint]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
-                    [fdUiHintToggleOnClick]="true"
-                />
-            }
+            <span class="portion-label"
+                ><span>{{ 'PUBLIC_RECIPES.SERVINGS' | translate }}</span>
+                @if (ingredients().length > 0) {
+                    <fd-ui-button
+                        fill="text"
+                        size="xs"
+                        icon="info"
+                        [ariaLabel]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
+                        [fdUiHint]="'PUBLIC_RECIPES.PORTIONS_HINT' | translate"
+                        [fdUiHintToggleOnClick]="true"
+                    />
+                }
+            </span>
             <fd-ui-button
                 variant="outline"
                 size="sm"
@@ -23,18 +24,44 @@
                 [ariaLabel]="'PUBLIC_RECIPES.FEWER' | translate"
                 (click)="changeServings(-1)"
             />
-            <strong aria-live="polite">{{ servings() }}</strong>
+            <strong class="portion-value" aria-live="polite" [style.width]="servingsWidth()">{{ servings() }}</strong>
             <fd-ui-button
                 variant="outline"
                 size="sm"
                 icon="add"
-                [disabled]="servings() >= maxServings"
-                [disabledReason]="'PUBLIC_RECIPES.MAX_SERVINGS' | translate"
+                [disabled]="servings() >= maxServings()"
+                [disabledReason]="'PUBLIC_RECIPES.MAX_SERVINGS' | translate: { count: maxServings() }"
                 [ariaLabel]="'PUBLIC_RECIPES.MORE' | translate"
                 (click)="changeServings(1)"
             />
         </div>
     </div>
+    <div class="shopping-toolbar">
+        <div class="shopping-target" [hidden]="ingredients().length === 0">
+            <span [title]="shoppingTarget() ?? ''">{{
+                (shoppingTarget() === null ? 'PUBLIC_RECIPES.SHOPPING_DESTINATION' : 'PUBLIC_RECIPES.SHOPPING_TARGET')
+                    | translate: { name: shoppingTarget() }
+            }}</span>
+            <fd-ui-button variant="secondary" fill="text" size="sm" [loading]="shoppingBusy()" (click)="shoppingChange.emit()">{{
+                (shoppingTarget() === null ? 'PUBLIC_RECIPES.SHOPPING_SELECT_LIST' : 'PUBLIC_RECIPES.SHOPPING_CHANGE') | translate
+            }}</fd-ui-button>
+        </div>
+        <fd-ui-button
+            variant="secondary"
+            fill="text"
+            size="sm"
+            icon="add_shopping_cart"
+            [hidden]="ingredients().length === 0"
+            [loading]="shoppingBusy()"
+            [disabled]="remaining().length === 0"
+            [disabledReason]="'PUBLIC_RECIPES.SHOPPING_ALL_ADDED' | translate"
+            (click)="addAll()"
+            >{{
+                (remaining().length === 0 ? 'PUBLIC_RECIPES.SHOPPING_ALL_ADDED' : 'PUBLIC_RECIPES.SHOPPING_ADD_ALL') | translate
+            }}</fd-ui-button
+        >
+    </div>
+    <p class="shopping-message" role="status">{{ shoppingMessage() ?? '' | translate }}</p>
     <ul class="ingredient-list">
         @for (ingredient of ingredients(); track $index) {
             <li>
@@ -45,18 +72,36 @@
                         {{ ingredient.name ?? ('PUBLIC_RECIPES.PRIVATE_INGREDIENT' | translate) }}
                     }
                 </span>
-                <span>
-                    @if (ingredient.amountText) {
-                        {{ ingredient.amountText }}
-                    } @else if (amount(ingredient); as amountValue) {
-                        {{ amountValue | number: '1.0-2' }}
-                        {{ unitKey(ingredient.unit) ? (unitKey(ingredient.unit) | translate) : ingredient.unit }}
+                <span class="ingredient-actions"
+                    ><span class="ingredient-amount">
+                        @if (ingredient.amountText) {
+                            {{ ingredient.amountText }}
+                        } @else if (amount(ingredient); as amountValue) {
+                            {{ amountValue | number: '1.0-2' }}
+                            {{ unitKey(ingredient.unit) ? (unitKey(ingredient.unit) | translate) : ingredient.unit }}
+                        }
+                    </span>
+                    @if (ingredient.isAvailable && ingredient.name) {
+                        <fd-ui-button
+                            variant="secondary"
+                            fill="text"
+                            size="md"
+                            [icon]="addedIngredients().has($index) ? 'check' : 'add_shopping_cart'"
+                            [disabled]="shoppingBusy() || addedIngredients().has($index)"
+                            [ariaLabel]="
+                                (addedIngredients().has($index) ? 'PUBLIC_RECIPES.SHOPPING_ADDED' : 'PUBLIC_RECIPES.SHOPPING_ADD')
+                                    | translate: { name: ingredient.name }
+                            "
+                            [fdUiHint]="
+                                (addedIngredients().has($index) ? 'PUBLIC_RECIPES.SHOPPING_ADDED' : 'PUBLIC_RECIPES.SHOPPING_ADD')
+                                    | translate: { name: ingredient.name }
+                            "
+                            (click)="add($index, ingredient)"
+                        />
                     }
                 </span>
             </li>
         }
     </ul>
-    @if (ingredients().length === 0) {
-        <p class="ingredients-empty">{{ 'PUBLIC_RECIPES.NO_INGREDIENTS' | translate }}</p>
-    }
+    <p class="ingredients-empty" [hidden]="ingredients().length > 0">{{ 'PUBLIC_RECIPES.NO_INGREDIENTS' | translate }}</p>
 </section>

@@ -5,7 +5,7 @@
 }
 .cooking-steps {
     border-top: var(--fd-border-muted);
-    padding-block: clamp(var(--fd-space-xl), 4vw, var(--fd-space-xxl));
+    padding-top: var(--fd-space-lg);
 }
 .steps-heading,
 .step-navigation {
@@ -20,8 +20,11 @@
     display: grid;
     grid-template-columns: 72px minmax(0, 1fr);
     gap: var(--fd-space-lg);
-    padding-block: var(--fd-space-xl);
+    padding-block: var(--fd-space-md);
     border-top: var(--fd-border-muted);
+}
+.recipe-step:last-child {
+    padding-bottom: 0;
 }
 .step-number {
     color: var(--fd-color-primary);
@@ -36,7 +39,7 @@
     display: grid;
     grid-template-columns: 200px minmax(0, 1fr);
     align-items: start;
-    gap: var(--fd-space-md) var(--fd-space-lg);
+    gap: var(--fd-space-sm) var(--fd-space-lg);
 }
 .recipe-step.has-media h3 {
     grid-column: 1 / -1;
@@ -49,20 +52,24 @@
     margin-top: 0;
 }
 .step-instruction {
+    margin: 0;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    color: var(--fd-color-text-muted);
+    color: var(--fd-color-text);
 }
 .steps-heading h2 {
     margin: 0;
 }
 .recipe-step h3 {
-    margin-top: 0;
+    margin: 0 0 var(--fd-space-sm);
 }
 .step-ingredients {
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-sm-size);
-    margin-bottom: 0;
+    margin: var(--fd-space-xs) 0 0;
+}
+.step-ingredients strong {
+    font-weight: var(--fd-font-weight-medium);
 }
 .step-gallery {
     width: 100%;

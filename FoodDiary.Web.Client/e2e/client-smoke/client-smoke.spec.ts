@@ -457,6 +457,27 @@ function formatNetworkAuditTable(results: readonly NetworkAuditRouteResult[]): s
 }
 
 test.describe('session routing smoke', () => {
+    test('keeps the recipe catalog hidden until the authenticated shell is ready', async ({ page }) => {
+        await page.addInitScript((token: string) => {
+            window.sessionStorage.setItem('authToken', token);
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
+        await mockAuthenticatedClientApiAsync(page);
+        await page.route('**/api/v1/users/info', async route => {
+            await new Promise(resolve => setTimeout(resolve, SESSION_RESTORE_DELAY_MS));
+            await route.fulfill(jsonResponse(createUser()));
+        });
+        await page.goto('/explore', { waitUntil: 'domcontentloaded' });
+        await expect(page.locator('html')).toHaveClass(/fd-session-route-pending/);
+        await expect(page.locator('fd-root')).toBeHidden();
+        // Explicit visibility on catalog descendants must not escape the startup veil.
+        await expect(page.locator('fd-root')).toHaveCSS('opacity', '0');
+        await expect(page.locator('fd-public-recipe-catalog')).toBeVisible();
+        await expect(page.locator('fd-root')).toHaveCSS('opacity', '1');
+        await expect(page.locator('html')).not.toHaveClass(/fd-session-route-pending/);
+        await expect(page.locator('.fd-root')).not.toHaveClass(/fd-root--no-sidebar/);
+    });
+
     test('keeps prerendered landing hidden while an authenticated root route initializes', async ({ page }) => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);

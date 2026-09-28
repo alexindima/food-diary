@@ -1,4 +1,4 @@
-<section class="nutrition">
+<section class="nutrition" [class.nutrition--empty]="!hasNutrition()">
     <header>
         <div class="nutrition-heading">
             <h2>{{ 'PUBLIC_RECIPES.NUTRITION' | translate }}</h2>
@@ -33,7 +33,7 @@
         </dl>
     } @else {
         <p class="nutrition-empty">
-            <fd-ui-icon name="warning_amber" />
+            <span class="nutrition-empty-icon"><fd-ui-icon name="warning_amber" /></span>
             <span>{{ 'PUBLIC_RECIPES.NUTRITION_INSUFFICIENT' | translate }}</span>
         </p>
         @if (recipe().missingIngredientCount > 0) {

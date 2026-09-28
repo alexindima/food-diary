@@ -13,6 +13,8 @@
         <style>
             html.fd-session-route-pending fd-root {
                 visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
             }
         </style>
         <script>
@@ -25,7 +27,9 @@
                     return;
                 }
 
-                if (location.pathname !== '/') {
+                const hasSessionDependentShell =
+                    location.pathname === '/' || location.pathname === '/explore' || location.pathname.startsWith('/explore/');
+                if (!hasSessionDependentShell) {
                     return;
                 }
 

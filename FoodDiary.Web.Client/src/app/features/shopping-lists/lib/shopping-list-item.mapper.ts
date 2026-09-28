@@ -31,6 +31,7 @@ export function formatShoppingListItemMeta(item: ShoppingListItem, translate: Sh
         parts.push(unitLabel !== null ? `${item.amount} ${unitLabel}` : `${item.amount}`);
     }
 
+    appendTextPart(parts, item.note);
     appendTextPart(parts, item.category);
     appendTextPart(parts, item.sources?.[0]?.label);
 

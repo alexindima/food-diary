@@ -22,6 +22,10 @@ export class ShoppingListService extends ApiService {
         );
     }
 
+    public getAllForSelection(): Observable<ShoppingListSummary[]> {
+        return this.get<ShoppingListSummary[]>('');
+    }
+
     public getById(id: string): Observable<ShoppingList | null> {
         return this.get<ShoppingList>(id).pipe(catchError((error: unknown) => fallbackApiError('Get shopping list error', error, null)));
     }

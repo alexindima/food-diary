@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1785,
-    "symbols": 689,
+    "typescriptFiles": 1788,
+    "symbols": 691,
     "routes": 102,
     "features": 44,
-    "specs": 645,
+    "specs": 646,
     "localeFiles": 5,
     "roles": {
-      "Component": 467,
+      "Component": 468,
       "Directive": 12,
-      "Facade": 66,
+      "Facade": 67,
       "Other": 19,
       "Pipe": 4,
       "Service": 121
@@ -1246,10 +1246,12 @@
       "name": "shopping-lists",
       "root": "FoodDiary.Web.Client/src/app/features/shopping-lists",
       "symbols": [
+        "ShoppingListAddFacade",
         "ShoppingListFacade",
         "ShoppingListItemsPanelComponent",
         "ShoppingListManageControlsComponent",
         "ShoppingListPageComponent",
+        "ShoppingListPickerComponent",
         "ShoppingListService"
       ],
       "routes": [
@@ -1257,6 +1259,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-add.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-item.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-options.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list.facade.spec.ts",
@@ -5147,7 +5150,7 @@
       "role": "Component",
       "selector": "fd-public-ingredients",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "PublicRecipeNavigationComponent",
@@ -5287,7 +5290,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
-      "line": 40
+      "line": 41
     },
     {
       "name": "ClientTasksService",
@@ -5330,6 +5333,20 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
       "line": 10
+    },
+    {
+      "name": "ShoppingListPickerComponent",
+      "role": "Component",
+      "selector": "fd-shopping-list-picker",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
+      "line": 21
+    },
+    {
+      "name": "ShoppingListAddFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-add.facade.ts",
+      "line": 14
     },
     {
       "name": "ShoppingListFacade",
@@ -6801,8 +6818,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3853,
-      "russianProperties": 3853,
+      "englishProperties": 3867,
+      "russianProperties": 3867,
       "countsMatch": true
     },
     {

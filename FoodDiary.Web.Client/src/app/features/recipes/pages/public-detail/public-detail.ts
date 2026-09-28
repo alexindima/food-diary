@@ -9,6 +9,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { AuthService } from '../../../../services/auth.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
+import { ShoppingListAddFacade } from '../../../shopping-lists/lib/shopping-list-add.facade';
 import { PublicRecipeGalleryComponent } from '../../components/public-gallery/public-gallery';
 import { PublicIngredientsComponent } from '../../components/public-ingredients/public-ingredients';
 import { PublicRecipeNavigationComponent } from '../../components/public-navigation/public-navigation';
@@ -24,7 +25,7 @@ import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolve
     templateUrl: './public-detail.html',
     styleUrl: './public-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [PublicRecipesFacade],
+    providers: [PublicRecipesFacade, ShoppingListAddFacade],
     imports: [
         PageBodyComponent,
         PublicNutritionComponent,
@@ -38,6 +39,16 @@ import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolve
     ],
 })
 export class PublicRecipeDetailComponent {
+    protected readonly shopping = inject(ShoppingListAddFacade);
+    protected readonly addedIngredients = computed(
+        () =>
+            new Set(
+                this.recipe()
+                    ?.steps.flatMap(step => step.ingredients)
+                    .map((_, index) => index)
+                    .filter(index => this.shopping.isAdded(index)),
+            ),
+    );
     protected readonly recipeCategoryKey = recipeCategoryKey;
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -85,6 +96,7 @@ export class PublicRecipeDetailComponent {
     public constructor() {
         effect(() => {
             this.servings.set(this.recipe()?.servings ?? 1);
+            this.shopping.setScope(this.recipe()?.id ?? '', this.recipe()?.name ?? '');
         });
         effect(onCleanup => {
             const recipe = this.recipe();

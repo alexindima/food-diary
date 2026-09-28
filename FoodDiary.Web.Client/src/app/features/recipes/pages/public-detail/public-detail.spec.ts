@@ -10,6 +10,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
+import { ShoppingListAddFacade } from '../../../shopping-lists/lib/shopping-list-add.facade';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import { PublicRecipeDetailComponent } from './public-detail';
@@ -44,7 +45,21 @@ beforeEach(() => {
         ],
     });
     TestBed.overrideComponent(PublicRecipeDetailComponent, {
-        set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }] },
+        set: {
+            providers: [
+                { provide: PublicRecipesFacade, useValue: facade },
+                {
+                    provide: ShoppingListAddFacade,
+                    useValue: {
+                        setScope: vi.fn(),
+                        isAdded: (): boolean => false,
+                        busy: signal(false),
+                        target: signal(null),
+                        message: signal(null),
+                    },
+                },
+            ],
+        },
     });
 });
 describe('public recipe account actions', () => {

@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 104,
+    "selectorUnreferencedComponents": 105,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 129,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 37,
     "explicitDebtMarkers": 11
   },
@@ -955,6 +955,14 @@
       "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.spec.ts"
+    },
+    {
+      "class": "ShoppingListPickerComponent",
+      "selector": "fd-shopping-list-picker",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "specPath": null
     },
     {
       "class": "StatisticsNutrientBalanceCardComponent",
@@ -4981,6 +4989,16 @@
           "type": "SidebarRouteItem"
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "ShoppingListPickerComponent",
+      "selector": "fd-shopping-list-picker",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "inputs": [],
+      "outputs": [],
       "specPath": null
     },
     {

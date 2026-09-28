@@ -1,0 +1,32 @@
+<fd-ui-dialog size="sm" [title]="titleKey | translate" (close)="close()">
+    <form class="fd-stack fd-gap-lg" [formRoot]="fields" (submit)="submit($event)">
+        <fd-ui-select [label]="'PUBLIC_RECIPES.SHOPPING_LIST' | translate" [options]="options" [formField]="fields.id" />
+        @if (draft().id === '') {
+            <fd-ui-input #listName [selectOnFocus]="true" [label]="'PUBLIC_RECIPES.SHOPPING_NAME' | translate" [formField]="fields.name" />
+        }
+        <p class="fd-ui-action-text" [hidden]="count === undefined">{{ 'PUBLIC_RECIPES.SHOPPING_COUNT' | translate: { count: count } }}</p>
+        @if (item; as ingredient) {
+            <p class="fd-ui-action-text">
+                {{ ingredient.name }}
+                @if (ingredient.amount !== null && ingredient.amount !== undefined) {
+                    &middot; {{ ingredient.amount | localizedNumber: language() : 0 : 2 }}
+                    @if (ingredient.unit) {
+                        {{ `GENERAL.UNITS.${ingredient.unit}` | translate }}
+                    }
+                }
+                @if (ingredient.note) {
+                    &middot; {{ ingredient.note }}
+                }
+            </p>
+        }
+        <p class="fd-ui-text-muted fd-ui-body-sm">{{ 'PUBLIC_RECIPES.SHOPPING_PICK_HINT' | translate }}</p>
+        <div class="fd-row fd-justify-end fd-gap-actions">
+            <fd-ui-button variant="secondary" fill="text" (click)="close()">{{
+                'PUBLIC_RECIPES.SHOPPING_CANCEL' | translate
+            }}</fd-ui-button>
+            <fd-ui-button type="submit" [disabled]="!valid()" [disabledReason]="'PUBLIC_RECIPES.SHOPPING_NAME_REQUIRED' | translate">{{
+                actionKey() | translate
+            }}</fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>
