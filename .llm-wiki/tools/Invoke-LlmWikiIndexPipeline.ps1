@@ -290,6 +290,8 @@ if ($AffectedOnly) {
         $productionChangedPaths = @($normalizedChangedPaths | Where-Object { $_ -notin $csharpTestPaths -and $_ -notin $frontendTests })
 
         if ($frontendTests.Count -gt 0) {
+            Add-IndexTool 'Build-LlmWikiFrontendIndex.ps1'
+            Add-IndexToolWithDependents 'Build-LlmWikiFrontendContractIndex.ps1'
             Add-IndexTool 'Build-LlmWikiQualityIndex.ps1'
         }
         if ($frontendSources.Count -gt 0) {

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 472,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "inputs": 1510,
     "outputs": 508,
     "apiCalls": 269,
@@ -10369,7 +10369,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.spec.ts"
     },
     {
       "class": "PublicRecipeNavigationComponent",

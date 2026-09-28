@@ -9,9 +9,9 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 # Frozen from the unsharded audit at 45e8de30e. Updating assertions requires an
 # intentional inventory refresh, never silently dropping coverage during moves.
 $expected = @{
-    # Compared with ca6ae5b5e: only BillingController and architecture-test paths
-    # changed inside assertions after their moves. Every assertion is preserved.
-    Core = @{ count = 333; hash = '3c8768a5fd7976a6c8a62d5148dabb55b75cc17d3578fdae534163ce869293fb' }
+    # Compared with 4a7908255: Compose count is 18 and two assertions verify
+    # client-ssr uniqueness and the client dependency. Existing assertions remain.
+    Core = @{ count = 335; hash = '4427e2744ee03a73d70a85b08968a7474a024c66cd9d9037560bab93c8861240' }
     # Daily metrics assertion now verifies the exact UTC dates and total across midnight;
     # no assertions were removed or relaxed.
     Governed = @{ count = 376; hash = '9a0737e2c64b6e66529ce281c5e186137475102dbb50a6de9b537d372051b221' }
@@ -63,4 +63,4 @@ foreach ($required in @('shard: [Core, Workspace, Orchestration]', 'fail-fast: f
 if (-not $workflow.Contains('needs: [llm-wiki-focused, llm-wiki-audit]') -or
     -not $workflow.Contains('needs.llm-wiki-audit.result')) { throw 'Wiki gate must require the aggregate result of every audit shard.' }
 & (Join-Path $repositoryRoot 'scripts/ci/Test-WikiCiResult.ps1')
-Write-Host 'Full audit shard contracts passed: all 710 original assertions preserved, isolated CI matrix, exhaustive default and failure gate.'
+Write-Host 'Full audit shard contracts passed: 712 assertions verified, isolated CI matrix, exhaustive default and failure gate.'

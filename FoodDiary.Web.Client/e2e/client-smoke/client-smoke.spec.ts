@@ -71,6 +71,9 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/auth/sessions'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/billing/overview'), createResponse: createBillingOverview },
     { matches: pathname => pathname.endsWith('/recipes/explore'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/recipes/public'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/recipes/public/categories'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/favorite-recipes'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/shopping-lists'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/lessons'), createResponse: () => [] },
@@ -2105,7 +2108,7 @@ test.describe('product creation behavior', () => {
         await expect(calories).toHaveValue('300');
         await protein.fill('25,5');
         await page.locator('details summary').click();
-        await page.getByRole('textbox', { name: 'Comment', exact: true }).fill('Keep this comment');
+        await page.getByRole('textbox', { name: 'Private note', exact: true }).fill('Keep this comment');
         await page.getByRole('button', { name: 'Create product', exact: true }).click();
         await expect(page).toHaveURL(/\/products$/u);
         expect(payloads).toHaveLength(1);

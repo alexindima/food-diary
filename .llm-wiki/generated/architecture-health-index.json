@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 104,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 37,
     "explicitDebtMarkers": 11
   },
@@ -4723,27 +4723,6 @@
         {
           "name": "recipe",
           "type": "PublicRecipe",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "PublicRecipeGalleryComponent",
-      "selector": "fd-public-recipe-gallery",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.html",
-      "inputs": [
-        {
-          "name": "images",
-          "type": "string[]",
-          "required": true
-        },
-        {
-          "name": "name",
-          "type": "string",
           "required": true
         }
       ],

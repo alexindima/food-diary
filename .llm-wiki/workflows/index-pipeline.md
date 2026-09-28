@@ -491,9 +491,11 @@ Plan mode emits `Affected path count` and `Affected index tools` on the ordinary
 PowerShell output stream. Tests and shell hooks should consume these stable plan
 fields instead of parsing human-oriented `Write-Host` diagnostics.
 
-An Angular `*.spec.ts`-only change selects quality plus its downstream
-architecture-health check. It does not run frontend source, frontend contract,
-or sensitive-data generators because test content cannot change those indexes.
+An Angular `*.spec.ts`-only change selects the frontend source and frontend
+contract indexes, quality, and downstream architecture health. Adding or removing
+tests changes the spec inventory, direct component spec links, and test-gap
+counts even when production code is unchanged. It does not select backend source
+or sensitive-data generators.
 Stylesheet-only changes select no compiled index because no generator reads CSS
 or SCSS contents. Template-only changes select the frontend and frontend-contract
 indexes plus downstream architecture health, but skip quality and sensitive-data.

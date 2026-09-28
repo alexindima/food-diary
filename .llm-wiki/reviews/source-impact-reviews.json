@@ -231,17 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "01008ac6842c321c25b7af792dfb8c2662f8025ef065640f1270a1bbc91e8ea3"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
+          "sha256": "7c9479af4e536660f8a865e77d33cf9f6bf9c2848ba07fe3ec7fe5d41b18250e"
         }
       ],
-      "reason": "Reviewed explicit shared-contract references after canonical namespace migration and regenerated architecture index. Dependency matrix remains enforced; focused architecture suite passed 2111 tests.",
+      "reason": "Reviewed regenerated architecture health: PublicRecipeGalleryComponent now has a direct spec and leaves the missing-spec list; dependency graph and enforcement are unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:26.7290065Z"
+      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
+      "reviewedAtUtc": "2026-09-28T01:46:58.1801220Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -840,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3f23c0a5f9104cd9576d12922c97717d8793c569255a6af4e576696c8f3a10d0"
+          "sha256": "86c323ece41cf9e99ec238f7723048fde6288c3ffbdfe4dd1d282eef3e577124"
         }
       ],
-      "reason": "Reviewed regenerated quality-index diff: only extraction-readiness structural counts changed for the shared-contract exclusion. Hotspot classification, test-reference limitations and query behavior remain accurate.",
+      "reason": "Reviewed quality index regeneration after adding frontend test inventory selection: only pipeline line count and structural risk score change; hotspot interpretation stays accurate.",
       "baseRef": "origin/master",
-      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
-      "reviewedAtUtc": "2026-09-28T01:25:51.6853887Z"
+      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
+      "reviewedAtUtc": "2026-09-28T01:46:56.781417Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +926,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3f23c0a5f9104cd9576d12922c97717d8793c569255a6af4e576696c8f3a10d0"
+          "sha256": "86c323ece41cf9e99ec238f7723048fde6288c3ffbdfe4dd1d282eef3e577124"
         }
       ],
-      "reason": "Reviewed regenerated quality-index diff: one namespace-classification condition changes structural metrics only. Security evidence boundaries and documented limitations remain accurate.",
+      "reason": "Reviewed quality index regeneration: index selection has two additional generator calls; no security control classification or runtime boundary changes.",
       "baseRef": "origin/master",
-      "gitHead": "4a79082552d2cda536756cc1b0e76ce27666b6e8",
-      "reviewedAtUtc": "2026-09-28T01:25:52.2387349Z"
+      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
+      "reviewedAtUtc": "2026-09-28T01:46:57.7949365Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1077,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c6e3a1d4789fcaf787bdd90ef18d25b628e95c1e808a7bb05dff61ea288b194d"
+          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "51cca857942a674032ca17d12c57cc623f837b37d8273d1f94f78ae0a745fd03"
+          "sha256": "d5e25df0563bbb8e58ab56cfe48e8db64eaa8681e6f9aef117ba1bb357db58e8"
         }
       ],
-      "reason": "Reviewed refreshed frontend route/component/spec and consumer indexes for public recipes. Existing frontend and backend trace guidance remains valid for the current source owners.",
+      "reason": "Reviewed frontend inventory diff: two new Recipes spec files and the public gallery direct-spec link are now discoverable. Existing trace behavior and evidence limitations remain accurate.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:23.4637356Z"
+      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
+      "reviewedAtUtc": "2026-09-28T01:46:56.1880684Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1175,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c6e3a1d4789fcaf787bdd90ef18d25b628e95c1e808a7bb05dff61ea288b194d"
+          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
         }
       ],
-      "reason": "Reviewed generated public catalog sort translation keys, detail servings text, page-header bindings and consumer counts against current templates. Existing contract and trace workflow guidance remains accurate.",
+      "reason": "Reviewed frontend contract diff: the public gallery direct spec link is now indexed and missing-spec count decreases by one. Inputs, outputs and consumer edges are unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:25.018934Z"
+      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
+      "reviewedAtUtc": "2026-09-28T01:46:57.2541167Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -27,8 +27,13 @@ foreach ($path in @(
 $frontendPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'
 Assert-Plan ($frontendPlan -match 'Build-LlmWikiFrontendIndex.ps1' -and $frontendPlan -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend builder dependency closure is incorrect.'
 
-$frontendTestPlan = Get-IndexPlan 'FoodDiary.Web.Client/src/app/example/example.spec.ts'
-Assert-Plan ($frontendTestPlan -match 'Build-LlmWikiQualityIndex.ps1' -and $frontendTestPlan -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend tests should update quality without architecture health.'
+foreach ($testPath in @('FoodDiary.Web.Client/src/app/example/example.spec.ts', 'FoodDiary.Web.Client/src/app/example/example.test.ts')) {
+    $frontendTestPlan = Get-IndexPlan $testPath
+    foreach ($expectedTool in @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1')) {
+        Assert-Plan ($frontendTestPlan -match [regex]::Escape($expectedTool)) "Frontend test inventory change omitted generator $expectedTool for $testPath."
+    }
+    Assert-Plan ($frontendTestPlan -notmatch 'Build-LlmWikiCatalog.ps1|Build-LlmWikiSymbolIndex.ps1|Build-LlmWikiBackendContractIndex.ps1|Build-LlmWikiSensitiveDataIndex.ps1') 'Frontend tests selected unrelated backend or sensitive-data indexes.'
+}
 
 $frontendLocalizationPlan = Get-IndexPlan 'FoodDiary.Web.Client/assets/i18n/en/landing.json'
 Assert-Plan ($frontendLocalizationPlan -match 'Build-LlmWikiFrontendIndex.ps1') 'Frontend localization changes should update the localization-reading frontend index.'

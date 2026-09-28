@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1782,
+    "typescriptFiles": 1784,
     "symbols": 689,
     "routes": 102,
     "features": 44,
-    "specs": 642,
+    "specs": 644,
     "localeFiles": 5,
     "roles": {
       "Component": 467,
@@ -1190,6 +1190,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-category-filter/public-category-filter.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.spec.ts",
@@ -1200,6 +1201,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipe.utils.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipes.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-image.util.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-language.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.spec.ts",
