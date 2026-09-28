@@ -1912,7 +1912,7 @@
       "identityTerms": ["recipe", "access", "service"],
       "minimumIdentityMatches": 3,
       "score": 350,
-      "directOnly": true,
+      "directOnly": false,
       "identityScope": "file"
     },
     {

@@ -29,7 +29,7 @@
       "reason": "Reviewed merged docs README and crash-dump runbook. Repository catalog and runtime topology regenerated to retain both current namespaces and upstream diagnostic configuration.",
       "baseRef": "HEAD",
       "gitHead": "fda59e120e61862fee767e625b0c5515d098ca59",
-      "reviewedAtUtc": "2026-09-27T14:51:47.5303780Z"
+      "reviewedAtUtc": "2026-09-27T14:51:47.530378Z"
     },
     {
       "pageId": "module.frontend",
@@ -282,14 +282,14 @@
       "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "176590c4b493bc5416d358f058e28944e1ea5a52bc021d4c6d622635cd6a028f"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
         }
       ],
-      "reason": "Reviewed added SQLite snapshot regression in code-graph lane; graph query and index semantics unchanged.",
+      "reason": "Reviewed existing recipe access identity rule using translated query terms. Shared Node and .NET policy semantics remain aligned; source navigation, security-evidence limits, corpus thresholds and ranking rule counts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:03:10.2639702Z"
+      "gitHead": "ef1d724d6ed831a224c96ba6ce24e061af2f5161",
+      "reviewedAtUtc": "2026-09-28T00:17:25.5501672Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -834,7 +834,7 @@
       "reason": "Reviewed regenerated metrics and stale baseline line counts; new tests cover recipe language transitions, gallery cleanup and missing profiles. Static reference counts are kept distinct from dotCover execution evidence.",
       "baseRef": "HEAD",
       "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:14.3003410Z"
+      "reviewedAtUtc": "2026-09-27T23:48:14.300341Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -917,22 +917,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47b1da4e01ccb8b2408e9b46ad689fbae41931625972d7f2f2a0735327fbd899"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "702eb621484be5f416bd7ee173a6b12c36dfe935920f27ba5d1c3e3d15bc40db"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
         }
       ],
-      "reason": "Reviewed topology, privacy and quality index refreshes. Exact public-controller allowlist preserves anonymous catalog access while API tests retain private-recipe and ingredient protections; no new external trust boundary.",
+      "reason": "Reviewed existing recipe access identity rule using translated query terms. Shared Node and .NET policy semantics remain aligned; source navigation, security-evidence limits, corpus thresholds and ranking rule counts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:16.4293104Z"
+      "gitHead": "ef1d724d6ed831a224c96ba6ce24e061af2f5161",
+      "reviewedAtUtc": "2026-09-28T00:17:25.7705622Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
