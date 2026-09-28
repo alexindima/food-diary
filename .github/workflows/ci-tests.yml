@@ -75,6 +75,8 @@ jobs:
               if ($LASTEXITCODE -ne 1) { throw 'Unable to verify API baseline ancestry.' }
             }
           }
+          git cat-file -e "${apiBaseRef}:$apiSnapshotPath"
+          if ($LASTEXITCODE -ne 0) { throw "API compatibility baseline '$apiBaseRef' does not contain the OpenAPI snapshot." }
           "API_COMPAT_BASE_REF=$apiBaseRef" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
           Write-Host "API compatibility baseline: $apiBaseRef"
 

@@ -208,13 +208,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
+          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
         }
       ],
-      "reason": "CI baseline selection now ignores successful ancestral commits created before the OpenAPI snapshot existed and falls back to the immediate base only during bootstrap; no API contract changed.",
+      "reason": "CI now verifies the selected API baseline contains the OpenAPI snapshot, preserving bootstrap fallback while clearing the expected native probe exit code; no API contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
-      "reviewedAtUtc": "2026-09-28T09:35:23.7927502Z"
+      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
+      "reviewedAtUtc": "2026-09-28T10:29:00.9249991Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -644,13 +644,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
+          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
         }
       ],
-      "reason": "Only the API compatibility baseline bootstrap in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
+      "reason": "Only API baseline validation in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
-      "reviewedAtUtc": "2026-09-28T09:35:24.3981196Z"
+      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
+      "reviewedAtUtc": "2026-09-28T10:29:01.7428625Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -873,13 +873,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
+          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
         }
       ],
-      "reason": "Only the API compatibility baseline bootstrap in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
+      "reason": "Only API baseline validation in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
-      "reviewedAtUtc": "2026-09-28T09:35:25.0213750Z"
+      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
+      "reviewedAtUtc": "2026-09-28T10:29:02.6724556Z"
     },
     {
       "pageId": "workflow-risk-calibration",
