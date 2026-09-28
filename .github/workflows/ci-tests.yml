@@ -53,8 +53,11 @@ jobs:
 
           # A failed push is not an approved API baseline. Compare repairs with
           # the last successful ancestral push so restoring compatibility is
-          # checked against the accepted contract, not the rejected one.
+          # checked against the accepted contract, not the rejected one. During
+          # snapshot bootstrap, keep the immediate base until a successful run
+          # that contains the snapshot exists.
           $apiBaseRef = $baseRef
+          $apiSnapshotPath = 'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json'
           if ($env:GITHUB_EVENT_NAME -eq 'push') {
             $successfulCommits = @(gh api --method GET "repos/$env:GITHUB_REPOSITORY/actions/workflows/ci-tests.yml/runs" `
               -f "branch=$env:GITHUB_REF_NAME" -f 'status=success' -f 'event=push' -f 'per_page=100' `
@@ -64,7 +67,11 @@ jobs:
               if ($candidate -notmatch '^[0-9a-f]{40}$') { throw 'Invalid workflow commit SHA.' }
               if ($candidate -eq $env:GITHUB_SHA) { continue }
               git merge-base --is-ancestor $candidate $baseRef
-              if ($LASTEXITCODE -eq 0) { $apiBaseRef = $candidate; break }
+              if ($LASTEXITCODE -eq 0) {
+                git cat-file -e "${candidate}:$apiSnapshotPath" 2>$null
+                if ($LASTEXITCODE -eq 0) { $apiBaseRef = $candidate; break }
+                continue
+              }
               if ($LASTEXITCODE -ne 1) { throw 'Unable to verify API baseline ancestry.' }
             }
           }

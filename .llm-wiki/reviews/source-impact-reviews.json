@@ -207,14 +207,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "46202a6508afae8afe554b3da37922a703391634986581ff6242c8302635396e"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
         }
       ],
-      "reason": "Reviewed public recipe snapshot changes: SortBy maxLength 32 and Language maxLength 10 document existing finite validator sets (six sort codes, en/ru); routes, defaults, payloads and supported values are unchanged. API contract tests pass; compatibility workflow guidance remains accurate.",
+      "reason": "CI baseline selection now ignores successful ancestral commits created before the OpenAPI snapshot existed and falls back to the immediate base only during bootstrap; no API contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:47:01.7027926Z"
+      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
+      "reviewedAtUtc": "2026-09-28T09:35:23.7927502Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -643,18 +643,14 @@
       "pageSha256": "fe774ed8067f265672ee7a60614a941021605e090f88e4946a41a7750a30ded7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "9cf508d204705dc2b55ef7d6559b888abc36a37b42c3103b9b0e49c7284965f5"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "e617db3ca389d0a275e4dfc5a5c1dd060233da6f8b038ee4c83ca010a9e3363f"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
         }
       ],
-      "reason": "Reviewed the Core audit assertions and frozen inventory: all 335 Core assertions remain, with three expectations aligned to the documented frontend spec inventory, direct-spec links and downstream architecture test-gap refresh. No production behavior or coverage is removed.",
-      "baseRef": "origin/master",
-      "gitHead": "c40a7a51dfffc826e73df58a706558632796b882",
-      "reviewedAtUtc": "2026-09-28T02:53:31.8918101Z"
+      "reason": "Only the API compatibility baseline bootstrap in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
+      "reviewedAtUtc": "2026-09-28T09:35:24.3981196Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -877,13 +873,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "aea9e242aff413ded6f91b68554a3757766a0e144a42b05f904460741bf19e16"
+          "sha256": "279e6b98a13cf1113140d0efd67f1ad85a8648811461e635cb09d70a89d50a1b"
         }
       ],
-      "reason": "CI API comparison now resolves a successful ancestral push with read-only actions permission; the immediate Wiki base, all test workers, required gates and FailOnBreaking remain enforced. Workflow guards passed 8/8. Index changes reflect one compatibility action and its tests.",
+      "reason": "Only the API compatibility baseline bootstrap in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4eb412289f6cdf47cb413d29afbaec3b9c1a3faa",
-      "reviewedAtUtc": "2026-09-25T22:45:43.8582753Z"
+      "gitHead": "d5a4c76dc6114ff143cff7f5590e36020623e684",
+      "reviewedAtUtc": "2026-09-28T09:35:25.0213750Z"
     },
     {
       "pageId": "workflow-risk-calibration",
