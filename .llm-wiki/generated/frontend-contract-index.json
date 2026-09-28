@@ -7,7 +7,7 @@
     "outputs": 508,
     "apiCalls": 269,
     "templatesWithTranslations": 332,
-    "translationKeys": 1966,
+    "translationKeys": 1970,
     "consumerEdges": 1172,
     "consumedComponents": 302,
     "unconsumedComponents": 169
@@ -21236,10 +21236,10 @@
         "PUBLIC_RECIPES.COOK",
         "PUBLIC_RECIPES.MIN",
         "PUBLIC_RECIPES.NUTRITION",
+        "PUBLIC_RECIPES.ORIGINAL_SERVINGS",
         "PUBLIC_RECIPES.PARTIAL_HINT",
         "PUBLIC_RECIPES.PER_SERVING",
-        "PUBLIC_RECIPES.PREP",
-        "PUBLIC_RECIPES.SERVINGS"
+        "PUBLIC_RECIPES.PREP"
       ]
     },
     {
@@ -21321,6 +21321,7 @@
       "keys": [
         "PUBLIC_RECIPES.ANY_TIME",
         "PUBLIC_RECIPES.BY_NAME",
+        "PUBLIC_RECIPES.BY_NAME_DESC",
         "PUBLIC_RECIPES.CATALOG",
         "PUBLIC_RECIPES.EMPTY",
         "PUBLIC_RECIPES.EMPTY_HINT",
@@ -21328,9 +21329,11 @@
         "PUBLIC_RECIPES.FASTEST",
         "PUBLIC_RECIPES.FILTERS",
         "PUBLIC_RECIPES.NEWEST",
+        "PUBLIC_RECIPES.OLDEST",
         "PUBLIC_RECIPES.RESET",
         "PUBLIC_RECIPES.RETRY",
         "PUBLIC_RECIPES.SEARCH",
+        "PUBLIC_RECIPES.SLOWEST",
         "PUBLIC_RECIPES.SORT",
         "PUBLIC_RECIPES.SUBTITLE",
         "PUBLIC_RECIPES.TIME",
@@ -28221,9 +28224,8 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
-        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -37920,10 +37922,14 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
       "occurrences": 1,
       "inputsUsed": [
+        "backAriaLabel",
+        "backVisible",
         "subtitle",
         "title"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "back"
+      ]
     },
     {
       "component": "PageHeaderComponent",

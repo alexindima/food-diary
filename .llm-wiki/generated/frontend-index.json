@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1781,
+    "typescriptFiles": 1782,
     "symbols": 689,
     "routes": 102,
     "features": 44,
-    "specs": 641,
+    "specs": 642,
     "localeFiles": 5,
     "roles": {
       "Component": 467,
@@ -1206,6 +1206,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-select.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-servings.utils.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/models/recipe-category.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-add/recipe-add.spec.ts",
@@ -5283,7 +5284,7 @@
       "role": "Component",
       "selector": "fd-public-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
-      "line": 44
+      "line": 43
     },
     {
       "name": "ClientTasksService",
@@ -6797,8 +6798,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3836,
-      "russianProperties": 3836,
+      "englishProperties": 3840,
+      "russianProperties": 3840,
       "countsMatch": true
     },
     {
