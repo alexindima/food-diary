@@ -28297,14 +28297,14 @@
       "kind": "record",
       "role": "Query",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetMailRelayCollectionHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetOutgoingEmailJournalHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetOutgoingEmailJournalHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "IngestMailRelayDeliveryEventHttpRequest",

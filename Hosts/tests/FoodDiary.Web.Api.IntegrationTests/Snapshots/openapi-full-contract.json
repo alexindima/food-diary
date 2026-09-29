@@ -2730,7 +2730,7 @@
               "Format": "int32",
               "Default": "50",
               "Minimum": 1,
-              "Maximum": 200
+              "Maximum": 100
             },
             {
               "Name": "Page",

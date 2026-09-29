@@ -78,6 +78,7 @@ Rules for `Tooling/tests/FoodDiary.ArchitectureTests/`.
 - `RequestFolderConventionTests` requires every application command and query slice to live in its own feature folder.
 - `BusinessModuleBoundaryTests` protects governed vertical module ownership, EF configuration placement, and the explicit cross-module projection allowlist.
 - `AsyncMethodGuardrailTests` uses Roslyn syntax parsing for async suffix and cancellation-token rules.
+- `CollectionEndpointPaginationTests` distinguishes offset (`Page` + `Limit`), cursor (`Cursor` + `Limit`), and limit-only bounded collections. It requires finite validation bounds, caps page limits at 100 and bounded collection limits at 1000, and rejects mixed pagination shapes and misleading `GetAll`/`ListAll` HTTP GET action names.
 - `ClientPackageBoundaryTests` protects MailRelay/MailInbox client packages from server-side coupling.
 - `HostCompositionBoundaryTests` protects host-only concerns from leaking into application/presentation/resource projects.
 - `ContainerSupplyChainGuardrailTests` requires production images to carry provenance and SBOM metadata, resolve to image indexes, and be signed and verified before deployment.

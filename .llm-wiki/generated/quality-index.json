@@ -44506,19 +44506,19 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetMailRelayCollectionHttpQuery.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetOutgoingEmailJournalHttpQuery.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",

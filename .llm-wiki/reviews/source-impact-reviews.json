@@ -207,18 +207,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "55795ca5904d3ccddbda1681843f0a312e423d9e48c5fd1c68df477db19a4593"
-        },
-        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ca65c13516f6b866799c9c28a3a9a84459db44b2913d9534acab4cbaadb26d93"
+          "sha256": "49cb1bb161a4b830e3d2b7bea8b2bc92c389e63ba04e49e399163ef32d52a03d"
         }
       ],
-      "reason": "Reviewed intentional pagination contract standardization: HTTP collection parameters now use page/limit or cursor/limit, clients and OpenAPI snapshots were updated together, and Swagger tests prohibit legacy aliases.",
+      "reason": "Reviewed the admin mail inbox page contract change: Limit maximum is intentionally reduced from 200 to the canonical page maximum 100; routes, payload shapes, defaults, and status codes are unchanged, and Swagger tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:45.3335539Z"
+      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
+      "reviewedAtUtc": "2026-09-29T23:22:21.0578930Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9d5df32fbd5161f42ebd3cb4b546f018a67a8a86ff68350fd82d0779b86603ec"
+          "sha256": "32d4e37a215f670a7735903416decb90ca517f809feadc96f54e11233ba59845"
         }
       ],
-      "reason": "Reviewed architecture and quality indexes; Roslyn and Swagger guardrails prevent legacy pagination names and unbounded values from returning.",
+      "reason": "Reviewed generated quality changes from the new pagination guard; the guard increases coverage and all focused architecture, service, Swagger, and full build checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:56.5326632Z"
+      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
+      "reviewedAtUtc": "2026-09-29T23:22:49.2979632Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8149e7af10e039a004a268e143695b0603812f868579a42fcddc0ad68c3edc5a"
+          "sha256": "c5f31936f54bebb67b01becb1896672be00dc742b90e64151bc0263307835f31"
         }
       ],
-      "reason": "Reviewed regenerated runtime and backend contract indexes; the new shared transport models preserve module ownership and only standardize HTTP pagination vocabulary.",
+      "reason": "Reviewed runtime topology changes; only HTTP query validation metadata and one stricter admin page limit changed, with no service dependencies, registrations, jobs, or runtime topology behavior added.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:56.9774014Z"
+      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
+      "reviewedAtUtc": "2026-09-29T23:22:50.0697918Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9d5df32fbd5161f42ebd3cb4b546f018a67a8a86ff68350fd82d0779b86603ec"
+          "sha256": "32d4e37a215f670a7735903416decb90ca517f809feadc96f54e11233ba59845"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8149e7af10e039a004a268e143695b0603812f868579a42fcddc0ad68c3edc5a"
+          "sha256": "c5f31936f54bebb67b01becb1896672be00dc742b90e64151bc0263307835f31"
         }
       ],
-      "reason": "Reviewed resource-exhaustion controls: page and limit remain bounded, cursor length is capped, and application handlers clamp cursor limits.",
+      "reason": "Reviewed security impact: page limits are now capped at 100, bounded collections at 1000, cursor length at 128, and previously unbounded MailRelay pagination now has finite validation ranges.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:57.5242534Z"
+      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
+      "reviewedAtUtc": "2026-09-29T23:22:51.1982058Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -6,6 +7,21 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CollectionEndpointPaginationTests {
+    private static readonly IReadOnlyDictionary<string, int> PaginationLimitValues =
+        new Dictionary<string, int>(StringComparer.Ordinal) {
+            ["MinimumPage"] = 1,
+            ["MaximumPage"] = 10_000,
+            ["MinimumPageSize"] = 1,
+            ["MaximumPageSize"] = 100,
+            ["MaximumCollectionSize"] = 1_000,
+            ["MaximumRecentItems"] = 50,
+            ["MaximumAdminDashboardRecentItems"] = 20,
+            ["MaximumAdminMailInboxMessages"] = 200,
+            ["MaximumAdminUserRoleAuditEntries"] = 50,
+            ["MaximumCollaborationAuditEntries"] = 500,
+            ["MaximumCursorLength"] = 128,
+        };
+
     [Fact]
     public void HttpGetActions_DoNotClaimToReturnAllItems() {
         string root = ArchitectureTestPaths.RepositoryRoot;
@@ -56,6 +72,54 @@ public sealed class CollectionEndpointPaginationTests {
         Assert.True(
             violations.Length == 0,
             $"HTTP pagination must use page/limit or cursor/limit:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
+    public void HttpQueryModels_UseSafeCanonicalPaginationShapes() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] presentationRoots = GetPresentationRoots(root);
+        var violations = new List<string>();
+
+        foreach (string path in SourceScanner.SourceFiles(presentationRoots)
+                     .Where(static path => path.EndsWith("HttpQuery.cs", StringComparison.Ordinal))) {
+            SyntaxNode syntaxRoot = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot();
+            foreach (TypeDeclarationSyntax declaration in syntaxRoot.DescendantNodes().OfType<TypeDeclarationSyntax>()) {
+                Dictionary<string, PaginationMember> members = GetPaginationMembers(declaration);
+                bool hasPage = members.ContainsKey("Page");
+                bool hasCursor = members.ContainsKey("Cursor");
+                bool hasLimit = members.ContainsKey("Limit");
+                if (!hasPage && !hasCursor && !hasLimit) {
+                    continue;
+                }
+
+                string typeLocation = ToLocation(root, path, declaration);
+                if (hasPage && hasCursor) {
+                    violations.Add($"{typeLocation} mixes offset and cursor pagination");
+                }
+
+                if ((hasPage || hasCursor) && !hasLimit) {
+                    violations.Add($"{typeLocation} pagination requires a Limit member");
+                    continue;
+                }
+
+                if (hasPage) {
+                    ValidateNumericMember(root, path, members["Page"], maximum: 10_000, allowNullable: false, violations: violations);
+                }
+
+                if (hasCursor) {
+                    ValidateCursorMember(root, path, members["Cursor"], violations);
+                }
+
+                if (hasLimit) {
+                    int maximum = hasPage || hasCursor ? 100 : 1_000;
+                    ValidateNumericMember(root, path, members["Limit"], maximum, allowNullable: !hasPage && !hasCursor, violations);
+                }
+            }
+        }
+
+        Assert.True(
+            violations.Count == 0,
+            $"HTTP query models must use page/limit, cursor/limit, or an explicitly bounded limit:{Environment.NewLine}{string.Join(Environment.NewLine, violations.Order(StringComparer.Ordinal))}");
     }
 
     [Fact]
@@ -110,6 +174,95 @@ public sealed class CollectionEndpointPaginationTests {
                 }))
             .GroupBy(static entry => entry.Name, StringComparer.Ordinal)
             .ToDictionary(static group => group.Key, static group => string.Join('\n', group.Select(static entry => entry.Source)), StringComparer.Ordinal);
+
+    private static Dictionary<string, PaginationMember> GetPaginationMembers(TypeDeclarationSyntax declaration) {
+        IEnumerable<PaginationMember> constructorParameters = declaration switch {
+            RecordDeclarationSyntax { ParameterList: not null } record => record.ParameterList.Parameters
+                .Where(static parameter => parameter.Identifier.ValueText is "Page" or "Cursor" or "Limit")
+                .Select(static parameter => new PaginationMember(
+                    parameter.Identifier.ValueText,
+                    parameter.Type?.ToString() ?? string.Empty,
+                    [.. parameter.AttributeLists.SelectMany(static list => list.Attributes)],
+                    parameter)),
+            _ => [],
+        };
+        IEnumerable<PaginationMember> properties = declaration.Members.OfType<PropertyDeclarationSyntax>()
+            .Where(static property => property.Identifier.ValueText is "Page" or "Cursor" or "Limit")
+            .Select(static property => new PaginationMember(
+                property.Identifier.ValueText,
+                property.Type.ToString(),
+                [.. property.AttributeLists.SelectMany(static list => list.Attributes)],
+                property));
+
+        return constructorParameters.Concat(properties)
+            .GroupBy(static member => member.Name, StringComparer.Ordinal)
+            .ToDictionary(static group => group.Key, static group => group.First(), StringComparer.Ordinal);
+    }
+
+    private static void ValidateNumericMember(
+        string root,
+        string path,
+        PaginationMember member,
+        int maximum,
+        bool allowNullable,
+        ICollection<string> violations) {
+        string expectedType = allowNullable ? "int or int?" : "int";
+        if (member.Type is not "int" && !(allowNullable && string.Equals(member.Type, "int?", StringComparison.Ordinal))) {
+            violations.Add($"{ToLocation(root, path, member.Syntax)} {member.Name} must be {expectedType}");
+        }
+
+        AttributeSyntax? range = member.Attributes.FirstOrDefault(static attribute =>
+            attribute.Name.ToString() is "OpenApiNumericRange" or "OpenApiNumericRangeAttribute" or "Range" or "RangeAttribute");
+        SeparatedSyntaxList<AttributeArgumentSyntax> arguments = range?.ArgumentList?.Arguments ?? default;
+        if (arguments.Count < 2 || !TryResolvePositiveInteger(arguments[0].Expression, out int minimum) ||
+            !TryResolvePositiveInteger(arguments[1].Expression, out int declaredMaximum)) {
+            violations.Add($"{ToLocation(root, path, member.Syntax)} {member.Name} must declare finite numeric range bounds");
+            return;
+        }
+
+        if (minimum < 1 || declaredMaximum > maximum || declaredMaximum < minimum) {
+            violations.Add(
+                $"{ToLocation(root, path, member.Syntax)} {member.Name} range " +
+                $"{minimum.ToString(CultureInfo.InvariantCulture)}..{declaredMaximum.ToString(CultureInfo.InvariantCulture)} " +
+                $"exceeds safe 1..{maximum.ToString(CultureInfo.InvariantCulture)}");
+        }
+    }
+
+    private static void ValidateCursorMember(
+        string root,
+        string path,
+        PaginationMember member,
+        ICollection<string> violations) {
+        if (member.Type is not "string" and not "string?") {
+            violations.Add($"{ToLocation(root, path, member.Syntax)} Cursor must be string or string?");
+        }
+
+        AttributeSyntax? maxLength = member.Attributes.FirstOrDefault(static attribute =>
+            attribute.Name.ToString() is "MaxLength" or "MaxLengthAttribute");
+        ExpressionSyntax? argument = maxLength?.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
+        if (argument is null || !TryResolvePositiveInteger(argument, out int value) || value > 128) {
+            violations.Add($"{ToLocation(root, path, member.Syntax)} Cursor must declare MaxLength no greater than 128");
+        }
+    }
+
+    private static bool TryResolvePositiveInteger(ExpressionSyntax expression, out int value) {
+        if (expression is LiteralExpressionSyntax literal && literal.Token.Value is int literalValue) {
+            value = literalValue;
+            return value > 0;
+        }
+
+        string constantName = expression switch {
+            MemberAccessExpressionSyntax memberAccess => memberAccess.Name.Identifier.ValueText,
+            IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+            _ => string.Empty,
+        };
+        return PaginationLimitValues.TryGetValue(constantName, out value) && value > 0;
+    }
+
+    private static string ToLocation(string root, string path, SyntaxNode syntax) =>
+        string.Create(
+            CultureInfo.InvariantCulture,
+            $"{Path.GetRelativePath(root, path).Replace('\\', '/')}:{syntax.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
 
     private static bool IsHttpGetCollectionAction(MethodDeclarationSyntax method) {
         AttributeSyntax[] attributes = [.. method.AttributeLists.SelectMany(static list => list.Attributes)];
@@ -166,4 +319,11 @@ public sealed class CollectionEndpointPaginationTests {
         .. Directory.GetDirectories(Path.Combine(root, "Services"), "*Presentation", SearchOption.AllDirectories)
             .Where(static path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
     ];
+
+    [ExcludeFromCodeCoverage]
+    private sealed record PaginationMember(
+        string Name,
+        string Type,
+        AttributeSyntax[] Attributes,
+        SyntaxNode Syntax);
 }
