@@ -24,4 +24,5 @@ public static class PresentationQueryLimits {
     public const int MaximumCsvFilterLength = 256;
     public const int MaximumLocaleLength = 10;
     public const int MaximumSortLength = 32;
+    public const int MaximumCursorLength = 128;
 }

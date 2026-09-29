@@ -12,7 +12,7 @@ export class LessonService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.lessons;
 
     public getAll(query: LessonQuery): Observable<LessonPage> {
-        const params: ApiQueryParams = { locale: query.locale, sort: query.sort, page: query.page, pageSize: query.pageSize };
+        const params: ApiQueryParams = { locale: query.locale, sort: query.sort, page: query.page, limit: query.pageSize };
         addOptionalStringParam(params, 'category', query.category?.trim());
         addOptionalStringParam(params, 'difficulty', query.difficulty?.trim());
         addOptionalStringParam(params, 'search', query.search?.trim());

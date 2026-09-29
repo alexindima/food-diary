@@ -4,5 +4,5 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Users.Application.Queries.GetWeightGoalHistoryPage;
 
-public sealed record GetWeightGoalHistoryPageQuery(Guid? UserId, string? Cursor = null)
+public sealed record GetWeightGoalHistoryPageQuery(Guid? UserId, string? Cursor = null, int Limit = 10)
     : IQuery<Result<GoalHistoryPageModel<WeightGoalHistoryModel>>>, IUserRequest;

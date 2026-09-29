@@ -5,6 +5,7 @@ using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminAchievementDefinitionsController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminAchievementDefinitionHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(AdminAchievementDefinitionsHttpMappings.ToQuery(query.Page, query.Limit),
             static definitions => definitions.Select(static definition => definition.ToHttpResponse()).ToList());
 

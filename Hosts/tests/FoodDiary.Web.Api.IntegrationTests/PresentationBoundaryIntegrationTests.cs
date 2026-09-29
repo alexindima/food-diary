@@ -1391,9 +1391,14 @@ public sealed partial class PresentationBoundaryIntegrationTests(
                     }
 
                     string? name = nameElement.GetString();
+                    if (name?.ToLowerInvariant() is "pagesize" or "page_size" or "take" or "pagenumber" or "page_number") {
+                        violations.Add($"{operation.Name.ToUpperInvariant()} {path.Name}: legacy pagination query parameter '{name}' is not allowed; use page/limit or cursor/limit.");
+                        continue;
+                    }
+
                     int? expectedMaximum = name?.ToLowerInvariant() switch {
-                        "limit" or "pagesize" or "page_size" or "take" => PaginationPolicy.MaxCollectionSize,
-                        "page" or "pagenumber" or "page_number" => PaginationPolicy.MaxPageNumber,
+                        "limit" => PaginationPolicy.MaxCollectionSize,
+                        "page" => PaginationPolicy.MaxPageNumber,
                         _ => null,
                     };
                     if (expectedMaximum is null) {

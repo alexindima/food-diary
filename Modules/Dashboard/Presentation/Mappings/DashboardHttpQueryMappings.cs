@@ -12,7 +12,7 @@ public static class DashboardHttpQueryMappings {
                 userId,
                 query.Date,
                 query.Page,
-                query.PageSize,
+                query.Limit,
                 query.Locale,
                 query.TrendDays,
                 query.TimeZoneOffsetMinutes,

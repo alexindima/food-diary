@@ -448,7 +448,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },

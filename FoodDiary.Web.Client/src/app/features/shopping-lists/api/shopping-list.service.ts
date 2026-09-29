@@ -27,15 +27,15 @@ export class ShoppingListService extends ApiService {
     }
 
     public getPage(page = 1, search = ''): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('page', { page, pageSize: 20, search }).pipe(
+        return this.get<ShoppingListSummary[]>('page', { page, limit: 20, search }).pipe(
             catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])),
         );
     }
 
     public getSelectionPage(): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('page', { page: 1, pageSize: 50 }).pipe(
+        return this.get<ShoppingListSummary[]>('page', { page: 1, limit: 50 }).pipe(
             expand((items, index) => (items.length === 50
-                ? this.get<ShoppingListSummary[]>('page', { page: index + 2, pageSize: 50 })
+                ? this.get<ShoppingListSummary[]>('page', { page: index + 2, limit: 50 })
                 : EMPTY)),
             reduce((allItems, items) => [...allItems, ...items], [] as ShoppingListSummary[]),
         );

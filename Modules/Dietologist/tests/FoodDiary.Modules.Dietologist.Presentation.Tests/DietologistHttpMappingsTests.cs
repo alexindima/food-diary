@@ -89,7 +89,7 @@ public sealed class DietologistHttpMappingsTests {
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 1);
-        var httpQuery = new GetClientDashboardHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
+        var httpQuery = new GetClientDashboardHttpQuery(date, Page: 2, Limit: 20, Locale: "ru", TrendDays: 14);
 
         GetDietologistClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
@@ -115,7 +115,7 @@ public sealed class DietologistHttpMappingsTests {
             DateFrom: dateFrom,
             DateTo: dateTo,
             Page: 1,
-            PageSize: 10,
+            Limit: 10,
             Locale: "en",
             TrendDays: 7);
 

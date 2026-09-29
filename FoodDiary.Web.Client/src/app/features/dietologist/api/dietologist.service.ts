@@ -81,7 +81,7 @@ export class DietologistService extends ApiService {
             dateFrom: formatDateInputValue(dateFrom),
             dateTo: formatDateInputValue(dateTo ?? dateFrom),
             page,
-            pageSize,
+            limit: pageSize,
             trendDays,
         };
 

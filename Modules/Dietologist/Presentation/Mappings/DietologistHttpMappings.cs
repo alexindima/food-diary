@@ -120,7 +120,7 @@ public static class DietologistHttpMappings {
             DateTime dateFrom = query.DateFrom ?? query.Date ?? todayUtc.Date;
             DateTime? dateTo = query.DateTo ?? query.Date;
 
-            return new(userId, clientUserId, dateFrom, dateTo, query.Page, query.PageSize, query.Locale, query.TrendDays);
+            return new(userId, clientUserId, dateFrom, dateTo, query.Page, query.Limit, query.Locale, query.TrendDays);
         }
     }
 

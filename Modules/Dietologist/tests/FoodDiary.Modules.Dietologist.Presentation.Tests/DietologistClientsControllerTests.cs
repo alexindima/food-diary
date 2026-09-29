@@ -66,7 +66,7 @@ public sealed class DietologistClientsControllerTests {
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
-        var query = new GetClientDashboardHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
+        var query = new GetClientDashboardHttpQuery(date, Page: 2, Limit: 20, Locale: "ru", TrendDays: 14);
 
         IActionResult result = await controller.GetClientDashboard(clientUserId, userId, query);
 

@@ -10,6 +10,7 @@ using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ public sealed class DietologistClientsController(ISender mediator, TimeProvider 
     [ProducesResponseType<List<ClientSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetMyClients(
         [FromCurrentUser] Guid userId,
-        [FromQuery] GetDietologistCollectionPageHttpQuery? query = null) =>
+        [FromQuery] OffsetPaginationHttpQuery? query = null) =>
         HandleOk(userId.ToMyClientsQuery(query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpDelete("{clientUserId:guid}")]

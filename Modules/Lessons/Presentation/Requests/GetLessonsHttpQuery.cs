@@ -27,4 +27,4 @@ public sealed record GetLessonsHttpQuery(
         PresentationQueryValues.Recommended,
         PresentationQueryValues.Shortest)] string? Sort = null,
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
-    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int PageSize = 20);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 20);

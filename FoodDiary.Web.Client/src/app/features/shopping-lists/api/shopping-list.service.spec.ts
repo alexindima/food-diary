@@ -54,7 +54,7 @@ describe('ShoppingListService reads', () => {
             expect(result).toEqual(MOCK_SUMMARIES);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/page?page=1&pageSize=20&search=`);
+        const req = httpMock.expectOne(`${BASE_URL}/page?page=1&limit=20&search=`);
         expect(req.request.method).toBe('GET');
         req.flush(MOCK_SUMMARIES);
     });
@@ -123,7 +123,7 @@ describe('ShoppingListService failures', () => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/page?page=1&pageSize=20&search=`);
+        const req = httpMock.expectOne(`${BASE_URL}/page?page=1&limit=20&search=`);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 

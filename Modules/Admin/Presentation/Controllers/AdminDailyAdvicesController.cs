@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminDailyAdvicesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminDailyAdviceHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(query.ToDailyAdvicesQuery(), static items =>
             items.Select(static item => item.ToDailyAdviceHttpResponse()).ToList());
 
@@ -36,7 +37,7 @@ public sealed class AdminDailyAdvicesController(ISender mediator) : BaseApiContr
 
     [HttpGet("groups")]
     [ProducesResponseType<List<AdminDailyAdviceGroupHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetGroups([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetGroups([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(AdminDailyAdviceGroupHttpMappings.ToDailyAdviceGroupsQuery(query.Page, query.Limit), static items =>
             items.Select(static item => item.ToGroupHttpResponse()).ToList());
 

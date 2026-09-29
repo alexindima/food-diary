@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
@@ -296,7 +297,7 @@ public sealed class DietologistNewEndpointsCoverageTests {
                 Result.Success(new PagedResponse<RecommendationCommentModel>([comment], 1, 20, 1, 1)),
                 request => getRequest = request)));
 
-        IActionResult get = await getController.GetComments(recommendationId, userId);
+        IActionResult get = await getController.GetComments(recommendationId, userId, new OffsetPaginationHttpQuery());
 
         Assert.IsType<PagedHttpResponse<RecommendationCommentHttpResponse>>(Assert.IsType<OkObjectResult>(get).Value);
         Assert.IsType<GetRecommendationCommentsQuery>(getRequest);

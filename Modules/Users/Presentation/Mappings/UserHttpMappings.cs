@@ -24,9 +24,9 @@ public static class UserHttpMappings {
         public GetUserByIdQuery ToUserQuery() => new(userId);
         public GetProfileOverviewQuery ToProfileOverviewQuery() => new(userId);
         public GetDesiredWeightQuery ToDesiredWeightQuery() => new(userId);
-        public GetWeightGoalHistoryPageQuery ToWeightGoalHistoryPageQuery(string? cursor) => new(userId, cursor);
+        public GetWeightGoalHistoryPageQuery ToWeightGoalHistoryPageQuery(string? cursor, int limit) => new(userId, cursor, limit);
         public GetDesiredWaistQuery ToDesiredWaistQuery() => new(userId);
-        public GetWaistGoalHistoryPageQuery ToWaistGoalHistoryPageQuery(string? cursor) => new(userId, cursor);
+        public GetWaistGoalHistoryPageQuery ToWaistGoalHistoryPageQuery(string? cursor, int limit) => new(userId, cursor, limit);
     }
 
     extension(UpdateDesiredWeightHttpRequest request) {

@@ -81,7 +81,7 @@ describe('DietologistService client workspace', () => {
             })
             .subscribe();
         const dashboardReq = httpMock.expectOne(
-            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17&dateTo=2026-05-23&page=1&pageSize=5&trendDays=14&locale=en`,
+            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17&dateTo=2026-05-23&page=1&limit=5&trendDays=14&locale=en`,
         );
         expect(dashboardReq.request.method).toBe('GET');
         dashboardReq.flush({});

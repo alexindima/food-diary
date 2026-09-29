@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1294,
     "ambiguousContracts": 2,
-    "consumerEdges": 10089,
-    "productionConsumerEdges": 5770,
-    "testConsumerEdges": 4319,
+    "consumerEdges": 10099,
+    "productionConsumerEdges": 5776,
+    "testConsumerEdges": 4323,
     "consumedContracts": 1294,
     "unconsumedContracts": 0
   },
@@ -3309,6 +3309,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "CursorPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "CycleConsentHttpResponse",
       "roles": [
         "Response"
@@ -5333,23 +5350,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "GetAdminContentReportsHttpQuery",
       "roles": [
         "Query"
@@ -6399,23 +6399,6 @@
       ],
       "definitionPaths": [
         "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "GetDietologistCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17216,6 +17199,23 @@
       ],
       "definitionPaths": [
         "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -34368,6 +34368,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "CursorPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CursorPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "CycleConsentHttpResponse",
       "roles": [
         "Response"
@@ -41632,123 +41658,6 @@
       "referenceCount": 2
     },
     {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "GetAdminCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
       "contract": "GetAdminContentReportsHttpQuery",
       "roles": [
         "Query"
@@ -45465,58 +45374,6 @@
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "GetDietologistCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDietologistCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDietologistCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDietologistCollectionPageHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs",
-      "isTest": false,
-      "referenceCount": 1
     },
     {
       "contract": "GetEmailTemplatePageQuery",
@@ -132471,6 +132328,279 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecipeCommunity/Presentation/RecipeComments/Controllers/RecipeCommentsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Presentation.Tests/RecipeCommentsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

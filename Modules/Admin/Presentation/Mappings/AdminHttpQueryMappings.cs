@@ -21,6 +21,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionSummary;
 using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Presentation.Api.Requests;
 
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
@@ -70,10 +71,10 @@ public static class AdminHttpQueryMappings {
         }
     }
 
-    public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
-    public static GetAdminAiPromptsQuery ToAiPromptsQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
-    public static GetAdminLessonsQuery ToLessonsQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
-    public static GetAdminDailyAdvicesQuery ToDailyAdvicesQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery(this OffsetPaginationHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminAiPromptsQuery ToAiPromptsQuery(this OffsetPaginationHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminLessonsQuery ToLessonsQuery(this OffsetPaginationHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminDailyAdvicesQuery ToDailyAdvicesQuery(this OffsetPaginationHttpQuery query) => new(query.Page, query.Limit);
 
     extension(GetAdminUsersHttpQuery query) {
         public GetAdminUsersQuery ToQuery() {

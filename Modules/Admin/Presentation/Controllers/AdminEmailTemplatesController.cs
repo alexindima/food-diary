@@ -5,6 +5,7 @@ using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminEmailTemplateHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(query.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]

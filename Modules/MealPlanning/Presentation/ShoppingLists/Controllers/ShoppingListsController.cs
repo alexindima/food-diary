@@ -6,6 +6,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -33,11 +34,10 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage(
         [FromCurrentUser] Guid userId,
-        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
-        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int pageSize = 20,
+        [FromQuery] OffsetPaginationHttpQuery pagination,
         [FromQuery] string? search = null) =>
         HandleOk(new FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists.GetShoppingListsQuery(
-            userId, page, pageSize, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
+            userId, pagination.Page, pagination.Limit, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]

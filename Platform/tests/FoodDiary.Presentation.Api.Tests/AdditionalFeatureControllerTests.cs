@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Results;
 using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
@@ -89,7 +90,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender allSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<ShoppingListSummaryModel>>([new ShoppingListSummaryModel(listId, "Weekly", DateTime.UtcNow, 2)]));
         ShoppingListsController allController = CreateController(new ShoppingListsController(allSender));
-        Assert.IsType<List<ShoppingListSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetPage(userId, 1, 20)).Value);
+        Assert.IsType<List<ShoppingListSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetPage(userId, new OffsetPaginationHttpQuery())).Value);
         Assert.Equal(userId, Assert.IsType<GetShoppingListsQuery>(allSender.Request).UserId);
 
         CapturedSender currentSender = SubstituteSender.Capture(Result.Success(list));

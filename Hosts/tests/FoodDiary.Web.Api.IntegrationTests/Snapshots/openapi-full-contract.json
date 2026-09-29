@@ -43,7 +43,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -403,7 +403,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -1580,7 +1580,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -1648,7 +1648,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -2071,7 +2071,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -2327,7 +2327,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -6979,7 +6979,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -7861,6 +7861,16 @@
               "Format": "date-time"
             },
             {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
               "Name": "Locale",
               "Location": "query",
               "Required": false,
@@ -7877,16 +7887,6 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 10000
-            },
-            {
-              "Name": "PageSize",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32",
-              "Default": "10",
-              "Minimum": 1,
-              "Maximum": 100
             },
             {
               "Name": "TimeZoneId",
@@ -8102,7 +8102,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -8418,6 +8418,16 @@
               "Format": "date-time"
             },
             {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
               "Name": "Locale",
               "Location": "query",
               "Required": false,
@@ -8434,16 +8444,6 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 10000
-            },
-            {
-              "Name": "PageSize",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32",
-              "Default": "10",
-              "Minimum": 1,
-              "Maximum": 100
             },
             {
               "Name": "TrendDays",
@@ -8689,7 +8689,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -9182,7 +9182,7 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
@@ -12089,6 +12089,16 @@
               ]
             },
             {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
               "Name": "Locale",
               "Location": "query",
               "Required": false,
@@ -12105,16 +12115,6 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 10000
-            },
-            {
-              "Name": "PageSize",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32",
-              "Default": "20",
-              "Minimum": 1,
-              "Maximum": 100
             },
             {
               "Name": "Search",
@@ -12259,14 +12259,7 @@
           ],
           "QueryParameters": [
             {
-              "Name": "dietType",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "MaxLength": 32
-            },
-            {
-              "Name": "limit",
+              "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -12276,7 +12269,7 @@
               "Maximum": 100
             },
             {
-              "Name": "page",
+              "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -12284,6 +12277,13 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 10000
+            },
+            {
+              "Name": "dietType",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 32
             }
           ],
           "PathParameters": [
@@ -15328,7 +15328,7 @@
           ],
           "QueryParameters": [
             {
-              "Name": "limit",
+              "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -15338,7 +15338,7 @@
               "Maximum": 100
             },
             {
-              "Name": "page",
+              "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -15751,17 +15751,17 @@
           ],
           "QueryParameters": [
             {
-              "Name": "limit",
+              "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "50",
+              "Default": "20",
               "Minimum": 1,
               "Maximum": 100
             },
             {
-              "Name": "page",
+              "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -16146,17 +16146,7 @@
           ],
           "QueryParameters": [
             {
-              "Name": "page",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32",
-              "Default": "1",
-              "Minimum": 1,
-              "Maximum": 10000
-            },
-            {
-              "Name": "pageSize",
+              "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
@@ -16164,6 +16154,16 @@
               "Default": "20",
               "Minimum": 1,
               "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "search",
@@ -17440,10 +17440,21 @@
           ],
           "QueryParameters": [
             {
-              "Name": "cursor",
+              "Name": "Cursor",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
             }
           ],
           "PathParameters": [
@@ -17492,10 +17503,21 @@
           ],
           "QueryParameters": [
             {
-              "Name": "cursor",
+              "Name": "Cursor",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
             }
           ],
           "PathParameters": [

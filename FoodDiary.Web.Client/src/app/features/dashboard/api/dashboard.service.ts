@@ -58,7 +58,7 @@ export class DashboardService extends ApiService {
             date: date.toISOString(),
             timeZoneOffsetMinutes: query.timeZoneOffsetMinutes,
             page,
-            pageSize,
+            limit: pageSize,
         };
 
         if (query.timeZoneId !== undefined) {

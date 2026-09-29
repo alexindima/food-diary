@@ -7,6 +7,7 @@ using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ public sealed class RecommendationTemplatesController(ISender mediator) : Author
         [FromCurrentUser] Guid userId,
         [FromQuery, MaxLength(DietologistRequestLimits.MaximumTemplateSearchLength)] string? search = null,
         [FromQuery] bool includeArchived = false,
-        [FromQuery] GetDietologistCollectionPageHttpQuery? pagination = null) =>
+        [FromQuery] OffsetPaginationHttpQuery? pagination = null) =>
         HandleOk(
             userId.ToSearchTemplatesQuery(search, includeArchived, pagination?.Page ?? 1, pagination?.Limit ?? 50),
             static value => value.Select(template => template.ToHttpResponse()).ToList());

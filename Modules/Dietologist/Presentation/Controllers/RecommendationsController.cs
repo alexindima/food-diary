@@ -4,7 +4,7 @@ using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,10 +31,9 @@ public sealed class RecommendationsController(ISender mediator) : AuthorizedCont
     public Task<IActionResult> GetComments(
         Guid recommendationId,
         [FromCurrentUser] Guid userId,
-        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
-        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int limit = 50) =>
+        [FromQuery] OffsetPaginationHttpQuery pagination) =>
         HandleOk(
-            recommendationId.ToRecommendationCommentsQuery(userId, page, limit),
+            recommendationId.ToRecommendationCommentsQuery(userId, pagination.Page, pagination.Limit),
             static value => new PagedHttpResponse<RecommendationCommentHttpResponse>(
                 value.Data.Select(comment => comment.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 

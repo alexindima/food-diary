@@ -24,7 +24,7 @@ public sealed class DashboardControllerTests {
         ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DashboardController controller = CreateController(sender);
         var userId = Guid.NewGuid();
-        var query = new GetDashboardSnapshotHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
+        var query = new GetDashboardSnapshotHttpQuery(date, Page: 2, Limit: 20, Locale: "ru", TrendDays: 14);
 
         IActionResult result = await controller.Get(userId, query);
 

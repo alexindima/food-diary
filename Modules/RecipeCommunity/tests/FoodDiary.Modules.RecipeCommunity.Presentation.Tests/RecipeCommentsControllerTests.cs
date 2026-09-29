@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Results;
 using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;
@@ -28,7 +29,7 @@ public sealed class RecipeCommentsControllerTests {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
 
-        IActionResult result = await controller.GetAll(userId, recipeId, page: 2, limit: 10);
+        IActionResult result = await controller.GetAll(userId, recipeId, new OffsetPaginationHttpQuery(Page: 2, Limit: 10));
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         PagedHttpResponse<RecipeCommentHttpResponse> response = Assert.IsType<PagedHttpResponse<RecipeCommentHttpResponse>>(ok.Value);

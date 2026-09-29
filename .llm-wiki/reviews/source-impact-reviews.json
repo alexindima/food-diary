@@ -208,17 +208,17 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "fae4d0453f4c4440d90517fc83998c31e1647f034045cf73aae757d9057ea75d"
+          "sha256": "55795ca5904d3ccddbda1681843f0a312e423d9e48c5fd1c68df477db19a4593"
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "9b334c09198beb826de9873f2dde2c14e659f06ad641c0f55f607aa804933cd1"
+          "sha256": "ca65c13516f6b866799c9c28a3a9a84459db44b2913d9534acab4cbaadb26d93"
         }
       ],
-      "reason": "Reviewed pagination hardening: OpenAPI query bounds and snapshots intentionally reflect bounded page and collection parameters; compatibility is preserved by frontend paging adapters.",
+      "reason": "Reviewed intentional pagination contract standardization: HTTP collection parameters now use page/limit or cursor/limit, clients and OpenAPI snapshots were updated together, and Swagger tests prohibit legacy aliases.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:32.7589681Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:45.3335539Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -227,13 +227,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4359bd3772b158e2f0105901908a14e384fbaa8f26c3ae89cd06d3b4f21e4168"
+          "sha256": "4457e556fb3960c8f3f9f0c1b0b87022ba48e96e45c0fe3575d4b542c3b30124"
         }
       ],
-      "reason": "Reviewed regenerated architecture and quality indexes; the new collection guardrails and focused tests cover the intended regression risk.",
+      "reason": "Reviewed architecture and quality indexes; Roslyn and Swagger guardrails prevent legacy pagination names and unbounded values from returning.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:53.5407269Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:55.3568395Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -242,13 +242,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8c9c4dfae1709a9dfe51db028537e394e43d087a98674c9ce09a2649d2a1c112"
+          "sha256": "a84c724ff2bd0b801f99eef6860c3caf160d52d8a9752b9dd8bfab5bd81f6d44"
         }
       ],
-      "reason": "Reviewed pagination hardening: generated backend and frontend contract indexes and OpenAPI snapshots intentionally describe bounded collection parameters and compatible client paging.",
+      "reason": "Reviewed intentional pagination contract standardization: HTTP collection parameters now use page/limit or cursor/limit, clients and OpenAPI snapshots were updated together, and Swagger tests prohibit legacy aliases.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:54.1860277Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:55.9894398Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -824,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "69920946f7421d7d8c4b949acf2e3fee83ec0d3e6fc2832b80880adfa5cc4669"
+          "sha256": "9d5df32fbd5161f42ebd3cb4b546f018a67a8a86ff68350fd82d0779b86603ec"
         }
       ],
-      "reason": "Reviewed regenerated architecture and quality indexes; the new collection guardrails and focused tests cover the intended regression risk.",
+      "reason": "Reviewed architecture and quality indexes; Roslyn and Swagger guardrails prevent legacy pagination names and unbounded values from returning.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:54.8628426Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:56.5326632Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f97c38b10686873116991d5f63a9850b421c58fd53ee39f29a2cdf4a1c367cfc"
+          "sha256": "8149e7af10e039a004a268e143695b0603812f868579a42fcddc0ad68c3edc5a"
         }
       ],
-      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
+      "reason": "Reviewed regenerated runtime and backend contract indexes; the new shared transport models preserve module ownership and only standardize HTTP pagination vocabulary.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:55.4570028Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:56.9774014Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "69920946f7421d7d8c4b949acf2e3fee83ec0d3e6fc2832b80880adfa5cc4669"
+          "sha256": "9d5df32fbd5161f42ebd3cb4b546f018a67a8a86ff68350fd82d0779b86603ec"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f97c38b10686873116991d5f63a9850b421c58fd53ee39f29a2cdf4a1c367cfc"
+          "sha256": "8149e7af10e039a004a268e143695b0603812f868579a42fcddc0ad68c3edc5a"
         }
       ],
-      "reason": "Reviewed pagination bounds and runtime topology; request limits reduce resource-exhaustion exposure and do not expand sensitive-data handling.",
+      "reason": "Reviewed resource-exhaustion controls: page and limit remain bounded, cursor length is capped, and application handlers clamp cursor limits.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:55.9023091Z"
+      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
+      "reviewedAtUtc": "2026-09-29T22:43:57.5242534Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

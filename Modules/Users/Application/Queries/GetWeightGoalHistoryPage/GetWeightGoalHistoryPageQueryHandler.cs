@@ -1,5 +1,6 @@
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -16,11 +17,12 @@ public sealed class GetWeightGoalHistoryPageQueryHandler(IUserBodyMetricHistoryR
         if (!GoalHistoryCursor.TryDecode(query.Cursor, timeProvider.GetUtcNow().UtcDateTime, out DateTime snapshotUtc, out int offset)) {
             return Result.Failure<GoalHistoryPageModel<WeightGoalHistoryModel>>(Errors.Validation.Invalid(nameof(query.Cursor), "Invalid history cursor."));
         }
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         Result<IReadOnlyList<WeightGoalHistoryModel>> result = await reader.ReadWeightGoalsAsync(userId.Value, snapshotUtc,
-            offset, GoalHistoryCursor.PageSize + 1, cancellationToken).ConfigureAwait(false);
+            offset, limit + 1, cancellationToken).ConfigureAwait(false);
         if (result.IsFailure) { return Result.Failure<GoalHistoryPageModel<WeightGoalHistoryModel>>(result.Error); }
-        bool hasMore = result.Value.Count > GoalHistoryCursor.PageSize;
-        return Result.Success(new GoalHistoryPageModel<WeightGoalHistoryModel>(result.Value.Take(GoalHistoryCursor.PageSize).ToArray(),
-            hasMore ? GoalHistoryCursor.Encode(snapshotUtc, offset + GoalHistoryCursor.PageSize) : null));
+        bool hasMore = result.Value.Count > limit;
+        return Result.Success(new GoalHistoryPageModel<WeightGoalHistoryModel>(result.Value.Take(limit).ToArray(),
+            hasMore ? GoalHistoryCursor.Encode(snapshotUtc, offset + limit) : null));
     }
 }

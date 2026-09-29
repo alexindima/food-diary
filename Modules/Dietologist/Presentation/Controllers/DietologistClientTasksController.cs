@@ -6,6 +6,7 @@ using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public sealed class DietologistClientTasksController(ISender mediator) : Authori
     public Task<IActionResult> GetTasksForClient(
         Guid clientUserId,
         [FromCurrentUser] Guid userId,
-        [FromQuery] GetDietologistCollectionPageHttpQuery? query = null) =>
+        [FromQuery] OffsetPaginationHttpQuery? query = null) =>
         HandleOk(clientUserId.ToClientTasksQuery(userId, query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(task => task.ToHttpResponse()).ToList());
 
     [HttpPost("{clientUserId:guid}/tasks")]

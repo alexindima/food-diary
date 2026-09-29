@@ -74,7 +74,7 @@ describe('DashboardService snapshot', () => {
                 r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('page') === '1' &&
-                r.params.get('pageSize') === '10',
+                r.params.get('limit') === '10',
         );
         expect(req.request.method).toBe('GET');
         req.flush(MOCK_SNAPSHOT);
@@ -102,7 +102,7 @@ describe('DashboardService snapshot', () => {
                 r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('timeZoneId') === 'Asia/Tbilisi' &&
                 r.params.get('page') === '2' &&
-                r.params.get('pageSize') === '20' &&
+                r.params.get('limit') === '20' &&
                 r.params.get('locale') === 'en' &&
                 r.params.get('trendDays') === '7',
         );

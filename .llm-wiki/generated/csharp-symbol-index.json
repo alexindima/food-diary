@@ -1350,6 +1350,20 @@
       "line": 2
     },
     {
+      "name": "CursorPaginationHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "OffsetPaginationHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs",
+      "line": 4
+    },
+    {
       "name": "ApiErrorDetailsMapper",
       "kind": "class",
       "role": "Mapper",
@@ -3846,7 +3860,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "AdminAcquisitionController",
@@ -3860,7 +3874,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
-      "line": 20
+      "line": 21
     },
     {
       "name": "AdminAiUsageController",
@@ -3902,7 +3916,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "AdminDashboardController",
@@ -3916,14 +3930,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
-      "line": 20
+      "line": 21
     },
     {
       "name": "AdminLessonsController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "AdminMailInboxController",
@@ -4070,7 +4084,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "line": 26
+      "line": 27
     },
     {
       "name": "AdminHttpResponseMappings",
@@ -4288,13 +4302,6 @@
       "role": "Query",
       "path": "Modules/Admin/Presentation/Requests/GetAdminBugReportsHttpQuery.cs",
       "line": 5
-    },
-    {
-      "name": "GetAdminCollectionPageHttpQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs",
-      "line": 4
     },
     {
       "name": "GetAdminContentReportsHttpQuery",
@@ -10510,7 +10517,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DietologistAttentionController",
@@ -10524,14 +10531,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "DietologistClientTasksController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "DietologistController",
@@ -10559,7 +10566,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "DietologistRequestLimits",
@@ -10665,13 +10672,6 @@
       "role": "Query",
       "path": "Modules/Dietologist/Presentation/Requests/GetClientDashboardHttpQuery.cs",
       "line": 5
-    },
-    {
-      "name": "GetDietologistCollectionPageHttpQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs",
-      "line": 4
     },
     {
       "name": "InviteDietologistHttpRequest",
@@ -18126,7 +18126,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "ShoppingListHttpMappings",
@@ -23817,7 +23817,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Application/Common/GoalHistoryCursor.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IUserContextService",
@@ -24062,7 +24062,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWaistGoalHistoryPage/GetWaistGoalHistoryPageQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetWeightGoalHistoryQuery",
@@ -24090,7 +24090,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWeightGoalHistoryPage/GetWeightGoalHistoryPageQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UserAuthenticationIdentityService",
@@ -25315,14 +25315,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "WeightGoalsController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",

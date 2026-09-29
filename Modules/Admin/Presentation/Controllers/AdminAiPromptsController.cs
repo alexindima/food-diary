@@ -7,6 +7,7 @@ using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,7 @@ public sealed class AdminAiPromptsController(ISender mediator) : BaseApiControll
 
     [HttpGet]
     [ProducesResponseType<List<AdminAiPromptHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(query.ToAiPromptsQuery(), static value => value.Select(item => item.ToAiPromptHttpResponse()).ToList());
 
     [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]

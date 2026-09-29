@@ -1,4 +1,5 @@
 using FoodDiary.Results;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
@@ -48,7 +49,7 @@ public sealed class MealPlanGamificationLessonControllerTests {
             new MealPlanSummaryModel(planId, "Balanced", "Desc", "Balanced", 7, 2100, IsCurated: true, TotalRecipes: 14),
         ], 1, 20, 1, 1)), request => allRequest = request);
         MealPlansController allController = CreateController(new MealPlansController(allSender));
-        IActionResult all = await allController.GetPage(userId, "Balanced");
+        IActionResult all = await allController.GetPage(userId, "Balanced", new OffsetPaginationHttpQuery());
         Assert.IsType<PagedHttpResponse<MealPlanSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
         Assert.Equal("Balanced", Assert.IsType<GetMealPlansQuery>(allRequest).DietType);
 

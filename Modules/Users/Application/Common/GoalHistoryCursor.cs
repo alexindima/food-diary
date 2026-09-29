@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Text;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Users.Application.Common;
 
 internal static class GoalHistoryCursor {
-    public const int PageSize = 10;
     // Closed goals cannot be edited. Freeze the upper end time so later closures
     // do not shift offsets in an already-open history traversal.
     public static string Encode(DateTime snapshotUtc, int offset) =>
@@ -19,7 +19,7 @@ internal static class GoalHistoryCursor {
             string[] parts = Encoding.UTF8.GetString(Convert.FromBase64String(cursor)).Split(':');
             if (parts.Length != 2 || !long.TryParse(parts[0], CultureInfo.InvariantCulture, out long ticks)
                 || ticks < DateTime.MinValue.Ticks || ticks > nowUtc.Ticks
-                || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out offset) || offset < 0 || offset > int.MaxValue - PageSize) {
+                || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out offset) || offset < 0 || offset > int.MaxValue - PaginationPolicy.MaxPageSize) {
                 return false;
             }
             snapshotUtc = new DateTime(ticks, DateTimeKind.Utc);

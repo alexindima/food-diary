@@ -6,6 +6,7 @@ using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminLessonsController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminLessonHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] OffsetPaginationHttpQuery query) =>
         HandleOk(query.ToLessonsQuery(), static value =>
             value.Select(static item => item.ToLessonHttpResponse()).ToList());
 

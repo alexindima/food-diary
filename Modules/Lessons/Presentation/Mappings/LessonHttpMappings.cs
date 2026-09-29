@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Lessons.Presentation.Mappings;
 public static class LessonHttpMappings {
     extension(Guid userId) {
         public GetLessonsQuery ToQuery(GetLessonsHttpQuery query) =>
-            new(userId, query.Locale, query.Category, query.Difficulty, query.Search, query.Sort, query.Page, query.PageSize);
+            new(userId, query.Locale, query.Category, query.Difficulty, query.Search, query.Sort, query.Page, query.Limit);
         public GetLessonByIdQuery ToGetByIdQuery(Guid lessonId) =>
             new(userId, lessonId);
         public MarkLessonReadCommand ToMarkReadCommand(Guid lessonId) =>

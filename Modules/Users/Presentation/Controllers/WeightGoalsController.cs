@@ -5,6 +5,7 @@ using FoodDiary.Presentation.Api.Controllers;
 
 using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ public sealed class WeightGoalsController(ISender mediator) : AuthorizedControll
     [ProducesResponseType<WeightGoalHistoryPageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] string? cursor = null) =>
-        HandleOk(userId.ToWeightGoalHistoryPageQuery(cursor), static page => new WeightGoalHistoryPageHttpResponse(
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] CursorPaginationHttpQuery pagination) =>
+        HandleOk(userId.ToWeightGoalHistoryPageQuery(pagination.Cursor, pagination.Limit), static page => new WeightGoalHistoryPageHttpResponse(
             page.Items.Select(static value => value.ToHttpResponse()).ToList(), page.NextCursor));
 }

@@ -5,6 +5,7 @@ using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Models;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
@@ -252,7 +253,7 @@ public sealed class AdminHttpMappingsTests {
         var fromDate = new DateOnly(2026, 4, 1);
         var toDate = new DateOnly(2026, 4, 30);
 
-        var collectionPage = new GetAdminCollectionPageHttpQuery();
+        var collectionPage = new OffsetPaginationHttpQuery();
         Assert.NotNull(collectionPage.ToEmailTemplatesQuery());
         Assert.NotNull(collectionPage.ToAiPromptsQuery());
         Assert.NotNull(collectionPage.ToLessonsQuery());

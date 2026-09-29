@@ -7,14 +7,39 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class CollectionEndpointPaginationTests {
     [Fact]
+    public void HttpQueryModels_UseCanonicalPaginationNames() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] presentationRoots = GetPresentationRoots(root);
+        string[] legacyNames = ["PageSize", "Take"];
+
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoots)
+            .Where(static path => path.EndsWith("HttpQuery.cs", StringComparison.Ordinal))
+            .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot()
+                .DescendantNodes()
+                .Where(node => node is ParameterSyntax or PropertyDeclarationSyntax)
+                .Select(node => new {
+                    path,
+                    Name = node switch {
+                        ParameterSyntax parameter => parameter.Identifier.ValueText,
+                        PropertyDeclarationSyntax property => property.Identifier.ValueText,
+                        _ => string.Empty,
+                    },
+                    Line = node.GetLocation().GetLineSpan().StartLinePosition.Line + 1,
+                }))
+            .Where(entry => legacyNames.Contains(entry.Name, StringComparer.OrdinalIgnoreCase))
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path).Replace('\\', '/')}:" +
+                $"{entry.Line.ToString(CultureInfo.InvariantCulture)} uses legacy pagination name '{entry.Name}'")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.True(
+            violations.Length == 0,
+            $"HTTP pagination must use page/limit or cursor/limit:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     public void HttpGetCollectionEndpoints_RequirePaginationOrReviewedBound() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string[] presentationRoots = [
-            .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Presentation", SearchOption.AllDirectories)
-                .Where(static path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
-            .. Directory.GetDirectories(Path.Combine(root, "Services"), "*Presentation", SearchOption.AllDirectories)
-                .Where(static path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
-        ];
+        string[] presentationRoots = GetPresentationRoots(root);
         string[] sourceFiles = [.. SourceScanner.SourceFiles(presentationRoots)];
         Dictionary<string, string> requestSources = BuildRequestSourceIndex(sourceFiles);
         var reviewedBoundedEndpoints = new HashSet<string>(StringComparer.Ordinal) {
@@ -95,7 +120,7 @@ public sealed class CollectionEndpointPaginationTests {
 
             string typeName = parameter.Type?.ToString().TrimEnd('?') ?? string.Empty;
             if (requestSources.TryGetValue(typeName, out string? source) &&
-                new[] { "Page", "Limit", "PageSize", "Cursor", "Before" }.Any(token => source.Contains(token, StringComparison.Ordinal))) {
+                new[] { "Page", "Limit", "Cursor" }.Any(token => source.Contains(token, StringComparison.Ordinal))) {
                 return true;
             }
         }
@@ -111,4 +136,12 @@ public sealed class CollectionEndpointPaginationTests {
 
     private static string ToEndpointKey(string root, string path, MethodDeclarationSyntax method) =>
         $"{Path.GetRelativePath(root, path).Replace('\\', '/')}#{method.Identifier.ValueText}";
+
+    private static string[] GetPresentationRoots(string root) => [
+        Path.Combine(root, "FoodDiary.Presentation.Api"),
+        .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Presentation", SearchOption.AllDirectories)
+            .Where(static path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+        .. Directory.GetDirectories(Path.Combine(root, "Services"), "*Presentation", SearchOption.AllDirectories)
+            .Where(static path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+    ];
 }

@@ -4,6 +4,7 @@ using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinit
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
@@ -43,7 +44,7 @@ public sealed class AdminAchievementDefinitionsControllerTests {
             () => Assert.Equal(model.Version, updateCommand.Input.Version));
 
         CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AchievementDefinitionAdminModel>>([model]));
-        IActionResult listResult = await CreateController(listSender).GetPage(new GetAdminCollectionPageHttpQuery());
+        IActionResult listResult = await CreateController(listSender).GetPage(new OffsetPaginationHttpQuery());
         Assert.IsType<List<AdminAchievementDefinitionHttpResponse>>(Assert.IsType<OkObjectResult>(listResult).Value);
         Assert.IsType<GetAdminAchievementDefinitionsQuery>(listSender.Request);
     }
