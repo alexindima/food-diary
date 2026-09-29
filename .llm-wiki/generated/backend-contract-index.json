@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1285,
+    "contracts": 1288,
     "ambiguousContracts": 2,
-    "consumerEdges": 10041,
-    "productionConsumerEdges": 5734,
+    "consumerEdges": 10054,
+    "productionConsumerEdges": 5747,
     "testConsumerEdges": 4307,
-    "consumedContracts": 1285,
+    "consumedContracts": 1288,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -7895,6 +7895,23 @@
       ],
       "definitionPaths": [
         "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetShoppingListOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -19563,6 +19580,40 @@
       ],
       "definitionPaths": [
         "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ShoppingListOverviewHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ShoppingListPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -50878,6 +50929,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetShoppingListOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetShoppingListOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetShoppingListsQuery",
       "roles": [
         "Query"
@@ -50888,7 +50965,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetShoppingListsQuery",
@@ -50900,6 +50977,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetShoppingListsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67111,6 +67201,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97802,6 +97905,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -99844,6 +99960,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -113402,6 +113531,19 @@
         "Modules/MealPlanning/Application.Abstractions/ShoppingLists/Common/IShoppingListReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IShoppingListReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application.Abstractions/ShoppingLists/Common/IShoppingListReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -123140,6 +123282,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -142987,6 +143142,19 @@
         "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ShoppingListHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/ShoppingListHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -143291,6 +143459,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "ShoppingListOverviewHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ShoppingListPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ShoppingListPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "ShoppingListSummaryHttpResponse",
       "roles": [
         "Response"
@@ -143301,7 +143508,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ShoppingListSummaryHttpResponse",
@@ -143315,6 +143522,19 @@
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "ShoppingListSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ShoppingListSummaryHttpResponse",

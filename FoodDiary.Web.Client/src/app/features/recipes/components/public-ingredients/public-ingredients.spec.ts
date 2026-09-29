@@ -45,7 +45,7 @@ describe('public ingredient quantities', () => {
     it('sends scaled quantities and free text, with no shopping action for private ingredients', () => {
         const recipe = publicRecipeFixture();
         recipe.steps[0].ingredients = [
-            { name: 'Rice', amount: 100, unit: 'Gram', amountText: null, recipeId: null, isAvailable: true },
+            { name: 'Rice', productId: 'public-rice', amount: 100, unit: 'Gram', amountText: null, recipeId: null, isAvailable: true },
             { name: 'Salt', amount: null, unit: null, amountText: 'to taste', recipeId: null, isAvailable: true },
             { name: null, amount: null, unit: null, amountText: null, recipeId: null, isAvailable: false },
         ];
@@ -62,11 +62,11 @@ describe('public ingredient quantities', () => {
         buttons[1].click();
         expect(added).toHaveBeenNthCalledWith(1, {
             index: 0,
-            item: { name: 'Rice', amount: 200, unit: 'G', note: null, isChecked: false },
+            item: { name: 'Rice', productId: 'public-rice', amount: 200, unit: 'G', note: null, isChecked: false },
         });
         expect(added).toHaveBeenNthCalledWith(2, {
             index: 1,
-            item: { name: 'Salt', amount: null, unit: null, note: 'to taste', isChecked: false },
+            item: { name: 'Salt', productId: null, amount: null, unit: null, note: 'to taste', isChecked: false },
         });
     });
 

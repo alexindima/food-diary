@@ -35,6 +35,18 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
 }
 
 describe('ShoppingListManageControlsComponent', () => {
+    it('keeps tab order stable and replaces the least recently used slot', async () => {
+        const extra = ['3', '4', '5'].map(number => ({ ...LISTS[0], id: `list-${number}`, name: `Extra ${number}` }));
+        const { component } = await setupManageControlsAsync([...LISTS, ...extra]);
+        component['selectList']('list-5');
+        expect(component['quickLists']().map(list => list.id)).toEqual(['list-1', 'list-2', 'list-5']);
+        expect(component['quickLists']().map(list => list.id)).toContain('list-5');
+        component['selectList']('list-2');
+        expect(component['quickLists']().map(list => list.id)).toEqual(['list-1', 'list-2', 'list-5']);
+        component['selectList']('list-4');
+        expect(component['quickLists']().map(list => list.id)).toEqual(['list-4', 'list-2', 'list-5']);
+    });
+
     it('tracks list count and selected list card state', async () => {
         const { component } = await setupManageControlsAsync();
 

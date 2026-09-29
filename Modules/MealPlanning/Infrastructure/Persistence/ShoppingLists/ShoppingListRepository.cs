@@ -96,17 +96,25 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
 
     public async Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        return await entries
-            .AsNoTracking()
-            .Where(list => list.UserId == userId)
+        CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null) {
+        IQueryable<ShoppingList> query = entries.AsNoTracking().Where(list => list.UserId == userId);
+        if (!string.IsNullOrWhiteSpace(search)) {
+            string term = search.Trim().ToLowerInvariant();
+            // The parameterless overload is translated to SQL LOWER; culture overloads are not translatable.
+#pragma warning disable MA0011
+            query = query.Where(list => list.Name.ToLower().Contains(term));
+#pragma warning restore MA0011
+        }
+        int size = pageSize.HasValue ? Math.Clamp(pageSize.Value, 1, 50) : PaginationPolicy.MaxCollectionSize;
+        int offset = (Math.Clamp(page, 1, 10000) - 1) * size;
+        return await query
             .OrderByDescending(list => list.CreatedOnUtc)
-            .Take(PaginationPolicy.MaxCollectionSize)
+            .ThenByDescending(list => list.Id)
+            .Skip(offset)
+            .Take(size)
             .Select(list => new ShoppingListSummaryReadModel(
-                list.Id.Value,
-                list.Name,
-                list.CreatedOnUtc,
-                list.Items.Count))
+                list.Id.Value, list.Name, list.CreatedOnUtc, list.Items.Count,
+                list.Items.Count(item => !item.IsChecked)))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }

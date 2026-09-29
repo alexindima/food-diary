@@ -1,151 +1,68 @@
-﻿<div class="shopping-list" fdPageContainer>
-    <fd-page-header
-        class="shopping-list__header"
-        [title]="'SHOPPING_LIST.TITLE' | translate"
-        [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate"
-        [compactActions]="true"
-    >
-        @if (isMobileView()) {
-            <div class="shopping-list__mobile-toolbar">
-                <fd-ui-button
-                    class="shopping-list__icon-button shopping-list__manage-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="tune"
-                    [fdUiHint]="'SHOPPING_LIST.LISTS_LABEL' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.LISTS_LABEL' | translate"
-                    (click)="toggleMobileManage()"
-                />
-                <fd-ui-button
-                    class="shopping-list__icon-button shopping-list__icon-button--primary"
-                    appearance="toolbar"
-                    variant="primary"
-                    fill="solid"
-                    icon="add"
-                    data-fd-overflow-primary
-                    [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
-                    [disabled]="isLoading()"
-                    [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                    (click)="createNewList()"
-                />
-                <fd-ui-button
-                    class="shopping-list__icon-button"
-                    data-tour-id="shopping-list-tour-help"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="help_outline"
-                    [fdUiHint]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
-                    (click)="startShoppingListTour()"
-                />
-            </div>
-        } @else {
-            <fd-ui-button
-                appearance="brand-action"
-                variant="primary"
-                fill="solid"
-                icon="add"
-                data-fd-overflow-primary
-                [disabled]="isLoading()"
-                [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                (click)="createNewList()"
-            >
-                {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button
-                data-tour-id="shopping-list-tour-help"
-                appearance="toolbar"
-                variant="secondary"
-                fill="outline"
-                icon="help_outline"
-                [fdUiHint]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
-                [ariaLabel]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
-                (click)="startShoppingListTour()"
-            />
-        }
+<div class="shopping-list" fdPageContainer>
+    <fd-page-header [title]="'SHOPPING_LIST.TITLE' | translate" [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate" [compactActions]="true">
+        <fd-ui-button
+            appearance="brand-action"
+            variant="primary"
+            fill="solid"
+            icon="add"
+            data-fd-overflow-primary
+            [disabled]="isCreating()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            (click)="createNewList()"
+            >{{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}</fd-ui-button
+        >
+        <fd-ui-button
+            data-tour-id="shopping-list-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+            (click)="startShoppingListTour()"
+        />
     </fd-page-header>
-
     <fd-page-body>
-        @if (isMobileView()) {
-            <div class="shopping-list__mobile-manage" [class.shopping-list__mobile-manage--open]="isMobileManageVisible()">
-                <fd-shopping-list-manage-controls
-                    data-tour-id="shopping-list-manage"
-                    [listSelectField]="listSelectForm.id"
-                    [lists]="lists()"
-                    [isLoading]="isLoading()"
-                    [canDeleteList]="canDeleteList()"
-                    [isMobile]="true"
-                    [renameRequestedListId]="renameRequestedListId()"
-                    (createList)="createNewList()"
-                    (clearListById)="clearListById($event)"
-                    (deleteListById)="deleteListById($event)"
-                    (renameListById)="renameListById($event.listId, $event.name)"
-                    (renameRequestHandled)="clearRenameRequest($event)"
-                />
-            </div>
-        }
-
-        @if (isLoading()) {
+        @if (isLoading() && !hasLists()) {
             <fd-ui-loader class="shopping-list__loader" />
+        } @else if (!hasLists()) {
+            <section class="shopping-list__no-lists">
+                <fd-ui-icon name="shopping_cart" size="xl" />
+                <h2>{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
+                <p>{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
+            </section>
         } @else {
-            @if (!hasLists()) {
-                <section class="shopping-list__no-lists">
-                    <div class="shopping-list__no-lists-icon fd-center">
-                        <fd-ui-icon name="shopping_cart" size="xl" />
-                    </div>
-                    <h2 class="shopping-list__no-lists-title fd-ui-card-title">{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
-                    <p class="shopping-list__no-lists-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
-                    <fd-ui-button
-                        variant="primary"
-                        fill="solid"
-                        icon="add"
-                        [disabled]="isLoading()"
-                        [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                        (click)="createNewList()"
-                    >
-                        {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
-                    </fd-ui-button>
-                </section>
-            } @else {
-                @if (!isMobileView()) {
-                    <div class="shopping-list__navigation">
-                        <fd-shopping-list-manage-controls
-                            data-tour-id="shopping-list-manage"
-                            [listSelectField]="listSelectForm.id"
-                            [lists]="lists()"
-                            [isLoading]="isLoading()"
-                            [canDeleteList]="canDeleteList()"
-                            [renameRequestedListId]="renameRequestedListId()"
-                            (createList)="createNewList()"
-                            (clearListById)="clearListById($event)"
-                            (deleteListById)="deleteListById($event)"
-                            (renameListById)="renameListById($event.listId, $event.name)"
-                            (renameRequestHandled)="clearRenameRequest($event)"
-                        />
-                    </div>
-                }
-                <section class="shopping-list__summary" data-tour-id="shopping-list-summary">
-                    <h2 class="shopping-list__summary-title fd-ui-card-title">{{ list()?.name }}</h2>
-                    <span class="shopping-list__summary-meta fd-ui-caption">
-                        {{ 'SHOPPING_LIST.REMAINING_ITEMS' | translate }}: {{ remainingItemsCount() }} / {{ totalItemsCount() }}
-                    </span>
-                </section>
-
-                <div class="shopping-list__workspace">
+            <fd-shopping-list-manage-controls
+                data-tour-id="shopping-list-manage"
+                [listSelectField]="listSelectForm.id"
+                [lists]="lists()"
+                [initialPage]="initialPage()"
+                [isLoading]="isLoading() || isSaving()"
+                [canDeleteList]="canDeleteList()"
+                [isMobile]="isMobileView()"
+                [renameRequestedListId]="renameRequestedListId()"
+                [canClearPurchased]="checkedItemsCount() > 0"
+                (mergeDuplicates)="mergeDuplicates()"
+                (createList)="createNewList($event)"
+                (clearPurchased)="clearPurchased()"
+                (clearListById)="clearListById($event)"
+                (deleteListById)="deleteListById($event)"
+                (renameListById)="renameListById($event.listId, $event.name)"
+                (renameRequestHandled)="clearRenameRequest($event)"
+            />
+            <div class="shopping-list__workspace" [attr.aria-busy]="isLoading()">
+                <fieldset class="shopping-list__content" [disabled]="isLoading()">
                     <fd-shopping-list-items-panel
-                        class="shopping-list__items-panel"
                         data-tour-id="shopping-list-items"
                         [itemForm]="itemForm"
                         [items]="items()"
                         (itemAdd)="addItem()"
                         (itemRemove)="removeItem($event)"
+                        (itemEdit)="editItem($event)"
                         (itemCheckedChange)="toggleItemChecked($event.itemId, $event.checked)"
                     />
-                </div>
-            }
+                </fieldset>
+            </div>
         }
     </fd-page-body>
 </div>

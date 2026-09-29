@@ -22,7 +22,7 @@ public static class ShoppingListHttpResponseMappings {
                 model.Id,
                 model.Name,
                 model.CreatedAt,
-                model.ItemsCount
+                model.ItemsCount, model.RemainingCount
             );
         }
     }

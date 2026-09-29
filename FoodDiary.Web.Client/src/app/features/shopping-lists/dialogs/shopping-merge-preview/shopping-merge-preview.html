@@ -1,0 +1,22 @@
+<fd-ui-dialog size="sm" [title]="'SHOPPING_LIST.MERGE_TITLE' | translate" (close)="close()">
+    <div class="fd-stack fd-gap-md">
+        <p>{{ (rows.length > 0 ? 'SHOPPING_LIST.MERGE_COPY' : 'SHOPPING_LIST.MERGE_EMPTY') | translate }}</p>
+        <ul class="fd-stack fd-gap-md">
+            @for (row of rows; track row.id) {
+                <li>
+                    <strong>{{ row.name }}</strong>
+                    <div>{{ row.before }} → {{ row.after }}</div>
+                </li>
+            }
+        </ul>
+        <p class="fd-ui-body-sm">{{ 'SHOPPING_LIST.MERGE_LIMITS' | translate }}</p>
+        <div class="fd-row fd-justify-end fd-gap-actions">
+            <fd-ui-button variant="secondary" fill="text" (click)="close()">{{
+                'PUBLIC_RECIPES.SHOPPING_CANCEL' | translate
+            }}</fd-ui-button>
+            @if (rows.length > 0) {
+                <fd-ui-button (click)="close(true)">{{ 'SHOPPING_LIST.MERGE_CONFIRM' | translate }}</fd-ui-button>
+            }
+        </div>
+    </div>
+</fd-ui-dialog>

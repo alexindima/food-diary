@@ -1,0 +1,79 @@
+<div class="list-browser">
+    <fd-ui-input
+        floatLabel="always"
+        prefixIcon="search"
+        [value]="search()"
+        [maxLength]="maxNameLength"
+        [ariaLabel]="'SHOPPING_LIST.SEARCH_LISTS' | translate"
+        [placeholder]="'SHOPPING_LIST.SEARCH_LISTS' | translate"
+        (valueChange)="search.set($event)"
+    />
+    <div #results class="list-browser__results" [attr.aria-busy]="browser.loading()" (scroll)="onScroll(results)">
+        @for (list of visible(); track list.id) {
+            <!-- Native button provides a full-width three-column row without styling UI-kit internals. -->
+            <button
+                type="button"
+                class="list-browser__row"
+                [class.list-browser__row--selected]="list.id === selectedId()"
+                [attr.aria-pressed]="list.id === selectedId()"
+                (click)="listSelected.emit(list.id)"
+            >
+                <span class="list-browser__selection" aria-hidden="true"
+                    ><fd-ui-icon name="check" [style.visibility]="list.id === selectedId() ? 'visible' : 'hidden'"
+                /></span>
+                <span class="list-browser__name">{{ list.name }}</span>
+                <span class="list-browser__status" [class.list-browser__status--done]="list.completed">{{ status(list) }}</span>
+            </button>
+        }
+        @if (matches().length === 0 && !browser.loading() && !browser.failed()) {
+            <p>{{ 'SHOPPING_LIST.NO_MATCHES' | translate }}</p>
+        }
+        @if (query().length === 0 && completed().length > 0) {
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                [icon]="completedOpen() ? 'expand_more' : 'chevron_right'"
+                [attr.aria-expanded]="completedOpen()"
+                (click)="completedOpen.set(!completedOpen())"
+                >{{ 'SHOPPING_LIST.COMPLETED_GROUP' | translate }} · {{ completed().length }}</fd-ui-button
+            >
+            @for (list of completedOpen() ? completed() : []; track list.id) {
+                <!-- Native button provides a full-width three-column row without styling UI-kit internals. -->
+                <button
+                    type="button"
+                    class="list-browser__row"
+                    [class.list-browser__row--selected]="list.id === selectedId()"
+                    [attr.aria-pressed]="list.id === selectedId()"
+                    (click)="listSelected.emit(list.id)"
+                >
+                    <span class="list-browser__selection" aria-hidden="true"
+                        ><fd-ui-icon name="check" [style.visibility]="list.id === selectedId() ? 'visible' : 'hidden'"
+                    /></span>
+                    <span class="list-browser__name">{{ list.name }}</span>
+                    <span class="list-browser__status" [class.list-browser__status--done]="list.completed">{{ status(list) }}</span>
+                </button>
+            }
+        }
+        @if (browser.hasMore()) {
+            <fd-ui-button
+                class="list-browser__load-more"
+                variant="secondary"
+                fill="text"
+                [loading]="browser.loading()"
+                (click)="browser.loadMore()"
+                >{{ (browser.failed() ? 'SHOPPING_LIST.RETRY_LOAD' : 'SHOPPING_LIST.LOAD_MORE') | translate }}</fd-ui-button
+            >
+        }
+    </div>
+    <fd-ui-button
+        class="list-browser__create"
+        variant="secondary"
+        fill="text"
+        icon="add"
+        [fullWidth]="true"
+        (click)="createRequested.emit(createName() || undefined)"
+        >{{
+            (createName() ? 'SHOPPING_LIST.CREATE_NAMED_LIST' : 'SHOPPING_LIST.CREATE_LIST') | translate: { name: createName() }
+        }}</fd-ui-button
+    >
+</div>

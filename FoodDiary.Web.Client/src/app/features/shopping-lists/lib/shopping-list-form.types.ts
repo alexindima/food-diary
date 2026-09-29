@@ -11,4 +11,6 @@ export type ShoppingListItemFormModel = {
 
 export type ShoppingListItemViewModel = {
     meta: string;
+    quantity: string;
+    detail: string;
 } & ShoppingListItem;

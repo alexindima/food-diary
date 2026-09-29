@@ -9,6 +9,7 @@ import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListPickerData, ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
 import type { ShoppingList, ShoppingListItemDto } from '../models/shopping-list.data';
 import { mapShoppingListItemToDto } from './shopping-list-item.mapper';
+import { appendShoppingItems } from './shopping-list-merge';
 
 @Injectable()
 export class ShoppingListAddFacade {
@@ -99,7 +100,9 @@ export class ShoppingListAddFacade {
         }
     }
     private async saveAsync(target: ShoppingListTarget, items: ShoppingListItemDto[]): Promise<ShoppingList> {
-        return target.id === null ? firstValueFrom(this.api.create({ name: target.name, items })) : this.appendAsync(target.id, items);
+        return target.id === null
+            ? firstValueFrom(this.api.create({ name: target.name, items: appendShoppingItems([], items) }))
+            : this.appendAsync(target.id, items);
     }
     private async prepareAsync(item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
         if (!(await this.ensureAuthenticatedAsync())) {
@@ -118,10 +121,7 @@ export class ShoppingListAddFacade {
         }
         return firstValueFrom(
             this.api.update(id, {
-                items: [
-                    ...list.items.map(mapShoppingListItemToDto),
-                    ...items.map((item, index) => ({ ...item, sortOrder: list.items.length + index + 1 })),
-                ],
+                items: appendShoppingItems(list.items.map(mapShoppingListItemToDto), items),
             }),
         );
     }

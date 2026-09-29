@@ -47,8 +47,29 @@ describe('shopping-list-item.mapper', () => {
         expect(formatShoppingListItemMeta(item, translate)).toBe('2 pack - Dairy');
     });
 
+    it.each(['Ml', 'ml', ' ML '])('localizes persisted unit %s regardless of casing', unit => {
+        const translateRu = (key: string): string => (key === 'GENERAL.UNITS.ML' ? 'мл' : key);
+        const item = { ...ITEM, amount: 555, unit, category: null };
+        expect(buildShoppingListItemViewModels([item], translateRu)[0].quantity).toBe('555 мл');
+        expect(buildShoppingListItemViewModels([item], translate)[0].quantity).toBe('555 ml');
+    });
+
     it('should build item view models with meta', () => {
-        expect(buildShoppingListItemViewModels([ITEM], translate)).toEqual([{ ...ITEM, meta: '2 ml - Dairy' }]);
+        expect(buildShoppingListItemViewModels([ITEM], translate)).toEqual([
+            { ...ITEM, meta: '2 ml - Dairy', quantity: '2 ml', detail: 'Dairy' },
+        ]);
+    });
+
+    it('puts known text quantities on the right but retains freeform notes as details', () => {
+        const [text, note] = buildShoppingListItemViewModels(
+            [
+                { ...ITEM, amount: null, category: null, note: 'по вкусу' },
+                { ...ITEM, amount: null, category: null, note: 'Купить на рынке' },
+            ],
+            translate,
+        );
+        expect(text).toMatchObject({ quantity: 'по вкусу', detail: '' });
+        expect(note).toMatchObject({ quantity: '', detail: 'Купить на рынке' });
     });
 
     it('should rebuild sort order from item positions', () => {

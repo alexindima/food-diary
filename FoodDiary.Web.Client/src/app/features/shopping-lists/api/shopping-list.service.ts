@@ -4,11 +4,21 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
+import type {
+    ShoppingList,
+    ShoppingListCreateDto,
+    ShoppingListOverview,
+    ShoppingListSummary,
+    ShoppingListUpdateDto,
+} from '../models/shopping-list.data';
 
 @Service()
 export class ShoppingListService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.shoppingLists;
+
+    public getOverview(): Observable<ShoppingListOverview> {
+        return this.get<ShoppingListOverview>('overview');
+    }
 
     public getCurrent(): Observable<ShoppingList | null> {
         return this.get<ShoppingList>('current').pipe(
@@ -17,9 +27,11 @@ export class ShoppingListService extends ApiService {
     }
 
     public getAll(): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('').pipe(
-            catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])),
-        );
+        return this.getPage().pipe(catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])));
+    }
+
+    public getPage(page = 1, search = ''): Observable<ShoppingListSummary[]> {
+        return this.get<ShoppingListSummary[]>('page', { page, pageSize: 20, search });
     }
 
     public getAllForSelection(): Observable<ShoppingListSummary[]> {

@@ -76,6 +76,7 @@ export class PublicIngredientsComponent {
         const unit = units.get(ingredient.unit?.toLowerCase() ?? '') ?? null;
         return {
             name: ingredient.name,
+            productId: ingredient.productId ?? null,
             amount: ingredient.amountText !== null ? null : this.amount(ingredient),
             unit: ingredient.amountText !== null ? null : unit,
             note: this.shoppingNote(ingredient, unit),

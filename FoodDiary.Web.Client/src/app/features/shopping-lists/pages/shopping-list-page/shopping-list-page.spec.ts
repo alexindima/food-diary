@@ -52,10 +52,14 @@ type ShoppingListFacadeMock = {
     deleteListById: ReturnType<typeof vi.fn>;
     initialize: ReturnType<typeof vi.fn>;
     isLoading: ReturnType<typeof signal<boolean>>;
+    isCreating: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
     items: ReturnType<typeof signal<ShoppingListItem[]>>;
     list: ReturnType<typeof signal<ShoppingList | null>>;
     listName: ReturnType<typeof signal<string>>;
+    initialPage: ReturnType<typeof signal<null>>;
+    navigationLists: ReturnType<typeof signal<ShoppingListSummary[]>>;
+    applyConsolidation: ReturnType<typeof vi.fn>;
     lists: ReturnType<typeof signal<ShoppingListSummary[]>>;
     removeItem: ReturnType<typeof vi.fn>;
     renameListById: ReturnType<typeof vi.fn>;
@@ -79,7 +83,11 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
         items: signal([SHOPPING_LIST_ITEM]),
         isLoading: signal(false),
         isSaving: signal(false),
+        isCreating: signal(false),
         lists: signal(SHOPPING_LISTS),
+        initialPage: signal(null),
+        navigationLists: signal(SHOPPING_LISTS),
+        applyConsolidation: vi.fn(),
         selectedListId: signal(FIRST_LIST_ID),
         listName: signal(SHOPPING_LIST.name),
         renameRequestedListId: signal(null),
@@ -318,3 +326,19 @@ async function flushSignalEffectsAsync(): Promise<void> {
         setTimeout(resolve, 0);
     });
 }
+
+describe('Shopping list merge preview', () => {
+    it('applies the preview only after confirmation', async () => {
+        const { component, facade } = await setupShoppingListPageAsync();
+        const original = [SHOPPING_LIST_ITEM, { ...SHOPPING_LIST_ITEM, id: 'duplicate' }];
+        facade.items.set(original);
+        component['mergeDuplicates']();
+        expect(facade.applyConsolidation).toHaveBeenCalledWith(FIRST_LIST_ID, original, [expect.objectContaining({ amount: 24 })]);
+    });
+    it('leaves items unchanged when cancelled', async () => {
+        const { component, facade, dialogService } = await setupShoppingListPageAsync();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
+        component['mergeDuplicates']();
+        expect(facade.applyConsolidation).not.toHaveBeenCalled();
+    });
+});

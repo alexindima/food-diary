@@ -86,7 +86,7 @@ public partial class ShoppingListsFeatureTests {
             bool includeItems = false,
             CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ShoppingList>>([]);
 
-        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null) =>
             Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>([]);
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -126,7 +126,7 @@ public partial class ShoppingListsFeatureTests {
             bool includeItems = false,
             CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ShoppingList>>([]);
 
-        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null) =>
             Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>([]);
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -168,7 +168,7 @@ public partial class ShoppingListsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<ShoppingList>>(userId == list.UserId ? [list] : []);
 
-        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null) =>
             Task.FromResult<IReadOnlyList<ShoppingListSummaryReadModel>>(userId == list.UserId ? [ToSummaryReadModel(list)] : []);
 
         public Task UpdateAsync(ShoppingList updatedList, CancellationToken cancellationToken = default) {

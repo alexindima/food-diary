@@ -1,0 +1,9 @@
+<fd-ui-dialog size="sm" [title]="'SHOPPING_LIST.ALL_LISTS' | translate" (close)="close()"
+    ><fd-shopping-list-browser
+        [lists]="data.lists()"
+        [initialPage]="data.initialPage()"
+        [selectedId]="data.selectedId"
+        [focusSearch]="false"
+        (createRequested)="create($event)"
+        (listSelected)="close($event)"
+/></fd-ui-dialog>

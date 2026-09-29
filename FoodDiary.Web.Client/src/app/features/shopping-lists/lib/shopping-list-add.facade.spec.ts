@@ -60,7 +60,8 @@ describe('recipe shopping additions', () => {
                 { name: 'Water', amount: 600, unit: 'Ml', sortOrder: 3 },
             ],
         });
-        expect(dialogs.open.mock.calls[1][1].data.count).toBe(2);
+        const options = dialogs.open.mock.calls[1][1] as { data: { count: number } };
+        expect(options.data.count).toBe(2);
         expect(facade.isAdded(1)).toBe(true);
         expect(facade.isAdded(2)).toBe(true);
         await facade.addAllAsync(entries);
@@ -77,12 +78,18 @@ describe('recipe shopping additions', () => {
         await facade.addAsync(0, { name: 'Rice', amount: 200, unit: 'g' });
         await facade.addAsync(1, { name: 'Salt', note: 'to taste' });
         await facade.addAsync(1, { name: 'Salt', note: 'to taste' });
-        expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: 'Soup', items: [{ name: 'Rice', amount: 200, unit: 'g' }] });
+        expect(api.create).toHaveBeenCalledExactlyOnceWith({
+            name: 'Soup',
+            items: [{ name: 'Rice', amount: 200, unit: 'g', sortOrder: 1 }],
+        });
         expect(api.update).toHaveBeenCalledExactlyOnceWith('list-1', { items: [{ name: 'Salt', note: 'to taste', sortOrder: 1 }] });
         expect(dialogs.open).toHaveBeenCalledTimes(1);
         expect(facade.isAdded(0)).toBe(true);
         expect(facade.isAdded(1)).toBe(true);
     });
+});
+
+describe('recipe shopping target state', () => {
     it('preserves existing items, IDs and checked state when selecting an existing list', async () => {
         dialogs.open.mockReturnValue({ afterClosed: () => of({ id: 'list-1', name: 'Soup' }) });
         api.getById.mockReturnValue(

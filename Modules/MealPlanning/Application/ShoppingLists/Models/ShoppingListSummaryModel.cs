@@ -4,4 +4,4 @@ public sealed record ShoppingListSummaryModel(
     Guid Id,
     string Name,
     DateTime CreatedAt,
-    int ItemsCount);
+    int ItemsCount, int RemainingCount = 0);

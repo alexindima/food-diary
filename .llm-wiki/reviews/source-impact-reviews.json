@@ -208,13 +208,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "af03cdb1e92569556d70bb184dc2d146634ee095122d81118b4faa27b70cfc11"
+          "sha256": "b13723b70c9f42143878ce93fc2d51a9af61e085979778c1c8ef38e2154129da"
         }
       ],
-      "reason": "Reviewed additive public product description and ordered images fields; generated Swagger snapshot passes its integration test and private products still return unavailable.",
+      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:32.3710128Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:20.5496643Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "5a1435434fcc9abaa9fdcd8559fff117860b999a7ff71d571371fe6b9dc8a96b"
+          "sha256": "3bd99a5d4f91a5168058d3794ef7a6c9165f01b3def6e9f5927fe9bec6507b14"
         }
       ],
-      "reason": "Gallery remains in Products frontend feature and reuses UI-kit lightbox; public query and response retain existing Products ownership with no new dependencies.",
+      "reason": "Reviewed generated health and test indexes: overview adds no project dependencies; host/frontend builds, 101 frontend tests and four API integration tests pass. Prior unrelated Products typed-ID architecture failure remains outside this change.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:29.4058597Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:22:11.3812894Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7fa8572e067d5b808251860c33ee69fc1a5b41c130c7a2ab00b70563a29200b6"
+          "sha256": "e708f8edf08067fae655803d10cca73e26bfee52f3a23c46ef8625add5de0f54"
         }
       ],
-      "reason": "Reviewed optional publication DTO fields and anonymous public product projection; Swagger integration snapshot and additive compatibility checks passed. Existing product PATCH now permits visibility-only updates for used products; 18 handler tests retain restrictions on accompanying content edits.",
+      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-28T21:44:11.3541348Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:21.1933938Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4479267c90257d79a13f36311a0a40caa969a622f1bef4a90a65d05de544b20c"
+          "sha256": "286a1ba7948d331c5f48ef8aa13869dde0122c0fe33c61be34234c50cf7e0052"
         }
       ],
-      "reason": "Focused public query tests (2), preview component tests (3), Swagger snapshot test and frontend production build pass. Browser checks cover two photos, single photo, no photo and mobile without console errors.",
+      "reason": "Reviewed generated health and test indexes: overview adds no project dependencies; host/frontend builds, 101 frontend tests and four API integration tests pass. Prior unrelated Products typed-ID architecture failure remains outside this change.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:31.4103750Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:22:11.9503997Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6d78c687720d26f921198cc572c9c9e042255449e5ad4948323dc7aa037c9790"
+          "sha256": "f6813f885a07d72ea9623b3643ea61b54a3d62c07187a91a2c7e33b3bff6b977"
         }
       ],
-      "reason": "Public product response adds description and image URLs using existing read model; no new service, configuration, provider or background work. Local API restarted and real uploaded images verified.",
+      "reason": "Existing architecture remains unchanged; regenerated indexes document overview and frontend first-page reuse.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:35.3699453Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:22.0847705Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,21 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4479267c90257d79a13f36311a0a40caa969a622f1bef4a90a65d05de544b20c"
+          "sha256": "286a1ba7948d331c5f48ef8aa13869dde0122c0fe33c61be34234c50cf7e0052"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6d78c687720d26f921198cc572c9c9e042255449e5ad4948323dc7aa037c9790"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3e33455e09b1b4ab8d500a817bc3bed6360c62c34bdafedcc6ee4189377f47a7"
+          "sha256": "f6813f885a07d72ea9623b3643ea61b54a3d62c07187a91a2c7e33b3bff6b977"
         }
       ],
-      "reason": "Public visibility guard remains before returning description and image URLs; private product test passes. No owner comments, credentials or editing controls are included in public preview.",
+      "reason": "Overview resolves current user and scopes both summary and selected detail reads to that user; isolation integration test passes.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:34.4709997Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:22.6044954Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,17 +1061,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9eb0f9dd69c277113d7db283617f3cc0ecec9e4ede8542def5c98f67ac9da7b5"
+          "sha256": "407970af8ad11c8865e30618a3e61361b1d293742972232f289671a4fcf5e62f"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "a9dd6e7f9097c4338444a6172e02e8544c6b9069d9f8eb123233783e50b88a7e"
+          "sha256": "8e9a66616d54eb2a76fa1336c7407a2e986cfa1d859c70b8c68f52874c710446"
         }
       ],
-      "reason": "Verified recipe eye action through preview service, public product API, gallery thumbnail selection and shared lightbox; optional gallery absence uses full-width product details.",
+      "reason": "Existing architecture remains unchanged; regenerated indexes document overview and frontend first-page reuse.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:30.3769958Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:23.0601398Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,13 +1159,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9eb0f9dd69c277113d7db283617f3cc0ecec9e4ede8542def5c98f67ac9da7b5"
+          "sha256": "407970af8ad11c8865e30618a3e61361b1d293742972232f289671a4fcf5e62f"
         }
       ],
-      "reason": "Reviewed optional description/images response mapping, legacy single-cover fallback, bounded deduplicated gallery and selected lightbox index. Three component tests and desktop/mobile browser checks pass.",
+      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-29T07:07:33.4146619Z"
+      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
+      "reviewedAtUtc": "2026-09-29T15:21:21.6612549Z"
     },
     {
       "pageId": "workflow.query-context",

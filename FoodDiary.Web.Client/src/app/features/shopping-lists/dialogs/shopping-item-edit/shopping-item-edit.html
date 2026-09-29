@@ -1,0 +1,17 @@
+<fd-ui-dialog size="sm" [title]="'SHOPPING_LIST.EDIT_ITEM' | translate" (close)="close()">
+    <form class="fd-stack fd-gap-md" [formRoot]="fields" (submit)="save($event)">
+        <fd-ui-input [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate" [formField]="fields.name" />
+        <fd-ui-input type="number" [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate" [formField]="fields.amount" />
+        <fd-ui-select [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate" [formField]="fields.unit" [options]="units" />
+        <fd-ui-input [label]="'SHOPPING_LIST.ADD_ITEM_NOTE' | translate" [formField]="fields.note" />
+        <fd-ui-input [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate" [formField]="fields.category" />
+        <div class="fd-row fd-justify-end fd-gap-actions">
+            <fd-ui-button variant="secondary" fill="text" (click)="close()">{{
+                'PUBLIC_RECIPES.SHOPPING_CANCEL' | translate
+            }}</fd-ui-button>
+            <fd-ui-button type="submit" [disabled]="!valid()" [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate">{{
+                'SHOPPING_LIST.SAVE_ITEM' | translate
+            }}</fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>

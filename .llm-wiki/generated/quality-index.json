@@ -5,13 +5,13 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5630,
+    "productionFiles": 5643,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 968,
+    "criticalSymbols": 969,
     "criticalSymbolsWithTestReferences": 930,
-    "criticalSymbolsWithoutTestReferences": 38,
-    "debtMarkers": 11
+    "criticalSymbolsWithoutTestReferences": 39,
+    "debtMarkers": 12
   },
   "hotspots": [
     {
@@ -325,6 +325,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 119.56
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list.facade.ts",
+      "nonBlankLines": 570,
+      "decisionPoints": 71,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 117.9
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
@@ -805,14 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 78.72
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 293,
-      "decisionPoints": 47,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 78.36
     }
   ],
   "files": [
@@ -11762,11 +11762,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
-      "nonBlankLines": 118,
-      "decisionPoints": 17,
+      "nonBlankLines": 119,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.86
+      "structuralRiskScore": 29.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
@@ -12138,11 +12138,35 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "nonBlankLines": 37,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.94
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.ts",
+      "nonBlankLines": 84,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.68
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
+      "nonBlankLines": 48,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.96
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
@@ -12153,6 +12177,14 @@
       "structuralRiskScore": 12.18
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.58
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-add.facade.ts",
       "nonBlankLines": 167,
       "decisionPoints": 25,
@@ -12161,20 +12193,44 @@
       "structuralRiskScore": 40.84
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-browser.facade.ts",
+      "nonBlankLines": 70,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.9
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-consolidation.ts",
+      "nonBlankLines": 60,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.2
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-form.types.ts",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-item.mapper.ts",
-      "nonBlankLines": 75,
-      "decisionPoints": 19,
+      "nonBlankLines": 89,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30
+      "structuralRiskScore": 39.28
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-merge.ts",
+      "nonBlankLines": 58,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-options.mapper.ts",
@@ -12186,43 +12242,43 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list.facade.ts",
-      "nonBlankLines": 404,
-      "decisionPoints": 30,
+      "nonBlankLines": 570,
+      "decisionPoints": 71,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 53.08
+      "structuralRiskScore": 117.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/models/shopping-list.data.ts",
-      "nonBlankLines": 61,
+      "nonBlankLines": 65,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.22
+      "structuralRiskScore": 1.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
-      "nonBlankLines": 62,
-      "decisionPoints": 0,
+      "nonBlankLines": 97,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.24
+      "structuralRiskScore": 6.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts",
-      "nonBlankLines": 112,
-      "decisionPoints": 9,
+      "nonBlankLines": 197,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.74
+      "structuralRiskScore": 30.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "nonBlankLines": 227,
-      "decisionPoints": 27,
+      "nonBlankLines": 301,
+      "decisionPoints": 43,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.04
+      "structuralRiskScore": 70.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-tour.ts",
@@ -32065,6 +32121,22 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListOverviewModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListPageModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListSummaryModel.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -32121,6 +32193,22 @@
       "structuralRiskScore": 3.8
     },
     {
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 10.66
+    },
+    {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -32130,19 +32218,19 @@
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 40,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.28
+      "structuralRiskScore": 4.3
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 14,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.72
+      "structuralRiskScore": 3.78
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs",
@@ -32370,11 +32458,11 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
-      "nonBlankLines": 152,
-      "decisionPoints": 9,
+      "nonBlankLines": 160,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.54
+      "structuralRiskScore": 18.2
     },
     {
       "path": "Modules/MealPlanning/PersistenceModel/Configurations/MealPlans/MealPlanConfiguration.cs",
@@ -32490,11 +32578,11 @@
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 69,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.1
+      "structuralRiskScore": 3.38
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -32559,6 +32647,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListSummaryHttpResponse.cs",
@@ -49836,7 +49940,7 @@
       "name": "ShoppingListsController",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "line": 17,
+      "line": 18,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -51780,6 +51884,16 @@
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetShoppingListOverviewQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "line": 12,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
@@ -58382,6 +58496,11 @@
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "line": 53,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
+      "line": 104,
       "marker": "#pragma warning disable"
     },
     {

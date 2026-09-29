@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form, required } from '@angular/forms/signals';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -45,7 +46,7 @@ async function setupItemsPanelAsync(items: ShoppingListItem[] = [CHECKED_ITEM]):
 }> {
     await TestBed.configureTestingModule({
         imports: [ShoppingListItemsPanelComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideTranslateTesting(), provideRouter([])],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ShoppingListItemsPanelComponent);
@@ -57,6 +58,33 @@ async function setupItemsPanelAsync(items: ShoppingListItem[] = [CHECKED_ITEM]):
 }
 
 describe('ShoppingListItemsPanelComponent', () => {
+    it('renders exactly one purchased summary and only makes it interactive for purchased items', async () => {
+        const { fixture } = await setupItemsPanelAsync([{ ...CHECKED_ITEM, isChecked: false }]);
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelectorAll('.shopping-list__purchased-summary')).toHaveLength(1);
+        expect(element.querySelector('.shopping-list__purchased-toggle')).toBeNull();
+
+        fixture.componentRef.setInput('items', [CHECKED_ITEM]);
+        fixture.detectChanges();
+        expect(element.querySelector('.shopping-list__purchased-summary')).toBeNull();
+        expect(element.querySelectorAll('.shopping-list__purchased-toggle')).toHaveLength(1);
+
+        fixture.componentRef.setInput('items', [{ ...CHECKED_ITEM, isChecked: false }]);
+        fixture.detectChanges();
+        expect(element.querySelectorAll('.shopping-list__purchased-summary')).toHaveLength(1);
+        expect(element.querySelector('.shopping-list__purchased-toggle')).toBeNull();
+    });
+
+    it('separates purchased items and returns unchecked items to the shopping rows', async () => {
+        const { component, fixture } = await setupItemsPanelAsync([CHECKED_ITEM, { ...CHECKED_ITEM, id: 'pending', isChecked: false }]);
+        expect(component['purchasedItems']().map(item => item.id)).toEqual(['item-1']);
+        expect(component['pendingItems']().map(item => item.id)).toEqual(['pending']);
+        fixture.componentRef.setInput('items', [{ ...CHECKED_ITEM, isChecked: false }]);
+        fixture.detectChanges();
+        expect(component['purchasedItems']()).toEqual([]);
+        expect(component['pendingItems']()[0].id).toBe('item-1');
+    });
+
     it('builds localized unit options and item view models', async () => {
         const { component } = await setupItemsPanelAsync();
 
@@ -88,8 +116,13 @@ describe('ShoppingListItemsPanelComponent', () => {
     });
 
     it('renders empty state view model for empty items', async () => {
-        const { component } = await setupItemsPanelAsync([]);
+        const { component, fixture } = await setupItemsPanelAsync([]);
 
         expect(component['itemViewModels']()).toEqual([]);
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.shopping-list__purchased-toggle')).toBeNull();
+        expect(element.querySelector<HTMLInputElement>('.shopping-list__quick-add-input input')?.placeholder).toBe(
+            'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER',
+        );
     });
 });

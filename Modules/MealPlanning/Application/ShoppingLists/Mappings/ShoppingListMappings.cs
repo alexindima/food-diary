@@ -51,7 +51,7 @@ public static class ShoppingListMappings {
                 list.Id.Value,
                 list.Name,
                 list.CreatedOnUtc,
-                list.Items.Count);
+                list.Items.Count, list.Items.Count(item => !item.IsChecked));
     }
 
     extension(ShoppingListReadModel list) {
@@ -103,6 +103,6 @@ public static class ShoppingListMappings {
                 list.Id,
                 list.Name,
                 list.CreatedAt,
-                list.ItemsCount);
+                list.ItemsCount, list.RemainingCount);
     }
 }

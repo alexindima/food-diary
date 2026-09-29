@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4273,
-    "symbols": 4204,
+    "sourceFiles": 4279,
+    "symbols": 4210,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2205,
+      "class": 2206,
       "enum": 65,
       "interface": 401,
-      "record": 1413,
+      "record": 1418,
       "record struct": 120
     },
     "roles": {
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1732,
-      "Query": 286,
-      "QueryHandler": 208,
+      "Other": 1734,
+      "Query": 287,
+      "QueryHandler": 209,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 229,
+      "Response": 231,
       "Service": 162,
       "Validator": 231,
       "ValueObject": 114,
@@ -17695,6 +17695,20 @@
       "line": 2
     },
     {
+      "name": "ShoppingListOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListOverviewModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListPageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListPageModel.cs",
+      "line": 2
+    },
+    {
       "name": "ShoppingListSummaryModel",
       "kind": "record",
       "role": "Other",
@@ -17742,6 +17756,20 @@
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "GetShoppingListOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetShoppingListOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "line": 12
     },
     {
       "name": "GetShoppingListsQuery",
@@ -18056,7 +18084,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "ShoppingListHttpMappings",
@@ -18112,6 +18140,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListItemSourceHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListOverviewHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListOverviewHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListPageHttpResponse.cs",
       "line": 2
     },
     {

@@ -3,8 +3,10 @@
         <div class="shopping-list__quick-add-row">
             <fd-ui-input
                 class="shopping-list__quick-add-input"
+                floatLabel="always"
+                prefixIcon="add"
                 [formField]="itemForm().name"
-                [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
+                [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
                 [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
             />
             <fd-ui-button
@@ -22,7 +24,6 @@
                 class="shopping-list__quick-add-button"
                 variant="primary"
                 fill="solid"
-                icon="add"
                 [disabled]="isItemFormInvalid()"
                 [disabledReason]="isItemFormInvalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                 (click)="itemAdd.emit()"
@@ -59,40 +60,75 @@
     </form>
 
     <section class="shopping-list__items-surface">
-        @if (itemViewModels().length > 0) {
-            <div class="shopping-list__items">
-                @for (item of itemViewModels(); track item.id) {
-                    <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
-                        <fd-ui-checkbox
-                            class="shopping-list__checkbox"
-                            label=""
-                            [checked]="item.isChecked"
-                            (checkedChange)="itemCheckedChange.emit({ itemId: item.id, checked: $event })"
-                        />
-                        <div class="shopping-list__item-body">
-                            <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
-                            @if (item.meta) {
-                                <div class="shopping-list__item-meta fd-ui-caption">{{ item.meta }}</div>
-                            }
-                        </div>
-                        <fd-ui-button
-                            class="shopping-list__item-remove"
-                            variant="secondary"
-                            fill="solid"
-                            icon="delete"
-                            [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
-                            [ariaLabel]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
-                            (click)="itemRemove.emit(item.id)"
-                        />
-                    </div>
-                }
-            </div>
-        } @else {
+        <ul class="shopping-list__items">
+            @for (item of pendingItems(); track item.id) {
+                <li class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
+                    <ng-container *ngTemplateOutlet="itemRow; context: { $implicit: item }" />
+                </li>
+            }
+        </ul>
+        @if (itemViewModels().length === 0) {
             <div class="shopping-list__empty-state">
                 <fd-ui-icon name="shopping_cart" size="xl" />
-                <div class="shopping-list__empty-title fd-ui-card-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
-                <div class="shopping-list__empty-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
+                <h3>{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</h3>
+                <p>{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</p>
             </div>
+        } @else {
+            <ng-container *ngTemplateOutlet="purchasedSection" />
         }
     </section>
+    <ng-template #purchasedSection>
+        @if (purchasedItems().length === 0) {
+            <p class="shopping-list__purchased-summary">
+                {{ 'SHOPPING_LIST.PURCHASED_PROGRESS' | translate: { checked: 0, total: itemViewModels().length } }}
+            </p>
+        } @else {
+            <fd-ui-button
+                class="shopping-list__purchased-toggle"
+                variant="ghost"
+                fill="text"
+                [icon]="purchasedOpen() ? 'expand_more' : 'chevron_right'"
+                [attr.aria-expanded]="purchasedOpen()"
+                (click)="purchasedOpen.set(!purchasedOpen())"
+            >
+                {{ 'SHOPPING_LIST.PURCHASED_PROGRESS' | translate: { checked: purchasedItems().length, total: itemViewModels().length } }}
+            </fd-ui-button>
+            <ul class="shopping-list__items shopping-list__purchased">
+                @for (item of purchasedOpen() ? purchasedItems() : []; track item.id) {
+                    <li class="shopping-list__item shopping-list__item--checked">
+                        <ng-container *ngTemplateOutlet="itemRow; context: { $implicit: item }" />
+                    </li>
+                }
+            </ul>
+        }
+    </ng-template>
+    <ng-template #itemRow let-item>
+        <div class="shopping-list__item-body">
+            <fd-ui-checkbox [checked]="item.isChecked" (checkedChange)="toggleChecked(item.id, $event)">
+                <span class="shopping-list__item-name">{{ item.name }}</span>
+            </fd-ui-checkbox>
+            <div class="shopping-list__item-meta" [hidden]="!item.detail">{{ item.detail }}</div>
+        </div>
+        <span class="shopping-list__item-quantity">{{ item.quantity }}</span>
+        <div class="shopping-list__item-actions">
+            <fd-ui-button
+                variant="ghost"
+                fill="text"
+                icon="more_horiz"
+                [ariaLabel]="`${('COMMON.MORE_ACTIONS' | translate)}: ${item.name}`"
+                [fdUiMenuTrigger]="itemMenu"
+            />
+            <fd-ui-menu #itemMenu="fdUiMenu">
+                <fd-ui-menu-item
+                    [disabled]="item.id.startsWith('temp-')"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    (itemClick)="itemEdit.emit(item.id)"
+                    ><fd-ui-icon name="edit" /><span>{{ 'SHOPPING_LIST.EDIT_ITEM' | translate }}</span></fd-ui-menu-item
+                >
+                <fd-ui-menu-item class="fd-ui-menu-item--danger" (itemClick)="itemRemove.emit(item.id)"
+                    ><fd-ui-icon name="delete" /><span>{{ 'SHOPPING_LIST.REMOVE_ITEM' | translate }}</span></fd-ui-menu-item
+                >
+            </fd-ui-menu>
+        </div>
+    </ng-template>
 </div>

@@ -3,6 +3,7 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { MeasurementUnit } from '../../products/models/product.data';
 import type { ShoppingListItem, ShoppingListItemDto } from '../models/shopping-list.data';
 import type { ShoppingListItemViewModel } from './shopping-list-form.types';
+import { isTextQuantity } from './shopping-list-merge';
 
 export type ShoppingListTranslateFn = (key: string) => string;
 
@@ -20,6 +21,18 @@ export function buildShoppingListItemViewModels(
     return items.map(item => ({
         ...item,
         meta: formatShoppingListItemMeta(item, translate),
+        quantity:
+            (item.amount === null || item.amount === undefined) && isTextQuantity(item.note)
+                ? (item.note?.trim() ?? '')
+                : formatShoppingListItemMeta({ ...item, note: null, category: null, sources: [] }, translate),
+        detail: formatShoppingListItemMeta(
+            {
+                ...item,
+                amount: null,
+                note: (item.amount === null || item.amount === undefined) && isTextQuantity(item.note) ? null : item.note,
+            },
+            translate,
+        ),
     }));
 }
 
@@ -75,7 +88,8 @@ function getUnitLabel(unit: MeasurementUnit | string | null | undefined, transla
         return null;
     }
 
-    const key = `GENERAL.UNITS.${unit}`;
+    const normalizedUnit = Object.values(MeasurementUnit).find(value => value.toString() === unit.trim().toUpperCase());
+    const key = `GENERAL.UNITS.${normalizedUnit ?? unit}`;
     const translated = translate(key);
     return translated === key ? unit : translated;
 }

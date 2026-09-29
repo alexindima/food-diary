@@ -16,5 +16,5 @@ public interface IShoppingListReadModelRepository {
 
     Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(
         UserId userId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null);
 }

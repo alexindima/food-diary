@@ -1,0 +1,77 @@
+:host {
+    display: block;
+    max-width: 100%;
+}
+
+.list-browser {
+    width: 420px;
+    max-width: min(100%, calc(100vw - var(--fd-space-xl)));
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--fd-space-sm);
+    padding: var(--fd-space-xs);
+    &__results {
+        display: grid;
+        grid-auto-rows: max-content;
+        align-content: start;
+        gap: var(--fd-space-xxs);
+        max-height: min(420px, 60dvh);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+    }
+    &__row {
+        display: grid;
+        grid-template-columns: var(--fd-space-lg) minmax(0, 1fr) 7ch;
+        align-items: center;
+        gap: var(--fd-space-sm);
+        min-height: var(--fd-size-control-lg);
+        height: auto;
+        box-sizing: border-box;
+        width: 100%;
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border: 0;
+        border-radius: var(--fd-radius-sm);
+        background: transparent;
+        color: var(--fd-color-text);
+        font-family: inherit;
+        font-size: var(--fd-text-body-sm-size);
+        line-height: var(--fd-text-body-sm-line-height);
+        text-align: left;
+        cursor: pointer;
+    }
+    &__row:hover {
+        background: var(--fd-bg-brand-tint);
+    }
+    &__row--selected {
+        background: var(--fd-bg-accent-soft);
+    }
+    &__row:focus-visible {
+        outline: var(--fd-outline-focus);
+        outline-offset: -2px;
+    }
+    &__selection {
+        color: var(--fd-color-primary);
+        display: flex;
+        align-items: center;
+    }
+    &__name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+    &__status {
+        color: var(--fd-color-text-muted);
+        text-align: right;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+    &__status--done {
+        color: var(--fd-color-primary);
+    }
+    &__create {
+        --fd-button-white-space: normal;
+        overflow-wrap: anywhere;
+        border-top: var(--fd-border-muted);
+        padding-top: var(--fd-space-xs);
+    }
+}

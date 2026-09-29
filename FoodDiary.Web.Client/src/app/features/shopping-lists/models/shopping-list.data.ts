@@ -41,6 +41,8 @@ export type ShoppingListSummary = {
     name: string;
     createdAt: string;
     itemsCount: number;
+    remainingCount?: number;
+    completed?: boolean;
 };
 
 export type ShoppingListCreateDto = {
@@ -66,3 +68,6 @@ export type ShoppingListItemDto = {
     checkedOnUtc?: string | null;
     sortOrder?: number | null;
 };
+
+export type ShoppingListPage = { items: ShoppingListSummary[]; hasMore: boolean; nextPage: number | null };
+export type ShoppingListOverview = { selectedList: ShoppingList | null; lists: ShoppingListPage };

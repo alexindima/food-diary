@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListOverview;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -15,6 +16,13 @@ namespace FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Controllers;
 [ApiController]
 [Route("api/v{version:apiVersion}/shopping-lists")]
 public sealed class ShoppingListsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet("overview")]
+    [ProducesResponseType<ShoppingListOverviewHttpResponse>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId) =>
+        HandleOk(new GetShoppingListOverviewQuery(userId), static value => new ShoppingListOverviewHttpResponse(
+            value.SelectedList?.ToHttpResponse(), new ShoppingListPageHttpResponse(
+                value.Lists.Items.Select(item => item.ToHttpResponse()).ToList(), value.Lists.HasMore, value.Lists.NextPage)));
+
     [HttpGet("current")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
@@ -24,6 +32,14 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     [ProducesResponseType<List<ShoppingListSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToListQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
+
+    [HttpGet("page")]
+    [ProducesResponseType<List<ShoppingListSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20, [FromQuery] string? search = null) =>
+        HandleOk(new FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists.GetShoppingListsQuery(
+            userId, page, pageSize, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]

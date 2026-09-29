@@ -620,7 +620,7 @@ public class MealPlansFeatureTests {
         public Task<ShoppingListReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        public Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(UserId userId, CancellationToken cancellationToken = default, int page = 1, int? pageSize = null, string? search = null) =>
             throw new NotSupportedException();
 
         public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) =>

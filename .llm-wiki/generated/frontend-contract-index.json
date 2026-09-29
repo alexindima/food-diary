@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 476,
-    "componentsWithoutDirectSpecs": 132,
-    "inputs": 1518,
-    "outputs": 512,
-    "apiCalls": 271,
-    "templatesWithTranslations": 336,
-    "translationKeys": 1993,
-    "consumerEdges": 1183,
-    "consumedComponents": 303,
-    "unconsumedComponents": 172
+    "components": 480,
+    "componentsWithoutDirectSpecs": 134,
+    "inputs": 1524,
+    "outputs": 517,
+    "apiCalls": 272,
+    "templatesWithTranslations": 340,
+    "translationKeys": 2001,
+    "consumerEdges": 1197,
+    "consumedComponents": 304,
+    "unconsumedComponents": 175
   },
   "components": [
     {
@@ -14013,6 +14013,66 @@
       "specPath": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-user-menu/sidebar-user-menu.spec.ts"
     },
     {
+      "class": "ShoppingItemEditComponent",
+      "selector": "fd-shopping-item-edit",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.spec.ts"
+    },
+    {
+      "class": "ShoppingListBrowserComponent",
+      "selector": "fd-shopping-list-browser",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
+      "inputs": [
+        {
+          "name": "initialPage",
+          "type": "ShoppingListPage | null",
+          "required": false
+        },
+        {
+          "name": "lists",
+          "type": "readonly ShoppingListSummary[]",
+          "required": true
+        },
+        {
+          "name": "selectedId",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "focusSearch",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "createRequested",
+          "type": "string | void"
+        },
+        {
+          "name": "listSelected",
+          "type": "string"
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.spec.ts"
+    },
+    {
+      "class": "ShoppingListBrowserDialogComponent",
+      "selector": "fd-shopping-list-browser-dialog",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "ShoppingListItemsPanelComponent",
       "selector": "fd-shopping-list-items-panel",
       "feature": "shopping-lists",
@@ -14040,6 +14100,10 @@
           "type": "string"
         },
         {
+          "name": "itemEdit",
+          "type": "string"
+        },
+        {
           "name": "itemCheckedChange",
           "type": "{ itemId: string; checked: boolean }"
         }
@@ -14057,6 +14121,11 @@
           "name": "listSelectField",
           "type": "FieldTree<string | null>",
           "required": true
+        },
+        {
+          "name": "initialPage",
+          "type": "ShoppingListPage | null",
+          "required": false
         },
         {
           "name": "lists",
@@ -14082,11 +14151,24 @@
           "name": "renameRequestedListId",
           "type": "string | null",
           "required": false
+        },
+        {
+          "name": "canClearPurchased",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
         {
+          "name": "mergeDuplicates",
+          "type": ""
+        },
+        {
           "name": "createList",
+          "type": "string | void"
+        },
+        {
+          "name": "clearPurchased",
           "type": ""
         },
         {
@@ -14124,6 +14206,16 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "ShoppingMergePreviewComponent",
+      "selector": "fd-shopping-merge-preview",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -17793,10 +17885,22 @@
     {
       "feature": "shopping-lists",
       "method": "GET",
+      "responseType": "ShoppingListOverview",
+      "urlExpression": "'overview'",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+      "line": 20,
+      "publicMethod": "getOverview",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "environment.apiUrls.shoppingLists",
+      "resolvedUrlExpression": "environment.apiUrls.shoppingLists/overview"
+    },
+    {
+      "feature": "shopping-lists",
+      "method": "GET",
       "responseType": "ShoppingList",
       "urlExpression": "'current'",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 14,
+      "line": 24,
       "publicMethod": "getCurrent",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17806,13 +17910,13 @@
       "feature": "shopping-lists",
       "method": "GET",
       "responseType": "ShoppingListSummary[]",
-      "urlExpression": "''",
+      "urlExpression": "'page'",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 20,
-      "publicMethod": "getAll",
+      "line": 34,
+      "publicMethod": "getPage",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
-      "resolvedUrlExpression": "environment.apiUrls.shoppingLists/''"
+      "resolvedUrlExpression": "environment.apiUrls.shoppingLists/page"
     },
     {
       "feature": "shopping-lists",
@@ -17820,7 +17924,7 @@
       "responseType": "ShoppingListSummary[]",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 26,
+      "line": 38,
       "publicMethod": "getAllForSelection",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17832,7 +17936,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 30,
+      "line": 42,
       "publicMethod": "getById",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17844,7 +17948,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 34,
+      "line": 46,
       "publicMethod": "create",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17856,7 +17960,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 38,
+      "line": 50,
       "publicMethod": "update",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17868,7 +17972,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 44,
+      "line": 56,
       "publicMethod": "deleteById",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -21965,6 +22069,37 @@
     },
     {
       "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
+      "keys": [
+        "SHOPPING_LIST.COMPLETED_GROUP",
+        "SHOPPING_LIST.NO_MATCHES",
+        "SHOPPING_LIST.SEARCH_LISTS"
+      ]
+    },
+    {
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "keys": [
+        "DISABLED_HINTS.FORM_INVALID",
+        "PUBLIC_RECIPES.SHOPPING_CANCEL",
+        "SHOPPING_LIST.ADD_ITEM_AMOUNT",
+        "SHOPPING_LIST.ADD_ITEM_CATEGORY",
+        "SHOPPING_LIST.ADD_ITEM_NAME",
+        "SHOPPING_LIST.ADD_ITEM_NOTE",
+        "SHOPPING_LIST.ADD_ITEM_UNIT",
+        "SHOPPING_LIST.EDIT_ITEM",
+        "SHOPPING_LIST.SAVE_ITEM"
+      ]
+    },
+    {
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "keys": [
+        "SHOPPING_LIST.ALL_LISTS"
+      ]
+    },
+    {
+      "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
       "keys": [
         "PUBLIC_RECIPES.SHOPPING_CANCEL",
@@ -21977,9 +22112,21 @@
     },
     {
       "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
+      "keys": [
+        "PUBLIC_RECIPES.SHOPPING_CANCEL",
+        "SHOPPING_LIST.MERGE_CONFIRM",
+        "SHOPPING_LIST.MERGE_LIMITS",
+        "SHOPPING_LIST.MERGE_TITLE"
+      ]
+    },
+    {
+      "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "keys": [
+        "COMMON.MORE_ACTIONS",
         "DISABLED_HINTS.FORM_INVALID",
+        "DISABLED_HINTS.OPERATION_BUSY",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER",
         "SHOPPING_LIST.ADD_ITEM_BUTTON",
@@ -21992,8 +22139,10 @@
         "SHOPPING_LIST.ADD_ITEM_NOTE_PLACEHOLDER",
         "SHOPPING_LIST.ADD_ITEM_UNIT",
         "SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER",
+        "SHOPPING_LIST.EDIT_ITEM",
         "SHOPPING_LIST.EMPTY_COPY",
         "SHOPPING_LIST.EMPTY_TITLE",
+        "SHOPPING_LIST.PURCHASED_PROGRESS",
         "SHOPPING_LIST.REMOVE_ITEM"
       ]
     },
@@ -22002,16 +22151,16 @@
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
       "keys": [
         "COMMON.MORE_ACTIONS",
-        "DISABLED_HINTS.KEEP_ONE_LIST",
-        "DISABLED_HINTS.LIST_ALREADY_ACTIVE",
         "DISABLED_HINTS.LIST_EMPTY",
         "DISABLED_HINTS.LIST_NAME_REQUIRED",
         "DISABLED_HINTS.OPERATION_BUSY",
+        "SHOPPING_LIST.ALL_LISTS",
         "SHOPPING_LIST.CLEAR_LIST_BUTTON",
+        "SHOPPING_LIST.CLEAR_PURCHASED",
         "SHOPPING_LIST.DELETE_LIST_BUTTON",
         "SHOPPING_LIST.LISTS_LABEL",
-        "SHOPPING_LIST.MAKE_ACTIVE_BUTTON",
-        "SHOPPING_LIST.NEW_LIST_BUTTON",
+        "SHOPPING_LIST.MERGE_TITLE",
+        "SHOPPING_LIST.NO_PURCHASED",
         "SHOPPING_LIST.RENAME_LIST_BUTTON",
         "SHOPPING_LIST.SAVE_NAME_BUTTON"
       ]
@@ -22021,11 +22170,9 @@
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
-        "SHOPPING_LIST.LISTS_LABEL",
         "SHOPPING_LIST.NEW_LIST_BUTTON",
         "SHOPPING_LIST.NO_LISTS_COPY",
         "SHOPPING_LIST.NO_LISTS_TITLE",
-        "SHOPPING_LIST.REMAINING_ITEMS",
         "SHOPPING_LIST.SUBTITLE",
         "SHOPPING_LIST.TITLE",
         "SHOPPING_LIST.TOUR.START_TOUR"
@@ -28490,6 +28637,38 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "fill",
+        "fullWidth",
+        "icon",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fill",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -28506,8 +28685,21 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
@@ -28525,7 +28717,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
@@ -28542,7 +28734,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
-      "occurrences": 6,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29939,8 +30131,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 1,
       "inputsUsed": [
-        "checked",
-        "label"
+        "checked"
       ],
       "outputsHandled": [
         "checkedChange"
@@ -30726,7 +30917,46 @@
       "selector": "fd-ui-dialog",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
       "occurrences": 1,
       "inputsUsed": [
         "size",
@@ -32330,8 +32560,20 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
-      "occurrences": 1,
+      "occurrences": 3,
       "inputsUsed": [
         "name",
         "size"
@@ -32346,8 +32588,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
       "occurrences": 6,
       "inputsUsed": [
-        "name",
-        "size"
+        "name"
       ],
       "outputsHandled": []
     },
@@ -33517,6 +33758,38 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "floatLabel",
+        "maxLength",
+        "placeholder",
+        "prefixIcon",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "occurrences": 4,
+      "inputsUsed": [
+        "label",
+        "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -33533,8 +33806,11 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
       "inputsUsed": [
+        "ariaLabel",
+        "floatLabel",
         "label",
         "placeholder",
+        "prefixIcon",
         "type"
       ],
       "outputsHandled": []
@@ -34170,8 +34446,18 @@
       "selector": "fd-ui-menu",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
       "consumerFeature": "shopping-lists",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiMenuComponent",
+      "selector": "fd-ui-menu",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
+      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -34281,8 +34567,23 @@
       "selector": "fd-ui-menu-item",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
       "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason"
+      ],
+      "outputsHandled": [
+        "itemClick"
+      ]
+    },
+    {
+      "component": "FdUiMenuItemComponent",
+      "selector": "fd-ui-menu-item",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
+      "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "disabled",
         "disabledReason"
@@ -35621,6 +35922,19 @@
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "label",
         "options"
       ],
@@ -39264,6 +39578,41 @@
       "outputsHandled": []
     },
     {
+      "component": "ShoppingListBrowserComponent",
+      "selector": "fd-shopping-list-browser",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "focusSearch",
+        "initialPage",
+        "lists",
+        "selectedId"
+      ],
+      "outputsHandled": [
+        "createRequested",
+        "listSelected"
+      ]
+    },
+    {
+      "component": "ShoppingListBrowserComponent",
+      "selector": "fd-shopping-list-browser",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "initialPage",
+        "lists",
+        "selectedId"
+      ],
+      "outputsHandled": [
+        "createRequested",
+        "listSelected"
+      ]
+    },
+    {
       "component": "ShoppingListItemsPanelComponent",
       "selector": "fd-shopping-list-items-panel",
       "componentPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
@@ -39277,6 +39626,7 @@
       "outputsHandled": [
         "itemAdd",
         "itemCheckedChange",
+        "itemEdit",
         "itemRemove"
       ]
     },
@@ -39286,22 +39636,18 @@
       "componentPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
+        "canClearPurchased",
         "canDeleteList",
+        "initialPage",
         "isLoading",
         "isMobile",
         "listSelectField",
         "lists",
         "renameRequestedListId"
       ],
-      "outputsHandled": [
-        "clearListById",
-        "createList",
-        "deleteListById",
-        "renameListById",
-        "renameRequestHandled"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "SidebarComponent",

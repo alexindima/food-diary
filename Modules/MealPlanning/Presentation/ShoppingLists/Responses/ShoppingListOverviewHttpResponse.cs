@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Responses;
+
+public sealed record ShoppingListOverviewHttpResponse(ShoppingListHttpResponse? SelectedList, ShoppingListPageHttpResponse Lists);

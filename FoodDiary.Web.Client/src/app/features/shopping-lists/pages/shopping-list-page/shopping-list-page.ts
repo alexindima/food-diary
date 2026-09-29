@@ -19,7 +19,10 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import { ShoppingListFacade } from '../../lib/shopping-list.facade';
+import { ShoppingItemEditComponent } from '../../dialogs/shopping-item-edit/shopping-item-edit';
+import { ShoppingMergePreviewComponent } from '../../dialogs/shopping-merge-preview/shopping-merge-preview';
+import { type ShoppingListDraftItem, ShoppingListFacade } from '../../lib/shopping-list.facade';
+import { planShoppingConsolidation, type ShoppingMergeGroup } from '../../lib/shopping-list-consolidation';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel';
 import { ShoppingListManageControlsComponent } from '../shopping-list-manage-controls/shopping-list-manage-controls';
@@ -57,7 +60,9 @@ export class ShoppingListPageComponent {
     protected readonly items = this.facade.items;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
-    protected readonly lists = this.facade.lists;
+    protected readonly isCreating = this.facade.isCreating;
+    protected readonly initialPage = this.facade.initialPage;
+    protected readonly lists = this.facade.navigationLists;
     protected readonly renameRequestedListId = this.facade.renameRequestedListId;
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
@@ -140,6 +145,53 @@ export class ShoppingListPageComponent {
             category: null,
             note: null,
         });
+    }
+
+    protected editItem(itemId: string): void {
+        const item = this.items().find(entry => entry.id === itemId);
+        const listId = this.list()?.id;
+        if (item === undefined) {
+            return;
+        }
+        this.dialogService
+            .open<ShoppingItemEditComponent, ShoppingListDraftItem, ShoppingListDraftItem>(ShoppingItemEditComponent, {
+                preset: 'form',
+                data: {
+                    name: item.name,
+                    amount: item.amount ?? null,
+                    unit: item.unit ?? null,
+                    category: item.category ?? null,
+                    note: item.note ?? null,
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(draft => {
+                if (draft !== undefined && this.list()?.id === listId) {
+                    this.facade.editItem(itemId, draft);
+                }
+            });
+    }
+
+    protected mergeDuplicates(): void {
+        const listId = this.list()?.id;
+        if (listId === undefined || this.isSaving() || this.isLoading()) {
+            return;
+        }
+        const expected = this.items();
+        const plan = planShoppingConsolidation(expected);
+        this.dialogService
+            .open<ShoppingMergePreviewComponent, ShoppingMergeGroup[], boolean>(ShoppingMergePreviewComponent, {
+                preset: 'confirm',
+                data: plan.groups,
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed === true) {
+                    this.facade.applyConsolidation(listId, expected, plan.items);
+                }
+            });
     }
 
     protected removeItem(itemId: string): void {
@@ -250,8 +302,33 @@ export class ShoppingListPageComponent {
             });
     }
 
-    protected createNewList(): void {
-        this.facade.createNewList();
+    protected clearPurchased(): void {
+        const current = this.list();
+        const ids = this.items()
+            .filter(item => item.isChecked)
+            .map(item => item.id);
+        if (current === null || ids.length === 0 || this.isLoading() || this.isSaving()) {
+            return;
+        }
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED'),
+            message: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED_CONFIRM', { count: ids.length }),
+            confirmLabel: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED'),
+            cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
+        };
+        this.dialogService
+            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, { preset: 'confirm', data })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed === true) {
+                    this.facade.removePurchased(current.id, ids);
+                }
+            });
+    }
+
+    protected createNewList(name?: string | void): void {
+        this.facade.createNewList(name);
     }
 
     protected startShoppingListTour(force = true): void {

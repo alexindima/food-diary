@@ -10,11 +10,11 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 107,
+    "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 132,
-    "criticalSymbolsWithoutTestReferences": 38,
-    "explicitDebtMarkers": 11
+    "componentsWithoutDirectSpecs": 134,
+    "criticalSymbolsWithoutTestReferences": 39,
+    "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -973,11 +973,35 @@
       "specPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.spec.ts"
     },
     {
+      "class": "ShoppingItemEditComponent",
+      "selector": "fd-shopping-item-edit",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.spec.ts"
+    },
+    {
+      "class": "ShoppingListBrowserDialogComponent",
+      "selector": "fd-shopping-list-browser-dialog",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "specPath": null
+    },
+    {
       "class": "ShoppingListPickerComponent",
       "selector": "fd-shopping-list-picker",
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "specPath": null
+    },
+    {
+      "class": "ShoppingMergePreviewComponent",
+      "selector": "fd-shopping-merge-preview",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
       "specPath": null
     },
     {
@@ -5039,11 +5063,31 @@
       "specPath": null
     },
     {
+      "class": "ShoppingListBrowserDialogComponent",
+      "selector": "fd-shopping-list-browser-dialog",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "ShoppingListPickerComponent",
       "selector": "fd-shopping-list-picker",
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "ShoppingMergePreviewComponent",
+      "selector": "fd-shopping-merge-preview",
+      "feature": "shopping-lists",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5236,6 +5280,16 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetShoppingListOverviewQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
+      "line": 12,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5511,6 +5565,11 @@
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "line": 53,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
+      "line": 104,
       "marker": "#pragma warning disable"
     },
     {
