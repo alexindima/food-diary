@@ -9,6 +9,9 @@
     accent="primary"
     [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
 >
+    <p class="fd-ui-text-muted fd-ui-body-sm" [hidden]="recipeForm.visibility().value() !== 'Public'">
+        {{ 'PUBLIC_RECIPES.PUBLISH_INGREDIENTS_HINT' | translate }}
+    </p>
     <div class="recipe-basic-info__hero fd-grid fd-gap-lg">
         <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
             <fd-ui-input

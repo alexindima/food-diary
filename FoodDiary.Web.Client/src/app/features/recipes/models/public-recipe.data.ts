@@ -1,5 +1,6 @@
 import type { RecipeCategory } from './recipe-category';
 export type PublicRecipeIngredient = {
+    productId?: string | null;
     name: string | null;
     amount: number | null;
     unit: string | null;

@@ -111,5 +111,19 @@ public sealed class PublicRecipeQueryTests {
             () => Assert.Equal("https://example.com/step.jpg", Assert.Single(result.Steps[0].Images)));
         Assert.Equal("Salt", Assert.Single(result.MissingIngredientNames));
         Assert.Empty((overview with { MissingIngredientCount = 0 }).ToPublicModel().MissingIngredientNames);
+        RecipeOverviewReadItem published = overview with {
+            Steps = [overview.Steps[0] with { Ingredients = [source with { PublicName = "Published flour", PublicUnit = "G" }] }],
+        };
+        PublicRecipeIngredientModel snapshot = published.ToPublicModel().Steps[0].Ingredients[0];
+        Assert.True(snapshot.IsAvailable);
+        Assert.Equal("Published flour", snapshot.Name);
+        Assert.Equal(100, snapshot.Amount);
+        Assert.Equal("G", snapshot.Unit);
+        Assert.Null(snapshot.ProductId);
+        Assert.Null(snapshot.RecipeId);
+        PublicRecipeIngredientModel accessible = (published with {
+            Steps = [overview.Steps[0] with { Ingredients = [source with { ProductIsAccessible = true }] }],
+        }).ToPublicModel().Steps[0].Ingredients[0];
+        Assert.Equal(source.ProductId, accessible.ProductId);
     }
 }

@@ -2056,6 +2056,14 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeIngredient", b => {
+                b.Property<string>("PublicName")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
+
+                b.Property<string>("PublicUnit")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
+
                 b.Property<string>("AmountText")
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");

@@ -105,3 +105,15 @@ it.each([2, LARGE_RECIPE_SERVINGS])('limits servings while preserving larger ori
     increase?.click();
     expect(fixture.componentInstance.servings()).toBe(limit);
 });
+
+it('hides shopping actions when all ingredients are unavailable', () => {
+    TestBed.configureTestingModule({ imports: [PublicIngredientsComponent], providers: [provideRouter([]), provideTranslateTesting()] });
+    const recipe = publicRecipeFixture();
+    recipe.steps[0].ingredients = [{ name: null, amount: null, unit: null, amountText: null, recipeId: null, isAvailable: false }];
+    const fixture = TestBed.createComponent(PublicIngredientsComponent);
+    fixture.componentRef.setInput('recipe', recipe);
+    fixture.componentRef.setInput('servings', recipe.servings);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector<HTMLElement>('.shopping-toolbar')?.style.display).toBe('none');
+});

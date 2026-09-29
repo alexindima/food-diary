@@ -25,6 +25,7 @@ import {
 } from '../dialogs/recipe-language-dialog/recipe-language-dialog';
 import type { Recipe, RecipeDto } from '../models/recipe.data';
 import { normalizeRecipeLanguage } from './recipe-language.utils';
+import { RecipePublicationService } from './recipe-publication.service';
 
 export type RecipeNutritionSummary = {
     calories: number;
@@ -43,6 +44,8 @@ export type RecipeStepsNutritionState = readonly StepFormValues[];
 
 @Injectable()
 export class RecipeManageFacade {
+    private readonly publication = inject(RecipePublicationService);
+
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
@@ -51,6 +54,9 @@ export class RecipeManageFacade {
 
     private readonly userFacade = inject(UserFacade);
     public readonly preferredLanguage = computed(() => normalizeRecipeLanguage(this.userFacade.user()?.language));
+    public async preparePublicationAsync(data: RecipeDto): Promise<RecipeDto | null> {
+        return this.publication.prepareAsync(data);
+    }
     public async confirmRecipeLanguageAsync(detected: string, selected: string): Promise<RecipeLanguageChoice | undefined> {
         return firstValueFrom(
             this.dialogService

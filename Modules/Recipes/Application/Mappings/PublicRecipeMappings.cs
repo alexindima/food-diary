@@ -34,11 +34,15 @@ public static class PublicRecipeMappings {
 
     private static PublicRecipeIngredientModel ToPublicIngredient(RecipeOverviewIngredientReadItem ingredient) {
         bool accessible = ingredient.ProductIsAccessible && ingredient.NestedRecipeIsAccessible;
+        // Legacy ingredients without an explicitly published description remain redacted.
+        if (!accessible && ingredient.PublicName is not null) {
+            return new PublicRecipeIngredientModel(ingredient.PublicName, ingredient.Amount, ingredient.PublicUnit, AmountText: null, RecipeId: null, IsAvailable: true);
+        }
         return new PublicRecipeIngredientModel(
             accessible ? ingredient.TextName ?? ingredient.ProductName ?? ingredient.NestedRecipeName : null,
             accessible && ingredient.TextName is null ? ingredient.Amount : null,
             accessible ? GetUnit(ingredient) : null,
             accessible ? ingredient.AmountText : null,
-            accessible ? ingredient.NestedRecipeId : null, accessible);
+            accessible ? ingredient.NestedRecipeId : null, accessible) { ProductId = accessible ? ingredient.ProductId : null };
     }
 }

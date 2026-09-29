@@ -1,0 +1,19 @@
+<!-- Native image buttons keep photo geometry; full-screen viewing uses the shared UI-kit gallery. -->
+<button type="button" class="cover" [attr.aria-label]="'PUBLIC_RECIPES.ENLARGE' | translate" (click)="preview()">
+    <img [src]="activeImage()" [alt]="name()" />
+</button>
+@if (images().length > 1) {
+    <div class="thumbnails">
+        @for (url of images(); track url) {
+            <button
+                type="button"
+                [class.selected]="$index === activeIndex()"
+                [attr.aria-pressed]="$index === activeIndex()"
+                [attr.aria-label]="'PUBLIC_RECIPES.PHOTO_NUMBER' | translate: { number: $index + 1 }"
+                (click)="selected.set($index)"
+            >
+                <img alt="" loading="lazy" [src]="url" />
+            </button>
+        }
+    </div>
+}

@@ -1,0 +1,23 @@
+<fd-ui-dialog [title]="'RECIPE_PUBLICATION.TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+    <p>{{ 'RECIPE_PUBLICATION.MESSAGE' | translate }}</p>
+    <ul>
+        @for (name of data.names; track $index) {
+            <li>{{ name }}</li>
+        }
+    </ul>
+    <p>{{ 'RECIPE_PUBLICATION.PUBLISH_HINT' | translate }}</p>
+    <p>{{ 'RECIPE_PUBLICATION.TEXT_HINT' | translate }}</p>
+    @if (!data.canPublish) {
+        <p class="fd-ui-text-muted">{{ 'RECIPE_PUBLICATION.OWNER_ONLY' | translate }}</p>
+    }
+    <div fdUiDialogFooter class="fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button variant="secondary" fill="text" (click)="dialog.close()">{{ 'COMMON.CANCEL' | translate }}</fd-ui-button>
+        <fd-ui-button variant="outline" (click)="dialog.close('text')">{{ 'RECIPE_PUBLICATION.TEXT' | translate }}</fd-ui-button>
+        <fd-ui-button
+            [disabled]="!data.canPublish"
+            [disabledReason]="'RECIPE_PUBLICATION.OWNER_ONLY' | translate"
+            (click)="dialog.close('publish')"
+            >{{ 'RECIPE_PUBLICATION.PUBLISH' | translate }}</fd-ui-button
+        >
+    </div>
+</fd-ui-dialog>

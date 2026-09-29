@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1546,
+    "candidateFields": 1550,
     "credential": 156,
     "identity": 174,
-    "health": 702,
+    "health": 704,
     "financial": 129,
-    "privateContent": 385,
-    "boundaryFiles": 202,
+    "privateContent": 387,
+    "boundaryFiles": 203,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -4772,6 +4772,13 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Products/Application/Models/PublicProductModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "CaloriesFrom",
       "type": "double?",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
@@ -4846,6 +4853,13 @@
       "type": "double?",
       "path": "Modules/Products/Presentation/Responses/ProductSearchSuggestionHttpResponse.cs",
       "line": 11
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Products/Presentation/Responses/PublicProductHttpResponse.cs",
+      "line": 4
     },
     {
       "category": "health",
@@ -9952,6 +9966,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Products/Application/Models/PublicProductModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "Modules/Products/Contracts/Models/ProductImageReadItem.cs",
@@ -10208,6 +10229,13 @@
       "type": "string?",
       "path": "Modules/Products/Presentation/Responses/ProductSearchSuggestionHttpResponse.cs",
       "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Products/Presentation/Responses/PublicProductHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -11848,6 +11876,14 @@
     },
     {
       "path": "Modules/Products/Presentation/Responses/ProductSearchSuggestionHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Products/Presentation/Responses/PublicProductHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"

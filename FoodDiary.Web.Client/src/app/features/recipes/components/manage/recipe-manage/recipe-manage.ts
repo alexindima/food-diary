@@ -75,6 +75,7 @@ export class RecipeManageComponent {
     private readonly nutritionFormManager: RecipeNutritionFormManager;
     private lastRecipe: Recipe | null = null;
     private readonly checkingLanguage = signal(false);
+    private readonly checkingPublication = signal(false);
 
     private readonly recipeManageFacade = inject(RecipeManageFacade);
     private readonly languageVersion = signal(0);
@@ -89,7 +90,7 @@ export class RecipeManageComponent {
     protected readonly stepPhotosUploading = signal(false);
     protected readonly photosUploading = signal(false);
     protected readonly anyPhotosUploading = computed(() => this.photosUploading() || this.stepPhotosUploading());
-    protected isSubmitting = this.recipeManageFacade.isSubmitting;
+    protected readonly isSubmitting = computed(() => this.recipeManageFacade.isSubmitting() || this.checkingPublication());
     protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
     protected readonly importText = signal('');
@@ -327,7 +328,13 @@ export class RecipeManageComponent {
     }
 
     protected onSubmit(): void {
-        if (this.isSubmitting() || this.checkingLanguage() || this.photosUploading() || this.stepPhotosUploading()) {
+        if (
+            this.isSubmitting() ||
+            this.checkingLanguage() ||
+            this.checkingPublication() ||
+            this.photosUploading() ||
+            this.stepPhotosUploading()
+        ) {
             return;
         }
 
@@ -390,6 +397,25 @@ export class RecipeManageComponent {
     }
 
     private persistRecipe(recipeData: RecipeDto): void {
+        void this.persistPublishedRecipeAsync(recipeData);
+    }
+
+    private async persistPublishedRecipeAsync(recipeData: RecipeDto): Promise<void> {
+        this.checkingPublication.set(true);
+        const formVersion = JSON.stringify(this.prepareRecipeDto());
+        try {
+            const prepared = await this.recipeManageFacade.preparePublicationAsync(recipeData);
+            if (prepared !== null && formVersion === JSON.stringify(this.prepareRecipeDto())) {
+                this.savePreparedRecipe(prepared);
+            }
+        } catch {
+            this.recipeManageFacade.setGlobalError('RECIPE_PUBLICATION.ERROR');
+        } finally {
+            this.checkingPublication.set(false);
+        }
+    }
+
+    private savePreparedRecipe(recipeData: RecipeDto): void {
         const existingRecipe = this.recipe();
         this.recipeManageFacade.clearGlobalError();
 

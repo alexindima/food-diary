@@ -258,7 +258,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         nested.ApplyComputedNutrition(300, 12, 8, 40, 4, 0);
         var outer = Recipe.Create(owner.Id, "Public meal", servings: 2, visibility: Visibility.Public);
         RecipeStep step = outer.AddStep(1, "Combine");
-        step.AddProductIngredient(product.Id, 100);
+        step.AddProductIngredient(product.Id, 100).SetPublicDescription("Published ingredient", "G");
         step.AddNestedRecipeIngredient(nested.Id, 1);
         outer.ApplyComputedNutrition(350, 16, 9, 50, 4, 0);
         context.AddRange(owner, reader, product, nested, outer);
@@ -272,6 +272,9 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         RecipeOverviewReadItem item = Assert.Single(result).Value;
         Assert.Equal(350, item.TotalCalories);
+        Assert.Equal("Published ingredient", item.Steps.Single().Ingredients[0].PublicName);
+        Assert.Equal("G", item.Steps.Single().Ingredients[0].PublicUnit);
+        Assert.Null(item.Steps.Single().Ingredients[1].PublicName);
         RecipeOverviewIngredientReadItem[] ingredients = [.. item.Steps.Single().Ingredients];
         Assert.All(ingredients, ingredient => {
             Assert.Null(ingredient.ProductId);

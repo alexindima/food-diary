@@ -55,7 +55,7 @@ public sealed class UpdateProductCommandHandler(
             product.UserId,
             includePublic: false,
             cancellationToken).ConfigureAwait(false);
-        if (usageCount > 0) {
+        if (usageCount > 0 && !IsVisibilityOnlyUpdate(command)) {
             return Result.Failure<ProductModel>(Errors.Validation.Invalid(
                 nameof(command.ProductId),
                 "Product is already used in meals or recipes and cannot be updated"));
@@ -83,5 +83,23 @@ public sealed class UpdateProductCommandHandler(
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
     }
+
+    // Visibility does not alter historical meal/recipe quantities or nutrition.
+    // Any accompanying content edit still follows the existing usage restriction.
+    private static bool IsVisibilityOnlyUpdate(UpdateProductCommand command) => command is {
+        Visibility: not null,
+        Barcode: null, ClearBarcode: false,
+        Name: null,
+        Brand: null, ClearBrand: false,
+        ProductType: null,
+        Category: null, ClearCategory: false,
+        Description: null, ClearDescription: false,
+        Comment: null, ClearComment: false,
+        ImageUrl: null, ClearImageUrl: false,
+        ImageAssetId: null, ClearImageAssetId: false, ImageAssetIds: null,
+        BaseUnit: null, BaseAmount: null, DefaultPortionAmount: null,
+        CaloriesPerBase: null, ProteinsPerBase: null, FatsPerBase: null,
+        CarbsPerBase: null, FiberPerBase: null, AlcoholPerBase: null,
+    };
 
 }

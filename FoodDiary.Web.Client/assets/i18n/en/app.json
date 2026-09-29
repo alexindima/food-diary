@@ -4116,7 +4116,12 @@
         "SHOPPING_ADD_ALL": "Add all",
         "SHOPPING_ALL_ADDED": "All added",
         "SHOPPING_BULK_TITLE": "Add to shopping list",
-        "SHOPPING_COUNT": "Ingredients to add: {{count}}"
+        "SHOPPING_COUNT": "Ingredients to add: {{count}}",
+        "PUBLISH_INGREDIENTS_HINT": "Ingredient names and quantities in a public recipe are visible to everyone, including nested recipe names. Before saving, you can make private products public or replace them with text.",
+        "PRODUCT_DETAILS": "Product",
+        "PRODUCT_NUTRITION_BASE": "Nutrition per",
+        "PRODUCT_UNAVAILABLE": "This product is unavailable or is no longer public.",
+        "PRODUCT_VIEW": "View product: {{name}}"
     },
     "RECIPE_LANGUAGE": {
         "LABEL": "Recipe language",
@@ -4145,5 +4150,15 @@
         "sauces": "Sauces & dressings",
         "snacks": "Snacks",
         "preserves": "Preserves"
+    },
+    "RECIPE_PUBLICATION": {
+        "TITLE": "This recipe contains private products",
+        "MESSAGE": "Before saving this public recipe, choose how to handle these products:",
+        "OWNER_ONLY": "You can only change visibility for your own products.",
+        "TEXT": "Replace with text and save",
+        "TEXT_HINT": "Replace with text: names and quantities stay in the recipe while products remain private. These ingredients will no longer contribute to automatic nutrition calculations, and their quantities will not scale with servings.",
+        "PUBLISH": "Make public and save",
+        "ERROR": "Could not verify or change product visibility. The recipe was not saved. Try again: some products may already have changed visibility.",
+        "PUBLISH_HINT": "Make public: these product cards will become available to everyone. Visibility changes are saved separately from the recipe."
     }
 }

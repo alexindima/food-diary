@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
@@ -9,7 +9,7 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
-import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
+import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../models/recipe.data';
 import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { RecipeManageComponent } from './recipe-manage';
 
@@ -34,6 +34,7 @@ const MANUAL_FIBER = 2;
 const PRODUCT_CALORIES = 200;
 
 type RecipeManageFacadeMock = {
+    preparePublicationAsync: ReturnType<typeof vi.fn>;
     preferredLanguage: ReturnType<typeof signal<string>>;
     confirmRecipeLanguageAsync: ReturnType<typeof vi.fn>;
     globalError: ReturnType<typeof signal<string | null>>;
@@ -151,6 +152,7 @@ describe('RecipeManageComponent submission', () => {
         patchValidManualRecipe(component);
 
         component['onSubmit']();
+        await waitForAsyncTasksAsync();
 
         expect(facade.clearGlobalError).toHaveBeenCalledTimes(1);
         expect(facade.addRecipe).toHaveBeenCalledWith(
@@ -186,6 +188,7 @@ describe('RecipeManageComponent submission', () => {
         });
 
         component['onSubmit']();
+        await waitForAsyncTasksAsync();
 
         expect(facade.updateRecipe).toHaveBeenCalledWith(
             RECIPE_ID,
@@ -411,6 +414,9 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
         confirmRecipeLanguageAsync: vi.fn().mockResolvedValue(undefined),
         globalError: signal(null),
         isSubmitting: signal(false),
+        preparePublicationAsync: vi
+            .fn<(data: RecipeDto) => Promise<RecipeDto | null>>()
+            .mockImplementation(async data => firstValueFrom(of(data))),
         addRecipe: vi.fn(),
         applyItemSelection: vi.fn(),
         calculateAutoSummary: vi.fn().mockReturnValue(EMPTY_SUMMARY),

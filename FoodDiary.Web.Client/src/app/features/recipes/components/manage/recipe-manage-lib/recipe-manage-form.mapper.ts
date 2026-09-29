@@ -112,7 +112,7 @@ export function buildRecipeDto(
         visibility: formValue.visibility,
         calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
         ...buildManualRecipeTotals(formValue, scaleMode, servings, toRecipeTotal),
-        steps: mapRecipeStepsToDto(formValue.steps),
+        steps: mapRecipeStepsToDto(formValue.steps, formValue.visibility === RecipeVisibility.Public),
     };
 }
 
@@ -170,11 +170,11 @@ export function normalizeRecipeVisibility(value?: RecipeVisibility | string | nu
     return value.toString().toUpperCase() === RecipeVisibility.Private.toUpperCase() ? RecipeVisibility.Private : RecipeVisibility.Public;
 }
 
-function mapRecipeStepsToDto(steps: RecipeFormValues['steps']): RecipeDto['steps'] {
-    return steps.map(step => mapRecipeStepToDto(step));
+function mapRecipeStepsToDto(steps: RecipeFormValues['steps'], publish: boolean): RecipeDto['steps'] {
+    return steps.map(step => mapRecipeStepToDto(step, publish));
 }
 
-function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto['steps'][number] {
+function mapRecipeStepToDto(step: RecipeFormValues['steps'][number], publish: boolean): RecipeDto['steps'][number] {
     return {
         title: step.title ?? null,
         imageUrl: step.imageUrl?.url ?? null,
@@ -186,6 +186,12 @@ function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto[
         ingredients: step.ingredients
             .filter(ingredient => typeof ingredient.textName === 'string' || hasProductId(ingredient) || hasNestedRecipeId(ingredient))
             .map(ingredient => ({
+                ...(publish && typeof ingredient.textName !== 'string'
+                    ? {
+                          publicName: ingredient.foodName,
+                          publicUnit: hasNestedRecipeId(ingredient) ? 'serving' : ingredient.food?.baseUnit,
+                      }
+                    : {}),
                 productId: resolveProductId(ingredient),
                 nestedRecipeId: resolveNestedRecipeId(ingredient),
                 amount: typeof ingredient.textName === 'string' ? 0 : (ingredient.amount ?? 0),

@@ -558,8 +558,10 @@ public partial class ProductsFeatureTests {
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
-    [Fact]
-    public async Task UpdateProductCommandHandler_WhenProductIsUsed_ReturnsValidationFailure() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task UpdateProductCommandHandler_WhenProductIsUsed_AllowsOnlyVisibilityUpdate(bool visibilityOnly) {
         var user = User.Create("update-product-used@example.com", "hash");
         var product = Product.Create(
             user.Id,
@@ -585,13 +587,22 @@ public partial class ProductsFeatureTests {
             FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
-        Result<ProductModel> result = await handler.Handle(
-            CreateUpdateProductCommand(user.Id.Value, product.Id.Value, name: "Updated"),
-            CancellationToken.None);
+        UpdateProductCommand command = CreateUpdateProductCommand(user.Id.Value, product.Id.Value,
+            name: visibilityOnly ? null : "Updated") with { Visibility = nameof(Visibility.Public), };
+        Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Equal("Validation.Invalid", result.Error.Code);
-        Assert.False(repository.UpdateCalled);
+        if (visibilityOnly) {
+            ResultAssert.Success(result);
+            Assert.Equal(Visibility.Public, product.Visibility);
+            Assert.True(repository.UpdateCalled);
+            Assert.Equal("Apple", product.Name);
+            Assert.Equal(52, product.CaloriesPerBase);
+        } else {
+            ResultAssert.Failure(result);
+            Assert.Equal("Validation.Invalid", result.Error.Code);
+            Assert.False(repository.UpdateCalled);
+            Assert.Equal(Visibility.Private, product.Visibility);
+        }
         Assert.Empty(cleanup.RequestedAssetIds);
     }
 

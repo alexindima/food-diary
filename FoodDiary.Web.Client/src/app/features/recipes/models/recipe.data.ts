@@ -155,6 +155,8 @@ export type RecipeStepDto = {
 };
 
 export type RecipeIngredientDto = {
+    publicName?: string | null;
+    publicUnit?: string | null;
     textName?: string | null;
     amountText?: string | null;
     productId?: string;

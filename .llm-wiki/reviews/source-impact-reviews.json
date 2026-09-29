@@ -208,13 +208,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "8800af2866b6a57df60f5d3346c27f0307142af9aafd65c7f50f40ed91bd4109"
+          "sha256": "af03cdb1e92569556d70bb184dc2d146634ee095122d81118b4faa27b70cfc11"
         }
       ],
-      "reason": "Reviewed additive nullable authorName in PublicRecipeHttpResponse. Full OpenAPI snapshot updated and SwaggerJson_MatchesFullPresentationContractSnapshot passed; existing fields and routes are unchanged. The API compatibility workflow remains accurate.",
+      "reason": "Reviewed additive public product description and ordered images fields; generated Swagger snapshot passes its integration test and private products still return unavailable.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:33:37.0275042Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:32.3710128Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7c9479af4e536660f8a865e77d33cf9f6bf9c2848ba07fe3ec7fe5d41b18250e"
+          "sha256": "5a1435434fcc9abaa9fdcd8559fff117860b999a7ff71d571371fe6b9dc8a96b"
         }
       ],
-      "reason": "Reviewed regenerated architecture health: PublicRecipeGalleryComponent now has a direct spec and leaves the missing-spec list; dependency graph and enforcement are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:58.180122Z"
+      "reason": "Gallery remains in Products frontend feature and reuses UI-kit lightbox; public query and response retain existing Products ownership with no new dependencies.",
+      "baseRef": "HEAD",
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:29.4058597Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,21 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "5ae874e3007773b3336826ada723f2172698f79b4353327e2cdf264b5bcc7c5e"
-        },
-        {
-          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
-          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
-        },
-        {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
+          "sha256": "7fa8572e067d5b808251860c33ee69fc1a5b41c130c7a2ab00b70563a29200b6"
         }
       ],
-      "reason": "Reviewed canonical shared contract namespaces and public recipe query mappings, length constraints and OpenAPI snapshot. Owner contract guidance remains current; API compatibility against the last successful CI baseline passed.",
-      "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:26.0644741Z"
+      "reason": "Reviewed optional publication DTO fields and anonymous public product projection; Swagger integration snapshot and additive compatibility checks passed. Existing product PATCH now permits visibility-only updates for used products; 18 handler tests retain restrictions on accompanying content edits.",
+      "baseRef": "HEAD",
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-28T21:44:11.3541348Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -509,13 +501,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "dbbf1bc7b2f20f1a2b24efdfc6e6c15fabb70bbc8d63ff2eec8240f5492ca150"
+          "sha256": "b45cdffcd61be5c6f888e13167d6d2bd66a258502d194786f822016734a06818"
         }
       ],
-      "reason": "Reviewed refreshed source locations and line counts after formatting recipe ingredient construction and frontend files, plus the behavior-preserving recipe script-language helper extraction. Runtime declarations and security boundaries remain unchanged; recipe and frontend regression tests validate the repaired fixtures.",
-      "baseRef": "origin/master",
-      "gitHead": "b7a9c9f36dd65e6d1250104cc907ad911d3aa7b4",
-      "reviewedAtUtc": "2026-09-28T00:36:21.7035177Z"
+      "reason": "Reviewed nullable bounded snapshots and paired migration. PostgreSQL upgrade test preserves author snapshots/private recipes and covers all units. Down retains snapshots because later edits cannot be distinguished safely. No runtime aggregate ownership change.",
+      "baseRef": "HEAD",
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-28T21:44:09.0966564Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -783,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4bfb178da2d30bb8b9bb6dc57ab9522ebb31a11824b02b7cbeb6a9a48bd9e3d6"
+          "sha256": "3e33455e09b1b4ab8d500a817bc3bed6360c62c34bdafedcc6ee4189377f47a7"
         }
       ],
-      "reason": "Public author field selects first name only, with no email or surname fallback and null when absent. Anonymous visibility is preserved and integration test passes. Privacy workflow remains accurate.",
+      "reason": "Reviewed current publication boundary: user-authorized one-time backfill publishes only missing product names and units in public recipes. Private recipe and product visibility remain unchanged. New save choices explicitly describe publication or text conversion; anonymous private product card stays 404.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:35:49.3782147Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-28T21:44:14.1457870Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ed427f093436b75cbcbc7f9d2a730e6a1c77f4e18ffb995a30c759a20f16ba4c"
+          "sha256": "4479267c90257d79a13f36311a0a40caa969a622f1bef4a90a65d05de544b20c"
         }
       ],
-      "reason": "Regenerated quality index includes author read integration test and existing recipe tests. Test references remain navigation evidence; executed validation includes PostgreSQL projection, API snapshot, 17 frontend tests and 2111 architecture tests. Quality risk workflow remains accurate.",
+      "reason": "Focused public query tests (2), preview component tests (3), Swagger snapshot test and frontend production build pass. Browser checks cover two photos, single photo, no photo and mobile without console errors.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:36:22.2385198Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:31.4103750Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e3229a2a43d03ed7b21a2151256b216ec3398b2ba3adec52826cd9b815377271"
+          "sha256": "6d78c687720d26f921198cc572c9c9e042255449e5ad4948323dc7aa037c9790"
         }
       ],
-      "reason": "Author projection uses the existing scoped read context. No provider, host registration, job, or endpoint route changes. API build and 2111 architecture tests passed. Runtime impact workflow remains accurate.",
+      "reason": "Public product response adds description and image URLs using existing read model; no new service, configuration, provider or background work. Local API restarted and real uploaded images verified.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:35:56.8136969Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:35.3699453Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ed427f093436b75cbcbc7f9d2a730e6a1c77f4e18ffb995a30c759a20f16ba4c"
+          "sha256": "4479267c90257d79a13f36311a0a40caa969a622f1bef4a90a65d05de544b20c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e3229a2a43d03ed7b21a2151256b216ec3398b2ba3adec52826cd9b815377271"
+          "sha256": "6d78c687720d26f921198cc572c9c9e042255449e5ad4948323dc7aa037c9790"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4bfb178da2d30bb8b9bb6dc57ab9522ebb31a11824b02b7cbeb6a9a48bd9e3d6"
+          "sha256": "3e33455e09b1b4ab8d500a817bc3bed6360c62c34bdafedcc6ee4189377f47a7"
         }
       ],
-      "reason": "Author first name is read through the existing composition projection; generated indexes add no new provider, credentials, or foreign writes. Integration tests verify first-name-only output and missing names. Existing workflow remains accurate.",
+      "reason": "Public visibility guard remains before returning description and image URLs; private product test passes. No owner comments, credentials or editing controls are included in public preview.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:34:58.1742990Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:34.4709997Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5c50367c084dd198801daf7068345266e3bb360b25654225a9f17b50edcdbef2"
+          "sha256": "9eb0f9dd69c277113d7db283617f3cc0ecec9e4ede8542def5c98f67ac9da7b5"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "110783a3381a01c20cd7656ebf697da7cf51ebca1658d41ac8bb642ad173e79a"
+          "sha256": "a9dd6e7f9097c4338444a6172e02e8544c6b9069d9f8eb123233783e50b88a7e"
         }
       ],
-      "reason": "Generated frontend indexes reflect optional authorName and nutrition styling. Existing public recipe routes, resolver and facade are unchanged. Existing workflow remains accurate.",
+      "reason": "Verified recipe eye action through preview service, public product API, gallery thumbnail selection and shared lightbox; optional gallery absence uses full-width product details.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:35:00.0944594Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:30.3769958Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5c50367c084dd198801daf7068345266e3bb360b25654225a9f17b50edcdbef2"
+          "sha256": "9eb0f9dd69c277113d7db283617f3cc0ecec9e4ede8542def5c98f67ac9da7b5"
         }
       ],
-      "reason": "Optional authorName is additive and rendered conditionally; existing routes and controls unchanged. Browser checks pass RU/EN and mobile; 17 frontend tests pass. Contract review instructions remain accurate.",
+      "reason": "Reviewed optional description/images response mapping, legacy single-cover fallback, bounded deduplicated gallery and selected lightbox index. Three component tests and desktop/mobile browser checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
-      "reviewedAtUtc": "2026-09-28T19:35:38.9895537Z"
+      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
+      "reviewedAtUtc": "2026-09-29T07:07:33.4146619Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -17,6 +17,7 @@ import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import { type Recipe, RecipeVisibility } from '../models/recipe.data';
 import { type RecipeIngredientSelectionTarget, RecipeManageFacade, type RecipeStepsNutritionState } from './recipe-manage.facade';
+import { RecipePublicationService } from './recipe-publication.service';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 150;
 const APPLE_CALORIES = 52;
@@ -71,6 +72,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         providers: [
             RecipeManageFacade,
+            { provide: RecipePublicationService, useValue: { prepareAsync: vi.fn() } },
             { provide: UserFacade, useValue: { user: signal({ language: 'en' }) } },
             { provide: RecipeService, useValue: recipeService },
             { provide: NavigationService, useValue: navigationService },

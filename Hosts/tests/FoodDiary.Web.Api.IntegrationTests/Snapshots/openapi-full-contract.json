@@ -13885,6 +13885,55 @@
       ]
     },
     {
+      "Path": "/api/v{version}/products/public/{id}",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "404",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/PublicProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/PublicProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/PublicProductHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/products/recent",
       "Operations": [
         {
@@ -30488,6 +30537,104 @@
       ]
     },
     {
+      "Name": "PublicProductHttpResponse",
+      "Properties": [
+        {
+          "Name": "alcohol",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "baseAmount",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "baseUnit",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "brand",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "calories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "carbs",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "fats",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "fiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "images",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "name",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "proteins",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "PublicRecipeHttpResponse",
       "Properties": [
         {
@@ -30692,6 +30839,13 @@
           "Name": "name",
           "Required": false,
           "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "productId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
           "Nullable": true
         },
         {
@@ -31182,6 +31336,18 @@
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "publicName",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "publicUnit",
+          "Required": false,
+          "Type": "string",
           "Nullable": true
         },
         {

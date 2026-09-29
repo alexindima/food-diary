@@ -1,0 +1,33 @@
+<fd-ui-dialog size="lg" [title]="'PUBLIC_RECIPES.PRODUCT_DETAILS' | translate" (close)="ref.close()">
+    @if (product(); as item) {
+        <div class="product-layout" [class.with-photo]="images().length > 0">
+            @if (images().length > 0) {
+                <fd-public-product-gallery [images]="images()" [name]="item.name" />
+            }
+            <div class="product-details">
+                <h2>{{ item.name }}</h2>
+                <p class="brand fd-ui-text-muted" [hidden]="!item.brand">{{ item.brand }}</p>
+                <p class="description" [hidden]="!item.description">{{ item.description }}</p>
+                <p class="nutrition-heading">
+                    {{ 'PUBLIC_RECIPES.PRODUCT_NUTRITION_BASE' | translate }} {{ item.baseAmount | localizedNumber: language() : 0 : 2 }}
+                    {{ `GENERAL.UNITS.${item.baseUnit}` | translate }}
+                </p>
+                <dl>
+                    @for (nutrient of nutrients; track nutrient.key) {
+                        <div [class.calories]="nutrient.key === 'calories'">
+                            <dt>{{ `PUBLIC_RECIPES.${nutrient.label}` | translate }}</dt>
+                            <dd>
+                                {{ item[nutrient.key] | localizedNumber: language() : 0 : 1 }}
+                                {{ `PUBLIC_RECIPES.${nutrient.unit}` | translate }}
+                            </dd>
+                        </div>
+                    }
+                </dl>
+            </div>
+        </div>
+    } @else if (product() === undefined) {
+        <fd-ui-loader />
+    } @else {
+        <p role="status">{{ 'PUBLIC_RECIPES.PRODUCT_UNAVAILABLE' | translate }}</p>
+    }
+</fd-ui-dialog>

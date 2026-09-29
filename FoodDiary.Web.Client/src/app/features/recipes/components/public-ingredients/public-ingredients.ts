@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
+import { PublicProductPreviewService } from '../../../products/lib/public-product-preview.service';
 import type { ShoppingListItemDto } from '../../../shopping-lists/models/shopping-list.data';
 import { scaleIngredient } from '../../lib/public-recipe.utils';
 import type { PublicRecipe, PublicRecipeIngredient } from '../../models/public-recipe.data';
@@ -19,6 +20,7 @@ const DEFAULT_MAX_SERVINGS = 50;
     imports: [DecimalPipe, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiHintDirective],
 })
 export class PublicIngredientsComponent {
+    protected readonly productPreview = inject(PublicProductPreviewService);
     private readonly toast = inject(FdUiToastService);
     private readonly translate = inject(TranslateService);
     public readonly recipe = input.required<PublicRecipe>();
@@ -30,6 +32,9 @@ export class PublicIngredientsComponent {
     public readonly shoppingAdd = output<{ index: number; item: ShoppingListItemDto }>();
     public readonly shoppingAddAll = output<Array<{ index: number; item: ShoppingListItemDto }>>();
     public readonly shoppingChange = output();
+    protected readonly hasAvailableIngredients = computed(() =>
+        this.ingredients().some(ingredient => ingredient.isAvailable && ingredient.name !== null && ingredient.name.length > 0),
+    );
     protected readonly remaining = computed(() =>
         this.ingredients()
             .map((ingredient, index) => ({ ingredient, index }))
@@ -47,6 +52,11 @@ export class PublicIngredientsComponent {
                 this.toast.error(this.translate.instant('PUBLIC_RECIPES.SHOPPING_ERROR'));
             }
         });
+    }
+    protected viewProduct(ingredient: PublicRecipeIngredient): void {
+        if (ingredient.productId !== null && ingredient.productId !== undefined) {
+            void this.productPreview.openAsync(ingredient.productId);
+        }
     }
     protected add(index: number, ingredient: PublicRecipeIngredient): void {
         if (!ingredient.isAvailable || ingredient.name === null || ingredient.name.length === 0) {

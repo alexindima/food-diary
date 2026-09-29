@@ -8,6 +8,18 @@ namespace FoodDiary.Modules.Recipes.Domain.Entities;
 public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     public const int TextNameMaxLength = 256;
     public const int AmountTextMaxLength = 128;
+    // Author-published description, independent of the linked product or nested recipe's visibility.
+    public string? PublicName { get; private set; }
+    public string? PublicUnit { get; private set; }
+
+    public void SetPublicDescription(string? name, string? unit) {
+        if (name?.Length > TextNameMaxLength || unit?.Length > AmountTextMaxLength) {
+            throw new ArgumentException("Public ingredient description exceeds the length limit.", nameof(name));
+        }
+        PublicName = string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+        PublicUnit = PublicName is null || string.IsNullOrWhiteSpace(unit) ? null : unit.Trim();
+    }
+
     public string? TextName { get; private set; }
     public string? AmountText { get; private set; }
 

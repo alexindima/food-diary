@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4268,
-    "symbols": 4199,
+    "sourceFiles": 4273,
+    "symbols": 4204,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2203,
+      "class": 2205,
       "enum": 65,
       "interface": 401,
-      "record": 1410,
+      "record": 1413,
       "record struct": 120
     },
     "roles": {
       "Command": 223,
       "CommandHandler": 218,
       "Configuration": 96,
-      "Controller": 106,
+      "Controller": 107,
       "Entity": 99,
       "Event": 19,
       "Factory": 14,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1731,
-      "Query": 285,
-      "QueryHandler": 207,
+      "Other": 1732,
+      "Query": 286,
+      "QueryHandler": 208,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 228,
+      "Response": 229,
       "Service": 162,
       "Validator": 231,
       "ValueObject": 114,
@@ -20642,6 +20642,13 @@
       "line": 2
     },
     {
+      "name": "PublicProductModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/PublicProductModel.cs",
+      "line": 2
+    },
+    {
       "name": "GetProductByIdQuery",
       "kind": "record",
       "role": "Query",
@@ -20703,6 +20710,20 @@
       "role": "Validator",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
       "line": 5
+    },
+    {
+      "name": "GetPublicProductQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetPublicProductQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQueryHandler.cs",
+      "line": 11
     },
     {
       "name": "GetRecentProductsQuery",
@@ -21013,6 +21034,13 @@
       "line": 17
     },
     {
+      "name": "PublicProductsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
+      "line": 16
+    },
+    {
       "name": "ProductsPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -21108,6 +21136,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Products/Presentation/Responses/ProductSearchSuggestionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "PublicProductHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Products/Presentation/Responses/PublicProductHttpResponse.cs",
       "line": 2
     },
     {

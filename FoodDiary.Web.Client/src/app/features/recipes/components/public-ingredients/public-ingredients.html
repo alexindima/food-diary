@@ -36,8 +36,8 @@
             />
         </div>
     </div>
-    <div class="shopping-toolbar">
-        <div class="shopping-target" [hidden]="ingredients().length === 0">
+    <div class="shopping-toolbar" [style.display]="hasAvailableIngredients() ? null : 'none'">
+        <div class="shopping-target" [hidden]="!hasAvailableIngredients()">
             <span [title]="shoppingTarget() ?? ''">{{
                 (shoppingTarget() === null ? 'PUBLIC_RECIPES.SHOPPING_DESTINATION' : 'PUBLIC_RECIPES.SHOPPING_TARGET')
                     | translate: { name: shoppingTarget() }
@@ -51,7 +51,7 @@
             fill="text"
             size="sm"
             icon="add_shopping_cart"
-            [hidden]="ingredients().length === 0"
+            [hidden]="!hasAvailableIngredients()"
             [loading]="shoppingBusy()"
             [disabled]="remaining().length === 0"
             [disabledReason]="'PUBLIC_RECIPES.SHOPPING_ALL_ADDED' | translate"
@@ -81,6 +81,16 @@
                             {{ unitKey(ingredient.unit) ? (unitKey(ingredient.unit) | translate) : ingredient.unit }}
                         }
                     </span>
+                    <fd-ui-button
+                        variant="secondary"
+                        fill="text"
+                        size="md"
+                        icon="visibility"
+                        [style.display]="ingredient.productId ? null : 'none'"
+                        [ariaLabel]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: ingredient.name }"
+                        [fdUiHint]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: ingredient.name }"
+                        (click)="viewProduct(ingredient)"
+                    />
                     @if (ingredient.isAvailable && ingredient.name) {
                         <fd-ui-button
                             variant="secondary"

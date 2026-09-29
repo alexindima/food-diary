@@ -396,3 +396,12 @@ describe('instruction-only step mapping', () => {
         expect(dto.steps[0].ingredients).toEqual([]);
     });
 });
+
+it('publishes ingredient descriptions only when the author saves a public recipe', () => {
+    const ingredient = createRecipeIngredientValue({ nestedRecipeId: 'nested', nestedRecipeName: 'Private sauce', amount: 2 });
+    const form = { ...createRecipeFormValue(), steps: [{ ...createRecipeStepValue(), ingredients: [ingredient] }] };
+    const privateDto = buildRecipeDto(form, 'recipe', 1, value => value ?? 0);
+    expect(privateDto.steps[0].ingredients[0].publicName).toBeUndefined();
+    const publicDto = buildRecipeDto({ ...form, visibility: RecipeVisibility.Public }, 'recipe', 1, value => value ?? 0);
+    expect(publicDto.steps[0].ingredients[0]).toMatchObject({ publicName: 'Private sauce', publicUnit: 'serving', amount: 2 });
+});

@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 105,
+    "selectorUnreferencedComponents": 107,
     "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 37,
+    "componentsWithoutDirectSpecs": 132,
+    "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -757,6 +757,14 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.spec.ts"
     },
     {
+      "class": "PublicProductPreviewComponent",
+      "selector": "fd-public-product-preview",
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/public-product-preview/public-product-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/products/dialogs/public-product-preview/public-product-preview.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/public-product-preview/public-product-preview.spec.ts"
+    },
+    {
       "class": "ChangePasswordDialogComponent",
       "selector": "fd-change-password-dialog",
       "feature": "profile",
@@ -827,6 +835,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.spec.ts"
+    },
+    {
+      "class": "RecipePublicationDialogComponent",
+      "selector": "fd-recipe-publication-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.html",
+      "specPath": null
     },
     {
       "class": "AiConsentDialogComponent",
@@ -4446,6 +4462,27 @@
       "specPath": null
     },
     {
+      "class": "PublicProductGalleryComponent",
+      "selector": "fd-public-product-gallery",
+      "feature": "products",
+      "path": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.html",
+      "inputs": [
+        {
+          "name": "images",
+          "type": "readonly string[]",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "UserManageComparisonWidgetsComponent",
       "selector": "fd-user-manage-comparison-widgets",
       "feature": "profile",
@@ -4754,6 +4791,16 @@
           "type": "Recipe"
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "RecipePublicationDialogComponent",
+      "selector": "fd-recipe-publication-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.html",
+      "inputs": [],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -5119,6 +5166,16 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
       "line": 17,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PublicProductsController",
+      "role": "Controller",
+      "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
+      "line": 16,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

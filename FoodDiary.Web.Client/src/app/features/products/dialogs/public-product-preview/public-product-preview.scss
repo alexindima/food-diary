@@ -1,0 +1,63 @@
+@use 'variables' as variables;
+
+.product-layout {
+    display: grid;
+    gap: var(--fd-space-lg);
+    align-items: start;
+}
+.with-photo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.product-details {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+h2,
+p,
+dl,
+dd {
+    margin: 0;
+}
+h2 {
+    font-size: var(--fd-text-section-title-size);
+}
+.brand {
+    margin-top: var(--fd-space-xs);
+}
+.description {
+    margin-top: var(--fd-space-sm);
+    white-space: pre-line;
+}
+.nutrition-heading {
+    margin-top: var(--fd-space-lg);
+    margin-bottom: var(--fd-space-xs);
+    font-weight: var(--fd-font-weight-medium);
+}
+dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--fd-space-md);
+    padding-block: var(--fd-space-xxs);
+    border-bottom: var(--fd-border-muted);
+}
+dl > div:last-child {
+    border-bottom: none;
+}
+dt {
+    color: var(--fd-color-text-muted);
+}
+dd {
+    font-weight: var(--fd-font-weight-medium);
+    white-space: nowrap;
+}
+.calories dd {
+    font-weight: var(--fd-font-weight-bold);
+}
+@media #{variables.$media-tablet} {
+    .with-photo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .product-layout {
+        gap: var(--fd-space-md);
+    }
+}

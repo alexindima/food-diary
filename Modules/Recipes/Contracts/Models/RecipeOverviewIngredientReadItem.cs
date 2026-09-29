@@ -24,6 +24,8 @@ public sealed record RecipeOverviewIngredientReadItem(
     double? NestedRecipeTotalAlcohol,
     bool ProductIsAccessible = true,
     bool NestedRecipeIsAccessible = true) {
+    public string? PublicName { get; init; }
+    public string? PublicUnit { get; init; }
     public string? TextName { get; init; }
     public string? AmountText { get; init; }
     public int NestedRecipeMissingIngredientCount { get; init; }
