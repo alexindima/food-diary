@@ -252,9 +252,10 @@ public sealed class AdminHttpMappingsTests {
         var fromDate = new DateOnly(2026, 4, 1);
         var toDate = new DateOnly(2026, 4, 30);
 
-        Assert.NotNull(AdminHttpQueryMappings.ToEmailTemplatesQuery());
-        Assert.NotNull(AdminHttpQueryMappings.ToAiPromptsQuery());
-        Assert.NotNull(AdminHttpQueryMappings.ToLessonsQuery());
+        var collectionPage = new GetAdminCollectionPageHttpQuery();
+        Assert.NotNull(collectionPage.ToEmailTemplatesQuery());
+        Assert.NotNull(collectionPage.ToAiPromptsQuery());
+        Assert.NotNull(collectionPage.ToLessonsQuery());
         Assert.Multiple(
             () => Assert.Equal(userId, userId.ToAdminUserQuery().UserId),
             () => Assert.Equal(userId, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).UserId),

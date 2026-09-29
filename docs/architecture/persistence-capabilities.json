@@ -547,7 +547,7 @@
         "write:DietologistInvitation"
       ],
       "reason": "Owner repository retains writes and delegates joined DTO reads to composition.",
-      "technicalSourceSha256": "5bc0496b32fec668f73d347655357e6b601cae0d478fb7a4eb14177573aa1155"
+      "technicalSourceSha256": "48545f0ac7106b4f714b90bdea4083b9d7f67a07030c675450a7c5c6f37944a5"
     },
     "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
       "module": "Dietologist",
@@ -723,7 +723,7 @@
         "write:AchievementDefinition"
       ],
       "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
-      "technicalSourceSha256": "1968b337e79a8e99bffda0224b5ab9d23326ed77cc00472d40d3b1dde4f2e4d4"
+        "technicalSourceSha256": "bb4322cfa0473ac95c6aae3c8ff2fcf776dc71b169680f05e82679ba3aa636be"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -855,7 +855,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "927fb0646216505f5c215cb2d05fc600fcf208057889beaffbb2b0553b519923"
+        "technicalSourceSha256": "b617d2912f1bc2ecaf3204c81d36adac99104d7a71140abb648c7fd09ac5df96"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

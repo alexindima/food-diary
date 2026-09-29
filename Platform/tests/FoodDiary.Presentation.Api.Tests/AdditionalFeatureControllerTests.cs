@@ -89,7 +89,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender allSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<ShoppingListSummaryModel>>([new ShoppingListSummaryModel(listId, "Weekly", DateTime.UtcNow, 2)]));
         ShoppingListsController allController = CreateController(new ShoppingListsController(allSender));
-        Assert.IsType<List<ShoppingListSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetAll(userId)).Value);
+        Assert.IsType<List<ShoppingListSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetPage(userId, 1, 20)).Value);
         Assert.Equal(userId, Assert.IsType<GetShoppingListsQuery>(allSender.Request).UserId);
 
         CapturedSender currentSender = SubstituteSender.Capture(Result.Success(list));

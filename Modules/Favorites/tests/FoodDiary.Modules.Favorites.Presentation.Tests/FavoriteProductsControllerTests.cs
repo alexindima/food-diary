@@ -7,7 +7,6 @@ using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavor
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
-using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.IsProductFavorite;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Controllers;
@@ -21,20 +20,20 @@ namespace FoodDiary.Modules.Favorites.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteProductsControllerTests {
     [Fact]
-    public async Task GetAll_SendsQueryAndReturnsFavorites() {
+    public async Task GetPage_SendsQueryAndReturnsFavorites() {
         FavoriteProductModel favorite = CreateFavorite();
-        IRequest<Result<IReadOnlyList<FavoriteProductModel>>>? sentRequest = null;
-        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<FavoriteProductModel>>([favorite]), request => sentRequest = request);
+        IRequest<Result<PagedResponse<FavoriteProductModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(new PagedResponse<FavoriteProductModel>([favorite], 1, 10, 1, 1)), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
-        IActionResult result = await controller.GetAll(userId);
+        IActionResult result = await controller.GetPage(userId, new GetFavoriteProductPageHttpQuery());
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
-        List<FavoriteProductHttpResponse> response = Assert.IsType<List<FavoriteProductHttpResponse>>(ok.Value);
-        Assert.Single(response);
-        Assert.Equal(favorite.Id, response[0].Id);
-        GetFavoriteProductsQuery query = Assert.IsType<GetFavoriteProductsQuery>(sentRequest);
+        PagedHttpResponse<FavoriteProductHttpResponse> response = Assert.IsType<PagedHttpResponse<FavoriteProductHttpResponse>>(ok.Value);
+        Assert.Single(response.Data);
+        Assert.Equal(favorite.Id, response.Data[0].Id);
+        GetFavoriteProductPageQuery query = Assert.IsType<GetFavoriteProductPageQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 

@@ -4,6 +4,8 @@ namespace FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelayDeliveryEve
 
 public sealed class GetMailRelayDeliveryEventsQueryValidator : AbstractValidator<GetMailRelayDeliveryEventsQuery> {
     public GetMailRelayDeliveryEventsQueryValidator() {
+        RuleFor(static query => query.Page).InclusiveBetween(1, 10_000).WithErrorCode("Validation.Invalid");
+        RuleFor(static query => query.Limit).InclusiveBetween(1, 100).WithErrorCode("Validation.Invalid");
         RuleFor(static query => query.Email)
             .EmailAddress()
             .When(static query => !string.IsNullOrWhiteSpace(query.Email))

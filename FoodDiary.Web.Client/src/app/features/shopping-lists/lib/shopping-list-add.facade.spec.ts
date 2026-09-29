@@ -13,7 +13,7 @@ import type { ShoppingList } from '../models/shopping-list.data';
 import { ShoppingListAddFacade } from './shopping-list-add.facade';
 
 const authenticated = signal(true);
-const api = { getAllForSelection: vi.fn(), getById: vi.fn(), create: vi.fn(), update: vi.fn() };
+const api = { getSelectionPage: vi.fn(), getById: vi.fn(), create: vi.fn(), update: vi.fn() };
 const dialogs = { open: vi.fn() };
 const authDialog = { openAsync: vi.fn() };
 const list: ShoppingList = { id: 'list-1', name: 'Soup', createdAt: '', items: [] };
@@ -31,7 +31,7 @@ beforeEach(() => {
             { provide: PublicAuthDialogService, useValue: authDialog },
         ],
     });
-    api.getAllForSelection.mockReturnValue(of([]));
+    api.getSelectionPage.mockReturnValue(of([]));
     api.create.mockReturnValue(of(list));
     api.getById.mockReturnValue(of(list));
     api.update.mockReturnValue(of(list));
@@ -126,7 +126,7 @@ describe('recipe shopping target state', () => {
         TestBed.tick();
         authDialog.openAsync.mockResolvedValue(null);
         await facade.addAsync(0, { name: 'Rice' });
-        expect(api.getAllForSelection).not.toHaveBeenCalled();
+        expect(api.getSelectionPage).not.toHaveBeenCalled();
         expect(api.create).not.toHaveBeenCalled();
     });
     it('ignores double clicks while selecting and ignores selection after navigating away', async () => {

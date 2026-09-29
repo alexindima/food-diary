@@ -37,7 +37,7 @@ let recipeService: {
 };
 let favoriteRecipeService: {
     getPage: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getLookupPage: ReturnType<typeof vi.fn>;
     add: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
 };
@@ -79,7 +79,7 @@ beforeEach(() => {
 
     favoriteRecipeService = {
         getPage: vi.fn().mockReturnValue(of({ data: [createFavoriteRecipe()], page: 1, limit: 1, totalItems: 1, totalPages: 1 })),
-        getAll: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
+        getLookupPage: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
         add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
         remove: vi.fn().mockReturnValue(of(null)),
     };

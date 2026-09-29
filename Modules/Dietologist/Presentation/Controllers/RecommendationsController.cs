@@ -4,6 +4,7 @@ using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,17 @@ public sealed class RecommendationsController(ISender mediator) : AuthorizedCont
         HandleNoContent(recommendationId.ToMarkReadCommand(userId));
 
     [HttpGet("{recommendationId:guid}/comments")]
-    [ProducesResponseType<List<RecommendationCommentHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PagedHttpResponse<RecommendationCommentHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetComments(Guid recommendationId, [FromCurrentUser] Guid userId) =>
+    public Task<IActionResult> GetComments(
+        Guid recommendationId,
+        [FromCurrentUser] Guid userId,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int limit = 50) =>
         HandleOk(
-            recommendationId.ToRecommendationCommentsQuery(userId),
-            static value => value.Select(comment => comment.ToHttpResponse()).ToList());
+            recommendationId.ToRecommendationCommentsQuery(userId, page, limit),
+            static value => new PagedHttpResponse<RecommendationCommentHttpResponse>(
+                value.Data.Select(comment => comment.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpPost("{recommendationId:guid}/comments")]
     [EnableIdempotency]

@@ -7,20 +7,22 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationComments;
 
 public sealed class GetRecommendationCommentsQueryHandler(
     IRecommendationCommentReadModelRepository commentRepository,
     ICurrentUserAccessService currentUserAccessService)
-    : IQueryHandler<GetRecommendationCommentsQuery, Result<IReadOnlyList<RecommendationCommentModel>>> {
-    public async Task<Result<IReadOnlyList<RecommendationCommentModel>>> Handle(
+    : IQueryHandler<GetRecommendationCommentsQuery, Result<PagedResponse<RecommendationCommentModel>>> {
+    public async Task<Result<PagedResponse<RecommendationCommentModel>>> Handle(
         GetRecommendationCommentsQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
-            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationCommentModel>>(userIdResult);
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<RecommendationCommentModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
@@ -31,19 +33,22 @@ public sealed class GetRecommendationCommentsQueryHandler(
             "Recommendation id must not be empty.",
             value => new RecommendationId(value));
         if (recommendationIdResult.IsFailure) {
-            return Result.Failure<IReadOnlyList<RecommendationCommentModel>>(recommendationIdResult.Error);
+            return Result.Failure<PagedResponse<RecommendationCommentModel>>(recommendationIdResult.Error);
         }
 
         bool isParticipant = await commentRepository.IsParticipantAsync(
             recommendationIdResult.Value, userId, cancellationToken).ConfigureAwait(false);
         if (!isParticipant) {
-            return Result.Failure<IReadOnlyList<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
+            return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
         }
 
-        IReadOnlyList<RecommendationCommentReadModel> comments =
-            await commentRepository.GetByRecommendationAsync(recommendationIdResult.Value, cancellationToken).ConfigureAwait(false);
-        return Result.Success<IReadOnlyList<RecommendationCommentModel>>(
-            comments.Select(ToModel).ToList());
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
+        (IReadOnlyList<RecommendationCommentReadModel> comments, int total) =
+            await commentRepository.GetPageByRecommendationAsync(recommendationIdResult.Value, page, limit, cancellationToken).ConfigureAwait(false);
+        int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)limit);
+        return Result.Success(new PagedResponse<RecommendationCommentModel>(
+            comments.Select(ToModel).ToArray(), page, limit, totalPages, total));
 
     }
 

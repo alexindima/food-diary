@@ -693,7 +693,7 @@ public sealed partial class MailRelayPresentationTests {
             DateTimeOffset.UtcNow,
             ExpiresAtUtc: null);
         var sender = new RecordingSender {
-            SuppressionsResult = Result.Success<IReadOnlyList<MailRelaySuppressionEntry>>([suppression]),
+            SuppressionsPageResult = Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>([suppression], 1, 20, 1, 1)),
             SuppressionCreateResult = Result.Success(),
             SuppressionRemoveResult = Result.Success(),
         };
@@ -705,9 +705,9 @@ public sealed partial class MailRelayPresentationTests {
             },
         };
 
-        OkObjectResult getResult = Assert.IsType<OkObjectResult>(await controller.Get("user@example.com"));
-        IReadOnlyList<MailRelaySuppressionHttpResponse> suppressions = Assert.IsAssignableFrom<IReadOnlyList<MailRelaySuppressionHttpResponse>>(getResult.Value);
-        Assert.Single(suppressions);
+        OkObjectResult getResult = Assert.IsType<OkObjectResult>(await controller.GetPage(new GetMailRelayCollectionHttpQuery("user@example.com")));
+        MailRelayPageHttpResponse<MailRelaySuppressionHttpResponse> suppressions = Assert.IsType<MailRelayPageHttpResponse<MailRelaySuppressionHttpResponse>>(getResult.Value);
+        Assert.Single(suppressions.Data);
         Assert.IsType<GetMailRelaySuppressionsQuery>(sender.LastRequest);
 
         CreatedResult createResult = Assert.IsType<CreatedResult>(await controller.Create(new CreateMailRelaySuppressionHttpRequest(
@@ -993,6 +993,8 @@ public sealed partial class MailRelayPresentationTests {
         public Result<Guid> EnqueueResult { get; init; } = Result.Success(Guid.NewGuid());
         public Result<IReadOnlyList<MailRelaySuppressionEntry>> SuppressionsResult { get; init; } =
             Result.Success<IReadOnlyList<MailRelaySuppressionEntry>>([]);
+        public Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> SuppressionsPageResult { get; init; } =
+            Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>([], 1, 20, 0, 0));
         public Result SuppressionCreateResult { get; init; } = Result.Success();
         public Result SuppressionRemoveResult { get; init; } = Result.Success();
 
@@ -1005,7 +1007,7 @@ public sealed partial class MailRelayPresentationTests {
                 GetMailRelayQueueStatsQuery => QueueStatsResult,
                 FoodDiary.MailRelay.Application.Emails.Queries.GetOutgoingEmailJournal.GetOutgoingEmailJournalQuery => JournalResult,
                 EnqueueMailRelayEmailCommand => EnqueueResult,
-                GetMailRelaySuppressionsQuery => SuppressionsResult,
+                GetMailRelaySuppressionsQuery => SuppressionsPageResult,
                 CreateMailRelaySuppressionCommand => SuppressionCreateResult,
                 RemoveMailRelaySuppressionCommand => SuppressionRemoveResult,
                 _ => throw new InvalidOperationException($"Unexpected request type {request.GetType().FullName}."),

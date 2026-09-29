@@ -440,6 +440,28 @@
               "Nullable": false,
               "ItemReference": "#/components/schemas/AdminEmailTemplateHttpResponse"
             }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
           ]
         }
       ]

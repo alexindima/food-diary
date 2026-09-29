@@ -338,7 +338,7 @@ public class MealPlansFeatureTests {
     public async Task GetMealPlans_WithEmptyUserId_ReturnsInvalidToken() {
         GetMealPlansQueryHandler handler = CreateMealPlansHandler(new StubMealPlanRepository(plan: null));
 
-        Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -352,13 +352,13 @@ public class MealPlansFeatureTests {
         var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
         GetMealPlansQueryHandler handler = CreateMealPlansHandler(repository);
 
-        Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(
             new GetMealPlansQuery(userId.Value, "keto"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(DietType.Keto, repository.LastDietTypeFilter);
-        Assert.Equal(["Keto curated", "User plan"], result.Value.Select(plan => plan.Name), StringComparer.Ordinal);
+        Assert.Equal(["Keto curated", "User plan"], result.Value.Data.Select(plan => plan.Name), StringComparer.Ordinal);
     }
 
     [Fact]

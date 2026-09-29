@@ -139,7 +139,7 @@ export class MealDetailFacade {
         }
 
         this.favoriteMealService
-            .getAll()
+            .getLookupPage()
             .pipe(
                 switchMap(favorites => {
                     const match = favorites.find(favorite => favorite.mealId === meal.id);

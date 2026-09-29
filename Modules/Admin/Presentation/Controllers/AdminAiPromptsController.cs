@@ -47,8 +47,8 @@ public sealed class AdminAiPromptsController(ISender mediator) : BaseApiControll
 
     [HttpGet]
     [ProducesResponseType<List<AdminAiPromptHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll() =>
-        HandleOk(AdminHttpQueryMappings.ToAiPromptsQuery(), static value => value.Select(item => item.ToAiPromptHttpResponse()).ToList());
+    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(query.ToAiPromptsQuery(), static value => value.Select(item => item.ToAiPromptHttpResponse()).ToList());
 
     [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

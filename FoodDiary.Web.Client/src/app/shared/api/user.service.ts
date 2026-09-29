@@ -202,12 +202,6 @@ export class UserService extends ApiService {
         );
     }
 
-    public getWeightGoalHistory(): Observable<WeightGoalHistoryItem[]> {
-        return this.get<WeightGoalHistoryItem[]>('weight-goals').pipe(
-            catchError((error: unknown) => fallbackApiError('Get weight goal history error', error, [])),
-        );
-    }
-
     public updateDesiredWeight(value: number | null): Observable<number | null> {
         return this.put<DesiredWeightResponse>('desired-weight', {
             desiredWeightKg: value,
@@ -248,12 +242,6 @@ export class UserService extends ApiService {
             cursor === undefined ? {} : { cursor },
             undefined,
             this.silentLoadingContext,
-        );
-    }
-
-    public getWaistGoalHistory(): Observable<WaistGoalHistoryItem[]> {
-        return this.get<WaistGoalHistoryItem[]>('waist-goals').pipe(
-            catchError((error: unknown) => fallbackApiError('Get waist goal history error', error, [])),
         );
     }
 

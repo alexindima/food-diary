@@ -10,10 +10,11 @@ public static class MailRelayEmailHttpMappings {
 
     public static GetMailRelayMessageDetailsQuery ToMessageDetailsQuery(this Guid id) => new(id);
 
-    extension(string? email) {
-        public GetMailRelaySuppressionsQuery ToSuppressionsQuery() => new(email);
-        public GetMailRelayDeliveryEventsQuery ToDeliveryEventsQuery() => new(email);
-    }
+    public static GetMailRelaySuppressionsQuery ToSuppressionsQuery(this GetMailRelayCollectionHttpQuery query) =>
+        new(query.Email, query.Page, query.Limit);
+
+    public static GetMailRelayDeliveryEventsQuery ToDeliveryEventsQuery(this GetMailRelayCollectionHttpQuery query) =>
+        new(query.Email, query.Page, query.Limit);
 
     public static EnqueueMailRelayEmailCommand ToCommand(this EnqueueMailRelayEmailRequest request) =>
         new(request.ToApplicationRequest());

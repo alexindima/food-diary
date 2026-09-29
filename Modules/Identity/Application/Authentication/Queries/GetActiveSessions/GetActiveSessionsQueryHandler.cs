@@ -6,6 +6,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
 
@@ -14,12 +15,16 @@ public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelR
     public async Task<Result<IReadOnlyList<ActiveSessionModel>>> Handle(
         GetActiveSessionsQuery query,
         CancellationToken cancellationToken) {
-        IReadOnlyList<RefreshTokenSessionReadModel> sessions = await repository
-            .GetActiveReadModelsAsync((UserId)query.UserId, cancellationToken)
-            .ConfigureAwait(false);
-        if (!sessions.Any(session => session.Id == query.CurrentSessionId)) {
+        var userId = (UserId)query.UserId;
+        if (!await repository.IsActiveAsync(userId, query.CurrentSessionId, cancellationToken).ConfigureAwait(false)) {
             return Result.Failure<IReadOnlyList<ActiveSessionModel>>(AuthenticationErrors.InvalidToken);
         }
+
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
+        IReadOnlyList<RefreshTokenSessionReadModel> sessions = await repository
+            .GetActivePageReadModelsAsync(userId, page, limit, cancellationToken)
+            .ConfigureAwait(false);
 
         ActiveSessionModel[] models = [.. sessions.Select(session => {
             ParsedUserAgent userAgent = UserAgentParser.Parse(session.UserAgent);

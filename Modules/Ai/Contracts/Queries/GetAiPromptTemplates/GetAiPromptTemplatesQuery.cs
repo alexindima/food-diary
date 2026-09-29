@@ -3,4 +3,4 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptTemplates;
 
-public sealed record GetAiPromptTemplatesQuery : IRequest<IReadOnlyList<AiPromptTemplateReadModel>>;
+public sealed record GetAiPromptTemplatesQuery(int Page, int Limit) : IRequest<IReadOnlyList<AiPromptTemplateReadModel>>;

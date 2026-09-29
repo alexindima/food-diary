@@ -96,4 +96,19 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
             .OrderByDescending(i => i.AcceptedAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    public async Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
+        UserId dietologistUserId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        return await Project(context.DietologistInvitations
+            .AsNoTracking()
+            .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
+            .OrderByDescending(i => i.AcceptedAtUtc)
+            .ThenBy(i => i.Id)
+            .Skip((page - 1) * limit)
+            .Take(limit))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
 }

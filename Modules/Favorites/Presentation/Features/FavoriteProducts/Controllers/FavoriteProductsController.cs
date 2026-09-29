@@ -13,11 +13,6 @@ namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Con
 [ApiController]
 [Route("api/v{version:apiVersion}/favorite-products")]
 public sealed class FavoriteProductsController(ISender mediator) : AuthorizedController(mediator) {
-    [HttpGet]
-    [ProducesResponseType<List<FavoriteProductHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
-
     [HttpGet("page")]
     [ProducesResponseType<PagedHttpResponse<FavoriteProductHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

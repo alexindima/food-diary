@@ -3,4 +3,4 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Gamification.Contracts.Queries.GetAchievementDefinitionsForAdministration;
 
-public sealed record GetAchievementDefinitionsForAdministrationQuery : IRequest<IReadOnlyList<AchievementDefinitionAdminModel>>;
+public sealed record GetAchievementDefinitionsForAdministrationQuery(int Page = 1, int Limit = 50) : IRequest<IReadOnlyList<AchievementDefinitionAdminModel>>;

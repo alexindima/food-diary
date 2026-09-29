@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     AdminDailyAdvice,
     AdminDailyAdvicesImportRequest,
@@ -16,7 +17,9 @@ export class AdminDailyAdvicesService {
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/daily-advices`;
 
     public getAll(): Observable<AdminDailyAdvice[]> {
-        return this.http.get<AdminDailyAdvice[]>(`${this.baseUrl}/groups`);
+        return loadPagedCollection((page, limit) =>
+            this.http.get<AdminDailyAdvice[]>(`${this.baseUrl}/groups`, { params: { page, limit } }),
+        );
     }
 
     public importAdvices(request: AdminDailyAdvicesImportRequest): Observable<AdminDailyAdvicesImportResponse> {

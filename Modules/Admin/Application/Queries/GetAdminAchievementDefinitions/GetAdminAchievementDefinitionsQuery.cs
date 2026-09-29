@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 
-public sealed record GetAdminAchievementDefinitionsQuery : IQuery<Result<IReadOnlyList<AchievementDefinitionAdminModel>>>;
+public sealed record GetAdminAchievementDefinitionsQuery(int Page = 1, int Limit = 50) : IQuery<Result<IReadOnlyList<AchievementDefinitionAdminModel>>>;

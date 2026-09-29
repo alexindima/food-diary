@@ -49,6 +49,23 @@ public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates,
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<EmailTemplateReadModel>> GetPageReadModelsAsync(
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await emailTemplates.AsNoTracking()
+            .OrderBy(t => t.Key)
+            .ThenBy(t => t.Locale)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(t => new EmailTemplateReadModel(t.Id, t.Key, t.Locale, t.Subject, t.HtmlBody, t.TextBody,
+                t.IsActive, t.CreatedOnUtc, t.ModifiedOnUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<EmailTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);

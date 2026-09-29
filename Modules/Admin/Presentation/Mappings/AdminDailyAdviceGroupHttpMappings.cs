@@ -9,7 +9,7 @@ using FoodDiary.Modules.Admin.Application.Models;
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
 public static class AdminDailyAdviceGroupHttpMappings {
-    public static GetAdminDailyAdviceGroupsQuery ToDailyAdviceGroupsQuery() => new();
+    public static GetAdminDailyAdviceGroupsQuery ToDailyAdviceGroupsQuery(int page, int limit) => new(page, limit);
     public static DeleteAdminDailyAdviceGroupCommand ToDeleteDailyAdviceGroupCommand(Guid id) => new(id);
 
     extension(AdminDailyAdviceGroupUpdateHttpRequest request) {

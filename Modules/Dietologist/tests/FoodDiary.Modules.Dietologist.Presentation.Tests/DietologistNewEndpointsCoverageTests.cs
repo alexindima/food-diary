@@ -1,4 +1,6 @@
 using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Application.Commands.ArchiveRecommendationTemplate;
 using FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
@@ -89,7 +91,7 @@ public sealed class DietologistNewEndpointsCoverageTests {
             () => Assert.Equal(userId, userId.ToMyClientTasksQuery().UserId),
             () => Assert.Equal(templateId, templateId.ToArchiveTemplateCommand(userId).TemplateId),
             () => Assert.Equal("search", userId.ToSearchTemplatesQuery("search", true).Search),
-            () => Assert.Equal(recommendationId, recommendationId.ToRecommendationCommentsQuery(userId).RecommendationId));
+            () => Assert.Equal(recommendationId, recommendationId.ToRecommendationCommentsQuery(userId, 2, 25).RecommendationId));
 
         object[] responses = [
             new AttentionSignalModel("signal", clientId, "Client", "Type", "High", "Reason", UtcNow, null)
@@ -288,15 +290,15 @@ public sealed class DietologistNewEndpointsCoverageTests {
             "alex@example.com",
             "Comment",
             UtcNow);
-        IRequest<Result<IReadOnlyList<RecommendationCommentModel>>>? getRequest = null;
+        IRequest<Result<PagedResponse<RecommendationCommentModel>>>? getRequest = null;
         RecommendationsController getController = CreateController(
             new RecommendationsController(SubstituteSender.Create(
-                Result.Success<IReadOnlyList<RecommendationCommentModel>>([comment]),
+                Result.Success(new PagedResponse<RecommendationCommentModel>([comment], 1, 20, 1, 1)),
                 request => getRequest = request)));
 
         IActionResult get = await getController.GetComments(recommendationId, userId);
 
-        Assert.IsType<List<RecommendationCommentHttpResponse>>(Assert.IsType<OkObjectResult>(get).Value);
+        Assert.IsType<PagedHttpResponse<RecommendationCommentHttpResponse>>(Assert.IsType<OkObjectResult>(get).Value);
         Assert.IsType<GetRecommendationCommentsQuery>(getRequest);
 
         IRequest<Result<RecommendationCommentModel>>? createRequest = null;

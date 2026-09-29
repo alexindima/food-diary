@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import type { ActiveSession } from '../models/active-session.model';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 
 @Service()
 export class ActiveSessionsService {
@@ -11,7 +12,7 @@ export class ActiveSessionsService {
     private readonly sessionsUrl = `${environment.apiUrls.auth}/sessions`;
 
     public getAll(): Observable<ActiveSession[]> {
-        return this.http.get<ActiveSession[]>(this.sessionsUrl);
+        return loadPagedCollection((page, limit) => this.http.get<ActiveSession[]>(this.sessionsUrl, { params: { page, limit } }));
     }
 
     public revoke(sessionId: string): Observable<void> {

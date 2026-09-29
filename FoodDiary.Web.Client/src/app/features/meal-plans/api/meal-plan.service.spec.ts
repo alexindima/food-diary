@@ -26,23 +26,23 @@ describe('MealPlanService', () => {
     });
 
     it('loads meal plans with optional diet type filter', () => {
-        const plans: MealPlanSummary[] = [createSummary()];
+        const page = { data: [createSummary()], page: 1, limit: 50, totalPages: 1, totalItems: 1 };
 
-        service.getAll('Keto').subscribe(result => {
-            expect(result).toEqual(plans);
+        service.getPage('Keto').subscribe(result => {
+            expect(result).toEqual(page);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?dietType=Keto`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?page=1&limit=50&dietType=Keto`);
         expect(request.request.method).toBe('GET');
-        request.flush(plans);
+        request.flush(page);
     });
 
     it('returns empty list when meal plan loading fails', () => {
-        service.getAll().subscribe(result => {
-            expect(result).toEqual([]);
+        service.getPage().subscribe(result => {
+            expect(result).toEqual({ data: [], page: 1, limit: 50, totalPages: 0, totalItems: 0 });
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?page=1&limit=50`);
         request.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
     });
 

@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminDailyAdviceGroups;
 
-public sealed record GetAdminDailyAdviceGroupsQuery : IQuery<Result<IReadOnlyList<AdminDailyAdviceGroupModel>>>;
+public sealed record GetAdminDailyAdviceGroupsQuery(int Page = 1, int Limit = 50) : IQuery<Result<IReadOnlyList<AdminDailyAdviceGroupModel>>>;

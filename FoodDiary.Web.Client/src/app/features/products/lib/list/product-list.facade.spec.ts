@@ -45,7 +45,7 @@ let productService: {
     deleteById: ReturnType<typeof vi.fn>;
 };
 let favoriteProductService: {
-    getAll: ReturnType<typeof vi.fn>;
+    getLookupPage: ReturnType<typeof vi.fn>;
     getPage: ReturnType<typeof vi.fn>;
     add: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
@@ -70,7 +70,7 @@ beforeEach(() => {
         deleteById: vi.fn(),
     };
     favoriteProductService = {
-        getAll: vi.fn(),
+        getLookupPage: vi.fn(),
         getPage: vi.fn().mockReturnValue(of({ data: [], totalItems: 1 })),
         add: vi.fn(),
         update: vi.fn(),
@@ -111,7 +111,7 @@ beforeEach(() => {
     productService.query.mockReturnValue(of(createPage([createProduct({ id: 'query-product', name: 'Query product' })])));
     productService.getById.mockReturnValue(of(createProduct()));
     productService.deleteById.mockReturnValue(of(void 0));
-    favoriteProductService.getAll.mockReturnValue(of([createFavoriteProduct()]));
+    favoriteProductService.getLookupPage.mockReturnValue(of([createFavoriteProduct()]));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
     favoriteProductService.remove.mockReturnValue(of(null));
     openFoodFactsService.search.mockReturnValue(of([createOpenFoodFactsProduct()]));
@@ -460,7 +460,7 @@ describe('ProductListFacade request lifecycle', () => {
     });
     it('opens favorites without fetching the full collection', () => {
         facade.openFavorites();
-        expect(favoriteProductService.getAll).not.toHaveBeenCalled();
+        expect(favoriteProductService.getLookupPage).not.toHaveBeenCalled();
         expect(favoriteProductService.getPage).not.toHaveBeenCalled();
         const options = dialogService.open.mock.calls[0][1] as {
             size: string;

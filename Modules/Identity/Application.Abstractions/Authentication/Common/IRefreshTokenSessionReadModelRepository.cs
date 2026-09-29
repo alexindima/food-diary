@@ -6,4 +6,15 @@ namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Com
 public interface IRefreshTokenSessionReadModelRepository {
     Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActivePageReadModelsAsync(
+        UserId userId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> IsActiveAsync(
+        UserId userId,
+        Guid sessionId,
+        CancellationToken cancellationToken = default);
 }

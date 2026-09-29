@@ -88,7 +88,7 @@ public sealed class MailRelayApplicationValidationTests {
         await using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
         ISender sender = provider.GetRequiredService<ISender>();
 
-        Result<IReadOnlyList<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
+        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
 
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorKind.Validation, result.Error?.Kind);

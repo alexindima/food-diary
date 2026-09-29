@@ -11,9 +11,10 @@ namespace FoodDiary.MailRelay.Presentation.Features.Email;
 [Route("api/email/suppressions")]
 public sealed class MailRelaySuppressionsController(ISender sender) : AuthorizedMailRelayController(sender) {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<MailRelaySuppressionHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> Get([FromQuery] string? email) =>
-        HandleOk(email.ToSuppressionsQuery(), static value => value.ToHttpResponse());
+    [ProducesResponseType<MailRelayPageHttpResponse<MailRelaySuppressionHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetPage([FromQuery] GetMailRelayCollectionHttpQuery query) =>
+        HandleOk(query.ToSuppressionsQuery(), static value => new MailRelayPageHttpResponse<MailRelaySuppressionHttpResponse>(
+            value.Data.Select(item => item.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpPost]
     [ProducesResponseType<MailRelaySuppressionCreatedHttpResponse>(StatusCodes.Status201Created)]

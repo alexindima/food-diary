@@ -30,9 +30,10 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     public Task<IActionResult> GetSessions(
         [FromCurrentUser] Guid userId,
-        [FromCurrentRefreshSession] Guid currentSessionId) =>
+        [FromCurrentRefreshSession] Guid currentSessionId,
+        [FromQuery] GetActiveSessionsHttpQuery? query = null) =>
         HandleOk(
-            userId.ToGetActiveSessionsQuery(currentSessionId),
+            userId.ToGetActiveSessionsQuery(currentSessionId, query?.Page ?? 1, query?.Limit ?? 50),
             static sessions => sessions.Select(static session => session.ToHttpResponse()).ToArray());
 
     [Authorize]

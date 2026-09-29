@@ -782,6 +782,12 @@ public partial class AdminFeatureTests {
         public Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<AiPromptTemplateReadModel>>([.. _templates.Select(ToReadModel)]);
 
+        public Task<IReadOnlyList<AiPromptTemplateReadModel>> GetPageReadModelsAsync(
+            int page,
+            int limit,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<AiPromptTemplateReadModel>>([.. _templates.Skip((page - 1) * limit).Take(limit).Select(ToReadModel)]);
+
         public Task<AiPromptTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) =>
             Task.FromResult(_templates.FirstOrDefault(template =>
                 string.Equals(template.Key, key, StringComparison.Ordinal) &&

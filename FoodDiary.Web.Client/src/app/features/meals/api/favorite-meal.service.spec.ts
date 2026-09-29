@@ -70,21 +70,33 @@ describe('FavoriteMealService', () => {
 
 describe('FavoriteMealService mutations and legacy reads', () => {
     it('should get all favorite meals', () => {
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual([favoriteMeal]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         expect(req.request.method).toBe('GET');
-        req.flush([favoriteMeal]);
+        req.flush({ data: [favoriteMeal], page: 1, limit: 100, totalPages: 1, totalItems: 1 });
+    });
+
+    it('loads every bounded page for lookup consumers', () => {
+        const secondFavorite = { ...favoriteMeal, id: 'favorite-2', mealId: 'meal-2' };
+        service.getLookupPage().subscribe(result => {
+            expect(result).toEqual([favoriteMeal, secondFavorite]);
+        });
+
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '1')
+            .flush({ data: [favoriteMeal], page: 1, limit: 100, totalPages: 2, totalItems: 2 });
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '2')
+            .flush({ data: [secondFavorite], page: 2, limit: 100, totalPages: 2, totalItems: 2 });
     });
 
     it('should return empty array when favorite list request fails', () => {
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 

@@ -130,6 +130,8 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
     }
 
     public async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
+        int page,
+        int limit,
         CancellationToken cancellationToken = default) {
         return await lessonSet
             .AsNoTracking()
@@ -137,6 +139,8 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
             .ThenBy(l => l.Category)
             .ThenBy(l => l.SortOrder)
             .ThenBy(l => l.CreatedOnUtc)
+            .Skip((page - 1) * limit)
+            .Take(limit)
             .Select(l => new LessonAdminReadModel(
                 l.Id.Value,
                 l.Title,

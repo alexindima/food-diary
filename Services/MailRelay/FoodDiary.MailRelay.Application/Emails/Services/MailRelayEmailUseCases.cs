@@ -23,10 +23,9 @@ public sealed class MailRelayEmailUseCases(
         return queueStore.GetMessageDetailsAsync(id, cancellationToken);
     }
 
-    public Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(
-        string? email,
-        CancellationToken cancellationToken) {
-        return queueStore.GetSuppressionsAsync(email, cancellationToken);
+    public Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(
+        string? email, int page, int limit, CancellationToken cancellationToken) {
+        return queueStore.GetSuppressionsPageAsync(email, page, limit, cancellationToken);
     }
 
     public Task CreateSuppressionAsync(CreateSuppressionRequest request, CancellationToken cancellationToken) {
@@ -37,9 +36,8 @@ public sealed class MailRelayEmailUseCases(
         return queueStore.RemoveSuppressionAsync(email, cancellationToken);
     }
 
-    public Task<IReadOnlyList<MailRelayDeliveryEventEntry>> GetDeliveryEventsAsync(
-        string? email,
-        CancellationToken cancellationToken) {
-        return queueStore.GetDeliveryEventsAsync(email, cancellationToken);
+    public Task<MailRelayPage<MailRelayDeliveryEventEntry>> GetDeliveryEventsPageAsync(
+        string? email, int page, int limit, CancellationToken cancellationToken) {
+        return queueStore.GetDeliveryEventsPageAsync(email, page, limit, cancellationToken);
     }
 }

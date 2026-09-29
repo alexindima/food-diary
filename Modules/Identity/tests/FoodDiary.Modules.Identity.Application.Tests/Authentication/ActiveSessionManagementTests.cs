@@ -86,7 +86,8 @@ public sealed class ActiveSessionManagementTests {
         var userId = new UserId(Guid.NewGuid());
         UserRefreshTokenSession activeSession = CreateSession(userId, Guid.NewGuid());
         IRefreshTokenSessionReadModelRepository repository = Substitute.For<IRefreshTokenSessionReadModelRepository>();
-        repository.GetActiveReadModelsAsync(userId, CancellationToken.None)
+        repository.IsActiveAsync(userId: userId, sessionId: Arg.Any<Guid>(), cancellationToken: CancellationToken.None).Returns(returnThis: false);
+        repository.GetActivePageReadModelsAsync(userId: userId, page: 1, limit: 50, cancellationToken: CancellationToken.None)
             .Returns(Task.FromResult<IReadOnlyList<RefreshTokenSessionReadModel>>([new(
                 activeSession.Id, activeSession.AuthProvider, activeSession.UserAgent, activeSession.CreatedAtUtc, activeSession.LastRotatedAtUtc)]));
         var handler = new GetActiveSessionsQueryHandler(repository);
@@ -103,7 +104,8 @@ public sealed class ActiveSessionManagementTests {
         var userId = new UserId(Guid.NewGuid());
         UserRefreshTokenSession activeSession = CreateSession(userId, Guid.NewGuid());
         IRefreshTokenSessionReadModelRepository repository = Substitute.For<IRefreshTokenSessionReadModelRepository>();
-        repository.GetActiveReadModelsAsync(userId, CancellationToken.None)
+        repository.IsActiveAsync(userId: userId, sessionId: activeSession.Id, cancellationToken: CancellationToken.None).Returns(returnThis: true);
+        repository.GetActivePageReadModelsAsync(userId: userId, page: 1, limit: 50, cancellationToken: CancellationToken.None)
             .Returns(Task.FromResult<IReadOnlyList<RefreshTokenSessionReadModel>>([new(
                 activeSession.Id, activeSession.AuthProvider, activeSession.UserAgent, activeSession.CreatedAtUtc, activeSession.LastRotatedAtUtc)]));
         var handler = new GetActiveSessionsQueryHandler(repository);

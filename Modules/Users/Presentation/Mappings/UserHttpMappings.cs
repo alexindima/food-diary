@@ -10,9 +10,7 @@ using FoodDiary.Modules.Users.Application.Commands.UpdateUser;
 using FoodDiary.Modules.Users.Application.Queries.GetProfileOverview;
 using FoodDiary.Modules.Users.Application.Queries.GetDesiredWaist;
 using FoodDiary.Modules.Users.Application.Queries.GetDesiredWeight;
-using FoodDiary.Modules.Users.Application.Queries.GetWeightGoalHistory;
 using FoodDiary.Modules.Users.Application.Queries.GetWeightGoalHistoryPage;
-using FoodDiary.Modules.Users.Application.Queries.GetWaistGoalHistory;
 using FoodDiary.Modules.Users.Application.Queries.GetWaistGoalHistoryPage;
 using FoodDiary.Modules.Users.Application.Queries.GetUserById;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -26,10 +24,8 @@ public static class UserHttpMappings {
         public GetUserByIdQuery ToUserQuery() => new(userId);
         public GetProfileOverviewQuery ToProfileOverviewQuery() => new(userId);
         public GetDesiredWeightQuery ToDesiredWeightQuery() => new(userId);
-        public GetWeightGoalHistoryQuery ToWeightGoalHistoryQuery() => new(userId);
         public GetWeightGoalHistoryPageQuery ToWeightGoalHistoryPageQuery(string? cursor) => new(userId, cursor);
         public GetDesiredWaistQuery ToDesiredWaistQuery() => new(userId);
-        public GetWaistGoalHistoryQuery ToWaistGoalHistoryQuery() => new(userId);
         public GetWaistGoalHistoryPageQuery ToWaistGoalHistoryPageQuery(string? cursor) => new(userId, cursor);
     }
 

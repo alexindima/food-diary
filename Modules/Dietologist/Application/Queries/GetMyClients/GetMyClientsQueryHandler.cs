@@ -4,6 +4,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
 
@@ -21,6 +22,8 @@ public sealed class GetMyClientsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetMyClientsAsync(userId, cancellationToken).ConfigureAwait(false);
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
+        return await readService.GetMyClientsPageAsync(userId, page, limit, cancellationToken).ConfigureAwait(false);
     }
 }

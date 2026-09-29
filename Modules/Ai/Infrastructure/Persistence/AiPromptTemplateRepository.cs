@@ -37,6 +37,23 @@ internal sealed class AiPromptTemplateRepository(DbSet<AiPromptTemplate> templat
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<AiPromptTemplateReadModel>> GetPageReadModelsAsync(
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await templates.AsNoTracking()
+            .OrderBy(t => t.Key)
+            .ThenBy(t => t.Locale)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(t => new AiPromptTemplateReadModel(
+                t.Id.Value, t.Key, t.Locale, t.PromptText, t.Version, t.IsActive, t.CreatedOnUtc, t.ModifiedOnUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<AiPromptTemplate?> GetByKeyAsync(
         string key,
         string locale,

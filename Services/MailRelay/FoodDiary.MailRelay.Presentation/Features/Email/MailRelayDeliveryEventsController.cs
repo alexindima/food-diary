@@ -12,9 +12,10 @@ namespace FoodDiary.MailRelay.Presentation.Features.Email;
 [Route("api/email/events")]
 public sealed class MailRelayDeliveryEventsController(ISender sender) : AuthorizedMailRelayController(sender) {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<MailRelayDeliveryEventHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> Get([FromQuery] string? email) =>
-        HandleOk(email.ToDeliveryEventsQuery(), static value => value.ToHttpResponse());
+    [ProducesResponseType<MailRelayPageHttpResponse<MailRelayDeliveryEventHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetPage([FromQuery] GetMailRelayCollectionHttpQuery query) =>
+        HandleOk(query.ToDeliveryEventsQuery(), static value => new MailRelayPageHttpResponse<MailRelayDeliveryEventHttpResponse>(
+            value.Data.Select(item => item.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpPost]
     [ProducesResponseType<MailRelayDeliveryEventHttpResponse>(StatusCodes.Status201Created)]

@@ -8,7 +8,7 @@ using FoodDiary.Modules.Admin.Presentation.Responses;
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
 public static class AdminAchievementDefinitionsHttpMappings {
-    public static GetAdminAchievementDefinitionsQuery ToQuery() => new();
+    public static GetAdminAchievementDefinitionsQuery ToQuery(int page, int limit) => new(page, limit);
 
     extension(CreateAdminAchievementDefinitionHttpRequest request) {
         public CreateAdminAchievementDefinitionCommand ToCommand() =>

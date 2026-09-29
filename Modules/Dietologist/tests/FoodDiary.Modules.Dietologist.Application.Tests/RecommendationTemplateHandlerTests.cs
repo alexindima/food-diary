@@ -231,7 +231,7 @@ public sealed class RecommendationTemplateHandlerTests {
         IRecommendationTemplateRepository repository = Substitute.For<IRecommendationTemplateRepository>();
         DateTime createdAt = DateTime.UtcNow.AddDays(-2);
         DateTime modifiedAt = DateTime.UtcNow.AddDays(-1);
-        repository.SearchAsync(dietologistId, "protein", true, Arg.Any<CancellationToken>())
+        repository.SearchAsync(dietologistId, "protein", true, 1, 50, Arg.Any<CancellationToken>())
             .Returns([
                 new RecommendationTemplateReadModel(
                     Guid.NewGuid(),
@@ -273,6 +273,8 @@ public sealed class RecommendationTemplateHandlerTests {
                 dietologist.Id,
                 "name",
                 true,
+                1,
+                50,
                 Arg.Any<CancellationToken>())
             .Returns([expected]);
         var handler = new SearchRecommendationTemplatesQueryHandler(

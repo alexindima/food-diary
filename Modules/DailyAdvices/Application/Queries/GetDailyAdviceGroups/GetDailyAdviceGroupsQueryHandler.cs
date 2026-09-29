@@ -4,13 +4,17 @@ using FoodDiary.Results;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdviceGroups;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.DailyAdvices.Application.Queries.GetDailyAdviceGroups;
 
 public sealed class GetDailyAdviceGroupsQueryHandler(IDailyAdviceReadModelRepository repository)
     : IRequestHandler<GetDailyAdviceGroupsQuery, Result<IReadOnlyList<DailyAdviceGroupModel>>> {
     public async Task<Result<IReadOnlyList<DailyAdviceGroupModel>>> Handle(GetDailyAdviceGroupsQuery request, CancellationToken cancellationToken) {
-        IReadOnlyList<DailyAdviceReadModel> items = await repository.GetAllReadModelsAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdviceReadModel> items = await repository.GetGroupPageReadModelsAsync(
+            PaginationPolicy.NormalizePage(request.Page),
+            PaginationPolicy.NormalizePageSize(request.Limit),
+            cancellationToken).ConfigureAwait(false);
         return Result.Success<IReadOnlyList<DailyAdviceGroupModel>>(items
             .GroupBy(item => item.GroupId == Guid.Empty ? item.Id : item.GroupId)
             .Select(group => new DailyAdviceGroupModel(group.Key,

@@ -268,7 +268,7 @@ describe('UserService dashboard persistence', () => {
 });
 
 describe('UserService body goal contracts', () => {
-    it.each(['weight', 'waist'] as const)('reads %s goal and history', kind => {
+    it.each(['weight', 'waist'] as const)('reads %s goal', kind => {
         const waist = kind === 'waist';
         const goal = waist
             ? { desiredWaistCm: 80, startWaistCm: 90, startedAtUtc: '2026-03-01' }
@@ -280,16 +280,9 @@ describe('UserService body goal contracts', () => {
         expect(req.request.method).toBe('GET');
         req.flush(goal);
         expect(next).toHaveBeenCalledWith(goal);
-        const historyNext = vi.fn();
-        const historyRequest: Observable<unknown> = waist ? service.getWaistGoalHistory() : service.getWeightGoalHistory();
-        historyRequest.subscribe(historyNext);
-        const historyReq = httpMock.expectOne(`${BASE_URL}/${kind}-goals`);
-        expect(historyReq.request.method).toBe('GET');
-        historyReq.flush([]);
-        expect(historyNext).toHaveBeenCalledWith([]);
     });
 
-    it.each(['weight', 'waist'] as const)('returns empty %s goals/history after read errors', kind => {
+    it.each(['weight', 'waist'] as const)('returns an empty %s goal after read errors', kind => {
         const waist = kind === 'waist';
         const next = vi.fn();
         const request: Observable<unknown> = waist ? service.getWaistGoal() : service.getWeightGoal();
@@ -300,11 +293,6 @@ describe('UserService body goal contracts', () => {
                 ? { desiredWaistCm: null, startWaistCm: null, startedAtUtc: null }
                 : { desiredWeightKg: null, startWeightKg: null, startedAtUtc: null },
         );
-        const historyNext = vi.fn();
-        const historyRequest: Observable<unknown> = waist ? service.getWaistGoalHistory() : service.getWeightGoalHistory();
-        historyRequest.subscribe(historyNext);
-        httpMock.expectOne(`${BASE_URL}/${kind}-goals`).flush('offline', { status: 503, statusText: 'Unavailable' });
-        expect(historyNext).toHaveBeenCalledWith([]);
     });
 });
 

@@ -133,7 +133,7 @@ export class RecipeDetailFacade {
         const request$ =
             favoriteId !== null && favoriteId.length > 0
                 ? this.favoriteRecipeService.remove(favoriteId)
-                : this.favoriteRecipeService.getAll().pipe(
+                : this.favoriteRecipeService.getLookupPage().pipe(
                       switchMap(favorites => {
                           const match = favorites.find(favorite => favorite.recipeId === recipe.id);
                           return match === undefined ? of(null) : this.favoriteRecipeService.remove(match.id);

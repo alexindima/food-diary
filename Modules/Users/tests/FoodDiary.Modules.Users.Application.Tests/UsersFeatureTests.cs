@@ -1347,6 +1347,12 @@ public partial class UsersFeatureTests {
         public Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsAsync(
             UserId userId,
             CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsPageAsync(
+            UserId userId,
+            int page,
+            int limit,
+            CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<DietologistInvitationReadModel?> GetByIdReadModelAsync(
             DietologistInvitationId id,
             CancellationToken cancellationToken = default) =>
@@ -1403,6 +1409,12 @@ public partial class UsersFeatureTests {
 
         public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
             UserId dietologistUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
+            UserId dietologistUserId,
+            int page,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(

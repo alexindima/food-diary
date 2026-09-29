@@ -417,6 +417,19 @@ public partial class DietologistFeatureTests {
                     .Select(static invitation => ToReadModel(invitation)!)
                     .ToList());
 
+        public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
+            UserId dietologistUserId,
+            int page,
+            int limit,
+            CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<DietologistInvitationReadModel>>(
+                _invitations.Where(i => i.DietologistUserId == dietologistUserId
+                                        && i.Status == DietologistInvitationStatus.Accepted)
+                    .Skip((page - 1) * limit)
+                    .Take(limit)
+                    .Select(static invitation => ToReadModel(invitation)!)
+                    .ToList());
+
         public Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(
             UserId dietologistUserId, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<DietologistInvitation>>(

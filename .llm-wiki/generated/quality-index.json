@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5643,
+    "productionFiles": 5654,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 969,
-    "criticalSymbolsWithTestReferences": 930,
-    "criticalSymbolsWithoutTestReferences": 39,
+    "criticalSymbols": 971,
+    "criticalSymbolsWithTestReferences": 931,
+    "criticalSymbolsWithoutTestReferences": 40,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -695,6 +695,14 @@
       "structuralRiskScore": 87.68
     },
     {
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "nonBlankLines": 251,
+      "decisionPoints": 55,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 87.52
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
       "nonBlankLines": 400,
       "decisionPoints": 51,
@@ -789,14 +797,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 79.92
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 221,
-      "decisionPoints": 50,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.42
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
@@ -4226,19 +4226,19 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
-      "nonBlankLines": 92,
-      "decisionPoints": 4,
+      "nonBlankLines": 106,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.84
+      "structuralRiskScore": 9.62
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 52,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.66
+      "structuralRiskScore": 4.04
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs",
@@ -6066,11 +6066,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
-      "nonBlankLines": 23,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.52
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/lib/admin-achievements.facade.ts",
@@ -6170,11 +6170,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "nonBlankLines": 57,
+      "nonBlankLines": 58,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
+      "structuralRiskScore": 2.66
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
@@ -6474,11 +6474,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
-      "nonBlankLines": 32,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.ts",
@@ -6602,11 +6602,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.ts",
@@ -6658,11 +6658,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-      "nonBlankLines": 32,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
@@ -7095,6 +7095,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 6.5
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/load-paged-collection.ts",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.ts",
@@ -8770,11 +8778,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
-      "nonBlankLines": 132,
+      "nonBlankLines": 140,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.14
+      "structuralRiskScore": 7.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/dietologist.routes.ts",
@@ -9802,11 +9810,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "nonBlankLines": 32,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan-view.mapper.ts",
@@ -9818,11 +9826,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan.facade.ts",
-      "nonBlankLines": 57,
+      "nonBlankLines": 58,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.64
+      "structuralRiskScore": 8.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/meal-plan.routes.ts",
@@ -9906,11 +9914,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "nonBlankLines": 38,
+      "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
+      "structuralRiskScore": 0.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/meal-api.config.ts",
@@ -10506,11 +10514,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "nonBlankLines": 45,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.9
+      "structuralRiskScore": 0.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
@@ -11050,11 +11058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "nonBlankLines": 19,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/profile-measurements.service.ts",
@@ -11490,11 +11498,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "nonBlankLines": 35,
+      "nonBlankLines": 37,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.74
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe-api.token.ts",
@@ -12082,19 +12090,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/client-tasks.service.ts",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
-      "nonBlankLines": 25,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/components/recommendation-thread/recommendation-thread.ts",
@@ -12138,11 +12146,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "nonBlankLines": 47,
+      "nonBlankLines": 51,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.94
+      "structuralRiskScore": 1.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.ts",
@@ -13289,6 +13297,14 @@
       "structuralRiskScore": 0.84
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/api/load-paged-collection.ts",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/api/recipe-lookup.service.ts",
       "nonBlankLines": 14,
       "decisionPoints": 0,
@@ -13298,11 +13314,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "nonBlankLines": 245,
+      "nonBlankLines": 235,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.9
+      "structuralRiskScore": 16.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
@@ -15322,11 +15338,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQuery.cs",
@@ -15354,11 +15370,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.38
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQuery.cs",
@@ -15530,11 +15546,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQuery.cs",
@@ -15546,11 +15562,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.34
+      "structuralRiskScore": 7.4
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQuery.cs",
@@ -15594,11 +15610,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.38
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs",
@@ -15634,11 +15650,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.38
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQuery.cs",
@@ -16609,6 +16625,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Admin/Presentation/Requests/GetAdminContentReportsHttpQuery.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
@@ -17274,11 +17298,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadModelRepository.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateWriteRepository.cs",
@@ -17554,11 +17578,11 @@
     },
     {
       "path": "Modules/Ai/Application/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQueryHandler.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Ai/Application/Queries/GetAiUsageForUser/GetAiUsageForUserQueryHandler.cs",
@@ -17954,11 +17978,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 7,
+      "nonBlankLines": 75,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.68
+      "structuralRiskScore": 13.5
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
@@ -21466,11 +21490,11 @@
     },
     {
       "path": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceReadModelRepository.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/DailyAdvices/Application.Abstractions/Common/IDailyAdviceWriteRepository.cs",
@@ -21546,19 +21570,19 @@
     },
     {
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 24,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.9
+      "structuralRiskScore": 8.98
     },
     {
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.3
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
@@ -21690,11 +21714,11 @@
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 62,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 2.74
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs",
@@ -22314,11 +22338,11 @@
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IClientTaskReadModelRepository.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IClientTaskRepository.cs",
@@ -22346,11 +22370,11 @@
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadModelRepository.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.58
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadRepository.cs",
@@ -22402,11 +22426,11 @@
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentReadModelRepository.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentRepository.cs",
@@ -22450,11 +22474,11 @@
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationTemplateReadModelRepository.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationTemplateRepository.cs",
@@ -23018,11 +23042,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Common/IDietologistInvitationReadService.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/Dietologist/Application/Common/IDietologistUserContextService.cs",
@@ -23234,19 +23258,19 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 45,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.8
+      "structuralRiskScore": 5.9
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQuery.cs",
@@ -23290,11 +23314,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 32,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.08
+      "structuralRiskScore": 4.14
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQuery.cs",
@@ -23306,11 +23330,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 26,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
+      "structuralRiskScore": 4.02
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetMyDietologist/GetMyDietologistQuery.cs",
@@ -23362,19 +23386,27 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 58,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.56
+      "structuralRiskScore": 7.66
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryValidator.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.18
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs",
@@ -23394,19 +23426,19 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQuery.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 34,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.08
+      "structuralRiskScore": 4.18
     },
     {
       "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
@@ -23434,11 +23466,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 4,
+      "nonBlankLines": 91,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.5
+      "structuralRiskScore": 9.32
     },
     {
       "path": "Modules/Dietologist/Application/Services/DietologistUserContextService.cs",
@@ -23642,11 +23674,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistInvitationRepository.cs",
-      "nonBlankLines": 110,
+      "nonBlankLines": 116,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.7
+      "structuralRiskScore": 18.82
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs",
@@ -23666,11 +23698,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
-      "nonBlankLines": 67,
+      "nonBlankLines": 75,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.84
+      "structuralRiskScore": 9
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
@@ -23698,11 +23730,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs",
-      "nonBlankLines": 64,
+      "nonBlankLines": 58,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.78
+      "structuralRiskScore": 8.66
     },
     {
       "path": "Modules/Dietologist/PersistenceModel/Configurations/ClientTaskConfiguration.cs",
@@ -23786,11 +23818,11 @@
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
+      "structuralRiskScore": 5.56
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistAttentionController.cs",
@@ -23802,19 +23834,19 @@
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
+      "nonBlankLines": 41,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
+      "structuralRiskScore": 5.82
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 0,
+      "nonBlankLines": 63,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.22
+      "structuralRiskScore": 6.26
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistController.cs",
@@ -23834,19 +23866,19 @@
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 0,
+      "nonBlankLines": 50,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.98
+      "structuralRiskScore": 6
     },
     {
       "path": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.84
+      "structuralRiskScore": 2.96
     },
     {
       "path": "Modules/Dietologist/Presentation/DietologistRequestLimits.cs",
@@ -23866,11 +23898,11 @@
     },
     {
       "path": "Modules/Dietologist/Presentation/Mappings/DietologistHttpMappings.cs",
-      "nonBlankLines": 169,
+      "nonBlankLines": 171,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.88
+      "structuralRiskScore": 7.92
     },
     {
       "path": "Modules/Dietologist/Presentation/Mappings/DietologistHttpResponseMappings.cs",
@@ -23967,6 +23999,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Dietologist/Presentation/Requests/InviteDietologistHttpRequest.cs",
@@ -27066,11 +27106,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 2.84
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -27098,11 +27138,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.9
+      "structuralRiskScore": 2.82
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -27138,11 +27178,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.78
+      "structuralRiskScore": 2.7
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
@@ -27178,11 +27218,11 @@
     },
     {
       "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs",
-      "nonBlankLines": 5,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
@@ -27298,11 +27338,11 @@
     },
     {
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs",
@@ -27466,11 +27506,11 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
-      "nonBlankLines": 64,
+      "nonBlankLines": 75,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.28
+      "structuralRiskScore": 4.5
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
@@ -28130,11 +28170,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
@@ -28290,11 +28330,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
@@ -29170,11 +29210,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 39,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.2
+      "structuralRiskScore": 4.28
     },
     {
       "path": "Modules/Identity/Application/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQueryHandler.cs",
@@ -29303,6 +29343,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.24
+    },
+    {
+      "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatePageQueryHandler.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatesQueryHandler.cs",
@@ -29497,6 +29545,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplates/GetEmailTemplatePageQuery.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplates/GetEmailTemplatesQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -29602,11 +29658,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 9,
+      "nonBlankLines": 93,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.04
+      "structuralRiskScore": 16.86
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs",
@@ -29658,11 +29714,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 221,
-      "decisionPoints": 50,
+      "nonBlankLines": 251,
+      "decisionPoints": 55,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.42
+      "structuralRiskScore": 87.52
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -29906,11 +29962,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
-      "nonBlankLines": 68,
-      "decisionPoints": 1,
+      "nonBlankLines": 69,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.86
+      "structuralRiskScore": 7.88
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBackupEmailController.cs",
@@ -30031,6 +30087,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/GetActiveSessionsHttpQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/GoogleLoginHttpRequest.cs",
@@ -30850,11 +30914,11 @@
     },
     {
       "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonReadModelRepository.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 43,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.86
     },
     {
       "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonReadRepository.cs",
@@ -31058,11 +31122,11 @@
     },
     {
       "path": "Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Lessons/Contracts/Commands/CreateLesson/CreateLessonCommand.cs",
@@ -31202,11 +31266,11 @@
     },
     {
       "path": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
-      "nonBlankLines": 231,
+      "nonBlankLines": 235,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.62
+      "structuralRiskScore": 28.7
     },
     {
       "path": "Modules/Lessons/PersistenceModel/Configurations/NutritionLessonConfiguration.cs",
@@ -31634,11 +31698,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanReadRepository.cs",
@@ -31938,27 +32002,27 @@
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 35,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.42
+      "structuralRiskScore": 4.2
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 28,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
+      "structuralRiskScore": 4.06
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
@@ -32450,11 +32514,11 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "nonBlankLines": 141,
-      "decisionPoints": 11,
+      "nonBlankLines": 157,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.32
+      "structuralRiskScore": 24.14
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
@@ -32530,11 +32594,11 @@
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.88
+      "structuralRiskScore": 2.96
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -32578,11 +32642,11 @@
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 68,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.38
+      "structuralRiskScore": 3.36
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -40994,19 +41058,19 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
+      "structuralRiskScore": 2.4
     },
     {
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
+      "structuralRiskScore": 2.4
     },
     {
       "path": "Modules/Users/Presentation/Extensions/UsersPresentationServiceCollectionExtensions.cs",
@@ -41058,11 +41122,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
-      "nonBlankLines": 105,
+      "nonBlankLines": 101,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.1
+      "structuralRiskScore": 2.02
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpResponseMappings.cs",
@@ -43250,11 +43314,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.94
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
@@ -43449,6 +43513,14 @@
       "structuralRiskScore": 0.28
     },
     {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayPage.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayQueueStats.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -43490,11 +43562,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "structuralRiskScore": 7.24
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
@@ -43554,11 +43626,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "structuralRiskScore": 7.24
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs",
@@ -43586,11 +43658,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 35,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
@@ -44098,11 +44170,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
-      "nonBlankLines": 101,
+      "nonBlankLines": 118,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.02
+      "structuralRiskScore": 14.36
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
@@ -44130,11 +44202,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
-      "nonBlankLines": 110,
+      "nonBlankLines": 127,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.7
+      "structuralRiskScore": 13.04
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
@@ -44298,11 +44370,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
+      "structuralRiskScore": 2.5
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
@@ -44330,11 +44402,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.54
+      "structuralRiskScore": 2.56
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
@@ -44433,6 +44505,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetMailRelayCollectionHttpQuery.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetOutgoingEmailJournalHttpQuery.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -44503,6 +44583,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayPageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayProviderIngestionHttpResponse.cs",
@@ -48792,11 +48880,12 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
       "line": 20,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAiPromptTestControllerTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -48890,11 +48979,12 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
       "line": 20,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49018,10 +49108,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
       "line": 17,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49326,9 +49417,10 @@
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistAttentionController.cs",
       "line": 18,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49350,10 +49442,11 @@
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
       "line": 23,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49391,9 +49484,10 @@
       "role": "Controller",
       "path": "Modules/Exercises/Presentation/Controllers/ExercisesController.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExercisesControllerTests.cs"
+        "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExercisesControllerTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49493,9 +49587,10 @@
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
       "line": 20,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs"
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49532,11 +49627,12 @@
       "role": "Controller",
       "path": "Modules/Hydration/Presentation/Controllers/HydrationEntriesController.cs",
       "line": 18,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49717,7 +49813,7 @@
       "name": "MealPlansController",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
-      "line": 18,
+      "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
@@ -49771,11 +49867,12 @@
       "role": "Controller",
       "path": "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs",
       "line": 16,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/PresentationHardeningContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/PresentationHardeningContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49785,11 +49882,12 @@
       "role": "Controller",
       "path": "Modules/Notifications/Presentation/Controllers/NotificationsController.cs",
       "line": 19,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49850,9 +49948,10 @@
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49899,14 +49998,15 @@
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/RecipesController.cs",
       "line": 17,
-      "testReferenceCount": 6,
+      "testReferenceCount": 7,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs",
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49927,11 +50027,12 @@
       "name": "RecommendationsController",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
-      "line": 15,
-      "testReferenceCount": 2,
+      "line": 16,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49979,10 +50080,11 @@
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
       "line": 30,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramOperationsControllerTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50030,11 +50132,12 @@
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UsersController.cs",
       "line": 17,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs",
         "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -50098,10 +50201,11 @@
       "role": "Controller",
       "path": "Modules/Wearables/Presentation/Controllers/WearablesController.cs",
       "line": 19,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50299,7 +50403,7 @@
       "name": "GetAchievementDefinitionsForAdministrationQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "line": 7,
+      "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementDefinitionAdministrationServiceTests.cs",
@@ -50312,7 +50416,7 @@
       "name": "GetActiveSessionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs"
@@ -50324,7 +50428,7 @@
       "name": "GetAdminAchievementDefinitionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs"
@@ -50346,7 +50450,7 @@
       "name": "GetAdminAiPromptsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "line": 10,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
@@ -50456,7 +50560,7 @@
       "name": "GetAdminDailyAdviceGroupsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -50466,7 +50570,7 @@
       "name": "GetAdminDailyAdvicesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -50500,7 +50604,7 @@
       "name": "GetAdminEmailTemplatesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "line": 10,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
@@ -50525,7 +50629,7 @@
       "name": "GetAdminLessonsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "line": 10,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -50703,7 +50807,7 @@
       "name": "GetAiPromptTemplatesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQueryHandler.cs",
-      "line": 7,
+      "line": 8,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
@@ -50788,7 +50892,7 @@
       "name": "GetClientTasksForDietologistQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-      "line": 12,
+      "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs"
@@ -50894,7 +50998,7 @@
       "name": "GetDailyAdviceGroupsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -50917,7 +51021,7 @@
       "name": "GetDailyAdvicesForAdministrationQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -50997,6 +51101,18 @@
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetEmailTemplatePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatePageQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -51346,7 +51462,7 @@
       "name": "GetLessonsForAdministrationQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs",
-      "line": 7,
+      "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -51496,7 +51612,7 @@
       "name": "GetMealPlansQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -51548,7 +51664,7 @@
       "name": "GetMyClientTasksQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs"
@@ -51560,7 +51676,7 @@
       "name": "GetMyClientsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
@@ -51850,7 +51966,7 @@
       "name": "GetRecommendationCommentsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "line": 12,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistResidualCoverageTests.cs",
@@ -52877,7 +52993,7 @@
       "name": "SearchRecommendationTemplatesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/RecommendationTemplateHandlerTests.cs"
@@ -54144,7 +54260,7 @@
       "name": "GetMealPlansQueryValidator",
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "line": 5,
+      "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansValidatorTests.cs"
@@ -54331,6 +54447,16 @@
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetRecommendationCommentsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryValidator.cs",
+      "line": 5,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {

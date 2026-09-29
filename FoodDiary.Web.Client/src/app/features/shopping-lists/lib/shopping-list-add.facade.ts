@@ -130,7 +130,7 @@ export class ShoppingListAddFacade {
             return false;
         }
         const scope = this.scope;
-        const lists = await firstValueFrom(this.api.getAllForSelection());
+        const lists = await firstValueFrom(this.api.getSelectionPage());
         const { ShoppingListPickerComponent } = await import('../dialogs/shopping-list-picker/shopping-list-picker');
         if (!this.isCurrent(scope)) {
             return false;

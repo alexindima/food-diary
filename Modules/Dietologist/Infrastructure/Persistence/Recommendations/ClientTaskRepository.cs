@@ -27,18 +27,26 @@ internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientT
 
     public async Task<IReadOnlyList<ClientTaskReadModel>> GetByClientAsync(
         UserId clientUserId,
+        int page,
+        int limit,
         CancellationToken cancellationToken = default) =>
         await Project(records.Where(task => task.ClientUserId == clientUserId))
+            .Skip((page - 1) * limit)
+            .Take(limit)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
     public async Task<IReadOnlyList<ClientTaskReadModel>> GetByDietologistAndClientAsync(
         UserId dietologistUserId,
         UserId clientUserId,
+        int page,
+        int limit,
         CancellationToken cancellationToken = default) =>
         await Project(records.Where(task =>
                 task.DietologistUserId == dietologistUserId &&
                 task.ClientUserId == clientUserId))
+            .Skip((page - 1) * limit)
+            .Take(limit)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 

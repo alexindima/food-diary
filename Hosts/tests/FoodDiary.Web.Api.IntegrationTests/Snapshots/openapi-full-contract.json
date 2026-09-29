@@ -36,6 +36,28 @@
               "ItemReference": "#/components/schemas/AdminAchievementDefinitionHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -372,6 +394,28 @@
               "Type": "array",
               "Nullable": false,
               "ItemReference": "#/components/schemas/AdminAiPromptHttpResponse"
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             }
           ],
           "PathParameters": [
@@ -1529,6 +1573,28 @@
               "ItemReference": "#/components/schemas/AdminDailyAdviceHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -1573,6 +1639,28 @@
               "Type": "array",
               "Nullable": false,
               "ItemReference": "#/components/schemas/AdminDailyAdviceGroupHttpResponse"
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             }
           ],
           "PathParameters": [
@@ -1976,6 +2064,28 @@
               "ItemReference": "#/components/schemas/AdminEmailTemplateHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -2208,6 +2318,28 @@
               "Type": "array",
               "Nullable": false,
               "ItemReference": "#/components/schemas/AdminLessonHttpResponse"
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             }
           ],
           "PathParameters": [
@@ -2608,7 +2740,7 @@
               "Format": "int32",
               "Default": "1",
               "Minimum": 1,
-              "Maximum": 2147483647
+              "Maximum": 10000
             },
             {
               "Name": "Recipient",
@@ -5242,6 +5374,28 @@
               "ItemReference": "#/components/schemas/ActiveSessionHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -6818,6 +6972,28 @@
               "ItemReference": "#/components/schemas/ClientTaskHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -7919,6 +8095,28 @@
               "ItemReference": "#/components/schemas/ClientSummaryHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -8484,6 +8682,28 @@
               "ItemReference": "#/components/schemas/ClientTaskHttpResponse"
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            }
+          ],
           "PathParameters": [
             {
               "Name": "clientUserId",
@@ -8956,6 +9176,26 @@
             }
           ],
           "QueryParameters": [
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
             {
               "Name": "includeArchived",
               "Location": "query",
@@ -10368,46 +10608,6 @@
       "Path": "/api/v{version}/favorite-meals",
       "Operations": [
         {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteMealHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteMealHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteMealHttpResponse"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        },
-        {
           "Method": "post",
           "HasRequestBody": true,
           "RequestBody": {
@@ -10678,46 +10878,6 @@
     {
       "Path": "/api/v{version}/favorite-products",
       "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteProductHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteProductHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteProductHttpResponse"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        },
         {
           "Method": "post",
           "HasRequestBody": true,
@@ -11004,46 +11164,6 @@
     {
       "Path": "/api/v{version}/favorite-recipes",
       "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteRecipeHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteRecipeHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/FavoriteRecipeHttpResponse"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        },
         {
           "Method": "post",
           "HasRequestBody": true,
@@ -12121,23 +12241,20 @@
             {
               "StatusCode": "200",
               "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/MealPlanSummaryHttpResponse"
+              "Reference": "#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse",
+              "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/MealPlanSummaryHttpResponse"
+              "Reference": "#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse",
+              "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/MealPlanSummaryHttpResponse"
+              "Reference": "#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse",
+              "Nullable": false
             }
           ],
           "QueryParameters": [
@@ -12147,6 +12264,26 @@
               "Required": false,
               "Type": "string",
               "MaxLength": 32
+            },
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             }
           ],
           "PathParameters": [
@@ -15596,23 +15733,42 @@
             {
               "StatusCode": "200",
               "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/RecommendationCommentHttpResponse"
+              "Reference": "#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse",
+              "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/RecommendationCommentHttpResponse"
+              "Reference": "#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse",
+              "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/RecommendationCommentHttpResponse"
+              "Reference": "#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             }
           ],
           "PathParameters": [
@@ -15806,46 +15962,6 @@
       "Path": "/api/v{version}/shopping-lists",
       "Operations": [
         {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/ShoppingListSummaryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/ShoppingListSummaryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/ShoppingListSummaryHttpResponse"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        },
-        {
           "Method": "post",
           "HasRequestBody": true,
           "RequestBody": {
@@ -16035,7 +16151,9 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "1"
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "pageSize",
@@ -16043,7 +16161,9 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "20"
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "search",
@@ -17286,52 +17406,6 @@
       ]
     },
     {
-      "Path": "/api/v{version}/users/waist-goals",
-      "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "404",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WaistGoalHistoryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WaistGoalHistoryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WaistGoalHistoryHttpResponse"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "Path": "/api/v{version}/users/waist-goals/page",
       "Operations": [
         {
@@ -17370,52 +17444,6 @@
               "Location": "query",
               "Required": false,
               "Type": "string"
-            }
-          ],
-          "PathParameters": [
-            {
-              "Name": "version",
-              "Location": "path",
-              "Required": true,
-              "Type": "string"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Path": "/api/v{version}/users/weight-goals",
-      "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "404",
-            "500"
-          ],
-          "SuccessResponses": [
-            {
-              "StatusCode": "200",
-              "MediaType": "application/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WeightGoalHistoryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/json",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WeightGoalHistoryHttpResponse"
-            },
-            {
-              "StatusCode": "200",
-              "MediaType": "text/plain",
-              "Type": "array",
-              "Nullable": false,
-              "ItemReference": "#/components/schemas/WeightGoalHistoryHttpResponse"
             }
           ],
           "PathParameters": [
@@ -29916,6 +29944,46 @@
       ]
     },
     {
+      "Name": "MealPlanSummaryHttpResponsePagedHttpResponse",
+      "Properties": [
+        {
+          "Name": "data",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/MealPlanSummaryHttpResponse"
+        },
+        {
+          "Name": "limit",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "page",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalPages",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "MenstrualEpisodeHttpResponse",
       "Properties": [
         {
@@ -31887,6 +31955,46 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "RecommendationCommentHttpResponsePagedHttpResponse",
+      "Properties": [
+        {
+          "Name": "data",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/RecommendationCommentHttpResponse"
+        },
+        {
+          "Name": "limit",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "page",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "totalPages",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
         }
       ]
     },

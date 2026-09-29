@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     AdminLesson,
     AdminLessonCreateRequest,
@@ -17,7 +18,7 @@ export class AdminLessonsService {
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/lessons`;
 
     public getAll(): Observable<AdminLesson[]> {
-        return this.http.get<AdminLesson[]>(this.baseUrl);
+        return loadPagedCollection((page, limit) => this.http.get<AdminLesson[]>(this.baseUrl, { params: { page, limit } }));
     }
 
     public create(request: AdminLessonCreateRequest): Observable<AdminLesson> {

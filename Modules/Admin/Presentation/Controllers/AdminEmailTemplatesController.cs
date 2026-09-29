@@ -20,8 +20,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminEmailTemplateHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll() =>
-        HandleOk(AdminHttpQueryMappings.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
+    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(query.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

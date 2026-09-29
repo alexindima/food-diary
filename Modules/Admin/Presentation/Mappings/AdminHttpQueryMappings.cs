@@ -70,10 +70,10 @@ public static class AdminHttpQueryMappings {
         }
     }
 
-    public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery() => new();
-    public static GetAdminAiPromptsQuery ToAiPromptsQuery() => new();
-    public static GetAdminLessonsQuery ToLessonsQuery() => new();
-    public static GetAdminDailyAdvicesQuery ToDailyAdvicesQuery() => new();
+    public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminAiPromptsQuery ToAiPromptsQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminLessonsQuery ToLessonsQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
+    public static GetAdminDailyAdvicesQuery ToDailyAdvicesQuery(this GetAdminCollectionPageHttpQuery query) => new(query.Page, query.Limit);
 
     extension(GetAdminUsersHttpQuery query) {
         public GetAdminUsersQuery ToQuery() {

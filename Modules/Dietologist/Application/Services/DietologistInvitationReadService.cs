@@ -30,6 +30,24 @@ public sealed class DietologistInvitationReadService(
         return Result.Success<IReadOnlyList<ClientSummaryModel>>(clients);
     }
 
+    public async Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsPageAsync(
+        UserId userId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken) {
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientSummaryModel>>(userIdResult);
+        }
+
+        IReadOnlyList<DietologistInvitationReadModel> invitations =
+            await invitationRepository.GetActiveByDietologistPageReadModelsAsync(userId, page, limit, cancellationToken)
+                .ConfigureAwait(false);
+        return Result.Success<IReadOnlyList<ClientSummaryModel>>(
+            invitations.Select(invitation => invitation.ToClientSummaryModel()).ToList());
+    }
+
     public async Task<Result<DietologistRelationshipModel?>> GetMyRelationshipAsync(
         UserId userId,
         CancellationToken cancellationToken) {

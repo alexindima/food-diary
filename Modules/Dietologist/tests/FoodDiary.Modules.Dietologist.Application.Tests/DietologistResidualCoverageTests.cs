@@ -159,7 +159,7 @@ public sealed class DietologistResidualCoverageTests {
             Substitute.For<IRecommendationCommentReadModelRepository>(),
             users);
 
-        Result<IReadOnlyList<RecommendationCommentModel>> result = await handler.Handle(
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await handler.Handle(
             new GetRecommendationCommentsQuery(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -170,7 +170,7 @@ public sealed class DietologistResidualCoverageTests {
     public async Task RecommendationDiscussionReadService_WhenRecommendationIdIsEmpty_ReturnsFailure() {
         var service = new GetRecommendationCommentsQueryHandler(Substitute.For<IRecommendationCommentRepository>(), Substitute.For<ICurrentUserAccessService>());
 
-        Result<IReadOnlyList<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
     }

@@ -12,12 +12,12 @@ import { PublicCatalogFavorites } from './public-catalog-favorites.facade';
 import { publicRecipeFixture } from './public-recipe.test-helper';
 
 const authenticated = signal(false);
-const api = { getAll: vi.fn(), add: vi.fn(), remove: vi.fn() };
+const api = { getLookupPage: vi.fn(), add: vi.fn(), remove: vi.fn() };
 const dialog = { openAsync: vi.fn() };
 let favorites: PublicCatalogFavorites;
 beforeEach(() => {
     authenticated.set(false);
-    api.getAll.mockReset().mockReturnValue(of([]));
+    api.getLookupPage.mockReset().mockReturnValue(of([]));
     api.add.mockReset().mockReturnValue(of({ id: 'favorite-id' }));
     api.remove.mockReset().mockReturnValue(of(undefined));
     dialog.openAsync.mockReset().mockResolvedValue(null);
@@ -36,7 +36,7 @@ beforeEach(() => {
 describe('PublicCatalogFavorites', () => {
     it('does not request private favorites for guests and preserves the return URL on login', async () => {
         await favorites.toggleAsync(publicRecipeFixture());
-        expect(api.getAll).not.toHaveBeenCalled();
+        expect(api.getLookupPage).not.toHaveBeenCalled();
         expect(api.add).not.toHaveBeenCalled();
         expect(dialog.openAsync).toHaveBeenCalledWith(expect.objectContaining({ returnUrl: '/explore?maxTotalTime=30' }));
     });
@@ -54,13 +54,13 @@ describe('PublicCatalogFavorites', () => {
         expect(favorites.savedIds().size).toBe(0);
     });
     it('loads existing favorites once and clears them on logout', async () => {
-        api.getAll.mockReturnValue(of([{ id: 'existing', recipeId: 'recipe' }]));
+        api.getLookupPage.mockReturnValue(of([{ id: 'existing', recipeId: 'recipe' }]));
         authenticated.set(true);
         TestBed.tick();
         await vi.waitFor(() => {
             expect(favorites.savedIds().has('recipe')).toBe(true);
         });
-        expect(api.getAll).toHaveBeenCalledTimes(1);
+        expect(api.getLookupPage).toHaveBeenCalledTimes(1);
         authenticated.set(false);
         TestBed.tick();
         expect(favorites.savedIds().size).toBe(0);

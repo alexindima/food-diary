@@ -61,21 +61,21 @@ describe('FavoriteRecipeService', () => {
     it('gets all favorite recipes', () => {
         const favorites = [createFavoriteRecipe()];
 
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual(favorites);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         expect(req.request.method).toBe('GET');
-        req.flush(favorites);
+        req.flush({ data: favorites, page: 1, limit: 100, totalPages: 1, totalItems: 1 });
     });
 
     it('returns an empty list when get all fails', () => {
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 

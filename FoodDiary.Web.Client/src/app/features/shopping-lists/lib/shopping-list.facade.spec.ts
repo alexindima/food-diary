@@ -16,7 +16,7 @@ type ShoppingListServiceMock = {
     create: ReturnType<typeof vi.fn>;
     deleteById: ReturnType<typeof vi.fn>;
     getOverview: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getPage: ReturnType<typeof vi.fn>;
     getById: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
 };
@@ -85,7 +85,7 @@ describe('ShoppingListFacade loading and selection', () => {
         facade.initialize();
 
         expect(shoppingListService.getOverview).toHaveBeenCalledTimes(1);
-        expect(shoppingListService.getAll).not.toHaveBeenCalled();
+        expect(shoppingListService.getPage).not.toHaveBeenCalled();
         facade.selectList('list-1');
         expect(shoppingListService.getById).not.toHaveBeenCalled();
         expect(facade.list()?.id).toBe('list-1');
@@ -216,7 +216,7 @@ describe('ShoppingListFacade persistence operations', () => {
 
     it('should delete the last selected list and keep empty state', async () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
-        shoppingListService.getAll.mockReturnValueOnce(of([]));
+        shoppingListService.getPage.mockReturnValueOnce(of([]));
         facade.initialize();
         await waitForAsyncTasksAsync();
 
@@ -277,7 +277,7 @@ describe('ShoppingListFacade autosave', () => {
             items: [],
         };
         shoppingListService.create.mockReturnValueOnce(of(createdList));
-        shoppingListService.getAll.mockReturnValueOnce(NEVER);
+        shoppingListService.getPage.mockReturnValueOnce(NEVER);
 
         facade.createNewList();
 
@@ -337,7 +337,7 @@ function createShoppingListServiceMock(list: ShoppingList): ShoppingListServiceM
                 },
             }),
         ),
-        getAll: vi.fn().mockReturnValue(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }])),
+        getPage: vi.fn().mockReturnValue(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }])),
         getById: vi.fn().mockReturnValue(of(list)),
         create: vi.fn().mockReturnValue(of(list)),
         update: vi.fn().mockReturnValue(of(list)),

@@ -7,18 +7,19 @@ import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error
 import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 
 @Service()
 export class MealPlanService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.mealPlans;
 
-    public getAll(dietType?: string): Observable<MealPlanSummary[]> {
-        const params: ApiQueryParams = {};
+    public getPage(dietType?: string, page = 1, limit = 50): Observable<PageOf<MealPlanSummary>> {
+        const params: ApiQueryParams = { page, limit };
         addOptionalStringParam(params, 'dietType', dietType);
 
         return super
-            .get<MealPlanSummary[]>('', params)
-            .pipe(catchError((error: unknown) => fallbackApiError('Get meal plans error', error, [])));
+            .get<PageOf<MealPlanSummary>>('', params)
+            .pipe(catchError((error: unknown) => fallbackApiError('Get meal plans error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 })));
     }
 
     public getById(id: string): Observable<MealPlan> {

@@ -85,7 +85,7 @@ const mockFavoriteProductService = {
     isFavorite: vi.fn().mockReturnValue(of(false)),
     add: vi.fn().mockReturnValue(of(mockFavoriteProduct)),
     remove: vi.fn().mockReturnValue(of(void 0)),
-    getAll: vi.fn().mockReturnValue(of([mockFavoriteProduct])),
+    getLookupPage: vi.fn().mockReturnValue(of([mockFavoriteProduct])),
 };
 
 async function createComponentAsync(product: Product = mockProduct): Promise<ProductDetailComponent> {
@@ -118,7 +118,7 @@ beforeEach(async () => {
     mockFavoriteProductService.isFavorite.mockReturnValue(of(false));
     mockFavoriteProductService.add.mockReturnValue(of(mockFavoriteProduct));
     mockFavoriteProductService.remove.mockReturnValue(of(void 0));
-    mockFavoriteProductService.getAll.mockReturnValue(of([mockFavoriteProduct]));
+    mockFavoriteProductService.getLookupPage.mockReturnValue(of([mockFavoriteProduct]));
     await createComponentAsync();
 });
 
@@ -275,7 +275,7 @@ describe('ProductDetailComponent favorite flow', () => {
 
         favoriteComponent['toggleFavorite']();
 
-        expect(mockFavoriteProductService.getAll).toHaveBeenCalled();
+        expect(mockFavoriteProductService.getLookupPage).toHaveBeenCalled();
         expect(mockFavoriteProductService.remove).toHaveBeenCalledWith(FAVORITE_ID);
         expect(favoriteComponent['isFavorite']()).toBe(false);
     });

@@ -7,4 +7,6 @@ namespace FoodDiary.Modules.Dietologist.Application.Queries.SearchRecommendation
 public sealed record SearchRecommendationTemplatesQuery(
     Guid? UserId,
     string? Search,
-    bool IncludeArchived) : IQuery<Result<IReadOnlyList<RecommendationTemplateModel>>>, IUserRequest;
+    bool IncludeArchived,
+    int Page = 1,
+    int Limit = 50) : IQuery<Result<IReadOnlyList<RecommendationTemplateModel>>>, IUserRequest;

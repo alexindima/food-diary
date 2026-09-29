@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { catchError, EMPTY, expand, reduce, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -26,16 +26,19 @@ export class ShoppingListService extends ApiService {
         );
     }
 
-    public getAll(): Observable<ShoppingListSummary[]> {
-        return this.getPage().pipe(catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])));
-    }
-
     public getPage(page = 1, search = ''): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('page', { page, pageSize: 20, search });
+        return this.get<ShoppingListSummary[]>('page', { page, pageSize: 20, search }).pipe(
+            catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])),
+        );
     }
 
-    public getAllForSelection(): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('');
+    public getSelectionPage(): Observable<ShoppingListSummary[]> {
+        return this.get<ShoppingListSummary[]>('page', { page: 1, pageSize: 50 }).pipe(
+            expand((items, index) => (items.length === 50
+                ? this.get<ShoppingListSummary[]>('page', { page: index + 2, pageSize: 50 })
+                : EMPTY)),
+            reduce((allItems, items) => [...allItems, ...items], [] as ShoppingListSummary[]),
+        );
     }
 
     public getById(id: string): Observable<ShoppingList | null> {

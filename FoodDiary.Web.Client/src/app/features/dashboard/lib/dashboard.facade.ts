@@ -107,7 +107,7 @@ export class DashboardFacade {
             meal.isFavorite === true
                 ? ((meal.favoriteMealId?.length ?? 0) > 0
                       ? of(meal.favoriteMealId)
-                      : this.favoriteMealService.getAll().pipe(map(favorites => favorites.find(favorite => favorite.mealId === mealId)?.id))
+                      : this.favoriteMealService.getLookupPage().pipe(map(favorites => favorites.find(favorite => favorite.mealId === mealId)?.id))
                   ).pipe(
                       switchMap(id =>
                           id !== undefined && id !== null && id.length > 0 ? this.favoriteMealService.remove(id) : of(undefined),

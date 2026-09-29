@@ -18,8 +18,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminAchievementDefinitionsController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminAchievementDefinitionHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll() =>
-        HandleOk(AdminAchievementDefinitionsHttpMappings.ToQuery(),
+    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(AdminAchievementDefinitionsHttpMappings.ToQuery(query.Page, query.Limit),
             static definitions => definitions.Select(static definition => definition.ToHttpResponse()).ToList());
 
     [HttpPost]

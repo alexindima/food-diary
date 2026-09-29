@@ -31,33 +31,26 @@ internal sealed class RecommendationTemplateRepository(DbSet<RecommendationTempl
         UserId dietologistUserId,
         string? search,
         bool includeArchived,
+        int page,
+        int limit,
         CancellationToken cancellationToken = default) {
         IQueryable<RecommendationTemplate> query = records
             .AsNoTracking()
             .Where(template =>
                 template.DietologistUserId == dietologistUserId &&
                 (includeArchived || !template.IsArchived));
-        if (string.IsNullOrWhiteSpace(search)) {
-            return await query
-                .OrderBy(template => template.Name)
-                .Select(template => new RecommendationTemplateReadModel(
-                    template.Id.Value,
-                    template.Name,
-                    template.Text,
-                    template.IsArchived,
-                    template.CreatedOnUtc,
-                    template.ModifiedOnUtc))
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(search)) {
+            string pattern = $"%{search.Trim()}%";
+            query = query.Where(template =>
+                EF.Functions.ILike(template.Name, pattern) ||
+                EF.Functions.ILike(template.Text, pattern));
         }
-
-        string pattern = $"%{search.Trim()}%";
-        query = query.Where(template =>
-            EF.Functions.ILike(template.Name, pattern) ||
-            EF.Functions.ILike(template.Text, pattern));
 
         return await query
             .OrderBy(template => template.Name)
+            .ThenBy(template => template.Id)
+            .Skip((page - 1) * limit)
+            .Take(limit)
             .Select(template => new RecommendationTemplateReadModel(
                 template.Id.Value,
                 template.Name,

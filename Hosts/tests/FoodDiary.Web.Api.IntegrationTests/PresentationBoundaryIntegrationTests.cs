@@ -1,8 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Modules.Admin.Presentation.Requests;
@@ -1258,7 +1260,9 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             }
         }
 
-        Assert.Empty(violations);
+        Assert.True(
+            violations.Count == 0,
+            $"Pagination query parameters must expose safe OpenAPI maximums:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
     [RequiresDockerFact]
@@ -1363,6 +1367,54 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             .GetProperty("application/json").GetProperty("schema");
         await AssertSnapshotAsync("openapi-recipe-like-not-found-schema.json",
             JsonSerializer.Serialize(likeNotFoundSchema, IndentedJsonOptions));
+    }
+
+    [RequiresDockerFact]
+    public async Task SwaggerJson_PaginationParametersExposeSafeMaximums() {
+        HttpClient client = apiFactory.CreateClient();
+        HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
+        response.EnsureSuccessStatusCode();
+
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var violations = new List<string>();
+        foreach (JsonProperty path in json.RootElement.GetProperty("paths").EnumerateObject()) {
+            foreach (JsonProperty operation in path.Value.EnumerateObject()) {
+                if (!operation.Value.TryGetProperty("parameters", out JsonElement parameters)) {
+                    continue;
+                }
+
+                foreach (JsonElement parameter in parameters.EnumerateArray()) {
+                    if (!parameter.TryGetProperty("in", out JsonElement location) ||
+                        !string.Equals(location.GetString(), "query", StringComparison.Ordinal) ||
+                        !parameter.TryGetProperty("name", out JsonElement nameElement)) {
+                        continue;
+                    }
+
+                    string? name = nameElement.GetString();
+                    int? expectedMaximum = name?.ToLowerInvariant() switch {
+                        "limit" or "pagesize" or "page_size" or "take" => PaginationPolicy.MaxCollectionSize,
+                        "page" or "pagenumber" or "page_number" => PaginationPolicy.MaxPageNumber,
+                        _ => null,
+                    };
+                    if (expectedMaximum is null) {
+                        continue;
+                    }
+
+                    if (!parameter.TryGetProperty("schema", out JsonElement schema) ||
+                        !schema.TryGetProperty("maximum", out JsonElement maximum) ||
+                        !maximum.TryGetInt32(out int actualMaximum) ||
+                        actualMaximum > expectedMaximum.Value) {
+                        violations.Add(string.Create(
+                            CultureInfo.InvariantCulture,
+                            $"{operation.Name.ToUpperInvariant()} {path.Name}: query parameter '{name}' must declare maximum <= {expectedMaximum.Value}."));
+                    }
+                }
+            }
+        }
+
+        Assert.True(
+            violations.Count == 0,
+            $"Pagination query parameters must expose safe OpenAPI maximums:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
     }
 
     [RequiresDockerFact]

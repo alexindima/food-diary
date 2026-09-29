@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { catchError, map, type Observable } from 'rxjs';
+import { catchError, EMPTY, expand, map, reduce, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -21,9 +21,10 @@ export class FavoriteProductService extends ApiService {
         );
     }
 
-    public getAll(): Observable<FavoriteProduct[]> {
-        return this.get<FavoriteProduct[]>('').pipe(
-            map(products => products.map(normalizeProductUnit)),
+    public getLookupPage(): Observable<FavoriteProduct[]> {
+        return this.getPage(1, 100).pipe(
+            expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, 100) : EMPTY)),
+            reduce((items, page) => [...items, ...page.data], [] as FavoriteProduct[]),
             catchError((error: unknown) => fallbackApiError('Get favorite products error', error, [])),
         );
     }

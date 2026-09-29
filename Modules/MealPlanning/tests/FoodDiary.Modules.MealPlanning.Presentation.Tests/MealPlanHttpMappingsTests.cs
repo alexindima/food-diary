@@ -14,10 +14,12 @@ public sealed class MealPlanHttpMappingsTests {
     public void ToQuery_MapsUserIdAndDietType() {
         var userId = Guid.NewGuid();
 
-        GetMealPlansQuery query = userId.ToQuery("LowCarb");
+        GetMealPlansQuery query = userId.ToQuery("LowCarb", 2, 25);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal("LowCarb", query.DietType);
+        Assert.Equal(2, query.Page);
+        Assert.Equal(25, query.Limit);
     }
 
     [Fact]

@@ -9,6 +9,12 @@ public interface IDietologistInvitationReadService {
         UserId userId,
         CancellationToken cancellationToken);
 
+    Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsPageAsync(
+        UserId userId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken);
+
     Task<Result<DietologistRelationshipModel?>> GetMyRelationshipAsync(
         UserId userId,
         CancellationToken cancellationToken);

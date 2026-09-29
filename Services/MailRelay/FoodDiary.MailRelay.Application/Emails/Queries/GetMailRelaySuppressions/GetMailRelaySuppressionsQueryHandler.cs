@@ -3,11 +3,11 @@ using FoodDiary.Mediator;
 namespace FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelaySuppressions;
 
 public sealed class GetMailRelaySuppressionsQueryHandler(MailRelayEmailUseCases useCases)
-    : IRequestHandler<GetMailRelaySuppressionsQuery, Result<IReadOnlyList<MailRelaySuppressionEntry>>> {
-    public async Task<Result<IReadOnlyList<MailRelaySuppressionEntry>>> Handle(
+    : IRequestHandler<GetMailRelaySuppressionsQuery, Result<MailRelayPage<MailRelaySuppressionEntry>>> {
+    public async Task<Result<MailRelayPage<MailRelaySuppressionEntry>>> Handle(
         GetMailRelaySuppressionsQuery request,
         CancellationToken cancellationToken) {
-        IReadOnlyList<MailRelaySuppressionEntry> suppressions = await useCases.GetSuppressionsAsync(request.Email, cancellationToken).ConfigureAwait(false);
-        return Result<IReadOnlyList<MailRelaySuppressionEntry>>.Success(suppressions);
+        MailRelayPage<MailRelaySuppressionEntry> suppressions = await useCases.GetSuppressionsPageAsync(request.Email, request.Page, request.Limit, cancellationToken).ConfigureAwait(false);
+        return Result<MailRelayPage<MailRelaySuppressionEntry>>.Success(suppressions);
     }
 }

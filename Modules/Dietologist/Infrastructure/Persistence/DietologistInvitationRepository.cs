@@ -86,6 +86,13 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
         CancellationToken cancellationToken = default) =>
         readModels.GetActiveByDietologistReadModelsAsync(dietologistUserId, cancellationToken);
 
+    public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
+        UserId dietologistUserId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) =>
+        readModels.GetActiveByDietologistPageReadModelsAsync(dietologistUserId, page, limit, cancellationToken);
+
     public async Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(
         UserId dietologistUserId,
         CancellationToken cancellationToken = default) {

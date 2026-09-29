@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4279,
-    "symbols": 4210,
+    "sourceFiles": 4288,
+    "symbols": 4219,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2206,
+      "class": 2208,
       "enum": 65,
       "interface": 401,
-      "record": 1418,
+      "record": 1425,
       "record struct": 120
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1734,
-      "Query": 287,
-      "QueryHandler": 209,
+      "Other": 1735,
+      "Query": 292,
+      "QueryHandler": 210,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 157,
-      "Response": 231,
+      "Response": 232,
       "Service": 162,
-      "Validator": 231,
+      "Validator": 232,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -1564,7 +1564,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecommendationReadService",
@@ -3174,7 +3174,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GetAdminAiPromptsQuery",
@@ -3188,7 +3188,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminAiPromptScenariosQuery",
@@ -3356,7 +3356,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdviceGroups/GetAdminDailyAdviceGroupsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetAdminDailyAdvicesQuery",
@@ -3370,7 +3370,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetAdminDashboardOverviewQuery",
@@ -3412,7 +3412,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminImpersonationSessionsQuery",
@@ -3447,7 +3447,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminMailInboxMessageDetailsQuery",
@@ -4290,6 +4290,13 @@
       "line": 5
     },
     {
+      "name": "GetAdminCollectionPageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminCollectionPageHttpQuery.cs",
+      "line": 4
+    },
+    {
       "name": "GetAdminContentReportsHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -5113,7 +5120,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQueryHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GetAiUsageForUserQueryHandler",
@@ -8557,14 +8564,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetDailyAdvicesForAdministrationQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvicesForAdministration/GetDailyAdvicesForAdministrationQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "DailyAdviceSelector",
@@ -10027,7 +10034,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetInvitationByTokenQuery",
@@ -10069,7 +10076,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetMyClientTasksQuery",
@@ -10083,7 +10090,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetMyDietologistQuery",
@@ -10132,14 +10139,21 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetRecommendationCommentsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "line": 12
+      "line": 14
+    },
+    {
+      "name": "GetRecommendationCommentsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryValidator.cs",
+      "line": 5
     },
     {
       "name": "GetRecommendationsForClientQuery",
@@ -10167,7 +10181,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "SearchRecommendationTemplatesQueryValidator",
@@ -10538,7 +10552,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RecommendationTemplatesController",
@@ -10651,6 +10665,13 @@
       "role": "Query",
       "path": "Modules/Dietologist/Presentation/Requests/GetClientDashboardHttpQuery.cs",
       "line": 5
+    },
+    {
+      "name": "GetDietologistCollectionPageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Dietologist/Presentation/Requests/GetDietologistCollectionPageHttpQuery.cs",
+      "line": 4
     },
     {
       "name": "InviteDietologistHttpRequest",
@@ -13513,7 +13534,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GetGamificationQuery",
@@ -15137,7 +15158,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetLoginDeviceSummaryQueryHandler",
@@ -15257,6 +15278,13 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplateRevisions/GetEmailTemplateRevisionsQueryHandler.cs",
       "line": 7
+    },
+    {
+      "name": "GetEmailTemplatePageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatePageQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "GetEmailTemplatesQueryHandler",
@@ -15424,6 +15452,13 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplateRevisions/GetEmailTemplateRevisionsQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetEmailTemplatePageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplates/GetEmailTemplatePageQuery.cs",
       "line": 5
     },
     {
@@ -15893,6 +15928,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeTelegramOidcHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "GetActiveSessionsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/GetActiveSessionsHttpQuery.cs",
       "line": 4
     },
     {
@@ -16775,7 +16817,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CreateLessonCommand",
@@ -17538,21 +17580,21 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetMealPlansQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetMealPlansQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "CreateShoppingListCommand",
@@ -18042,7 +18084,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "MealPlanHttpMappings",
@@ -25329,7 +25371,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
-      "line": 23
+      "line": 21
     },
     {
       "name": "UserHttpResponseMappings",
@@ -27383,6 +27425,13 @@
       "line": 2
     },
     {
+      "name": "MailRelayPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayPage.cs",
+      "line": 2
+    },
+    {
       "name": "MailRelayQueueStats",
       "kind": "record",
       "role": "Other",
@@ -28244,6 +28293,13 @@
       "line": 2
     },
     {
+      "name": "GetMailRelayCollectionHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetMailRelayCollectionHttpQuery.cs",
+      "line": 2
+    },
+    {
       "name": "GetOutgoingEmailJournalHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -28304,6 +28360,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayMessageDetailsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayPageHttpResponse.cs",
       "line": 2
     },
     {

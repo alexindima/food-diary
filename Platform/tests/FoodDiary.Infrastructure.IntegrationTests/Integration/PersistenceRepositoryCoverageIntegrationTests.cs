@@ -332,18 +332,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.ChangeTracker.Clear();
         Assert.Empty(await repository.GetByLocaleAsync("en"));
         Assert.Null(await repository.GetDetailReadModelByIdAsync(lesson.Id));
-        Assert.False(Assert.Single(await repository.GetAdminReadModelsAsync()).IsPublished);
+        Assert.False(Assert.Single(await repository.GetAdminReadModelsAsync(page: 1, limit: 100)).IsPublished);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(lesson.Id);
         Assert.NotNull(tracked);
         tracked.SetPublication(isPublished: true);
         await repository.AddProgressAsync(UserLessonProgress.Create(user.Id, lesson.Id, DateTime.UtcNow));
         await context.SaveChangesAsync();
         Assert.Single(await repository.GetByLocaleAsync("en"));
-        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync()).CompletedCount);
+        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync(page: 1, limit: 100)).CompletedCount);
         tracked.SetPublication(isPublished: false);
         await context.SaveChangesAsync();
         Assert.Null(await repository.GetByIdAsync(lesson.Id));
-        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync()).CompletedCount);
+        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync(page: 1, limit: 100)).CompletedCount);
         Assert.Equal(0, await repository.CountReadLessonsByLocaleAsync(user.Id, "en"));
     }
 
@@ -386,7 +386,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         IReadOnlyList<LessonSummaryReadModel> allSummaryLessons =
             await repository.GetSummaryReadModelsByLocaleAsync("en");
         IReadOnlyList<NutritionLesson> allLessons = await repository.GetAllAsync();
-        IReadOnlyList<LessonAdminReadModel> adminLessons = await repository.GetAdminReadModelsAsync();
+        IReadOnlyList<LessonAdminReadModel> adminLessons = await repository.GetAdminReadModelsAsync(page: 1, limit: 100);
         NutritionLesson? saved = await repository.GetByIdAsync(basics.Id);
         LessonDetailReadModel? detail = await repository.GetDetailReadModelByIdAsync(basics.Id);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(basics.Id);

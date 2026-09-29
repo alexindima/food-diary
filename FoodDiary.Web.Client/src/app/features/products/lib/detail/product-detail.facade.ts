@@ -128,7 +128,7 @@ export class ProductDetailFacade {
         const request$ =
             favoriteId !== null && favoriteId.length > 0
                 ? this.favoriteProductService.remove(favoriteId)
-                : this.favoriteProductService.getAll().pipe(
+                : this.favoriteProductService.getLookupPage().pipe(
                       switchMap(favorites => {
                           const match = favorites.find(favorite => favorite.productId === product.id);
                           return match === undefined ? of(null) : this.favoriteProductService.remove(match.id);

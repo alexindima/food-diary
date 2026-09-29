@@ -6,6 +6,7 @@ using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.SearchRecommendationTemplates;
 
@@ -22,10 +23,14 @@ public sealed class SearchRecommendationTemplatesQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationTemplateModel>>(userIdResult);
         }
 
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         IReadOnlyList<RecommendationTemplateReadModel> templates = await repository.SearchAsync(
             userIdResult.Value,
             query.Search,
             query.IncludeArchived,
+            page,
+            limit,
             cancellationToken).ConfigureAwait(false);
         return Result.Success<IReadOnlyList<RecommendationTemplateModel>>([.. templates.Select(template => template.ToModel())]);
     }

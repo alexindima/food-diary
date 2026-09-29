@@ -163,15 +163,15 @@ public sealed class MailRelayApplicationFeatureTests {
             Stats = stats,
         });
 
-        Result<IReadOnlyList<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
+        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
             .Handle(new GetMailRelaySuppressionsQuery("user@example.com"), CancellationToken.None);
-        Result<IReadOnlyList<MailRelayDeliveryEventEntry>> deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
+        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelayDeliveryEventEntry>> deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
             .Handle(new GetMailRelayDeliveryEventsQuery("user@example.com"), CancellationToken.None);
         Result<MailRelayQueueStats> queueStats = await new GetMailRelayQueueStatsQueryHandler(useCases)
             .Handle(new GetMailRelayQueueStatsQuery(), CancellationToken.None);
 
-        Assert.Same(suppression, Assert.Single(suppressions.Value));
-        Assert.Same(deliveryEvent, Assert.Single(deliveryEvents.Value));
+        Assert.Same(suppression, Assert.Single(suppressions.Value.Data));
+        Assert.Same(deliveryEvent, Assert.Single(deliveryEvents.Value.Data));
         Assert.Same(stats, queueStats.Value);
     }
 

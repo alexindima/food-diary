@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
 
-public record GetAdminAiPromptsQuery : IQuery<Result<IReadOnlyList<AdminAiPromptModel>>>;
+public record GetAdminAiPromptsQuery(int Page = 1, int Limit = 50) : IQuery<Result<IReadOnlyList<AdminAiPromptModel>>>;

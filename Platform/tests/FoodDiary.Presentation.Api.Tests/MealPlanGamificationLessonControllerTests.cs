@@ -1,8 +1,10 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
-using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMeals;
+using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMealPage;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
@@ -41,13 +43,13 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var planId = Guid.NewGuid();
         MealPlanModel mealPlan = CreateMealPlan(planId);
 
-        IRequest<Result<IReadOnlyList<MealPlanSummaryModel>>>? allRequest = null;
-        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<MealPlanSummaryModel>>([
+        IRequest<Result<PagedResponse<MealPlanSummaryModel>>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success(new PagedResponse<MealPlanSummaryModel>([
             new MealPlanSummaryModel(planId, "Balanced", "Desc", "Balanced", 7, 2100, IsCurated: true, TotalRecipes: 14),
-        ]), request => allRequest = request);
+        ], 1, 20, 1, 1)), request => allRequest = request);
         MealPlansController allController = CreateController(new MealPlansController(allSender));
-        IActionResult all = await allController.GetAll(userId, "Balanced");
-        Assert.IsAssignableFrom<IReadOnlyList<MealPlanSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
+        IActionResult all = await allController.GetPage(userId, "Balanced");
+        Assert.IsType<PagedHttpResponse<MealPlanSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
         Assert.Equal("Balanced", Assert.IsType<GetMealPlansQuery>(allRequest).DietType);
 
         IRequest<Result<MealPlanModel>>? byIdRequest = null;
@@ -92,12 +94,12 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var favoriteId = Guid.NewGuid();
         FavoriteMealModel favorite = CreateFavoriteMeal(favoriteId, mealId);
 
-        IRequest<Result<IReadOnlyList<FavoriteMealModel>>>? allRequest = null;
-        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<FavoriteMealModel>>([favorite]), request => allRequest = request);
+        IRequest<Result<PagedResponse<FavoriteMealModel>>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success(new PagedResponse<FavoriteMealModel>([favorite], 1, 10, 1, 1)), request => allRequest = request);
         FavoriteMealsController allController = CreateController(new FavoriteMealsController(allSender));
-        IActionResult all = await allController.GetAll(userId);
-        Assert.IsType<List<FavoriteMealHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
-        Assert.Equal(userId, Assert.IsType<GetFavoriteMealsQuery>(allRequest).UserId);
+        IActionResult all = await allController.GetPage(userId, new GetFavoriteMealPageHttpQuery());
+        Assert.IsType<PagedHttpResponse<FavoriteMealHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
+        Assert.Equal(userId, Assert.IsType<GetFavoriteMealPageQuery>(allRequest).UserId);
 
         IRequest<Result<bool>>? checkRequest = null;
         ISender checkSender = SubstituteSender.Create(Result.Success(value: true), request => checkRequest = request);

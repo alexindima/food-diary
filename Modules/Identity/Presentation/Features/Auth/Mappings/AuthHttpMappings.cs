@@ -146,8 +146,8 @@ public static class AuthHttpMappings {
     }
 
     extension(Guid userId) {
-        public GetActiveSessionsQuery ToGetActiveSessionsQuery(Guid currentSessionId) =>
-            new(userId, currentSessionId);
+        public GetActiveSessionsQuery ToGetActiveSessionsQuery(Guid currentSessionId, int page, int limit) =>
+            new(userId, currentSessionId, page, limit);
 
         public RevokeSessionCommand ToRevokeSessionCommand(Guid currentSessionId, Guid sessionId) =>
             new(userId, currentSessionId, sessionId);

@@ -95,14 +95,16 @@ public static class DietologistHttpMappings {
 
         public GetMyDietologistRelationshipQuery ToMyDietologistRelationshipQuery() => new(userId);
 
-        public GetMyClientsQuery ToMyClientsQuery() => new(userId);
+        public GetMyClientsQuery ToMyClientsQuery(int page = 1, int limit = 50) => new(userId, page, limit);
 
-        public GetMyClientTasksQuery ToMyClientTasksQuery() => new(userId);
+        public GetMyClientTasksQuery ToMyClientTasksQuery(int page = 1, int limit = 50) => new(userId, page, limit);
 
         public SearchRecommendationTemplatesQuery ToSearchTemplatesQuery(
                 string? search,
-                bool includeArchived) =>
-                new(userId, search, includeArchived);
+                bool includeArchived,
+                int page = 1,
+                int limit = 50) =>
+                new(userId, search, includeArchived, page, limit);
 
         public GetMyRecommendationsQuery ToMyRecommendationsQuery() => new(userId);
     }
@@ -126,8 +128,8 @@ public static class DietologistHttpMappings {
         public GetClientGoalsQuery ToClientGoalsQuery(Guid userId) =>
                 new(userId, clientUserId);
 
-        public GetClientTasksForDietologistQuery ToClientTasksQuery(Guid userId) =>
-                new(userId, clientUserId);
+        public GetClientTasksForDietologistQuery ToClientTasksQuery(Guid userId, int page = 1, int limit = 50) =>
+                new(userId, clientUserId, page, limit);
 
         public GetRecommendationsForClientQuery ToRecommendationsForClientQuery(
         Guid userId) =>
@@ -190,8 +192,8 @@ public static class DietologistHttpMappings {
 
     extension(Guid recommendationId) {
         public GetRecommendationCommentsQuery ToRecommendationCommentsQuery(
-                Guid userId) =>
-                new(userId, recommendationId);
+                Guid userId, int page, int limit) =>
+                new(userId, recommendationId, page, limit);
 
         public MarkRecommendationReadCommand ToMarkReadCommand(Guid userId) =>
                 new(userId, recommendationId);

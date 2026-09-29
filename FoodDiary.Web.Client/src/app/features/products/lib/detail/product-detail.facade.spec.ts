@@ -24,7 +24,7 @@ let favoriteProductService: {
     isFavorite: ReturnType<typeof vi.fn>;
     add: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getLookupPage: ReturnType<typeof vi.fn>;
 };
 let dialogRef: { close: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
@@ -37,7 +37,7 @@ beforeEach(() => {
         isFavorite: vi.fn(),
         add: vi.fn(),
         remove: vi.fn(),
-        getAll: vi.fn(),
+        getLookupPage: vi.fn(),
     };
     dialogRef = {
         close: vi.fn(),
@@ -50,7 +50,7 @@ beforeEach(() => {
     favoriteProductService.isFavorite.mockReturnValue(of(false));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
     favoriteProductService.remove.mockReturnValue(of(null));
-    favoriteProductService.getAll.mockReturnValue(of([createFavoriteProduct()]));
+    favoriteProductService.getLookupPage.mockReturnValue(of([createFavoriteProduct()]));
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
 
     TestBed.configureTestingModule({
@@ -103,7 +103,7 @@ describe('ProductDetailFacade favorites', () => {
         facade.toggleFavorite(product);
 
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
-        expect(favoriteProductService.getAll).not.toHaveBeenCalled();
+        expect(favoriteProductService.getLookupPage).not.toHaveBeenCalled();
         expect(facade.isFavorite()).toBe(false);
         expect(facade.isFavoriteLoading()).toBe(false);
     });
@@ -115,7 +115,7 @@ describe('ProductDetailFacade favorites', () => {
 
         facade.toggleFavorite(product);
 
-        expect(favoriteProductService.getAll).toHaveBeenCalled();
+        expect(favoriteProductService.getLookupPage).toHaveBeenCalled();
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.isFavorite()).toBe(false);
     });

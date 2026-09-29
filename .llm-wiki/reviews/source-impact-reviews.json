@@ -207,14 +207,18 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "fae4d0453f4c4440d90517fc83998c31e1647f034045cf73aae757d9057ea75d"
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "b13723b70c9f42143878ce93fc2d51a9af61e085979778c1c8ef38e2154129da"
+          "sha256": "9b334c09198beb826de9873f2dde2c14e659f06ad641c0f55f607aa804933cd1"
         }
       ],
-      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
+      "reason": "Reviewed pagination hardening: OpenAPI query bounds and snapshots intentionally reflect bounded page and collection parameters; compatibility is preserved by frontend paging adapters.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:20.5496643Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:32.7589681Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -223,13 +227,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3bd99a5d4f91a5168058d3794ef7a6c9165f01b3def6e9f5927fe9bec6507b14"
+          "sha256": "4359bd3772b158e2f0105901908a14e384fbaa8f26c3ae89cd06d3b4f21e4168"
         }
       ],
-      "reason": "Reviewed generated health and test indexes: overview adds no project dependencies; host/frontend builds, 101 frontend tests and four API integration tests pass. Prior unrelated Products typed-ID architecture failure remains outside this change.",
+      "reason": "Reviewed regenerated architecture and quality indexes; the new collection guardrails and focused tests cover the intended regression risk.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:22:11.3812894Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:53.5407269Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +242,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e708f8edf08067fae655803d10cca73e26bfee52f3a23c46ef8625add5de0f54"
+          "sha256": "8c9c4dfae1709a9dfe51db028537e394e43d087a98674c9ce09a2649d2a1c112"
         }
       ],
-      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
+      "reason": "Reviewed pagination hardening: generated backend and frontend contract indexes and OpenAPI snapshots intentionally describe bounded collection parameters and compatible client paging.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:21.1933938Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:54.1860277Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "286a1ba7948d331c5f48ef8aa13869dde0122c0fe33c61be34234c50cf7e0052"
+          "sha256": "69920946f7421d7d8c4b949acf2e3fee83ec0d3e6fc2832b80880adfa5cc4669"
         }
       ],
-      "reason": "Reviewed generated health and test indexes: overview adds no project dependencies; host/frontend builds, 101 frontend tests and four API integration tests pass. Prior unrelated Products typed-ID architecture failure remains outside this change.",
+      "reason": "Reviewed regenerated architecture and quality indexes; the new collection guardrails and focused tests cover the intended regression risk.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:22:11.9503997Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:54.8628426Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f6813f885a07d72ea9623b3643ea61b54a3d62c07187a91a2c7e33b3bff6b977"
+          "sha256": "f97c38b10686873116991d5f63a9850b421c58fd53ee39f29a2cdf4a1c367cfc"
         }
       ],
-      "reason": "Existing architecture remains unchanged; regenerated indexes document overview and frontend first-page reuse.",
+      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:22.0847705Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:55.4570028Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "286a1ba7948d331c5f48ef8aa13869dde0122c0fe33c61be34234c50cf7e0052"
+          "sha256": "69920946f7421d7d8c4b949acf2e3fee83ec0d3e6fc2832b80880adfa5cc4669"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f6813f885a07d72ea9623b3643ea61b54a3d62c07187a91a2c7e33b3bff6b977"
+          "sha256": "f97c38b10686873116991d5f63a9850b421c58fd53ee39f29a2cdf4a1c367cfc"
         }
       ],
-      "reason": "Overview resolves current user and scopes both summary and selected detail reads to that user; isolation integration test passes.",
+      "reason": "Reviewed pagination bounds and runtime topology; request limits reduce resource-exhaustion exposure and do not expand sensitive-data handling.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:22.6044954Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:55.9023091Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1061,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "407970af8ad11c8865e30618a3e61361b1d293742972232f289671a4fcf5e62f"
+          "sha256": "ac8e87bc7f0f39a909fce882f8bb9815ca748bbb3d38f08ae4fd1724eb1f3e9e"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "8e9a66616d54eb2a76fa1336c7407a2e986cfa1d859c70b8c68f52874c710446"
+          "sha256": "758b8ace6346a28f4379ef203df6618f0abf670636103e961670468cec49d713"
         }
       ],
-      "reason": "Existing architecture remains unchanged; regenerated indexes document overview and frontend first-page reuse.",
+      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:23.0601398Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:56.3398910Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1159,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "407970af8ad11c8865e30618a3e61361b1d293742972232f289671a4fcf5e62f"
+          "sha256": "ac8e87bc7f0f39a909fce882f8bb9815ca748bbb3d38f08ae4fd1724eb1f3e9e"
         }
       ],
-      "reason": "Reviewed additive user-scoped shopping overview and paginated summaries; OpenAPI snapshots and four API integration tests pass.",
+      "reason": "Reviewed pagination hardening: generated backend and frontend contract indexes and OpenAPI snapshots intentionally describe bounded collection parameters and compatible client paging.",
       "baseRef": "HEAD",
-      "gitHead": "58c0b769b631e9c111d319938a18f29d701e5d5d",
-      "reviewedAtUtc": "2026-09-29T15:21:21.6612549Z"
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:54.4900288Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1174,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7b192f30221c4892a375a2bd8ed1c3312dfa5d99e13a4c16726200ab5aacf071"
+          "sha256": "e9b60ac89907a595ef44cd99858710c4c86d2f2c9cd3954576554b03f15312e0"
         }
       ],
-      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
-      "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:56.7045268Z"
+      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
+      "baseRef": "HEAD",
+      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
+      "reviewedAtUtc": "2026-09-29T22:17:55.1736454Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -12,11 +12,6 @@ namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteMeals.Contro
 [ApiController]
 [Route("api/v{version:apiVersion}/favorite-meals")]
 public sealed class FavoriteMealsController(ISender mediator) : AuthorizedController(mediator) {
-    [HttpGet]
-    [ProducesResponseType<List<FavoriteMealHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
-
     [HttpGet("page")]
     [ProducesResponseType<PagedHttpResponse<FavoriteMealHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -27,8 +27,15 @@ public interface INutritionLessonReadModelRepository {
         string locale,
         CancellationToken cancellationToken = default);
 
+    async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) =>
+        (await GetAdminReadModelsAsync(cancellationToken).ConfigureAwait(false)).Skip((page - 1) * limit).Take(limit).ToList();
+
     Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
 
     Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
         NutritionLessonId id,

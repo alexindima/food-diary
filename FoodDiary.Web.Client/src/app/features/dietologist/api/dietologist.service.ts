@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     AttentionSignal,
     AttentionSignalSettings,
@@ -48,7 +49,7 @@ export class DietologistService extends ApiService {
     }
 
     public getMyClients(): Observable<ClientSummary[]> {
-        return this.get<ClientSummary[]>('clients');
+        return loadPagedCollection((page, limit) => this.get<ClientSummary[]>('clients', { page, limit }));
     }
 
     public getAttentionSignals(settings: AttentionSignalSettings): Observable<AttentionSignal[]> {
@@ -108,7 +109,7 @@ export class DietologistService extends ApiService {
     }
 
     public getTasksForClient(clientUserId: string): Observable<ClientTask[]> {
-        return this.get<ClientTask[]>(`clients/${clientUserId}/tasks`);
+        return loadPagedCollection((page, limit) => this.get<ClientTask[]>(`clients/${clientUserId}/tasks`, { page, limit }));
     }
 
     public createTask(clientUserId: string, request: CreateClientTaskRequest): Observable<ClientTask> {
@@ -120,7 +121,14 @@ export class DietologistService extends ApiService {
     }
 
     public searchRecommendationTemplates(search = '', includeArchived = false): Observable<RecommendationTemplate[]> {
-        return this.get<RecommendationTemplate[]>('recommendation-templates', { search, includeArchived: String(includeArchived) });
+        return loadPagedCollection((page, limit) =>
+            this.get<RecommendationTemplate[]>('recommendation-templates', {
+                search,
+                includeArchived: String(includeArchived),
+                page,
+                limit,
+            }),
+        );
     }
 
     public createRecommendationTemplate(request: RecommendationTemplateRequest): Observable<RecommendationTemplate> {

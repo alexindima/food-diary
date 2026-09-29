@@ -19,8 +19,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminLessonsController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminLessonHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll() =>
-        HandleOk(AdminHttpQueryMappings.ToLessonsQuery(), static value =>
+    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(query.ToLessonsQuery(), static value =>
             value.Select(static item => item.ToLessonHttpResponse()).ToList());
 
     [HttpPost]

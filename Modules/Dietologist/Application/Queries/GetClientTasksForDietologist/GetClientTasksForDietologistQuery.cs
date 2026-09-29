@@ -6,4 +6,6 @@ namespace FoodDiary.Modules.Dietologist.Application.Queries.GetClientTasksForDie
 
 public sealed record GetClientTasksForDietologistQuery(
     Guid? UserId,
-    Guid ClientUserId) : IQuery<Result<IReadOnlyList<ClientTaskModel>>>, IUserRequest;
+    Guid ClientUserId,
+    int Page = 1,
+    int Limit = 50) : IQuery<Result<IReadOnlyList<ClientTaskModel>>>, IUserRequest;

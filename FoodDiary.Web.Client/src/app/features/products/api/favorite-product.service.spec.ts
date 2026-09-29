@@ -59,21 +59,21 @@ describe('FavoriteProductService', () => {
     it('should get all favorite products', () => {
         const favorites = [createFavoriteProduct()];
 
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual(favorites);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         expect(req.request.method).toBe('GET');
-        req.flush(favorites);
+        req.flush({ data: favorites, page: 1, limit: 100, totalPages: 1, totalItems: 1 });
     });
 
     it('should return an empty list when get all fails', () => {
-        service.getAll().subscribe(result => {
+        service.getLookupPage().subscribe(result => {
             expect(result).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
@@ -198,10 +198,11 @@ describe('FavoriteProductService API measurement units', () => {
                 totalItems: 1,
                 totalPages: 1,
             });
-        service.getAll().subscribe(value => {
+        service.getLookupPage().subscribe(value => {
             all = value;
         });
-        httpMock.expectOne(`${BASE_URL}/`).flush([item]);
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100')
+            .flush({ data: [item], page: 1, limit: 100, totalItems: 1, totalPages: 1 });
         expect(page).toMatchObject({ data: [{ baseUnit: wireUnit.toUpperCase() }] });
         expect(all).toMatchObject([{ baseUnit: wireUnit.toUpperCase() }]);
     });

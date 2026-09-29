@@ -187,20 +187,20 @@ public sealed class RecommendationCommentHandlerTests {
         };
         IRecommendationCommentRepository comments = Substitute.For<IRecommendationCommentRepository>();
         comments.IsParticipantAsync(recommendation.Id, clientId, Arg.Any<CancellationToken>()).Returns(returnThis: true);
-        comments.GetByRecommendationAsync(recommendation.Id, Arg.Any<CancellationToken>())
-            .Returns(expected);
+        comments.GetPageByRecommendationAsync(recommendation.Id, Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<(IReadOnlyList<RecommendationCommentReadModel> Items, int Total)>((expected, expected.Count)));
         var handler = new GetRecommendationCommentsQueryHandler(
             comments,
             CreateCurrentUserAccess());
 
-        Result<IReadOnlyList<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
             await handler.Handle(
                 new GetRecommendationCommentsQuery(clientId.Value, recommendation.Id.Value),
                 CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Collection(
-            result.Value,
+            result.Value.Data,
             first => Assert.Equal("First", first.Text),
             second => Assert.Equal("Second", second.Text));
     }
@@ -212,7 +212,7 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IRecommendationCommentRepository>(),
             CreateCurrentUserAccess());
 
-        Result<IReadOnlyList<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
+        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
             await handler.Handle(
                 new GetRecommendationCommentsQuery(Guid.NewGuid(), recommendation.Id.Value),
                 CancellationToken.None);

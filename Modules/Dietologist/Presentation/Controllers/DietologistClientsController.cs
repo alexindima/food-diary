@@ -23,8 +23,10 @@ namespace FoodDiary.Modules.Dietologist.Presentation.Controllers;
 public sealed class DietologistClientsController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<ClientSummaryHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetMyClients([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToMyClientsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
+    public Task<IActionResult> GetMyClients(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetDietologistCollectionPageHttpQuery? query = null) =>
+        HandleOk(userId.ToMyClientsQuery(query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpDelete("{clientUserId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

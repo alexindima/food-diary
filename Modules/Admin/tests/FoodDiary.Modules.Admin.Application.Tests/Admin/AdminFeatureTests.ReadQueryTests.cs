@@ -525,7 +525,11 @@ RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Modules.Users
             "<b>Body</b>",
             "Body",
             isActive: true);
-        GetAdminEmailTemplatesQueryHandler handler = new(RequestTestSender.Create(new GetEmailTemplateRevisionsQueryHandler(new InMemoryEmailTemplateRepository(template)), new GetEmailTemplatesQueryHandler(new InMemoryEmailTemplateRepository(template))));
+        var repository = new InMemoryEmailTemplateRepository(template);
+        GetAdminEmailTemplatesQueryHandler handler = new(RequestTestSender.Create(
+            new GetEmailTemplateRevisionsQueryHandler(repository),
+            new GetEmailTemplatesQueryHandler(repository),
+            new GetEmailTemplatePageQueryHandler(repository)));
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 

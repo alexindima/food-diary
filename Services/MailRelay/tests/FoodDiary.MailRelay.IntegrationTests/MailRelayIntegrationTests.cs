@@ -147,16 +147,16 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "mailbox-does-not-exist"));
         eventResponse.EnsureSuccessStatusCode();
 
-        List<SuppressionEntry>? suppressions = await client.GetFromJsonAsync<List<SuppressionEntry>>("/api/email/suppressions?email=user@example.com");
+        PageResponse<SuppressionEntry>? suppressions = await client.GetFromJsonAsync<PageResponse<SuppressionEntry>>("/api/email/suppressions?email=user@example.com&page=1&limit=20");
         Assert.NotNull(suppressions);
-        Assert.Single(suppressions);
-        Assert.Equal("user@example.com", suppressions[0].Email);
+        Assert.Single(suppressions.Data);
+        Assert.Equal("user@example.com", suppressions.Data[0].Email);
 
-        List<DeliveryEventEntry>? events = await client.GetFromJsonAsync<List<DeliveryEventEntry>>("/api/email/events?email=user@example.com");
+        PageResponse<DeliveryEventEntry>? events = await client.GetFromJsonAsync<PageResponse<DeliveryEventEntry>>("/api/email/events?email=user@example.com&page=1&limit=20");
         Assert.NotNull(events);
-        Assert.Single(events);
-        Assert.Equal("bounce", events[0].EventType);
-        Assert.Equal("hard", events[0].Classification);
+        Assert.Single(events.Data);
+        Assert.Equal("bounce", events.Data[0].EventType);
+        Assert.Equal("hard", events.Data[0].Classification);
     }
 
     [Fact]
@@ -261,4 +261,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
     [ExcludeFromCodeCoverage]
     private sealed record DeliveryEventEntry(string EventType, string Email, string? Classification);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record PageResponse<T>(IReadOnlyList<T> Data, int Page, int Limit, int TotalPages, int TotalItems);
 }

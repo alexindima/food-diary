@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     AdminAchievementDefinition,
     CreateAdminAchievementDefinitionRequest,
@@ -15,7 +16,9 @@ export class AdminAchievementsService {
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/achievement-definitions`;
 
     public getAll(): Observable<AdminAchievementDefinition[]> {
-        return this.http.get<AdminAchievementDefinition[]>(this.baseUrl);
+        return loadPagedCollection((page, limit) =>
+            this.http.get<AdminAchievementDefinition[]>(this.baseUrl, { params: { page, limit } }),
+        );
     }
 
     public create(request: CreateAdminAchievementDefinitionRequest): Observable<AdminAchievementDefinition> {

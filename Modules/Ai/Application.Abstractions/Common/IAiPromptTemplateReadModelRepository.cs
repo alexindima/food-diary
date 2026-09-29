@@ -5,4 +5,8 @@ namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 public interface IAiPromptTemplateReadModelRepository {
     Task<IReadOnlyList<AiPromptRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken);
     Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<AiPromptTemplateReadModel>> GetPageReadModelsAsync(
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default);
 }

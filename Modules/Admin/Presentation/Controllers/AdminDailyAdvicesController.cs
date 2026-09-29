@@ -19,8 +19,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminDailyAdvicesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminDailyAdviceHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll() =>
-        HandleOk(AdminHttpQueryMappings.ToDailyAdvicesQuery(), static items =>
+    public Task<IActionResult> GetPage([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(query.ToDailyAdvicesQuery(), static items =>
             items.Select(static item => item.ToDailyAdviceHttpResponse()).ToList());
 
     [HttpPost("import")]
@@ -36,8 +36,8 @@ public sealed class AdminDailyAdvicesController(ISender mediator) : BaseApiContr
 
     [HttpGet("groups")]
     [ProducesResponseType<List<AdminDailyAdviceGroupHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetGroups() =>
-        HandleOk(AdminDailyAdviceGroupHttpMappings.ToDailyAdviceGroupsQuery(), static items =>
+    public Task<IActionResult> GetGroups([FromQuery] GetAdminCollectionPageHttpQuery query) =>
+        HandleOk(AdminDailyAdviceGroupHttpMappings.ToDailyAdviceGroupsQuery(query.Page, query.Limit), static items =>
             items.Select(static item => item.ToGroupHttpResponse()).ToList());
 
     [HttpPost("groups/import")]

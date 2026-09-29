@@ -173,14 +173,14 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
 
         Assert.NotNull(await taskRepository.GetByIdAsync(task.Id));
         Assert.NotNull(await taskRepository.GetByIdAsync(task.Id, asTracking: true));
-        Assert.Single(await taskRepository.GetByClientAsync(client.Id));
-        Assert.Single(await taskRepository.GetByDietologistAndClientAsync(dietologist.Id, client.Id));
+        Assert.Single(await taskRepository.GetByClientAsync(client.Id, page: 1, limit: 100));
+        Assert.Single(await taskRepository.GetByDietologistAndClientAsync(dietologist.Id, client.Id, page: 1, limit: 100));
         Assert.Single(await taskRepository.GetDueForReminderAsync(UtcNow, UtcNow.AddHours(2), 10));
         Assert.Single(await commentRepository.GetByRecommendationAsync(recommendation.Id));
         Assert.NotNull(await templateRepository.GetByIdAsync(template.Id));
         Assert.NotNull(await templateRepository.GetByIdAsync(template.Id, asTracking: true));
-        Assert.Single(await templateRepository.SearchAsync(dietologist.Id, search: null, includeArchived: false));
-        Assert.Single(await templateRepository.SearchAsync(dietologist.Id, "plate", includeArchived: true));
+        Assert.Single(await templateRepository.SearchAsync(dietologist.Id, search: null, includeArchived: false, page: 1, limit: 100));
+        Assert.Single(await templateRepository.SearchAsync(dietologist.Id, search: "plate", includeArchived: true, page: 1, limit: 100));
         Assert.Single(await dispatchRepository.GetExistingAsync(dietologist.Id, "key", [client.Id]));
     }
 

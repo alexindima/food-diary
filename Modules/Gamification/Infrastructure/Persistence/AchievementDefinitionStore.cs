@@ -8,15 +8,26 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 public sealed class AchievementDefinitionStore(DbContext context, DbSet<AchievementDefinition> definitions, DbSet<UserAchievement> achievements, Func<DbTransaction?>? currentTransaction = null) : IAchievementDefinitionStore, IAchievementDefinitionReadModelRepository {
-    public async Task<IReadOnlyList<AchievementDefinitionAdminModel>> GetForAdministrationAsync(CancellationToken cancellationToken = default) {
-        IReadOnlyDictionary<string, int> counts = await GetAwardCountsAsync(cancellationToken).ConfigureAwait(false);
+    public async Task<IReadOnlyList<AchievementDefinitionAdminModel>> GetForAdministrationAsync(
+        int page = 1,
+        int limit = 50,
+        CancellationToken cancellationToken = default) {
         List<AchievementDefinitionAdminModel> models = await definitions.AsNoTracking()
             .OrderBy(item => item.SortOrder).ThenBy(item => item.Key)
+            .Skip((page - 1) * limit)
+            .Take(limit)
             .Select(item => new AchievementDefinitionAdminModel(
                 item.Id.Value, item.Key, item.Category, item.Metric.ToString(), item.Threshold,
                 item.TitleRu, item.TitleEn, item.DescriptionRu, item.DescriptionEn, item.Icon,
                 item.SortOrder, item.IsActive, item.Version, 0))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
+        string[] keys = [.. models.Select(static item => item.Key)];
+        IReadOnlyDictionary<string, int> counts = await achievements.AsNoTracking()
+            .Where(item => Enumerable.Contains(keys, item.AchievementKey))
+            .GroupBy(item => item.AchievementKey)
+            .Select(group => new { group.Key, Count = group.Select(item => item.UserId).Distinct().Count() })
+            .ToDictionaryAsync(item => item.Key, item => item.Count, StringComparer.Ordinal, cancellationToken)
+            .ConfigureAwait(false);
         return [.. models.Select(item => item with { AwardedUsers = counts.GetValueOrDefault(item.Key) })];
     }
 

@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1811,
+    "typescriptFiles": 1813,
     "symbols": 703,
     "routes": 102,
     "features": 44,
@@ -1999,7 +1999,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AdminAchievementsFacade",
@@ -2048,7 +2048,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AdminAiPromptContextComponent",
@@ -2223,7 +2223,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DailyAdviceGroupCardComponent",
@@ -2286,7 +2286,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AdminEmailTemplateEditDialogComponent",
@@ -2314,7 +2314,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "AdminLessonEditDialogComponent",
@@ -3532,7 +3532,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
-      "line": 39
+      "line": 40
     },
     {
       "name": "DietologistFacade",
@@ -4092,7 +4092,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 12
+      "line": 13
     },
     {
       "name": "MealPlanFacade",
@@ -4785,7 +4785,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProfileMeasurementsService",
@@ -5366,14 +5366,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/client-tasks.service.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecommendationsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RecommendationThreadComponent",

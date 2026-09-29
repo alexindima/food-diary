@@ -23,8 +23,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
         Assert.IsType<GetMailRelayQueueStatsQuery>(MailRelayEmailHttpMappings.ToQueueStatsQuery());
         Assert.Multiple(
             () => Assert.Equal(messageId, messageId.ToMessageDetailsQuery().Id),
-            () => Assert.Equal("user@example.com", "user@example.com".ToSuppressionsQuery().Email),
-            () => Assert.Equal("user@example.com", "user@example.com".ToDeliveryEventsQuery().Email));
+            () => Assert.Equal("user@example.com", new GetMailRelayCollectionHttpQuery("user@example.com").ToSuppressionsQuery().Email),
+            () => Assert.Equal("user@example.com", new GetMailRelayCollectionHttpQuery("user@example.com").ToDeliveryEventsQuery().Email));
     }
 
     [Fact]

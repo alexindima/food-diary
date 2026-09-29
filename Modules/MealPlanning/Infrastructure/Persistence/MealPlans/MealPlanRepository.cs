@@ -10,6 +10,23 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans;
 
 internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanCompositionReader composition) : IMealPlanRepository {
+    public async Task<(IReadOnlyList<MealPlanSummaryReadModel> Items, int Total)> GetPageSummaryReadModelsAsync(
+        UserId userId, DietType? dietType, int page, int limit, CancellationToken cancellationToken = default) {
+        int normalizedPage = Math.Clamp(page, 1, 10_000);
+        int normalizedLimit = Math.Clamp(limit, 1, 100);
+        IQueryable<MealPlan> query = plans.AsNoTracking().Where(plan =>
+            plan.UserId == userId || (plan.IsCurated && (!dietType.HasValue || plan.DietType == dietType.Value)));
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<MealPlanSummaryReadModel> items = await ProjectSummaryReadModels(query
+                .OrderByDescending(plan => plan.IsCurated)
+                .ThenByDescending(plan => plan.CreatedOnUtc)
+                .ThenByDescending(plan => plan.Id)
+                .Skip((normalizedPage - 1) * normalizedLimit)
+                .Take(normalizedLimit))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        return (items, total);
+    }
+
     public Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken = default) {
         plans.Add(plan);
         return Task.FromResult(plan);

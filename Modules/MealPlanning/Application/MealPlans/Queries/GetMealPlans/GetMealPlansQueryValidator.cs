@@ -1,5 +1,6 @@
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FluentValidation;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
@@ -10,6 +11,8 @@ public sealed class GetMealPlansQueryValidator : AbstractValidator<GetMealPlansQ
         StringComparer.OrdinalIgnoreCase);
 
     public GetMealPlansQueryValidator() {
+        RuleFor(x => x.Page).InclusiveBetween(1, PaginationPolicy.MaxPageNumber).WithErrorCode("Validation.Invalid");
+        RuleFor(x => x.Limit).InclusiveBetween(1, PaginationPolicy.MaxPageSize).WithErrorCode("Validation.Invalid");
         RuleFor(x => x.UserId)
             .NotEmpty()
             .WithErrorCode("Authentication.InvalidToken")

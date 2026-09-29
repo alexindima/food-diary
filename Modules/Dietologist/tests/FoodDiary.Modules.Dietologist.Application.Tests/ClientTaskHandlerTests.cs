@@ -332,7 +332,7 @@ public sealed class ClientTaskHandlerTests {
     public async Task GetMyClientTasks_MapsOverdueState() {
         var client = User.Create("client@example.com", "hash");
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
-        tasks.GetByClientAsync(client.Id, Arg.Any<CancellationToken>())
+        tasks.GetByClientAsync(client.Id, 1, 50, Arg.Any<CancellationToken>())
             .Returns([
                 CreateReadModel(UserId.New(), client.Id, ClientTaskStatus.Open, UtcNow.AddMinutes(-1)),
                 CreateReadModel(UserId.New(), client.Id, ClientTaskStatus.Completed, UtcNow.AddMinutes(-1)),
@@ -372,7 +372,7 @@ public sealed class ClientTaskHandlerTests {
         var dietologist = User.Create("dietologist@example.com", "hash");
         var clientId = UserId.New();
         IClientTaskRepository tasks = Substitute.For<IClientTaskRepository>();
-        tasks.GetByDietologistAndClientAsync(dietologist.Id, clientId, Arg.Any<CancellationToken>())
+        tasks.GetByDietologistAndClientAsync(dietologist.Id, clientId, 1, 50, Arg.Any<CancellationToken>())
             .Returns([CreateReadModel(dietologist.Id, clientId, ClientTaskStatus.Open, null)]);
         var handler = new GetClientTasksForDietologistQueryHandler(
             tasks,

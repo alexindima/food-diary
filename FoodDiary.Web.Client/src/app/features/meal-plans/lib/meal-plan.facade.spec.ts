@@ -16,7 +16,7 @@ const TOTAL_RECIPES = 21;
 type MealPlanServiceMock = {
     adopt: ReturnType<typeof vi.fn>;
     generateShoppingList: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getPage: ReturnType<typeof vi.fn>;
     getById: ReturnType<typeof vi.fn>;
 };
 
@@ -27,7 +27,7 @@ describe('MealPlanFacade', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
         mealPlanService = {
-            getAll: vi.fn(() => of([createSummary()])),
+            getPage: vi.fn(() => of({ data: [createSummary()], page: 1, limit: 50, totalPages: 1, totalItems: 1 })),
             getById: vi.fn(() => of(createMealPlan())),
             adopt: vi.fn(() => of(createMealPlan())),
             generateShoppingList: vi.fn(() => of(createShoppingList())),
@@ -45,7 +45,7 @@ describe('MealPlanFacade', () => {
 
         await waitForAsync(() => facade.plans().length > 0);
 
-        expect(mealPlanService.getAll).toHaveBeenLastCalledWith('Keto');
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto');
         expect(facade.plans()).toEqual([createSummary()]);
     });
 

@@ -14,8 +14,10 @@ namespace FoodDiary.Modules.Dietologist.Presentation.Controllers;
 public sealed class ClientTasksController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<ClientTaskHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetMyTasks([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToMyClientTasksQuery(), static value => value.Select(task => task.ToHttpResponse()).ToList());
+    public Task<IActionResult> GetMyTasks(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetDietologistCollectionPageHttpQuery? query = null) =>
+        HandleOk(userId.ToMyClientTasksQuery(query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(task => task.ToHttpResponse()).ToList());
 
     [HttpPut("{taskId:guid}/status")]
     [ProducesResponseType<ClientTaskHttpResponse>(StatusCodes.Status200OK)]

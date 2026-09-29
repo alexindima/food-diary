@@ -3,6 +3,10 @@ using NpgsqlTypes;
 namespace FoodDiary.MailRelay.Infrastructure.Services;
 
 public sealed partial class MailRelayQueueStore {
+    public async Task<IReadOnlyList<MailRelayDeliveryEventEntry>> GetDeliveryEventsAsync(
+        string? email, CancellationToken cancellationToken) =>
+        (await GetDeliveryEventsPageAsync(email, 1, 100, cancellationToken).ConfigureAwait(false)).Data;
+
     public async Task<MailRelayDeliveryEventEntry> RecordDeliveryEventAsync(
         IngestMailEventRequest request,
         CancellationToken cancellationToken) {
@@ -73,10 +77,16 @@ public sealed partial class MailRelayQueueStore {
             request.ProviderEventId);
     }
 
-    public async Task<IReadOnlyList<MailRelayDeliveryEventEntry>> GetDeliveryEventsAsync(
-        string? email,
-        CancellationToken cancellationToken) {
+    public async Task<MailRelayPage<MailRelayDeliveryEventEntry>> GetDeliveryEventsPageAsync(
+        string? email, int page, int limit, CancellationToken cancellationToken) {
+        int normalizedPage = Math.Clamp(page, 1, 10_000);
+        int normalizedLimit = Math.Clamp(limit, 1, 100);
+        int offset = (normalizedPage - 1) * normalizedLimit;
         const string sql = """
+                           select count(*)
+                           from mailrelay_delivery_events
+                           where @email is null or email = @email;
+
                            select
                                id,
                                event_type,
@@ -90,19 +100,28 @@ public sealed partial class MailRelayQueueStore {
                                created_at_utc
                            from mailrelay_delivery_events
                            where @email is null or email = @email
-                           order by created_at_utc desc, id desc;
+                           order by created_at_utc desc, id desc
+                           limit @limit offset @offset;
                            """;
 
         return await _executor.QueryAsync(
             sql,
-            command => command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value,
+            command => {
+                command.Parameters.Add("email", NpgsqlDbType.Text).Value = (object?)MailRelayQueueRowMapper.NormalizeEmail(email) ?? DBNull.Value;
+                command.Parameters.AddWithValue("limit", normalizedLimit);
+                command.Parameters.AddWithValue("offset", offset);
+            },
             async (reader, token) => {
+                await RequireReturnedRowAsync(reader, token, "Delivery event count query did not return a row.").ConfigureAwait(false);
+                int total = checked((int)reader.GetInt64(0));
+                await reader.NextResultAsync(token).ConfigureAwait(false);
                 var result = new List<MailRelayDeliveryEventEntry>();
                 while (await reader.ReadAsync(token).ConfigureAwait(false)) {
                     result.Add(await MailRelayQueueRowMapper.ReadDeliveryEventEntryAsync(reader, token).ConfigureAwait(false));
                 }
 
-                return result;
+                int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)normalizedLimit);
+                return new MailRelayPage<MailRelayDeliveryEventEntry>(result, normalizedPage, normalizedLimit, totalPages, total);
             },
             cancellationToken).ConfigureAwait(false);
     }

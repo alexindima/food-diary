@@ -101,7 +101,7 @@ export class PublicCatalogFavorites {
     }
 
     private async loadAsync(session: number): Promise<void> {
-        const favorites = await firstValueFrom(this.api.getAll());
+        const favorites = await firstValueFrom(this.api.getLookupPage());
         if (session !== this.session || this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
             return;
         }

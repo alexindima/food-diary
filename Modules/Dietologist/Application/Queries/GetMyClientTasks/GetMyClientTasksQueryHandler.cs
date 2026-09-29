@@ -6,6 +6,7 @@ using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyClientTasks;
 
@@ -23,8 +24,10 @@ public sealed class GetMyClientTasksQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientTaskModel>>(userIdResult);
         }
 
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         IReadOnlyList<ClientTaskReadModel> tasks = await taskRepository.GetByClientAsync(
-            userIdResult.Value, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, page, limit, cancellationToken).ConfigureAwait(false);
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
         return Result.Success<IReadOnlyList<ClientTaskModel>>(
             tasks.Select(task => task.ToModel(utcNow)).ToList());

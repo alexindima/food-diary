@@ -15282,7 +15282,7 @@
           {
             "verb": "POST",
             "route": "/api/email/events",
-            "line": 19
+            "line": 20
           }
         ]
       },
@@ -15350,12 +15350,12 @@
           {
             "verb": "POST",
             "route": "/api/email/suppressions",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "DELETE",
             "route": "/api/email/suppressions/{email}",
-            "line": 26
+            "line": 27
           }
         ]
       },

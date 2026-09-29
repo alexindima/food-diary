@@ -6,6 +6,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Responses;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using ShoppingListResponseMappings = FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Mappings.ShoppingListHttpResponseMappings;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +20,15 @@ public sealed class MealPlansController(ISender mediator) : AuthorizedController
     private const int MaximumDietTypeLength = 32;
 
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<MealPlanSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PagedHttpResponse<MealPlanSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll(
+    public Task<IActionResult> GetPage(
         [FromCurrentUser] Guid userId,
-        [FromQuery, MaxLength(MaximumDietTypeLength)] string? dietType = null) =>
-        HandleOk(userId.ToQuery(dietType), static value => value.ToHttpResponse());
+        [FromQuery, MaxLength(MaximumDietTypeLength)] string? dietType = null,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int limit = 20) =>
+        HandleOk(userId.ToQuery(dietType, page, limit), static value => new PagedHttpResponse<MealPlanSummaryHttpResponse>(
+            value.Data.ToHttpResponse(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<MealPlanHttpResponse>(StatusCodes.Status200OK)]

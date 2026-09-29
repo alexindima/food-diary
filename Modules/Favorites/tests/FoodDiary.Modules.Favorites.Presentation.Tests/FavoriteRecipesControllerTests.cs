@@ -6,7 +6,6 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
-using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Controllers;
@@ -20,20 +19,20 @@ namespace FoodDiary.Modules.Favorites.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteRecipesControllerTests {
     [Fact]
-    public async Task GetAll_SendsQueryAndReturnsFavorites() {
+    public async Task GetPage_SendsQueryAndReturnsFavorites() {
         FavoriteRecipeModel favorite = CreateFavorite();
-        IRequest<Result<IReadOnlyList<FavoriteRecipeModel>>>? sentRequest = null;
-        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<FavoriteRecipeModel>>([favorite]), request => sentRequest = request);
+        IRequest<Result<PagedResponse<FavoriteRecipeModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(new PagedResponse<FavoriteRecipeModel>([favorite], 1, 10, 1, 1)), request => sentRequest = request);
         FavoriteRecipesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
-        IActionResult result = await controller.GetAll(userId);
+        IActionResult result = await controller.GetPage(userId, new GetFavoriteRecipePageHttpQuery());
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
-        List<FavoriteRecipeHttpResponse> response = Assert.IsType<List<FavoriteRecipeHttpResponse>>(ok.Value);
-        Assert.Single(response);
-        Assert.Equal(favorite.Id, response[0].Id);
-        GetFavoriteRecipesQuery query = Assert.IsType<GetFavoriteRecipesQuery>(sentRequest);
+        PagedHttpResponse<FavoriteRecipeHttpResponse> response = Assert.IsType<PagedHttpResponse<FavoriteRecipeHttpResponse>>(ok.Value);
+        Assert.Single(response.Data);
+        Assert.Equal(favorite.Id, response.Data[0].Id);
+        GetFavoriteRecipePageQuery query = Assert.IsType<GetFavoriteRecipePageQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 

@@ -19,7 +19,7 @@ let facade: RecipeDetailFacade;
 let recipeService: { duplicate: ReturnType<typeof vi.fn> };
 let favoriteRecipeService: {
     add: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getLookupPage: ReturnType<typeof vi.fn>;
     isFavorite: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
 };
@@ -32,7 +32,7 @@ beforeEach(() => {
     };
     favoriteRecipeService = {
         add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
-        getAll: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
+        getLookupPage: vi.fn().mockReturnValue(of([createFavoriteRecipe()])),
         isFavorite: vi.fn().mockReturnValue(of(false)),
         remove: vi.fn().mockReturnValue(of(null)),
     };
@@ -165,7 +165,7 @@ describe('RecipeDetailFacade favorites', () => {
 
         facade.toggleFavorite(createRecipe({ isFavorite: true, favoriteRecipeId: null }));
 
-        expect(favoriteRecipeService.getAll).toHaveBeenCalled();
+        expect(favoriteRecipeService.getLookupPage).toHaveBeenCalled();
         expect(favoriteRecipeService.remove).toHaveBeenCalledWith(FAVORITE_ID);
     });
 
@@ -251,7 +251,7 @@ describe('RecipeDetailFacade favorite failures', () => {
 
     it('handles an already removed favorite without issuing a delete', () => {
         favoriteRecipeService.isFavorite.mockReturnValue(of(true));
-        favoriteRecipeService.getAll.mockReturnValue(of([]));
+        favoriteRecipeService.getLookupPage.mockReturnValue(of([]));
         facade.initialize(createRecipe());
         facade.toggleFavorite(createRecipe());
         expect(favoriteRecipeService.remove).not.toHaveBeenCalled();

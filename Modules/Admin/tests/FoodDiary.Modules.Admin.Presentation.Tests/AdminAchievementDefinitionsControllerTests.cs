@@ -43,7 +43,7 @@ public sealed class AdminAchievementDefinitionsControllerTests {
             () => Assert.Equal(model.Version, updateCommand.Input.Version));
 
         CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AchievementDefinitionAdminModel>>([model]));
-        IActionResult listResult = await CreateController(listSender).GetAll();
+        IActionResult listResult = await CreateController(listSender).GetPage(new GetAdminCollectionPageHttpQuery());
         Assert.IsType<List<AdminAchievementDefinitionHttpResponse>>(Assert.IsType<OkObjectResult>(listResult).Value);
         Assert.IsType<GetAdminAchievementDefinitionsQuery>(listSender.Request);
     }

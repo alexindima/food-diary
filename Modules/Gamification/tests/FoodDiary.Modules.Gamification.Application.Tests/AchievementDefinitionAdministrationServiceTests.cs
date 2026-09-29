@@ -28,7 +28,7 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         var expected = new AchievementDefinitionAdminModel(definition.Id.Value, definition.Key, definition.Category,
             definition.Metric.ToString(), definition.Threshold, definition.TitleRu, definition.TitleEn,
             definition.DescriptionRu, definition.DescriptionEn, definition.Icon, definition.SortOrder, definition.IsActive, definition.Version, 3);
-        reader.GetForAdministrationAsync(Arg.Any<CancellationToken>()).Returns([expected]);
+        reader.GetForAdministrationAsync(1, 50, Arg.Any<CancellationToken>()).Returns([expected]);
         ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(reader));
         AchievementDefinitionAdminModel model = Assert.Single(await service.Send(new GetAchievementDefinitionsForAdministrationQuery(), CancellationToken.None));
         Assert.Equal(3, model.AwardedUsers);

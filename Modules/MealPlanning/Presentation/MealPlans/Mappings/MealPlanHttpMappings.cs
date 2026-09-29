@@ -9,8 +9,8 @@ namespace FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Mappings;
 
 public static class MealPlanHttpMappings {
     extension(Guid userId) {
-        public GetMealPlansQuery ToQuery(string? dietType) =>
-            new(userId, dietType);
+        public GetMealPlansQuery ToQuery(string? dietType, int page, int limit) =>
+            new(userId, dietType, page, limit);
         public GetMealPlanByIdQuery ToGetByIdQuery(Guid planId) =>
             new(userId, planId);
         public AdoptMealPlanCommand ToAdoptCommand(Guid planId) =>

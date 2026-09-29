@@ -51,7 +51,7 @@ let dialogRef: { close: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let favoriteMealService: {
     add: ReturnType<typeof vi.fn>;
-    getAll: ReturnType<typeof vi.fn>;
+    getLookupPage: ReturnType<typeof vi.fn>;
     isFavorite: ReturnType<typeof vi.fn>;
     remove: ReturnType<typeof vi.fn>;
 };
@@ -65,7 +65,7 @@ beforeEach(() => {
     };
     favoriteMealService = {
         add: vi.fn().mockReturnValue(of(favoriteMeal)),
-        getAll: vi.fn().mockReturnValue(of([favoriteMeal])),
+        getLookupPage: vi.fn().mockReturnValue(of([favoriteMeal])),
         isFavorite: vi.fn().mockReturnValue(of(false)),
         remove: vi.fn().mockReturnValue(of(void 0)),
     };
@@ -136,7 +136,7 @@ describe('MealDetailFacade favorite state', () => {
 
         facade.toggleFavorite(favoriteMealData);
 
-        expect(favoriteMealService.getAll).toHaveBeenCalled();
+        expect(favoriteMealService.getLookupPage).toHaveBeenCalled();
         expect(favoriteMealService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.isFavorite()).toBe(false);
     });
@@ -205,7 +205,7 @@ describe('MealDetailFacade removal failures', () => {
         favoriteMealService.isFavorite.mockReturnValue(of(true));
         facade.initialize({ ...meal, isFavorite: true, favoriteMealId: mode === 'known' ? favoriteMeal.id : null });
         if (mode === 'lookup') {
-            favoriteMealService.getAll.mockReturnValueOnce(throwError(() => new Error('offline')));
+            favoriteMealService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         } else {
             favoriteMealService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
         }

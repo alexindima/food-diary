@@ -22,6 +22,38 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActivePageReadModelsAsync(
+        UserId userId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions
+            .AsNoTracking()
+            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
+            .OrderByDescending(session => session.LastRotatedAtUtc)
+            .ThenBy(session => session.Id)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(session => new RefreshTokenSessionReadModel(
+                session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> IsActiveAsync(
+        UserId userId,
+        Guid sessionId,
+        CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions.AsNoTracking().AnyAsync(
+            session => session.UserId == userId && session.Id == sessionId && session.RevokedAtUtc == null,
+            cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);

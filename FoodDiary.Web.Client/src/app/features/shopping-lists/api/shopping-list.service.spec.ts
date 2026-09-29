@@ -50,7 +50,7 @@ describe('ShoppingListService reads', () => {
     });
 
     it('should get first page of shopping lists', () => {
-        service.getAll().subscribe(result => {
+        service.getPage().subscribe(result => {
             expect(result).toEqual(MOCK_SUMMARIES);
         });
 
@@ -118,8 +118,8 @@ describe('ShoppingListService failures', () => {
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
-    it('should return empty array on getAll failure', () => {
-        service.getAll().subscribe(result => {
+    it('should return empty array on getPage failure', () => {
+        service.getPage().subscribe(result => {
             expect(result).toEqual([]);
         });
 

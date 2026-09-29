@@ -433,10 +433,10 @@ describe('DashboardFacade meal mutations (3)', () => {
         snapshot.meals.items.push({ ...createMeal(), isFavorite: true });
         facade.initialize();
         const favorites = TestBed.inject(FavoriteMealService);
-        vi.mocked(vi.spyOn(favorites, 'getAll')).mockReturnValue(of(found ? [createFavorite()] : []));
+        vi.mocked(vi.spyOn(favorites, 'getLookupPage')).mockReturnValue(of(found ? [createFavorite()] : []));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(of(undefined));
         facade.toggleMealFavorite('meal-1');
-        expect(vi.spyOn(favorites, 'getAll')).toHaveBeenCalledTimes(1);
+        expect(vi.spyOn(favorites, 'getLookupPage')).toHaveBeenCalledTimes(1);
         if (found) {
             expect(vi.spyOn(favorites, 'remove')).toHaveBeenCalledWith('favorite-1');
         } else {
@@ -665,7 +665,7 @@ function setupFacade(): {
             { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },
             { provide: NutritionDataInvalidationService, useValue: { reportMealMutation: vi.fn() } },
             { provide: MealService, useValue: { repeat: vi.fn(), deleteById: vi.fn() } },
-            { provide: FavoriteMealService, useValue: { add: vi.fn(), remove: vi.fn(), getAll: vi.fn() } },
+            { provide: FavoriteMealService, useValue: { add: vi.fn(), remove: vi.fn(), getLookupPage: vi.fn() } },
             { provide: FdUiToastService, useValue: { error: vi.fn() } },
             { provide: DashboardService, useValue: dashboardService },
             { provide: GoalsService, useValue: goalsService },

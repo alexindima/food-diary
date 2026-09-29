@@ -82,7 +82,7 @@ public sealed class AdminControllersCoverageTests {
         CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminLessonModel>>([CreateLesson()]));
         AdminLessonsController listController = CreateController(new AdminLessonsController(listSender));
 
-        IActionResult list = await listController.GetAll();
+        IActionResult list = await listController.GetPage(new GetAdminCollectionPageHttpQuery());
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(list);
         Assert.IsType<List<AdminLessonHttpResponse>>(ok.Value);
@@ -222,7 +222,7 @@ public sealed class AdminControllersCoverageTests {
         CapturedSender promptsSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminAiPromptModel>>([prompt]));
         AdminAiPromptsController promptsController = CreateController(new AdminAiPromptsController(promptsSender));
 
-        IActionResult prompts = await promptsController.GetAll();
+        IActionResult prompts = await promptsController.GetPage(new GetAdminCollectionPageHttpQuery());
 
         Assert.IsType<List<AdminAiPromptHttpResponse>>(Assert.IsType<OkObjectResult>(prompts).Value);
         Assert.IsType<GetAdminAiPromptsQuery>(promptsSender.Request);
@@ -278,7 +278,7 @@ public sealed class AdminControllersCoverageTests {
         AdminEmailTemplateModel template = new(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", IsActive: true, DateTime.UtcNow, UpdatedOnUtc: null);
         CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminEmailTemplateModel>>([template]));
         AdminEmailTemplatesController listController = CreateController(new AdminEmailTemplatesController(listSender));
-        Assert.IsType<List<AdminEmailTemplateHttpResponse>>(Assert.IsType<OkObjectResult>(await listController.GetAll()).Value);
+        Assert.IsType<List<AdminEmailTemplateHttpResponse>>(Assert.IsType<OkObjectResult>(await listController.GetPage(new GetAdminCollectionPageHttpQuery())).Value);
         Assert.IsType<GetAdminEmailTemplatesQuery>(listSender.Request);
 
         CapturedSender upsertSender = SubstituteSender.Capture(Result.Success(template));

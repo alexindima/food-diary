@@ -4,4 +4,4 @@ using FoodDiary.Modules.Dietologist.Application.Models;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
 
-public record GetMyClientsQuery(Guid? UserId) : IQuery<Result<IReadOnlyList<ClientSummaryModel>>>, IUserRequest;
+public record GetMyClientsQuery(Guid? UserId, int Page = 1, int Limit = 50) : IQuery<Result<IReadOnlyList<ClientSummaryModel>>>, IUserRequest;

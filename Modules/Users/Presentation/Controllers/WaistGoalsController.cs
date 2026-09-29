@@ -13,12 +13,6 @@ namespace FoodDiary.Modules.Users.Presentation.Controllers;
 [ApiController]
 [Route("api/v{version:apiVersion}/users/waist-goals")]
 public sealed class WaistGoalsController(ISender mediator) : AuthorizedController(mediator) {
-    [HttpGet]
-    [ProducesResponseType<IReadOnlyList<WaistGoalHistoryHttpResponse>>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetHistory([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToWaistGoalHistoryQuery(), static values => values.Select(static value => value.ToHttpResponse()).ToList());
-
     [HttpGet("page")]
     [ProducesResponseType<WaistGoalHistoryPageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

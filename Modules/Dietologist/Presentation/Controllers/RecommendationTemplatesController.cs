@@ -23,9 +23,10 @@ public sealed class RecommendationTemplatesController(ISender mediator) : Author
     public Task<IActionResult> Search(
         [FromCurrentUser] Guid userId,
         [FromQuery, MaxLength(DietologistRequestLimits.MaximumTemplateSearchLength)] string? search = null,
-        [FromQuery] bool includeArchived = false) =>
+        [FromQuery] bool includeArchived = false,
+        [FromQuery] GetDietologistCollectionPageHttpQuery? pagination = null) =>
         HandleOk(
-            userId.ToSearchTemplatesQuery(search, includeArchived),
+            userId.ToSearchTemplatesQuery(search, includeArchived, pagination?.Page ?? 1, pagination?.Limit ?? 50),
             static value => value.Select(template => template.ToHttpResponse()).ToList());
 
     [HttpPost]

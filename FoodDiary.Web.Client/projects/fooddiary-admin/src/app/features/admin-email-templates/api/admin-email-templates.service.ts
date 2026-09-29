@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     AdminEmailTemplate,
     AdminEmailTemplateTestRequest,
@@ -15,7 +16,7 @@ export class AdminEmailTemplatesService {
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/email-templates`;
 
     public getAll(): Observable<AdminEmailTemplate[]> {
-        return this.http.get<AdminEmailTemplate[]>(this.baseUrl);
+        return loadPagedCollection((page, limit) => this.http.get<AdminEmailTemplate[]>(this.baseUrl, { params: { page, limit } }));
     }
 
     public upsert(key: string, locale: string, request: AdminEmailTemplateUpsertRequest): Observable<AdminEmailTemplate> {

@@ -28,16 +28,14 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToCurrentQuery(), static value => value.ToHttpResponse());
 
-    [HttpGet]
-    [ProducesResponseType<List<ShoppingListSummaryHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToListQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
-
     [HttpGet("page")]
     [ProducesResponseType<List<ShoppingListSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20, [FromQuery] string? search = null) =>
+    public Task<IActionResult> GetPage(
+        [FromCurrentUser] Guid userId,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int pageSize = 20,
+        [FromQuery] string? search = null) =>
         HandleOk(new FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists.GetShoppingListsQuery(
             userId, page, pageSize, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
 

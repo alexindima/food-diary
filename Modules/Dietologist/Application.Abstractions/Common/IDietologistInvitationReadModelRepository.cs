@@ -27,4 +27,10 @@ public interface IDietologistInvitationReadModelRepository {
     Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
         UserId dietologistUserId,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
+        UserId dietologistUserId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default);
 }

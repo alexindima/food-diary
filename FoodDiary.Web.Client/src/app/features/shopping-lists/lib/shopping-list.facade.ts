@@ -435,7 +435,7 @@ export class ShoppingListFacade {
     private loadLists(): void {
         this.isLoading.set(true);
         this.shoppingListService
-            .getAll()
+            .getPage()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: lists => {
