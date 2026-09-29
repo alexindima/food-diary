@@ -16,7 +16,7 @@ public sealed class LessonsController(ISender mediator) : AuthorizedController(m
     [HttpGet]
     [ProducesResponseType<LessonPageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll(
+    public Task<IActionResult> GetPage(
         [FromCurrentUser] Guid userId,
         [FromQuery] GetLessonsHttpQuery query) =>
         HandleOk(userId.ToQuery(query), static value => value.ToHttpResponse());

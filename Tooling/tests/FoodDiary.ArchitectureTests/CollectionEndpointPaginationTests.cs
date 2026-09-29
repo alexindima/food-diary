@@ -7,6 +7,28 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class CollectionEndpointPaginationTests {
     [Fact]
+    public void HttpGetActions_DoNotClaimToReturnAllItems() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] presentationRoots = GetPresentationRoots(root);
+
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoots)
+            .Where(static path => path.EndsWith("Controller.cs", StringComparison.Ordinal))
+            .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot()
+                .DescendantNodes().OfType<MethodDeclarationSyntax>()
+                .Where(static method => method.Identifier.ValueText is "GetAll" or "ListAll")
+                .Where(static method => method.AttributeLists.SelectMany(static list => list.Attributes)
+                    .Any(static attribute => attribute.Name.ToString() is "HttpGet" or "HttpGetAttribute"))
+                .Select(method => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, path).Replace('\\', '/')}:{method.GetLocation().GetLineSpan().StartLinePosition.Line + 1}#{method.Identifier.ValueText}")))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.True(
+            violations.Length == 0,
+            $"HTTP GET action names must describe a page, range, or bounded collection instead of promising all items:{Environment.NewLine}{string.Join(Environment.NewLine, violations)}");
+    }
+
+    [Fact]
     public void HttpQueryModels_UseCanonicalPaginationNames() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] presentationRoots = GetPresentationRoots(root);
@@ -51,7 +73,7 @@ public sealed class CollectionEndpointPaginationTests {
             "Modules/Dietologist/Presentation/Controllers/DietologistAttentionController.cs#GetAttentionSignals",
             "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs#GetRecommendationsForClient",
             "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs#GetMyRecommendations",
-            "Modules/Exercises/Presentation/Controllers/ExercisesController.cs#GetAll",
+            "Modules/Exercises/Presentation/Controllers/ExercisesController.cs#GetByDateRange",
             "Modules/Hydration/Presentation/Controllers/HydrationEntriesController.cs#GetByDate",
             "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs#ListReady",
             "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs#GetWebPushSubscriptions",

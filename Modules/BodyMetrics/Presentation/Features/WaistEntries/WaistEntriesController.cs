@@ -18,7 +18,7 @@ public sealed class WaistEntriesController(ISender mediator) : AuthorizedControl
     [HttpGet]
     [ProducesResponseType<List<WaistEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetWaistEntriesHttpQuery query) =>
+    public Task<IActionResult> GetEntries([FromCurrentUser] Guid userId, [FromQuery] GetWaistEntriesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpGet("latest")]

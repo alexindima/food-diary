@@ -197,7 +197,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender allSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<WeightEntryModel>>([model]));
         WeightEntriesController allController = CreateController(new WeightEntriesController(allSender));
-        Assert.IsType<List<WeightEntryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetAll(userId, new GetWeightEntriesHttpQuery())).Value);
+        Assert.IsType<List<WeightEntryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetEntries(userId, new GetWeightEntriesHttpQuery())).Value);
         Assert.IsType<GetWeightEntriesQuery>(allSender.Request);
 
         CapturedSender latestSender = SubstituteSender.Capture(Result.Success<WeightEntryModel?>(model));
@@ -252,7 +252,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender allSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<WaistEntryModel>>([model]));
         WaistEntriesController allController = CreateController(new WaistEntriesController(allSender));
-        Assert.IsType<List<WaistEntryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetAll(userId, new GetWaistEntriesHttpQuery())).Value);
+        Assert.IsType<List<WaistEntryHttpResponse>>(Assert.IsType<OkObjectResult>(await allController.GetEntries(userId, new GetWaistEntriesHttpQuery())).Value);
         Assert.IsType<GetWaistEntriesQuery>(allSender.Request);
 
         CapturedSender latestSender = SubstituteSender.Capture(Result.Success<WaistEntryModel?>(model));

@@ -26,7 +26,7 @@ public sealed class ExercisesControllerTests {
         DateTime dateFrom = DateTime.UtcNow.AddDays(-7);
         DateTime dateTo = DateTime.UtcNow;
 
-        IActionResult result = await controller.GetAll(userId, dateFrom, dateTo);
+        IActionResult result = await controller.GetByDateRange(userId, dateFrom, dateTo);
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         IReadOnlyList<ExerciseEntryHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<ExerciseEntryHttpResponse>>(ok.Value);

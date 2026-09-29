@@ -18,7 +18,7 @@ public sealed class PublicRecipesController(ISender mediator) : BaseApiControlle
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<PublicRecipeHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll([FromQuery] PublicRecipesHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromQuery] PublicRecipesHttpQuery query) =>
         HandleOk(query.ToQuery(),
             static page => page.ToHttpResponse());
 

@@ -17,7 +17,7 @@ public sealed class ProductsController(ISender mediator) : AuthorizedController(
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<ProductHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("overview")]

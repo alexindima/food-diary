@@ -29,7 +29,7 @@ public sealed class RecipeCommentsControllerTests {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
 
-        IActionResult result = await controller.GetAll(userId, recipeId, new OffsetPaginationHttpQuery(Page: 2, Limit: 10));
+        IActionResult result = await controller.GetPage(userId, recipeId, new OffsetPaginationHttpQuery(Page: 2, Limit: 10));
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         PagedHttpResponse<RecipeCommentHttpResponse> response = Assert.IsType<PagedHttpResponse<RecipeCommentHttpResponse>>(ok.Value);

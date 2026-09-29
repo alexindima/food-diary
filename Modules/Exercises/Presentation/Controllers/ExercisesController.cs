@@ -16,7 +16,7 @@ public sealed class ExercisesController(ISender mediator) : AuthorizedController
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<ExerciseEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll(
+    public Task<IActionResult> GetByDateRange(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
         [FromQuery] DateTime dateTo) =>

@@ -16,7 +16,7 @@ namespace FoodDiary.Modules.RecipeCommunity.Presentation.RecipeComments.Controll
 public sealed class RecipeCommentsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeCommentHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetAll(
+    public Task<IActionResult> GetPage(
         [FromCurrentUser] Guid userId,
         Guid recipeId,
         [FromQuery] OffsetPaginationHttpQuery pagination) =>

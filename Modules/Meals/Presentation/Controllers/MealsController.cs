@@ -26,7 +26,7 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<MealHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetMealsHttpQuery query) =>
+    public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetMealsHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]

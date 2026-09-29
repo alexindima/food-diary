@@ -133,7 +133,7 @@ public sealed class MealPlanGamificationLessonControllerTests {
             new LessonSummaryModel(lessonId, "Basics", "Summary", "nutrition", "beginner", 5, IsRead: false),
         ], 1, 20, 1, 1, 1, 0, ["nutrition"])), request => allRequest = request);
         LessonsController allController = CreateController(new LessonsController(allSender));
-        IActionResult all = await allController.GetAll(userId, new GetLessonsHttpQuery("ru", "nutrition"));
+        IActionResult all = await allController.GetPage(userId, new GetLessonsHttpQuery("ru", "nutrition"));
         Assert.IsType<LessonPageHttpResponse>(Assert.IsType<OkObjectResult>(all).Value);
         GetLessonsQuery allQuery = Assert.IsType<GetLessonsQuery>(allRequest);
         Assert.Equal("ru", allQuery.Locale);
