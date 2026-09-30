@@ -9,9 +9,11 @@ public sealed class MessagePageValidationTests {
     [InlineData(0, 50, false)]
     [InlineData(-1, 50, false)]
     [InlineData(1, 0, false)]
-    [InlineData(1, 201, false)]
+    [InlineData(1, 101, false)]
     [InlineData(1, 50, true)]
-    [InlineData(int.MaxValue, 200, true)]
+    [InlineData(10_000, 100, true)]
+    [InlineData(10_001, 50, false)]
+    [InlineData(int.MaxValue, 100, false)]
     public async Task ValidateAsync_EnforcesPageAndSizeBounds(int page, int limit, bool expected) {
         var validator = new GetInboundMailMessagePageQueryValidator();
         ValidationResult result = await validator.ValidateAsync(new GetInboundMailMessagePageQuery(page, limit));

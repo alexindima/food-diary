@@ -20,6 +20,12 @@ public sealed class CollectionEndpointPaginationTests {
             ["MaximumAdminUserRoleAuditEntries"] = 50,
             ["MaximumCollaborationAuditEntries"] = 500,
             ["MaximumCursorLength"] = 128,
+            ["OpenFoodFactsRequestLimits.MinimumLimit"] = 1,
+            ["OpenFoodFactsRequestLimits.MaximumLimit"] = 50,
+            ["ProductSuggestionRequestLimits.MinimumLimit"] = 1,
+            ["ProductSuggestionRequestLimits.MaximumLimit"] = 20,
+            ["UsdaRequestLimits.MinimumLimit"] = 1,
+            ["UsdaRequestLimits.MaximumLimit"] = 100,
         };
 
     [Fact]
@@ -120,6 +126,46 @@ public sealed class CollectionEndpointPaginationTests {
         Assert.True(
             violations.Count == 0,
             $"HTTP query models must use page/limit, cursor/limit, or an explicitly bounded limit:{Environment.NewLine}{string.Join(Environment.NewLine, violations.Order(StringComparer.Ordinal))}");
+    }
+
+    [Fact]
+    public void HttpActionPaginationParameters_DeclareSafeBounds() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] presentationRoots = GetPresentationRoots(root);
+        var violations = new List<string>();
+
+        foreach (string path in SourceScanner.SourceFiles(presentationRoots)
+                     .Where(static path => path.EndsWith("Controller.cs", StringComparison.Ordinal))) {
+            SyntaxNode syntaxRoot = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot();
+            foreach (ParameterSyntax parameter in syntaxRoot.DescendantNodes().OfType<MethodDeclarationSyntax>()
+                         .Where(static method => method.AttributeLists.SelectMany(static list => list.Attributes)
+                             .Any(static attribute => attribute.Name.ToString() is "HttpGet" or "HttpGetAttribute"))
+                         .SelectMany(static method => method.ParameterList.Parameters)
+                         .Where(IsDirectPaginationParameter)) {
+                string name = parameter.Identifier.ValueText;
+                if (name.Equals("pageSize", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("take", StringComparison.OrdinalIgnoreCase)) {
+                    violations.Add($"{ToLocation(root, path, parameter)} uses legacy pagination name '{name}'");
+                    continue;
+                }
+
+                var member = new PaginationMember(
+                    name,
+                    parameter.Type?.ToString() ?? string.Empty,
+                    [.. parameter.AttributeLists.SelectMany(static list => list.Attributes)],
+                    parameter);
+                if (name.Equals("cursor", StringComparison.OrdinalIgnoreCase)) {
+                    ValidateCursorMember(root, path, member, violations);
+                } else {
+                    int maximum = GetDirectParameterMaximum(name);
+                    ValidateNumericMember(root, path, member, maximum, allowNullable: name.Equals("limit", StringComparison.OrdinalIgnoreCase), violations);
+                }
+            }
+        }
+
+        Assert.True(
+            violations.Count == 0,
+            $"Direct HTTP pagination parameters must declare finite safe bounds:{Environment.NewLine}{string.Join(Environment.NewLine, violations.Order(StringComparer.Ordinal))}");
     }
 
     [Fact]
@@ -251,6 +297,11 @@ public sealed class CollectionEndpointPaginationTests {
             return value > 0;
         }
 
+        string expressionName = expression.ToString();
+        if (PaginationLimitValues.TryGetValue(expressionName, out value) && value > 0) {
+            return true;
+        }
+
         string constantName = expression switch {
             MemberAccessExpressionSyntax memberAccess => memberAccess.Name.Identifier.ValueText,
             IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
@@ -308,6 +359,29 @@ public sealed class CollectionEndpointPaginationTests {
         name.Contains("limit", StringComparison.OrdinalIgnoreCase) ||
         name.Contains("cursor", StringComparison.OrdinalIgnoreCase) ||
         name.Contains("before", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsDirectPaginationParameter(ParameterSyntax parameter) {
+        bool isFromQuery = parameter.AttributeLists.SelectMany(static list => list.Attributes)
+            .Any(static attribute => attribute.Name.ToString() is "FromQuery" or "FromQueryAttribute");
+        if (!isFromQuery) {
+            return false;
+        }
+
+        string name = parameter.Identifier.ValueText;
+        return name.Equals("page", StringComparison.OrdinalIgnoreCase) ||
+               name.Equals("limit", StringComparison.OrdinalIgnoreCase) ||
+               name.Equals("pageSize", StringComparison.OrdinalIgnoreCase) ||
+               name.Equals("take", StringComparison.OrdinalIgnoreCase) ||
+               name.Equals("cursor", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static int GetDirectParameterMaximum(string name) {
+        if (name.Equals("page", StringComparison.OrdinalIgnoreCase)) {
+            return 10_000;
+        }
+
+        return name.Equals("limit", StringComparison.OrdinalIgnoreCase) ? 100 : 1_000;
+    }
 
     private static string ToEndpointKey(string root, string path, MethodDeclarationSyntax method) =>
         $"{Path.GetRelativePath(root, path).Replace('\\', '/')}#{method.Identifier.ValueText}";

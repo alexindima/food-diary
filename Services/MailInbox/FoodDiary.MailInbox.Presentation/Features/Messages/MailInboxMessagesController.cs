@@ -2,6 +2,7 @@ using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRe
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessageDetails;
 using FoodDiary.MailInbox.Presentation.Controllers;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
+using FoodDiary.MailInbox.Presentation.Features.Messages.Requests;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
 using FoodDiary.MailInbox.Presentation.Filters;
 using FoodDiary.MailInbox.Presentation.Options;
@@ -25,10 +26,10 @@ public sealed class MailInboxMessagesController(
     [ProducesResponseType<InboundMailMessagePageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status503ServiceUnavailable)]
-    public Task<IActionResult> GetPage([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string? recipient = null, [FromQuery] string? category = null, [FromQuery] bool? unread = null,
-        [FromQuery] DateTimeOffset? fromUtc = null, [FromQuery] DateTimeOffset? toUtc = null, [FromQuery] string? search = null, [FromQuery] string? fromAddress = null, [FromQuery] Guid? id = null) =>
+    public Task<IActionResult> GetPage([FromQuery] GetInboundMailMessagePageHttpQuery query) =>
         ExecuteMetadataOperationAsync(cancellationToken => HandleOk(
-            new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id),
+            new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(
+                query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id),
             static value => new InboundMailMessagePageHttpResponse(value.Items.ToHttpResponse(), value.TotalItems, value.UnreadCount, value.ReadCount), cancellationToken));
 
     [HttpGet]
@@ -37,10 +38,11 @@ public sealed class MailInboxMessagesController(
     [ProducesResponseType<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status503ServiceUnavailable)]
-    public Task<IActionResult> Get([FromQuery] int? limit, [FromQuery] string? recipient = null, [FromQuery] string? category = null, [FromQuery] bool? unread = null) =>
+    public Task<IActionResult> Get([FromQuery] GetInboundMailMessagesHttpQuery query) =>
         ExecuteMetadataOperationAsync(
             cancellationToken => HandleOk(
-                new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages.GetInboundMailMessagesQuery(limit ?? 50, recipient, category, unread),
+                new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages.GetInboundMailMessagesQuery(
+                    query.Limit ?? 50, query.Recipient, query.Category, query.Unread),
                 static value => value.ToHttpResponse(),
                 cancellationToken));
 

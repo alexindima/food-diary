@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4288,
-    "symbols": 4219,
+    "sourceFiles": 4290,
+    "symbols": 4221,
     "interfaceImplementationLinks": 191,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2208,
       "enum": 65,
       "interface": 401,
-      "record": 1425,
+      "record": 1427,
       "record struct": 120
     },
     "roles": {
@@ -33,7 +33,7 @@
       "Mapping": 4,
       "Options": 70,
       "Other": 1735,
-      "Query": 292,
+      "Query": 294,
       "QueryHandler": 210,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
@@ -27072,7 +27072,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "InboundMailHttpMappings",
@@ -27080,6 +27080,20 @@
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
       "line": 6
+    },
+    {
+      "name": "GetInboundMailMessagePageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagePageHttpQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetInboundMailMessagesHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs",
+      "line": 4
     },
     {
       "name": "DmarcReportHttpResponse",

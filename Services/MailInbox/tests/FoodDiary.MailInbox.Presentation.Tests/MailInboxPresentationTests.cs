@@ -14,6 +14,7 @@ using FoodDiary.MailInbox.Presentation.Features.Health.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Health.Responses;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
+using FoodDiary.MailInbox.Presentation.Features.Messages.Requests;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
 using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
@@ -497,7 +498,7 @@ public sealed partial class MailInboxPresentationTests {
             .Register(new GetInboundMailMessagesQuery(25), Result.Success<IReadOnlyList<InboundMailMessageSummary>>([summary]));
         MailInboxMessagesController controller = CreateMessagesController(sender);
 
-        IActionResult result = await controller.Get(25);
+        IActionResult result = await controller.Get(new GetInboundMailMessagesHttpQuery(25));
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         IReadOnlyList<InboundMailMessageSummaryHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(ok.Value);

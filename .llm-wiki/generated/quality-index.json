@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5654,
+    "productionFiles": 5656,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 971,
@@ -43098,11 +43098,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "nonBlankLines": 98,
+      "nonBlankLines": 100,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.46
+      "structuralRiskScore": 8.5
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
@@ -43111,6 +43111,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.72
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagePageHttpQuery.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportHttpResponse.cs",
@@ -49710,7 +49726,7 @@
       "name": "MailInboxMessagesController",
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 19,
+      "line": 20,
       "testReferenceCount": 5,
       "testReferences": [
         "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageDetailConcurrencyTests.cs",

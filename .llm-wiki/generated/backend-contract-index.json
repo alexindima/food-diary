@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1294,
+    "contracts": 1296,
     "ambiguousContracts": 2,
-    "consumerEdges": 10099,
-    "productionConsumerEdges": 5776,
-    "testConsumerEdges": 4323,
-    "consumedContracts": 1294,
+    "consumerEdges": 10104,
+    "productionConsumerEdges": 5778,
+    "testConsumerEdges": 4326,
+    "consumedContracts": 1296,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -6914,6 +6914,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetInboundMailMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagePageHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetInboundMailMessagePageQuery",
       "roles": [
         "Query"
@@ -6926,6 +6943,23 @@
       ],
       "definitionPaths": [
         "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetInboundMailMessagesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -47235,6 +47269,32 @@
       "referenceCount": 2
     },
     {
+      "contract": "GetInboundMailMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagePageHttpQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagePageHttpQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.Journal.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetInboundMailMessagePageQuery",
       "roles": [
         "Query"
@@ -47309,6 +47369,45 @@
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.Journal.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageMetadataConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetInboundMailMessagesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Requests/GetInboundMailMessagesHttpQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

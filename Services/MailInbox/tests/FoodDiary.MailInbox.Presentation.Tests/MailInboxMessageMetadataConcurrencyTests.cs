@@ -1,6 +1,7 @@
 using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRead;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
+using FoodDiary.MailInbox.Presentation.Features.Messages.Requests;
 using FoodDiary.MailInbox.Presentation.Filters;
 using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
@@ -96,7 +97,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
             TimeSpan.FromMilliseconds(1));
 
         IActionResult actionResult = listOperation
-            ? await controller.Get(50)
+            ? await controller.Get(new GetInboundMailMessagesHttpQuery(50))
             : await controller.MarkRead(Guid.NewGuid());
 
         ObjectResult result = Assert.IsType<ObjectResult>(actionResult);
@@ -116,7 +117,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
             TimeSpan.FromSeconds(1));
         controller.HttpContext.RequestAborted = cancellation.Token;
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => controller.Get(50)).ConfigureAwait(true);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => controller.Get(new GetInboundMailMessagesHttpQuery(50))).ConfigureAwait(true);
     }
 
     private static MailInboxMessageMetadataConcurrencyGate CreateGate(TimeSpan queueTimeout) =>

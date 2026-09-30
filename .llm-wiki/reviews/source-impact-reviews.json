@@ -238,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a84c724ff2bd0b801f99eef6860c3caf160d52d8a9752b9dd8bfab5bd81f6d44"
+          "sha256": "72ddf7d5fd7cb5396f7edab19035b38bc3aaa864e182ad3cfa7f3c2fbcc00190"
         }
       ],
-      "reason": "Reviewed intentional pagination contract standardization: HTTP collection parameters now use page/limit or cursor/limit, clients and OpenAPI snapshots were updated together, and Swagger tests prohibit legacy aliases.",
+      "reason": "MailInbox routes and parameter names remain unchanged; page and limit validation bounds are intentionally narrowed and covered by application and presentation tests.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:55.9894398Z"
+      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
+      "reviewedAtUtc": "2026-09-30T07:54:24.3890380Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "32d4e37a215f670a7735903416decb90ca517f809feadc96f54e11233ba59845"
+          "sha256": "e7567d2da3723d3ceb1837d1777594b68ddc0a37619c44e9764c3cac7084212a"
         }
       ],
-      "reason": "Reviewed generated quality changes from the new pagination guard; the guard increases coverage and all focused architecture, service, Swagger, and full build checks pass.",
+      "reason": "Roslyn guard now validates direct controller pagination parameters; focused architecture and complete MailInbox application and presentation suites pass.",
       "baseRef": "HEAD",
-      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
-      "reviewedAtUtc": "2026-09-29T23:22:49.2979632Z"
+      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
+      "reviewedAtUtc": "2026-09-30T07:54:25.0490504Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c5f31936f54bebb67b01becb1896672be00dc742b90e64151bc0263307835f31"
+          "sha256": "771782e214fb4542e3408d1666c7e036468a50202f26c9047e3efec4e0813b39"
         }
       ],
-      "reason": "Reviewed runtime topology changes; only HTTP query validation metadata and one stricter admin page limit changed, with no service dependencies, registrations, jobs, or runtime topology behavior added.",
+      "reason": "Two MailInbox HTTP query records replace scalar controller parameters without changing persistence ownership, service topology, hosted workers, dependency injection, or external clients.",
       "baseRef": "HEAD",
-      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
-      "reviewedAtUtc": "2026-09-29T23:22:50.0697918Z"
+      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
+      "reviewedAtUtc": "2026-09-30T07:54:26.2246727Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "32d4e37a215f670a7735903416decb90ca517f809feadc96f54e11233ba59845"
+          "sha256": "e7567d2da3723d3ceb1837d1777594b68ddc0a37619c44e9764c3cac7084212a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c5f31936f54bebb67b01becb1896672be00dc742b90e64151bc0263307835f31"
+          "sha256": "771782e214fb4542e3408d1666c7e036468a50202f26c9047e3efec4e0813b39"
         }
       ],
-      "reason": "Reviewed security impact: page limits are now capped at 100, bounded collections at 1000, cursor length at 128, and previously unbounded MailRelay pagination now has finite validation ranges.",
+      "reason": "Page is capped at 10000 and paged limit at 100 at both HTTP and application boundaries; limit-only collection remains capped at 200.",
       "baseRef": "HEAD",
-      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
-      "reviewedAtUtc": "2026-09-29T23:22:51.1982058Z"
+      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
+      "reviewedAtUtc": "2026-09-30T07:54:26.9291509Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1174,13 +1174,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e9b60ac89907a595ef44cd99858710c4c86d2f2c9cd3954576554b03f15312e0"
+          "sha256": "ffaa9c2b3096f0234fc5157735e02d91751f274f2f24fc028f242185bfeb0526"
         }
       ],
-      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
+      "reason": "Two MailInbox HTTP query records replace scalar controller parameters without changing persistence ownership, service topology, hosted workers, dependency injection, or external clients.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:55.1736454Z"
+      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
+      "reviewedAtUtc": "2026-09-30T07:54:25.6253930Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -1,6 +1,7 @@
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
+using FoodDiary.MailInbox.Presentation.Features.Messages.Requests;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,9 @@ public sealed partial class MailInboxPresentationTests {
         var page = new InboundMailMessagePage([entry], 31, 11, 20);
         StubSender sender = new StubSender().Register(query, Result.Success(page));
         MailInboxMessagesController controller = CreateMessagesController(sender);
-        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(2, 10, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id));
+        var httpQuery = new GetInboundMailMessagePageHttpQuery(
+            2, 10, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id);
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(httpQuery));
         InboundMailMessagePageHttpResponse response = Assert.IsType<InboundMailMessagePageHttpResponse>(result.Value);
         Assert.Equivalent(page, response, strict: true);
         Assert.Equal(query, sender.LastRequest);
