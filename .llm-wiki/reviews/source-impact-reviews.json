@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fd600b360849136ff525bed2790029f828078c9707be0d2c982f21de4295307c"
+          "sha256": "648f235974926d47e2cc6f5358feba427e4f328af9fcab3c2f13496971bceda0"
         }
       ],
-      "reason": "Reviewed retry failure and concurrent edits using 89 focused frontend tests, 4545 broader frontend tests and 2116 architecture tests; Docker projection integration tests are explicitly skipped and real API checks provide separate evidence.",
+      "reason": "Final quality index now includes nine realtime tests alongside nutrient conversion, recipe hydration and retry regressions. Static hotspot guidance remains accurate; 292 focused tests executed successfully.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:38.0340007Z"
+      "gitHead": "045946de4758250ccd976639500bf50c2ea91fb8",
+      "reviewedAtUtc": "2026-09-30T18:06:04.7959539Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,17 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fd600b360849136ff525bed2790029f828078c9707be0d2c982f21de4295307c"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "05da5e3aa4c3dcbff9b2703abae98e6ca70545845b04c799fcc96179db82130a"
+          "sha256": "648f235974926d47e2cc6f5358feba427e4f328af9fcab3c2f13496971bceda0"
         }
       ],
-      "reason": "Reviewed current-user access and dated weight filtering; no new logging, provider sharing, writes, retention or credentials. User profile projection remains no-tracking; real local API verified TDEE with recorded weight.",
+      "reason": "Realtime reconnect reuses existing coalesced refresh and JWT expiry decoder without auth API or credential storage changes. Expired-token success and refresh refusal tested; live browser refresh and hub negotiation returned 200.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:38.7073109Z"
+      "gitHead": "045946de4758250ccd976639500bf50c2ea91fb8",
+      "reviewedAtUtc": "2026-09-30T18:06:06.4544702Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1048,18 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "72e85ba541236d8ebf8e84b62adc6236f532eac8e481a1ef882a6d3b6a948893"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6841a3ecf0e68afb7a963e0d0f635e7409f354787a0dfe633f4c3e979eecc1e5"
+          "sha256": "006cde69ef636bae22a5e2acd0cc01924cc50c50ec593bffe0418e88041e2e79"
         }
       ],
-      "reason": "Reviewed shared query-parameter Requests folder against existing HTTP naming guidance; updated affected indexes and confirmed no host, job, provider or deployment topology change. A second local API on 5301 is only the verification environment.",
+      "reason": "Final frontend index includes shared scale helper and expired-session hub token callback. Frontend trace workflow and route ownership remain accurate after review of current callers.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:39.1216119Z"
+      "gitHead": "045946de4758250ccd976639500bf50c2ea91fb8",
+      "reviewedAtUtc": "2026-09-30T18:06:08.2270752Z"
     },
     {
       "pageId": "workflow-verification-planner",

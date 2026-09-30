@@ -488,6 +488,16 @@ describe('RecipeManageFacade submission recovery', () => {
         expect(recipeService.update).not.toHaveBeenCalled();
     });
 
+    it('shows a localized connection error and allows retry after an offline save', () => {
+        recipeService.update.mockReturnValueOnce(throwError(() => ({ status: 0, error: { message: 'Failed to fetch' } })));
+        facade.updateRecipe('r1', dto);
+        expect(facade.globalError()).toBe('FORM_ERRORS.SAVE_CONNECTION');
+        expect(facade.isSubmitting()).toBe(false);
+        facade.updateRecipe('r1', dto);
+        expect(recipeService.update).toHaveBeenCalledTimes(2);
+        expect(facade.globalError()).toBeNull();
+    });
+
     it('returns a saved recipe to the caller when used in a dialog', async () => {
         const close = vi.fn();
         const scoped = TestBed.runInInjectionContext(() => {
@@ -512,6 +522,12 @@ const PORTION_NUTRIENT = 40;
 const SERVING_COUNT = 3;
 
 describe('RecipeManageFacade nutrition fallback', () => {
+    it('preserves recipe totals when transferring automatic nutrition to manual portions', () => {
+        const recipeCalories = 280;
+        const portion = facade.fromRecipeTotal(recipeCalories, 'portion', SERVING_COUNT);
+        expect(facade.toRecipeTotal(portion, 'portion', SERVING_COUNT)).toBe(recipeCalories);
+    });
+
     it('rounds nutrition without introducing floating-point tails', () => {
         const input = 1.234;
         const rounded = 1.23;

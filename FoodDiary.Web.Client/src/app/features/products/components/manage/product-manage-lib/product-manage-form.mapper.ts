@@ -1,5 +1,5 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
-import { getControlNumericValue } from '../../../../../shared/lib/nutrition-form.utils';
+import { getControlNumericValue, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { PRODUCT_MAX_PHOTOS, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
@@ -104,7 +104,8 @@ export function buildConvertedNutritionPatch(values: ProductFormValues, factor: 
             return;
         }
 
-        patch[field] = roundProductNutrientValue(getProductControlNumberValue(rawValue) * factor);
+        // Keep conversion precision until submit so switching the display basis does not change the saved nutrients.
+        patch[field] = scaleNutrientInput(getProductControlNumberValue(rawValue), factor);
     });
 
     return patch;

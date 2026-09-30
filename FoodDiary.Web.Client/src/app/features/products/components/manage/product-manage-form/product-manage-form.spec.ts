@@ -528,6 +528,24 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
         expect(component['nutritionMode']).toBe('base');
         expect(productValues(component).caloriesPerBase).toBe(BASE_CALORIES);
     });
+
+    it('preserves nutrients after changing display basis and saves the original base values', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        const baseProteins = 12.5;
+        const portionProteins = 6.25;
+        patchProductForm(component, { name: 'Oats', defaultPortionAmount: 50, caloriesPerBase: 350, proteinsPerBase: baseProteins });
+        component['onNutritionModeChange']('portion');
+        expect(productValues(component).proteinsPerBase).toBe(portionProteins);
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledWith(
+            null,
+            expect.objectContaining({ proteinsPerBase: baseProteins, caloriesPerBase: 350 }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+        component['onNutritionModeChange']('base');
+        expect(productValues(component).proteinsPerBase).toBe(baseProteins);
+    });
 });
 
 describe('Product recognition integration', () => {

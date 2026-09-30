@@ -158,6 +158,8 @@ Responsive line chart for compact trends and sparklines. With axes enabled, the 
 
 Universal single-line input.
 
+Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text units participate in the field layout, leaving the remaining width for the value in compact forms.
+
 **Inputs**
 
 - `label?: string`

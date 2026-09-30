@@ -12,6 +12,7 @@ import {
     getDefaultProductBaseAmount,
     normalizeProductNutritionValues,
 } from './product-manage-form.mapper';
+import type { ProductFormValues } from './product-manage-form.types';
 
 const DEFAULT_BASE_AMOUNT = 100;
 const PRODUCT: Product = {
@@ -151,13 +152,31 @@ describe('product manage nutrition mapping', () => {
         };
 
         expect(buildConvertedNutritionPatch(form, 2)).toEqual({
-            caloriesPerBase: 222.2,
-            fatsPerBase: 6.7,
-            carbsPerBase: 8.9,
+            caloriesPerBase: 222.22,
+            fatsPerBase: 6.66,
+            carbsPerBase: 8.88,
             alcoholPerBase: 1.1,
         });
     });
+});
 
+describe('product nutrition precision', () => {
+    it('preserves fractional nutrients through repeated basis conversions and submission', () => {
+        const original = { ...createProductForm(), defaultPortionAmount: 33, caloriesPerBase: 350, proteinsPerBase: 12.5, fatsPerBase: 7 };
+        let converted: ProductFormValues = original;
+        const conversionCount = 5;
+        const portionFactor = original.defaultPortionAmount / DEFAULT_BASE_AMOUNT;
+        for (let index = 0; index < conversionCount; index++) {
+            converted = { ...converted, ...buildConvertedNutritionPatch(converted, portionFactor) };
+            expect(buildProductData(converted, 'portion').proteinsPerBase).toBe(original.proteinsPerBase);
+            converted = { ...converted, ...buildConvertedNutritionPatch(converted, 1 / portionFactor) };
+        }
+
+        expect(buildProductData(converted, 'base')).toEqual(buildProductData(original, 'base'));
+    });
+});
+
+describe('product nutrition prefill mapping', () => {
     it('should build AI result patch while preserving existing optional values when AI leaves them empty', () => {
         const image: ImageSelection = { url: 'https://example.test/current.png', assetId: 'current-asset' };
         const form = {

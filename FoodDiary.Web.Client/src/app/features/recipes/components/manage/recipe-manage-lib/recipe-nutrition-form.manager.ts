@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 
-import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
+import { checkMacrosError, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../../shared/models/charts.data';
 import type { RecipeNutritionSummary, RecipeStepsNutritionState } from '../../../lib/recipe-manage.facade';
 import type { Recipe } from '../../../models/recipe.data';
@@ -56,7 +56,7 @@ export class RecipeNutritionFormManager {
 
     public initialize(): void {
         this.nutritionMode.set(this.form.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual');
-        this.recalculateNutrientsFromForm();
+        this.updateSummaryFromForm();
     }
 
     public handleAutoCalculationChange(isAuto: boolean): void {
@@ -201,11 +201,15 @@ export class RecipeNutritionFormManager {
         const patch: Partial<RecipeFormValues> = {};
 
         fields.forEach(field => {
-            const raw = Number(this.form.controls[field].value);
+            const value = this.form.controls[field].value;
+            if (value === null) {
+                return;
+            }
+            const raw = Number(value);
             if (!Number.isFinite(raw)) {
                 return;
             }
-            patch[field] = this.operations.roundNutritionValue(raw * factor);
+            patch[field] = scaleNutrientInput(raw, factor);
         });
 
         this.form.patchValue(patch, { emitEvent: false });

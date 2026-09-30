@@ -118,6 +118,29 @@ describe('RecipeNutritionFormManager manual mode', () => {
 });
 
 describe('RecipeNutritionFormManager summary updates', () => {
+    it('preserves recipe totals and empty fields through repeated portion conversions', () => {
+        const form = createRecipeFormState();
+        form.patchValue({
+            calculateNutritionAutomatically: false,
+            servings: 3,
+            manualCalories: 280,
+            manualProteins: 10,
+            manualFiber: null,
+        });
+        const manager = new RecipeNutritionFormManager(form, createOperations());
+        const conversionCount = 5;
+        const recipeCalories = form.controls.manualCalories.value;
+        const recipeProteins = form.controls.manualProteins.value;
+        for (let index = 0; index < conversionCount; index++) {
+            manager.onNutritionScaleModeChange('portion');
+            expect(manager.totalCalories()).toBe(recipeCalories);
+            expect(form.controls.manualFiber.value).toBeNull();
+            manager.onNutritionScaleModeChange('recipe');
+            expect(form.controls.manualCalories.value).toBe(recipeCalories);
+            expect(form.controls.manualProteins.value).toBe(recipeProteins);
+        }
+    });
+
     it('uses recipe summary with current state as fallback', () => {
         const form = createRecipeFormState();
         const getSummaryFromRecipe = vi.fn((_recipe: Recipe | null, fallback: RecipeNutritionSummary) => ({

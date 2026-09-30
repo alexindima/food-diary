@@ -103,6 +103,16 @@ describe('RecipeManageComponent form population', () => {
 });
 
 describe('RecipeManageComponent language checks', () => {
+    it('shows the saved manual calculation mode when editing a recipe', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        const recipe = createRecipe({ isNutritionAutoCalculated: false, manualCalories: 280, totalCalories: 280, totalProteins: 10 });
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.detectChanges();
+        expect(component['nutritionMode']()).toBe('manual');
+        expect(component['recipeFormModel']().calculateNutritionAutomatically).toBe(false);
+        expect(component['totalCalories']()).toBe(recipe.totalCalories);
+    });
+
     it.each(['keep', 'change', undefined] as const)('handles a language mismatch choice: %s', async choice => {
         const { component, facade, fixture } = await setupComponentAsync();
         patchValidManualRecipe(component);

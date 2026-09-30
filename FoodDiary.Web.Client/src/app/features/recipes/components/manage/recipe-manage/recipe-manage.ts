@@ -502,6 +502,7 @@ export class RecipeManageComponent {
 
             this.nutritionFormManager.updateNutrientSummary(recipeData);
         });
+        this.nutritionFormManager.initialize();
         if (this.hasNoRecipeNutritionTotals(recipeData)) {
             this.nutritionFormManager.recalculateNutrientsFromForm();
         } else {

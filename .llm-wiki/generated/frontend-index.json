@@ -5311,7 +5311,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "RecipePublicationService",
@@ -6242,7 +6242,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification-realtime.service.ts",
-      "line": 15
+      "line": 17
     },
     {
       "name": "NotificationService",

@@ -62,7 +62,7 @@
     background: var(--fd-input-control-background);
     display: flex;
     align-items: center;
-    padding: 0 var(--fd-space-control-affix-padding-x) 0 var(--fd-space-control-padding-x);
+    padding: 0 var(--fd-space-control-padding-x);
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -80,6 +80,10 @@
 
 .fd-ui-input__control-wrap--with-prefix {
     padding-left: var(--fd-space-control-affix-padding-x);
+}
+
+.fd-ui-input__control-wrap--with-suffix-button {
+    padding-right: var(--fd-space-control-affix-padding-x);
 }
 
 .fd-ui-input__control-wrap--date {

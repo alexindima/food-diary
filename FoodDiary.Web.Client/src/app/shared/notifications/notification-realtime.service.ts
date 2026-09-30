@@ -1,9 +1,11 @@
 import { effect, inject, Service, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
+import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { FrontendLoggerService } from '../../services/frontend-logger.service';
+import { JwtDecoderService } from '../../services/jwt-decoder.service';
 import { buildRealtimeHubUrl } from '../lib/realtime-hub-url.utils';
 import { NotificationService } from './notification.service';
 
@@ -16,6 +18,7 @@ export class NotificationRealtimeService {
     private readonly authService = inject(AuthService);
     private readonly notificationService = inject(NotificationService);
     private readonly logger = inject(FrontendLoggerService);
+    private readonly jwtDecoder = inject(JwtDecoderService);
     private connection: HubConnection | null = null;
     private disconnecting = false;
     private readonly connecting = signal(false);
@@ -59,7 +62,7 @@ export class NotificationRealtimeService {
 
         this.connection = new HubConnectionBuilder()
             .withUrl(toNotificationHubUrl(environment.apiUrls.auth), {
-                accessTokenFactory: () => this.authService.getToken() ?? '',
+                accessTokenFactory: this.getConnectionTokenAsync.bind(this),
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
@@ -116,5 +119,16 @@ export class NotificationRealtimeService {
             this.connectedSignal.set(false);
             this.connecting.set(false);
         }
+    }
+
+    private async getConnectionTokenAsync(): Promise<string> {
+        const token = this.authService.getToken();
+        if (typeof token !== 'string') {
+            return '';
+        }
+        if (this.jwtDecoder.isExpired(token)) {
+            return (await firstValueFrom(this.authService.refreshToken())) ?? '';
+        }
+        return token;
     }
 }

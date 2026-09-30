@@ -1,10 +1,12 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { AuthService } from '../../services/auth.service';
 import { FrontendLoggerService } from '../../services/frontend-logger.service';
+import { JwtDecoderService } from '../../services/jwt-decoder.service';
 import { NotificationService } from './notification.service';
 import { NotificationRealtimeService } from './notification-realtime.service';
 
@@ -104,12 +106,12 @@ describe('NotificationRealtimeService connection guards', () => {
         expect(signalrMock.builder.withUrl).toHaveBeenCalledWith(
             expect.stringContaining('/hubs/notifications'),
             expect.objectContaining({
-                accessTokenFactory: expect.any(Function) as () => string,
+                accessTokenFactory: expect.any(Function) as () => Promise<string>,
             }),
         );
         const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
-        const options = withUrlCall?.[1] as { accessTokenFactory: () => string };
-        expect(options.accessTokenFactory()).toBe(AUTH_TOKEN);
+        const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
+        expect(await options.accessTokenFactory()).toBe(AUTH_TOKEN);
         expect(service.connected()).toBe(true);
         expect(notificationService.fetchUnreadCount).toHaveBeenCalledOnce();
         expect(notificationService.ensureNotificationsLoaded).toHaveBeenCalledOnce();
@@ -170,6 +172,36 @@ describe('NotificationRealtimeService connection guards', () => {
     });
 });
 
+describe('NotificationRealtimeService expired sessions', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+        signalrMock.reset();
+    });
+
+    it('refreshes an expired token before a reconnect uses it', async () => {
+        setup(true, AUTH_TOKEN);
+        const expired = vi.spyOn(TestBed.inject(JwtDecoderService), 'isExpired').mockReturnValue(true);
+        const refreshedToken = 'refreshed-session';
+        const refresh = vi.spyOn(TestBed.inject(AuthService), 'refreshToken').mockReturnValue(of(refreshedToken));
+        await waitForAsync(() => signalrMock.connection.start.mock.calls.length > 0);
+        const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
+        const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
+        expect(await options.accessTokenFactory()).toBe(refreshedToken);
+        expect(expired).toHaveBeenCalledWith(AUTH_TOKEN);
+        expect(refresh).toHaveBeenCalledOnce();
+    });
+
+    it('does not reuse the expired token when refresh fails', async () => {
+        setup(true, AUTH_TOKEN);
+        vi.spyOn(TestBed.inject(JwtDecoderService), 'isExpired').mockReturnValue(true);
+        vi.spyOn(TestBed.inject(AuthService), 'refreshToken').mockReturnValue(of(null));
+        await waitForAsync(() => signalrMock.connection.start.mock.calls.length > 0);
+        const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
+        const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
+        expect(await options.accessTokenFactory()).toBe('');
+    });
+});
+
 function setup(
     isAuthenticated: boolean,
     token: string | null,
@@ -206,6 +238,7 @@ function setup(
                 useValue: {
                     isAuthenticated: authenticated,
                     getToken: vi.fn(() => token),
+                    refreshToken: vi.fn(() => of(null)),
                 },
             },
             { provide: NotificationService, useValue: notificationService },

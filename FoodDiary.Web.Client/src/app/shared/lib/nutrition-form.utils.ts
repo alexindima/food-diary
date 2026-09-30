@@ -36,6 +36,16 @@ export type CalorieMismatchWarningInput = {
 
 export type NutritionMode = 'auto' | 'manual';
 
+const NUTRIENT_CONVERSION_EPSILON_MULTIPLIER = 8;
+
+/** Preserve input precision across display-basis changes; round totals only for presentation or submission. */
+export function scaleNutrientInput(value: number, factor: number): number {
+    const converted = value * factor;
+    const rounded = roundNutrient(converted);
+    const tolerance = Number.EPSILON * Math.max(1, Math.abs(converted)) * NUTRIENT_CONVERSION_EPSILON_MULTIPLIER;
+    return Math.abs(converted - rounded) <= tolerance ? rounded : converted;
+}
+
 /**
  * Calculate expected calories from macronutrient grams.
  * Proteins: 4 kcal/g, Fats: 9 kcal/g, Carbs: 4 kcal/g, Alcohol: 7 kcal/g.

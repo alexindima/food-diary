@@ -15,6 +15,7 @@ import type {
     ItemSelection,
 } from '../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
+import { scaleNutrientInput } from '../../../shared/lib/nutrition-form.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues, NutritionScaleMode, StepFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
@@ -253,7 +254,7 @@ export class RecipeManageFacade {
             return normalized;
         }
 
-        return this.roundNutrient(normalized / this.normalizeServings(servings));
+        return scaleNutrientInput(normalized, 1 / this.normalizeServings(servings));
     }
 
     public toRecipeTotal(value: number | null | undefined, scaleMode: NutritionScaleMode, servings: number): number {
@@ -356,6 +357,10 @@ export class RecipeManageFacade {
     }
 
     private handleSubmitError(error?: unknown): void {
+        if (this.isRecord(error) && error['status'] === 0) {
+            this.setGlobalError('FORM_ERRORS.SAVE_CONNECTION');
+            return;
+        }
         const message = this.getErrorMessage(error) ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
         this.setGlobalError(message, false);
     }
