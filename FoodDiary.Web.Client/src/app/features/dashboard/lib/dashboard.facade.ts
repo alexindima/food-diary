@@ -223,6 +223,7 @@ export class DashboardFacade {
             next: () => {
                 this.loadDashboardSnapshot(false, true);
             },
+            error: () => this.toastService.error(this.translateService.instant('HYDRATION_CARD.ADD_ERROR')),
         });
     }
 

@@ -1636,7 +1636,7 @@
         "BACKUP_EMAIL_COOLDOWN": "You can request another email in {{seconds}} seconds.",
         "EMAIL_CONFIRMED": "Email confirmed. You can use it with a password to sign in.",
         "EMAIL_UNCONFIRMED": "Email is not confirmed yet.",
-        "ACTIVITY_DEFAULT_HINT": "Moderate activity is a starting selection. Choose the level that matches your usual week.",
+        "ACTIVITY_DEFAULT_HINT": "Choose the activity level that matches your usual week. It is used to estimate your daily energy needs.",
         "BIRTH_DATE_INVALID": "Enter a valid date of birth that is not in the future."
     },
     "SIDEBAR": {
@@ -3298,6 +3298,7 @@
         "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
     },
     "HYDRATION_CARD": {
+        "ADD_ERROR": "Could not record water. Check your connection and try again.",
         "TITLE": "Hydration",
         "GOAL_TITLE": "Hydration goal missing",
         "GOAL_BODY": "Set a daily water target to track progress.",

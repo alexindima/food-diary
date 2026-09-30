@@ -1,4 +1,4 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { catchError, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -44,6 +44,7 @@ export class AuthService extends ApiService {
     private refreshInFlight$: Observable<string | null> | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
     private readonly authReadySignal = signal(false);
+    private sessionVersion = 0;
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
@@ -57,6 +58,18 @@ export class AuthService extends ApiService {
     public readonly isImpersonating = computed(() => this.jwtDecoder.isImpersonation(this.authTokenSignal()));
     public readonly impersonationReason = computed(() => this.jwtDecoder.extractImpersonationReason(this.authTokenSignal()));
     public readonly isAuthReady = this.authReadySignal.asReadonly();
+
+    public constructor() {
+        super();
+        const stopListening = this.browserWindow.onLocalStorageChange(event => {
+            const sessionRemoved = event.key === 'refreshSession' && event.newValue === null;
+            const storageCleared = event.key === null;
+            if ((sessionRemoved || storageCleared) && this.isAuthenticated() && !this.tokenStorage.hasRefreshSession()) {
+                void this.onLogoutAsync(true);
+            }
+        });
+        inject(DestroyRef).onDestroy(stopListening);
+    }
 
     public initializeAuth(): void {
         let token = this.tokenStorage.getToken();
@@ -240,8 +253,12 @@ export class AuthService extends ApiService {
 
         const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
         const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
+        const refreshVersion = this.sessionVersion;
         const refreshRequest$ = this.post<AuthResponse>('refresh', request).pipe(
             map(response => {
+                if (refreshVersion !== this.sessionVersion) {
+                    return null;
+                }
                 const accessToken = response.accessToken;
                 if (accessToken.length > 0) {
                     this.applyAuthenticatedSession(response);
@@ -263,6 +280,7 @@ export class AuthService extends ApiService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
+        this.sessionVersion++;
         if (this.tokenStorage.hasRefreshSession()) {
             const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
             const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };

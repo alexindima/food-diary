@@ -799,20 +799,20 @@
       "structuralRiskScore": 79.92
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "nonBlankLines": 390,
+      "decisionPoints": 48,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 79.8
+    },
+    {
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
       "nonBlankLines": 366,
       "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 79.32
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-      "nonBlankLines": 311,
-      "decisionPoints": 47,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 78.72
     }
   ],
   "files": [
@@ -8618,11 +8618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "nonBlankLines": 293,
+      "nonBlankLines": 294,
       "decisionPoints": 47,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.36
+      "structuralRiskScore": 76.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.ts",
@@ -13186,11 +13186,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 373,
-      "decisionPoints": 42,
+      "nonBlankLines": 390,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.46
+      "structuralRiskScore": 79.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -13938,11 +13938,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-window.service.ts",
-      "nonBlankLines": 145,
-      "decisionPoints": 25,
+      "nonBlankLines": 160,
+      "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.4
+      "structuralRiskScore": 43.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/platform/mobile-shell-runtime.ts",

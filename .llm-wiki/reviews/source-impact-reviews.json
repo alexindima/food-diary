@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8139028e48d1e6ebdd9d24467390e9f387772104094d0afa6bb678bc21d95ffe"
+          "sha256": "32e8b23b26fb15f25088b453fa2bed2aa9c967cee70e85d9d57b3090a5d597aa"
         }
       ],
-      "reason": "Final formatting retains tested fasting failure and retry behavior plus bilingual shopping list date coverage; quality guidance remains current.",
+      "reason": "Executed 3939 app tests and 117 focused auth tests cover hydration retry, cross-tab session cleanup and late refresh; static references remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f347ae1a16df54348a386f4079c2a02ad4a5aa3e",
-      "reviewedAtUtc": "2026-09-30T18:58:36.0240992Z"
+      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
+      "reviewedAtUtc": "2026-09-30T19:53:07.3231468Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8139028e48d1e6ebdd9d24467390e9f387772104094d0afa6bb678bc21d95ffe"
+          "sha256": "32e8b23b26fb15f25088b453fa2bed2aa9c967cee70e85d9d57b3090a5d597aa"
         }
       ],
-      "reason": "Final UI-only changes do not alter credentials, logs, permissions, sharing, HTTP contracts or persistence boundaries.",
+      "reason": "Reviewed existing refreshSession marker and logout cleanup. Local storage removal triggers existing session cleanup; no new secret persistence, logging, HTTP contracts or server permissions. Real two-tab logout verified.",
       "baseRef": "HEAD",
-      "gitHead": "f347ae1a16df54348a386f4079c2a02ad4a5aa3e",
-      "reviewedAtUtc": "2026-09-30T18:58:37.4355166Z"
+      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
+      "reviewedAtUtc": "2026-09-30T19:53:08.3415486Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "604dcdca502c4895973722d63928b1f1e8e7e8f30ada5446a97c2fce1d64d77e"
+          "sha256": "91645ebbdf3516f796bc9cac00a38540b782493d19a11b99483ece619eddb2f5"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "983c6ef2b5b00976138639dafb12625e5bd21bea842ba200a9496cfbcc800f6b"
+          "sha256": "a27c654fcdf51392357311f7fce834ac2ce20f2e586ed504f71407f564031c71"
         }
       ],
-      "reason": "Final sources retain the existing fasting service calls and shared locale resolution; facade error callbacks now expose retry feedback.",
+      "reason": "Traced hydration request error to existing toast and browser storage adapter to AuthService logout and session event cleanup. Tested retries and late refresh responses.",
       "baseRef": "HEAD",
-      "gitHead": "f347ae1a16df54348a386f4079c2a02ad4a5aa3e",
-      "reviewedAtUtc": "2026-09-30T18:58:38.6980480Z"
+      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
+      "reviewedAtUtc": "2026-09-30T19:53:09.3005225Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "604dcdca502c4895973722d63928b1f1e8e7e8f30ada5446a97c2fce1d64d77e"
+          "sha256": "91645ebbdf3516f796bc9cac00a38540b782493d19a11b99483ece619eddb2f5"
         }
       ],
-      "reason": "Both dialogs reuse fd-ui-form-error without changing public inputs or outputs. Desktop and mobile browser checks confirm errors, retained notes and retry; shared UI kit was not modified.",
+      "reason": "Existing toast and translated profile hint retained public component contracts. Storage listener remains in browser platform adapter with cleanup and SSR handling. English and Russian assets regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "f347ae1a16df54348a386f4079c2a02ad4a5aa3e",
-      "reviewedAtUtc": "2026-09-30T18:58:39.7810002Z"
+      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
+      "reviewedAtUtc": "2026-09-30T19:53:10.2897820Z"
     },
     {
       "pageId": "workflow.query-context",

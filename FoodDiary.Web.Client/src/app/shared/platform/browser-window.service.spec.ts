@@ -109,6 +109,27 @@ describe('BrowserWindowService', () => {
     });
 });
 
+describe('BrowserWindowService storage events', () => {
+    it('observes local storage changes and stops listening after cleanup', () => {
+        const service = createService(document);
+        const callback = vi.fn();
+        const stopListening = service.onLocalStorageChange(callback);
+        const sessionEvent = new StorageEvent('storage', { key: 'session' });
+        Object.defineProperty(sessionEvent, 'storageArea', { value: sessionStorage });
+        window.dispatchEvent(sessionEvent);
+        expect(callback).not.toHaveBeenCalled();
+
+        const event = new StorageEvent('storage', { key: 'session' });
+        Object.defineProperty(event, 'storageArea', { value: localStorage });
+        window.dispatchEvent(event);
+        expect(callback).toHaveBeenCalledWith(event);
+
+        stopListening();
+        window.dispatchEvent(event);
+        expect(callback).toHaveBeenCalledOnce();
+    });
+});
+
 function createService(ownerDocument: Document): BrowserWindowService {
     TestBed.configureTestingModule({
         providers: [BrowserWindowService, { provide: DOCUMENT, useValue: ownerDocument }],

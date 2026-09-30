@@ -105,6 +105,22 @@ export class BrowserWindowService {
         };
     }
 
+    public onLocalStorageChange(callback: (event: StorageEvent) => void): () => void {
+        const windowRef = this.getWindow();
+        if (windowRef === null) {
+            return () => {};
+        }
+        const listener = (event: StorageEvent): void => {
+            if (event.storageArea === windowRef.localStorage) {
+                callback(event);
+            }
+        };
+        windowRef.addEventListener('storage', listener);
+        return () => {
+            windowRef.removeEventListener('storage', listener);
+        };
+    }
+
     public async getUserMediaAsync(constraints: MediaStreamConstraints): Promise<MediaStream> {
         const mediaDevices = this.getWindow()?.navigator.mediaDevices;
         if (mediaDevices === undefined) {

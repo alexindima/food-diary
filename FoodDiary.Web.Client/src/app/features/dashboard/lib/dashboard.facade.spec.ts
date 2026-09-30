@@ -292,14 +292,25 @@ describe('DashboardFacade actions', () => {
         expect(facade.isHydrationLoading()).toBe(false);
     });
 
-    it('should stop hydration loading when hydration update fails', () => {
-        const { facade, hydrationService } = setupFacade();
+    it('reports a failed hydration update without changing the total and allows retry', () => {
+        const { facade, hydrationService, dashboardService } = setupFacade();
         facade.initialize();
+        const originalTotal = facade.hydration()?.totalMl;
+        const errorToast = vi.spyOn(TestBed.inject(FdUiToastService), 'error');
+        const initialLoads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
         hydrationService.addEntry.mockReturnValueOnce(throwError(() => new Error('hydration failed')));
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
 
         expect(facade.isHydrationLoading()).toBe(false);
+        expect(facade.hydration()?.totalMl).toBe(originalTotal);
+        expect(errorToast).toHaveBeenCalledWith('HYDRATION_CARD.ADD_ERROR');
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(initialLoads);
+
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+
+        expect(hydrationService.addEntry).toHaveBeenCalledTimes(2);
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(initialLoads + 1);
     });
 });
 

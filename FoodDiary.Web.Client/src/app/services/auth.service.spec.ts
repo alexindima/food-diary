@@ -99,6 +99,58 @@ afterEach(() => {
     sessionStorage.clear();
 });
 
+describe('logout across tabs', () => {
+    it.each([true, false])('clears the cached user and token after another tab logs out (remembered=%s)', remembered => {
+        authenticateForCrossTabTest(remembered);
+        localStorage.removeItem('refreshSession');
+
+        window.dispatchEvent(createSessionRemovalEvent());
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        expect(service.getToken()).toBeNull();
+        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
+        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
+        httpMock.expectNone(`${authBaseUrl}/logout`);
+    });
+
+    it('ignores an old removal event after a new refresh session exists', () => {
+        authenticateForCrossTabTest(true);
+
+        window.dispatchEvent(createSessionRemovalEvent());
+
+        expect(service.isAuthenticated()).toBe(true);
+        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
+    });
+
+    it('ignores a refresh response that arrives after logout in another tab', () => {
+        authenticateForCrossTabTest(false);
+        const received = vi.fn();
+        service.refreshToken().subscribe(received);
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        localStorage.removeItem('refreshSession');
+        window.dispatchEvent(createSessionRemovalEvent());
+
+        request.flush(loginAuthResponse);
+
+        expect(received).toHaveBeenCalledWith(null);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getToken()).toBeNull();
+        expect(localStorage.getItem('refreshSession')).toBeNull();
+    });
+});
+
+function authenticateForCrossTabTest(remembered: boolean): void {
+    service.login(new LoginRequest({ email: loginRequest.email, password: loginRequest.password, rememberMe: remembered })).subscribe();
+    httpMock.expectOne(`${authBaseUrl}/login`).flush(loginAuthResponse);
+}
+
+function createSessionRemovalEvent(): StorageEvent {
+    const event = new StorageEvent('storage', { key: 'refreshSession', oldValue: 'true', newValue: null });
+    Object.defineProperty(event, 'storageArea', { value: localStorage });
+    return event;
+}
+
 describe('token management', () => {
     it('should get token from localStorage', () => {
         localStorage.setItem('authToken', 'local-token');
