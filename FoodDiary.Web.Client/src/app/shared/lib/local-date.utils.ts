@@ -17,6 +17,18 @@ const DATE_TIME_INPUT_MINUTE_INDEX = 5;
 
 export type DateInputValue = Date | string | null | undefined;
 
+export function parseCalendarDateUtc(value: string | null | undefined): Date | null {
+    const match = /^(\d{4})-(\d{2})-(\d{2})(?:T|$)/.exec(value ?? '');
+    if (match === null) {
+        return null;
+    }
+    const year = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    const day = Number(match[3]);
+    const date = new Date(Date.UTC(year, month, day));
+    return date.getUTCFullYear() === year && date.getUTCMonth() === month && date.getUTCDate() === day ? date : null;
+}
+
 export function parseDateValue(value: DateInputValue): Date | null {
     if (value === null || value === undefined || value === '') {
         return null;

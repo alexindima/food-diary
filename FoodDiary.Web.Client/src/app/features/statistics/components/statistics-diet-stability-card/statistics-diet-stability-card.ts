@@ -5,6 +5,8 @@ import { FdUiCardComponent } from 'fd-ui-kit';
 
 import type { StatisticsDietStabilityData } from '../../models/statistics-dashboard-card.models';
 
+const MIN_RECORDED_DAYS = 3;
+
 const STABILITY_DEVIATION_TOLERANCE_PERCENT = 20;
 
 @Component({
@@ -16,6 +18,10 @@ const STABILITY_DEVIATION_TOLERANCE_PERCENT = 20;
 })
 export class StatisticsDietStabilityCardComponent {
     public readonly data = input.required<StatisticsDietStabilityData>();
+
+    protected readonly hasEnoughData = computed(
+        () => this.data().days.length >= MIN_RECORDED_DAYS && this.data().days.every(day => day.status !== 'missing'),
+    );
 
     protected readonly hasHighDeviation = computed(() => {
         const deviation = this.data().averageDeviationPercent;

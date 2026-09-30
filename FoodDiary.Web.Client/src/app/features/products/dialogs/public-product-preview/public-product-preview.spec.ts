@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { PublicProductPreviewService } from '../../lib/public-product-preview.service';
+import { PublicProductDetailsFacade } from '../../lib/public-product-details.facade';
 import type { PublicProduct } from '../../models/public-product.data';
 import { PublicProductPreviewComponent } from './public-product-preview';
 
@@ -36,7 +36,7 @@ async function setupAsync(data: PublicProduct): Promise<{
             { provide: FD_UI_DIALOG_DATA, useValue: data.id },
             { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
             { provide: FdUiDialogService, useValue: dialogs },
-            { provide: PublicProductPreviewService, useValue: { getById: vi.fn().mockReturnValue(of(data)) } },
+            { provide: PublicProductDetailsFacade, useValue: { getById: vi.fn().mockReturnValue(of(data)) } },
         ],
     }).compileComponents();
     const fixture = TestBed.createComponent(PublicProductPreviewComponent);
@@ -73,7 +73,9 @@ describe('PublicProductPreviewComponent', () => {
         expect(element.querySelector('.cover img')?.getAttribute('src')).toBe('back.webp');
         expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
         element.querySelector<HTMLButtonElement>('.cover')?.click();
-        const config = dialogs.open.mock.calls[0]?.[1] as { data: { initialIndex: number; collageImages: Array<{ url: string; alt: string }> } };
+        const config = dialogs.open.mock.calls[0]?.[1] as {
+            data: { initialIndex: number; collageImages: Array<{ url: string; alt: string }> };
+        };
         expect(config.data.initialIndex).toBe(1);
         expect(config.data.collageImages.map(image => image.url)).toEqual(['cover.webp', 'back.webp', 'side.webp']);
         expect(element.querySelector('.description')?.textContent).toBe('Crunchy oats');

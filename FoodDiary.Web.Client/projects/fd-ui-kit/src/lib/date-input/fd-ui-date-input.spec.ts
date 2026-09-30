@@ -62,6 +62,24 @@ describe('FdUiDateInputComponent', () => {
         fixture.detectChanges();
     });
 
+    it('accepts a distant birthday through native keyboard input and rejects dates outside bounds', () => {
+        fixture.componentRef.setInput('allowManualInput', true);
+        fixture.componentRef.setInput('max', '2026-09-30');
+        fixture.detectChanges();
+        const input = requireInputElement('input');
+        expect(input.type).toBe('date');
+        expect(input.readOnly).toBe(false);
+        input.value = '1995-06-15';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.value()).toBe('1995-06-15');
+        input.value = '2027-01-01';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.value()).toBeNull();
+        expect(component.touched()).toBe(true);
+    });
+
     it('should create', () => {
         expect(component).toBeTruthy();
     });

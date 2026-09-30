@@ -104,7 +104,8 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
         "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
         "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
-        "UNKNOWN": "Unknown error"
+        "UNKNOWN": "Unknown error",
+        "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
     "COMMON": {
         "ADD": "Add",
@@ -338,7 +339,8 @@
             "CONFIRM_PASSWORD": "Confirm new password",
             "SAVE": "Save and continue",
             "LOGOUT": "Sign out",
-            "ERROR": "We couldn't change the password. Check the temporary password and try again."
+            "ERROR": "We couldn't change the password. Check the temporary password and try again.",
+            "SESSION_ERROR": "Password saved. Try Continue again to sign in with your new password."
         },
         "RESET": {
             "TITLE": "Reset your password",

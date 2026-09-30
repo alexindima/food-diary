@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4457e556fb3960c8f3f9f0c1b0b87022ba48e96e45c0fe3575d4b542c3b30124"
+          "sha256": "4b6ee83e9316e8db4a2bce644b2408dd783b9f5fa1a96ab84c07bfdc9400c327"
         }
       ],
-      "reason": "Reviewed architecture and quality indexes; Roslyn and Swagger guardrails prevent legacy pagination names and unbounded values from returning.",
+      "reason": "Reviewed refreshed architecture index: frontend provider cycle removed by separating public product details; no .NET project references or ownership changes. Existing backend architecture failures are recorded in .artifacts/ux-architecture.log.",
       "baseRef": "HEAD",
-      "gitHead": "faaa9ffffb6a7213597846929ec0b3148e2151d8",
-      "reviewedAtUtc": "2026-09-29T22:43:55.3568395Z"
+      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
+      "reviewedAtUtc": "2026-09-30T14:00:06.5060383Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "51d85162d3bb4cd6e75014aba3f94b38a278a902d1817372747f32e4e3f137b0"
+          "sha256": "678ae4bf8aefb12a4316d14d5dff710cd2fd57c434184a26f5b296f592e8b111"
         }
       ],
-      "reason": "Focused shared-policy, Fasting, Marketing, and pagination architecture tests cover the new boundary and all pass.",
+      "reason": "Reviewed regenerated quality navigation against executed frontend suites, solution build and password-change tests. Partial diary data uses neutral reports and manual meal selection retains quantity; existing backend guardrail failures are outside this frontend patch.",
       "baseRef": "HEAD",
-      "gitHead": "fdae14fa6c0e3b49bc1f4e2148b9314e67d2cf92",
-      "reviewedAtUtc": "2026-09-30T08:52:22.8687061Z"
+      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
+      "reviewedAtUtc": "2026-09-30T14:00:08.9076355Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,17 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "51d85162d3bb4cd6e75014aba3f94b38a278a902d1817372747f32e4e3f137b0"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd7ed8118c71eda5cb9c4d0a38e7ecf4e778aa03571c2bc61e7291fc6a8b3c99"
+          "sha256": "678ae4bf8aefb12a4316d14d5dff710cd2fd57c434184a26f5b296f592e8b111"
         }
       ],
-      "reason": "The new upper bound reduces resource-exhaustion exposure and does not introduce or move sensitive data.",
+      "reason": "Password change still revokes every old session; frontend obtains a fresh login session before navigation and does not bypass 429 limits. Local QA account was created without email, credentials remain outside repository and provider sharing was unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fdae14fa6c0e3b49bc1f4e2148b9314e67d2cf92",
-      "reviewedAtUtc": "2026-09-30T08:52:24.3657603Z"
+      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
+      "reviewedAtUtc": "2026-09-30T14:00:10.4024539Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1061,17 +1057,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ac8e87bc7f0f39a909fce882f8bb9815ca748bbb3d38f08ae4fd1724eb1f3e9e"
+          "sha256": "c492a871f578ee8d3958892f5173b81b714a549da097354774b4875c58b38b19"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "758b8ace6346a28f4379ef203df6618f0abf670636103e961670468cec49d713"
+          "sha256": "9f9b7d622b1681f894511ae0e9097fbea8e30af0d686712d495ea12c1b5ac8fa"
         }
       ],
-      "reason": "Reviewed regenerated repository, runtime, and frontend indexes; changes match the implemented pagination flow and introduce no undocumented ownership change.",
+      "reason": "Verified frontend routes and consumers for dashboard manual query parameter, profile DOB input, recipe/product picker and public product details facade; generated frontend navigation reflects these bounded UI changes.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:56.3398910Z"
+      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
+      "reviewedAtUtc": "2026-09-30T14:00:11.7968586Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1159,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ac8e87bc7f0f39a909fce882f8bb9815ca748bbb3d38f08ae4fd1724eb1f3e9e"
+          "sha256": "c492a871f578ee8d3958892f5173b81b714a549da097354774b4875c58b38b19"
         }
       ],
-      "reason": "Reviewed pagination hardening: generated backend and frontend contract indexes and OpenAPI snapshots intentionally describe bounded collection parameters and compatible client paging.",
+      "reason": "Reviewed date input optional manual entry, latestDate alias and locale; preserved item selection payloads with embedded picker; English and Russian keys and accessible mobile controls verified in browser and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "d371217ef99591ff2e3006ad3d2589610febac8e",
-      "reviewedAtUtc": "2026-09-29T22:17:54.4900288Z"
+      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
+      "reviewedAtUtc": "2026-09-30T14:00:07.7257883Z"
     },
     {
       "pageId": "workflow.query-context",

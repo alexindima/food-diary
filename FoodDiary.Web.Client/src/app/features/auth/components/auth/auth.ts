@@ -457,6 +457,8 @@ export class AuthComponent {
         if (result === 'invalidCredentials') {
             this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
             this.showRestoreAction.set(false);
+        } else if (result === 'rateLimited') {
+            this.setGlobalError('FORM_ERRORS.RATE_LIMITED');
         } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.LOGIN.ACCOUNT_DELETED');
             this.showRestoreAction.set(true);
@@ -469,6 +471,8 @@ export class AuthComponent {
     private handleRegisterResult(result: AuthRegisterResult): void {
         if (result === 'emailExists') {
             this.formManager.setRegisterEmailExistsError();
+        } else if (result === 'rateLimited') {
+            this.setGlobalError('FORM_ERRORS.RATE_LIMITED');
         } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {

@@ -367,3 +367,21 @@
         row-gap: 0;
     }
 }
+
+button.nutrient-badges__chip--quality {
+    position: relative;
+    z-index: 2;
+    appearance: none;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    &:focus-visible {
+        outline: var(--fd-outline-focus-strong);
+        outline-offset: var(--fd-outline-offset);
+    }
+}
+
+.nutrient-badges__explanation {
+    flex-basis: 100%;
+    margin: var(--fd-space-xs) 0;
+}

@@ -103,7 +103,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `emptyLabel?: string`
 - `showLabels?: boolean`
 - `categories?: FdUiBarChartCategory[]`
-- `selectable?: boolean` — makes category columns keyboard-accessible toggle buttons; `categorySelected` emits the clicked category index. Set `highlighted` on the selected category.
+- `selectable?: boolean` â€” makes category columns keyboard-accessible toggle buttons; `categorySelected` emits the clicked category index. Set `highlighted` on the selected category.
 - `layout?: 'single' | 'grouped' | 'stacked'`
 - `axisUnit?: string`
 - `axisTicks?: number[]`
@@ -118,7 +118,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `--fd-bar-chart-label-height`
 - `--fd-bar-chart-reference-label-space`
 - `--fd-bar-chart-bar-width`
-- `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` — categorical axis unit typography. Unit style defaults to `italic`; consumers do not need to repeat it.
+- `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` â€” categorical axis unit typography. Unit style defaults to `italic`; consumers do not need to repeat it.
 - `--fd-bar-chart-group-width`
 
 #### `fd-ui-line-chart`
@@ -731,7 +731,7 @@ Reusable empty/no-data placeholder for pages, cards, and compact sections.
 
 - `title?: string | null`
 - `message: string`
-- `icon?: string | null` — pass `null` to hide the icon and its container.
+- `icon?: string | null` â€” pass `null` to hide the icon and its container.
 - `appearance?: 'default' | 'compact'`
 
 #### `fd-ui-section-state`
@@ -858,3 +858,7 @@ Textarea supports `[stretch]="true"` to fill an available flex/grid height (for 
 `fd-ui-autocomplete` accepts `suffixIcon` (default `search`); use `expand_more` for searchable category pickers. Existing clear and keyboard behavior is unchanged.
 
 `showClear` (default `true`) controls the autocomplete clear action.
+
+### Manual calendar date entry
+
+`fd-ui-date-input` accepts `allowManualInput` (default `false`). Set it for distant dates such as birth dates. It uses the native date field for direct keyboard entry and validates min/max before emitting an ISO calendar date; the calendar button remains available. Use `latestDate` for an upper bound alongside Signal Forms, where `max` is owned by the field binding. `invalidDateLabel` supplies the localized message for an invalid manual date. Date input and calendar use the current translation language unless a calendar locale is explicitly provided.

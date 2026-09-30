@@ -7,6 +7,8 @@ import { environment } from '../../../../environments/environment';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesService } from './admin-email-templates.service';
 
+const PAGE_LIMIT = 100;
+
 describe('AdminEmailTemplatesService', () => {
     let service: AdminEmailTemplatesService;
     let httpMock: HttpTestingController;
@@ -45,8 +47,9 @@ describe('AdminEmailTemplatesService', () => {
             expect(result).toEqual(templates);
         });
 
-        const req = httpMock.expectOne(baseUrl);
+        const req = httpMock.expectOne(request => request.url === baseUrl && request.params.get('page') === '1');
         expect(req.request.method).toBe('GET');
+        expect(req.request.params.get('limit')).toBe(String(PAGE_LIMIT));
         req.flush(templates);
     });
 

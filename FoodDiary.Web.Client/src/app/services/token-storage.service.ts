@@ -29,6 +29,10 @@ export class TokenStorageService {
         }
     }
 
+    public isRemembered(): boolean {
+        return this.storage.getItem('local', 'authToken') !== null;
+    }
+
     public clearToken(): void {
         this.storage.removeItem('local', 'authToken');
         this.storage.removeItem('session', 'authToken');

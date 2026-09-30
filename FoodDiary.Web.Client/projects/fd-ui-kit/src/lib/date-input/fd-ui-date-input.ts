@@ -1,7 +1,10 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import type { FormValueControl } from '@angular/forms/signals';
+import { TranslateService } from '@ngx-translate/core';
+import { map, of } from 'rxjs';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
 import { fdUiFormatDateInputValue, fdUiParseLocalDate, fdUiStartOfLocalDay } from '../date/fd-ui-date.utils';
@@ -22,6 +25,11 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     private readonly locale = inject(LOCALE_ID);
     private readonly document = inject(DOCUMENT);
 
+    private readonly translateService = inject(TranslateService, { optional: true });
+    protected readonly language = toSignal(this.translateService?.onLangChange.pipe(map(event => event.lang)) ?? of(this.locale), {
+        initialValue: this.translateService?.getCurrentLang() ?? this.locale,
+    });
+    public readonly allowManualInput = input(false);
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly clearAriaLabel = input<string>();
@@ -29,11 +37,15 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly placeholder = input<string>();
     public readonly todayLabel = input<string>();
     public readonly error = input<string | null>();
+    public readonly invalidDateLabel = input<string>();
+    private readonly invalidManualDate = signal(false);
+    protected readonly fieldError = computed(() => this.error() ?? (this.invalidManualDate() ? this.invalidDateLabel() : null));
     public readonly required = input(false);
     public readonly showRequiredIndicator = input(true);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly min = input<string | Date>();
     public readonly max = input<string | Date>();
+    public readonly latestDate = input<string | Date>();
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
     public readonly disabled = input(false);
@@ -45,7 +57,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.fieldError();
 
         return error !== null && error !== undefined && error.trim().length > 0;
     });
@@ -67,7 +79,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             return todayLabel;
         }
 
-        return new Intl.DateTimeFormat(this.locale, {
+        return new Intl.DateTimeFormat(this.language(), {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -86,10 +98,34 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         });
     }
 
+    protected readonly manualValue = computed(() => {
+        const value = this.internalValue();
+        return value === null ? '' : fdUiFormatDateInputValue(value);
+    });
+    protected onManualInput(event: Event): void {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement)) {
+            return;
+        }
+        const parsed = fdUiParseLocalDate(target.value);
+        const min = this.minDate();
+        const max = this.maxDate();
+        if (parsed !== null && target.validity.valid && (min === null || parsed >= min) && (max === null || parsed <= max)) {
+            this.invalidManualDate.set(false);
+            this.onDateSelect(parsed);
+        } else {
+            this.invalidManualDate.set(target.value !== '' || target.validity.badInput);
+            this.value.set(null);
+            this.internalValue.set(null);
+        }
+        this.touched.set(true);
+    }
+
     protected clearValue(): void {
         if (this.disabled()) {
             return;
         }
+        this.invalidManualDate.set(false);
         this.internalValue.set(null);
         this.value.set(null);
         this.touched.set(true);
@@ -122,6 +158,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         }
 
         const normalized = this.stripTime(value);
+        this.invalidManualDate.set(false);
         this.internalValue.set(normalized);
         this.displayMonth.set(normalized);
         const isoDate = this.formatIsoDate(normalized);
@@ -160,6 +197,9 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             case 'ArrowDown':
             case 'Enter':
             case ' ': {
+                if (this.allowManualInput() && event.key !== 'ArrowDown') {
+                    return;
+                }
                 event.preventDefault();
                 this.openDatePicker();
                 break;
@@ -182,7 +222,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     }
 
     protected readonly minDate = computed(() => fdUiParseLocalDate(this.min()));
-    protected readonly maxDate = computed(() => fdUiParseLocalDate(this.max()));
+    protected readonly maxDate = computed(() => fdUiParseLocalDate(this.latestDate() ?? this.max()));
 
     private stripTime(date: Date): Date {
         return fdUiStartOfLocalDay(date);

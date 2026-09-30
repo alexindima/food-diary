@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -20,6 +20,7 @@ export type NutrientBadgesQuality = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutrientBadgesComponent {
+    protected readonly explanationVisible = signal(false);
     public readonly proteins = input.required<number>();
     public readonly fats = input.required<number>();
     public readonly carbs = input.required<number>();

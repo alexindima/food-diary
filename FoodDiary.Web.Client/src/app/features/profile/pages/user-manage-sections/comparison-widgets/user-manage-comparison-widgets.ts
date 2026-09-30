@@ -55,6 +55,7 @@ const IMPERIAL_HEIGHT_RANGES = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComparisonWidgetsComponent {
+    protected readonly latestBirthDate = new Date();
     protected readonly measurements = inject(MeasurementSystemService);
     protected readonly avatarClearRequest = signal(0);
     public readonly userForm = input.required<FieldTree<UserFormValues>>();

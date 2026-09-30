@@ -818,3 +818,22 @@ describe('email confirmed storage', () => {
         expect(service.isEmailConfirmed()).toBe(false);
     });
 });
+
+describe('Required password change session renewal', () => {
+    it('gets a new session with the changed password before clearing the required-change flag', async () => {
+        service.login(loginRequest).subscribe();
+        const oldToken = createFakeJwt({ nameid: 'user-123', email: loginRequest.email });
+        httpMock
+            .expectOne(`${authBaseUrl}/login`)
+            .flush({ ...loginAuthResponse, accessToken: oldToken, user: { ...loginAuthResponse.user, mustChangePassword: true } });
+        expect(service.mustChangePassword()).toBe(true);
+        const completion = service.completeRequiredPasswordChangeAsync('changed-password');
+        const request = httpMock.expectOne(`${authBaseUrl}/login`);
+        expect(request.request.body).toEqual({ email: loginRequest.email, password: 'changed-password', rememberMe: true });
+        expect(service.mustChangePassword()).toBe(true);
+        request.flush({ ...loginAuthResponse, user: { ...loginAuthResponse.user, mustChangePassword: false } });
+        await completion;
+        expect(service.mustChangePassword()).toBe(false);
+        expect(service.getToken()).toBe(loginFakeToken);
+    });
+});

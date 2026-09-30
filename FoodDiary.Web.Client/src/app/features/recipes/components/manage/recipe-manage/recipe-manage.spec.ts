@@ -4,7 +4,6 @@ import { provideRouter } from '@angular/router';
 import { firstValueFrom, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
@@ -105,7 +104,7 @@ describe('RecipeManageComponent form population', () => {
 
 describe('RecipeManageComponent language checks', () => {
     it.each(['keep', 'change', undefined] as const)('handles a language mismatch choice: %s', async choice => {
-        const { component, facade } = await setupComponentAsync();
+        const { component, facade, fixture } = await setupComponentAsync();
         patchValidManualRecipe(component);
         component['patchRecipeFormModel']({
             language: 'ru',
@@ -114,7 +113,7 @@ describe('RecipeManageComponent language checks', () => {
         });
         facade.confirmRecipeLanguageAsync.mockResolvedValue(choice);
         component['onSubmit']();
-        await waitForAsyncTasksAsync();
+        await fixture.whenStable();
         expect(facade.confirmRecipeLanguageAsync).toHaveBeenCalledWith('en', 'ru');
         if (choice === undefined) {
             expect(facade.addRecipe).not.toHaveBeenCalled();
@@ -123,7 +122,7 @@ describe('RecipeManageComponent language checks', () => {
                 expect.objectContaining({ language: choice === 'change' ? 'en' : 'ru', languageConfirmed: choice === 'keep' }),
             );
             component['onSubmit']();
-            await waitForAsyncTasksAsync();
+            await fixture.whenStable();
             expect(facade.confirmRecipeLanguageAsync).toHaveBeenCalledTimes(1);
         }
     });
@@ -148,11 +147,11 @@ describe('RecipeManageComponent submission', () => {
     });
 
     it('should submit a create DTO when the form is valid and no recipe is provided', async () => {
-        const { component, facade } = await setupComponentAsync();
+        const { component, facade, fixture } = await setupComponentAsync();
         patchValidManualRecipe(component);
 
         component['onSubmit']();
-        await waitForAsyncTasksAsync();
+        await fixture.whenStable();
 
         expect(facade.clearGlobalError).toHaveBeenCalledTimes(1);
         expect(facade.addRecipe).toHaveBeenCalledWith(
@@ -188,7 +187,7 @@ describe('RecipeManageComponent submission', () => {
         });
 
         component['onSubmit']();
-        await waitForAsyncTasksAsync();
+        await fixture.whenStable();
 
         expect(facade.updateRecipe).toHaveBeenCalledWith(
             RECIPE_ID,

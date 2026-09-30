@@ -13,6 +13,7 @@ import { describe, expect, it, type MockInstance, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../services/navigation.service';
 import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { UserFacade } from '../../../shared/lib/user.facade';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -144,7 +145,7 @@ describe('Dashboard page actions and localization', () => {
         expect(facade.toggleMealFavorite).toHaveBeenCalledExactlyOnceWith('meal-42');
         expect(facade.applyTdeeGoal).toHaveBeenCalledExactlyOnceWith(CALORIE_TARGET);
         expect(navigation.navigateToGoalsAsync).toHaveBeenCalledOnce();
-        expect(navigation.navigateToMealAddAsync).toHaveBeenCalledExactlyOnceWith('Lunch');
+        expect(navigation.navigateToMealAddAsync).toHaveBeenCalledExactlyOnceWith('Lunch', { manual: true });
         expect(navigation.navigateToMealListAsync).toHaveBeenCalledOnce();
         expect(navigation.navigateToFastingAsync).toHaveBeenCalledOnce();
     });
@@ -266,6 +267,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
     await TestBed.configureTestingModule({
         imports: [DashboardComponent],
         providers: [
+            { provide: UserFacade, useValue: { user: signal(null), getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
             provideRouter([]),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             { provide: ActivatedRoute, useValue: { queryParamMap: params } },
@@ -283,6 +285,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
                 imports: [NgTemplateOutlet, TranslatePipe],
                 schemas: [NO_ERRORS_SCHEMA],
                 providers: [
+                    { provide: UserFacade, useValue: { user: signal(null), getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
                     { provide: DashboardFacade, useValue: facade },
                     { provide: DashboardLayoutService, useValue: layout },
                     {

@@ -16,18 +16,8 @@ describe('NutrientBadgesComponent', () => {
     let fixture: ComponentFixture<NutrientBadgesComponent>;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [NutrientBadgesComponent],
-            providers: [provideTranslateTesting()],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(NutrientBadgesComponent);
+        fixture = await createFixtureAsync();
         component = fixture.componentInstance;
-        fixture.componentRef.setInput('proteins', PROTEIN_VALUE);
-        fixture.componentRef.setInput('fats', FAT_VALUE);
-        fixture.componentRef.setInput('carbs', CARB_VALUE);
-        fixture.componentRef.setInput('fiber', FIBER_VALUE);
-        fixture.componentRef.setInput('alcohol', 0);
     });
 
     it('should create', () => {
@@ -93,4 +83,33 @@ describe('NutrientBadgesComponent', () => {
         expect(component['fiber']()).toBe(FIBER_VALUE);
         expect(component['alcohol']()).toBe(0);
     });
+
+    it('keeps the quality explanation open after activation and closes it on the next activation', () => {
+        fixture.componentRef.setInput('quality', { score: CARB_VALUE, grade: 'yellow', hintKey: 'QUALITY.YELLOW' });
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const button = root.querySelector<HTMLButtonElement>('button.nutrient-badges__chip--quality');
+        expect(button?.getAttribute('aria-expanded')).toBe('false');
+        button?.click();
+        fixture.detectChanges();
+        expect(button?.getAttribute('aria-expanded')).toBe('true');
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('PRODUCT_CARD.QUALITY_EXPLANATION');
+        button?.click();
+        fixture.detectChanges();
+        expect(root.querySelector('[role="status"]')).toBeNull();
+    });
 });
+
+async function createFixtureAsync(): Promise<ComponentFixture<NutrientBadgesComponent>> {
+    await TestBed.configureTestingModule({
+        imports: [NutrientBadgesComponent],
+        providers: [provideTranslateTesting()],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(NutrientBadgesComponent);
+    fixture.componentRef.setInput('proteins', PROTEIN_VALUE);
+    fixture.componentRef.setInput('fats', FAT_VALUE);
+    fixture.componentRef.setInput('carbs', CARB_VALUE);
+    fixture.componentRef.setInput('fiber', FIBER_VALUE);
+    fixture.componentRef.setInput('alcohol', 0);
+    return fixture;
+}

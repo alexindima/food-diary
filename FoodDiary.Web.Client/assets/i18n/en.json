@@ -104,7 +104,8 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
         "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
         "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
-        "UNKNOWN": "Unknown error"
+        "UNKNOWN": "Unknown error",
+        "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
     "COMMON": {
         "ADD": "Add",
@@ -338,7 +339,8 @@
             "CONFIRM_PASSWORD": "Confirm new password",
             "SAVE": "Save and continue",
             "LOGOUT": "Sign out",
-            "ERROR": "We couldn't change the password. Check the temporary password and try again."
+            "ERROR": "We couldn't change the password. Check the temporary password and try again.",
+            "SESSION_ERROR": "Password saved. Try Continue again to sign in with your new password."
         },
         "RESET": {
             "TITLE": "Reset your password",
@@ -508,7 +510,8 @@
         "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
         "QUALITY_SCORE": "Healthiness",
-        "TO_DIARY": "To diary"
+        "TO_DIARY": "To diary",
+        "QUALITY_EXPLANATION": "A rough score from 0 to 100: higher means more points in this formula. 0–33 red, 34–66 yellow, 67–100 green. Based on protein and fibre per calorie, energy density, macro balance, alcohol and product type. Meals and recipes combine their ingredients. Missing nutrition data affects accuracy. This does not assess your whole diet or individual needs."
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal",
@@ -878,7 +881,13 @@
             "ABOVE": "You've passed the target for today. Nice work!"
         },
         "TITLE_SHORT": "Today",
-        "TITLE_FOR_DATE_SHORT": "{{ date }}"
+        "TITLE_FOR_DATE_SHORT": "{{ date }}",
+        "INITIAL_SETUP": {
+            "TITLE": "Start with a quick setup",
+            "HINT": "Until you set up your profile and goals, calorie, nutrient and water targets are starting values, not personal recommendations. Confirm your age, height, sex and activity, then choose your goals. You can already record your first meal.",
+            "PROFILE": "Set up profile",
+            "GOALS": "Choose goals"
+        }
     },
     "MEAL_DETAILS": {
         "ADD": "Add details",
@@ -1045,8 +1054,8 @@
         "ITEMS_AI_MORE": "+ {{count}} more",
         "ITEMS_AI_HIDE": "Hide",
         "ITEMS_MANUAL_SUMMARY": "Added manually",
-        "MANUAL_ITEM_DIALOG_TITLE": "Manual item",
-        "MANUAL_ITEM_DIALOG_SAVE": "Save item",
+        "MANUAL_ITEM_DIALOG_TITLE": "Find food and set quantity",
+        "MANUAL_ITEM_DIALOG_SAVE": "Add to meal",
         "TOUR": {
             "START_TOUR": "Show meal form tour",
             "GENERAL_TITLE": "Meal details",
@@ -4084,7 +4093,8 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the products tour whenever you need a reminder."
-        }
+        },
+        "SEARCH_HELP": "Search covers products in this catalogue. Try a shorter name, another spelling or reset filters. If nothing matches, create a product using its label, or switch to recipes."
     },
     "STATISTICS": {
         "TITLE": "Statistics",
@@ -4114,7 +4124,9 @@
                 "NUTRIENTS": "Average nutrient progress",
                 "DIARY_COMPLETENESS": "Diary completed",
                 "DAYS": "days",
-                "COMPLETENESS_HINT": "Complete the diary daily for a more accurate progress assessment."
+                "COMPLETENESS_HINT": "Days without entries are excluded from averages. Recorded days may still be incomplete; these totals describe your diary, not your diet quality.",
+                "RECORDED_DAYS": "Days with entries: {{current}} of {{total}}",
+                "AVERAGE_RECORDED_DAYS": "Average over days with entries ({{count}})"
             },
             "TREND": {
                 "TITLE": "Nutrition trend",
@@ -4173,7 +4185,8 @@
                     "MISSING": "No data"
                 },
                 "NO_GOAL_TITLE": "Set a calorie goal",
-                "NO_GOAL_HINT": "A daily calorie goal is needed to evaluate diet stability."
+                "NO_GOAL_HINT": "A daily calorie goal is needed to evaluate diet stability.",
+                "INSUFFICIENT_DATA": "Not enough recorded days to compare the period with your goal. Missing or partial entries are not a failure to meet your goal. Keep recording meals; even days with entries may be incomplete."
             },
             "BODY": {
                 "TITLE": "Body metrics",
@@ -4662,7 +4675,8 @@
         "TEXT_ERROR_PREMIUM": "Text and voice recognition are available for Premium users.",
         "TEXT_ERROR_QUOTA": "Monthly AI limit reached. Try again later or upgrade your plan.",
         "TEXT_ERROR_GENERIC": "Failed to recognize the meal from text. Please try again.",
-        "TEXT_NUTRITION_ERROR": "Failed to calculate nutrition for the recognized items. Please try again."
+        "TEXT_NUTRITION_ERROR": "Failed to calculate nutrition for the recognized items. Please try again.",
+        "PREMIUM_NOTICE": "AI recognition requires Premium. You can add products and recipes manually for free. Your text stays here if you cancel."
     },
     "AI_CONSENT": {
         "TITLE": "AI Usage Consent",
@@ -5120,7 +5134,9 @@
         "BACKUP_EMAIL_RESEND": "Send a new confirmation",
         "BACKUP_EMAIL_COOLDOWN": "You can request another email in {{seconds}} seconds.",
         "EMAIL_CONFIRMED": "Email confirmed. You can use it with a password to sign in.",
-        "EMAIL_UNCONFIRMED": "Email is not confirmed yet."
+        "EMAIL_UNCONFIRMED": "Email is not confirmed yet.",
+        "ACTIVITY_DEFAULT_HINT": "Moderate activity is a starting selection. Choose the level that matches your usual week.",
+        "BIRTH_DATE_INVALID": "Enter a valid date of birth that is not in the future."
     },
     "SIDEBAR": {
         "COLLAPSE": "Collapse navigation",
@@ -5159,7 +5175,13 @@
         "THEME_OCEAN": "Blue",
         "THEME_LEAF": "Green",
         "THEME_DARK": "Dark",
-        "THEME_UPDATE_ERROR": "Could not save theme preference."
+        "THEME_UPDATE_ERROR": "Could not save theme preference.",
+        "MOBILE_DASHBOARD": "Today",
+        "MOBILE_FOOD": "Food",
+        "MOBILE_BODY": "Body",
+        "MOBILE_REPORTS": "Reports",
+        "MOBILE_USER": "Profile",
+        "MOBILE_NAVIGATION": "Main navigation"
     },
     "NOTIFICATIONS": {
         "PASSWORD_SETUP_BADGE": "Backup sign-in",
@@ -6414,7 +6436,7 @@
             "PREVIEW_HINT": "The current version remains below for comparison while we refine this design.",
             "SUMMARY_TITLE": "Daily target",
             "CALORIES": "Calories",
-            "RECOMMENDED_TARGET": "Recommended target",
+            "RECOMMENDED_TARGET": "Current target. Starting values need to be adjusted to your needs.",
             "MACRO_RATIO": "Macronutrient share of calories",
             "NUTRITION_TITLE": "Nutrition",
             "NUTRITION_HINT": "Set your daily calorie and nutrient targets.",

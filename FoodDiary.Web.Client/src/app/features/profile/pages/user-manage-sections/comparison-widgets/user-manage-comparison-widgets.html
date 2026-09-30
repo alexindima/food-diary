@@ -110,6 +110,9 @@
                 />
                 <fd-ui-date-input
                     [formField]="userForm().birthDate"
+                    [allowManualInput]="true"
+                    [latestDate]="latestBirthDate"
+                    [invalidDateLabel]="'USER_MANAGE.BIRTH_DATE_INVALID' | translate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     (valueChange)="onBirthDateChange($event)"
                 />
@@ -190,6 +193,7 @@
                     [options]="activityLevelOptions()"
                     (valueChange)="userFormPatch.emit({ activityLevel: $event })"
                 />
+                <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'USER_MANAGE.ACTIVITY_DEFAULT_HINT' | translate }}</p>
             </div>
             <div class="profile-comparison__measurements fd-grid fd-gap-sm">
                 <a class="profile-comparison__measurement" routerLink="/weight-history">
@@ -198,7 +202,7 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WEIGHT' | translate }}</span>
                     </span>
                     <strong
-                        >{{ displayedWeight() ?? '—' }}
+                        >{{ displayedWeight() ?? 'â€”' }}
                         @if (displayedWeight() !== null) {
                             {{ measurements.weightUnitKey() | translate }}
                         }
@@ -214,7 +218,7 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WAIST' | translate }}</span>
                     </span>
                     <strong
-                        >{{ displayedWaist() ?? '—' }}
+                        >{{ displayedWaist() ?? 'â€”' }}
                         @if (displayedWaist() !== null) {
                             {{ measurements.lengthUnitKey() | translate }}
                         }

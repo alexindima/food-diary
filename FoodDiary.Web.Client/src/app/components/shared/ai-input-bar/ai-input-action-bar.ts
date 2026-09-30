@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
+import { AuthService } from '../../../services/auth.service';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMode, AiInputBarResult } from './ai-input-bar.types';
 
@@ -13,6 +14,7 @@ import type { AiInputBarMode, AiInputBarResult } from './ai-input-bar.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AiInputActionBarComponent {
+    protected readonly isPremium = inject(AuthService).isPremium;
     public readonly isProcessing = input(false);
     public readonly clearToken = input(0);
     public readonly showManualPrefix = input(true);

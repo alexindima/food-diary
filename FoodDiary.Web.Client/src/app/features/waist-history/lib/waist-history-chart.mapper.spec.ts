@@ -51,3 +51,19 @@ describe('Chart date boundaries', () => {
         ).toBe(expected);
     });
 });
+
+describe('waist calendar date regressions', () => {
+    it.each(['2026-09-30', '2026-09-30T00:00:00', '2026-09-30T00:00:00Z'])('preserves calendar day %s independently of timezone', date => {
+        expect(buildWaistEntryViewModels([{ id: 'entry', userId: 'user', date, circumferenceCm: 68.5 }], 'ru')[0].dateLabel).toBe(
+            '30.09.2026',
+        );
+    });
+    it('labels both ends of an aggregate bucket', () => {
+        const points = buildWaistHistoryChartPoints(
+            [{ startDate: '2026-09-29T00:00:00', endDate: '2026-09-30T00:00:00', averageCircumferenceCm: 68.5 }],
+            'ru',
+            CURRENT_YEAR,
+        );
+        expect(points[0].label).toBe('29\nсент. – 30\nсент.');
+    });
+});

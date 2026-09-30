@@ -59,6 +59,14 @@ function weekdayLabels(): Array<string | null> {
 
 function registerWeekSelectionTests(): void {
     describe('week selection', () => {
+        it('keeps a keyboard target in the displayed month after moving away from the selected date', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            component['showNextMonth']();
+            fixture.detectChanges();
+            expect(component['activeDate']().getMonth()).toBe(APRIL_INDEX);
+            expect(host().querySelectorAll('button[data-date][tabindex="0"]')).toHaveLength(1);
+        });
         it('normalizes the selected value to Monday and highlights the whole week', () => {
             fixture.componentRef.setInput('selectionMode', 'week');
             fixture.detectChanges();

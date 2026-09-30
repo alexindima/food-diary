@@ -1,4 +1,4 @@
-import { EMPTY, expand, reduce, type Observable } from 'rxjs';
+import { EMPTY, expand, type Observable, reduce } from 'rxjs';
 
 export const COLLECTION_PAGE_SIZE = 100;
 

@@ -4,20 +4,15 @@ import { form, FormField, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
-import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
-import { firstValueFrom, type Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
-import type {
-    ItemSelectDialogData,
-    ItemSelection,
-} from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
+import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
@@ -45,7 +40,7 @@ export type MealManualItemDialogData = {
         FdUiDialogFooterDirective,
         FdUiIconComponent,
         FdUiInputComponent,
-        FdUiSegmentedToggleComponent,
+        ItemSelectDialogComponent,
     ],
 })
 export class MealManualItemDialogComponent {
@@ -53,10 +48,14 @@ export class MealManualItemDialogComponent {
     private servingWeightSubscription?: Subscription;
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, MealItemFormValues | null>);
-    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
 
+    protected readonly showPicker = signal(this.data.item.product === null && this.data.item.recipe === null);
+    protected readonly amountLabel = computed(() => {
+        const unit = this.product()?.baseUnit ?? 'G';
+        return `${this.translateService.instant('MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT')} (${this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`)})`;
+    });
     protected readonly sourceType = signal(this.data.item.sourceType);
     protected readonly sourceTypeValue = signal(this.toSourceTypeValue(this.data.item.sourceType));
     protected readonly product = signal<Product | null>(this.data.item.product);
@@ -67,11 +66,6 @@ export class MealManualItemDialogComponent {
         required(path);
         min(path, MIN_AMOUNT);
     });
-
-    protected readonly sourceTypeOptions: FdUiSegmentedToggleOption[] = [
-        { value: PRODUCT_SOURCE_VALUE, label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product') },
-        { value: RECIPE_SOURCE_VALUE, label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
-    ];
 
     protected readonly selectedItemName = computed(() => this.recipe()?.name ?? this.product()?.name ?? null);
     protected readonly itemSourceName = computed(() => this.selectedItemName() ?? '');
@@ -97,7 +91,7 @@ export class MealManualItemDialogComponent {
         if (product !== null) {
             return this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_PRODUCT_META', {
                 amount: product.baseAmount,
-                unit: product.baseUnit,
+                unit: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${product.baseUnit.toUpperCase()}`),
                 calories: Math.round(product.caloriesPerBase),
             });
         }
@@ -162,24 +156,20 @@ export class MealManualItemDialogComponent {
         this.amount().value.set(null);
     }
 
-    protected async chooseItemAsync(): Promise<void> {
-        const initialTab = this.sourceType() === MealSourceType.Recipe ? RECIPE_SOURCE_VALUE : PRODUCT_SOURCE_VALUE;
-        const selection = await firstValueFrom(
-            this.fdDialogService
-                .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                    preset: 'list',
-                    data: { initialTab, lockInitialTab: true },
-                })
-                .afterClosed(),
-        );
+    protected showItemPicker(): void {
+        this.showPicker.set(true);
+    }
 
-        if (selection === null || selection === undefined || this.destroyRef.destroyed) {
-            return;
-        }
+    protected onProductSelected(product: Product): void {
+        this.applySelection({ type: 'Product', product });
+    }
 
-        if (selection.type === 'Text') {
-            return;
-        }
+    protected onRecipeSelected(recipe: Recipe): void {
+        this.applySelection({ type: 'Recipe', recipe });
+    }
+
+    private applySelection(selection: Exclude<ItemSelection, { type: 'Text' }>): void {
+        this.showPicker.set(false);
         this.servingWeightSubscription?.unsubscribe();
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);

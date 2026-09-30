@@ -3,8 +3,8 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import type { ActiveSession } from '../models/active-session.model';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
+import type { ActiveSession } from '../models/active-session.model';
 
 @Service()
 export class ActiveSessionsService {

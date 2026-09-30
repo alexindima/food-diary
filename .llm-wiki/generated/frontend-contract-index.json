@@ -3,14 +3,14 @@
   "summary": {
     "components": 480,
     "componentsWithoutDirectSpecs": 134,
-    "inputs": 1524,
+    "inputs": 1528,
     "outputs": 517,
     "apiCalls": 267,
-    "templatesWithTranslations": 340,
-    "translationKeys": 2001,
+    "templatesWithTranslations": 341,
+    "translationKeys": 2016,
     "consumerEdges": 1197,
-    "consumedComponents": 304,
-    "unconsumedComponents": 175
+    "consumedComponents": 305,
+    "unconsumedComponents": 174
   },
   "components": [
     {
@@ -4483,6 +4483,11 @@
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html",
       "inputs": [
         {
+          "name": "allowManualInput",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "id",
           "type": "",
           "required": false
@@ -4518,6 +4523,11 @@
           "required": false
         },
         {
+          "name": "invalidDateLabel",
+          "type": "string",
+          "required": false
+        },
+        {
           "name": "required",
           "type": "",
           "required": false
@@ -4539,6 +4549,11 @@
         },
         {
           "name": "max",
+          "type": "string | Date",
+          "required": false
+        },
+        {
+          "name": "latestDate",
           "type": "string | Date",
           "required": false
         },
@@ -13683,6 +13698,11 @@
           "name": "embedded",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "allowRecipeCreation",
+          "type": "boolean",
+          "required": false
         }
       ],
       "outputs": [
@@ -16388,7 +16408,7 @@
       "responseType": "boolean",
       "urlExpression": "`check/${mealId}`",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 31,
+      "line": 33,
       "publicMethod": "isFavorite",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteMeals",
@@ -16400,7 +16420,7 @@
       "responseType": "FavoriteMeal",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 37,
+      "line": 39,
       "publicMethod": "add",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteMeals",
@@ -16412,7 +16432,7 @@
       "responseType": "FavoriteMeal",
       "urlExpression": "`${id}/restore`",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 43,
+      "line": 45,
       "publicMethod": "restore",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteMeals",
@@ -16424,7 +16444,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 49,
+      "line": 51,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteMeals",
@@ -16556,7 +16576,7 @@
       "responseType": "boolean",
       "urlExpression": "`check/${productId}`",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 33,
+      "line": 35,
       "publicMethod": "isFavorite",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -16568,7 +16588,7 @@
       "responseType": "FavoriteProduct",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 39,
+      "line": 41,
       "publicMethod": "add",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -16580,7 +16600,7 @@
       "responseType": "FavoriteProduct",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 46,
+      "line": 48,
       "publicMethod": "update",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -16592,7 +16612,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 53,
+      "line": 55,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteProducts",
@@ -16796,7 +16816,7 @@
       "responseType": "boolean",
       "urlExpression": "`check/${recipeId}`",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 31,
+      "line": 33,
       "publicMethod": "isFavorite",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16808,7 +16828,7 @@
       "responseType": "FavoriteRecipe",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 37,
+      "line": 39,
       "publicMethod": "add",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16820,7 +16840,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 43,
+      "line": 45,
       "publicMethod": "remove",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.favoriteRecipes",
@@ -16988,7 +17008,7 @@
       "responseType": "RecommendationComment",
       "urlExpression": "`${recommendationId}/comments`",
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
-      "line": 35,
+      "line": 37,
       "publicMethod": "createComment",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.recommendations",
@@ -17276,7 +17296,7 @@
       "responseType": "{ accessToken: string }",
       "urlExpression": "'impersonation/exchange'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 412,
+      "line": 417,
       "publicMethod": "captureImpersonationCodeFromQueryAsync",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17816,7 +17836,7 @@
       "responseType": "ShoppingListOverview",
       "urlExpression": "'overview'",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 20,
+      "line": 22,
       "publicMethod": "getOverview",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17828,7 +17848,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "'current'",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 24,
+      "line": 26,
       "publicMethod": "getCurrent",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17840,20 +17860,8 @@
       "responseType": "ShoppingListSummary[]",
       "urlExpression": "'page'",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 30,
+      "line": 32,
       "publicMethod": "getPage",
-      "transport": "InheritedApiService",
-      "baseUrlExpression": "environment.apiUrls.shoppingLists",
-      "resolvedUrlExpression": "environment.apiUrls.shoppingLists/page"
-    },
-    {
-      "feature": "shopping-lists",
-      "method": "GET",
-      "responseType": "ShoppingListSummary[]",
-      "urlExpression": "'page'",
-      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 36,
-      "publicMethod": "getSelectionPage",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
       "resolvedUrlExpression": "environment.apiUrls.shoppingLists/page"
@@ -17873,10 +17881,22 @@
     {
       "feature": "shopping-lists",
       "method": "GET",
+      "responseType": "ShoppingListSummary[]",
+      "urlExpression": "'page'",
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
+      "line": 41,
+      "publicMethod": "getSelectionPage",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "environment.apiUrls.shoppingLists",
+      "resolvedUrlExpression": "environment.apiUrls.shoppingLists/page"
+    },
+    {
+      "feature": "shopping-lists",
+      "method": "GET",
       "responseType": "ShoppingList",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 45,
+      "line": 49,
       "publicMethod": "getById",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17888,7 +17908,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 49,
+      "line": 53,
       "publicMethod": "create",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17900,7 +17920,7 @@
       "responseType": "ShoppingList",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 53,
+      "line": 57,
       "publicMethod": "update",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -17912,7 +17932,7 @@
       "responseType": "void",
       "urlExpression": "id",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 59,
+      "line": 63,
       "publicMethod": "deleteById",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.shoppingLists",
@@ -19410,9 +19430,14 @@
         "DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS",
         "DASHBOARD.ACTIONS.OPEN_SETTINGS",
         "DASHBOARD.ACTIONS.START_TOUR",
+        "DASHBOARD.INITIAL_SETUP.GOALS",
+        "DASHBOARD.INITIAL_SETUP.HINT",
+        "DASHBOARD.INITIAL_SETUP.PROFILE",
+        "DASHBOARD.INITIAL_SETUP.TITLE",
         "DASHBOARD.LOADING",
         "DASHBOARD.SUBTITLE",
-        "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE"
+        "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
+        "MEAL_LIST.ADD_MANUALLY_BUTTON"
       ]
     },
     {
@@ -20281,11 +20306,9 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html",
       "keys": [
         "COMMON.CLOSE",
-        "MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT",
         "MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE",
         "MEAL_MANAGE.MANUAL_ITEM_DIALOG_TITLE",
         "MEAL_MANAGE.MANUAL_ITEM_SAVE_DISABLED",
-        "MEAL_MANAGE.MANUAL_ITEM_TYPE_LABEL",
         "PRODUCT_MANAGE.CANCEL_BUTTON"
       ]
     },
@@ -20768,6 +20791,7 @@
         "COMMON.ADD",
         "PRODUCT_AMOUNT_UNITS_SHORT.G",
         "PRODUCT_LIST.NO_PRODUCTS_FOUND",
+        "PRODUCT_LIST.SEARCH_HELP",
         "SHARED.NUTRIENTS_SUMMARY.KKAL"
       ]
     },
@@ -20851,10 +20875,12 @@
         "IMAGE_UPLOAD_FIELD.REPLACE",
         "IMAGE_UPLOAD_FIELD.SELECT_FILE",
         "USER_MANAGE.ACCOUNT_SECTION",
+        "USER_MANAGE.ACTIVITY_DEFAULT_HINT",
         "USER_MANAGE.ACTIVITY_LEVEL",
         "USER_MANAGE.BILLING_DESC",
         "USER_MANAGE.BILLING_SECTION",
         "USER_MANAGE.BIRTH_DATE",
+        "USER_MANAGE.BIRTH_DATE_INVALID",
         "USER_MANAGE.BODY_SECTION",
         "USER_MANAGE.COMPARISON.APPEARANCE",
         "USER_MANAGE.COMPARISON.APPEARANCE_HINT",
@@ -21611,6 +21637,13 @@
     },
     {
       "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.html",
+      "keys": [
+        "AI_INPUT_BAR.PREMIUM_NOTICE"
+      ]
+    },
+    {
+      "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
       "keys": [
         "AI_INPUT_BAR.ADD_ACTION",
@@ -21856,6 +21889,7 @@
       "keys": [
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
+        "PRODUCT_CARD.QUALITY_EXPLANATION",
         "PRODUCT_CARD.QUALITY_SCORE"
       ]
     },
@@ -21994,6 +22028,12 @@
         "SIDEBAR.DAILY_NORM",
         "SIDEBAR.DASHBOARD",
         "SIDEBAR.FOOD",
+        "SIDEBAR.MOBILE_BODY",
+        "SIDEBAR.MOBILE_DASHBOARD",
+        "SIDEBAR.MOBILE_FOOD",
+        "SIDEBAR.MOBILE_NAVIGATION",
+        "SIDEBAR.MOBILE_REPORTS",
+        "SIDEBAR.MOBILE_USER",
         "SIDEBAR.REPORTS",
         "SIDEBAR.USER"
       ]
@@ -22139,6 +22179,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.html",
       "keys": [
         "STATISTICS.DASHBOARD.STABILITY.AVERAGE_DEVIATION",
+        "STATISTICS.DASHBOARD.STABILITY.INSUFFICIENT_DATA",
         "STATISTICS.DASHBOARD.STABILITY.LOGGING_STREAK",
         "STATISTICS.DASHBOARD.STABILITY.NO_GOAL_HINT",
         "STATISTICS.DASHBOARD.STABILITY.NO_GOAL_TITLE",
@@ -22200,12 +22241,12 @@
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
         "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES",
-        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY",
+        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_RECORDED_DAYS",
         "STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT",
         "STATISTICS.DASHBOARD.OVERVIEW.DAYS",
-        "STATISTICS.DASHBOARD.OVERVIEW.DAYS_WITHIN_GOAL",
         "STATISTICS.DASHBOARD.OVERVIEW.DIARY_COMPLETENESS",
         "STATISTICS.DASHBOARD.OVERVIEW.NUTRIENTS",
+        "STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS",
         "STATISTICS.DASHBOARD.OVERVIEW.TITLE",
         "STATISTICS.DASHBOARD.OVERVIEW.VS_GOAL"
       ]
@@ -26693,7 +26734,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "occurrences": 4,
+      "occurrences": 7,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29042,7 +29083,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "fill",
         "icon",
@@ -29059,6 +29100,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "displayMonth",
+        "locale",
         "max",
         "min",
         "value"
@@ -30264,7 +30306,10 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "allowManualInput",
+        "invalidDateLabel",
+        "label",
+        "latestDate"
       ],
       "outputsHandled": [
         "valueChange"
@@ -35174,23 +35219,6 @@
       "selector": "fd-ui-segmented-toggle",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "fullWidth",
-        "options",
-        "selectedValue"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiSegmentedToggleComponent",
-      "selector": "fd-ui-segmented-toggle",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-      "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -36951,6 +36979,22 @@
       ],
       "outputsHandled": [
         "valueChange"
+      ]
+    },
+    {
+      "component": "ItemSelectDialogComponent",
+      "selector": "fd-item-select-dialog",
+      "componentPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
+      "consumerFeature": "meals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "allowRecipeCreation",
+        "embedded"
+      ],
+      "outputsHandled": [
+        "productSelected",
+        "recipeSelected"
       ]
     },
     {

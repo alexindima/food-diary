@@ -9,7 +9,7 @@ import { catchError, of } from 'rxjs';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { PublicProductGalleryComponent } from '../../components/public-product-gallery/public-product-gallery';
-import { PublicProductPreviewService } from '../../lib/public-product-preview.service';
+import { PublicProductDetailsFacade } from '../../lib/public-product-details.facade';
 
 const MAX_PRODUCT_PHOTOS = 5;
 
@@ -22,7 +22,7 @@ const MAX_PRODUCT_PHOTOS = 5;
 })
 export class PublicProductPreviewComponent {
     private readonly id = inject<string>(FD_UI_DIALOG_DATA);
-    private readonly service = inject(PublicProductPreviewService);
+    private readonly service = inject(PublicProductDetailsFacade);
     protected readonly ref = inject(FdUiDialogRef);
     protected readonly language = injectCurrentLanguage();
     protected readonly product = toSignal(this.service.getById(this.id).pipe(catchError(() => of(null))));

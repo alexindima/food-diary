@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -164,3 +165,12 @@ function createAuthResponse(language: string): AuthResponse {
         },
     };
 }
+
+describe('Auth rate limits', () => {
+    it('distinguishes throttling from invalid credentials without retrying automatically', async () => {
+        authServiceMock.login.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 429 })));
+        const facade = TestBed.inject(AuthFlowFacade);
+        expect(await firstValueFrom(facade.login({ email: 'user@example.com', password: 'password' }))).toBe('rateLimited');
+        expect(authServiceMock.login).toHaveBeenCalledOnce();
+    });
+});

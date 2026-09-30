@@ -1,7 +1,9 @@
-import { compareDatesAsc, parseDateValue } from '../../../shared/lib/local-date.utils';
+import { compareDatesAsc, parseCalendarDateUtc } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { WeightEntry, WeightEntrySummaryPoint } from '../models/weight-entry.data';
 import type { WeightEntryViewModel } from './weight-history.types';
+
+const CALENDAR_DATE_LENGTH = 10;
 
 export type WeightHistoryChartPoint = {
     label: string;
@@ -14,12 +16,15 @@ export function buildWeightHistoryChartPoints(
     currentYear = new Date().getFullYear(),
 ): WeightHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
-    const firstDate = parseDateValue(ordered[0]?.startDate);
-    const lastDate = parseDateValue(ordered.at(-1)?.startDate);
+    const firstDate = parseCalendarDateUtc(ordered[0]?.startDate);
+    const lastDate = parseCalendarDateUtc(ordered.at(-1)?.startDate);
     const showYear = firstDate?.getUTCFullYear() !== currentYear || lastDate?.getUTCFullYear() !== currentYear;
 
     return ordered.map(point => ({
-        label: formatWeightHistoryDateLabel(point.startDate, locale, showYear),
+        label:
+            point.startDate.slice(0, CALENDAR_DATE_LENGTH) === point.endDate.slice(0, CALENDAR_DATE_LENGTH)
+                ? formatWeightHistoryDateLabel(point.startDate, locale, showYear)
+                : `${formatWeightHistoryDateLabel(point.startDate, locale, showYear)} – ${formatWeightHistoryDateLabel(point.endDate, locale, showYear)}`,
         value: point.averageWeightKg > 0 ? point.averageWeightKg : null,
     }));
 }
@@ -32,7 +37,7 @@ export function buildWeightEntryViewModels(entries: WeightEntry[], locale: strin
 }
 
 export function formatWeightHistoryNumericDate(value: string, language: string): string {
-    const date = parseDateValue(value);
+    const date = parseCalendarDateUtc(value);
     if (date === null) {
         return value;
     }
@@ -46,7 +51,7 @@ export function formatWeightHistoryNumericDate(value: string, language: string):
 }
 
 function formatWeightHistoryDateLabel(dateString: string, locale: string, showYear: boolean): string {
-    const date = parseDateValue(dateString);
+    const date = parseCalendarDateUtc(dateString);
     if (date === null) {
         return dateString;
     }

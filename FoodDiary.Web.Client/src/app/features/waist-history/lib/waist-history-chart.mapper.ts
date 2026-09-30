@@ -1,7 +1,9 @@
-import { compareDatesAsc, parseDateValue } from '../../../shared/lib/local-date.utils';
+import { compareDatesAsc, parseCalendarDateUtc } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { WaistEntry, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import type { WaistEntryViewModel } from './waist-history.types';
+
+const CALENDAR_DATE_LENGTH = 10;
 
 export type WaistHistoryChartPoint = {
     label: string;
@@ -15,11 +17,14 @@ export function buildWaistHistoryChartPoints(
 ): WaistHistoryChartPoint[] {
     const ordered = [...points].sort((a, b) => compareDatesAsc(a.startDate, b.startDate));
 
-    const firstDate = parseDateValue(ordered[0]?.startDate);
-    const lastDate = parseDateValue(ordered.at(-1)?.startDate);
+    const firstDate = parseCalendarDateUtc(ordered[0]?.startDate);
+    const lastDate = parseCalendarDateUtc(ordered.at(-1)?.startDate);
     const showYear = firstDate?.getUTCFullYear() !== currentYear || lastDate?.getUTCFullYear() !== currentYear;
     return ordered.map(point => ({
-        label: formatWaistHistoryDateLabel(point.startDate, locale, showYear),
+        label:
+            point.startDate.slice(0, CALENDAR_DATE_LENGTH) === point.endDate.slice(0, CALENDAR_DATE_LENGTH)
+                ? formatWaistHistoryDateLabel(point.startDate, locale, showYear)
+                : `${formatWaistHistoryDateLabel(point.startDate, locale, showYear)} – ${formatWaistHistoryDateLabel(point.endDate, locale, showYear)}`,
         value: point.averageCircumferenceCm > 0 ? point.averageCircumferenceCm : null,
     }));
 }
@@ -32,7 +37,7 @@ export function buildWaistEntryViewModels(entries: WaistEntry[], locale: string)
 }
 
 export function formatWaistHistoryNumericDate(value: string, language: string): string {
-    const date = parseDateValue(value);
+    const date = parseCalendarDateUtc(value);
     if (date === null) {
         return value;
     }
@@ -46,7 +51,7 @@ export function formatWaistHistoryNumericDate(value: string, language: string): 
 }
 
 function formatWaistHistoryDateLabel(dateString: string, locale: string, showYear: boolean): string {
-    const date = parseDateValue(dateString);
+    const date = parseCalendarDateUtc(dateString);
     if (date === null) {
         return dateString;
     }

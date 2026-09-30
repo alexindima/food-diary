@@ -49,14 +49,16 @@ export class NavigationService {
         await this.router.navigate(['/meals']);
     }
 
-    public async navigateToMealAddAsync(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
+    public async navigateToMealAddAsync(mealType?: string, extras?: { state?: Record<string, unknown>; manual?: boolean }): Promise<boolean> {
         const navigationExtras =
             mealType !== undefined && mealType.length > 0
                 ? {
                       state: { mealType, ...extras?.state },
-                      queryParams: { mealType },
+                      queryParams: extras?.manual === true ? { mealType, manual: 1 } : { mealType },
                   }
-                : { state: extras?.state };
+                : extras?.manual === true
+                  ? { state: extras.state, queryParams: { manual: 1 } }
+                  : { state: extras?.state };
         return this.router.navigate(['/meals/add'], navigationExtras);
     }
 

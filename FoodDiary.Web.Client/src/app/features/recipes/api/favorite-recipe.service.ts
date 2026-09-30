@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { catchError, EMPTY, expand, reduce, type Observable } from 'rxjs';
+import { catchError, EMPTY, expand, type Observable, reduce } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -8,6 +8,8 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteRecipe } from '../models/recipe.data';
 
 const FAVORITE_PAGE_SIZE = 10;
+
+const LOOKUP_PAGE_SIZE = 100;
 
 @Service()
 export class FavoriteRecipeService extends ApiService {
@@ -20,8 +22,8 @@ export class FavoriteRecipeService extends ApiService {
     }
 
     public getLookupPage(): Observable<FavoriteRecipe[]> {
-        return this.getPage(1, 100).pipe(
-            expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, 100) : EMPTY)),
+        return this.getPage(1, LOOKUP_PAGE_SIZE).pipe(
+            expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, LOOKUP_PAGE_SIZE) : EMPTY)),
             reduce((items, page) => [...items, ...page.data], [] as FavoriteRecipe[]),
             catchError((error: unknown) => fallbackApiError('Get favorite recipes error', error, [])),
         );

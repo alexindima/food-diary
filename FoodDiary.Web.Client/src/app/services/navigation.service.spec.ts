@@ -81,6 +81,14 @@ describe('NavigationService', () => {
         });
     });
 
+    it('opens the manual picker directly for an explicit manual meal addition', async () => {
+        await service.navigateToMealAddAsync('breakfast', { manual: true });
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/meals/add'], {
+            state: { mealType: 'breakfast' },
+            queryParams: { mealType: 'breakfast', manual: 1 },
+        });
+    });
+
     it('should navigate to profile', async () => {
         await service.navigateToProfileAsync();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/profile']);

@@ -68,5 +68,10 @@
                 />
             }
         </div>
+        <div [hidden]="!showCreateAction()">
+            <fd-ui-button variant="secondary" fill="outline" icon="add" (click)="onCreateAction()">
+                {{ createActionLabelKey() | translate }}
+            </fd-ui-button>
+        </div>
     </div>
 }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, concatMap, from, map, type Observable, of } from 'rxjs';
 
@@ -7,8 +8,8 @@ import { MarketingAttributionService } from '../../../../../shared/marketing/mar
 import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
-export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'unknown';
-export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'unknown';
+export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'rateLimited' | 'unknown';
+export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'rateLimited' | 'unknown';
 export type GoogleLoginResult = 'success' | 'accountLinkRequired' | 'unknown';
 
 @Service()
@@ -21,7 +22,13 @@ export class AuthFlowFacade {
         return this.authService.login(new LoginRequest(formValue)).pipe(
             concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => 'success' as const),
-            catchError((error: unknown) => of(this.mapLoginError(this.getApiErrorCode(error)))),
+            catchError((error: unknown) =>
+                of(
+                    error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                        ? ('rateLimited' as const)
+                        : this.mapLoginError(this.getApiErrorCode(error)),
+                ),
+            ),
         );
     }
 
@@ -47,7 +54,13 @@ export class AuthFlowFacade {
                     return response;
                 }),
                 map(() => 'success' as const),
-                catchError((error: unknown) => of(this.mapRegisterError(this.getApiErrorCode(error)))),
+                catchError((error: unknown) =>
+                    of(
+                        error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                            ? ('rateLimited' as const)
+                            : this.mapRegisterError(this.getApiErrorCode(error)),
+                    ),
+                ),
             );
     }
 

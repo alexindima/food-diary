@@ -295,9 +295,14 @@ export class AuthService extends ApiService {
         this.tokenStorage.setEmailConfirmed(value);
     }
 
-    public completeRequiredPasswordChange(): void {
-        this.mustChangePasswordSignal.set(false);
-        this.tokenStorage.setMustChangePassword(false);
+    public async completeRequiredPasswordChangeAsync(newPassword: string): Promise<void> {
+        // Password changes revoke every old session. Acquire a fresh session before navigating.
+        const payload = this.jwtDecoder.decodePayload(this.getToken() ?? '');
+        const email = payload?.['email'] ?? payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+        if (typeof email !== 'string' || email.length === 0) {
+            throw new Error('Missing session email');
+        }
+        await firstValueFrom(this.login({ email, password: newPassword, rememberMe: this.tokenStorage.isRemembered() }));
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {

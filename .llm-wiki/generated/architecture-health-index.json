@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 110,
+    "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 65,
     "componentsWithoutDirectSpecs": 134,
     "criticalSymbolsWithoutTestReferences": 40,
@@ -963,14 +963,6 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.spec.ts"
-    },
-    {
-      "class": "ItemSelectDialogComponent",
-      "selector": "fd-item-select-dialog",
-      "feature": "shell",
-      "path": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
-      "specPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.spec.ts"
     },
     {
       "class": "ShoppingItemEditComponent",

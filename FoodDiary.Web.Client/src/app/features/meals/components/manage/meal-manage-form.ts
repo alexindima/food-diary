@@ -204,6 +204,11 @@ export class MealManageFormComponent {
     protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
+        afterNextRender(() => {
+            if (this.meal() === null && this.route.snapshot.queryParamMap.get('manual') === '1') {
+                this.addMealItem();
+            }
+        });
         this.buildMealTypeOptions();
         this.watchLanguageChanges();
         this.watchSignalFormModelChanges();

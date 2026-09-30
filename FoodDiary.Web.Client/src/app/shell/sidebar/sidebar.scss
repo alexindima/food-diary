@@ -517,11 +517,11 @@
     }
 
     &__label {
-        line-height: 1;
-
-        @media #{variables.$media-phablet} {
-            display: none;
-        }
+        font-size: var(--fd-text-body-nano-size);
+        line-height: 1.2;
+        max-width: 100%;
+        text-align: center;
+        white-space: nowrap;
     }
 
     &__backdrop {

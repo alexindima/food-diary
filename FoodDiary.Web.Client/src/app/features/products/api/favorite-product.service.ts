@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { catchError, EMPTY, expand, map, reduce, type Observable } from 'rxjs';
+import { catchError, EMPTY, expand, map, type Observable, reduce } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -9,6 +9,8 @@ import type { FavoriteProduct } from '../models/product.data';
 import { normalizeProductUnit } from './product-unit.mapper';
 
 const FAVORITE_PAGE_SIZE = 10;
+
+const LOOKUP_PAGE_SIZE = 100;
 
 @Service()
 export class FavoriteProductService extends ApiService {
@@ -22,8 +24,8 @@ export class FavoriteProductService extends ApiService {
     }
 
     public getLookupPage(): Observable<FavoriteProduct[]> {
-        return this.getPage(1, 100).pipe(
-            expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, 100) : EMPTY)),
+        return this.getPage(1, LOOKUP_PAGE_SIZE).pipe(
+            expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, LOOKUP_PAGE_SIZE) : EMPTY)),
             reduce((items, page) => [...items, ...page.data], [] as FavoriteProduct[]),
             catchError((error: unknown) => fallbackApiError('Get favorite products error', error, [])),
         );

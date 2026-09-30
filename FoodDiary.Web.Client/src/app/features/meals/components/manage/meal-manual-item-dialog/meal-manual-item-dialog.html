@@ -1,47 +1,45 @@
-<fd-ui-dialog size="md" [title]="'MEAL_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+<fd-ui-dialog size="lg" [title]="'MEAL_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
     <div class="meal-manual-item-dialog fd-stack fd-gap-md">
-        <section class="meal-manual-item-dialog__section">
-            <h3 class="meal-manual-item-dialog__label">{{ 'MEAL_MANAGE.MANUAL_ITEM_TYPE_LABEL' | translate }}</h3>
-            <fd-ui-segmented-toggle
-                [options]="sourceTypeOptions"
-                [selectedValue]="sourceTypeValue()"
-                [ariaLabel]="'MEAL_MANAGE.MANUAL_ITEM_TYPE_LABEL' | translate"
-                [fullWidth]="true"
-                (selectedValueChange)="onSourceTypeChange($event)"
+        @if (showPicker()) {
+            <fd-item-select-dialog
+                [embedded]="true"
+                [allowRecipeCreation]="false"
+                (productSelected)="onProductSelected($event)"
+                (recipeSelected)="onRecipeSelected($event)"
             />
-        </section>
-
-        <section class="meal-manual-item-dialog__section">
-            <h3 class="meal-manual-item-dialog__label">{{ sourceTypeLabelKey() | translate }}</h3>
-            <button
-                type="button"
-                class="meal-manual-item-dialog__source-selector"
-                [class.is-invalid]="sourceError() !== null"
-                (click)="chooseItemAsync()"
-            >
-                <fd-ui-icon class="meal-manual-item-dialog__source-icon" [name]="itemSourceIcon()" />
-                <span class="meal-manual-item-dialog__source-content">
-                    @if (selectedItemName(); as itemName) {
-                        <span class="meal-manual-item-dialog__source-name">{{ itemName }}</span>
-                        @if (selectedItemMeta(); as meta) {
-                            <span class="meal-manual-item-dialog__source-meta">{{ meta }}</span>
+        } @else {
+            <section class="meal-manual-item-dialog__section">
+                <h3 class="meal-manual-item-dialog__label">{{ sourceTypeLabelKey() | translate }}</h3>
+                <button
+                    type="button"
+                    class="meal-manual-item-dialog__source-selector"
+                    [class.is-invalid]="sourceError() !== null"
+                    (click)="showItemPicker()"
+                >
+                    <fd-ui-icon class="meal-manual-item-dialog__source-icon" [name]="itemSourceIcon()" />
+                    <span class="meal-manual-item-dialog__source-content">
+                        @if (selectedItemName(); as itemName) {
+                            <span class="meal-manual-item-dialog__source-name">{{ itemName }}</span>
+                            @if (selectedItemMeta(); as meta) {
+                                <span class="meal-manual-item-dialog__source-meta">{{ meta }}</span>
+                            }
+                        } @else {
+                            <span class="meal-manual-item-dialog__source-placeholder">{{ sourceActionLabelKey() | translate }}</span>
                         }
-                    } @else {
-                        <span class="meal-manual-item-dialog__source-placeholder">{{ sourceActionLabelKey() | translate }}</span>
-                    }
-                </span>
-                <fd-ui-icon class="meal-manual-item-dialog__source-chevron" name="chevron_right" />
-            </button>
-            @if (sourceError(); as error) {
-                <p class="meal-manual-item-dialog__error">{{ error }}</p>
-            }
-        </section>
+                    </span>
+                    <fd-ui-icon class="meal-manual-item-dialog__source-chevron" name="chevron_right" />
+                </button>
+                @if (sourceError(); as error) {
+                    <p class="meal-manual-item-dialog__error">{{ error }}</p>
+                }
+            </section>
+        }
 
         <fd-ui-input
             type="number"
             [formField]="amount"
             [step]="0.01"
-            [label]="'MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
+            [label]="amountLabel()"
             [placeholder]="amountPlaceholderKey() | translate"
             [error]="amountError()"
         />

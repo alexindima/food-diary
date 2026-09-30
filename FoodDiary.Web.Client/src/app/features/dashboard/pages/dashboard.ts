@@ -28,6 +28,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { UserFacade } from '../../../shared/lib/user.facade';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -109,6 +110,11 @@ export class DashboardComponent {
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
+    private readonly userFacade = inject(UserFacade);
+    protected readonly needsInitialSetup = computed(() => {
+        const user = this.userFacade.user();
+        return user !== null && ((user.birthDate ?? null) === null || (user.heightCm ?? 0) <= 0 || (user.gender ?? '') === '');
+    });
     protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
@@ -248,6 +254,9 @@ export class DashboardComponent {
     });
 
     public constructor() {
+        if (this.userFacade.user() === null) {
+            this.userFacade.getInfoSilently().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        }
         effect(() => {
             if (this.fastingPriorityOnOpen() !== null || !this.isTodaySelected() || !this.hasSnapshot() || this.isLoading()) {
                 return;
@@ -346,7 +355,7 @@ export class DashboardComponent {
     }
 
     protected async addMealAsync(mealType?: string | null): Promise<void> {
-        await this.navigationService.navigateToMealAddAsync(mealType ?? undefined);
+        await this.navigationService.navigateToMealAddAsync(mealType ?? undefined, { manual: true });
     }
 
     protected async manageMealsAsync(): Promise<void> {

@@ -7,6 +7,8 @@ import type { StatisticsNutrientProgress, StatisticsOverviewData } from '../../m
 
 const PERCENT_MAX = 100;
 
+const MIN_RECORDED_DAYS = 3;
+
 @Component({
     selector: 'fd-statistics-overview-card',
     imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
@@ -15,6 +17,10 @@ const PERCENT_MAX = 100;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsOverviewCardComponent {
+    protected readonly hasEnoughData = computed(
+        () => this.data().trackedDays >= MIN_RECORDED_DAYS && this.data().trackedDays === this.data().periodDays,
+    );
+
     public readonly data = input.required<StatisticsOverviewData>();
     protected readonly calorieProgress = computed(() => this.getProgress(this.data().averageCalories, this.data().calorieGoal));
 

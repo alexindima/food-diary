@@ -15,17 +15,21 @@
                 class="fd-ui-date-input__control"
                 role="combobox"
                 [id]="id()"
-                [value]="displayValue()"
+                [type]="allowManualInput() ? 'date' : 'text'"
+                [value]="allowManualInput() ? manualValue() : displayValue()"
+                [attr.min]="minDate() ? (minDate() | date: 'yyyy-MM-dd') : null"
+                [attr.max]="maxDate() ? (maxDate() | date: 'yyyy-MM-dd') : null"
                 [disabled]="disabled()"
-                [readOnly]="true"
+                [readOnly]="!allowManualInput()"
                 [attr.placeholder]="placeholderAttribute()"
-                [attr.aria-describedby]="error() ? `${id()}-error` : null"
-                [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-describedby]="fieldError() ? `${id()}-error` : null"
+                [attr.aria-invalid]="fieldError() ? 'true' : null"
                 [attr.aria-required]="required()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
                 [attr.aria-haspopup]="'dialog'"
-                (click)="openDatePicker()"
+                (input)="onManualInput($event)"
+                (click)="!allowManualInput() && openDatePicker()"
                 (keydown)="onInputKeydown($event)"
             />
             @if (clearAriaLabel() && internalValue() !== null) {
@@ -65,6 +69,7 @@
             >
                 <div class="fd-ui-date-input__panel" tabindex="-1" [id]="`${id()}-dialog`">
                     <fd-ui-calendar
+                        [locale]="language()"
                         [value]="internalValue()"
                         [displayMonth]="displayMonth()"
                         [min]="minDate()"
@@ -77,7 +82,7 @@
         </div>
     </div>
 
-    @if (error()) {
-        <div class="fd-ui-date-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    @if (fieldError()) {
+        <div class="fd-ui-date-input__error" role="alert" [id]="`${id()}-error`">{{ fieldError() }}</div>
     }
 </div>

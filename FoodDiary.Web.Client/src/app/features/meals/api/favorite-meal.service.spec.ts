@@ -68,12 +68,12 @@ describe('FavoriteMealService', () => {
     });
 });
 
+// eslint-disable-next-line max-lines-per-function -- Exercise the complete multi-page favourite lookup in one regression.
 describe('FavoriteMealService mutations and legacy reads', () => {
     it('should get all favorite meals', () => {
         service.getLookupPage().subscribe(result => {
             expect(result).toEqual([favoriteMeal]);
         });
-
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         expect(req.request.method).toBe('GET');
         req.flush({ data: [favoriteMeal], page: 1, limit: 100, totalPages: 1, totalItems: 1 });
@@ -85,9 +85,11 @@ describe('FavoriteMealService mutations and legacy reads', () => {
             expect(result).toEqual([favoriteMeal, secondFavorite]);
         });
 
-        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '1')
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '1')
             .flush({ data: [favoriteMeal], page: 1, limit: 100, totalPages: 2, totalItems: 2 });
-        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '2')
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === '2')
             .flush({ data: [secondFavorite], page: 2, limit: 100, totalPages: 2, totalItems: 2 });
     });
 

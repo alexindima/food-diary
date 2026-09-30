@@ -36,12 +36,17 @@
         </span>
     }
     @if (quality(); as cardQuality) {
-        <span
+        <button
+            type="button"
             class="nutrient-badges__chip nutrient-badges__chip--quality entity-card__quality fd-inline-center fd-gap-pill"
+            [attr.aria-expanded]="explanationVisible()"
             [class.nutrient-badges__chip--quality-green]="cardQuality.grade === 'green'"
             [class.nutrient-badges__chip--quality-yellow]="cardQuality.grade === 'yellow'"
             [class.nutrient-badges__chip--quality-red]="cardQuality.grade === 'red'"
             [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
+            (click)="$event.stopPropagation(); explanationVisible.set(!explanationVisible())"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation()"
         >
             <span class="nutrient-badges__quality-label entity-card__quality-label fd-ui-stat-label fd-nowrap">
                 {{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}
@@ -58,7 +63,12 @@
             >
                 {{ cardQuality.score }}
             </span>
-        </span>
+        </button>
+        @if (explanationVisible()) {
+            <p class="nutrient-badges__explanation fd-ui-body-sm" role="status">
+                {{ 'PRODUCT_CARD.QUALITY_EXPLANATION' | translate }}
+            </p>
+        }
     }
     @if (calories() !== null) {
         <span class="nutrient-badges__chip nutrient-badges__chip--calories fd-inline-center fd-gap-pill">

@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -30,6 +31,7 @@ export class RequiredPasswordChangeComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
 
+    private changedPassword: string | null = null;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly formModel = signal<RequiredPasswordChangeFormModel>({
@@ -62,19 +64,32 @@ export class RequiredPasswordChangeComponent {
         this.isSubmitting.set(true);
         this.errorMessage.set(null);
         const value = this.formModel();
-        const success = await firstValueFrom(
-            this.userFacade.changePassword({
-                currentPassword: value.currentPassword,
-                newPassword: value.newPassword,
-            }),
-        );
-        this.isSubmitting.set(false);
-        if (!success) {
-            this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
-            return;
+        try {
+            if (this.changedPassword === null) {
+                const success = await firstValueFrom(
+                    this.userFacade.changePassword({
+                        currentPassword: value.currentPassword,
+                        newPassword: value.newPassword,
+                    }),
+                );
+                if (!success) {
+                    this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
+                    return;
+                }
+                this.changedPassword = value.newPassword;
+            }
+            await this.authService.completeRequiredPasswordChangeAsync(this.changedPassword);
+            await this.navigationService.navigateToHomeAsync();
+        } catch (error: unknown) {
+            const key =
+                error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                    ? 'FORM_ERRORS.RATE_LIMITED'
+                    : this.changedPassword === null
+                      ? 'AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'
+                      : 'AUTH.REQUIRED_PASSWORD_CHANGE.SESSION_ERROR';
+            this.errorMessage.set(this.translateService.instant(key));
+        } finally {
+            this.isSubmitting.set(false);
         }
-
-        this.authService.completeRequiredPasswordChange();
-        await this.navigationService.navigateToHomeAsync();
     }
 }

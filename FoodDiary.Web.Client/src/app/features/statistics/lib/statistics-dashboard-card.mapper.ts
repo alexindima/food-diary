@@ -10,6 +10,8 @@ import type {
     StatisticsTrendInsight,
 } from '../models/statistics-dashboard-card.models';
 
+const MIN_RECORDED_DAYS = 3;
+
 const CALORIE_GOAL_TOLERANCE = 0.1;
 const PERCENT = 100;
 const STABILITY_DEVIATION_TOLERANCE_PERCENT = 20;
@@ -55,7 +57,10 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
             nutrients,
         },
         days,
-        insights: trackedIndexes.length > 0 ? buildInsights(nutrients, calorieDifferencePercent) : [],
+        insights:
+            trackedIndexes.length >= MIN_RECORDED_DAYS && trackedIndexes.length === periodDays
+                ? buildInsights(nutrients, calorieDifferencePercent)
+                : [],
         balance: nutrients,
         mealStructure: buildMealStructure(statistics),
         stability: buildDietStability(days, calorieGoal, quantizationDays),

@@ -5,8 +5,7 @@
                 <h2 class="statistics-overview-card__title fd-ui-card-title">{{ 'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate }}</h2>
                 <strong class="statistics-overview-card__headline fd-ui-section-title">
                     {{
-                        'STATISTICS.DASHBOARD.OVERVIEW.DAYS_WITHIN_GOAL'
-                            | translate: { current: data().daysWithinGoal, total: data().periodDays }
+                        'STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS' | translate: { current: data().trackedDays, total: data().periodDays }
                     }}
                 </strong>
             </div>
@@ -14,22 +13,22 @@
             <div class="statistics-overview-card__calories fd-row fd-align-center fd-gap-lg">
                 <fd-ui-progress-ring
                     class="statistics-overview-card__ring"
-                    [value]="calorieProgress()"
+                    [value]="hasEnoughData() ? calorieProgress() : 0"
                     [ariaLabel]="'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES' | translate"
                 >
                     <div class="statistics-overview-card__ring-center fd-place-center">
                         <strong class="fd-ui-metric-lg">{{ data().averageCalories | number: '1.0-0' }}</strong>
-                        <span class="fd-ui-body-sm"
+                        <span class="fd-ui-body-sm" [hidden]="!hasEnoughData()"
                             >/ {{ data().calorieGoal | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
                         >
                         <span class="fd-ui-caption fd-ui-text-muted">{{
-                            'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY' | translate
+                            'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_RECORDED_DAYS' | translate: { count: data().trackedDays }
                         }}</span>
                     </div>
                 </fd-ui-progress-ring>
 
                 @let calorieChangePercent = data().calorieChangePercent;
-                @if (calorieChangePercent !== null) {
+                @if (calorieChangePercent !== null && data().trackedDays >= 3 && data().trackedDays === data().periodDays) {
                     <div class="statistics-overview-card__comparison fd-stack fd-gap-xxs">
                         <strong class="fd-ui-metric-md">
                             {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | number: '1.0-0' }}%

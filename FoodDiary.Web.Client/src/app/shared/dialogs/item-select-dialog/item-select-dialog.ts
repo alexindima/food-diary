@@ -38,6 +38,8 @@ export class ItemSelectDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>, { optional: true });
 
     public readonly embedded = input<boolean>(false);
+    public readonly allowRecipeCreation = input<boolean>(true);
+    protected readonly showCreateAction = computed(() => this.activeTab() === 'Product' || this.allowRecipeCreation());
     public readonly productSelected = output<Product>();
     public readonly recipeSelected = output<Recipe>();
     public readonly createRecipeRequested = output();

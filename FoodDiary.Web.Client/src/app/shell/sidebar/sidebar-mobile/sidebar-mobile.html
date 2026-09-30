@@ -1,4 +1,4 @@
-<nav class="sidebar-mobile" aria-label="Mobile navigation">
+<nav class="sidebar-mobile" [attr.aria-label]="'SIDEBAR.MOBILE_NAVIGATION' | translate">
     @if (isProgressVisible()) {
         <section class="sidebar-mobile__progress" aria-live="polite">
             <div class="sidebar-mobile__progress-head">
@@ -24,7 +24,7 @@
             (click)="directRouteClick.emit({ route: '/', exact: true }); closeMenus.emit()"
         >
             <fd-ui-icon name="dashboard" />
-            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_DASHBOARD' | translate }}</span>
         </a>
         <button
             #mobileFoodButton
@@ -37,7 +37,7 @@
             (click)="foodToggle.emit(mobileFoodButton)"
         >
             <fd-ui-icon name="restaurant_menu" />
-            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.FOOD' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_FOOD' | translate }}</span>
         </button>
         <button
             #mobileBodyButton
@@ -50,7 +50,7 @@
             (click)="bodyToggle.emit(mobileBodyButton)"
         >
             <fd-ui-icon name="monitor_weight" />
-            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.BODY' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_BODY' | translate }}</span>
         </button>
         <button
             #mobileReportsButton
@@ -63,7 +63,7 @@
             (click)="reportsToggle.emit(mobileReportsButton)"
         >
             <fd-ui-icon name="bar_chart" />
-            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.REPORTS' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_REPORTS' | translate }}</span>
         </button>
         <button
             #mobileUserButton
@@ -77,7 +77,7 @@
         >
             <fd-ui-icon name="person" />
             <span class="sidebar-mobile__item-dot" aria-hidden="true" [hidden]="unreadNotificationCount() <= 0"></span>
-            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.USER' | translate }}</span>
+            <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_USER' | translate }}</span>
         </button>
     </div>
 

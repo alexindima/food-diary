@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    effect,
     ElementRef,
     inject,
     Injector,
@@ -11,8 +12,11 @@ import {
     LOCALE_ID,
     model,
     signal,
+    untracked,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { map, of } from 'rxjs';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import {
@@ -68,6 +72,10 @@ type FdUiCalendarCell = {
 })
 export class FdUiCalendarComponent {
     private readonly defaultLocale = inject(LOCALE_ID);
+    private readonly translateService = inject(TranslateService, { optional: true });
+    private readonly language = toSignal(this.translateService?.onLangChange.pipe(map(event => event.lang)) ?? of(this.defaultLocale), {
+        initialValue: this.translateService?.getCurrentLang() ?? this.defaultLocale,
+    });
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly today = this.stripTime(new Date());
@@ -110,7 +118,7 @@ export class FdUiCalendarComponent {
         });
     });
 
-    private readonly effectiveLocale = computed(() => this.locale() ?? this.defaultLocale);
+    private readonly effectiveLocale = computed(() => this.locale() ?? this.language());
 
     protected readonly weeks = computed(() => {
         const monthStart = this.visibleMonth();
@@ -151,7 +159,9 @@ export class FdUiCalendarComponent {
     });
 
     public constructor() {
-        this.activeDate.set(this.value() ?? this.displayMonth() ?? this.today);
+        effect(() => {
+            this.activeDate.set(this.value() ?? untracked(this.displayMonth) ?? this.today);
+        });
     }
 
     protected selectDate(date: Date): void {
@@ -218,6 +228,7 @@ export class FdUiCalendarComponent {
     private changeMonth(offset: number): void {
         const target = this.startOfMonth(this.addMonths(this.visibleMonth(), offset));
         this.displayMonth.set(target);
+        this.activeDate.set(this.clampDate(target, this.min(), this.max()));
         this.focusCell(this.activeDate());
     }
 

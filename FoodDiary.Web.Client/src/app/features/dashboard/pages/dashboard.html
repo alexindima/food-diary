@@ -86,6 +86,23 @@
     </fd-page-header>
 
     <fd-page-body>
+        <div [hidden]="!needsInitialSetup()">
+            <section class="fd-stack fd-gap-sm" [attr.aria-label]="'DASHBOARD.INITIAL_SETUP.TITLE' | translate">
+                <h2 class="fd-ui-card-title">{{ 'DASHBOARD.INITIAL_SETUP.TITLE' | translate }}</h2>
+                <p class="fd-ui-body-sm">{{ 'DASHBOARD.INITIAL_SETUP.HINT' | translate }}</p>
+                <div class="fd-row fd-wrap fd-gap-sm">
+                    <fd-ui-button variant="secondary" fill="outline" (click)="openProfileAsync()">{{
+                        'DASHBOARD.INITIAL_SETUP.PROFILE' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="outline" (click)="openGoalsAsync()">{{
+                        'DASHBOARD.INITIAL_SETUP.GOALS' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button variant="primary" fill="solid" (click)="addMealAsync()">{{
+                        'MEAL_LIST.ADD_MANUALLY_BUTTON' | translate
+                    }}</fd-ui-button>
+                </div>
+            </section>
+        </div>
         @if (layout.isEditingLayout()) {
             <div class="dashboard__edit-overlay"></div>
         }

@@ -3,7 +3,9 @@
         {{ 'STATISTICS.DASHBOARD.STABILITY.SUBTITLE' | translate }}
     </p>
 
-    @if (data().hasGoal) {
+    @if (!hasEnoughData()) {
+        <p class="fd-ui-body-sm">{{ 'STATISTICS.DASHBOARD.STABILITY.INSUFFICIENT_DATA' | translate }}</p>
+    } @else if (data().hasGoal) {
         <div class="statistics-diet-stability-card__summary fd-stack fd-gap-xxs">
             <strong class="fd-ui-metric-lg">
                 {{

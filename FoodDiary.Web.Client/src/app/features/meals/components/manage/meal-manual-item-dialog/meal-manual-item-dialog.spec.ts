@@ -1,3 +1,4 @@
+import { Component, input, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -6,12 +7,21 @@ import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { MealSourceType } from '../../../models/meal.data';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
+
+@Component({ selector: 'fd-item-select-dialog', template: '' })
+class ItemSelectStub {
+    public readonly allowRecipeCreation = input(true);
+    public readonly embedded = input(false);
+    public readonly productSelected = output<Product>();
+    public readonly recipeSelected = output<Recipe>();
+}
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;
 const RECIPE_SERVING_WEIGHT = 80;
@@ -27,9 +37,8 @@ describe('MealManualItemDialogComponent selection', () => {
     it('should apply selected product default portion amount', async () => {
         const product = createProduct();
         const { component, fdDialogService } = await setupComponentAsync();
-        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
-
-        await component['chooseItemAsync']();
+        component['onProductSelected'](product);
+        expect(fdDialogService.open).not.toHaveBeenCalled();
 
         expect(component['product']()).toBe(product);
         expect(component['recipe']()).toBeNull();
@@ -40,9 +49,8 @@ describe('MealManualItemDialogComponent selection', () => {
     it('should apply selected recipe serving weight', async () => {
         const recipe = createRecipe();
         const { component, fdDialogService } = await setupComponentAsync();
-        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
-
-        await component['chooseItemAsync']();
+        component['onRecipeSelected'](recipe);
+        expect(fdDialogService.open).not.toHaveBeenCalled();
 
         expect(component['recipe']()).toBe(recipe);
         expect(component['product']()).toBeNull();
@@ -114,7 +122,12 @@ async function setupComponentAsync(values: Partial<{ product: Product; recipe: R
                 },
             },
         ],
-    }).compileComponents();
+    })
+        .overrideComponent(MealManualItemDialogComponent, {
+            remove: { imports: [ItemSelectDialogComponent] },
+            add: { imports: [ItemSelectStub] },
+        })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(MealManualItemDialogComponent);
     fixture.detectChanges();
@@ -176,15 +189,13 @@ function createRecipe(): Recipe {
 
 describe('MealManualItemDialogComponent asynchronous serving weight', () => {
     it.each(['product', 'amount', 'destroy'] as const)('does not overwrite newer state after %s', async action => {
-        const { component, fdDialogService, fixture } = await setupComponentAsync();
+        const { component, fixture } = await setupComponentAsync();
         const weight = new Subject<number | null>();
         vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(weight);
-        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe: createRecipe() }) });
-        await component['chooseItemAsync']();
+        component['onRecipeSelected'](createRecipe());
         if (action === 'product') {
             component['onSourceTypeChange']('Product');
-            fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product: createProduct() }) });
-            await component['chooseItemAsync']();
+            component['onProductSelected'](createProduct());
         } else if (action === 'amount') {
             component['amount']().value.set(PRODUCT_DEFAULT_PORTION_AMOUNT);
         } else {
@@ -223,15 +234,14 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
     it('keeps the current item when selection is cancelled', async () => {
         const product = createProduct();
         const { component } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
-        await component['chooseItemAsync']();
+        component['showItemPicker']();
         expect(component['product']()).toBe(product);
         expect(component['amountModel']()).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
     });
     it.each([null, 0, -1])('keeps the fallback amount when serving weight is %s', async weight => {
-        const { component, fdDialogService } = await setupComponentAsync();
+        const { component } = await setupComponentAsync();
         vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(of(weight));
-        fdDialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe: createRecipe() }) });
-        await component['chooseItemAsync']();
+        component['onRecipeSelected'](createRecipe());
         expect(component['amountModel']()).toBe(1);
     });
 });

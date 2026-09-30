@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { catchError, EMPTY, expand, reduce, type Observable } from 'rxjs';
+import { catchError, EMPTY, expand, type Observable, reduce } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -11,6 +11,8 @@ import type {
     ShoppingListSummary,
     ShoppingListUpdateDto,
 } from '../models/shopping-list.data';
+
+const SELECTION_PAGE_SIZE = 50;
 
 @Service()
 export class ShoppingListService extends ApiService {
@@ -33,10 +35,12 @@ export class ShoppingListService extends ApiService {
     }
 
     public getSelectionPage(): Observable<ShoppingListSummary[]> {
-        return this.get<ShoppingListSummary[]>('page', { page: 1, limit: 50 }).pipe(
-            expand((items, index) => (items.length === 50
-                ? this.get<ShoppingListSummary[]>('page', { page: index + 2, limit: 50 })
-                : EMPTY)),
+        return this.get<ShoppingListSummary[]>('page', { page: 1, limit: SELECTION_PAGE_SIZE }).pipe(
+            expand((items, index) =>
+                items.length === SELECTION_PAGE_SIZE
+                    ? this.get<ShoppingListSummary[]>('page', { page: index + 2, limit: SELECTION_PAGE_SIZE })
+                    : EMPTY,
+            ),
             reduce((allItems, items) => [...allItems, ...items], [] as ShoppingListSummary[]),
         );
     }
