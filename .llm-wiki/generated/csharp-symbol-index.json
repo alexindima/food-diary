@@ -20800,7 +20800,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQuery.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetPublicProductQueryHandler",
@@ -21122,7 +21122,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "ProductsPresentationServiceCollectionExtensions",

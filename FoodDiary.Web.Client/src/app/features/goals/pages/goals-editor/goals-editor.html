@@ -36,7 +36,7 @@
                 [saveLabel]="(saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate"
                 [saving]="saving()"
                 (discard)="discard()"
-                (save)="persist()"
+                (save)="persistAsync()"
             />
         }
     </div>

@@ -211,7 +211,7 @@ function registerManualSaveTests(): void {
                 }),
             );
 
-            facade.saveManually({ dailyCalorieTarget: AUTOSAVE_CALORIES });
+            void facade.saveManuallyAsync({ dailyCalorieTarget: AUTOSAVE_CALORIES });
 
             expect(facade.calorieTarget()).toBe(AUTOSAVE_CALORIES);
             expect(facade.macroValues()).toEqual({

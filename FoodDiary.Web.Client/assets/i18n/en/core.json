@@ -105,6 +105,7 @@
         "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
         "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
         "UNKNOWN": "Unknown error",
+        "SAVE_CONNECTION": "Could not connect to the server. Your changes are still here. Check your connection and try saving again.",
         "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
     "COMMON": {

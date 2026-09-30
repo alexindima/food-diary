@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
 import type { DayCalorieKey } from '../models/goals.data';
 import { GoalsEditorComponent } from './goals-editor/goals-editor';
@@ -15,6 +16,8 @@ const WATER_TARGET = 2200;
 const BODY_WEIGHT = 72;
 const FIBER_TARGET = 30;
 const PROTEIN_TARGET = 150;
+const RETRY_WATER_TARGET = 2500;
+const NEWER_WATER_TARGET = 3000;
 
 let facade: GoalsFacadeMock;
 
@@ -55,9 +58,51 @@ describe('GoalsPageComponent', () => {
         const fixture = createComponent();
         const request = { dailyCalorieTarget: CALORIE_TARGET };
 
-        getEditor(fixture).save.emit(request);
+        void getEditor(fixture).saveRequest()(request);
 
-        expect(facade.saveManually).toHaveBeenCalledWith(request);
+        expect(facade.saveManuallyAsync).toHaveBeenCalledWith(request);
+    });
+
+    it('preserves unsaved goals after failure and permits a successful retry', async () => {
+        facade.saveManuallyAsync.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+        const fixture = createComponent();
+        getEditor(fixture)['updateWater'](RETRY_WATER_TARGET);
+        fixture.detectChanges();
+        const handler = TestBed.inject(UnsavedChangesService).getHandler();
+
+        expect(await handler?.save()).toBe(false);
+        fixture.detectChanges();
+        expect(handler?.hasChanges()).toBe(true);
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-unsaved-changes-bar')).not.toBeNull();
+
+        expect(await handler?.save()).toBe(true);
+        fixture.detectChanges();
+        expect(handler?.hasChanges()).toBe(false);
+        expect(facade.saveManuallyAsync).toHaveBeenCalledTimes(2);
+        expect(facade.saveManuallyAsync).toHaveBeenLastCalledWith(expect.objectContaining({ waterGoal: RETRY_WATER_TARGET }));
+    });
+
+    it('waits for saving and retains edits made while the request is pending', async () => {
+        let completeSave: (saved: boolean) => void = () => {};
+        facade.saveManuallyAsync.mockReturnValue(
+            new Promise<boolean>(resolve => {
+                completeSave = resolve;
+            }),
+        );
+        const fixture = createComponent();
+        const editor = getEditor(fixture);
+        editor['updateWater'](RETRY_WATER_TARGET);
+        const handler = TestBed.inject(UnsavedChangesService).getHandler();
+        const firstSave = handler?.save();
+        const repeatedSave = handler?.save();
+        editor['updateWater'](NEWER_WATER_TARGET);
+        completeSave(true);
+
+        expect(await firstSave).toBe(false);
+        expect(await repeatedSave).toBe(false);
+        expect(handler?.hasChanges()).toBe(true);
+        expect(facade.saveManuallyAsync).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -97,7 +142,7 @@ type GoalsFacadeMock = {
     bodyTargetValues: WritableSignal<{ weight: number; waist: number }>;
     initialize: ReturnType<typeof vi.fn>;
     reload: ReturnType<typeof vi.fn>;
-    saveManually: ReturnType<typeof vi.fn>;
+    saveManuallyAsync: ReturnType<typeof vi.fn>;
 };
 
 function createFacadeMock(): GoalsFacadeMock {
@@ -126,7 +171,7 @@ function createFacadeMock(): GoalsFacadeMock {
         bodyTargetValues: signal({ weight: BODY_WEIGHT, waist: 0 }),
         initialize: vi.fn(),
         reload: vi.fn(),
-        saveManually: vi.fn(),
+        saveManuallyAsync: vi.fn().mockResolvedValue(true),
     };
 }
 

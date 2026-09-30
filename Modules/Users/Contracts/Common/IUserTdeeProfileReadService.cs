@@ -8,4 +8,9 @@ public interface IUserTdeeProfileReadService {
     Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    Task<Result<UserTdeeProfileModel>> GetTdeeProfileWithWeightAsync(
+        UserId userId,
+        double? currentWeightKg,
+        CancellationToken cancellationToken = default);
 }

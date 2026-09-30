@@ -42,7 +42,7 @@
                 [cyclingEnabled]="calorieCyclingEnabled()"
                 [dayCalories]="dayCalories()"
                 [saving]="isSavingGoals()"
-                (save)="saveGoalsManually($event)"
+                [saveRequest]="saveGoalsManuallyAsync"
             />
         }
     </fd-page-body>

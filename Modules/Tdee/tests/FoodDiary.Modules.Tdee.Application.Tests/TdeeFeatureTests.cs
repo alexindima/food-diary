@@ -28,6 +28,30 @@ namespace FoodDiary.Modules.Tdee.Application.Tests;
 public class TdeeFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
+    [Fact]
+    public async Task GetTdeeInsight_UsesRecordedWeightWhenLegacyProfileWeightIsMissing() {
+        var user = User.Create("recorded-weight@example.com", "hash");
+        user.UpdatePersonalInfo(birthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", height: 180);
+        ISender sender = Substitute.For<ISender>();
+        IReadOnlyList<FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel> weights = [
+            new(Guid.NewGuid(), user.Id.Value, Today.AddDays(-60), 80),
+        ];
+        sender.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult(weights));
+        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.Exercises.Contracts.Models.ExerciseEntryModel>>([]));
+        var handler = new GetTdeeInsightQueryHandler(CreateProfileService(user), sender, CreateStatisticsReadService(),
+            new StubDateTimeProvider(), CreateCurrentUserAccessService(user));
+
+        Result<TdeeInsightModel> result = await handler.Handle(new GetTdeeInsightQuery(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        double? bmr = User.CalculateBmr(80, user.HeightCm, user.BirthDate, user.Gender);
+        Assert.Multiple(
+            () => Assert.Equal(bmr, result.Value.Bmr),
+            () => Assert.Equal(User.CalculateEstimatedTdee(bmr, user.ActivityLevel), result.Value.EstimatedTdee),
+            () => Assert.Null(user.WeightKg));
+        await sender.Received(1).Send(Arg.Is<ReadWeightEntriesQuery>(query => query.DateFrom == null && query.DateTo == Today && query.Limit == 1 && query.Descending), Arg.Any<CancellationToken>());
+    }
+
     [Theory]
     [InlineData("unknown/zone", 2026, 9, 20)]
     [InlineData("UTC", 1, 1, 1)]
@@ -158,7 +182,7 @@ public class TdeeFeatureTests {
     private static IUserTdeeProfileReadService CreateProfileService(User? user) {
         IUserTdeeProfileReadService service = Substitute.For<IUserTdeeProfileReadService>();
         service
-            .GetTdeeProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetTdeeProfileWithWeightAsync(Arg.Any<UserId>(), Arg.Any<double?>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
@@ -169,10 +193,12 @@ public class TdeeFeatureTests {
                     return Task.FromResult(Result.Failure<UserTdeeProfileModel>(UserAuthenticationErrors.AccountDeleted));
                 }
 
+                double? weight = call.Arg<double?>() ?? user.WeightKg;
+                double? bmr = User.CalculateBmr(weight, user.HeightCm, user.BirthDate, user.Gender);
                 return Task.FromResult(Result.Success(new UserTdeeProfileModel(
-                    user.CalculateBmr(),
-                    user.CalculateEstimatedTdee(),
-                    user.WeightKg,
+                    bmr,
+                    User.CalculateEstimatedTdee(bmr, user.ActivityLevel),
+                    weight,
                     user.DesiredWeightKg,
                     user.DailyCalorieTarget)));
             });
@@ -182,7 +208,7 @@ public class TdeeFeatureTests {
     private static IUserTdeeProfileReadService CreateFailingProfileService(Error error) {
         IUserTdeeProfileReadService service = Substitute.For<IUserTdeeProfileReadService>();
         service
-            .GetTdeeProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetTdeeProfileWithWeightAsync(Arg.Any<UserId>(), Arg.Any<double?>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<UserTdeeProfileModel>(error)));
         return service;
     }

@@ -3,8 +3,8 @@
   "summary": {
     "components": 480,
     "componentsWithoutDirectSpecs": 134,
-    "inputs": 1528,
-    "outputs": 517,
+    "inputs": 1529,
+    "outputs": 516,
     "apiCalls": 267,
     "templatesWithTranslations": 341,
     "translationKeys": 2016,
@@ -7297,14 +7297,14 @@
           "name": "saving",
           "type": "",
           "required": false
-        }
-      ],
-      "outputs": [
+        },
         {
-          "name": "save",
-          "type": "UpdateGoalsRequest"
+          "name": "saveRequest",
+          "type": "(request: UpdateGoalsRequest) => Promise<boolean>",
+          "required": true
         }
       ],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -36706,12 +36706,11 @@
         "preset",
         "presetOptions",
         "presets",
+        "saveRequest",
         "saving",
         "water"
       ],
-      "outputsHandled": [
-        "save"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "GoalsNutritionCardComponent",

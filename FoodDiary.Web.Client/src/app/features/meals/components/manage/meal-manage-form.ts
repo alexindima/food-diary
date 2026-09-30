@@ -690,6 +690,10 @@ export class MealManageFormComponent {
     }
 
     private handleSubmitError(error?: HttpErrorResponse): void {
+        if (error?.status === 0) {
+            this.setGlobalError('FORM_ERRORS.SAVE_CONNECTION');
+            return;
+        }
         const message = this.getSubmitErrorMessage(error);
         if (message !== null) {
             this.globalError.set(message);

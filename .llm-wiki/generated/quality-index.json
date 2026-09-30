@@ -279,6 +279,14 @@
       "structuralRiskScore": 126.88
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+      "nonBlankLines": 692,
+      "decisionPoints": 74,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 124.84
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
       "nonBlankLines": 331,
       "decisionPoints": 77,
@@ -301,14 +309,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 123.46
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "nonBlankLines": 688,
-      "decisionPoints": 73,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.26
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
@@ -9618,11 +9618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts",
-      "nonBlankLines": 539,
+      "nonBlankLines": 544,
       "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.28
+      "structuralRiskScore": 66.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/models/goals.data.ts",
@@ -9658,11 +9658,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
-      "nonBlankLines": 139,
-      "decisionPoints": 6,
+      "nonBlankLines": 150,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.78
+      "structuralRiskScore": 18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
@@ -9698,11 +9698,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-      "nonBlankLines": 98,
+      "nonBlankLines": 96,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
+      "structuralRiskScore": 1.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
@@ -10042,11 +10042,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "nonBlankLines": 688,
-      "decisionPoints": 73,
+      "nonBlankLines": 692,
+      "decisionPoints": 74,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.26
+      "structuralRiskScore": 124.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-lib/meal-manage-form.mapper.ts",
@@ -35762,11 +35762,11 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQuery.cs",
-      "nonBlankLines": 5,
+      "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQueryHandler.cs",
@@ -36154,11 +36154,11 @@
     },
     {
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.48
+      "structuralRiskScore": 7.5
     },
     {
       "path": "Modules/Products/Presentation/Extensions/ProductsPresentationServiceCollectionExtensions.cs",
@@ -38290,11 +38290,11 @@
     },
     {
       "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "nonBlankLines": 116,
+      "nonBlankLines": 121,
       "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.82
+      "structuralRiskScore": 14.92
     },
     {
       "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
@@ -39946,11 +39946,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserTdeeProfileReadService.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs",
@@ -40850,11 +40850,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "nonBlankLines": 113,
-      "decisionPoints": 13,
+      "nonBlankLines": 116,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.76
+      "structuralRiskScore": 26.32
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs",
@@ -49961,7 +49961,7 @@
       "name": "PublicProductsController",
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -17,6 +17,27 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task TdeeProfile_UsesRecordedWeightWithoutPersistingItOnUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("tdee-recorded-weight@example.com", "hash");
+        user.UpdatePersonalInfo(birthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", height: 180);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var service = new UserProfileProjectionService(context.Users);
+
+        UserTdeeProfileModel profile = Success(await service.GetTdeeProfileWithWeightAsync(user.Id, 80, CancellationToken.None));
+        double? bmr = User.CalculateBmr(80, user.HeightCm, user.BirthDate, user.Gender);
+
+        Assert.Multiple(
+            () => Assert.Equal(80, profile.WeightKg),
+            () => Assert.Equal(bmr, profile.Bmr),
+            () => Assert.Equal(User.CalculateEstimatedTdee(bmr, user.ActivityLevel), profile.EstimatedTdee));
+        Assert.Null(await context.Users.Where(candidate => candidate.Id == user.Id).Select(candidate => candidate.WeightKg).SingleAsync());
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task BillingProfile_RereadsPersistedRolesAndDeletionDespiteTrackedUser() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("billing-fresh-profile@example.com", "hash");

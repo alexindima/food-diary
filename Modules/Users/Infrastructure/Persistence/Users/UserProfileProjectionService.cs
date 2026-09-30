@@ -103,14 +103,18 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
         return await ReadAsync(userId, user => new UserHydrationProfileModel(user.HydrationGoal ?? user.WaterGoal), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
+        GetTdeeProfileWithWeightAsync(userId, currentWeightKg: null, cancellationToken);
+
+    public async Task<Result<UserTdeeProfileModel>> GetTdeeProfileWithWeightAsync(
+        UserId userId, double? currentWeightKg, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await ReadAsync(userId, user => new UserTdeeProfileModel(
-            User.CalculateBmr(user.WeightKg, user.HeightCm, user.BirthDate, user.Gender),
-            User.CalculateEstimatedTdee(User.CalculateBmr(user.WeightKg, user.HeightCm, user.BirthDate, user.Gender), user.ActivityLevel),
-            user.WeightKg, user.DesiredWeightKg, user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+            User.CalculateBmr(currentWeightKg ?? user.WeightKg, user.HeightCm, user.BirthDate, user.Gender),
+            User.CalculateEstimatedTdee(User.CalculateBmr(currentWeightKg ?? user.WeightKg, user.HeightCm, user.BirthDate, user.Gender), user.ActivityLevel),
+            currentWeightKg ?? user.WeightKg, user.DesiredWeightKg, user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default) {

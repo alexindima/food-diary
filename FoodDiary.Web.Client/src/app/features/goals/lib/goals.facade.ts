@@ -305,10 +305,12 @@ export class GoalsFacade {
         this.loadGoals();
     }
 
-    public saveManually(request: UpdateGoalsRequest): void {
+    public async saveManuallyAsync(request: UpdateGoalsRequest): Promise<boolean> {
         this.hasAutosaveError.set(false);
         this.hasPendingAutosave.set(false);
-        this.persistGoals(request);
+        return new Promise(resolve => {
+            this.persistGoals(request, resolve);
+        });
     }
 
     public updateCalories(rawValue: number): void {
@@ -484,7 +486,7 @@ export class GoalsFacade {
         );
     }
 
-    private persistGoals(request: UpdateGoalsRequest): void {
+    private persistGoals(request: UpdateGoalsRequest, completed?: (saved: boolean) => void): void {
         this.hasPendingAutosave.set(false);
         this.isSavingGoals.set(true);
         this.goalsService
@@ -506,6 +508,7 @@ export class GoalsFacade {
 
                         this.showSaveError();
                         this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                        completed?.(false);
                         return;
                     }
 
@@ -519,6 +522,7 @@ export class GoalsFacade {
                     this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
                     this.autosaveQueue.scheduleIfPending();
                     this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                    completed?.(true);
                 },
                 error: () => {
                     const hasQueuedUpdate = this.autosaveQueue.hasPending();
@@ -530,6 +534,7 @@ export class GoalsFacade {
 
                     this.showSaveError();
                     this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
+                    completed?.(false);
                 },
             });
     }

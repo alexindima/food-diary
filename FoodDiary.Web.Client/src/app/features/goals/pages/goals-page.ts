@@ -95,9 +95,7 @@ export class GoalsPageComponent {
         }),
     );
 
-    protected saveGoalsManually(request: UpdateGoalsRequest): void {
-        this.facade.saveManually(request);
-    }
+    protected readonly saveGoalsManuallyAsync = async (request: UpdateGoalsRequest): Promise<boolean> => this.facade.saveManuallyAsync(request);
 
     private buildMacroPresetOptions(): void {
         this.macroPresetOptions = this.macroPresets.map(preset => ({

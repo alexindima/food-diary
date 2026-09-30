@@ -105,6 +105,7 @@
         "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
         "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
         "UNKNOWN": "Unknown error",
+        "SAVE_CONNECTION": "Could not connect to the server. Your changes are still here. Check your connection and try saving again.",
         "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
     "COMMON": {
@@ -6846,8 +6847,8 @@
             "DEFICIT_TOO_AGGRESSIVE": "Your current goal results in a large estimated calorie deficit. A higher goal may reduce it.",
             "DEFICIT_MODERATE": "Good moderate deficit for steady weight loss.",
             "DEFICIT_MILD": "Mild deficit — weight loss will be slow but sustainable.",
-            "MAINTENANCE_ON_TRACK": "You're eating close to maintenance. Great for weight stability.",
-            "SURPLUS_WHILE_LOSING_GOAL": "You're in a surplus but your goal is to lose weight. Consider reducing your target.",
+            "MAINTENANCE_ON_TRACK": "Your current calorie target is close to your estimated expenditure. This compares your target, not your logged food intake.",
+            "SURPLUS_WHILE_LOSING_GOAL": "Your current calorie target is above your estimated expenditure, while your weight goal is lower. Review your target.",
             "SURPLUS_TOO_AGGRESSIVE": "Large surplus — you may gain weight faster than desired.",
             "SURPLUS_MODERATE": "Moderate surplus — good for lean muscle gain.",
             "REVIEW_GOALS": "Review your calorie target based on your current goals."

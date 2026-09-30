@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
@@ -39,7 +39,8 @@ export class GoalsEditorComponent {
     public readonly cyclingEnabled = input.required<boolean>();
     public readonly dayCalories = input.required<Record<DayCalorieKey, number>>();
     public readonly saving = input(false);
-    public readonly save = output<UpdateGoalsRequest>();
+    public readonly saveRequest = input.required<(request: UpdateGoalsRequest) => Promise<boolean>>();
+    private pendingSave: Promise<boolean> | null = null;
 
     protected readonly draft = signal<GoalsDraft | null>(null);
     protected readonly dirty = signal(false);
@@ -61,10 +62,7 @@ export class GoalsEditorComponent {
         });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.dirty(),
-            save: () => {
-                this.persist();
-                return true;
-            },
+            save: this.persistAsync.bind(this),
             discard: () => {
                 this.discard();
             },
@@ -114,9 +112,22 @@ export class GoalsEditorComponent {
         this.dirty.set(false);
     }
 
-    protected persist(): void {
-        this.save.emit(buildDraftRequest(this.requireDraft()));
-        this.dirty.set(false);
+    protected async persistAsync(): Promise<boolean> {
+        if (this.pendingSave !== null) {
+            return this.pendingSave;
+        }
+        const submittedDraft = this.requireDraft();
+        this.pendingSave = this.saveRequest()(buildDraftRequest(submittedDraft))
+            .then(saved => {
+                if (saved && this.draft() === submittedDraft) {
+                    this.discard();
+                }
+                return saved && !this.dirty();
+            })
+            .finally(() => {
+                this.pendingSave = null;
+            });
+        return this.pendingSave;
     }
 
     private updateDraft(change: Partial<GoalsDraft>): void {

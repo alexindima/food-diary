@@ -21,6 +21,7 @@ Rules for `FoodDiary.Presentation.Api/`.
 - Base controllers and binders: `Controllers/`
 - Shared/version-neutral controllers: `Features/`; module feature controllers, requests, responses and mappings: `Modules/<Feature>/Presentation/Features/`
 - Reusable HTTP responses/wrappers: `Responses/`
+- Reusable grouped HTTP query parameters: `Requests/`; keep module-specific requests in their owning Presentation feature.
 - Presentation-only services: `Services/`
 - Auth/presentation policies: `Authorization/`, `Policies/`, `Security/`
 - ASP.NET filters and filter attributes: `Filters/`

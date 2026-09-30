@@ -12,10 +12,10 @@ namespace FoodDiary.Modules.Products.Application.Queries.GetPublicProduct;
 public sealed class GetPublicProductQueryHandler(IProductOverviewReadService products)
     : IQueryHandler<GetPublicProductQuery, Result<PublicProductModel>> {
     public async Task<Result<PublicProductModel>> Handle(GetPublicProductQuery query, CancellationToken cancellationToken) {
-        var id = new ProductId(query.ProductId);
+        ProductId id = query.ProductId;
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> rows = await products.GetByIdsWithUsageAsync([id], UserId.Empty, includePublic: true, cancellationToken).ConfigureAwait(false);
         if (!rows.TryGetValue(id, out ProductOverviewReadItem? product) || product.Visibility != Visibility.Public) {
-            return Result.Failure<PublicProductModel>(ProductErrors.NotAccessible(query.ProductId));
+            return Result.Failure<PublicProductModel>(ProductErrors.NotAccessible(query.ProductId.Value));
         }
         return Result.Success(new PublicProductModel(product.Id.Value, product.Name, product.Brand, product.ImageUrl,
             product.BaseUnit.ToString(), product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase,

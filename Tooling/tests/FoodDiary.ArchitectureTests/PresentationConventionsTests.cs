@@ -28,6 +28,7 @@ public class PresentationConventionsTests {
             "Options",
             "Policies",
             "Responses",
+            "Requests",
             "Security",
             "Services",
             "Telemetry",

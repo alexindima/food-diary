@@ -4206,14 +4206,14 @@
           "name": "saving",
           "type": "",
           "required": false
-        }
-      ],
-      "outputs": [
+        },
         {
-          "name": "save",
-          "type": "UpdateGoalsRequest"
+          "name": "saveRequest",
+          "type": "(request: UpdateGoalsRequest) => Promise<boolean>",
+          "required": true
         }
       ],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -5211,7 +5211,7 @@
       "name": "PublicProductsController",
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

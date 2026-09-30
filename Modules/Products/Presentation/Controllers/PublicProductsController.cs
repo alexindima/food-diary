@@ -1,5 +1,6 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Products.Application.Queries.GetPublicProduct;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Presentation.Responses;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
@@ -17,7 +18,7 @@ public sealed class PublicProductsController(ISender mediator) : BaseApiControll
     [HttpGet("{id:guid}")]
     [ProducesResponseType<PublicProductHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> GetById(Guid id) => HandleOk(new GetPublicProductQuery(id),
+    public Task<IActionResult> GetById(Guid id) => HandleOk(new GetPublicProductQuery(new ProductId(id)),
         static p => new PublicProductHttpResponse(p.Id, p.Name, p.Brand, p.ImageUrl, p.BaseUnit,
             p.BaseAmount, p.Calories, p.Proteins, p.Fats, p.Carbs, p.Fiber, p.Alcohol) {
             Description = p.Description,

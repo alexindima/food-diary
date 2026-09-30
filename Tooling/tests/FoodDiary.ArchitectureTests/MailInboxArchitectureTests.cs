@@ -284,9 +284,9 @@ public sealed class MailInboxArchitectureTests {
         string presentationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Presentation");
 
         var conventions = new[] {
-            new { Folder = "Requests", Suffix = "HttpRequest.cs" },
-            new { Folder = "Responses", Suffix = "HttpResponse.cs" },
-            new { Folder = "Mappings", Suffix = "HttpMappings.cs" },
+            new { Folder = "Requests", Suffixes = new[] { "HttpRequest.cs", "HttpQuery.cs" } },
+            new { Folder = "Responses", Suffixes = new[] { "HttpResponse.cs" } },
+            new { Folder = "Mappings", Suffixes = new[] { "HttpMappings.cs" } },
         };
 
         string[] violations = [.. conventions
@@ -296,7 +296,7 @@ public sealed class MailInboxArchitectureTests {
                     $"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}",
                     StringComparison.Ordinal))
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
+                .Where(path => !convention.Suffixes.Any(suffix => path.EndsWith(suffix, StringComparison.Ordinal)))
                 .Select(path => Path.GetRelativePath(root, path)))
             .Order(StringComparer.Ordinal)];
 

@@ -51738,7 +51738,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "GetTdeeInsightQuery",
@@ -113175,7 +113175,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "ISender",
@@ -135990,7 +135990,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "ReadExerciseEntriesQuery",
@@ -137732,7 +137732,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ReadWeightEntriesQuery",
@@ -137810,7 +137810,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "ReadWeightEntriesQuery",

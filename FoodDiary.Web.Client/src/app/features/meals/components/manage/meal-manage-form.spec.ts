@@ -173,7 +173,7 @@ describe('MealManageFormComponent submit behavior', () => {
     it('should show backend validation message when submit fails', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         const serverMessage = 'Product is not accessible.';
-        mealManageFacade.submitMealAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
+        mealManageFacade.submitMealAsync.mockRejectedValue(new HttpErrorResponse({ status: 400, error: { message: serverMessage } }));
         component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
@@ -195,6 +195,28 @@ describe('MealManageFormComponent submit behavior', () => {
         await waitForAsyncTasksAsync();
 
         expect(component['globalError']()).toBe(serverMessage);
+    });
+});
+
+describe('MealManageFormComponent network recovery', () => {
+    it('keeps the meal draft and localizes a network failure instead of exposing fetch internals', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        mealManageFacade.submitMealAsync.mockRejectedValue(new HttpErrorResponse({ status: 0, error: new TypeError('Failed to fetch') }));
+        const items = [
+            createMealItemValue(
+                { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                null,
+                PRODUCT_AMOUNT,
+                MealSourceType.Product,
+            ),
+        ];
+        component['patchMealFormModel']({ date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST', items });
+
+        await component['onSubmitAsync']();
+        await waitForAsyncTasksAsync();
+
+        expect(component['globalError']()).toBe('FORM_ERRORS.SAVE_CONNECTION');
+        expect(component['mealFormModel']().items).toEqual(items);
     });
 });
 

@@ -40,13 +40,6 @@ public sealed class GetTdeeInsightQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<TdeeUserProfile> profileResult = await GetProfileAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (profileResult.IsFailure) {
-            return Result.Failure<TdeeInsightModel>(profileResult.Error);
-        }
-
-        TdeeUserProfile profile = profileResult.Value;
-
         if (!LocalCalendar.TryResolve(query.TimeZoneId, query.TimeZoneOffsetMinutes, out TimeZoneInfo zone)) {
             return Result.Failure<TdeeInsightModel>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Unknown time zone."));
         }
@@ -63,6 +56,17 @@ public sealed class GetTdeeInsightQueryHandler(
         } catch (ArgumentOutOfRangeException) {
             return Result.Failure<TdeeInsightModel>(Errors.Validation.Invalid(nameof(query.CurrentDate), "Date range is outside supported boundaries."));
         }
+
+        IReadOnlyList<WeightEntryModel> latestWeights = await sender.Send(
+            new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: today, Limit: 1, Descending: true), cancellationToken)
+            .ConfigureAwait(false);
+        double? currentWeightKg = latestWeights.Count > 0 ? latestWeights[0].WeightKg : null;
+        Result<TdeeUserProfile> profileResult = await GetProfileAsync(userId, currentWeightKg, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<TdeeInsightModel>(profileResult.Error);
+        }
+        TdeeUserProfile profile = profileResult.Value;
 
         IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: periodStart, DateTo: today, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
@@ -113,9 +117,9 @@ public sealed class GetTdeeInsightQueryHandler(
         IReadOnlyList<MealDailyCalories> dailyCalories,
         IReadOnlyList<ExerciseEntryModel> exercises) =>
         TdeeCalculator.CalculateAdaptive(weights, ToDailyCalories(dailyCalories), AnalysisPeriodDays, exercises);
-    private async Task<Result<TdeeUserProfile>> GetProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    private async Task<Result<TdeeUserProfile>> GetProfileAsync(UserId userId, double? currentWeightKg, CancellationToken cancellationToken = default) {
         Result<UserTdeeProfileModel> profileResult = await userProfileReadService
-            .GetTdeeProfileAsync(userId, cancellationToken)
+            .GetTdeeProfileWithWeightAsync(userId, currentWeightKg, cancellationToken)
             .ConfigureAwait(false);
         if (profileResult.IsFailure) {
             return Result.Failure<TdeeUserProfile>(profileResult.Error);

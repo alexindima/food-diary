@@ -67,26 +67,14 @@
       "pageSha256": "c159de7d87fab3af4797d412e925d9c35188294ad7e4ddd0a25f0a5b256bd8be",
       "sources": [
         {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "2f6a61da2a1b2c48c13d04da5801647721ea4fa5384aa3a9c0b3c41aac37006c"
-        },
-        {
-          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
-          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
-        },
-        {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
-        },
-        {
-          "path": "Shared/FoodDiary.Integrations.Http/AGENTS.md",
-          "sha256": "7c8a1edbf55a3b5f7c7abd24c6c11527469eb852caffa141a889d8500bf3533e"
+          "path": "FoodDiary.Presentation.Api/AGENTS.md",
+          "sha256": "6a0aadccdb87e464248f52be0ead10052ea3707acddc01f09b2003df241ccb98"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed Users scalar TDEE read extension, preserved legacy method and HTTP routes/payloads; latest dated weight is read through BodyMetrics contract; full solution build, 43 TDEE tests and 2 public-product tests pass. Public ProductId conversion now occurs at presentation boundary.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:45.4808473Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:36.2983843Z"
     },
     {
       "pageId": "system.architecture",
@@ -223,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4b6ee83e9316e8db4a2bce644b2408dd783b9f5fa1a96ab84c07bfdc9400c327"
+          "sha256": "324eeacba111467942ea4f00c9017954a58020d4ca1dde6c8e169cc7ef9c834b"
         }
       ],
-      "reason": "Reviewed refreshed architecture index: frontend provider cycle removed by separating public product details; no .NET project references or ownership changes. Existing backend architecture failures are recorded in .artifacts/ux-architecture.log.",
+      "reason": "Reviewed retry failure and concurrent edits using 89 focused frontend tests, 4545 broader frontend tests and 2116 architecture tests; Docker projection integration tests are explicitly skipped and real API checks provide separate evidence.",
       "baseRef": "HEAD",
-      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
-      "reviewedAtUtc": "2026-09-30T14:00:06.5060383Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:36.5599543Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "951da3a43d57694dc747fe75c0f0d42b3e81a80f08f49aceb228b015971d9710"
+          "sha256": "e2726dc8cd63f9026ddf652fc3225aeae03fe138f69dec5a749db841344c4a27"
         }
       ],
-      "reason": "The change only tightens accepted date-range values; HTTP request shapes, routes, response schemas, and generated API contracts are unchanged.",
+      "reason": "Reviewed Users scalar TDEE read extension, preserved legacy method and HTTP routes/payloads; latest dated weight is read through BodyMetrics contract; full solution build, 43 TDEE tests and 2 public-product tests pass. Public ProductId conversion now occurs at presentation boundary.",
       "baseRef": "HEAD",
-      "gitHead": "fdae14fa6c0e3b49bc1f4e2148b9314e67d2cf92",
-      "reviewedAtUtc": "2026-09-30T08:52:21.9590317Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:37.2093681Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -820,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "678ae4bf8aefb12a4316d14d5dff710cd2fd57c434184a26f5b296f592e8b111"
+          "sha256": "fd600b360849136ff525bed2790029f828078c9707be0d2c982f21de4295307c"
         }
       ],
-      "reason": "Reviewed regenerated quality navigation against executed frontend suites, solution build and password-change tests. Partial diary data uses neutral reports and manual meal selection retains quantity; existing backend guardrail failures are outside this frontend patch.",
+      "reason": "Reviewed retry failure and concurrent edits using 89 focused frontend tests, 4545 broader frontend tests and 2116 architecture tests; Docker projection integration tests are explicitly skipped and real API checks provide separate evidence.",
       "baseRef": "HEAD",
-      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
-      "reviewedAtUtc": "2026-09-30T14:00:08.9076355Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:38.0340007Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd7ed8118c71eda5cb9c4d0a38e7ecf4e778aa03571c2bc61e7291fc6a8b3c99"
+          "sha256": "05da5e3aa4c3dcbff9b2703abae98e6ca70545845b04c799fcc96179db82130a"
         }
       ],
-      "reason": "Runtime composition and topology are unchanged; only application-layer validation rejects query periods longer than 366 days.",
+      "reason": "Reviewed shared query-parameter Requests folder against existing HTTP naming guidance; updated affected indexes and confirmed no host, job, provider or deployment topology change. A second local API on 5301 is only the verification environment.",
       "baseRef": "HEAD",
-      "gitHead": "fdae14fa6c0e3b49bc1f4e2148b9314e67d2cf92",
-      "reviewedAtUtc": "2026-09-30T08:52:23.5674231Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:38.2825737Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +898,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "678ae4bf8aefb12a4316d14d5dff710cd2fd57c434184a26f5b296f592e8b111"
+          "sha256": "fd600b360849136ff525bed2790029f828078c9707be0d2c982f21de4295307c"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "05da5e3aa4c3dcbff9b2703abae98e6ca70545845b04c799fcc96179db82130a"
         }
       ],
-      "reason": "Password change still revokes every old session; frontend obtains a fresh login session before navigation and does not bypass 429 limits. Local QA account was created without email, credentials remain outside repository and provider sharing was unchanged.",
+      "reason": "Reviewed current-user access and dated weight filtering; no new logging, provider sharing, writes, retention or credentials. User profile projection remains no-tracking; real local API verified TDEE with recorded weight.",
       "baseRef": "HEAD",
-      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
-      "reviewedAtUtc": "2026-09-30T14:00:10.4024539Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:38.7073109Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1049,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c492a871f578ee8d3958892f5173b81b714a549da097354774b4875c58b38b19"
+          "sha256": "72e85ba541236d8ebf8e84b62adc6236f532eac8e481a1ef882a6d3b6a948893"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "9f9b7d622b1681f894511ae0e9097fbea8e30af0d686712d495ea12c1b5ac8fa"
+          "sha256": "6841a3ecf0e68afb7a963e0d0f635e7409f354787a0dfe633f4c3e979eecc1e5"
         }
       ],
-      "reason": "Verified frontend routes and consumers for dashboard manual query parameter, profile DOB input, recipe/product picker and public product details facade; generated frontend navigation reflects these bounded UI changes.",
+      "reason": "Reviewed shared query-parameter Requests folder against existing HTTP naming guidance; updated affected indexes and confirmed no host, job, provider or deployment topology change. A second local API on 5301 is only the verification environment.",
       "baseRef": "HEAD",
-      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
-      "reviewedAtUtc": "2026-09-30T14:00:11.7968586Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:39.1216119Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c492a871f578ee8d3958892f5173b81b714a549da097354774b4875c58b38b19"
+          "sha256": "72e85ba541236d8ebf8e84b62adc6236f532eac8e481a1ef882a6d3b6a948893"
         }
       ],
-      "reason": "Reviewed date input optional manual entry, latestDate alias and locale; preserved item selection payloads with embedded picker; English and Russian keys and accessible mobile controls verified in browser and focused tests.",
+      "reason": "Reviewed Users scalar TDEE read extension, preserved legacy method and HTTP routes/payloads; latest dated weight is read through BodyMetrics contract; full solution build, 43 TDEE tests and 2 public-product tests pass. Public ProductId conversion now occurs at presentation boundary.",
       "baseRef": "HEAD",
-      "gitHead": "5c90831cc75baccb35a47d10f96da516c2a50fb8",
-      "reviewedAtUtc": "2026-09-30T14:00:07.7257883Z"
+      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
+      "reviewedAtUtc": "2026-09-30T16:48:37.5973766Z"
     },
     {
       "pageId": "workflow.query-context",
