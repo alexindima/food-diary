@@ -25322,11 +25322,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 32,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
+      "structuralRiskScore": 4.14
     },
     {
       "path": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
@@ -31490,11 +31490,11 @@
     },
     {
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 8,
+      "nonBlankLines": 32,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.6
+      "structuralRiskScore": 16.14
     },
     {
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
@@ -44890,11 +44890,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Validation/TemporalRangePolicy.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 10,
+      "nonBlankLines": 91,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.78
+      "structuralRiskScore": 18.32
     },
     {
       "path": "Shared/FoodDiary.Application.Runtime/AssemblyInfo.cs",
@@ -51578,7 +51578,7 @@
       "name": "GetMarketingAttributionRangeQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
-      "line": 10,
+      "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs"

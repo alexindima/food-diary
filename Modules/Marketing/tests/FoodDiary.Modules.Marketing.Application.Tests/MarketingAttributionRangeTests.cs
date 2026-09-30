@@ -3,6 +3,7 @@ using FoodDiary.Modules.Marketing.Contracts.Models;
 using FoodDiary.Modules.Marketing.Application.Queries.GetMarketingAttributionRange;
 using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange;
 using FoodDiary.Results;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Marketing.Application.Tests;
 
@@ -42,6 +43,7 @@ public sealed class MarketingAttributionRangeTests {
     [InlineData("before-epoch")]
     [InlineData("empty-range")]
     [InlineData("future")]
+    [InlineData("range")]
     [InlineData("page")]
     [InlineData("limit")]
     [InlineData("search")]
@@ -56,6 +58,9 @@ public sealed class MarketingAttributionRangeTests {
             "before-epoch" => query with { FromUtc = DateTimeOffset.UnixEpoch.AddTicks(-1) },
             "empty-range" => query with { ToUtc = query.FromUtc },
             "future" => query with { ToUtc = DateTimeOffset.UnixEpoch.AddDays(4) },
+            "range" => query with {
+                ToUtc = query.FromUtc.AddDays(TemporalRangePolicy.MaxPeriodDays).AddTicks(1),
+            },
             "page" => query with { Page = 0 },
             "limit" => query with { Limit = 101 },
             "search" => query with { Search = new string('s', 321) },
@@ -67,5 +72,25 @@ public sealed class MarketingAttributionRangeTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Empty(repository.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task MaximumRange_ReadsRepository() {
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        DateTimeOffset to = DateTimeOffset.UnixEpoch.AddDays(TemporalRangePolicy.MaxPeriodDays);
+        clock.GetUtcNow().Returns(to);
+        IMarketingAttributionRangeReadRepository repository = Substitute.For<IMarketingAttributionRangeReadRepository>();
+        repository.GetRangeAsync(Arg.Any<MarketingAttributionRangeFilter>(), Arg.Any<CancellationToken>())
+            .Returns(new MarketingAttributionRangeRecord(
+                new MarketingAttributionSummaryRecord(0, 0, 0, 0, 0, 0, 0, 0, DateTime.UnixEpoch, [], [], []),
+                new MarketingAttributionSummaryRecord(0, 0, 0, 0, 0, 0, 0, 0, DateTime.UnixEpoch, [], [], []),
+                [],
+                0));
+
+        Result<MarketingAttributionRangeModel> result = await new GetMarketingAttributionRangeQueryHandler(repository, clock)
+            .Handle(new GetMarketingAttributionRangeQuery(DateTimeOffset.UnixEpoch, to), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        await repository.Received(1).GetRangeAsync(Arg.Any<MarketingAttributionRangeFilter>(), Arg.Any<CancellationToken>());
     }
 }

@@ -7,6 +7,9 @@ public static class TemporalRangePolicy {
     public static bool IsPeriodWithinLimit(DateTime dateFrom, DateTime dateTo) =>
         dateFrom <= dateTo && GetInclusiveDayCount(dateFrom, dateTo) <= MaxPeriodDays;
 
+    public static bool IsPeriodWithinLimit(DateTimeOffset dateFrom, DateTimeOffset dateTo) =>
+        dateFrom <= dateTo && dateTo - dateFrom <= TimeSpan.FromDays(MaxPeriodDays);
+
     public static bool IsQuantizationValid(int quantizationDays) =>
         quantizationDays is >= 1 and <= MaxQuantizationDays;
 

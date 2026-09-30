@@ -17139,7 +17139,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetMarketingAttributionSummaryQueryHandler",

@@ -45758,7 +45758,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 10
     },
     {
       "contract": "GetFastingHistoryQuery",
@@ -48605,7 +48605,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetMarketingAttributionSummaryHttpQuery",
@@ -84836,7 +84836,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IMarketingAttributionRangeReadRepository",

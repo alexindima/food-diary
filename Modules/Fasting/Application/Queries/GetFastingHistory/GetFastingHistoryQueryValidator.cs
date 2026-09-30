@@ -28,5 +28,11 @@ public sealed class GetFastingHistoryQueryValidator : AbstractValidator<GetFasti
             .Must(x => x.From <= x.To)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("From must be earlier than or equal to To.");
+
+        RuleFor(x => x.To)
+            .Must((query, to) => TemporalRangePolicy.IsPeriodWithinLimit(query.From, to))
+            .When(query => query.From <= query.To)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");
     }
 }

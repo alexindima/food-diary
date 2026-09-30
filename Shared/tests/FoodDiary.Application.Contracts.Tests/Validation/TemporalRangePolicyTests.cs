@@ -5,6 +5,14 @@ namespace FoodDiary.Application.Contracts.Tests.Validation;
 [ExcludeFromCodeCoverage]
 public sealed class TemporalRangePolicyTests {
     [Fact]
+    public void IsPeriodWithinLimit_DateTimeOffset_UsesElapsedDuration() {
+        var from = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+        Assert.True(TemporalRangePolicy.IsPeriodWithinLimit(from, from.AddDays(TemporalRangePolicy.MaxPeriodDays)));
+        Assert.False(TemporalRangePolicy.IsPeriodWithinLimit(from, from.AddDays(TemporalRangePolicy.MaxPeriodDays).AddTicks(1)));
+    }
+
+    [Fact]
     public void TrySubtract_WithValidOffset_PreservesInstantAndKind() {
         var value = new DateTime(2026, 9, 20, 1, 0, 0, DateTimeKind.Utc);
         Assert.True(TemporalRangePolicy.TrySubtract(value, TimeSpan.FromHours(4), out DateTime result));

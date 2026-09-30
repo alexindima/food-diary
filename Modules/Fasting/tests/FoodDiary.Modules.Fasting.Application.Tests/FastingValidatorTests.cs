@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
 using FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
 using FoodDiary.Modules.Fasting.Application.Commands.PostponeCyclicDay;
@@ -190,6 +191,29 @@ public class FastingValidatorTests {
             new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 10_001, 10));
 
         result.ShouldHaveValidationErrorFor(x => x.Page);
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_AtMaximumPeriod_HasNoErrors() {
+        var validator = new GetFastingHistoryQueryValidator();
+        DateTime to = DateTime.UtcNow;
+        DateTime from = to.AddDays(-(TemporalRangePolicy.MaxPeriodDays - 1));
+
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(
+            new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 1, 10));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task GetFastingHistory_AboveMaximumPeriod_HasError() {
+        var validator = new GetFastingHistoryQueryValidator();
+        DateTime to = DateTime.UtcNow;
+
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(
+            new GetFastingHistoryQuery(Guid.NewGuid(), to.AddDays(-TemporalRangePolicy.MaxPeriodDays), to, 1, 10));
+
+        result.ShouldHaveValidationErrorFor(x => x.To);
     }
 
     [Fact]

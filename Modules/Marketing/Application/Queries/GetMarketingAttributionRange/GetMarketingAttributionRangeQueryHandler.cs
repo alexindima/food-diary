@@ -5,6 +5,7 @@ using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange
 using FoodDiary.Results;
 using FoodDiary.Modules.Marketing.Application.Mappings;
 using FoodDiary.Mediator;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Marketing.Application.Queries.GetMarketingAttributionRange;
 
@@ -14,7 +15,8 @@ public sealed class GetMarketingAttributionRangeQueryHandler(IMarketingAttributi
         GetAsync(request, cancellationToken);
     private async Task<Result<MarketingAttributionRangeModel>> GetAsync(GetMarketingAttributionRangeQuery request, CancellationToken cancellationToken) {
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        if (request.FromUtc < DateTimeOffset.UnixEpoch || request.FromUtc >= request.ToUtc || request.ToUtc.UtcDateTime > now.Date.AddDays(1) ||
+        if (request.FromUtc < DateTimeOffset.UnixEpoch || request.FromUtc >= request.ToUtc ||
+            !TemporalRangePolicy.IsPeriodWithinLimit(request.FromUtc, request.ToUtc) || request.ToUtc.UtcDateTime > now.Date.AddDays(1) ||
             request.Page is < 1 or > 10000 || request.Limit is < 1 or > 100 || request.Search?.Length > 320 ||
             request.EventType is not (null or "" or "page_landing" or "signup_completed" or "premium_started") ||
             request.Channel is not (null or "" or "tracked" or "direct")) {
