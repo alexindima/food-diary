@@ -9,7 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans;
 
-internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanCompositionReader composition) : IMealPlanRepository {
+internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanCompositionReader composition) : IMealPlanRepository, IMealPlanCatalogRepository {
+    public async Task<IReadOnlyList<MealPlanSummaryReadModel>> GetPageAsync(int page, int limit, CancellationToken cancellationToken) =>
+        await ProjectSummaryReadModels(plans.AsNoTracking().Where(plan => plan.UserId == null)
+            .OrderByDescending(plan => plan.CreatedOnUtc).ThenBy(plan => plan.Id)
+            .Skip((Math.Clamp(page, 1, 10_000) - 1) * Math.Clamp(limit, 1, 100)).Take(Math.Clamp(limit, 1, 100)))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+    public async Task<MealPlan?> GetForUpdateAsync(MealPlanId id, CancellationToken cancellationToken) =>
+        await plans.Where(plan => plan.Id == id && plan.UserId == null)
+            .Include(plan => plan.Days).ThenInclude(day => day.Meals).AsSplitQuery()
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
     public async Task<(IReadOnlyList<MealPlanSummaryReadModel> Items, int Total)> GetPageSummaryReadModelsAsync(
         UserId userId, DietType? dietType, int page, int limit, CancellationToken cancellationToken = default) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);

@@ -75,6 +75,28 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
 
     public MealPlanDay AddDay(int dayNumber) => AddDay(dayNumber, markModified: true);
 
+    // Catalog templates retain null ownership when hidden. Adopted plans always have an owner.
+    public void UpdateCatalogDetails(string name, string? description, DietType dietType,
+        int durationDays, double? targetCaloriesPerDay, bool isPublished) {
+        if (UserId is not null) {
+            throw new InvalidOperationException("User-owned plans cannot be edited as catalog templates.");
+        }
+
+        string normalizedName = NormalizeName(name);
+        string? normalizedDescription = NormalizeDescription(description);
+        int normalizedDuration = NormalizeDuration(durationDays);
+        DomainGuard.Defined(dietType, nameof(dietType));
+        double? calories = DomainGuard.PositiveFinite(targetCaloriesPerDay, nameof(targetCaloriesPerDay));
+        Name = normalizedName;
+        Description = normalizedDescription;
+        DietType = dietType;
+        DurationDays = normalizedDuration;
+        TargetCaloriesPerDay = calories;
+        IsCurated = isPublished;
+        _days.Clear();
+        SetModified();
+    }
+
     private MealPlanDay AddDay(int dayNumber, bool markModified) {
         if (dayNumber <= 0 || dayNumber > DurationDays) {
             throw new ArgumentOutOfRangeException(

@@ -166,7 +166,7 @@
         "tracked:ShoppingList"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "66c198520c09b5bb681a3e499454073f1c88979d53d41d6447e7d27ca0b6298b"
+      "technicalSourceSha256": "893de920a589c26db7bdbb9a702b5a1b36d15721ba7847cfe0509462deb462e1"
     },
     "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
       "module": "RecipeCommunity",
@@ -723,7 +723,7 @@
         "write:AchievementDefinition"
       ],
       "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
-        "technicalSourceSha256": "bb4322cfa0473ac95c6aae3c8ff2fcf776dc71b169680f05e82679ba3aa636be"
+      "technicalSourceSha256": "bb4322cfa0473ac95c6aae3c8ff2fcf776dc71b169680f05e82679ba3aa636be"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -855,7 +855,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-        "technicalSourceSha256": "b617d2912f1bc2ecaf3204c81d36adac99104d7a71140abb648c7fd09ac5df96"
+      "technicalSourceSha256": "b617d2912f1bc2ecaf3204c81d36adac99104d7a71140abb648c7fd09ac5df96"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
@@ -1751,6 +1751,13 @@
         "entity:WeightGoal"
       ],
       "reason": "Owner-only no-tracking scalar profiles and bounded closed goal pages. SQL applies user/status/snapshot filters, stable ordering and limits; provider tests protect no aggregate loading, no tracking and no saves."
+    },
+    "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCatalogRecipeReader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Recipe"
+      ],
+      "reason": "Bounded no-tracking public recipe selection and ID validation for owner catalog commands. Immutable scalar results only; MealPlanning owns mutations."
     }
   }
 }

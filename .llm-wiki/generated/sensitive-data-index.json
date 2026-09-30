@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1550,
+    "candidateFields": 1552,
     "credential": 156,
     "identity": 174,
-    "health": 704,
+    "health": 706,
     "financial": 129,
     "privateContent": 387,
-    "boundaryFiles": 203,
+    "boundaryFiles": 204,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -4135,6 +4135,13 @@
     },
     {
       "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
       "name": "Calories",
       "type": "double?",
       "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanMealModel.cs",
@@ -4160,6 +4167,13 @@
       "type": "double?",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
       "line": 18
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs",
+      "line": 10
     },
     {
       "category": "health",
@@ -11725,6 +11739,13 @@
       "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
       "categories": [
         "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs",
+      "categories": [
+        "health"
       ],
       "fieldCount": 1
     },

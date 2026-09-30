@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
-    "routedStandaloneComponents": 65,
-    "componentsWithoutDirectSpecs": 134,
-    "criticalSymbolsWithoutTestReferences": 40,
+    "routedStandaloneComponents": 66,
+    "componentsWithoutDirectSpecs": 135,
+    "criticalSymbolsWithoutTestReferences": 44,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -1361,6 +1361,16 @@
       "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminMealPlansComponent",
+      "selector": "fd-admin-meal-plans",
+      "feature": "admin-meal-plans",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5178,6 +5188,16 @@
       "coveredThrough": []
     },
     {
+      "name": "AdminMealPlansController",
+      "role": "Controller",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "line": 24,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "BugReportJournalController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
@@ -5242,6 +5262,26 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
       "line": 10,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetCatalogMealPlanQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
+      "line": 10,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetCatalogMealPlansQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQueryHandler.cs",
+      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5322,6 +5362,16 @@
       "role": "QueryHandler",
       "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
       "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "SearchCatalogRecipesQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQueryHandler.cs",
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

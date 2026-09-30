@@ -14,12 +14,14 @@ import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
 import { adminLessonsRoutes } from './features/admin-lessons/admin-lessons.routes';
 import { adminMailInboxRoutes } from './features/admin-mail-inbox/admin-mail-inbox.routes';
+import { adminMealPlansRoutes } from './features/admin-meal-plans/admin-meal-plans.routes';
 import { adminModerationRoutes } from './features/admin-moderation/admin-moderation.routes';
 import { adminOutgoingEmailsRoutes } from './features/admin-outgoing-emails/admin-outgoing-emails.routes';
 import { adminRetentionRoutes } from './features/admin-retention/admin-retention.routes';
 import { adminUsersRoutes } from './features/admin-users/admin-users.routes';
 
 const protectedFeatureRoutes: Routes[] = [
+    adminMealPlansRoutes,
     adminRetentionRoutes,
     adminAuditRoutes,
     adminBugsRoutes,

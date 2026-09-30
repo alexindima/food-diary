@@ -22,6 +22,7 @@ public static class ModuleRegistration {
         services.AddScoped<IMealPlanReadRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
         services.AddScoped<IMealPlanReadModelRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
         services.AddScoped<IMealPlanWriteRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
+        services.AddScoped<IMealPlanCatalogRepository>(static provider => (IMealPlanCatalogRepository)provider.GetRequiredService<IMealPlanRepository>());
         services.AddScoped<IShoppingListRepository>(static provider => new ShoppingListRepository(
             provider.GetRequiredService<MealPlanningDbContext>().ShoppingLists));
         services.AddScoped<IShoppingListReadRepository>(static provider => provider.GetRequiredService<IShoppingListRepository>());

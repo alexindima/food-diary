@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4290,
-    "symbols": 4221,
-    "interfaceImplementationLinks": 191,
+    "sourceFiles": 4310,
+    "symbols": 4241,
+    "interfaceImplementationLinks": 192,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2208,
+      "class": 2215,
       "enum": 65,
-      "interface": 401,
-      "record": 1427,
+      "interface": 403,
+      "record": 1438,
       "record struct": 120
     },
     "roles": {
-      "Command": 223,
-      "CommandHandler": 218,
+      "Command": 224,
+      "CommandHandler": 219,
       "Configuration": 96,
-      "Controller": 107,
+      "Controller": 108,
       "Entity": 99,
       "Event": 19,
       "Factory": 14,
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1735,
-      "Query": 294,
-      "QueryHandler": 210,
+      "Other": 1740,
+      "Query": 297,
+      "QueryHandler": 213,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
-      "Repository": 98,
-      "Request": 157,
-      "Response": 232,
+      "Repository": 99,
+      "Request": 160,
+      "Response": 233,
       "Service": 162,
-      "Validator": 232,
+      "Validator": 233,
       "ValueObject": 114,
       "WriteRepository": 47
     }
@@ -1627,6 +1627,13 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
+      "line": 9
+    },
+    {
+      "name": "MealPlanCatalogRecipeReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCatalogRecipeReader.cs",
       "line": 9
     },
     {
@@ -17310,6 +17317,20 @@
       "line": 7
     },
     {
+      "name": "IMealPlanCatalogRecipeReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogRecipeReader.cs",
+      "line": 4
+    },
+    {
+      "name": "IMealPlanCatalogRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogRepository.cs",
+      "line": 6
+    },
+    {
       "name": "IMealPlanCompositionReader",
       "kind": "interface",
       "role": "Other",
@@ -17350,6 +17371,13 @@
       "role": "Other",
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/MealPlanErrors.cs",
       "line": 4
+    },
+    {
+      "name": "CatalogRecipeReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Models/CatalogRecipeReadModel.cs",
+      "line": 2
     },
     {
       "name": "MealPlanDayReadModel",
@@ -17520,6 +17548,41 @@
       "line": 4
     },
     {
+      "name": "CatalogDayInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/CatalogDayInput.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogMealInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/CatalogMealInput.cs",
+      "line": 2
+    },
+    {
+      "name": "SaveCatalogMealPlanCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SaveCatalogMealPlanCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "SaveCatalogMealPlanCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandValidator.cs",
+      "line": 7
+    },
+    {
       "name": "MealPlanMappings",
       "kind": "class",
       "role": "Other",
@@ -17553,6 +17616,34 @@
       "role": "Other",
       "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanSummaryModel.cs",
       "line": 2
+    },
+    {
+      "name": "GetCatalogMealPlanQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCatalogMealPlanQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetCatalogMealPlansQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCatalogMealPlansQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "GetMealPlanByIdQuery",
@@ -17595,6 +17686,20 @@
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
       "line": 6
+    },
+    {
+      "name": "SearchCatalogRecipesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "SearchCatalogRecipesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "CreateShoppingListCommand",
@@ -18080,6 +18185,13 @@
       "line": 5
     },
     {
+      "name": "AdminMealPlansController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "line": 24
+    },
+    {
       "name": "MealPlansController",
       "kind": "class",
       "role": "Controller",
@@ -18092,6 +18204,34 @@
       "role": "Other",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/MealPlanHttpMappings.cs",
       "line": 9
+    },
+    {
+      "name": "CatalogDayHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Requests/CatalogDayHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "CatalogMealHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Requests/CatalogMealHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "SaveCatalogMealPlanHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "CatalogRecipeHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/CatalogRecipeHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "MealPlanDayHttpResponse",
@@ -30357,6 +30497,13 @@
       "interfacePath": "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs",
       "implementation": "MealNutritionStatisticsReadService",
       "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMealPlanCatalogRecipeReader",
+      "interfacePath": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogRecipeReader.cs",
+      "implementation": "MealPlanCatalogRecipeReader",
+      "implementationPath": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCatalogRecipeReader.cs",
       "confidence": "naming-convention"
     },
     {

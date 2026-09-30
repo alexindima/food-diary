@@ -195,14 +195,18 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "6cbbed7a8384a1ee576080716994d6379775944ad49cf202ac577945d4b25d9b"
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "49cb1bb161a4b830e3d2b7bea8b2bc92c389e63ba04e49e399163ef32d52a03d"
+          "sha256": "74f12864c9e0d7d91af0161a6f46cd76a2b8cf8c35cc91110c8b5c29a3c76358"
         }
       ],
-      "reason": "Reviewed the admin mail inbox page contract change: Limit maximum is intentionally reduced from 200 to the canonical page maximum 100; routes, payload shapes, defaults, and status codes are unchanged, and Swagger tests pass.",
+      "reason": "Reviewed additive admin-only routes and four DTOs. Existing user API shapes and test-only exception route preserved. Scalar public-recipe reader registered within approved composition ownership; server authorization tested on live API.",
       "baseRef": "HEAD",
-      "gitHead": "ae5afb256cb7b05b36ab9172427510bd68c4eb3e",
-      "reviewedAtUtc": "2026-09-29T23:22:21.0578930Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:43.4899453Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -211,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "324eeacba111467942ea4f00c9017954a58020d4ca1dde6c8e169cc7ef9c834b"
+          "sha256": "930b9e627ad9ed1f1d4b1ea3325c0e2d98a69268a62d1bf316d51ee004e0e162"
         }
       ],
-      "reason": "Reviewed retry failure and concurrent edits using 89 focused frontend tests, 4545 broader frontend tests and 2116 architecture tests; Docker projection integration tests are explicitly skipped and real API checks provide separate evidence.",
+      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:36.5599543Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:44.1949262Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e2726dc8cd63f9026ddf652fc3225aeae03fe138f69dec5a749db841344c4a27"
+          "sha256": "77e29d624ff080a7b838bbd5a8f8f21279116098616b00f14e2322115155e496"
         }
       ],
-      "reason": "Reviewed Users scalar TDEE read extension, preserved legacy method and HTTP routes/payloads; latest dated weight is read through BodyMetrics contract; full solution build, 43 TDEE tests and 2 public-product tests pass. Public ProductId conversion now occurs at presentation boundary.",
+      "reason": "Verified all three snapshots against running Swagger using unchanged snapshot builders and preserved test-only endpoint. New routes and DTOs are additive; existing user shapes preserved. Live API rejects malformed requests with 400 after explicit validator error-code fix.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:37.2093681Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:16:10.6935401Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -489,13 +493,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "b45cdffcd61be5c6f888e13167d6d2bd66a258502d194786f822016734a06818"
+          "sha256": "4e483bf07eb822e2fc93a9ed12884a103fb8439f309a227c1e368bd21c066b40"
         }
       ],
-      "reason": "Reviewed nullable bounded snapshots and paired migration. PostgreSQL upgrade test preserves author snapshots/private recipes and covers all units. Down retains snapshots because later edits cannot be distinguished safely. No runtime aggregate ownership change.",
+      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-28T21:44:09.0966564Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:46.0047328Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -763,13 +767,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3e33455e09b1b4ab8d500a817bc3bed6360c62c34bdafedcc6ee4189377f47a7"
+          "sha256": "beab79587dc4fbed89a08696e7a2d02876c0eea114414afd1587158d034e0397"
         }
       ],
-      "reason": "Reviewed current publication boundary: user-authorized one-time backfill publishes only missing product names and units in public recipes. Private recipe and product visibility remain unchanged. New save choices explicitly describe publication or text conversion; anonymous private product card stays 404.",
+      "reason": "Admin role required on all catalog reads and writes; user-owned plans excluded by null-owner predicate. Only public recipes accepted; private or missing IDs rejected before mutation. Browser confirmed 401/403 and independent adopted copies. No credential or provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "e7a023af6c6119edb76aa3874ae03a3952c4bb90",
-      "reviewedAtUtc": "2026-09-28T21:44:14.1457870Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:47.4958844Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +812,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "32e8b23b26fb15f25088b453fa2bed2aa9c967cee70e85d9d57b3090a5d597aa"
+          "sha256": "48b1b48a17575fd0fba60e2ae27414ff9bd846bae7472b62950c2ca9792254cf"
         }
       ],
-      "reason": "Executed 3939 app tests and 117 focused auth tests cover hydration retry, cross-tab session cleanup and late refresh; static references remain navigation evidence.",
+      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
-      "reviewedAtUtc": "2026-09-30T19:53:07.3231468Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:48.5041183Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +887,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "05da5e3aa4c3dcbff9b2703abae98e6ca70545845b04c799fcc96179db82130a"
+          "sha256": "04a0b4696cba55f9c7a8598e6b3aaa7a61df68a27deb02f5e327af6396878349"
         }
       ],
-      "reason": "Reviewed shared query-parameter Requests folder against existing HTTP naming guidance; updated affected indexes and confirmed no host, job, provider or deployment topology change. A second local API on 5301 is only the verification environment.",
+      "reason": "Final runtime fingerprint includes whitespace normalization only. Existing owner command persistence, cancellation and DI boundaries preserved; no new jobs/providers/migrations. Desktop/mobile and RU rendering verified.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:38.2825737Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:20:59.7226860Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,13 +902,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "32e8b23b26fb15f25088b453fa2bed2aa9c967cee70e85d9d57b3090a5d597aa"
+          "sha256": "48b1b48a17575fd0fba60e2ae27414ff9bd846bae7472b62950c2ca9792254cf"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "04a0b4696cba55f9c7a8598e6b3aaa7a61df68a27deb02f5e327af6396878349"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "beab79587dc4fbed89a08696e7a2d02876c0eea114414afd1587158d034e0397"
         }
       ],
-      "reason": "Reviewed existing refreshSession marker and logout cleanup. Local storage removal triggers existing session cleanup; no new secret persistence, logging, HTTP contracts or server permissions. Real two-tab logout verified.",
+      "reason": "Reviewed server Admin role gate, null-owner catalog scoping and public-only recipe validation. Browser proved 401/403 and independent adopted copies. Final changes only normalize source EOF whitespace; no new data flow or credentials.",
       "baseRef": "HEAD",
-      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
-      "reviewedAtUtc": "2026-09-30T19:53:08.3415486Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:21:00.7508850Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1057,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "91645ebbdf3516f796bc9cac00a38540b782493d19a11b99483ece619eddb2f5"
+          "sha256": "0a57fe160d104a62f0008565795490817cf2bb03124e485cf950ba503eaa42f4"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "a27c654fcdf51392357311f7fce834ac2ce20f2e586ed504f71407f564031c71"
+          "sha256": "ca3105aeaa870c3ef3b903cc6888537e25770de37a63beed4c9cddb89045ed4c"
         }
       ],
-      "reason": "Traced hydration request error to existing toast and browser storage adapter to AuthService logout and session event cleanup. Tested retries and late refresh responses.",
+      "reason": "Existing workflow guidance remains valid. Runtime changes are synchronous admin HTTP use cases without new jobs or providers; cancellation passed through repositories. EN/RU assets and desktop/mobile rendered workflows verified.",
       "baseRef": "HEAD",
-      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
-      "reviewedAtUtc": "2026-09-30T19:53:09.3005225Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:50.9330326Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "91645ebbdf3516f796bc9cac00a38540b782493d19a11b99483ece619eddb2f5"
+          "sha256": "0a57fe160d104a62f0008565795490817cf2bb03124e485cf950ba503eaa42f4"
         }
       ],
-      "reason": "Existing toast and translated profile hint retained public component contracts. Storage listener remains in browser platform adapter with cleanup and SSR handling. English and Russian assets regenerated.",
+      "reason": "Reviewed additive admin-only routes and four DTOs. Existing user API shapes and test-only exception route preserved. Scalar public-recipe reader registered within approved composition ownership; server authorization tested on live API.",
       "baseRef": "HEAD",
-      "gitHead": "0c1fee7e57153827536588e7386f0bfad7c84f17",
-      "reviewedAtUtc": "2026-09-30T19:53:10.2897820Z"
+      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
+      "reviewedAtUtc": "2026-09-30T21:06:46.7991472Z"
     },
     {
       "pageId": "workflow.query-context",

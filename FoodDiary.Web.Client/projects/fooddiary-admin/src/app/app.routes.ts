@@ -2,6 +2,10 @@ import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
+        path: 'meal-plans',
+        loadChildren: async () => import('./features/admin-meal-plans/admin-meal-plans.routes').then(module => module.adminMealPlansRoutes),
+    },
+    {
         path: 'analytics/retention',
         loadChildren: async () => import('./features/admin-retention/admin-retention.routes').then(module => module.adminRetentionRoutes),
     },

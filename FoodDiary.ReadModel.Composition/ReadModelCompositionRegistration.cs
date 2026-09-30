@@ -50,6 +50,7 @@ public static class ReadModelCompositionRegistration {
         services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<ContentReportReadService>());
         services.AddScoped<IContentReportTargetReadService>(static provider => provider.GetRequiredService<ContentReportReadService>());
         services.AddScoped<IMealPlanCompositionReader, MealPlanCompositionReader>();
+        services.AddScoped<IMealPlanCatalogRecipeReader, MealPlanCatalogRecipeReader>();
         services.AddScoped<IAdminDashboardMetricsReader, AdminDashboardMetricsReader>();
         services.AddScoped<IAdminRetentionReader, AdminRetentionReader>();
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();

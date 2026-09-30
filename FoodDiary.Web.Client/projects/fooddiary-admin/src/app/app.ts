@@ -33,6 +33,7 @@ const ADMIN_PAGE_HEADERS: Readonly<Record<string, AdminPageHeader>> = {
 };
 
 const ADMIN_TOOL_LINKS = [
+    { id: 'meal-plans', icon: 'restaurant_menu', key: 'ADMIN_MEAL_PLANS.TITLE', route: '/meal-plans' },
     { id: 'ai-usage', icon: 'smart_toy', key: 'ADMIN_NAV.AI', route: '/ai-usage' },
     { id: 'retention', icon: 'timeline', key: 'ADMIN_NAV.RETENTION', route: '/analytics/retention' },
     { id: 'audit', icon: 'history', key: 'ADMIN_NAV.AUDIT', route: '/audit' },

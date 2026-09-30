@@ -42,20 +42,22 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: MealPlan, MealPlanDay, MealPlanMeal, ShoppingList, ShoppingListItem, ShoppingListItemSource
-- Public contract files: 19
+- Public contract files: 22
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 19
-- Interfaces: 9
-- DTO/read-model/projection types: 8
+- Public contract types: 22
+- Interfaces: 11
+- DTO/read-model/projection types: 9
 - Enums: 0
-- Exported repository-shaped contracts: 8
+- Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 0
 - `class MealPlanErrors`
 - `class ShoppingListErrors`
+- `interface IMealPlanCatalogRecipeReader`
+- `interface IMealPlanCatalogRepository`
 - `interface IMealPlanCompositionReader`
 - `interface IMealPlanReadModelRepository`
 - `interface IMealPlanReadRepository`
@@ -65,6 +67,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IShoppingListReadRepository`
 - `interface IShoppingListRepository`
 - `interface IShoppingListWriteRepository`
+- `record CatalogRecipeReadModel`
 - `record MealPlanDayReadModel`
 - `record MealPlanMealReadModel`
 - `record MealPlanReadModel`
@@ -81,6 +84,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
@@ -92,6 +96,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/TestProductOverview.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/CatalogMealPlanTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/DietTypeContractTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanDayBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanInvariantTests.cs`
@@ -106,7 +111,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanHttpMappingsTests.cs`
 - [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/ShoppingListHttpMappingsTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MealPlanningModuleExtractionTests.cs`
 
 ## Working Rule
 

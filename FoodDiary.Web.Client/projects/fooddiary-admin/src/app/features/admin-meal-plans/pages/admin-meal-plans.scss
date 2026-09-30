@@ -1,0 +1,32 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.plan-day {
+    padding: var(--fd-space-md);
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-bg-surface);
+    overflow-wrap: anywhere;
+}
+
+.plan-fields,
+.meal-fields {
+    display: grid;
+    gap: var(--fd-space-md);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+}
+
+.meal-fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr) auto;
+}
+
+@media #{variables.$media-tablet} {
+    .plan-fields,
+    .meal-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

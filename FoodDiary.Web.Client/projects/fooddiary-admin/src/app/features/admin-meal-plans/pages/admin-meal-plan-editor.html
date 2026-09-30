@@ -1,0 +1,66 @@
+<p role="alert" class="fd-ui-error-text">{{ error() }}</p>
+<form class="fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
+    <fd-ui-input [formField]="form.name" [label]="'ADMIN_MEAL_PLANS.NAME' | translate" />
+    <fd-ui-textarea [formField]="form.description" [label]="'ADMIN_MEAL_PLANS.DESCRIPTION' | translate" />
+    <div class="plan-fields">
+        <fd-ui-select [formField]="form.dietType" [options]="dietOptions()" [label]="'ADMIN_MEAL_PLANS.DIET' | translate" />
+        <fd-ui-input type="number" [formField]="form.durationDays" [label]="'ADMIN_MEAL_PLANS.DURATION' | translate" />
+        <fd-ui-input type="number" [formField]="form.targetCaloriesPerDay" [label]="'ADMIN_MEAL_PLANS.CALORIES' | translate" />
+    </div>
+    <p class="fd-ui-helper-text">{{ 'ADMIN_MEAL_PLANS.DURATION_HELP' | translate }}</p>
+    <fd-ui-checkbox [formField]="form.isPublished">{{ 'ADMIN_MEAL_PLANS.PUBLISH' | translate }}</fd-ui-checkbox>
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-input
+            [value]="recipeSearch()"
+            [label]="'ADMIN_MEAL_PLANS.SEARCH_RECIPES' | translate"
+            (valueChange)="recipeSearch.set($event === null ? '' : $event.toString())"
+        />
+        <fd-ui-button type="button" variant="secondary" (click)="searchRecipes()">{{ 'ADMIN_MEAL_PLANS.SEARCH' | translate }}</fd-ui-button>
+    </div>
+    <p class="fd-ui-helper-text">{{ 'ADMIN_MEAL_PLANS.RECIPE_HELP' | translate }}</p>
+    <div class="fd-grid fd-gap-md">
+        @for (day of model().days; track day.dayNumber; let dayIndex = $index) {
+            <section class="plan-day fd-grid fd-gap-md">
+                <h2 class="fd-ui-section-title">{{ 'ADMIN_MEAL_PLANS.DAY' | translate: { number: dayIndex + 1 } }}</h2>
+                <div class="fd-grid fd-gap-md">
+                    @for (meal of day.meals; track $index; let mealIndex = $index) {
+                        <div class="meal-fields">
+                            <fd-ui-select
+                                [formField]="form.days[dayIndex].meals[mealIndex].mealType"
+                                [options]="mealOptions()"
+                                [label]="'ADMIN_MEAL_PLANS.MEAL' | translate"
+                            />
+                            <fd-ui-select
+                                [formField]="form.days[dayIndex].meals[mealIndex].recipeId"
+                                [options]="recipeOptions()"
+                                [label]="'ADMIN_MEAL_PLANS.RECIPE' | translate"
+                            />
+                            <fd-ui-input
+                                type="number"
+                                [formField]="form.days[dayIndex].meals[mealIndex].servings"
+                                [label]="'ADMIN_MEAL_PLANS.SERVINGS' | translate"
+                            />
+                            <fd-ui-button type="button" variant="secondary" (click)="removeMeal(dayIndex, mealIndex)">{{
+                                'ADMIN_MEAL_PLANS.REMOVE' | translate
+                            }}</fd-ui-button>
+                        </div>
+                    }
+                </div>
+                <fd-ui-button type="button" variant="secondary" (click)="addMeal(dayIndex)">{{
+                    'ADMIN_MEAL_PLANS.ADD_RECIPE' | translate
+                }}</fd-ui-button>
+            </section>
+        }
+    </div>
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            [disabled]="saving()"
+            [disabledReason]="'ADMIN_MEAL_PLANS.SAVING' | translate"
+            (click)="cancel()"
+            >{{ 'ADMIN_MEAL_PLANS.CANCEL' | translate }}</fd-ui-button
+        >
+        <fd-ui-button type="button" [loading]="saving()" (click)="save()">{{ 'ADMIN_MEAL_PLANS.SAVE' | translate }}</fd-ui-button>
+    </div>
+</form>

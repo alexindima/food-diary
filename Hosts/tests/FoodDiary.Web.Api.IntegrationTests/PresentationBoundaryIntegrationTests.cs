@@ -1570,6 +1570,9 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             "/api/v{version}/admin/email-templates/test",
             "/api/v{version}/admin/email-templates/{key}/{locale}",
             "/api/v{version}/admin/ai-usage/summary",
+            "/api/v{version}/admin/meal-plans",
+            "/api/v{version}/admin/meal-plans/recipes",
+            "/api/v{version}/admin/meal-plans/{id}",
         ];
 
         JsonElement paths = root.GetProperty("paths");

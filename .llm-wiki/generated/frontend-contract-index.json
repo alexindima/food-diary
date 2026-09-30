@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 480,
-    "componentsWithoutDirectSpecs": 134,
-    "inputs": 1529,
-    "outputs": 516,
-    "apiCalls": 267,
-    "templatesWithTranslations": 341,
-    "translationKeys": 2016,
-    "consumerEdges": 1199,
-    "consumedComponents": 305,
-    "unconsumedComponents": 174
+    "components": 482,
+    "componentsWithoutDirectSpecs": 135,
+    "inputs": 1530,
+    "outputs": 518,
+    "apiCalls": 272,
+    "templatesWithTranslations": 343,
+    "translationKeys": 2043,
+    "consumerEdges": 1207,
+    "consumedComponents": 306,
+    "unconsumedComponents": 175
   },
   "components": [
     {
@@ -441,6 +441,41 @@
       "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminMealPlanEditorComponent",
+      "selector": "fd-admin-meal-plan-editor",
+      "feature": "admin-meal-plans",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "CatalogPlan | null",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "saved",
+          "type": ""
+        },
+        {
+          "name": "cancelled",
+          "type": ""
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.spec.ts"
+    },
+    {
+      "class": "AdminMealPlansComponent",
+      "selector": "fd-admin-meal-plans",
+      "feature": "admin-meal-plans",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -15503,6 +15538,66 @@
       "resolvedUrlExpression": "`${this.baseUrl}/${id}/read`"
     },
     {
+      "feature": "admin-meal-plans",
+      "method": "GET",
+      "responseType": "CatalogPlan[]",
+      "urlExpression": "this.url",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
+      "line": 15,
+      "publicMethod": "getAll",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "this.url"
+    },
+    {
+      "feature": "admin-meal-plans",
+      "method": "GET",
+      "responseType": "CatalogPlan",
+      "urlExpression": "`${this.url}/${id}`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
+      "line": 19,
+      "publicMethod": "get",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/${id}`"
+    },
+    {
+      "feature": "admin-meal-plans",
+      "method": "POST",
+      "responseType": "CatalogPlan",
+      "urlExpression": "this.url",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
+      "line": 23,
+      "publicMethod": "save",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "this.url"
+    },
+    {
+      "feature": "admin-meal-plans",
+      "method": "PUT",
+      "responseType": "CatalogPlan",
+      "urlExpression": "`${this.url}/${id}`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
+      "line": 23,
+      "publicMethod": "save",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/${id}`"
+    },
+    {
+      "feature": "admin-meal-plans",
+      "method": "GET",
+      "responseType": "CatalogRecipe[]",
+      "urlExpression": "`${this.url}/recipes`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
+      "line": 27,
+      "publicMethod": "recipes",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.url}/recipes`"
+    },
+    {
       "feature": "admin-moderation",
       "method": "POST",
       "responseType": "void",
@@ -18648,6 +18743,45 @@
         "ADMIN_MAIL_INBOX.UNREAD",
         "ADMIN_MAIL_INBOX.UNVERIFIED_SHORT",
         "ADMIN_PAGINATION.RANGE"
+      ]
+    },
+    {
+      "feature": "admin-meal-plans",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "keys": [
+        "ADMIN_MEAL_PLANS.ADD_RECIPE",
+        "ADMIN_MEAL_PLANS.CALORIES",
+        "ADMIN_MEAL_PLANS.CANCEL",
+        "ADMIN_MEAL_PLANS.DAY",
+        "ADMIN_MEAL_PLANS.DESCRIPTION",
+        "ADMIN_MEAL_PLANS.DIET",
+        "ADMIN_MEAL_PLANS.DURATION",
+        "ADMIN_MEAL_PLANS.DURATION_HELP",
+        "ADMIN_MEAL_PLANS.MEAL",
+        "ADMIN_MEAL_PLANS.NAME",
+        "ADMIN_MEAL_PLANS.PUBLISH",
+        "ADMIN_MEAL_PLANS.RECIPE",
+        "ADMIN_MEAL_PLANS.RECIPE_HELP",
+        "ADMIN_MEAL_PLANS.REMOVE",
+        "ADMIN_MEAL_PLANS.SAVE",
+        "ADMIN_MEAL_PLANS.SAVING",
+        "ADMIN_MEAL_PLANS.SEARCH",
+        "ADMIN_MEAL_PLANS.SEARCH_RECIPES",
+        "ADMIN_MEAL_PLANS.SERVINGS"
+      ]
+    },
+    {
+      "feature": "admin-meal-plans",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
+      "keys": [
+        "ADMIN_MEAL_PLANS.CREATE",
+        "ADMIN_MEAL_PLANS.DAYS",
+        "ADMIN_MEAL_PLANS.EDIT",
+        "ADMIN_MEAL_PLANS.EMPTY",
+        "ADMIN_MEAL_PLANS.HELP",
+        "ADMIN_MEAL_PLANS.LOADING",
+        "ADMIN_MEAL_PLANS.SAVED",
+        "ADMIN_MEAL_PLANS.TITLE"
       ]
     },
     {
@@ -22956,6 +23090,18 @@
       "component": "AdminLoadErrorComponent",
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 1,
@@ -23065,6 +23211,21 @@
       ],
       "outputsHandled": [
         "pageChange"
+      ]
+    },
+    {
+      "component": "AdminMealPlanEditorComponent",
+      "selector": "fd-admin-meal-plan-editor",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "plan"
+      ],
+      "outputsHandled": [
+        "cancelled",
+        "saved"
       ]
     },
     {
@@ -25716,6 +25877,35 @@
       "consumerFeature": "admin-mail-inbox",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "occurrences": 4,
+      "inputsUsed": [
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "occurrences": 5,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
+      "occurrences": 2,
       "inputsUsed": [
         "type",
         "variant"
@@ -30032,6 +30222,16 @@
       "component": "FdUiCheckboxComponent",
       "selector": "fd-ui-checkbox",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "occurrences": 5,
@@ -32993,6 +33193,22 @@
       "component": "FdUiInputComponent",
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "occurrences": 5,
+      "inputsUsed": [
+        "label",
+        "type",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 2,
@@ -35569,6 +35785,19 @@
       "component": "FdUiSelectComponent",
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 2,
@@ -36311,6 +36540,18 @@
       "consumerFeature": "admin-lessons",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
       "occurrences": 2,
+      "inputsUsed": [
+        "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "admin-meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.html",
+      "occurrences": 1,
       "inputsUsed": [
         "label"
       ],

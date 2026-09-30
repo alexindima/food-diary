@@ -1,0 +1,37 @@
+<header class="admin-page-header">
+    <div>
+        <h1 class="fd-page-title">{{ 'ADMIN_MEAL_PLANS.TITLE' | translate }}</h1>
+        <p class="fd-page-subtitle">{{ 'ADMIN_MEAL_PLANS.HELP' | translate }}</p>
+    </div>
+    @if (!editing()) {
+        <fd-ui-button type="button" (click)="create()">{{ 'ADMIN_MEAL_PLANS.CREATE' | translate }}</fd-ui-button>
+    }
+</header>
+<p role="alert" class="fd-ui-error-text">{{ error() }}</p>
+<p role="status" [hidden]="!saved()">{{ 'ADMIN_MEAL_PLANS.SAVED' | translate }}</p>
+@if (editing()) {
+    <fd-admin-meal-plan-editor [plan]="selected()" (saved)="onSaved()" (cancelled)="cancel()" />
+} @else if (loading()) {
+    <p role="status">{{ 'ADMIN_MEAL_PLANS.LOADING' | translate }}</p>
+} @else if (loadFailed()) {
+    <fd-admin-load-error (retry)="load()" />
+} @else {
+    <div class="fd-grid fd-gap-md">
+        @for (plan of plans(); track plan.id) {
+            <article class="plan-day fd-grid fd-gap-sm">
+                <h2 class="fd-ui-card-title">{{ plan.name }}</h2>
+                <p>{{ plan.description }}</p>
+                <p>
+                    {{ 'ADMIN_MEAL_PLANS.DAYS' | translate: { count: plan.durationDays } }} ·
+                    {{ `ADMIN_MEAL_PLANS.DIET_TYPE.${(plan.dietType | uppercase)}` | translate }} ·
+                    {{ (plan.isCurated ? 'ADMIN_MEAL_PLANS.PUBLISHED' : 'ADMIN_MEAL_PLANS.HIDDEN') | translate }}
+                </p>
+                <fd-ui-button type="button" variant="secondary" (click)="edit(plan)">{{
+                    'ADMIN_MEAL_PLANS.EDIT' | translate
+                }}</fd-ui-button>
+            </article>
+        } @empty {
+            <p>{{ 'ADMIN_MEAL_PLANS.EMPTY' | translate }}</p>
+        }
+    </div>
+}
