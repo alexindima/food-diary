@@ -8,7 +8,7 @@
     "apiCalls": 267,
     "templatesWithTranslations": 341,
     "translationKeys": 2016,
-    "consumerEdges": 1197,
+    "consumerEdges": 1199,
     "consumedComponents": 305,
     "unconsumedComponents": 174
   },
@@ -31472,6 +31472,30 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "dietologist",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "fasting",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "fasting",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"

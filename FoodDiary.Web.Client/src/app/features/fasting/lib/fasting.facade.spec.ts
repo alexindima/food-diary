@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -40,6 +42,44 @@ let frontendObservability: { recordFastingLifecycleEvent: ReturnType<typeof vi.f
 let userService: { user: ReturnType<typeof vi.fn> };
 let activeSession: FastingSession;
 let baseOverview: FastingOverview;
+let toastService: { error: ReturnType<typeof vi.fn> };
+
+describe('FastingFacade request failures', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+
+    it('reports a failed check-in and preserves the draft for retry', () => {
+        facade.currentSession.set(activeSession);
+        facade.setCheckInNotes('Keep my draft');
+        const savedVersion = facade.checkInSavedVersion();
+        fastingService.updateCheckIn.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        facade.saveCheckIn();
+
+        expect(facade.checkInError()).toBe('FASTING.REQUEST_ERROR');
+        expect(facade.checkInNotes()).toBe('Keep my draft');
+        expect(facade.isSavingCheckIn()).toBe(false);
+        expect(facade.checkInSavedVersion()).toBe(savedVersion);
+        fastingService.updateCheckIn.mockReturnValueOnce(of(activeSession));
+
+        facade.saveCheckIn();
+
+        expect(fastingService.updateCheckIn).toHaveBeenCalledTimes(2);
+        expect(facade.checkInSavedVersion()).toBeGreaterThan(savedVersion);
+        expect(facade.checkInError()).toBeNull();
+    });
+
+    it('reports a failed start without creating an active session', () => {
+        fastingService.start.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        facade.startFasting();
+
+        expect(toastService.error).toHaveBeenCalledWith('FASTING.REQUEST_ERROR');
+        expect(facade.currentSession()).toBeNull();
+        expect(facade.isStarting()).toBe(false);
+        expect(facade.requestError()).toBe('FASTING.REQUEST_ERROR');
+    });
+});
 
 describe('FastingFacade overview history', () => {
     beforeEach(setupFacade);
@@ -575,6 +615,7 @@ function setupFacade(): void {
     };
 
     localStorage.clear();
+    toastService = { error: vi.fn() };
 
     TestBed.configureTestingModule({
         providers: [
@@ -582,6 +623,8 @@ function setupFacade(): void {
             { provide: FastingService, useValue: fastingService },
             { provide: FrontendObservabilityService, useValue: frontendObservability },
             { provide: UserService, useValue: userService },
+            { provide: TranslateService, useValue: { instant: (key: string): string => key } },
+            { provide: FdUiToastService, useValue: toastService },
         ],
     });
 

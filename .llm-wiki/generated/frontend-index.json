@@ -3729,7 +3729,7 @@
       "role": "Component",
       "selector": "fd-fasting-check-in-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.ts",
-      "line": 20
+      "line": 28
     },
     {
       "name": "FastingCheckInSummaryComponent",
@@ -3834,7 +3834,7 @@
       "role": "Component",
       "selector": "fd-fasting-protocol-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.ts",
-      "line": 18
+      "line": 26
     },
     {
       "name": "FastingRedesignPreviewComponent",
@@ -3890,7 +3890,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "line": 55
+      "line": 57
     },
     {
       "name": "FastingAlertsSectionComponent",
@@ -5465,7 +5465,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list.facade.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "ShoppingListItemsPanelComponent",
@@ -6930,8 +6930,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3934,
-      "russianProperties": 3934,
+      "englishProperties": 3935,
+      "russianProperties": 3935,
       "countsMatch": true
     },
     {

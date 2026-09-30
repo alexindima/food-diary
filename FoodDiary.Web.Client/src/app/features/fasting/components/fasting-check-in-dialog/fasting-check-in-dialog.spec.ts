@@ -30,6 +30,7 @@ describe('FastingCheckInDialogComponent', () => {
                     useValue: {
                         checkInSavedVersion: savedVersion,
                         isSavingCheckIn: signal(false),
+                        checkInError: signal(null),
                         isEnding: signal(false),
                         isUpdatingCycle: signal(false),
                         hungerLevel: signal(DEFAULT_CHECK_IN_LEVEL),

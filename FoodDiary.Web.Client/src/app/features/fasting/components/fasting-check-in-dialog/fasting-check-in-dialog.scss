@@ -4,4 +4,9 @@
 
 .fasting-check-in-dialog__footer {
     width: 100%;
+    flex-wrap: wrap;
+}
+
+.fasting-check-in-dialog__error {
+    width: 100%;
 }

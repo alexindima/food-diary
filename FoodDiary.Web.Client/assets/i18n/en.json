@@ -5842,6 +5842,7 @@
         }
     },
     "FASTING": {
+        "REQUEST_ERROR": "Could not complete this action. Check your connection and try again.",
         "TITLE": "Fasting",
         "WIDGET_LABEL": "Fasting",
         "SUBTITLE": "Stay in your rhythm without unnecessary pressure",

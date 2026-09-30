@@ -4,6 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FastingCheckInCardComponent } from '../fasting-check-in-card/fasting-check-in-card';
@@ -12,7 +13,14 @@ export type FastingCheckInDialogResult = 'saved' | 'cancel';
 
 @Component({
     selector: 'fd-fasting-check-in-dialog',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiDialogFooterDirective, FdUiDialogShellComponent, FastingCheckInCardComponent],
+    imports: [
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiDialogFooterDirective,
+        FdUiDialogShellComponent,
+        FdUiFormErrorComponent,
+        FastingCheckInCardComponent,
+    ],
     templateUrl: './fasting-check-in-dialog.html',
     styleUrl: './fasting-check-in-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +31,7 @@ export class FastingCheckInDialogComponent {
     private readonly initialSavedVersion = this.facade.checkInSavedVersion();
 
     protected readonly isSaving = this.facade.isSavingCheckIn;
+    protected readonly saveError = this.facade.checkInError;
     protected readonly isEnding = this.facade.isEnding;
     protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
     protected readonly hungerLevel = this.facade.hungerLevel;

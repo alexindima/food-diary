@@ -296,7 +296,21 @@ describe('ShoppingListFacade autosave', () => {
     });
 });
 
-function setupShoppingListFacade(): ShoppingListFacadeContext {
+describe('ShoppingListFacade localized names', () => {
+    it.each([
+        ['ru', '30.09.2026'],
+        ['en', '9/30/2026'],
+    ])('uses the %s app language for the default date', (language, dateLabel) => {
+        const { facade, shoppingListService } = setupShoppingListFacade(language);
+        vi.setSystemTime(new Date('2026-09-30T12:00:00Z'));
+
+        facade.createNewList();
+
+        expect(shoppingListService.create).toHaveBeenCalledWith({ name: `SHOPPING_LIST.NEW_LIST ${dateLabel}` });
+    });
+});
+
+function setupShoppingListFacade(language = 'ru'): ShoppingListFacadeContext {
     vi.useFakeTimers();
 
     const list: ShoppingList = {
@@ -312,7 +326,7 @@ function setupShoppingListFacade(): ShoppingListFacadeContext {
         providers: [
             ShoppingListFacade,
             { provide: ShoppingListService, useValue: shoppingListService },
-            { provide: TranslateService, useValue: { instant: (key: string): string => key } },
+            { provide: TranslateService, useValue: { instant: (key: string): string => key, getCurrentLang: (): string => language } },
             { provide: FdUiToastService, useValue: toastService },
         ],
     });

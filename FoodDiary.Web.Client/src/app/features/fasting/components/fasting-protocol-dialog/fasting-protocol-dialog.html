@@ -4,6 +4,7 @@
     </div>
 
     <div fdUiDialogFooter class="fasting-protocol-dialog__footer">
+        <fd-ui-form-error [error]="requestError()" />
         <fd-ui-button [loading]="isStarting()" (click)="startFasting()">
             {{ 'FASTING.START_FAST' | translate }}
         </fd-ui-button>

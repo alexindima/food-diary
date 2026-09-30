@@ -1,5 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
@@ -58,15 +60,19 @@ export class FastingFacade {
     private readonly promptStateStore = inject(FastingPromptStateStore);
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
     private timerInterval: ReturnType<typeof setInterval> | null = null;
 
     public readonly isLoading = signal(false);
     public readonly isStarting = signal(false);
+    public readonly requestError = signal<string | null>(null);
     public readonly isEnding = signal(false);
     public readonly isExtending = signal(false);
     public readonly isReducing = signal(false);
     public readonly isUpdatingCycle = signal(false);
     public readonly isSavingCheckIn = signal(false);
+    public readonly checkInError = signal<string | null>(null);
     public readonly currentSession = signal<FastingSession | null>(null);
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
@@ -305,15 +311,14 @@ export class FastingFacade {
     }
 
     public resetCheckInDraft(): void {
+        this.checkInError.set(null);
         this.syncCheckInFromSession(this.currentSession());
     }
 
     public extendByHours(hours: number): void {
         const additionalHours = this.clampFastingHours(hours);
-        runTrackedRequest(this.destroyRef, this.isExtending, this.fastingService.extend({ additionalHours }), {
-            next: session => {
-                this.applyCurrentSessionUpdate(session);
-            },
+        this.trackRequest(this.isExtending, this.fastingService.extend({ additionalHours }), session => {
+            this.applyCurrentSessionUpdate(session);
         });
     }
 
@@ -323,15 +328,13 @@ export class FastingFacade {
             return;
         }
 
-        runTrackedRequest(this.destroyRef, this.isReducing, this.fastingService.reduceTarget({ reducedHours }), {
-            next: session => {
-                if (session.endedAtUtc !== null) {
-                    this.resetDraftState();
-                    this.applyCompletedSessionUpdate(session);
-                } else {
-                    this.applyCurrentSessionUpdate(session);
-                }
-            },
+        this.trackRequest(this.isReducing, this.fastingService.reduceTarget({ reducedHours }), session => {
+            if (session.endedAtUtc !== null) {
+                this.resetDraftState();
+                this.applyCompletedSessionUpdate(session);
+            } else {
+                this.applyCurrentSessionUpdate(session);
+            }
         });
     }
 
@@ -341,6 +344,7 @@ export class FastingFacade {
             return;
         }
         const checkInNotes = this.checkInNotes().trim();
+        this.checkInError.set(null);
 
         this.trackRequest(
             this.isSavingCheckIn,
@@ -367,6 +371,9 @@ export class FastingFacade {
                 });
                 this.clearPromptStateForSession(updated.id);
                 this.refreshOverview();
+            },
+            (): void => {
+                this.checkInError.set('FASTING.REQUEST_ERROR');
             },
         );
     }
@@ -546,8 +553,17 @@ export class FastingFacade {
         });
     }
 
-    private trackRequest<T>(state: WritableSignal<boolean>, request$: Observable<T>, next: (value: T) => void): void {
-        runTrackedRequest(this.destroyRef, state, request$, { next });
+    private trackRequest<T>(state: WritableSignal<boolean>, request$: Observable<T>, next: (value: T) => void, error?: () => void): void {
+        this.requestError.set(null);
+        runTrackedRequest(this.destroyRef, state, request$, {
+            next,
+            error:
+                error ??
+                ((): void => {
+                    this.requestError.set('FASTING.REQUEST_ERROR');
+                    this.toastService.error(this.translateService.instant('FASTING.REQUEST_ERROR'));
+                }),
+        });
     }
 
     private getReminderTelemetryDetails(): Record<string, unknown> {

@@ -5,6 +5,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { createClientId } from '../../../shared/lib/client-id.utils';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../models/shopping-list.data';
@@ -552,7 +553,7 @@ export class ShoppingListFacade {
 
     private buildNewListName(): string {
         const base = this.translateService.instant('SHOPPING_LIST.NEW_LIST');
-        const dateLabel = new Date().toLocaleDateString();
+        const dateLabel = new Date().toLocaleDateString(resolveAppLocale(this.translateService.getCurrentLang()));
         return `${base} ${dateLabel}`;
     }
 

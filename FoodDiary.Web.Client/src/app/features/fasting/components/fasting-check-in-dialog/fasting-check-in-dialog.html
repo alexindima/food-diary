@@ -17,6 +17,7 @@
     </div>
 
     <div fdUiDialogFooter class="fasting-check-in-dialog__footer fd-ui-actions fd-ui-actions--end">
+        <fd-ui-form-error class="fasting-check-in-dialog__error" [error]="saveError()" />
         <fd-ui-button
             [loading]="isSaving()"
             [disabled]="saveDisabled()"

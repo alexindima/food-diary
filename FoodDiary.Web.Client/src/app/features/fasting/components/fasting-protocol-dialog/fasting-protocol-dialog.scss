@@ -4,5 +4,8 @@
 
 .fasting-protocol-dialog__footer {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--fd-space-sm);
     justify-content: flex-end;
 }
