@@ -294,6 +294,29 @@ describe('UserManageComponent notification relationship refresh', () => {
     });
 });
 
+describe('UserManageComponent browser unload protection', () => {
+    it('guards browser unload only while profile edits remain unsaved', async () => {
+        await createComponentAsync(null);
+
+        const cleanUnload = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(cleanUnload);
+        expect(cleanUnload.defaultPrevented).toBe(false);
+
+        component['userForm'].firstName().value.set('Unsaved name');
+        fixture.detectChanges();
+        const dirtyUnload = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(dirtyUnload);
+        expect(dirtyUnload.defaultPrevented).toBe(true);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+
+        component['discardUserFormChanges']();
+        fixture.detectChanges();
+        const discardedUnload = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(discardedUnload);
+        expect(discardedUnload.defaultPrevented).toBe(false);
+    });
+});
+
 describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {
         await createComponentAsync(null);
@@ -346,6 +369,9 @@ describe('UserManageComponent explicit profile save feedback', () => {
         await fixture.whenStable();
 
         expect(component['hasUnsavedProfileChanges']()).toBe(false);
+        const savedUnload = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(savedUnload);
+        expect(savedUnload.defaultPrevented).toBe(false);
     });
 
     it('ignores bubbled input events outside profile fields', async () => {

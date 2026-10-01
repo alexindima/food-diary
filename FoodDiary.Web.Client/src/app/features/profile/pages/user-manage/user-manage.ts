@@ -104,6 +104,7 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
     styleUrl: './user-manage.scss',
     providers: [ProfileManageFacade, UserManageNotificationsFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '(window:beforeunload)': 'onBeforeUnload($event)' },
 })
 export class UserManageComponent {
     private readonly translateService = inject(TranslateService);
@@ -236,6 +237,12 @@ export class UserManageComponent {
 
         this.facade.initialize();
         this.loadBillingOverview();
+    }
+
+    protected onBeforeUnload(event: BeforeUnloadEvent): void {
+        if (this.hasUnsavedProfileChanges()) {
+            event.preventDefault();
+        }
     }
 
     private watchLanguageChanges(): void {

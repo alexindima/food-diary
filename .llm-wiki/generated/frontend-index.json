@@ -4985,7 +4985,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 108
+      "line": 109
     },
     {
       "name": "DietologistPromoComponent",
