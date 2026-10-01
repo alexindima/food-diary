@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
+import { FASTING_REMINDER_PRESETS } from '../../../../../shared/lib/fasting-reminder-presets';
 import type { User } from '../../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../../shared/notifications/push-notification.service';
@@ -21,6 +22,37 @@ const MANUAL_FOLLOW_UP_REMINDER_HOURS = 13;
 const TEST_NOTIFICATION_DELAY_SECONDS = 20;
 const FRACTIONAL_REMINDER_HOURS = 12.5;
 const EXCESSIVE_REMINDER_HOURS = 169;
+
+describe('Reminder edits during preference persistence', () => {
+    it('ignores manual and preset changes while saving and permits edits after the request finishes', () => {
+        const { facade, observability } = setup();
+        const service = TestBed.inject(UserManageNotificationsFacade);
+        service.syncFromUser(createUser());
+        facade.isUpdatingNotifications.set(true);
+        service.onFastingReminderHoursChange(MANUAL_FIRST_REMINDER_HOURS, 'first');
+        service.onFastingReminderHoursChange(MANUAL_FOLLOW_UP_REMINDER_HOURS, 'followUp');
+        service.applyFastingReminderPreset(FASTING_REMINDER_PRESETS[0]);
+        expect(service.fastingCheckInReminderHours()).toBe(FIRST_REMINDER_HOURS);
+        expect(service.fastingCheckInFollowUpReminderHours()).toBe(FOLLOW_UP_REMINDER_HOURS);
+        expect(observability.recordFastingReminderPresetSelected).not.toHaveBeenCalled();
+        facade.isUpdatingNotifications.set(false);
+        service.applyFastingReminderPreset(FASTING_REMINDER_PRESETS[0]);
+        expect(service.fastingCheckInReminderHours()).toBe(FASTING_REMINDER_PRESETS[0].firstReminderHours);
+        expect(observability.recordFastingReminderPresetSelected).toHaveBeenCalledOnce();
+    });
+
+    it('does not contaminate validation with an input event received during saving', async () => {
+        const { facade, toast } = setup();
+        const service = TestBed.inject(UserManageNotificationsFacade);
+        service.syncFromUser(createUser());
+        facade.isUpdatingNotifications.set(true);
+        service.onFastingReminderHoursChange(FRACTIONAL_REMINDER_HOURS, 'first');
+        facade.isUpdatingNotifications.set(false);
+        await service.saveFastingReminderHoursAsync();
+        expect(facade.updateNotificationPreferencesAsync).toHaveBeenCalledOnce();
+        expect(toast.error).not.toHaveBeenCalled();
+    });
+});
 
 describe('UserManageNotificationsFacade sync', () => {
     it('syncs reminder state from user and tracks notifications view once', () => {

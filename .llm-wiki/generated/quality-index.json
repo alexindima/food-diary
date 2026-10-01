@@ -11338,11 +11338,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.facade.ts",
-      "nonBlankLines": 300,
-      "decisionPoints": 32,
+      "nonBlankLines": 306,
+      "decisionPoints": 34,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 54
+      "structuralRiskScore": 57.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.mapper.ts",

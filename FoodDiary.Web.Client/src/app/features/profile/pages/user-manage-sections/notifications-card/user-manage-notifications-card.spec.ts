@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FASTING_REMINDER_PRESETS } from '../../../../../shared/lib/fasting-reminder-presets';
@@ -7,6 +7,7 @@ import { UserManageNotificationsCardComponent } from './user-manage-notification
 
 const CUSTOM_FIRST_REMINDER_HOURS = 3;
 const CUSTOM_FOLLOW_UP_REMINDER_HOURS = 11;
+const REMINDER_INPUT_COUNT = 2;
 
 let fixture: ComponentFixture<UserManageNotificationsCardComponent>;
 let component: UserManageNotificationsCardComponent;
@@ -86,6 +87,29 @@ describe('UserManageNotificationsCardComponent status state', () => {
         fixture.componentRef.setInput('fastingCheckInFollowUpReminderHours', CUSTOM_FOLLOW_UP_REMINDER_HOURS);
         fixture.detectChanges();
         expect(component['activeFastingReminderPresetId']()).toBeNull();
+    });
+});
+
+describe('Notification reminder draft protection', () => {
+    it('locks reminder fields and presets while saving and makes them available again afterward', async () => {
+        await createComponentAsync({ isUpdatingNotifications: true });
+        const host = fixture.nativeElement as HTMLElement;
+        const inputs = host.querySelectorAll<HTMLInputElement>('.user-manage__notifications-reminders input[type="number"]');
+        const presets = host.querySelectorAll<HTMLButtonElement>('.user-manage__preset-button button');
+        expect(inputs).toHaveLength(REMINDER_INPUT_COUNT);
+        expect(presets).toHaveLength(FASTING_REMINDER_PRESETS.length);
+        expect(Array.from(inputs).every(input => input.disabled)).toBe(true);
+        expect(Array.from(presets).every(button => button.disabled)).toBe(true);
+        const applied = vi.fn();
+        component.fastingReminderPresetApply.subscribe(applied);
+        presets[0].click();
+        expect(applied).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('isUpdatingNotifications', false);
+        fixture.detectChanges();
+        expect(Array.from(inputs).every(input => !input.disabled)).toBe(true);
+        expect(Array.from(presets).every(button => !button.disabled)).toBe(true);
+        presets[0].click();
+        expect(applied).toHaveBeenCalledExactlyOnceWith(FASTING_REMINDER_PRESETS[0]);
     });
 });
 

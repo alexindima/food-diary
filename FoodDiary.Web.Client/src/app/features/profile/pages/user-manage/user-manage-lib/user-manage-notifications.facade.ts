@@ -134,6 +134,9 @@ export class UserManageNotificationsFacade {
     }
 
     public onFastingReminderHoursChange(value: string | number, field: 'first' | 'followUp'): void {
+        if (this.isUpdatingNotifications()) {
+            return;
+        }
         const parsed = typeof value === 'number' ? value : value.trim().length === 0 ? Number.NaN : Number(value);
         if (!Number.isInteger(parsed) || parsed < 1 || parsed > MAX_FASTING_REMINDER_HOURS) {
             this.invalidReminderFields.add(field);
@@ -149,6 +152,9 @@ export class UserManageNotificationsFacade {
     }
 
     public applyFastingReminderPreset(preset: FastingReminderPreset): void {
+        if (this.isUpdatingNotifications()) {
+            return;
+        }
         this.invalidReminderFields.clear();
         this.fastingCheckInReminderHours.set(preset.firstReminderHours);
         this.fastingCheckInFollowUpReminderHours.set(preset.followUpReminderHours);

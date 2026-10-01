@@ -34001,6 +34001,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
         "label",
         "size",
         "type",

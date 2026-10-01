@@ -67,6 +67,8 @@
                                         fill="outline"
                                         variant="secondary"
                                         size="sm"
+                                        [disabled]="isUpdatingNotifications()"
+                                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                                         [class.user-manage__preset-button--active]="activeFastingReminderPresetId() === preset.id"
                                         (click)="fastingReminderPresetApply.emit(preset)"
                                     >
@@ -80,6 +82,7 @@
                             size="sm"
                             [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST' | translate"
                             [value]="fastingCheckInReminderHours()"
+                            [disabled]="isUpdatingNotifications()"
                             (valueChange)="fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'first' })"
                         />
                         <fd-ui-input
@@ -87,6 +90,7 @@
                             size="sm"
                             [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND' | translate"
                             [value]="fastingCheckInFollowUpReminderHours()"
+                            [disabled]="isUpdatingNotifications()"
                             (valueChange)="
                                 fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'followUp' })
                             "
