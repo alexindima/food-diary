@@ -11,7 +11,7 @@ import {
 export type { CycleDayFormModel, CycleSettingsFormModel } from './cycle-tracking.form-models';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, max, min, required } from '@angular/forms/signals';
+import { form, max, min, required, validate } from '@angular/forms/signals';
 import { finalize, firstValueFrom } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
@@ -73,6 +73,7 @@ export class CycleTrackingFacade {
     public readonly exportError = signal<string | null>(null);
     public readonly daySaveRevision = signal(0);
     public readonly settingsSaveRevision = signal(0);
+    public readonly settingsError = signal<string | null>(null);
     public readonly clearingDayDate = signal<string | null>(null);
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
@@ -108,10 +109,17 @@ export class CycleTrackingFacade {
             required(path.goal);
             required(path.reproductiveState);
             required(path.cycleTrackingConsentGranted);
+            validate(path.averageCycleLength, ({ value }) =>
+                value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' },
+            );
             min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
             max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
+            validate(path.averagePeriodLength, ({ value }) =>
+                value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' },
+            );
             min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
             max(path.averagePeriodLength, MAX_AVERAGE_PERIOD_LENGTH);
+            validate(path.lutealLength, ({ value }) => (value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' }));
             min(path.lutealLength, MIN_LUTEAL_LENGTH);
             max(path.lutealLength, MAX_LUTEAL_LENGTH);
         },
@@ -146,10 +154,20 @@ export class CycleTrackingFacade {
             required(path.mode);
             required(path.goal);
             required(path.reproductiveState);
+            validate(path.averageCycleLength, ({ value }) =>
+                value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' },
+            );
+            required(path.averageCycleLength);
             min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
             max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
+            validate(path.averagePeriodLength, ({ value }) =>
+                value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' },
+            );
+            required(path.averagePeriodLength);
             min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
             max(path.averagePeriodLength, MAX_AVERAGE_PERIOD_LENGTH);
+            validate(path.lutealLength, ({ value }) => (value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' }));
+            required(path.lutealLength);
             min(path.lutealLength, MIN_LUTEAL_LENGTH);
             max(path.lutealLength, MAX_LUTEAL_LENGTH);
         },
@@ -302,6 +320,7 @@ export class CycleTrackingFacade {
             hideFromDashboard: formValue.hideFromDashboard,
         };
 
+        this.settingsError.set(null);
         this.isSavingSettings.set(true);
         try {
             let updatedCycle = await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload));
@@ -319,6 +338,8 @@ export class CycleTrackingFacade {
             this.cycle.set(updatedCycle);
             this.loadNutritionSummary(updatedCycle);
             this.settingsSaveRevision.update(revision => revision + 1);
+        } catch {
+            this.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
         } finally {
             this.isSavingSettings.set(false);
         }

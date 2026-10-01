@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 482,
-    "componentsWithoutDirectSpecs": 133,
-    "inputs": 1544,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1545,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
     "translationKeys": 2055,
-    "consumerEdges": 1211,
+    "consumerEdges": 1212,
     "consumedComponents": 306,
     "unconsumedComponents": 175
   },
@@ -1557,6 +1557,11 @@
           "required": true
         },
         {
+          "name": "error",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "isDeleting",
           "type": "boolean",
           "required": true
@@ -1572,7 +1577,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.spec.ts"
     },
     {
       "class": "CycleTrackingPageComponent",
@@ -24268,6 +24273,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "goalOptions",
         "isDeleting",
         "isSaving",
@@ -31847,6 +31853,18 @@
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -33700,6 +33718,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
       "occurrences": 3,
       "inputsUsed": [
+        "error",
         "label",
         "type"
       ],

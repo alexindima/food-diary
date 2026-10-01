@@ -120,6 +120,7 @@ export class CycleTrackingPageComponent {
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
+    protected readonly settingsError = this.facade.settingsError;
     protected readonly isSavingSettings = this.facade.isSavingSettings;
     protected readonly isDeletingCycle = this.facade.isDeletingCycle;
     protected readonly isSavingDay = this.facade.isSavingDay;

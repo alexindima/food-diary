@@ -135,6 +135,14 @@
       "structuralRiskScore": 158.24
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
+      "nonBlankLines": 769,
+      "decisionPoints": 94,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 156.38
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
       "nonBlankLines": 417,
       "decisionPoints": 96,
@@ -173,14 +181,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 145.8
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 748,
-      "decisionPoints": 87,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 145.46
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
@@ -8266,11 +8266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 748,
-      "decisionPoints": 87,
+      "nonBlankLines": 769,
+      "decisionPoints": 94,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 145.46
+      "structuralRiskScore": 156.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",
@@ -8386,11 +8386,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.ts",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
+      "nonBlankLines": 56,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.72
+      "structuralRiskScore": 11.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.config.ts",
@@ -8426,11 +8426,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 369,
+      "nonBlankLines": 370,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.88
+      "structuralRiskScore": 17.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",

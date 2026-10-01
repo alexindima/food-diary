@@ -4,6 +4,7 @@ import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
@@ -20,6 +21,7 @@ import type { CycleReproductiveState, CycleTrackingGoal, CycleTrackingMode } fro
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         FdUiInputComponent,
+        FdUiFormErrorComponent,
         FdUiSelectComponent,
     ],
     templateUrl: './cycle-settings-drawer.html',
@@ -32,7 +34,26 @@ export class CycleSettingsDrawerComponent {
     public readonly goalOptions = input.required<Array<FdUiSelectOption<CycleTrackingGoal>>>();
     public readonly reproductiveStateOptions = input.required<Array<FdUiSelectOption<CycleReproductiveState>>>();
     public readonly isSaving = input.required<boolean>();
+    public readonly error = input<string | null>(null);
     public readonly isDeleting = input.required<boolean>();
     public readonly closed = output();
     public readonly deleteRequested = output();
+
+    protected numberError(fieldName: 'averageCycleLength' | 'averagePeriodLength' | 'lutealLength'): string | null {
+        const field = this.settingsForm()[fieldName]();
+        if (!field.invalid() || (!field.touched() && !field.dirty())) {
+            return null;
+        }
+        switch (fieldName) {
+            case 'averageCycleLength': {
+                return 'CYCLE_TRACKING.AVG_LENGTH_ERROR';
+            }
+            case 'averagePeriodLength': {
+                return 'CYCLE_TRACKING.PERIOD_LENGTH_ERROR';
+            }
+            case 'lutealLength': {
+                return 'CYCLE_TRACKING.LUTEAL_LENGTH_ERROR';
+            }
+        }
+    }
 }

@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
-    "componentsWithoutDirectSpecs": 133,
+    "componentsWithoutDirectSpecs": 132,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -1786,56 +1786,6 @@
         }
       ],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "CycleSettingsDrawerComponent",
-      "selector": "fd-cycle-settings-drawer",
-      "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
-      "inputs": [
-        {
-          "name": "settingsForm",
-          "type": "FieldTree<CycleSettingsFormModel>",
-          "required": true
-        },
-        {
-          "name": "modeOptions",
-          "type": "Array<FdUiSelectOption<CycleTrackingMode>>",
-          "required": true
-        },
-        {
-          "name": "goalOptions",
-          "type": "Array<FdUiSelectOption<CycleTrackingGoal>>",
-          "required": true
-        },
-        {
-          "name": "reproductiveStateOptions",
-          "type": "Array<FdUiSelectOption<CycleReproductiveState>>",
-          "required": true
-        },
-        {
-          "name": "isSaving",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "isDeleting",
-          "type": "boolean",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "closed",
-          "type": ""
-        },
-        {
-          "name": "deleteRequested",
-          "type": ""
-        }
-      ],
       "specPath": null
     },
     {

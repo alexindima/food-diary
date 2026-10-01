@@ -18,6 +18,7 @@ import {
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
 const LOGGED_CYCLE_DAYS = 4;
+const FRACTIONAL_DAY = 0.5;
 const SEVERE_SYMPTOM_INTENSITY = 9;
 
 let facade: CycleTrackingFacade;
@@ -257,7 +258,54 @@ describe('CycleTrackingFacade day saving', () => {
     });
 });
 
+describe('CycleTrackingFacade duration validation', () => {
+    it.each(['averageCycleLength', 'averagePeriodLength', 'lutealLength'] as const)(
+        'rejects fractional %s when starting tracking',
+        async field => {
+            facade.startCycleModel.update(model => ({
+                ...model,
+                cycleTrackingConsentGranted: true,
+                [field]: (model[field] ?? 0) + FRACTIONAL_DAY,
+            }));
+            expect(await submit(facade.startCycleForm)).toBe(false);
+            expect(cyclesService.create).not.toHaveBeenCalled();
+        },
+    );
+});
+
 describe('CycleTrackingFacade settings saving', () => {
+    it.each(['averageCycleLength', 'averagePeriodLength', 'lutealLength'] as const)(
+        'rejects fractional and empty %s before sending settings',
+        async field => {
+            facade.initialize();
+            const original = facade.settingsModel()[field] ?? 0;
+            for (const value of [original + FRACTIONAL_DAY, null]) {
+                facade.settingsModel.update(model => ({ ...model, [field]: value }));
+                expect(await submit(facade.settingsForm)).toBe(false);
+                expect(facade.settingsForm[field]().invalid()).toBe(true);
+            }
+            expect(cyclesService.updateSettings).not.toHaveBeenCalled();
+            expect(facade.settingsSaveRevision()).toBe(0);
+        },
+    );
+
+    it('retains the draft and permits an unchanged retry after a failed save', async () => {
+        facade.initialize();
+        facade.settingsModel.update(model => ({ ...model, averageCycleLength: 30 }));
+        const draft = facade.settingsModel();
+        cyclesService.updateSettings.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        await submit(facade.settingsForm);
+        expect(facade.settingsError()).toBe('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
+        expect(facade.settingsModel()).toEqual(draft);
+        expect(facade.settingsSaveRevision()).toBe(0);
+        expect(facade.isSavingSettings()).toBe(false);
+        expect(facade.settingsForm().invalid()).toBe(false);
+        await submit(facade.settingsForm);
+        expect(cyclesService.updateSettings).toHaveBeenCalledTimes(2);
+        expect(facade.settingsError()).toBeNull();
+        expect(facade.settingsSaveRevision()).toBe(1);
+    });
+
     it('publishes a successful settings save for drawer orchestration', async () => {
         facade.initialize();
 

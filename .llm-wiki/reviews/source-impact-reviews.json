@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "aa344b6e15f15baece497ddc4daf30c455fe6b4f2fdbbb529896282aeccd07ef"
+          "sha256": "e184682e7be16230c987ec6c857cb786e1ea36d6a8fc6a517efd06df75df063e"
         }
       ],
-      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
+      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
       "baseRef": "HEAD",
-      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
-      "reviewedAtUtc": "2026-10-01T12:37:21.3688408Z"
+      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
+      "reviewedAtUtc": "2026-10-01T21:47:59.7974352Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "af447d0ba6c59de135f9fc687652d69721b8e56f947db450b9bb77d2e6cb40a1"
+          "sha256": "273cf6365da6c6abedebf03e741db1de2750e52479ba707bbf6baeeed307585b"
         }
       ],
-      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
+      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
       "baseRef": "HEAD",
-      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
-      "reviewedAtUtc": "2026-10-01T20:39:34.6493175Z"
+      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
+      "reviewedAtUtc": "2026-10-01T21:48:00.7902005Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "af447d0ba6c59de135f9fc687652d69721b8e56f947db450b9bb77d2e6cb40a1"
+          "sha256": "273cf6365da6c6abedebf03e741db1de2750e52479ba707bbf6baeeed307585b"
         }
       ],
-      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
+      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
       "baseRef": "HEAD",
-      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
-      "reviewedAtUtc": "2026-10-01T20:39:35.1404418Z"
+      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
+      "reviewedAtUtc": "2026-10-01T21:48:01.4266476Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,13 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e06d2cf241e7fc93cf424abb7df3b9d0f719eba08fe3ad25c15415ef19827be3"
+          "sha256": "a6649f45aabffc305f01566a5fc85de513d4047489c40ab8d7cc3c76785b091d"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "620ad2b91ff6bb6443cdf222a478ce77181c41a539017c26878ec775e90fa72f"
         }
       ],
-      "reason": "Restore responsive container targeting and narrow wrapping for all fasting protocol selectors; avoid display-contents size-query containers",
+      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
       "baseRef": "HEAD",
-      "gitHead": "1f6b854731e07d915d043b84f14789f8144f740e",
-      "reviewedAtUtc": "2026-10-01T21:00:04.9388177Z"
+      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
+      "reviewedAtUtc": "2026-10-01T21:48:01.9801881Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e06d2cf241e7fc93cf424abb7df3b9d0f719eba08fe3ad25c15415ef19827be3"
+          "sha256": "a6649f45aabffc305f01566a5fc85de513d4047489c40ab8d7cc3c76785b091d"
         }
       ],
-      "reason": "Restore responsive container targeting and narrow wrapping for all fasting protocol selectors; avoid display-contents size-query containers",
+      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
       "baseRef": "HEAD",
-      "gitHead": "1f6b854731e07d915d043b84f14789f8144f740e",
-      "reviewedAtUtc": "2026-10-01T21:00:04.4566990Z"
+      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
+      "reviewedAtUtc": "2026-10-01T21:48:00.2270710Z"
     },
     {
       "pageId": "workflow.query-context",

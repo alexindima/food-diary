@@ -45,16 +45,19 @@
                         type="number"
                         [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
                         [formField]="settingsForm().averageCycleLength"
+                        [error]="numberError('averageCycleLength') ?? '' | translate"
                     />
                     <fd-ui-input
                         type="number"
                         [label]="'CYCLE_TRACKING.PERIOD_LENGTH' | translate"
                         [formField]="settingsForm().averagePeriodLength"
+                        [error]="numberError('averagePeriodLength') ?? '' | translate"
                     />
                     <fd-ui-input
                         type="number"
                         [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
                         [formField]="settingsForm().lutealLength"
+                        [error]="numberError('lutealLength') ?? '' | translate"
                     />
                 </div>
                 <div class="fd-stack fd-gap-sm">
@@ -74,6 +77,7 @@
                         {{ 'CYCLE_TRACKING.CONSENT_FERTILITY' | translate }}
                     </fd-ui-checkbox>
                 </div>
+                <fd-ui-form-error [error]="error()" />
                 <div class="cycle-drawer__advanced fd-stack fd-gap-sm">
                     <strong class="fd-ui-action-text">{{ 'CYCLE_TRACKING.DANGER_ZONE' | translate }}</strong>
                     <p class="cycle-drawer__privacy fd-ui-body-sm">{{ 'CYCLE_TRACKING.DELETE_CYCLE_SHORT' | translate }}</p>
