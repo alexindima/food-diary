@@ -20,6 +20,12 @@ class TestHostComponent {
     });
 }
 
+@Component({
+    template: '<fd-ui-input id="qa-email" label="Email" />',
+    imports: [FdUiInputComponent],
+})
+class ExplicitIdHostComponent {}
+
 type InputTestContext = {
     component: FdUiInputComponent;
     el: HTMLElement;
@@ -89,6 +95,19 @@ describe('FdUiInputComponent', () => {
 });
 
 describe('FdUiInputComponent rendering', () => {
+    it('associates the label with the native control when an explicit id is supplied', async () => {
+        await TestBed.configureTestingModule({ imports: [ExplicitIdHostComponent] }).compileComponents();
+        const fixture = TestBed.createComponent(ExplicitIdHostComponent);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const control = requireInput(root);
+        const label = root.querySelector<HTMLLabelElement>('label');
+
+        expect(control.id).toBe('qa-email');
+        expect(root.querySelectorAll('#qa-email')).toHaveLength(1);
+        expect(label?.control).toBe(control);
+    });
+
     it('should render label when provided', async () => {
         const { el, fixture } = await setupInputAsync();
         fixture.componentRef.setInput('label', 'Username');

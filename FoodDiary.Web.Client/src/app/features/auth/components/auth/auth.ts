@@ -261,7 +261,7 @@ export class AuthComponent {
                 return;
             }
 
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            this.setGlobalError('AUTH.LOGIN.RESTORE_ERROR');
         });
     }
 

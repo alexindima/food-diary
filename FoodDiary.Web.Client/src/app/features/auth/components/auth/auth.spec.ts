@@ -168,6 +168,22 @@ describe('AuthComponent login', () => {
         expect(component['isSubmitting']()).toBe(false);
     });
 
+    it('explains a failed account restoration and keeps the form available for retry', () => {
+        const { authFlowFacadeSpy, component, dialogRefSpy } = createComponent();
+        authFlowFacadeSpy.restoreAccount.mockReturnValue(of(false));
+        const credentials = { email: 'deleted@example.com', password: 'password123', rememberMe: false };
+        component['loginModel'].set(credentials);
+        component['showRestoreAction'].set(true);
+
+        component['onRestoreSubmit']();
+
+        expect(component['globalError']()).toBe('AUTH.LOGIN.RESTORE_ERROR');
+        expect(component['isRestoring']()).toBe(false);
+        expect(component['showRestoreAction']()).toBe(true);
+        expect(component['loginModel']()).toEqual(credentials);
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+    });
+
     it('should restore deleted account and complete navigation on success', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.restoreAccount.mockReturnValue(of(true));

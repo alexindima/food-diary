@@ -42,6 +42,7 @@ export function fdUiCoerceInputNumberValue(value: FdUiInputValue): string | numb
     templateUrl: './fd-ui-input.html',
     styleUrls: ['./fd-ui-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[attr.id]': 'null' },
 })
 export class FdUiInputComponent implements FormValueControl<string | number | null> {
     private readonly destroyRef = inject(DestroyRef);

@@ -158,6 +158,8 @@ Responsive line chart for compact trends and sparklines. With axes enabled, the 
 
 Universal single-line input.
 
+The `id` input identifies the native input control and its label. The component host does not repeat that ID.
+
 Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text units participate in the field layout, leaving the remaining width for the value in compact forms.
 
 **Inputs**

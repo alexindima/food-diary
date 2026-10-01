@@ -1758,7 +1758,7 @@
       "role": "Component",
       "selector": "fd-ui-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "FdUiLevelIndicatorComponent",
@@ -6993,8 +6993,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1087,
-      "russianProperties": 1087,
+      "englishProperties": 1088,
+      "russianProperties": 1088,
       "countsMatch": true
     },
     {

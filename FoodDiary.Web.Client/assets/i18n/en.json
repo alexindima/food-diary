@@ -276,6 +276,7 @@
             "FORGOT_PASSWORD": "Forgot password?",
             "LOGIN": "Login",
             "RESTORE": "Restore account",
+            "RESTORE_ERROR": "Could not restore your account. Please try again.",
             "ACCOUNT_DELETED": "This account is scheduled for deletion. Restore it to continue."
         },
         "REGISTER": {
