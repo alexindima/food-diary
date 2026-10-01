@@ -24,6 +24,8 @@ export class GoalsCyclingDayComponent {
             return;
         }
 
-        this.valueChange.emit({ key: this.dayKey(), value: Math.max(0, Math.round(Number(event.target.value))) });
+        const value = Math.max(0, Math.round(Number(event.target.value)));
+        event.target.value = String(value);
+        this.valueChange.emit({ key: this.dayKey(), value });
     }
 }

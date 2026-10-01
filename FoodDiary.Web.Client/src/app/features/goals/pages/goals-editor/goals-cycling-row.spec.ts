@@ -51,6 +51,27 @@ describe('GoalsCyclingRowComponent', () => {
 
         expect(days.every(day => day.barPercent() === AVERAGE_LINE_PERCENT)).toBe(true);
     });
+
+    it.each([
+        { entered: '-1', initial: 0, expected: 0 },
+        { entered: '1.4', initial: 1, expected: 1 },
+    ])('shows the saved calorie value after entering $entered', ({ entered, initial, expected }) => {
+        const fixture = createComponent(createDayCalories(initial));
+        const changes: Array<{ key: DayCalorieKey; value: number }> = [];
+        fixture.componentInstance.dayCaloriesChange.subscribe(change => changes.push(change));
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#goals-editor-cycling-wednesdayCalories');
+        expect(input).not.toBeNull();
+        if (input === null) {
+            throw new Error('Wednesday input is missing');
+        }
+        input.value = entered;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(changes).toEqual([{ key: 'wednesdayCalories', value: expected }]);
+        expect(input.value).toBe(String(expected));
+        expect(input.validity.valid).toBe(true);
+    });
 });
 
 function createComponent(dayCalories: Record<DayCalorieKey, number>): ComponentFixture<GoalsCyclingRowComponent> {

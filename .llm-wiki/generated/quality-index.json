@@ -9690,11 +9690,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
-      "nonBlankLines": 25,
+      "nonBlankLines": 27,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2
+      "structuralRiskScore": 2.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
