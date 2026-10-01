@@ -181,6 +181,30 @@ describe('WeeklyCheckInFacade (2)', () => {
 });
 
 describe('WeeklyCheckInFacade (3)', () => {
+    it.each(['current', 'next'] as const)('isolates a failed %s goal and retries only that week', async failedWeek => {
+        const { facade, goals } = setup();
+        const weekStart = failedWeek === 'current' ? facade.selectedWeekStartIso() : facade.goalWeekStartIso();
+        goals.getGoal.mockImplementation(week => (week === weekStart ? throwError(() => new Error('offline')) : of(GOAL)));
+        await settleAsync();
+        expect(facade.hasSelectedWeekGoalError()).toBe(failedWeek === 'current');
+        expect(facade.hasGoalError()).toBe(failedWeek === 'next');
+        expect(failedWeek === 'current' ? facade.weeklyGoal() : facade.selectedWeekGoal()).toEqual(GOAL);
+        expect(facade.review()).toBeDefined();
+        goals.getGoal.mockClear();
+        goals.getGoal.mockReturnValue(of(GOAL));
+        if (failedWeek === 'current') {
+            facade.retrySelectedWeekGoal();
+        } else {
+            facade.retryNextWeekGoal();
+        }
+        await settleAsync();
+        expect(goals.getGoal).toHaveBeenCalledExactlyOnceWith(weekStart);
+        expect(facade.hasSelectedWeekGoalError()).toBe(false);
+        expect(facade.hasGoalError()).toBe(false);
+        expect(facade.selectedWeekGoal()).toEqual(GOAL);
+        expect(facade.weeklyGoal()).toEqual(GOAL);
+    });
+
     it('does not reload goals when saving rejects', async () => {
         const { facade, goals } = setup();
         await settleAsync();

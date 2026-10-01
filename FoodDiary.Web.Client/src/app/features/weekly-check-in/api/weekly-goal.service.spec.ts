@@ -37,6 +37,34 @@ afterEach(() => {
 });
 
 describe('WeeklyGoalService', () => {
+    it('preserves the distinction between an absent goal and a failed request', () => {
+        let result: WeeklyGoal | null | undefined;
+        let receivedError: unknown;
+        service.getGoal('2026-08-17').subscribe({
+            next: goal => {
+                result = goal;
+            },
+            error: (error: unknown) => {
+                receivedError = error;
+            },
+        });
+        httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-17`).flush('Unavailable', {
+            status: 503,
+            statusText: 'Service Unavailable',
+        });
+        expect(result).toBeUndefined();
+        expect(receivedError).toMatchObject({ status: 503 });
+    });
+
+    it('returns null when the requested week has no goal', () => {
+        let result: WeeklyGoal | null | undefined;
+        service.getGoal('2026-08-17').subscribe(goal => {
+            result = goal;
+        });
+        httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-17`).flush(null);
+        expect(result).toBeNull();
+    });
+
     it('gets a goal for the requested week', () => {
         service.getGoal('2026-08-17').subscribe(goal => {
             expect(goal).toEqual(GOAL);

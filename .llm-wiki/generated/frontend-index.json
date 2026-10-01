@@ -5818,7 +5818,7 @@
       "role": "Component",
       "selector": "fd-weekly-check-in-page",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-      "line": 47
+      "line": 49
     },
     {
       "name": "WeightEntriesService",

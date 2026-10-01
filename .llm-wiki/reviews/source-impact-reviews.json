@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cf2f5bda69f12a64554a5cfa1bb6e4c44275d84621c01a93d9291aed94d29fd2"
+          "sha256": "c7028a60cb40fa3a10020c5567e137bb8666235efb2a9385fca162a09c383c7a"
         }
       ],
-      "reason": "Dashboard load error retry with final formatting",
+      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
       "baseRef": "HEAD",
-      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
-      "reviewedAtUtc": "2026-10-01T15:36:53.2812331Z"
+      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
+      "reviewedAtUtc": "2026-10-01T18:30:46.2658413Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cf2f5bda69f12a64554a5cfa1bb6e4c44275d84621c01a93d9291aed94d29fd2"
+          "sha256": "c7028a60cb40fa3a10020c5567e137bb8666235efb2a9385fca162a09c383c7a"
         }
       ],
-      "reason": "Dashboard load error retry with final formatting",
+      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
       "baseRef": "HEAD",
-      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
-      "reviewedAtUtc": "2026-10-01T15:36:53.6927663Z"
+      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
+      "reviewedAtUtc": "2026-10-01T18:30:46.7601893Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "51dbec9aff09552917df4879143e10d6908b1380655656b3699ce39be4d15382"
+          "sha256": "1cd12b22d9ba808ec9f75c2ea06f1d663ae234dfec6e6194b8bf7362223577ef"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f0fa2966b36e883da58e9c6c40e006358674eb7d5a162bb8993ce11c63fd33ce"
+          "sha256": "6bafc0dddd7fffc45c22e8587633c79fb6a02503bf8ff4639da5e7883a28d735"
         }
       ],
-      "reason": "Dashboard load error retry with final formatting",
+      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
       "baseRef": "HEAD",
-      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
-      "reviewedAtUtc": "2026-10-01T15:36:54.0951888Z"
+      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
+      "reviewedAtUtc": "2026-10-01T18:30:47.1926801Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "51dbec9aff09552917df4879143e10d6908b1380655656b3699ce39be4d15382"
+          "sha256": "1cd12b22d9ba808ec9f75c2ea06f1d663ae234dfec6e6194b8bf7362223577ef"
         }
       ],
-      "reason": "Dashboard load error retry with final formatting",
+      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
       "baseRef": "HEAD",
-      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
-      "reviewedAtUtc": "2026-10-01T15:36:52.8084690Z"
+      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
+      "reviewedAtUtc": "2026-10-01T18:30:45.7498631Z"
     },
     {
       "pageId": "workflow.query-context",

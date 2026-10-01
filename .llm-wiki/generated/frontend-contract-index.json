@@ -7,8 +7,8 @@
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2058,
-    "consumerEdges": 1210,
+    "translationKeys": 2054,
+    "consumerEdges": 1211,
     "consumedComponents": 306,
     "unconsumedComponents": 175
   },
@@ -22780,11 +22780,7 @@
         "WEEKLY_CHECK_IN.COVERAGE_TITLE",
         "WEEKLY_CHECK_IN.DISCLAIMER",
         "WEEKLY_CHECK_IN.FOCUS.TITLE",
-        "WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY",
         "WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION_HINT",
-        "WEEKLY_CHECK_IN.GOAL.CLOSED_COPY",
-        "WEEKLY_CHECK_IN.GOAL.CLOSED_EMPTY_COPY",
-        "WEEKLY_CHECK_IN.GOAL.CLOSED_TITLE",
         "WEEKLY_CHECK_IN.GOAL.CURRENT_WEEK_LABEL",
         "WEEKLY_CHECK_IN.LOADING",
         "WEEKLY_CHECK_IN.METRICS.DAYS",
@@ -25030,6 +25026,18 @@
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "ErrorStateComponent",
+      "selector": "fd-error-state",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.ts",
+      "consumerFeature": "weekly-check-in",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
+      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": [
         "retry"

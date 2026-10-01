@@ -54,6 +54,8 @@ export class WeeklyCheckInFacade {
     );
     public readonly isGoalLoading = computed(() => this.goalResource.isLoading());
     public readonly isSelectedWeekGoalLoading = computed(() => this.selectedWeekGoalResource.isLoading());
+    public readonly hasGoalError = computed(() => this.goalResource.error() !== undefined);
+    public readonly hasSelectedWeekGoalError = computed(() => this.selectedWeekGoalResource.error() !== undefined);
 
     public constructor() {
         effect(() => {
@@ -78,6 +80,14 @@ export class WeeklyCheckInFacade {
 
     public reloadGoal(): void {
         this.goalResource.reload();
+        this.selectedWeekGoalResource.reload();
+    }
+
+    public retryNextWeekGoal(): void {
+        this.goalResource.reload();
+    }
+
+    public retrySelectedWeekGoal(): void {
         this.selectedWeekGoalResource.reload();
     }
 }

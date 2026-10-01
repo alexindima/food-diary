@@ -12922,11 +12922,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.facade.ts",
-      "nonBlankLines": 91,
+      "nonBlankLines": 99,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.82
+      "structuralRiskScore": 7.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.mapper.ts",
@@ -12970,11 +12970,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-      "nonBlankLines": 130,
-      "decisionPoints": 10,
+      "nonBlankLines": 150,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.6
+      "structuralRiskScore": 25.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-tour.ts",

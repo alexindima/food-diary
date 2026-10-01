@@ -9,6 +9,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, map } from 'rxjs';
 
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
@@ -37,6 +38,7 @@ import { WEEKLY_CHECK_IN_TOUR } from './weekly-check-in-tour';
         FdUiWeekPickerComponent,
         PageHeaderComponent,
         PageBodyComponent,
+        ErrorStateComponent,
         FdPageContainerDirective,
     ],
     templateUrl: './weekly-check-in-page.html',
@@ -74,9 +76,21 @@ export class WeeklyCheckInPageComponent {
     protected readonly selectedWeekGoal = this.facade.selectedWeekGoal;
     protected readonly isGoalLoading = this.facade.isGoalLoading;
     protected readonly isSelectedWeekGoalLoading = this.facade.isSelectedWeekGoalLoading;
+    protected readonly hasGoalError = this.facade.hasGoalError;
+    protected readonly hasSelectedWeekGoalError = this.facade.hasSelectedWeekGoalError;
     protected readonly selectedWeek = this.facade.selectedWeek;
     protected readonly isSelectedWeekPast = this.facade.isSelectedWeekPast;
     protected readonly isGoalPeriodClosed = this.facade.isGoalPeriodClosed;
+    protected readonly showNextWeekGoalProgress = computed(() => !this.isGoalPeriodClosed() || this.weeklyGoal() !== null);
+    protected readonly nextWeekGoalCopyKey = computed(() =>
+        this.isGoalPeriodClosed() ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_COPY' : 'WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY',
+    );
+    protected readonly nextWeekEmptyTitleKey = computed(() =>
+        this.isGoalPeriodClosed() ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_TITLE' : this.review()?.focusTitleKey,
+    );
+    protected readonly nextWeekEmptyCopyKey = computed(() =>
+        this.isGoalPeriodClosed() ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_EMPTY_COPY' : this.review()?.focusDescriptionKey,
+    );
     protected readonly maximumWeek = new Date();
     protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
         initialValue: resolveTranslateLanguage(this.translateService),
@@ -91,7 +105,7 @@ export class WeeklyCheckInPageComponent {
     }
 
     protected openGoalDialog(): void {
-        if (this.isGoalPeriodClosed()) {
+        if (this.isGoalPeriodClosed() || this.hasGoalError() || this.isGoalLoading()) {
             return;
         }
 
@@ -99,7 +113,7 @@ export class WeeklyCheckInPageComponent {
     }
 
     protected openSelectedWeekGoalDialog(): void {
-        if (this.isSelectedWeekPast()) {
+        if (this.isSelectedWeekPast() || this.hasSelectedWeekGoalError() || this.isSelectedWeekGoalLoading()) {
             return;
         }
 
@@ -108,6 +122,14 @@ export class WeeklyCheckInPageComponent {
             this.selectedWeekGoal(),
             'WEEKLY_CHECK_IN.GOAL.CURRENT_DIALOG_TITLE',
         );
+    }
+
+    protected retryNextWeekGoal(): void {
+        this.facade.retryNextWeekGoal();
+    }
+
+    protected retrySelectedWeekGoal(): void {
+        this.facade.retrySelectedWeekGoal();
     }
 
     protected openDetailedReport(review: WeeklyReviewViewModel): void {

@@ -3,7 +3,7 @@ import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { UpsertWeeklyGoalPayload, WeeklyGoal } from '../models/weekly-goal.data';
 
 @Service()
@@ -13,7 +13,7 @@ export class WeeklyGoalService extends ApiService {
     public getGoal(weekStart: string): Observable<WeeklyGoal | null> {
         return super
             .get<WeeklyGoal | null>('', { weekStart })
-            .pipe(catchError((error: unknown) => fallbackApiError('Get weekly goal error', error, null)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)));
     }
 
     public upsertGoal(payload: UpsertWeeklyGoalPayload): Observable<WeeklyGoal> {
