@@ -19684,6 +19684,7 @@
         "DASHBOARD.SUBTITLE",
         "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
         "DISABLED_HINTS.OPERATION_BUSY",
+        "ERRORS.RETRY",
         "MEAL_LIST.ADD_MANUALLY_BUTTON"
       ]
     },
@@ -27061,7 +27062,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "occurrences": 7,
+      "occurrences": 8,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27069,6 +27070,7 @@
         "disabledReason",
         "fill",
         "icon",
+        "loading",
         "variant"
       ],
       "outputsHandled": []

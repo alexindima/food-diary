@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3ad91006e324aa4cc8bbf03ea1594f97e019f172d5bc44000d6689edb5d3ca0e"
+          "sha256": "cf2f5bda69f12a64554a5cfa1bb6e4c44275d84621c01a93d9291aed94d29fd2"
         }
       ],
-      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
+      "reason": "Dashboard load error retry with final formatting",
       "baseRef": "HEAD",
-      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
-      "reviewedAtUtc": "2026-10-01T12:37:22.7336724Z"
+      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
+      "reviewedAtUtc": "2026-10-01T15:36:53.2812331Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3ad91006e324aa4cc8bbf03ea1594f97e019f172d5bc44000d6689edb5d3ca0e"
+          "sha256": "cf2f5bda69f12a64554a5cfa1bb6e4c44275d84621c01a93d9291aed94d29fd2"
         }
       ],
-      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
+      "reason": "Dashboard load error retry with final formatting",
       "baseRef": "HEAD",
-      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
-      "reviewedAtUtc": "2026-10-01T12:37:23.7251648Z"
+      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
+      "reviewedAtUtc": "2026-10-01T15:36:53.6927663Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d09feab7498db3886b16594eebba4ef988d649dac727049143d805056fe81032"
+          "sha256": "51dbec9aff09552917df4879143e10d6908b1380655656b3699ce39be4d15382"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "5fafce6f0f397819b90cba6e2cf2d7cd174876a57736c5b7a274839bfe1462a5"
+          "sha256": "f0fa2966b36e883da58e9c6c40e006358674eb7d5a162bb8993ce11c63fd33ce"
         }
       ],
-      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
+      "reason": "Dashboard load error retry with final formatting",
       "baseRef": "HEAD",
-      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
-      "reviewedAtUtc": "2026-10-01T12:37:24.9478765Z"
+      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
+      "reviewedAtUtc": "2026-10-01T15:36:54.0951888Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d09feab7498db3886b16594eebba4ef988d649dac727049143d805056fe81032"
+          "sha256": "51dbec9aff09552917df4879143e10d6908b1380655656b3699ce39be4d15382"
         }
       ],
-      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
+      "reason": "Dashboard load error retry with final formatting",
       "baseRef": "HEAD",
-      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
-      "reviewedAtUtc": "2026-10-01T12:37:22.0173769Z"
+      "gitHead": "c5fa3a1802177cae3b10fe19f90a93a752c75a08",
+      "reviewedAtUtc": "2026-10-01T15:36:52.8084690Z"
     },
     {
       "pageId": "workflow.query-context",

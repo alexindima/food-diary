@@ -741,6 +741,7 @@
         "MEAL_FALLBACK": "Meal",
         "QUICK_ACTIONS_TITLE": "Quick actions",
         "LOADING": "Loading dashboard...",
+        "LOAD_ERROR": "Could not load your dashboard. Check your connection and try again.",
         "WEIGHT_TITLE": "Weight trend",
         "WEIGHT_META": "Last entry",
         "WEIGHT_META_EMPTY": "Set your weight goal",

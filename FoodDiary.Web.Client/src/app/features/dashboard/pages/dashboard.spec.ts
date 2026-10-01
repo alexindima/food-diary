@@ -31,6 +31,21 @@ const ONE_HOUR_MS = 3600000;
 // Keep the production page template and its bindings. Child components have their own
 // DOM tests; this suite isolates page orchestration from HTTP, overlays and defer timing.
 describe('Dashboard page composition', () => {
+    it('shows a retryable load error instead of empty cards when the initial snapshot fails', async () => {
+        const { facade, fixture, host } = await setupAsync();
+        facade.hasSnapshot.set(false);
+        facade.loadError.set('DASHBOARD.LOAD_ERROR');
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('DASHBOARD.LOAD_ERROR');
+        expect(host.querySelector('fd-dashboard-summary-block')).toBeNull();
+        expect(host.querySelector('fd-dashboard-hydration-block')).toBeNull();
+        const retry = host.querySelector('[role="alert"] fd-ui-button') as HTMLElement;
+        retry.click();
+        expect(facade.reload).toHaveBeenCalledWith(true);
+    });
+});
+
+describe('Dashboard page composition loading', () => {
     it('renders an initial loader without actionable cards, then keeps existing cards during refresh', async () => {
         const { facade, fixture, host } = await setupAsync();
         facade.isLoading.set(true);
@@ -222,6 +237,7 @@ class DashboardTestState {
         isTodaySelected: signal(true),
         snapshot: signal({ dailyGoal: 2000, meals: { total: 0 } }),
         isLoading: signal(false),
+        loadError: signal<string | null>(null),
         hasSnapshot: signal(true),
         meals: signal([]),
         weeklyConsumed: signal(0),

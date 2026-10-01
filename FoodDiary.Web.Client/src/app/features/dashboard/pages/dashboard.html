@@ -110,9 +110,13 @@
         }
 
         <div class="dashboard__body">
-            @if (isLoading() && !hasSnapshot()) {
+            <div role="alert" [hidden]="!loadError()">
+                <p>{{ loadError() ?? '' | translate }}</p>
+                <fd-ui-button [loading]="isLoading()" (click)="facade.reload(true)">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
+            </div>
+            @if (isInitialLoading()) {
                 <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>
-            } @else {
+            } @else if (canRenderSnapshot()) {
                 @if (isTodaySelected() && !layout.isEditingLayout()) {
                     <fd-dashboard-quick-add
                         [isAiMealSaving]="isAiMealSaving()"

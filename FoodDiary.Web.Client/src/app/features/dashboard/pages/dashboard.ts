@@ -128,6 +128,9 @@ export class DashboardComponent {
     protected readonly isTodaySelected = this.facade.isTodaySelected;
     protected readonly snapshot = this.facade.snapshot;
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly loadError = this.facade.loadError;
+    protected readonly canRenderSnapshot = computed(() => this.hasSnapshot() || this.loadError() === null);
+    protected readonly isInitialLoading = computed(() => this.isLoading() && !this.hasSnapshot());
     protected readonly hasSnapshot = this.facade.hasSnapshot;
     protected readonly meals = this.facade.meals;
     protected readonly weeklyConsumed = this.facade.weeklyConsumed;
