@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5689,
+    "productionFiles": 5690,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 977,
-    "criticalSymbolsWithTestReferences": 933,
-    "criticalSymbolsWithoutTestReferences": 44,
+    "criticalSymbolsWithTestReferences": 934,
+    "criticalSymbolsWithoutTestReferences": 43,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -32818,11 +32818,11 @@
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 44,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.14
+      "structuralRiskScore": 7.88
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
@@ -32831,6 +32831,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.94
+    },
+    {
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.58
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -32906,19 +32914,19 @@
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 66,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
+      "structuralRiskScore": 3.32
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 54,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
+      "structuralRiskScore": 2.58
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpResponseMappings.cs",
@@ -36410,11 +36418,11 @@
     },
     {
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.5
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.48
     },
     {
       "path": "Modules/Products/Presentation/Extensions/ProductsPresentationServiceCollectionExtensions.cs",
@@ -36434,11 +36442,11 @@
     },
     {
       "path": "Modules/Products/Presentation/Mappings/ProductHttpQueryMappings.cs",
-      "nonBlankLines": 62,
+      "nonBlankLines": 65,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
+      "structuralRiskScore": 2.8
     },
     {
       "path": "Modules/Products/Presentation/Mappings/ProductHttpResponseMappings.cs",
@@ -49312,7 +49320,7 @@
       "name": "AdminMealPlansController",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
-      "line": 24,
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -50226,9 +50234,10 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/ProductsController.cs",
       "line": 16,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
@@ -50240,10 +50249,12 @@
       "name": "PublicProductsController",
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "line": 17,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "line": 16,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -50344,7 +50355,7 @@
       "name": "ShoppingListsController",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "line": 19,
+      "line": 18,
       "testReferenceCount": 2,
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -55538,9 +55549,10 @@
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandValidator.cs",
       "line": 7,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs"
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs",
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/CatalogMealPlanHttpMappingsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

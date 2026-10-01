@@ -2,6 +2,8 @@ using FoodDiary.Modules.Products.Application.Queries.GetProducts;
 using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
 using FoodDiary.Modules.Products.Application.Queries.GetProductById;
 using FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
+using FoodDiary.Modules.Products.Application.Queries.GetPublicProduct;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Presentation.Requests;
 
 namespace FoodDiary.Modules.Products.Presentation.Mappings;
@@ -46,6 +48,8 @@ public static class ProductHttpQueryMappings {
     }
 
     extension(Guid id) {
+        public GetPublicProductQuery ToPublicProductQuery() => new(new ProductId(id));
+
         public GetProductByIdQuery ToQuery(Guid userId) {
             return new GetProductByIdQuery(userId, id);
         }

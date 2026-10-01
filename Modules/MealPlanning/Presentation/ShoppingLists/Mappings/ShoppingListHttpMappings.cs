@@ -5,7 +5,9 @@ using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.UpdateSh
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListOverview;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
+using FoodDiary.Presentation.Api.Requests;
 
 namespace FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Mappings;
 
@@ -13,6 +15,9 @@ public static class ShoppingListHttpMappings {
     extension(Guid userId) {
         public GetCurrentShoppingListQuery ToCurrentQuery() => new(userId);
         public GetShoppingListsQuery ToListQuery() => new(userId);
+        public GetShoppingListsQuery ToListQuery(OffsetPaginationHttpQuery pagination, string? search) =>
+            new(userId, pagination.Page, pagination.Limit, search);
+        public GetShoppingListOverviewQuery ToOverviewQuery() => new(userId);
         public GetShoppingListByIdQuery ToGetByIdQuery(Guid userId1) =>
             new(userId1, userId);
         public DeleteShoppingListCommand ToDeleteCommand(Guid userId1) =>

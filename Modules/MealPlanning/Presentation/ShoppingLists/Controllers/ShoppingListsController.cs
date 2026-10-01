@@ -1,4 +1,3 @@
-using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListOverview;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -20,7 +19,7 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     [HttpGet("overview")]
     [ProducesResponseType<ShoppingListOverviewHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId) =>
-        HandleOk(new GetShoppingListOverviewQuery(userId), static value => new ShoppingListOverviewHttpResponse(
+        HandleOk(userId.ToOverviewQuery(), static value => new ShoppingListOverviewHttpResponse(
             value.SelectedList?.ToHttpResponse(), new ShoppingListPageHttpResponse(
                 value.Lists.Items.Select(item => item.ToHttpResponse()).ToList(), value.Lists.HasMore, value.Lists.NextPage)));
 
@@ -36,8 +35,7 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
         [FromCurrentUser] Guid userId,
         [FromQuery] OffsetPaginationHttpQuery pagination,
         [FromQuery] string? search = null) =>
-        HandleOk(new FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists.GetShoppingListsQuery(
-            userId, pagination.Page, pagination.Limit, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
+        HandleOk(userId.ToListQuery(pagination, search), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]

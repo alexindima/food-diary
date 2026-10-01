@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1307,
     "ambiguousContracts": 2,
-    "consumerEdges": 10150,
-    "productionConsumerEdges": 5817,
-    "testConsumerEdges": 4333,
+    "consumerEdges": 10157,
+    "productionConsumerEdges": 5819,
+    "testConsumerEdges": 4338,
     "consumedContracts": 1307,
     "unconsumedContracts": 0
   },
@@ -28596,6 +28596,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "CatalogDayHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/MealPlans/Requests/CatalogDayHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/CatalogMealPlanHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "CatalogMealHttpRequest",
       "roles": [
         "Request"
@@ -34651,6 +34664,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CursorPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -44175,7 +44201,7 @@
         "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -44201,7 +44227,7 @@
         "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50480,7 +50506,7 @@
         "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
+      "consumerPath": "Modules/Products/Presentation/Mappings/ProductHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -51572,7 +51598,7 @@
         "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -51611,22 +51637,9 @@
         "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetShoppingListsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetShoppingListsQuery",
@@ -133263,7 +133276,33 @@
         "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -133355,6 +133394,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OffsetPaginationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Requests/OffsetPaginationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -142971,7 +143023,7 @@
         "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -142989,6 +143041,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "SaveCatalogMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/CatalogMealPlanHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "SaveCatalogMealPlanHttpRequest",
       "roles": [
         "Request"
@@ -142999,7 +143064,33 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 2
+    },
+    {
+      "contract": "SaveCatalogMealPlanHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SaveCatalogMealPlanHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/CatalogMealPlanHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ScheduledNotificationHttpResponse",
@@ -143309,7 +143400,7 @@
         "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },

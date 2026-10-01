@@ -194,6 +194,7 @@ public sealed class ControllerConventionsTests {
             "BillingWebhookController",
             "LogsController",
             "MarketingAttributionController.Create",
+            "PublicProductsController",
             "PublicRecipesController",
             "TelegramOperationsController",
             "VersionController",
@@ -349,6 +350,8 @@ public sealed class ControllerConventionsTests {
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
                 and not "EnumerableHttpResponseMappings.cs")
+            .Where(path => !path.EndsWith(Path.Combine("FoodDiary.Presentation.Api", "Requests", "CursorPaginationHttpQuery.cs"), StringComparison.OrdinalIgnoreCase)
+                && !path.EndsWith(Path.Combine("FoodDiary.Presentation.Api", "Requests", "OffsetPaginationHttpQuery.cs"), StringComparison.OrdinalIgnoreCase))
             .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
 
@@ -453,6 +456,7 @@ public sealed class ControllerConventionsTests {
             "FoodDiary.Modules.Billing.Presentation.Controllers.BillingWebhookController" or
             "FoodDiary.Modules.Fasting.Presentation.Features.Logs.LogsController" or
             "FoodDiary.Modules.Marketing.Presentation.Controllers.MarketingAttributionController" or
+            "FoodDiary.Modules.Products.Presentation.Controllers.PublicProductsController" or
             "FoodDiary.Modules.Recipes.Presentation.Controllers.PublicRecipesController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";
 

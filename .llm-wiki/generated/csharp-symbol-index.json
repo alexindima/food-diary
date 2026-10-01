@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4316,
-    "symbols": 4247,
+    "sourceFiles": 4317,
+    "symbols": 4248,
     "interfaceImplementationLinks": 192,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2218,
+      "class": 2219,
       "enum": 65,
       "interface": 403,
       "record": 1440,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1742,
+      "Other": 1743,
       "Query": 297,
       "QueryHandler": 213,
       "ReadModelRepository": 33,
@@ -18231,7 +18231,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
-      "line": 24
+      "line": 20
     },
     {
       "name": "MealPlansController",
@@ -18239,6 +18239,13 @@
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
       "line": 19
+    },
+    {
+      "name": "CatalogMealPlanHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/CatalogMealPlanHttpMappings.cs",
+      "line": 9
     },
     {
       "name": "MealPlanHttpMappings",
@@ -18308,14 +18315,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "ShoppingListHttpMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ShoppingListHttpResponseMappings",
@@ -21304,7 +21311,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "ProductsPresentationServiceCollectionExtensions",
@@ -21325,7 +21332,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Presentation/Mappings/ProductHttpQueryMappings.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ProductHttpResponseMappings",
