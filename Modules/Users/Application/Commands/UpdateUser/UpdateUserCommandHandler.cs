@@ -175,9 +175,9 @@ public sealed class UpdateUserCommandHandler(
             user.SetTimeZone(command.TimeZoneId);
         }
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
-            Username: Normalize(command.Username),
-            FirstName: Normalize(command.FirstName),
-            LastName: Normalize(command.LastName),
+            Username: command.Username?.Trim(),
+            FirstName: command.FirstName?.Trim(),
+            LastName: command.LastName?.Trim(),
             BirthDate: command.BirthDate,
             Gender: values.Gender,
             WeightKg: command.WeightKg,

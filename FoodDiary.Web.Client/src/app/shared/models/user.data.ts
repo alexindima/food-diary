@@ -98,9 +98,9 @@ export class UpdateUserDto {
 
     public constructor(formValues: Partial<UpdateUserFormValues>) {
         this.timeZoneId = normalizeString(formValues.timeZoneId);
-        this.username = normalizeString(formValues.username);
-        this.firstName = normalizeString(formValues.firstName);
-        this.lastName = normalizeString(formValues.lastName);
+        this.username = normalizeProfileName(formValues.username);
+        this.firstName = normalizeProfileName(formValues.firstName);
+        this.lastName = normalizeProfileName(formValues.lastName);
         this.birthDate = normalizeDate(formValues.birthDate);
         this.gender = normalizeString(formValues.gender);
         this.heightCm = normalizeNumber(formValues.heightCm);
@@ -136,6 +136,9 @@ export class UpdateUserAppearanceDto {
         this.surfaceStyle = formValues.surfaceStyle ?? undefined;
     }
 }
+
+const normalizeProfileName = (value: string | null | undefined): string | undefined =>
+    value === undefined ? undefined : (value ?? '').trim();
 
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();

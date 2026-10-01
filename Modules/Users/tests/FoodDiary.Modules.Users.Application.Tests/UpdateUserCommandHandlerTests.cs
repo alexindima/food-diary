@@ -16,6 +16,27 @@ namespace FoodDiary.Modules.Users.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class UpdateUserCommandHandlerTests {
     [Theory]
+    [InlineData(null, "Existing")]
+    [InlineData("", "")]
+    [InlineData(" \t ", "")]
+    [InlineData(" Updated ", "Updated")]
+    public async Task Handle_PersonalNamesPreserveOmittedValuesAndApplyExplicitClears(string? input, string? expected) {
+        var user = User.Create("profile-clear@example.com", "hash");
+        user.UpdatePersonalInfo(username: "Existing", firstName: "Existing", lastName: "Existing");
+        UpdateUserCommandHandler handler = new(CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { Username = input, FirstName = input, LastName = input };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(expected, user.Username),
+            () => Assert.Equal(expected, user.FirstName),
+            () => Assert.Equal(expected, user.LastName));
+    }
+
+    [Theory]
     [InlineData("Asia/Tbilisi", true)]
     [InlineData("America/New_York", true)]
     [InlineData("UTC", true)]

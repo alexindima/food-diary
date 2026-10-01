@@ -145,6 +145,34 @@ describe('UserService info', () => {
     });
 });
 
+describe('UserService optional profile names', () => {
+    it.each([
+        { input: null, expected: '' },
+        { input: '', expected: '' },
+        { input: ' \t ', expected: '' },
+        { input: ' Updated ', expected: 'Updated' },
+    ])('transmits explicit name edits including clears: $input', ({ input, expected }) => {
+        service.update(new UpdateUserDto({ username: input, firstName: input, lastName: input })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(req.request.method).toBe('PATCH');
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({
+            username: expected,
+            firstName: expected,
+            lastName: expected,
+        });
+        req.flush(MOCK_USER);
+    });
+
+    it('omits name fields from an unrelated profile update', () => {
+        service.update(new UpdateUserDto({ heightCm: 175 })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ heightCm: 175 });
+        req.flush(MOCK_USER);
+    });
+});
+
 describe('UserService password', () => {
     it('should change password', () => {
         const request: ChangePasswordRequest = { currentPassword: 'old', newPassword: 'new' };
