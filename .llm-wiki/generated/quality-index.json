@@ -10618,11 +10618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "nonBlankLines": 130,
+      "nonBlankLines": 121,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.1
+      "structuralRiskScore": 12.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/public-product.service.ts",

@@ -37,9 +37,7 @@ export class ProductService extends ApiService {
 
         return this.get<PageOf<Product>>('', params).pipe(
             map(result => ({ ...result, data: result.data.map(normalizeProductUnit) })),
-            catchError((error: unknown) =>
-                fallbackApiError('Query products error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
-            ),
+            catchError((error: unknown) => rethrowApiError('Query products error', error)),
         );
     }
 
@@ -69,14 +67,7 @@ export class ProductService extends ApiService {
                 favoriteItems: overview.favoriteItems.map(normalizeProductUnit),
                 allProducts: { ...overview.allProducts, data: overview.allProducts.data.map(normalizeProductUnit) },
             })),
-            catchError((error: unknown) =>
-                fallbackApiError('Query product overview error', error, {
-                    recentItems: [],
-                    favoriteItems: [],
-                    favoriteTotalCount: 0,
-                    allProducts: { data: [], page, limit, totalPages: 0, totalItems: 0 },
-                }),
-            ),
+            catchError((error: unknown) => rethrowApiError('Query product overview error', error)),
         );
     }
 

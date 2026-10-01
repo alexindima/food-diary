@@ -128,13 +128,18 @@ describe('ProductService query', () => {
         req.flush(MOCK_PAGE);
     });
 
-    it('should return empty PageOf on query failure', () => {
-        service.query(1, DEFAULT_PAGE_LIMIT).subscribe(result => {
-            expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
+    it('propagates query failures instead of reporting an empty catalogue', () => {
+        let received: unknown;
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe({
+            next: () => expect.fail('A failed query must not emit an empty page'),
+            error: (error: unknown) => {
+                received = error;
+            },
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(received).toMatchObject({ status: 500 });
     });
 });
 
@@ -352,20 +357,18 @@ describe('Product mutation failures', () => {
         httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions`).flush({}, { status: 503, statusText: 'Unavailable' });
         expect(received).toEqual([]);
     });
-    it('retains requested pagination in the overview fallback', () => {
+    it('propagates overview failures instead of reporting an empty catalogue', () => {
         let received: unknown;
-        service.queryOverview({ page: 3, limit: 7, favoriteLimit: 0 }).subscribe(value => {
-            received = value;
+        service.queryOverview({ page: 3, limit: 7, favoriteLimit: 0 }).subscribe({
+            next: () => expect.fail('A failed overview must not emit empty sections'),
+            error: (error: unknown) => {
+                received = error;
+            },
         });
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/overview`);
         expect(req.request.params.get('favoriteLimit')).toBe('0');
         req.flush({}, { status: 503, statusText: 'Unavailable' });
-        expect(received).toEqual({
-            recentItems: [],
-            favoriteItems: [],
-            favoriteTotalCount: 0,
-            allProducts: { data: [], page: 3, limit: 7, totalPages: 0, totalItems: 0 },
-        });
+        expect(received).toMatchObject({ status: 503 });
     });
 });
 
