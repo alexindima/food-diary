@@ -187,6 +187,24 @@ describe('RecipeListFacade favorites', () => {
 });
 
 describe('RecipeListFacade overview', () => {
+    it('opens a visible public recipe without requiring ownership', async () => {
+        const publicRecipe = { ...recipe, isOwnedByCurrentUser: false };
+        recipeService.getById.mockImplementation((_id: string, includePublic: boolean) => of(includePublic ? publicRecipe : null));
+
+        expect(await facade.getRecipeDetailAsync(publicRecipe.id)).toEqual(publicRecipe);
+        expect(recipeService.getById).toHaveBeenCalledWith(publicRecipe.id, true);
+        expect(toastService.error).not.toHaveBeenCalled();
+    });
+
+    it.each(['absent', 'error'])('reports unavailable detail (%s) and allows another opening attempt', async failure => {
+        recipeService.getById.mockReturnValueOnce(failure === 'absent' ? of(null) : throwError(() => new Error('offline')));
+
+        expect(await facade.getRecipeDetailAsync(recipe.id)).toBeNull();
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('ERRORS.LOAD_FAILED_MESSAGE');
+        expect(await facade.getRecipeDetailAsync(recipe.id)).toEqual(recipe);
+        expect(toastService.error).toHaveBeenCalledTimes(1);
+    });
+
     it('loads initial overview and updates derived state', () => {
         facade.loadInitialOverview(1, PAGE_LIMIT, { search: null }, false).subscribe();
 

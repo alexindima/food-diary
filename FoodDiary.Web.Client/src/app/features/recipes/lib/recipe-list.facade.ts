@@ -248,7 +248,11 @@ export class RecipeListFacade {
     }
 
     public async getRecipeDetailAsync(recipeId: string): Promise<Recipe | null> {
-        return firstValueFrom(this.recipeService.getById(recipeId, false).pipe(catchError(() => of(null))));
+        const recipe = await firstValueFrom(this.recipeService.getById(recipeId, true).pipe(catchError(() => of(null))));
+        if (recipe === null) {
+            this.toastService.error(this.translateService.instant('ERRORS.LOAD_FAILED_MESSAGE'));
+        }
+        return recipe;
     }
 
     public removeFavorite(favorite: FavoriteRecipe): Observable<void> {
