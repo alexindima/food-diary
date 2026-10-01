@@ -30,7 +30,7 @@ export class ShoppingListService extends ApiService {
 
     public getPage(page = 1, search = ''): Observable<ShoppingListSummary[]> {
         return this.get<ShoppingListSummary[]>('page', { page, limit: 20, search }).pipe(
-            catchError((error: unknown) => fallbackApiError('Get shopping lists error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Get shopping lists error', error)),
         );
     }
 

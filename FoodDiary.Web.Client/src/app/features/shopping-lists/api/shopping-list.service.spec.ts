@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
@@ -118,13 +118,15 @@ describe('ShoppingListService failures', () => {
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
-    it('should return empty array on getPage failure', () => {
-        service.getPage().subscribe(result => {
-            expect(result).toEqual([]);
-        });
+    it.each([HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable])('should propagate page failure %s', status => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getPage().subscribe({ next, error });
 
         const req = httpMock.expectOne(`${BASE_URL}/page?page=1&limit=20&search=`);
-        req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        req.flush('Server Error', { status, statusText: 'Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status }));
     });
 
     it('should return null on getById failure', () => {

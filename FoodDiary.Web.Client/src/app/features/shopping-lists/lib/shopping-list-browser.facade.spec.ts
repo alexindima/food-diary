@@ -1,7 +1,10 @@
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../environments/environment';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListSummary } from '../models/shopping-list.data';
 import { ShoppingListBrowserFacade } from './shopping-list-browser.facade';
@@ -65,5 +68,37 @@ describe('Shopping list lazy loading', () => {
         facade.loadMore();
         expect(service.getPage).toHaveBeenLastCalledWith(1, 'new');
         expect(facade.failed()).toBe(false);
+    });
+});
+
+describe('Shopping list browser HTTP recovery', () => {
+    it.each(['', 'milk'])('preserves a failed page and retries its query "%s"', search => {
+        TestBed.configureTestingModule({
+            providers: [ShoppingListBrowserFacade, ShoppingListService, provideHttpClient(), provideHttpClientTesting()],
+        });
+        const facade = TestBed.inject(ShoppingListBrowserFacade);
+        const http = TestBed.inject(HttpTestingController);
+        const first = { id: 'first', name: 'First', createdAt: '', itemsCount: 0, completed: false };
+        const second = { id: 'second', name: 'Second', createdAt: '', itemsCount: 0 };
+        if (search === '') {
+            facade.seed({ items: [first], hasMore: true, nextPage: 2 });
+            facade.loadMore();
+        } else {
+            facade.reset(search);
+        }
+        const page = search === '' ? 2 : 1;
+        const url = `${environment.apiUrls.shoppingLists}/page?page=${page}&limit=20&search=${search}`;
+        http.expectOne(url).flush('Unavailable', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        expect(facade.failed()).toBe(true);
+        expect(facade.loading()).toBe(false);
+        expect(facade.hasMore()).toBe(true);
+        expect(facade.lists()).toEqual(search === '' ? [first] : []);
+        facade.loadMore();
+        http.expectOne(url).flush([second]);
+        expect(facade.failed()).toBe(false);
+        expect(facade.loading()).toBe(false);
+        expect(facade.hasMore()).toBe(false);
+        expect(facade.lists()).toEqual(search === '' ? [first, { ...second, completed: false }] : [{ ...second, completed: false }]);
+        http.verify();
     });
 });
