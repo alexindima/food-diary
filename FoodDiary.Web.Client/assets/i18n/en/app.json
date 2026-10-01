@@ -1970,7 +1970,7 @@
             "BALANCE_LEFT": "remaining",
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
-            "HELP_TEXT": "This button restarts the dashboard tour whenever you need a quick reminder."
+            "HELP_TEXT": "Use this button to replay the dashboard tour whenever you need a quick reminder."
         },
         "APPEARANCE": {
             "TITLE": "Appearance",
