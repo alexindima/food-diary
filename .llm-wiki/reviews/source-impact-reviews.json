@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "273cf6365da6c6abedebf03e741db1de2750e52479ba707bbf6baeeed307585b"
+          "sha256": "a3ae1ad691b1ff527867139fcb57d3f6ae290aef92cf269b8f167aa19e878ce4"
         }
       ],
-      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
+      "reason": "Restore cycle settings lifecycle, protect pending operations, recover failures, preserve partial saves and render readable labels and localized episode ranges",
       "baseRef": "HEAD",
-      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
-      "reviewedAtUtc": "2026-10-01T21:48:00.7902005Z"
+      "gitHead": "9a77e31851f46c8bd3ee58599230ab7a0e4927c5",
+      "reviewedAtUtc": "2026-10-01T22:30:43.9476800Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "273cf6365da6c6abedebf03e741db1de2750e52479ba707bbf6baeeed307585b"
+          "sha256": "a3ae1ad691b1ff527867139fcb57d3f6ae290aef92cf269b8f167aa19e878ce4"
         }
       ],
-      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
+      "reason": "Restore cycle settings lifecycle, protect pending operations, recover failures, preserve partial saves and render readable labels and localized episode ranges",
       "baseRef": "HEAD",
-      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
-      "reviewedAtUtc": "2026-10-01T21:48:01.4266476Z"
+      "gitHead": "9a77e31851f46c8bd3ee58599230ab7a0e4927c5",
+      "reviewedAtUtc": "2026-10-01T22:30:44.4523856Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a6649f45aabffc305f01566a5fc85de513d4047489c40ab8d7cc3c76785b091d"
+          "sha256": "1b7cb2ce6916ecb5337d1f5b89e56071bf9063165b8a463004bd83b2a5bb3df2"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "620ad2b91ff6bb6443cdf222a478ce77181c41a539017c26878ec775e90fa72f"
+          "sha256": "a83bb37733d824d935ca3ebebbe163d0b65b39e61493396fea18f11e207889d6"
         }
       ],
-      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
+      "reason": "Restore cycle settings lifecycle, protect pending operations, recover failures, preserve partial saves and render readable labels and localized episode ranges",
       "baseRef": "HEAD",
-      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
-      "reviewedAtUtc": "2026-10-01T21:48:01.9801881Z"
+      "gitHead": "9a77e31851f46c8bd3ee58599230ab7a0e4927c5",
+      "reviewedAtUtc": "2026-10-01T22:30:45.0219531Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a6649f45aabffc305f01566a5fc85de513d4047489c40ab8d7cc3c76785b091d"
+          "sha256": "1b7cb2ce6916ecb5337d1f5b89e56071bf9063165b8a463004bd83b2a5bb3df2"
         }
       ],
-      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
+      "reason": "Restore cycle settings lifecycle, protect pending operations, recover failures, preserve partial saves and render readable labels and localized episode ranges",
       "baseRef": "HEAD",
-      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
-      "reviewedAtUtc": "2026-10-01T21:48:00.2270710Z"
+      "gitHead": "9a77e31851f46c8bd3ee58599230ab7a0e4927c5",
+      "reviewedAtUtc": "2026-10-01T22:30:43.4419315Z"
     },
     {
       "pageId": "workflow.query-context",

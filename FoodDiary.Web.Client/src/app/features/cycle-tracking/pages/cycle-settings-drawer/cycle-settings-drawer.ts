@@ -1,5 +1,5 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -38,6 +38,14 @@ export class CycleSettingsDrawerComponent {
     public readonly isDeleting = input.required<boolean>();
     public readonly closed = output();
     public readonly deleteRequested = output();
+
+    protected readonly isBusy = computed(() => this.isSaving() || this.isDeleting());
+
+    protected close(): void {
+        if (!this.isBusy()) {
+            this.closed.emit();
+        }
+    }
 
     protected numberError(fieldName: 'averageCycleLength' | 'averagePeriodLength' | 'lutealLength'): string | null {
         const field = this.settingsForm()[fieldName]();

@@ -11,7 +11,7 @@ import {
 export type { CycleDayFormModel, CycleSettingsFormModel } from './cycle-tracking.form-models';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, max, min, required, validate } from '@angular/forms/signals';
+import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
 import { finalize, firstValueFrom } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
@@ -64,6 +64,7 @@ export class CycleTrackingFacade {
     public readonly isSavingCycle = signal(false);
     public readonly isSavingSettings = signal(false);
     public readonly isDeletingCycle = signal(false);
+    private readonly isSettingsBusy = computed(() => this.isSavingSettings() || this.isDeletingCycle());
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
     public readonly isSavingEpisode = signal(false);
@@ -151,6 +152,7 @@ export class CycleTrackingFacade {
     public readonly settingsForm = form(
         this.settingsModel,
         path => {
+            disabled(path, { when: () => this.isSettingsBusy() });
             required(path.mode);
             required(path.goal);
             required(path.reproductiveState);
@@ -245,6 +247,32 @@ export class CycleTrackingFacade {
         this.loadCycle();
     }
 
+    public cancelSettingsEdit(): void {
+        if (this.isSettingsBusy()) {
+            return;
+        }
+        this.settingsError.set(null);
+        const cycle = this.cycle();
+        if (cycle === null) {
+            return;
+        }
+        this.settingsForm().reset({
+            mode: cycle.mode,
+            averageCycleLength: cycle.averageCycleLength,
+            averagePeriodLength: cycle.averagePeriodLength,
+            lutealLength: cycle.lutealLength,
+            isRegular: cycle.isRegular,
+            showFertilityEstimates: cycle.showFertilityEstimates,
+            discreetNotifications: cycle.discreetNotifications,
+            goal: cycle.goal,
+            reproductiveState: cycle.reproductiveState,
+            hideFromDashboard: cycle.hideFromDashboard,
+            cycleTrackingConsentGranted: true,
+            nutritionInsightsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS),
+            fertilitySignalsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS),
+        });
+    }
+
     public startCycle(): void {
         void this.startCycleAsync();
     }
@@ -292,43 +320,31 @@ export class CycleTrackingFacade {
 
     private async saveSettingsAsync(): Promise<void> {
         const currentCycle = this.cycle();
+        if (this.isSettingsBusy()) {
+            return;
+        }
         if (currentCycle === null || this.settingsForm().invalid()) {
             this.settingsForm().markAsTouched();
             return;
         }
 
         const formValue = this.settingsModel();
-        if (
-            formValue.mode === null ||
-            formValue.averageCycleLength === null ||
-            formValue.averagePeriodLength === null ||
-            formValue.lutealLength === null
-        ) {
+        const payload = this.buildSettingsPayload(formValue);
+        if (payload === null) {
             return;
         }
-
-        const payload: UpdateCycleSettingsPayload = {
-            mode: formValue.mode,
-            averageCycleLength: formValue.averageCycleLength,
-            averagePeriodLength: formValue.averagePeriodLength,
-            lutealLength: formValue.lutealLength,
-            isRegular: formValue.isRegular,
-            showFertilityEstimates: formValue.showFertilityEstimates,
-            discreetNotifications: formValue.discreetNotifications,
-            goal: formValue.goal ?? undefined,
-            reproductiveState: formValue.reproductiveState ?? undefined,
-            hideFromDashboard: formValue.hideFromDashboard,
-        };
 
         this.settingsError.set(null);
         this.isSavingSettings.set(true);
         try {
             let updatedCycle = await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload));
+            this.cycle.set(updatedCycle);
             updatedCycle = await this.updateConsentIfChangedAsync(
                 updatedCycle,
                 CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
                 formValue.nutritionInsightsConsentGranted,
             );
+            this.cycle.set(updatedCycle);
             updatedCycle = await this.updateConsentIfChangedAsync(
                 updatedCycle,
                 CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
@@ -340,17 +356,43 @@ export class CycleTrackingFacade {
             this.settingsSaveRevision.update(revision => revision + 1);
         } catch {
             this.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
+            this.loadNutritionSummary(this.cycle());
         } finally {
             this.isSavingSettings.set(false);
         }
     }
 
+    private buildSettingsPayload(formValue: CycleSettingsFormModel): UpdateCycleSettingsPayload | null {
+        if (
+            formValue.mode === null ||
+            formValue.averageCycleLength === null ||
+            formValue.averagePeriodLength === null ||
+            formValue.lutealLength === null
+        ) {
+            return null;
+        }
+
+        return {
+            mode: formValue.mode,
+            averageCycleLength: formValue.averageCycleLength,
+            averagePeriodLength: formValue.averagePeriodLength,
+            lutealLength: formValue.lutealLength,
+            isRegular: formValue.isRegular,
+            showFertilityEstimates: formValue.showFertilityEstimates,
+            discreetNotifications: formValue.discreetNotifications,
+            goal: formValue.goal ?? undefined,
+            reproductiveState: formValue.reproductiveState ?? undefined,
+            hideFromDashboard: formValue.hideFromDashboard,
+        };
+    }
+
     public async deleteCycleAsync(): Promise<void> {
         const currentCycle = this.cycle();
-        if (currentCycle === null || this.isDeletingCycle()) {
+        if (currentCycle === null || this.isDeletingCycle() || this.isSavingSettings()) {
             return;
         }
 
+        this.settingsError.set(null);
         this.isDeletingCycle.set(true);
         try {
             await firstValueFrom(this.cyclesService.deleteCycle(currentCycle.id));
@@ -359,6 +401,8 @@ export class CycleTrackingFacade {
             this.cancelDayEdit();
             this.cancelFactorEdit();
             this.cancelMenstrualEpisodeEdit();
+        } catch {
+            this.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
         } finally {
             this.isDeletingCycle.set(false);
         }
@@ -807,21 +851,7 @@ export class CycleTrackingFacade {
             .subscribe(cycle => {
                 this.cycle.set(cycle);
                 if (cycle !== null) {
-                    this.settingsModel.set({
-                        mode: cycle.mode,
-                        averageCycleLength: cycle.averageCycleLength,
-                        averagePeriodLength: cycle.averagePeriodLength,
-                        lutealLength: cycle.lutealLength,
-                        isRegular: cycle.isRegular,
-                        showFertilityEstimates: cycle.showFertilityEstimates,
-                        discreetNotifications: cycle.discreetNotifications,
-                        goal: cycle.goal,
-                        reproductiveState: cycle.reproductiveState,
-                        hideFromDashboard: cycle.hideFromDashboard,
-                        cycleTrackingConsentGranted: true,
-                        nutritionInsightsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS),
-                        fertilitySignalsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS),
-                    });
+                    this.cancelSettingsEdit();
                 }
                 this.loadNutritionSummary(cycle);
             });

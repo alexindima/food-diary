@@ -363,11 +363,15 @@
                                                 <div class="cycle-tracking__episode fd-stack fd-gap-xs">
                                                     <div class="fd-row fd-justify-between fd-gap-sm fd-align-center">
                                                         <strong class="fd-ui-action-text">
-                                                            {{ formatEpisodeDate(episode.startDate) }} â€”
                                                             {{
-                                                                episode.endDate
-                                                                    ? formatEpisodeDate(episode.endDate)
-                                                                    : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate)
+                                                                'CYCLE_TRACKING.EPISODE_DATE_RANGE'
+                                                                    | translate
+                                                                        : {
+                                                                              start: formatEpisodeDate(episode.startDate),
+                                                                              end: episode.endDate
+                                                                                  ? formatEpisodeDate(episode.endDate)
+                                                                                  : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate),
+                                                                          }
                                                             }}
                                                         </strong>
                                                         <span class="fd-ui-pill fd-ui-pill--compact fd-ui-pill--secondary fd-ui-meta-text">

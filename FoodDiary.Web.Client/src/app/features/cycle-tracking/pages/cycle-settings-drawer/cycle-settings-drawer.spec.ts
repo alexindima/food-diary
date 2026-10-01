@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ExportService } from '../../../../shared/api/export.service';
@@ -56,5 +56,25 @@ describe('CycleSettingsDrawerComponent errors', () => {
         expect(element.querySelector('[role=alert]')?.textContent).toContain('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
         expect(element.querySelectorAll('input[type=number]')).toHaveLength(DURATION_FIELD_COUNT);
         expect(element.querySelector('button[type=submit]')?.hasAttribute('disabled')).toBe(false);
+    });
+});
+
+describe('CycleSettingsDrawerComponent pending actions', () => {
+    it.each(['isSaving', 'isDeleting'] as const)('blocks dismissal while %s', operation => {
+        fixture.componentRef.setInput(operation, true);
+        fixture.detectChanges();
+        const closed = vi.fn();
+        fixture.componentInstance.closed.subscribe(closed);
+        const element = fixture.nativeElement as HTMLElement;
+        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        expect(closed).not.toHaveBeenCalled();
+        const buttons = Array.from(element.querySelectorAll('button'));
+        expect(buttons.find(button => button.textContent.includes('COMMON.CANCEL'))?.disabled).toBe(true);
+        expect(element.querySelector<HTMLButtonElement>('.cycle-drawer__backdrop')?.disabled).toBe(true);
+        expect(element.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+        fixture.componentRef.setInput(operation, false);
+        fixture.detectChanges();
+        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        expect(closed).toHaveBeenCalledOnce();
     });
 });

@@ -135,7 +135,8 @@ describe('CycleTrackingFacade current cycle', () => {
         cyclesService.deleteCycle.mockReturnValueOnce(throwError(() => new Error('delete failed')));
         facade.initialize();
 
-        await expect(facade.deleteCycleAsync()).rejects.toThrow('delete failed');
+        await expect(facade.deleteCycleAsync()).resolves.toBeUndefined();
+        expect(facade.settingsError()).toBe('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
 
         expect(facade.cycle()?.id).toBe('cycle-1');
         expect(facade.nutritionSummary()).not.toBeNull();
@@ -271,6 +272,107 @@ describe('CycleTrackingFacade duration validation', () => {
             expect(cyclesService.create).not.toHaveBeenCalled();
         },
     );
+});
+
+describe('CycleTrackingFacade settings cancellation', () => {
+    it('discards every cancelled preference and clears validation and request feedback', () => {
+        facade.initialize();
+        const saved = facade.settingsModel();
+        facade.settingsModel.update(model => ({
+            ...model,
+            averageCycleLength: null,
+            isRegular: !model.isRegular,
+            hideFromDashboard: !model.hideFromDashboard,
+            nutritionInsightsConsentGranted: !model.nutritionInsightsConsentGranted,
+            fertilitySignalsConsentGranted: !model.fertilitySignalsConsentGranted,
+        }));
+        facade.settingsForm.averageCycleLength().markAsTouched();
+        facade.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
+        facade.cancelSettingsEdit();
+        expect(facade.settingsModel()).toEqual(saved);
+        expect(facade.settingsForm.averageCycleLength().touched()).toBe(false);
+        expect(facade.settingsForm().invalid()).toBe(false);
+        expect(facade.settingsError()).toBeNull();
+        expect(cyclesService.updateSettings).not.toHaveBeenCalled();
+        expect(cyclesService.updateConsent).not.toHaveBeenCalled();
+    });
+
+    it.each(['isSavingSettings', 'isDeletingCycle'] as const)('does not discard a draft while %s', operation => {
+        facade.initialize();
+        facade.settingsModel.update(model => ({ ...model, averageCycleLength: 30 }));
+        const draft = facade.settingsModel();
+        facade[operation].set(true);
+        facade.cancelSettingsEdit();
+        expect(facade.settingsModel()).toEqual(draft);
+    });
+
+    it('resets to the newest persisted settings after a later draft is cancelled', async () => {
+        facade.initialize();
+        const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
+        cyclesService.updateSettings.mockReturnValue(of(persisted));
+        facade.settingsModel.update(model => ({ ...model, averageCycleLength: persisted.averageCycleLength }));
+        await submit(facade.settingsForm);
+        facade.settingsModel.update(model => ({ ...model, averageCycleLength: null }));
+        facade.cancelSettingsEdit();
+        expect(facade.settingsModel().averageCycleLength).toBe(persisted.averageCycleLength);
+    });
+});
+
+describe('CycleTrackingFacade settings operations', () => {
+    it('does not delete the cycle during an unresolved settings save', async () => {
+        facade.initialize();
+        const pending = new Subject<CycleResponse>();
+        cyclesService.updateSettings.mockReturnValue(pending);
+        const saving = submit(facade.settingsForm);
+        await facade.deleteCycleAsync();
+        expect(cyclesService.deleteCycle).not.toHaveBeenCalled();
+        expect(facade.settingsForm().disabled()).toBe(true);
+        pending.next(createCycleResponse());
+        pending.complete();
+        await saving;
+        expect(facade.settingsForm().disabled()).toBe(false);
+    });
+
+    it('does not save settings during unresolved deletion', async () => {
+        facade.initialize();
+        const pending = new Subject<void>();
+        cyclesService.deleteCycle.mockReturnValue(pending);
+        const deleting = facade.deleteCycleAsync();
+        await submit(facade.settingsForm);
+        expect(cyclesService.updateSettings).not.toHaveBeenCalled();
+        pending.next();
+        pending.complete();
+        await deleting;
+        expect(facade.cycle()).toBeNull();
+    });
+
+    it('shows deletion failure and allows retry without losing the cycle', async () => {
+        facade.initialize();
+        cyclesService.deleteCycle.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        await expect(facade.deleteCycleAsync()).resolves.toBeUndefined();
+        expect(facade.settingsError()).toBe('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
+        expect(facade.cycle()?.id).toBe('cycle-1');
+        expect(facade.isDeletingCycle()).toBe(false);
+        await facade.deleteCycleAsync();
+        expect(cyclesService.deleteCycle).toHaveBeenCalledTimes(2);
+        expect(facade.settingsError()).toBeNull();
+        expect(facade.cycle()).toBeNull();
+    });
+
+    it('retains confirmed settings when a later consent request fails', async () => {
+        facade.initialize();
+        const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
+        cyclesService.updateSettings.mockReturnValue(of(persisted));
+        cyclesService.updateConsent.mockReturnValue(throwError(() => new Error('unavailable')));
+        facade.settingsModel.update(model => ({ ...model, averageCycleLength: 30, nutritionInsightsConsentGranted: true }));
+        await submit(facade.settingsForm);
+        expect(facade.cycle()?.averageCycleLength).toBe(persisted.averageCycleLength);
+        expect(facade.settingsSaveRevision()).toBe(0);
+        expect(facade.settingsError()).toBe('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
+        facade.cancelSettingsEdit();
+        expect(facade.settingsModel().averageCycleLength).toBe(persisted.averageCycleLength);
+        expect(facade.settingsModel().nutritionInsightsConsentGranted).toBe(false);
+    });
 });
 
 describe('CycleTrackingFacade settings saving', () => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -236,7 +236,17 @@ export class CycleTrackingPageComponent {
         });
         effect(() => {
             if (this.facade.settingsSaveRevision() > 0) {
-                this.closeSettings();
+                untracked(() => {
+                    this.closeSettings();
+                });
+            }
+        });
+        effect(() => {
+            if (this.facade.cycle() === null) {
+                untracked(() => {
+                    this.isSettingsOpen.set(false);
+                    this.isDayEditorOpen.set(false);
+                });
             }
         });
         this.facade.initialize();
@@ -276,11 +286,19 @@ export class CycleTrackingPageComponent {
     }
 
     protected openSettings(): void {
+        if (this.isSavingSettings() || this.isDeletingCycle() || this.cycle() === null) {
+            return;
+        }
+        this.facade.cancelSettingsEdit();
         this.isDayEditorOpen.set(false);
         this.isSettingsOpen.set(true);
     }
 
     protected closeSettings(): void {
+        if (this.isSavingSettings() || this.isDeletingCycle()) {
+            return;
+        }
+        this.facade.cancelSettingsEdit();
         this.isSettingsOpen.set(false);
     }
 
@@ -330,6 +348,9 @@ export class CycleTrackingPageComponent {
     }
 
     protected deleteCycle(): void {
+        if (this.isSavingSettings() || this.isDeletingCycle() || this.cycle() === null) {
+            return;
+        }
         this.dialogService
             .open(FdUiConfirmDialogComponent, {
                 size: 'sm',
