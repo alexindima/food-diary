@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -44,6 +45,23 @@ describe('GamificationHabitPathComponent', () => {
         expect(element.querySelector('.habit-path__recent-item time')?.getAttribute('datetime')).toBe('2026-08-09T12:00:00Z');
         expect(element.querySelectorAll('.habit-path__badge')).toHaveLength(BADGES.length);
     });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- These counts cover English and Russian plural boundaries. */
+    it.each([
+        ['en', 1, 'ONE'],
+        ['en', 21, 'OTHER'],
+        ['ru', 1, 'ONE'],
+        ['ru', 2, 'FEW'],
+        ['ru', 11, 'MANY'],
+        ['ru', 21, 'ONE'],
+    ])('uses %s plural form for %i days', (language, count, category) => {
+        TestBed.inject(TranslateService).use(String(language));
+        const fixture = createComponent();
+        fixture.componentRef.setInput('currentStreak', Number(count));
+        fixture.detectChanges();
+        expect(getElement(fixture).textContent).toContain(`GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW_${category}`);
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- Restore the normal rule after boundary cases. */
 
     it('opens all earned achievements from the recent card', () => {
         const fixture = createComponent();

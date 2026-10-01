@@ -389,6 +389,7 @@ public class ExportFeatureTests {
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "heavy, painful");
         profile.UpsertSymptomEntry(CycleTestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
+        profile.SetDayNotes(CycleTestDate, "private daily note");
         profile.UpsertFertilitySignal(CycleTestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
         profile.UpsertFactor(CycleFactorType.HormonalContraception, CycleTestDate.AddDays(-1), endDate: null, notes: "pill");
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
@@ -407,6 +408,7 @@ public class ExportFeatureTests {
         Assert.Contains("Factor,2026-03-31,,HormonalContraception", content, StringComparison.Ordinal);
         Assert.DoesNotContain("heavy, painful", content, StringComparison.Ordinal);
         Assert.DoesNotContain("low mood", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("private daily note", content, StringComparison.Ordinal);
         Assert.DoesNotContain("FertilitySignal", content, StringComparison.Ordinal);
         Assert.DoesNotContain("signal note", content, StringComparison.Ordinal);
     }
@@ -425,6 +427,8 @@ public class ExportFeatureTests {
         credentialVerificationService
             .VerifyPasswordAsync(user.Id, "correct-password", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Success()));
+        profile.SetDayNotes(CycleTestDate, "private daily note");
+        profile.SetDayNotes(CycleTestDate.AddDays(1), "out-of-range note");
         ExportCycleQueryHandler handler = CreateExportCycleHandler(
             profile,
             CreateCurrentUserAccessService(user),
@@ -444,6 +448,9 @@ public class ExportFeatureTests {
         Assert.Contains("\"private, \"\"quoted\"\" note\"", content, StringComparison.Ordinal);
         Assert.Contains("FertilitySignal", content, StringComparison.Ordinal);
         Assert.Contains("signal note", content, StringComparison.Ordinal);
+        Assert.Contains("DayNote,2026-04-01", content, StringComparison.Ordinal);
+        Assert.Contains("private daily note", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("out-of-range note", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -812,7 +819,8 @@ public class ExportFeatureTests {
                 consent.CycleProfileId.Value,
                 consent.Purpose,
                 consent.GrantedAtUtc,
-                consent.RevokedAtUtc))]);
+                consent.RevokedAtUtc))],
+            DayNotes: [.. profile.DayNotes.Select(note => new CycleDayNoteReadModel(note.Id.Value, note.CycleProfileId.Value, note.Date, note.Notes))]);
 
     private static ExportCycleQueryHandler CreateExportCycleHandler(
         CycleProfile? profile,

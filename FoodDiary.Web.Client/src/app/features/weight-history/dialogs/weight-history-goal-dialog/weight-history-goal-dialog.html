@@ -5,6 +5,7 @@
     (close)="close()"
 >
     <form class="fd-stack fd-gap-lg" [formRoot]="form" (submit)="submit($event)">
+        <p role="alert" [hidden]="actionError() === null">{{ actionError() }}</p>
         <fd-ui-input
             type="text"
             inputMode="decimal"
@@ -15,6 +16,7 @@
             [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate"
             [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
             [formField]="weightField"
+            [error]="goalError() | translate: goalRange()"
         />
         @if (desiredWeightKg() !== null) {
             <div class="fd-ui-text-muted fd-ui-body-sm">{{ 'WEIGHT_HISTORY.GOAL_HISTORY_HINT' | translate }}</div>

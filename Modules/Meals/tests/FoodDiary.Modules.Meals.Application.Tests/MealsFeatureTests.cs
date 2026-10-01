@@ -52,7 +52,6 @@ public partial class MealsFeatureTests {
         new(
             repository,
             repository,
-            repository,
             mealNutritionService,
             recentItemRepository,
             imageAssetCleanupService,

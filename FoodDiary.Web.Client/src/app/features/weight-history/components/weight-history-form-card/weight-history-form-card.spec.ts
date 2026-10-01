@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { form } from '@angular/forms/signals';
+import { form, required, validate } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -8,6 +8,55 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { WeightHistoryFormCardComponent } from './weight-history-form-card';
 
 describe('WeightHistoryFormCardComponent', () => {
+    it('explains invalid input and clears the error after correction', () => {
+        const { fixture } = setupComponent(false);
+        const model = signal({ date: '2026-05-15', weight: '0' });
+        const fields = TestBed.runInInjectionContext(() =>
+            form(model, path => {
+                required(path.weight);
+                validate(path.weight, ({ value }) => (value() === '0' ? { kind: 'weightRange' } : undefined));
+            }),
+        );
+        fields.weight().markAsTouched();
+        fixture.componentRef.setInput('form', fields);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+
+        expect(root.querySelector('fd-ui-input input')?.getAttribute('aria-invalid')).toBe('true');
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain('WEIGHT_HISTORY.VALUE_RANGE');
+
+        model.set({ date: '2026-05-15', weight: '68.5' });
+        fixture.detectChanges();
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+        expect(root.querySelector('fd-ui-input input')?.getAttribute('aria-invalid')).toBeNull();
+    });
+
+    it('explains required fields when an empty form is submitted', async () => {
+        const submitWeightFormAsync = vi.fn(async (): Promise<void> => {});
+        const { fixture } = setupComponent(false);
+        const model = signal({ date: '', weight: '' });
+        const fields = TestBed.runInInjectionContext(() =>
+            form(
+                model,
+                path => {
+                    required(path.date);
+                    required(path.weight);
+                },
+                { submission: { action: submitWeightFormAsync } },
+            ),
+        );
+        fixture.componentRef.setInput('form', fields);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(submitWeightFormAsync).not.toHaveBeenCalled();
+        expect(root.querySelectorAll('[role="alert"]')).toHaveLength(2);
+        expect(getText(fixture)).toContain('FORM_ERRORS.REQUIRED');
+    });
+
     it('renders add mode by default', () => {
         const { fixture } = setupComponent(false);
 

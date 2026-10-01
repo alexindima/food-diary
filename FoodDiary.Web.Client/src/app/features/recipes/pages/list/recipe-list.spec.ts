@@ -73,6 +73,19 @@ describe('RecipeListComponent initial loading and filters', () => {
 });
 
 describe('RecipeListComponent detail actions', () => {
+    it('opens current usage state instead of a stale list snapshot', async () => {
+        const { component } = setupComponent();
+        const recipe = createRecipe();
+        const currentRecipe = { ...recipe, usageCount: 1 };
+        facade.getRecipeDetailAsync.mockResolvedValue(currentRecipe);
+
+        component['onRecipeClick'](recipe);
+        await waitForAsync(() => dialogService.open.mock.calls.length > 0);
+
+        expect(facade.getRecipeDetailAsync).toHaveBeenCalledWith(recipe.id);
+        expect(dialogService.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ data: currentRecipe }));
+    });
+
     it('reloads the overview including favorite state after a detail change', async () => {
         const { component } = setupComponent({
             detailResult: new RecipeDetailActionResult('recipe-1', 'FavoriteChanged'),
@@ -160,6 +173,7 @@ type RecipeListFacadeMock = Omit<
     RecipeListFacade,
     | 'addToMeal'
     | 'getFavoriteRecipe'
+    | 'getRecipeDetailAsync'
     | 'handleDetailActionAsync'
     | 'hasActiveFilters'
     | 'hasSearch'
@@ -173,6 +187,7 @@ type RecipeListFacadeMock = Omit<
 > & {
     addToMeal: ReturnType<typeof vi.fn>;
     getFavoriteRecipe: ReturnType<typeof vi.fn>;
+    getRecipeDetailAsync: ReturnType<typeof vi.fn>;
     handleDetailActionAsync: ReturnType<typeof vi.fn>;
     hasActiveFilters: ReturnType<typeof vi.fn>;
     hasSearch: ReturnType<typeof vi.fn>;
@@ -205,6 +220,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         favoriteRecipes: signal<FavoriteRecipe[]>([]),
         favoriteTotalCount: signal(0),
         getFavoriteRecipe: vi.fn().mockReturnValue(of(createRecipe())),
+        getRecipeDetailAsync: vi.fn().mockResolvedValue(createRecipe()),
         handleDetailActionAsync: vi.fn().mockResolvedValue(void 0),
         hasActiveFilters: vi.fn((onlyMine: boolean) => onlyMine),
         hasSearch: vi.fn((search: string | null) => search !== null && search.length > 0),

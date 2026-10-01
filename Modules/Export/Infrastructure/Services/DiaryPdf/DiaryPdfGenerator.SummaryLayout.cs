@@ -16,6 +16,7 @@ internal sealed partial class DiaryPdfGenerator {
                 row.RelativeItem().Element(c => ComposeAverageCard(c, report));
             });
 
+            column.Item().Text(report.Texts.AveragePerDayTitle).FontSize(9).SemiBold().FontColor(MutedTextColor);
             column.Item().Row(row => {
                 row.Spacing(8);
 

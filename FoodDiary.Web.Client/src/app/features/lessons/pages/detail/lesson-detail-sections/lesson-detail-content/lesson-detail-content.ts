@@ -25,5 +25,6 @@ import type { LessonDetailViewModel } from '../../../../lib/lesson-view.mapper';
 export class LessonDetailContentComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly lesson = input.required<LessonDetailViewModel | null>();
+    public readonly isMarkingRead = input(false);
     public readonly markRead = output();
 }

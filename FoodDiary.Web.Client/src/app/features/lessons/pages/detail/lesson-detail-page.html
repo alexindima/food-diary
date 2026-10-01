@@ -18,11 +18,21 @@
     </fd-page-header>
 
     <fd-page-body>
-        <fd-lesson-detail-content
-            data-tour-id="lesson-detail-content"
-            [isLoading]="facade.isDetailLoading()"
-            [lesson]="lesson()"
-            (markRead)="markRead()"
-        />
+        @if (facade.isLessonMissing()) {
+            <p role="alert">{{ 'LESSONS.NOT_FOUND' | translate }}</p>
+            <fd-ui-button (click)="goBack()">{{ 'LESSONS.BACK' | translate }}</fd-ui-button>
+        } @else if (facade.hasDetailError()) {
+            <p role="alert">{{ 'LESSONS.DETAIL_LOAD_ERROR' | translate }}</p>
+            <fd-ui-button (click)="facade.retryLesson()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
+        } @else {
+            <p role="alert" [hidden]="!facade.markReadFailed()">{{ 'LESSONS.MARK_READ_ERROR' | translate }}</p>
+            <fd-lesson-detail-content
+                data-tour-id="lesson-detail-content"
+                [isLoading]="facade.isDetailLoading()"
+                [lesson]="lesson()"
+                [isMarkingRead]="facade.isMarkingRead()"
+                (markRead)="markRead()"
+            />
+        }
     </fd-page-body>
 </div>

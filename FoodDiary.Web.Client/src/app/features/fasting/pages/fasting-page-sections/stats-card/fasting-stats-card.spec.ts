@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -19,6 +20,21 @@ describe('FastingStatsCardComponent', () => {
             providers: [provideTranslateTesting()],
         });
     });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- These counts cover singular and Russian plural boundaries. */
+    it.each([
+        ['en', 1, 'ONE'],
+        ['en', 21, 'OTHER'],
+        ['ru', 1, 'ONE'],
+        ['ru', 2, 'FEW'],
+        ['ru', 11, 'MANY'],
+        ['ru', 21, 'ONE'],
+    ])('uses %s plural form for %i days', (language, count, category) => {
+        TestBed.inject(TranslateService).use(String(language));
+        const fixture = createComponent(createStats({ currentStreak: Number(count) }));
+        expect(getElement(fixture).textContent).toContain(`FASTING.DAY_UNIT_${category}`);
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- Restore the normal rule after boundary cases. */
 
     it('renders empty state without stats', () => {
         const fixture = createComponent(null);

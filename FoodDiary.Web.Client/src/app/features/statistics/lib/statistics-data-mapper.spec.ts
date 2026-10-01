@@ -9,6 +9,10 @@ import {
 } from './statistics-data-mapper';
 
 const TEST_YEAR = 2026;
+const COMMON_YEAR = 2025;
+const LEAP_YEAR = 2024;
+const COMMON_YEAR_DAYS = 365;
+const LEAP_YEAR_DAYS = 366;
 const MAY_INDEX = 4;
 const APRIL_INDEX = 3;
 const FEBRUARY_INDEX = 1;
@@ -38,6 +42,16 @@ describe('statistics-data-mapper', () => {
     });
 
     describe('getCurrentDateRange', () => {
+        it.each([COMMON_YEAR, LEAP_YEAR])('returns a complete year ending today in %i', year => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(year, MAY_INDEX, CURRENT_DAY, NOON_HOUR));
+
+            const range = getCurrentDateRange('year', null);
+
+            expect(range.start).toEqual(new Date(year - 1, MAY_INDEX, CURRENT_DAY + 1, NOON_HOUR));
+            expect(getDateRangeDayCount(range)).toBe(year === LEAP_YEAR ? LEAP_YEAR_DAYS : COMMON_YEAR_DAYS);
+        });
+
         it('should return seven inclusive calendar days for week range', () => {
             vi.useFakeTimers();
             vi.setSystemTime(new Date(TEST_YEAR, MAY_INDEX, CURRENT_DAY, NOON_HOUR, 0, 0, 0));

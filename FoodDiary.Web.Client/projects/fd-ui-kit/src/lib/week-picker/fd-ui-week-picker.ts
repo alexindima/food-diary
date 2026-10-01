@@ -110,11 +110,7 @@ export class FdUiWeekPickerComponent {
 
     private formatRange(weekStart: Date): string {
         const weekEnd = fdUiAddLocalDays(weekStart, WEEK_LAST_DAY_OFFSET);
-        const sameMonth = weekStart.getMonth() === weekEnd.getMonth() && weekStart.getFullYear() === weekEnd.getFullYear();
-        const startOptions: Intl.DateTimeFormatOptions = sameMonth ? { day: 'numeric' } : { day: 'numeric', month: 'long' };
-        const start = new Intl.DateTimeFormat(this.effectiveLocale(), startOptions).format(weekStart);
-        const end = new Intl.DateTimeFormat(this.effectiveLocale(), { day: 'numeric', month: 'long' }).format(weekEnd);
-        return `${start}–${end}`;
+        return new Intl.DateTimeFormat(this.effectiveLocale(), { day: 'numeric', month: 'long' }).formatRange(weekStart, weekEnd);
     }
 
     private isSameDay(left: Date, right: Date): boolean {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -8,6 +8,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import { MAX_DESIRED_WAIST_CM } from '../../lib/waist-history.constants';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
 @Component({
@@ -25,6 +26,13 @@ export class WaistHistoryGoalDialogComponent {
     protected readonly form = this.facade.desiredWaistForm;
     protected readonly waistField = this.facade.desiredWaistForm.circumference;
     protected readonly isSaving = this.facade.isDesiredWaistSaving;
+    protected readonly actionError = this.facade.goalActionError;
+
+    protected readonly goalError = computed(() => {
+        const field = this.waistField();
+        return field.invalid() && (field.touched() || field.dirty()) ? 'WAIST_HISTORY.GOAL_VALUE_RANGE' : null;
+    });
+    protected readonly goalRange = computed(() => ({ max: this.measurements.displayLength(MAX_DESIRED_WAIST_CM) }));
 
     public constructor() {
         effect(() => {

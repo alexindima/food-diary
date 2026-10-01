@@ -1,6 +1,18 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    LOCALE_ID,
+    model,
+    output,
+    signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import type { FormValueControl } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,8 +58,10 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly min = input<string | Date>();
     public readonly max = input<string | Date>();
     public readonly latestDate = input<string | Date>();
+    public readonly earliestDate = input<string | Date>();
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected readonly internalValue = signal<Date | null>(null);
@@ -119,6 +133,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             this.internalValue.set(null);
         }
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected clearValue(): void {
@@ -129,6 +144,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         this.internalValue.set(null);
         this.value.set(null);
         this.touched.set(true);
+        this.touch.emit();
         this.closeDatePicker();
     }
 
@@ -150,6 +166,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         this.isOpen.set(false);
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onDateSelect(value: Date | null): void {
@@ -190,6 +207,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onInputKeydown(event: KeyboardEvent): void {
@@ -221,7 +239,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         }
     }
 
-    protected readonly minDate = computed(() => fdUiParseLocalDate(this.min()));
+    protected readonly minDate = computed(() => fdUiParseLocalDate(this.earliestDate() ?? this.min()));
     protected readonly maxDate = computed(() => fdUiParseLocalDate(this.latestDate() ?? this.max()));
 
     private stripTime(date: Date): Date {

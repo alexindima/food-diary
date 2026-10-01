@@ -118,13 +118,13 @@ export class PremiumAccessPageComponent {
         try {
             const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, provider));
             if (session.url.length === 0) {
-                this.showErrorMessage('Checkout URL is missing.');
+                this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
                 return;
             }
 
             this.document.location.href = session.url;
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error));
+            this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
         } finally {
             this.checkoutLoadingPlan.set(null);
         }
@@ -148,7 +148,7 @@ export class PremiumAccessPageComponent {
             await firstValueFrom(this.authService.refreshToken());
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error));
+            this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_TRIAL'));
         } finally {
             this.trialLoading.set(false);
         }
@@ -165,13 +165,13 @@ export class PremiumAccessPageComponent {
         try {
             const session = await firstValueFrom(this.billingService.createPortalSession());
             if (session.url.length === 0) {
-                this.showErrorMessage('Portal URL is missing.');
+                this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_PORTAL'));
                 return;
             }
 
             this.document.location.href = session.url;
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error));
+            this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_PORTAL'));
         } finally {
             this.portalLoading.set(false);
         }
@@ -286,7 +286,7 @@ export class PremiumAccessPageComponent {
                 replaceUrl: true,
             });
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error));
+            this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
         }
     }
 
@@ -296,7 +296,7 @@ export class PremiumAccessPageComponent {
     }
 
     private showPaddleClientTokenMissingError(): void {
-        this.showErrorMessage('Paddle client token is not configured.');
+        this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
     }
 
     private showErrorMessage(message: string): void {
@@ -312,8 +312,8 @@ export class PremiumAccessPageComponent {
         });
     }
 
-    private getErrorMessage(error: unknown): string {
-        return resolvePremiumErrorMessage(error, this.translateService.instant('PREMIUM_PAGE.ERROR_GENERIC'));
+    private getErrorMessage(error: unknown, fallbackKey = 'PREMIUM_PAGE.ERROR_GENERIC'): string {
+        return resolvePremiumErrorMessage(error, this.translateService.instant(fallbackKey));
     }
 
     private resolveCheckoutLocale(): string {

@@ -27,16 +27,16 @@ export class MeasurementSystemService {
         this.storage.setItem('local', STORAGE_KEY, system);
     }
 
-    public displayWeight(weightKg: number): number {
-        return this.system() === 'imperial' ? kilogramsToPounds(weightKg) : round(weightKg, 1);
+    public displayWeight(weightKg: number, fractionDigits = 1): number {
+        return this.system() === 'imperial' ? kilogramsToPounds(weightKg, fractionDigits) : round(weightKg, fractionDigits);
     }
 
     public canonicalWeight(displayWeight: number): number {
         return this.system() === 'imperial' ? poundsToKilograms(displayWeight) : displayWeight;
     }
 
-    public displayLength(lengthCm: number): number {
-        return this.system() === 'imperial' ? centimetersToInches(lengthCm) : round(lengthCm, 1);
+    public displayLength(lengthCm: number, fractionDigits = 1): number {
+        return this.system() === 'imperial' ? centimetersToInches(lengthCm, fractionDigits) : round(lengthCm, fractionDigits);
     }
 
     public canonicalLength(displayLength: number): number {
@@ -64,16 +64,16 @@ export class MeasurementSystemService {
     }
 }
 
-export function kilogramsToPounds(weightKg: number): number {
-    return round(weightKg * POUNDS_PER_KILOGRAM, 1);
+export function kilogramsToPounds(weightKg: number, fractionDigits = 1): number {
+    return round(weightKg * POUNDS_PER_KILOGRAM, fractionDigits);
 }
 
 export function poundsToKilograms(weightLb: number): number {
     return round(weightLb / POUNDS_PER_KILOGRAM, 2);
 }
 
-export function centimetersToInches(lengthCm: number): number {
-    return round(lengthCm / CENTIMETERS_PER_INCH, 1);
+export function centimetersToInches(lengthCm: number, fractionDigits = 1): number {
+    return round(lengthCm / CENTIMETERS_PER_INCH, fractionDigits);
 }
 
 export function inchesToCentimeters(lengthInches: number): number {

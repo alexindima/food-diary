@@ -5,6 +5,7 @@
 
     &__header {
         margin-bottom: var(--fd-space-lg);
+        overflow-wrap: anywhere;
     }
 
     &__actions {

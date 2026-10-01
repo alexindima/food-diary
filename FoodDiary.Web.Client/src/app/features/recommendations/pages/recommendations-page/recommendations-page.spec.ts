@@ -5,7 +5,7 @@ import { BehaviorSubject, type Observable, of, Subject, throwError } from 'rxjs'
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import type { ClientTask, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
 import { RecommendationsPageComponent } from './recommendations-page';
@@ -125,7 +125,9 @@ describe('RecommendationsPageComponent mark read', () => {
 
         component['markRecommendationAsRead'](recommendation);
 
-        expect(component['errorKey']()).toBe('RECOMMENDATIONS.MARK_READ_ERROR');
+        expect(component['readErrorKey']()).toBe('RECOMMENDATIONS.MARK_READ_ERROR');
+        expect(component['errorKey']()).toBeNull();
+        expect(component['recommendationItems']()).toHaveLength(1);
         expect(component['recommendationItems']()[0]).toMatchObject({
             isRead: false,
             isMarkingRead: false,
@@ -154,6 +156,59 @@ describe('RecommendationsPageComponent route and tour', () => {
 
         expect(localizedTour.build).toHaveBeenCalledTimes(1);
         expect(tourService.start).toHaveBeenCalledWith(tourDefinition, { force: true });
+    });
+});
+
+describe('RecommendationsPageComponent retry recovery', () => {
+    it('clears a previous recommendation load error after retry', () => {
+        const { component, facade } = createComponent({ loadError: true });
+        facade.getMyRecommendations.mockReturnValueOnce(of([createRecommendation()]));
+        component['retryRecommendations']();
+
+        expect(component['errorKey']()).toBeNull();
+        expect(component['recommendationItems']()).toHaveLength(1);
+    });
+
+    it('clears a previous task load error after retry', () => {
+        const { component, facade } = createComponent();
+        facade.getMyTasks.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        component['retryTasks']();
+        expect(component['taskErrorKey']()).toBe('CLIENT_TASKS.LOAD_ERROR');
+
+        component['retryTasks']();
+        expect(component['taskErrorKey']()).toBeNull();
+        expect(component['tasksLoading']()).toBe(false);
+    });
+});
+
+describe('RecommendationsPageComponent task action recovery', () => {
+    it('preserves a task after failure and updates it after retry', () => {
+        const { component, facade } = createComponent();
+        const task: ClientTask = {
+            id: 'task-1',
+            dietologistUserId: 'diet-1',
+            clientUserId: 'client-1',
+            title: 'Review breakfast',
+            details: null,
+            dueAtUtc: null,
+            status: 'Open',
+            isOverdue: false,
+            createdAtUtc: '2026-05-01T10:00:00Z',
+            statusChangedAtUtc: null,
+        };
+        component['tasks'].set([task]);
+        facade.changeTaskStatus.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        component['changeTaskStatus'](task, 'Completed');
+
+        expect(component['tasks']()).toEqual([task]);
+        expect(component['taskActionErrorKey']()).toBe('CLIENT_TASKS.CHANGE_ERROR');
+        expect(component['taskErrorKey']()).toBeNull();
+        expect(component['changingTaskIds']().size).toBe(0);
+
+        facade.changeTaskStatus.mockReturnValueOnce(of({ ...task, status: 'Completed' }));
+        component['changeTaskStatus'](task, 'Completed');
+        expect(component['taskActionErrorKey']()).toBeNull();
+        expect(component['tasks']()[0].status).toBe('Completed');
     });
 });
 

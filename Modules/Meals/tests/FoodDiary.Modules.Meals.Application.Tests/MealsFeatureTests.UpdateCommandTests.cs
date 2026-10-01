@@ -491,7 +491,7 @@ public partial class MealsFeatureTests {
     }
 
     [Fact]
-    public async Task UpdateMealCommandHandler_WhenUpdatedMealCannotBeReloaded_ReturnsInvalidData() {
+    public async Task UpdateMealCommandHandler_BeforeStagedChangesArePersisted_ReturnsUpdatedAggregate() {
         var user = User.Create("update-reload-missing@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new ReloadMissingMealRepository(meal);
@@ -526,8 +526,12 @@ public partial class MealsFeatureTests {
                 4),
             CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Equal("Meal.InvalidData", result.Error.Code);
+        ResultAssert.Success(result);
+        Assert.Equal("Updated", result.Value.Comment);
+        Assert.Equal(new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc), result.Value.Date);
+        Assert.Equal(MealType.Dinner.ToString(), result.Value.MealType);
+        Assert.Equal(600, result.Value.TotalCalories);
+        Assert.Equal(150, Assert.Single(result.Value.Items).Amount);
         Assert.True(repository.UpdateCalled);
     }
 

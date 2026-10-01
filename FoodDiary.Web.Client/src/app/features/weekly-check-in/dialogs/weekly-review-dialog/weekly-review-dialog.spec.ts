@@ -57,5 +57,27 @@ describe('WeeklyReviewDialogComponent', () => {
         expect(root.textContent).toContain('543');
         expect(root.textContent).toContain('20.2');
         expect(root.textContent).toContain('1,500');
+
+        data.review.daysLogged = 0;
+        data.week.daysLogged = 0;
+        data.week.avgDailyCalories = 0;
+        data.week.avgProteins = 0;
+        fixture.destroy();
+        const metrics = (): string[] => {
+            const rendered = TestBed.createComponent(WeeklyReviewDialogComponent);
+            rendered.detectChanges();
+            const element = rendered.nativeElement as HTMLElement;
+            const values = Array.from(element.querySelectorAll('.weekly-review-dialog__metric strong'), node => node.textContent.trim());
+            rendered.destroy();
+            return values;
+        };
+        expect(metrics().slice(1)).toEqual(['— GENERAL.UNITS.KCAL', '— GENERAL.UNITS.G', '1,500 GENERAL.UNITS.ML']);
+
+        data.week.totalHydrationMl = 0;
+        data.week.avgDailyHydrationMl = 0;
+        expect(metrics().slice(1)).toEqual(['— GENERAL.UNITS.KCAL', '— GENERAL.UNITS.G', '— GENERAL.UNITS.ML']);
+
+        data.review.daysLogged = 1;
+        expect(metrics().slice(1)).toEqual(['0 GENERAL.UNITS.KCAL', '0 GENERAL.UNITS.G', '— GENERAL.UNITS.ML']);
     });
 });

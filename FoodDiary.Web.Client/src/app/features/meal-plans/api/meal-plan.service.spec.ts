@@ -37,9 +37,14 @@ describe('MealPlanService', () => {
         request.flush(page);
     });
 
-    it('returns empty list when meal plan loading fails', () => {
-        service.getPage().subscribe(result => {
-            expect(result).toEqual({ data: [], page: 1, limit: 50, totalPages: 0, totalItems: 0 });
+    it('preserves the loading error instead of returning an empty catalog', () => {
+        service.getPage().subscribe({
+            next: () => {
+                throw new Error('Expected a loading error');
+            },
+            error: (error: unknown) => {
+                expect(error).toMatchObject({ status: 500 });
+            },
         });
 
         const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?page=1&limit=50`);

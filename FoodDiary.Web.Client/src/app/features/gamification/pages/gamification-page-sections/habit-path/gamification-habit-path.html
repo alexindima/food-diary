@@ -22,7 +22,7 @@
                 </span>
                 <div class="habit-path__streak-value">
                     <strong>{{ currentStreak() }}</strong>
-                    <span>{{ 'GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW' | translate }}</span>
+                    <span>{{ streakDayLabelKey() | translate }}</span>
                 </div>
                 <small>{{ 'GAMIFICATION.HABIT_PATH.BEST_STREAK' | translate: { count: longestStreak() } }}</small>
             </section>
@@ -130,7 +130,12 @@
         <div class="habit-path__collection-toolbar">
             <div class="habit-path__filters" role="group" [attr.aria-label]="'GAMIFICATION.HABIT_PATH.FILTERS' | translate">
                 @for (filter of filters; track filter) {
-                    <button type="button" [class.habit-path__filter--active]="activeFilter() === filter" (click)="setFilter(filter)">
+                    <button
+                        type="button"
+                        [class.habit-path__filter--active]="activeFilter() === filter"
+                        [attr.aria-pressed]="activeFilter() === filter"
+                        (click)="setFilter(filter)"
+                    >
                         {{ `GAMIFICATION.HABIT_PATH.FILTER_${(filter | uppercase)}` | translate }}
                     </button>
                 }

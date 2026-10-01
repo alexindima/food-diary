@@ -6,6 +6,7 @@ const routes: Routes = [
     {
         path: '',
         component: ShoppingListPageComponent,
+        canDeactivate: [async (component: ShoppingListPageComponent): Promise<boolean> => component.saveBeforeLeaveAsync()],
     },
 ];
 

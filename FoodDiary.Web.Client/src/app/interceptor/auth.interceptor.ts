@@ -1,9 +1,10 @@
 import { type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, type Observable, switchMap, throwError } from 'rxjs';
+import { catchError, from, map, type Observable, of, switchMap, throwError } from 'rxjs';
 
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
+import { getRecordProperty, getStringProperty } from '../shared/lib/unknown-value.utils';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -44,23 +45,45 @@ export class AuthInterceptor implements HttpInterceptor {
                     return throwError(() => error);
                 }
 
-                return this.authService.refreshToken().pipe(
-                    switchMap(accessToken => {
-                        if (accessToken !== null && accessToken.trim().length > 0) {
-                            const newRequest = req.clone({
-                                headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
-                            });
-                            return next.handle(newRequest);
+                return this.isCredentialVerificationFailure(error).pipe(
+                    switchMap(isCredentialFailure => {
+                        if (isCredentialFailure) {
+                            return throwError(() => error);
                         }
-
-                        void this.authService.onLogoutAsync(true);
-                        return throwError(() => error);
-                    }),
-                    catchError((refreshError: unknown) => {
-                        void this.authService.onLogoutAsync(true);
-                        return throwError(() => refreshError);
+                        return this.refreshRequest(req, next, error);
                     }),
                 );
+            }),
+        );
+    }
+
+    private isCredentialVerificationFailure(error: unknown): Observable<boolean> {
+        const body = getRecordProperty(error, 'error');
+        if (body instanceof Blob) {
+            return from(body.text()).pipe(
+                map(text => {
+                    const payload: unknown = JSON.parse(text);
+                    return getStringProperty(payload, 'error') === 'User.InvalidPassword';
+                }),
+                catchError(() => of(false)),
+            );
+        }
+        return of(getStringProperty(body, 'error') === 'User.InvalidPassword');
+    }
+
+    private refreshRequest(req: HttpRequest<unknown>, next: HttpHandler, error: unknown): Observable<HttpEvent<unknown>> {
+        return this.authService.refreshToken().pipe(
+            catchError((refreshError: unknown) => {
+                void this.authService.onLogoutAsync(true);
+                return throwError(() => refreshError);
+            }),
+            switchMap(accessToken => {
+                if (accessToken !== null && accessToken.trim().length > 0) {
+                    const newRequest = req.clone({ headers: req.headers.set('Authorization', `Bearer ${accessToken}`) });
+                    return next.handle(newRequest);
+                }
+                void this.authService.onLogoutAsync(true);
+                return throwError(() => error);
             }),
         );
     }

@@ -8,7 +8,7 @@ import type { CycleResponse } from '../models/cycle.data';
 import { toCycleDateKey } from './cycle-tracking.mapper';
 
 export function runCycleExport(
-    state: { cycle: CycleResponse | null; exporting: WritableSignal<boolean> },
+    state: { cycle: CycleResponse | null; exporting: WritableSignal<boolean>; error: WritableSignal<string | null> },
     service: Pick<ExportService, 'exportCycle' | 'exportSensitiveCycle'>,
     destroyRef: DestroyRef,
     currentPassword?: string,
@@ -23,6 +23,7 @@ export function runCycleExport(
         dateTo: formatDateInputValue(new Date()),
         timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
     };
+    state.error.set(null);
     exporting.set(true);
     const request =
         currentPassword === undefined ? service.exportCycle(range) : service.exportSensitiveCycle({ ...range, currentPassword });
@@ -33,5 +34,9 @@ export function runCycleExport(
             }),
             takeUntilDestroyed(destroyRef),
         )
-        .subscribe();
+        .subscribe({
+            error: () => {
+                state.error.set(currentPassword === undefined ? 'CYCLE_TRACKING.EXPORT_FAILED' : 'CYCLE_TRACKING.SENSITIVE_EXPORT_FAILED');
+            },
+        });
 }

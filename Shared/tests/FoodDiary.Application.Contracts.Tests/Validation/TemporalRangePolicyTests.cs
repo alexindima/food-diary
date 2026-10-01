@@ -4,6 +4,23 @@ namespace FoodDiary.Application.Contracts.Tests.Validation;
 
 [ExcludeFromCodeCoverage]
 public sealed class TemporalRangePolicyTests {
+    [Theory]
+    [InlineData(-840)]
+    [InlineData(-240)]
+    [InlineData(0)]
+    [InlineData(240)]
+    [InlineData(840)]
+    public void InstantRange_Allows366LocalDaysAcrossUtcDates(int offsetMinutes) {
+        DateTime from = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMinutes(-offsetMinutes);
+        DateTime to = from.AddDays(366).AddTicks(-1);
+
+        Assert.True(TemporalRangePolicy.IsInstantPeriodWithinLimit(from, to));
+        Assert.False(TemporalRangePolicy.IsInstantPeriodWithinLimit(from, to.AddTicks(1)));
+        IReadOnlyList<(DateTime Start, DateTime End)> buckets = TemporalRangePolicy.BuildInstantBuckets(from, to, 30);
+        Assert.Equal(from, buckets[0].Start);
+        Assert.Equal(to, buckets[^1].End);
+    }
+
     [Fact]
     public void IsPeriodWithinLimit_DateTimeOffset_UsesElapsedDuration() {
         var from = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);

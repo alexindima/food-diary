@@ -495,7 +495,7 @@ export class ProductManageFormComponent {
         } else if (status === HttpStatusCode.BadRequest) {
             this.setGlobalError('FORM_ERRORS.INVALID_DATA');
         } else {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            this.setGlobalError('PRODUCT_MANAGE.SAVE_ERROR');
         }
     }
 

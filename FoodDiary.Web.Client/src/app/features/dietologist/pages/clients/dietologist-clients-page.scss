@@ -17,11 +17,18 @@
 
     &__card-content {
         padding: var(--fd-space-md);
+        flex-wrap: wrap;
     }
 
     &__info {
         min-width: 0;
         flex: 1;
+        overflow-wrap: anywhere;
+    }
+
+    &__recipient {
+        min-width: 0;
+        overflow-wrap: anywhere;
     }
 
     &__avatar {
@@ -59,5 +66,9 @@
     &__email,
     &__date {
         color: var(--fd-color-text-muted);
+    }
+
+    &__date {
+        flex-basis: 100%;
     }
 }

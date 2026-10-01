@@ -34,6 +34,7 @@ export class GamificationPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly hasError = this.facade.hasError;
     protected readonly currentStreak = this.facade.currentStreak;
     protected readonly longestStreak = this.facade.longestStreak;
     protected readonly totalMealsLogged = this.facade.totalMealsLogged;
@@ -42,6 +43,10 @@ export class GamificationPageComponent {
     protected readonly badges = this.facade.badges;
 
     public constructor() {
+        this.facade.initialize();
+    }
+
+    protected retryLoad(): void {
         this.facade.initialize();
     }
 

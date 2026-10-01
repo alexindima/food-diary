@@ -15,6 +15,7 @@ const createFacade = (): {
     desiredWeightForm: FieldTree<{ date: string; weight: string }>;
     isSaving: WritableSignal<boolean>;
     isDesiredWeightSaving: WritableSignal<boolean>;
+    goalActionError: WritableSignal<string | null>;
     isEditing: WritableSignal<boolean>;
     entryError: WritableSignal<string | null>;
     entrySaveVersion: WritableSignal<number>;
@@ -31,6 +32,7 @@ const createFacade = (): {
         desiredWeightForm: fields,
         isSaving: signal(false),
         isDesiredWeightSaving: signal(false),
+        goalActionError: signal<string | null>(null),
         isEditing: signal(false),
         entryError: signal<string | null>(null),
         entrySaveVersion: signal(FIXTURE_INITIAL_VERSION),

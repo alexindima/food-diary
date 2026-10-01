@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -49,6 +49,7 @@ export class ProductListFiltersDialogComponent {
 
     protected visibilityValue: ProductListVisibilityFilter = this.data.onlyMine ? 'mine' : 'all';
     protected readonly selectedTypeValues = linkedSignal(() => [...this.data.productTypes]);
+    protected readonly caloriesError = signal('');
     protected caloriesFromValue: number | string | null = this.data.caloriesFrom;
     protected caloriesToValue: number | string | null = this.data.caloriesTo;
     protected imageValue: 'any' | 'with' | 'without' =
@@ -83,11 +84,22 @@ export class ProductListFiltersDialogComponent {
     }
 
     protected onApply(): void {
+        const caloriesFrom = this.parseCalories(this.caloriesFromValue);
+        const caloriesTo = this.parseCalories(this.caloriesToValue);
+        if (caloriesFrom === undefined || caloriesTo === undefined) {
+            this.caloriesError.set('PRODUCT_LIST.FILTER_CALORIES_INVALID');
+            return;
+        }
+        if (caloriesFrom !== null && caloriesTo !== null && caloriesFrom > caloriesTo) {
+            this.caloriesError.set('PRODUCT_LIST.FILTER_CALORIES_ORDER');
+            return;
+        }
+        this.caloriesError.set('');
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
             productTypes: this.selectedTypeValues(),
-            caloriesFrom: this.toNumberOrNull(this.caloriesFromValue),
-            caloriesTo: this.toNumberOrNull(this.caloriesToValue),
+            caloriesFrom,
+            caloriesTo,
             hasImage: this.imageValue === 'any' ? null : this.imageValue === 'with',
         });
     }
@@ -96,12 +108,12 @@ export class ProductListFiltersDialogComponent {
         this.dialogRef.close(null);
     }
 
-    private toNumberOrNull(value: number | string | null): number | null {
-        if (value === null || value === '') {
+    private parseCalories(value: number | string | null): number | null | undefined {
+        if (value === null || (typeof value === 'string' && value.trim() === '')) {
             return null;
         }
 
         const numericValue = typeof value === 'number' ? value : Number(value);
-        return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : null;
+        return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : undefined;
     }
 }

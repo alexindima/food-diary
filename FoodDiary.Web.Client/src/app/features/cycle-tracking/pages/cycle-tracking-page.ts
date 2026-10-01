@@ -10,6 +10,8 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter } from 'rxjs';
@@ -89,6 +91,8 @@ const RECENT_DAY_LIMIT = 5;
         FdUiTextareaComponent,
         FdUiDateInputComponent,
         FdUiCheckboxComponent,
+        FdUiFormErrorComponent,
+        FdUiInlineAlertComponent,
         CycleOverviewCardComponent,
         CycleCalendarCardComponent,
         CycleDaysCardComponent,
@@ -124,6 +128,7 @@ export class CycleTrackingPageComponent {
     protected readonly excludingEpisodeId = this.facade.excludingEpisodeId;
     protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
+    protected readonly exportError = this.facade.exportError;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly editingDayDate = this.facade.editingDayDate;
     protected readonly editingFactorId = this.facade.editingFactorId;
@@ -132,6 +137,14 @@ export class CycleTrackingPageComponent {
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
     protected readonly startCycleForm = this.facade.startCycleForm;
+    protected readonly cycleConsentError = computed(() => {
+        const field = this.startCycleForm.cycleTrackingConsentGranted();
+        return field.invalid() && field.touched() ? 'CYCLE_TRACKING.CONSENT_REQUIRED' : null;
+    });
+    protected readonly trackingStartDateError = computed(() => {
+        const field = this.startCycleForm.trackingStartDate();
+        return field.invalid() && field.touched() ? 'FORM_ERRORS.REQUIRED' : null;
+    });
     protected readonly settingsForm = this.facade.settingsForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
@@ -151,6 +164,7 @@ export class CycleTrackingPageComponent {
         buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), {
             locale: this.appLocale(),
             menstrualEpisodes: this.cycle()?.menstrualEpisodes ?? [],
+            dayNotes: this.cycle()?.dayNotes ?? [],
         }),
     );
     protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));

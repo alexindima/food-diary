@@ -9,6 +9,7 @@ import {
     inject,
     input,
     model,
+    output,
     signal,
     viewChildren,
 } from '@angular/core';
@@ -46,6 +47,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     public readonly size = input<FdUiFieldSize>('md');
     public readonly value = model<string | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected readonly internalValue = signal('');
@@ -129,6 +131,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
             }
         }
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onFocus(): void {
@@ -152,6 +155,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
         this.isOpen.set(false);
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected selectHour(hours: number): void {
@@ -193,6 +197,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
         }
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     private parseTime(value: string): { hours: number; minutes: number } | null {

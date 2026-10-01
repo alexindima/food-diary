@@ -10,7 +10,7 @@
             <div>
                 <div class="quick-meal__title fd-ui-card-title" [id]="titleId">{{ 'QUICK_MEAL.TITLE' | translate }}</div>
                 <div class="quick-meal__subtitle fd-ui-action-text" aria-live="polite">
-                    {{ items().length }} {{ 'QUICK_MEAL.ITEMS' | translate }}
+                    {{ items().length }} {{ itemsLabelKey() | translate }}
                 </div>
             </div>
             <div class="quick-meal__header-actions fd-row fd-gap-xs">

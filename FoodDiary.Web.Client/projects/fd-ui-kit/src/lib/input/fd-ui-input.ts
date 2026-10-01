@@ -78,6 +78,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly appearance = input<FdUiInputAppearance>('default');
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     public readonly suffixButtonClicked = output();
@@ -160,6 +161,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     protected onBlur(): void {
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onFocus(): void {

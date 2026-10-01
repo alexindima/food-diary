@@ -7,6 +7,7 @@
 .habit-path {
     container-type: inline-size;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--fd-space-card-gap);
 
     &__hero {
@@ -50,6 +51,7 @@
 
     &__health-copy {
         display: grid;
+        min-width: 0;
         gap: var(--fd-space-xs);
 
         h2,

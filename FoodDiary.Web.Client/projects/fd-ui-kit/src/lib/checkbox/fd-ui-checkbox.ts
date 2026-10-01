@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, model, output } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
 
 let nextId = 0;
@@ -16,6 +16,7 @@ export class FdUiCheckboxComponent implements FormCheckboxControl {
     public readonly disabled = input(false);
     public readonly checked = model(false);
     public readonly touched = model(false);
+    public readonly touch = output();
 
     protected checkedValue = false;
 
@@ -37,5 +38,6 @@ export class FdUiCheckboxComponent implements FormCheckboxControl {
 
     protected touchControl(): void {
         this.touched.set(true);
+        this.touch.emit();
     }
 }

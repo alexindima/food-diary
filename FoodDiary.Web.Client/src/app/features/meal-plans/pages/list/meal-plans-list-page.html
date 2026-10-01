@@ -18,13 +18,22 @@
             [selectedType]="facade.dietTypeFilter()"
             (filterChange)="filterByDiet($event)"
         />
-        <fd-meal-plan-list-content
-            data-tour-id="meal-plans-list"
-            [isLoading]="facade.isLoading()"
-            [plans]="planCards()"
-            [filtered]="facade.dietTypeFilter() !== null"
-            (filterReset)="filterByDiet(null)"
-            (planOpen)="openPlan($event)"
-        />
+        @if (facade.hasLoadError() && !facade.isLoading()) {
+            <div class="fd-stack fd-align-center fd-gap-sm">
+                <p role="alert">{{ 'MEAL_PLANS.ERROR_LOAD' | translate }}</p>
+                <fd-ui-button variant="secondary" fill="outline" (click)="facade.retryPlans()">
+                    {{ 'MEAL_PLANS.RETRY' | translate }}
+                </fd-ui-button>
+            </div>
+        } @else {
+            <fd-meal-plan-list-content
+                data-tour-id="meal-plans-list"
+                [isLoading]="facade.isLoading()"
+                [plans]="planCards()"
+                [filtered]="facade.dietTypeFilter() !== null"
+                (filterReset)="filterByDiet(null)"
+                (planOpen)="openPlan($event)"
+            />
+        }
     </fd-page-body>
 </div>

@@ -54,7 +54,17 @@
                             [value]="attentionSettings().weightChangePercent"
                             (change)="updateAttentionSetting('weightChangePercent', weightInput.value)"
                         />
-                        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
+                        <p role="alert" class="fd-ui-body-sm" [hidden]="invalidAttentionSettings().size === 0">
+                            {{ 'ATTENTION.INVALID_SETTINGS' | translate }}
+                        </p>
+                        <fd-ui-button
+                            type="button"
+                            variant="secondary"
+                            fill="outline"
+                            [disabled]="invalidAttentionSettings().size > 0"
+                            [disabledReason]="'ATTENTION.INVALID_SETTINGS' | translate"
+                            (click)="applyAttentionSettings()"
+                        >
                             {{ 'ATTENTION.APPLY' | translate }}
                         </fd-ui-button>
                     </div>
@@ -122,7 +132,7 @@
                                     [checked]="selectedClientIds().has(client.userId)"
                                     (change)="toggleClientSelection(client.userId, clientCheckbox.checked)"
                                 />
-                                <label [for]="`bulk-client-${client.userId}`">
+                                <label class="dietologist-clients__recipient" [for]="`bulk-client-${client.userId}`">
                                     @let hasName = client.firstName || client.lastName;
                                     @let firstName = client.firstName ?? '';
                                     @let lastName = client.lastName ?? '';

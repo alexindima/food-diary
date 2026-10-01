@@ -68,6 +68,18 @@ function requireInput(host: HTMLElement): HTMLInputElement {
     return input;
 }
 
+describe('FdUiInputComponent Signal Forms touch', () => {
+    it('marks the bound field touched when the native input loses focus', async () => {
+        const { hostComponent, hostFixture, input } = await setupInputHostAsync();
+        expect(hostComponent.inputForm.value().touched()).toBe(false);
+
+        input().dispatchEvent(new FocusEvent('blur'));
+        hostFixture.detectChanges();
+
+        expect(hostComponent.inputForm.value().touched()).toBe(true);
+    });
+});
+
 describe('FdUiInputComponent', () => {
     it('should create', async () => {
         const { component } = await setupInputAsync();

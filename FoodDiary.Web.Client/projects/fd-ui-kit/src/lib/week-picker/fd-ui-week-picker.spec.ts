@@ -48,6 +48,16 @@ describe('FdUiWeekPickerComponent', () => {
         expect(buttons[2].disabled).toBe(true);
     });
 
+    it.each([
+        ['en-US', /^August 10\s*[–-]\s*16$/],
+        ['ru-RU', /^10\s*[–-]\s*16 августа$/],
+    ])('formats a same-month range in %s date order', (locale, expected) => {
+        fixture.componentRef.setInput('locale', locale);
+        fixture.detectChanges();
+        const label = host().querySelector('.fd-ui-week-picker__trigger-copy strong');
+        expect(label?.textContent.trim()).toMatch(expected);
+    });
+
     it('opens the reusable week calendar and closes after selection', () => {
         component['open']();
         fixture.detectChanges();

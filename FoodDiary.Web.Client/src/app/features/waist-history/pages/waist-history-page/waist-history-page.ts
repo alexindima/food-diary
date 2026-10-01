@@ -67,6 +67,15 @@ export class WaistHistoryPageComponent {
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly currentRange = this.facade.currentRange;
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly deleteError = this.facade.deleteError;
+    protected readonly pageLoadError = this.facade.pageLoadError;
+    protected readonly summaryLoadError = this.facade.summaryLoadError;
+    protected readonly retryPageLoad = (): void => {
+        this.facade.retryPageLoad();
+    };
+    protected readonly retrySummaryLoad = (): void => {
+        this.facade.retrySummaryLoad();
+    };
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
     protected readonly customRangeForm = this.facade.customRangeForm;
     protected readonly desiredWaistCm = this.facade.desiredWaistCm;

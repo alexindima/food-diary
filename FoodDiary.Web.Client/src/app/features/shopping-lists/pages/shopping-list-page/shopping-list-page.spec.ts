@@ -51,6 +51,7 @@ type ShoppingListFacadeMock = {
     deleteCurrentList: ReturnType<typeof vi.fn>;
     deleteListById: ReturnType<typeof vi.fn>;
     initialize: ReturnType<typeof vi.fn>;
+    hasUnsavedChanges: ReturnType<typeof vi.fn>;
     isLoading: ReturnType<typeof signal<boolean>>;
     isCreating: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
@@ -92,6 +93,7 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
         listName: signal(SHOPPING_LIST.name),
         renameRequestedListId: signal(null),
         initialize: vi.fn(),
+        hasUnsavedChanges: vi.fn().mockReturnValue(false),
         selectList: vi.fn(),
         createNewList: vi.fn(),
         clearRenameRequest: vi.fn(),
@@ -239,6 +241,16 @@ describe('ShoppingListPageComponent native submit behavior', () => {
             category: null,
             note: null,
         });
+    });
+});
+
+describe('ShoppingListPageComponent browser navigation', () => {
+    it.each([true, false])('requests unload confirmation only while unsaved=%s', async unsaved => {
+        const { component, facade } = await setupShoppingListPageAsync();
+        facade.hasUnsavedChanges.mockReturnValue(unsaved);
+        const event = new Event('beforeunload', { cancelable: true });
+        component['onBeforeUnload'](event);
+        expect(event.defaultPrevented).toBe(unsaved);
     });
 });
 

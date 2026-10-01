@@ -7,6 +7,34 @@ import { ShoppingListService } from '../../api/shopping-list.service';
 import { ShoppingListBrowserComponent } from './shopping-list-browser';
 
 afterEach(() => vi.useRealTimers());
+describe('ShoppingListBrowserComponent current list data', () => {
+    it('updates renamed lists and counts without losing additional loaded pages', async () => {
+        const first = { id: 'first', name: 'Old name', itemsCount: 1, remainingCount: 1, createdAt: '' };
+        const next = { ...first, id: 'next', name: 'Next page list' };
+        const getPage = vi.fn().mockReturnValue(of([next]));
+        await TestBed.configureTestingModule({
+            imports: [ShoppingListBrowserComponent],
+            providers: [provideTranslateTesting(), { provide: ShoppingListService, useValue: { getPage } }],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(ShoppingListBrowserComponent);
+        fixture.componentRef.setInput('lists', [first]);
+        fixture.componentRef.setInput('initialPage', { items: [first], hasMore: true, nextPage: 2 });
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        element.querySelector<HTMLButtonElement>('.list-browser__load-more button')?.click();
+        fixture.componentRef.setInput('lists', [{ ...first, name: 'Renamed list', remainingCount: 0 }]);
+        fixture.detectChanges();
+        expect(element.textContent).not.toContain('Old name');
+        expect(element.textContent).toContain('Next page list');
+        expect(getPage).toHaveBeenCalledTimes(1);
+        const completedToggle = element.querySelector<HTMLButtonElement>('.list-browser__results fd-ui-button button');
+        expect(completedToggle).not.toBeNull();
+        completedToggle?.click();
+        fixture.detectChanges();
+        expect(element.textContent).toContain('Renamed list');
+    });
+});
+
 describe('ShoppingListBrowserComponent', () => {
     it('does not request the first page when overview data is available', async () => {
         vi.useFakeTimers();

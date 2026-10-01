@@ -195,18 +195,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "6cbbed7a8384a1ee576080716994d6379775944ad49cf202ac577945d4b25d9b"
-        },
-        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "74f12864c9e0d7d91af0161a6f46cd76a2b8cf8c35cc91110c8b5c29a3c76358"
+          "sha256": "442f507b571ef1efcfe93f22444ae66c91370fe4b616aa4e3a14161851dfca9e"
         }
       ],
-      "reason": "Reviewed additive admin-only routes and four DTOs. Existing user API shapes and test-only exception route preserved. Scalar public-recipe reader registered within approved composition ownership; server authorization tested on live API.",
+      "reason": "Reviewed actual normalized Swagger and payload diff: optional independent cycle-note fields and response schema added, existing test-only endpoint preserved. Sensitive export offset bounds remain unchanged; password maximum 256 is now explicit in Swagger and was already enforced by application validation. Local success/error behavior verified; Docker contract tests remain unverified.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:43.4899453Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-09-30T23:25:53.8304006Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "930b9e627ad9ed1f1d4b1ea3325c0e2d98a69268a62d1bf316d51ee004e0e162"
+          "sha256": "29396d4b4c44d0e4d3704e3331fb09c75b5a66e7d342b02d95c4c8b52b4f7a12"
         }
       ],
-      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
+      "reason": "Reviewed current architecture changes: Meals update drops unused projection read dependency without changing project references, command markers, persistence ownership or host registration; Cycles day notes stay within owning Domain/Application/PersistenceModel boundaries and existing scalar profile FK. All2116 architecture tests and API build passed. Generated health metrics are navigation evidence, not a claim of exhaustive audit completion.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:44.1949262Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:13:03.4580878Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "77e29d624ff080a7b838bbd5a8f8f21279116098616b00f14e2322115155e496"
+          "sha256": "38984f3747be3e94fa7ca850947df5f9f8d0ccaf0b7cffa46f469509ee3357f8"
         }
       ],
-      "reason": "Verified all three snapshots against running Swagger using unchanged snapshot builders and preserved test-only endpoint. New routes and DTOs are additive; existing user shapes preserved. Live API rejects malformed requests with 400 after explicit validator error-code fix.",
+      "reason": "Reviewed optional cycle day note contracts and export request limits against current mappings and API snapshots. Meals update removes an unused projection dependency and returns the updated aggregate before the existing pipeline save; 216 application tests, API build and live PATCH/GET verified. No transaction marker, persistence ownership or API shape changed in that fix.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:16:10.6935401Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:11:32.9002203Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -493,13 +489,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "4e483bf07eb822e2fc93a9ed12884a103fb8439f309a227c1e368bd21c066b40"
+          "sha256": "6bf468b0e2f7c9d82fb2a673a814bd1a89d6d4f904bdbc4a294af44d1aed2060"
         }
       ],
-      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
+      "reason": "Reviewed CycleDayNote factory/update, owner collection, unique profile/date key, max 1024 characters and cascade deletion. Migration adds only CycleDayNotes. Applied to verified localhost PostgreSQL; EF reports no pending model changes. Domain/application tests and browser save/edit/clear/delete passed. Clean/upgrade container tests remain unverified because Docker failed.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:46.0047328Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-09-30T23:25:53.1913890Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -767,13 +763,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "beab79587dc4fbed89a08696e7a2d02876c0eea114414afd1587158d034e0397"
+          "sha256": "5dec7af01ea6968b7a39075ca5707d8687f8f2700d5f59f15f63888e47a6b8a6"
         }
       ],
-      "reason": "Admin role required on all catalog reads and writes; user-owned plans excluded by null-owner predicate. Only public recipes accepted; private or missing IDs rejected before mutation. Browser confirmed 401/403 and independent adopted copies. No credential or provider changes.",
+      "reason": "Reviewed private cycle-note collection and deletion, user-scoped cycle access and password verification for sensitive export. Browser confirmed standard CSV excludes personal note, sensitive CSV includes it only after correct password, invalid password preserves session, and delete removes the test journal. No provider-sharing or production configuration changed; credentials never entered repository files.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:47.4958844Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-09-30T23:25:49.0971035Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -812,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "48b1b48a17575fd0fba60e2ae27414ff9bd846bae7472b62950c2ca9792254cf"
+          "sha256": "31e9fbd883c697605ac848dd7b2562e23ea1756d8b6f69c2af877828ca675cb6"
         }
       ],
-      "reason": "Reviewed new validators, domain catalog mutation and EF graph replacement. Domain/application/presentation suites and 2116 architecture tests passed; real PostgreSQL draft publication and hide succeeded. Docker integration tests skipped and disclosed. Wiki indexes regenerated.",
+      "reason": "Reviewed focused regressions and executed evidence: full frontend4057 app/454 UIkit/4 tour/177 admin, 2116 architecture,216 Meals,162 Cycles application and111 Cycles domain tests pass. Risk remains in uncompleted user journeys and Docker migration/provider integration; this commit is an audit checkpoint and does not claim exhaustive coverage.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:48.5041183Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:11:35.8798652Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -887,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "04a0b4696cba55f9c7a8598e6b3aaa7a61df68a27deb02f5e327af6396878349"
+          "sha256": "0a7e032af4a3e5930832bd9589ff9995176dff29aafad28e83a845f8c84fa102"
         }
       ],
-      "reason": "Final runtime fingerprint includes whitespace normalization only. Existing owner command persistence, cancellation and DI boundaries preserved; no new jobs/providers/migrations. Desktop/mobile and RU rendering verified.",
+      "reason": "Reviewed affected runtime topology against source: API response mapping and user-facing failure recovery change; no worker schedule, external client registration, webhook, retry policy or mail transport changes. Existing shared command save owns Meals persistence. New cycle day-note table remains deployment-sensitive and Docker migration validation remains explicitly unverified.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:20:59.7226860Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:13:50.2296133Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -902,21 +898,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "48b1b48a17575fd0fba60e2ae27414ff9bd846bae7472b62950c2ca9792254cf"
+          "sha256": "31e9fbd883c697605ac848dd7b2562e23ea1756d8b6f69c2af877828ca675cb6"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "04a0b4696cba55f9c7a8598e6b3aaa7a61df68a27deb02f5e327af6396878349"
+          "sha256": "0a7e032af4a3e5930832bd9589ff9995176dff29aafad28e83a845f8c84fa102"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "beab79587dc4fbed89a08696e7a2d02876c0eea114414afd1587158d034e0397"
+          "sha256": "5dec7af01ea6968b7a39075ca5707d8687f8f2700d5f59f15f63888e47a6b8a6"
         }
       ],
-      "reason": "Reviewed server Admin role gate, null-owner catalog scoping and public-only recipe validation. Browser proved 401/403 and independent adopted copies. Final changes only normalize source EOF whitespace; no new data flow or credentials.",
+      "reason": "Reviewed changed sensitive boundaries: cycle notes remain current-user scoped; sensitive export requires current password with existing application limits and bounded offset; frontend preserves credential-verification401 without bypassing server authorization, while refresh failure still logs out. EN/RU errors and export flows tested with local QA users. No credentials or tokens staged; this checkpoint does not assert a full security scan or Docker/provider coverage.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:21:00.7508850Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:13:51.2964015Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0a57fe160d104a62f0008565795490817cf2bb03124e485cf950ba503eaa42f4"
+          "sha256": "495fce3ba363859cb8aaf781701da4bb7a3e3d2ede929b165d9b2e6a47bdef8e"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "ca3105aeaa870c3ef3b903cc6888537e25770de37a63beed4c9cddb89045ed4c"
+          "sha256": "df2435a45e5b8e93c73d5bdc6648b8426b7695204786853eee11bb8a7d7691e6"
         }
       ],
-      "reason": "Existing workflow guidance remains valid. Runtime changes are synchronous admin HTTP use cases without new jobs or providers; cancellation passed through repositories. EN/RU assets and desktop/mobile rendered workflows verified.",
+      "reason": "Traced UpdateMeal controller through command handler, staged repository write, AsNoTracking projection and CommandTransactionBehavior; confirmed old response before pipeline save, replaced with current aggregate mapping, regression216tests and livePATCH/GET verified. Traced shared input blur through installed FormValueControl touch output and EN/RU consumer validation;454UIkit tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:50.9330326Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:13:52.5741653Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0a57fe160d104a62f0008565795490817cf2bb03124e485cf950ba503eaa42f4"
+          "sha256": "495fce3ba363859cb8aaf781701da4bb7a3e3d2ede929b165d9b2e6a47bdef8e"
         }
       ],
-      "reason": "Reviewed additive admin-only routes and four DTOs. Existing user API shapes and test-only exception route preserved. Scalar public-recipe reader registered within approved composition ownership; server authorization tested on live API.",
+      "reason": "Reviewed preserved UI control inputs and values plus additive void touch outputs required by installed Angular FormValueControl. 454 UI-kit tests, full app/admin/tour verification, and EN/RU blur validation runtime passed. Autocomplete late-response focus and option selection covered; date-range opposite bounds and mobile tour focus verified.",
       "baseRef": "HEAD",
-      "gitHead": "584a6af5bc482bdf2d4237f3b68bac8e5e38594a",
-      "reviewedAtUtc": "2026-09-30T21:06:46.7991472Z"
+      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
+      "reviewedAtUtc": "2026-10-01T08:11:34.2228849Z"
     },
     {
       "pageId": "workflow.query-context",

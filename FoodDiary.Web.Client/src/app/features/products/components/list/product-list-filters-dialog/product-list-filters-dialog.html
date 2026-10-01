@@ -28,6 +28,7 @@
                 type="number"
                 size="sm"
                 min="0"
+                [error]="caloriesError() | translate"
                 [label]="'PRODUCT_LIST.FILTER_CALORIES_FROM' | translate"
                 [(value)]="caloriesFromValue"
             />
@@ -35,6 +36,7 @@
                 type="number"
                 size="sm"
                 min="0"
+                [error]="caloriesError() | translate"
                 [label]="'PRODUCT_LIST.FILTER_CALORIES_TO' | translate"
                 [(value)]="caloriesToValue"
             />

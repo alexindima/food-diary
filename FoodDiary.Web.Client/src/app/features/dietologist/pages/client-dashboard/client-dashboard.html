@@ -207,15 +207,14 @@
                         <div class="fd-row fd-wrap fd-gap-sm">
                             <fd-ui-input
                                 [label]="'RECOMMENDATION_TEMPLATES.NAME' | translate"
+                                [error]="templateNameTooLong() ? ('RECOMMENDATION_TEMPLATES.NAME_TOO_LONG' | translate) : null"
                                 [formField]="recommendationForm.templateName"
                             />
                             <fd-ui-button
                                 type="button"
                                 variant="secondary"
                                 fill="outline"
-                                [disabled]="
-                                    recommendationModel().templateName.trim().length === 0 || recommendationModel().text.trim().length === 0
-                                "
+                                [disabled]="templateInvalid()"
                                 [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
                                 [loading]="savingTemplate()"
                                 (click)="createRecommendationTemplate()"
@@ -227,8 +226,8 @@
                             <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.LIMIT' | translate }} </span>
                             <fd-ui-button
                                 type="submit"
-                                [disabled]="recommendationForm().invalid() || savingRecommendation()"
-                                [disabledReason]="recommendationForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                                [disabled]="recommendationForm.text().invalid() || savingRecommendation()"
+                                [disabledReason]="recommendationForm.text().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                             >
                                 {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
                             </fd-ui-button>

@@ -64,6 +64,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly displayWith = input<(value: T | null) => string>();
     public readonly value = model<T | string | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     public readonly queryChange = output<string>();
@@ -141,11 +142,15 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.openMenu();
     }
 
-    protected onBlur(): void {
-        if (!this.isOpen()) {
-            this.isFocused.set(false);
-            this.touched.set(true);
+    protected onBlur(event: FocusEvent): void {
+        const target = event.relatedTarget;
+        if (target instanceof Node && this.listboxRef()?.nativeElement.contains(target) === true) {
+            return;
         }
+
+        this.closeMenu();
+        this.touched.set(true);
+        this.touch.emit();
     }
 
     protected clearValue(event: MouseEvent): void {
@@ -173,6 +178,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.queryText.set(option.label);
         this.value.set(option.value);
         this.touched.set(true);
+        this.touch.emit();
         this.optionSelected.emit(option);
         this.controlRef()?.nativeElement.focus();
         this.closeMenu();

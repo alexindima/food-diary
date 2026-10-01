@@ -27,7 +27,7 @@ const FIXTURE_REFERENCE_MEASUREMENT = 80;
 const FIXTURE_CURRENT_MEASUREMENT = 78;
 const FIXTURE_TARGET_MEASUREMENT = 75;
 const ENTRY = { id: 'entry', userId: 'u', date: '2026-06-20', weightKg: 80 };
-async function setupAsync(): Promise<{
+async function setupAsync(renderEntries = true): Promise<{
     fixture: ComponentFixture<WeightHistoryPageComponent>;
     component: WeightHistoryPageComponent;
     facade: WeightHistoryFacade;
@@ -75,8 +75,10 @@ async function setupAsync(): Promise<{
     await TestBed.compileComponents();
     const fixture = TestBed.createComponent(WeightHistoryPageComponent);
     fixture.detectChanges();
-    for (const block of await fixture.getDeferBlocks()) {
-        await block.render(DeferBlockState.Complete);
+    if (renderEntries) {
+        for (const block of await fixture.getDeferBlocks()) {
+            await block.render(DeferBlockState.Complete);
+        }
     }
     fixture.detectChanges();
     return {
@@ -95,6 +97,21 @@ beforeEach(async () => {
     context = await setupAsync();
 });
 describe('Weight history page composition', () => {
+    it('keeps the history tour target present while entries are deferred', async () => {
+        TestBed.resetTestingModule();
+        const { fixture } = await setupAsync(false);
+        const [block] = await fixture.getDeferBlocks();
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const target = root.querySelector('[data-tour-id="weight-history-entries"]');
+        expect(target).not.toBeNull();
+        expect(target?.querySelector('fd-weight-history-entries-card')).toBeNull();
+        await block.render(DeferBlockState.Complete);
+        fixture.detectChanges();
+        expect(root.querySelector('[data-tour-id="weight-history-entries"]')).toBe(target);
+        expect(target?.querySelector('fd-weight-history-entries-card')).not.toBeNull();
+    });
+
     it('renders metric data with both lower cards', () => {
         const { fixture, component } = context;
         const root = fixture.nativeElement as HTMLElement;

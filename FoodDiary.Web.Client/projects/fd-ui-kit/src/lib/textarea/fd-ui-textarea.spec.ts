@@ -23,6 +23,12 @@ class TestHostComponent {
     });
 }
 
+@Component({
+    template: '<fd-ui-textarea id="notes-field" label="Notes" />',
+    imports: [FdUiTextareaComponent],
+})
+class LabeledTextareaHostComponent {}
+
 type TextareaTestContext = {
     component: FdUiTextareaComponent;
     el: HTMLElement;
@@ -80,6 +86,19 @@ describe('FdUiTextareaComponent', () => {
 });
 
 describe('FdUiTextareaComponent rendering', () => {
+    it('associates a static-id label with the native textarea rather than the component host', async () => {
+        await TestBed.configureTestingModule({ imports: [LabeledTextareaHostComponent] }).compileComponents();
+        const fixture = TestBed.createComponent(LabeledTextareaHostComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const label = host.querySelector<HTMLLabelElement>('label');
+        const textarea = requireTextarea(host);
+
+        expect(textarea.id).toBe('notes-field');
+        expect(host.querySelectorAll('#notes-field')).toHaveLength(1);
+        expect(label?.control).toBe(textarea);
+    });
+
     it('should render label when provided', async () => {
         const { el, fixture } = await setupTextareaAsync();
         fixture.componentRef.setInput('label', 'Description');

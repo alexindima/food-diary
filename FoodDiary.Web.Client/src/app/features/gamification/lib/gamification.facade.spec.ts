@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -70,6 +70,20 @@ describe('GamificationFacade', () => {
         await waitForAsync(() => gamificationService.getData.mock.calls.length === 2);
 
         expect(gamificationService.getData).toHaveBeenCalledTimes(2);
+    });
+
+    it('exposes failed loading and recovers real data on retry', async () => {
+        gamificationService.getData.mockReturnValue(throwError(() => new Error('Unavailable')));
+        facade.initialize();
+        await waitForAsync(() => facade.hasError());
+        expect(facade.hasError()).toBe(true);
+        expect(facade.data()).toBeNull();
+
+        gamificationService.getData.mockReturnValue(of(MOCK_DATA));
+        facade.initialize();
+        await waitForAsync(() => facade.data() !== null);
+        expect(facade.hasError()).toBe(false);
+        expect(facade.data()).toEqual(MOCK_DATA);
     });
 });
 

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -17,9 +17,15 @@ type SensitiveCycleExportFormModel = { currentPassword: string };
 })
 export class SensitiveCycleExportDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<SensitiveCycleExportDialogComponent, string | null>);
+    private readonly translateService = inject(TranslateService);
     protected readonly model = signal<SensitiveCycleExportFormModel>({ currentPassword: '' });
     protected readonly exportForm = form(this.model, path => {
         required(path.currentPassword);
+    });
+
+    protected readonly passwordError = computed(() => {
+        const field = this.exportForm.currentPassword();
+        return field.touched() && field.invalid() ? this.translateService.instant('FORM_ERRORS.REQUIRED') : null;
     });
 
     protected submit(): void {

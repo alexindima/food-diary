@@ -1,7 +1,8 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, effect, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, firstValueFrom } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { LessonService } from '../api/lesson.service';
@@ -91,6 +92,7 @@ export class LessonFacade {
         return lessons.map(lesson => (markedReadIds.has(lesson.id) ? { ...lesson, isRead: true } : lesson));
     });
     public readonly isLoading = computed(() => this.lessonsResource.isLoading());
+    public readonly hasLoadError = computed(() => this.lessonsResource.error() !== undefined);
     public readonly selectedLesson = computed(() => {
         const lesson = this.selectedLessonResource.hasValue() ? (this.selectedLessonResource.value() ?? null) : null;
         if (lesson === null) {
@@ -100,6 +102,13 @@ export class LessonFacade {
         return this.markedReadIds().has(lesson.id) ? { ...lesson, isRead: true } : lesson;
     });
     public readonly isDetailLoading = computed(() => this.selectedLessonResource.isLoading());
+    public readonly hasDetailError = computed(() => this.selectedLessonResource.error() !== undefined);
+    public readonly isLessonMissing = computed(() => {
+        const error = this.selectedLessonResource.error();
+        return error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.NotFound);
+    });
+    public readonly isMarkingRead = signal(false);
+    public readonly markReadFailed = signal(false);
 
     public loadLessons(category?: string | null): void {
         this.categoryFilter.set(category ?? null);
@@ -109,16 +118,40 @@ export class LessonFacade {
         this.pageIndex.set(0);
     }
 
+    public retryLessons(): void {
+        this.lessonsResource.reload();
+    }
+
     public loadLesson(id: string): void {
+        this.markReadFailed.set(false);
         this.selectedLessonId.set(id);
     }
 
+    public retryLesson(): void {
+        this.selectedLessonResource.reload();
+    }
+
     public markRead(id: string): void {
+        if (this.isMarkingRead() || this.markedReadIds().has(id)) {
+            return;
+        }
+        this.isMarkingRead.set(true);
+        this.markReadFailed.set(false);
         this.service
             .markRead(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.markedReadIds.update(current => new Set(current).add(id));
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.isMarkingRead.set(false);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.markedReadIds.update(current => new Set(current).add(id));
+                },
+                error: () => {
+                    this.markReadFailed.set(true);
+                },
             });
     }
 

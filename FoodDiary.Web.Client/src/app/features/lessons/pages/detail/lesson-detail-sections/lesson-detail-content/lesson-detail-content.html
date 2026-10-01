@@ -28,7 +28,9 @@
 
         <footer class="lesson-detail__actions">
             @if (!lesson.isRead) {
-                <fd-ui-button icon="check" (click)="markRead.emit()"> {{ 'LESSONS.MARK_READ' | translate }} </fd-ui-button>
+                <fd-ui-button icon="check" [loading]="isMarkingRead()" (click)="markRead.emit()">
+                    {{ 'LESSONS.MARK_READ' | translate }}
+                </fd-ui-button>
             } @else {
                 <div class="lesson-detail__read-badge fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
                     <fd-ui-icon name="check_circle" />

@@ -19,6 +19,7 @@ const SELECTED_YEAR = 2026;
 const SELECTED_DAY = 22;
 const PERIOD_START_DAY = 16;
 const MAY_MONTH_INDEX = 4;
+const OVERLONG_TEMPLATE_NAME_LENGTH = 121;
 let dietologistService: {
     getMyClients: ReturnType<typeof vi.fn>;
     getClientDashboard: ReturnType<typeof vi.fn>;
@@ -272,6 +273,35 @@ function registerActionTests(): void {
         expect(router.navigate).not.toHaveBeenCalledWith(['/dietologist']);
     });
 }
+
+describe('ClientDashboardComponent template limits', () => {
+    it.each([
+        { nameLength: 120, textLength: 2000, invalid: false },
+        { nameLength: 121, textLength: 2000, invalid: true },
+        { nameLength: 120, textLength: 2001, invalid: true },
+    ])('validates $nameLength name characters and $textLength text characters', ({ nameLength, textLength, invalid }) => {
+        createComponent('client-1');
+        component['recommendationModel'].set({ text: 'x'.repeat(textLength), templateName: 'x'.repeat(nameLength) });
+        fixture.detectChanges();
+
+        expect(component['templateInvalid']()).toBe(invalid);
+        if (invalid) {
+            component['createRecommendationTemplate']();
+            expect(dietologistService.createRecommendationTemplate).not.toHaveBeenCalled();
+        }
+    });
+
+    it('submits a recommendation independently of the optional template name limit', async () => {
+        createComponent('client-1');
+        component['recommendationModel'].set({ text: 'Add protein', templateName: 'x'.repeat(OVERLONG_TEMPLATE_NAME_LENGTH) });
+        fixture.detectChanges();
+        const form = (fixture.nativeElement as HTMLElement).querySelector('.client-dashboard__recommendation-form');
+        form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+
+        expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
+    });
+});
 
 function createComponent(clientId: string): void {
     TestBed.configureTestingModule({

@@ -201,7 +201,8 @@ describe('FavoriteProductService API measurement units', () => {
         service.getLookupPage().subscribe(value => {
             all = value;
         });
-        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100')
+        httpMock
+            .expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100')
             .flush({ data: [item], page: 1, limit: 100, totalItems: 1, totalPages: 1 });
         expect(page).toMatchObject({ data: [{ baseUnit: wireUnit.toUpperCase() }] });
         expect(all).toMatchObject([{ baseUnit: wireUnit.toUpperCase() }]);

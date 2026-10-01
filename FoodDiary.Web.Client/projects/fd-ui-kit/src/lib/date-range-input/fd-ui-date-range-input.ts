@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output, signal } from '@angular/core';
 import { disabled as disabledRule, form, FormField, type FormValueControl } from '@angular/forms/signals';
 
 import { fdUiFormatDateInputValue, fdUiParseLocalDate } from '../date/fd-ui-date.utils';
@@ -30,6 +30,7 @@ export class FdUiDateRangeInputComponent implements FormValueControl<FdUiDateRan
     public readonly controlDisabled = input(false);
     public readonly value = model<FdUiDateRangeValue | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
 
     protected readonly rangeModel = signal<{ start: string | null; end: string | null }>({
         start: null,
@@ -66,6 +67,7 @@ export class FdUiDateRangeInputComponent implements FormValueControl<FdUiDateRan
 
     protected touchRange(): void {
         this.touched.set(true);
+        this.touch.emit();
     }
 
     private toRangeValue(value: FdUiDateRangeValue | null): { start: string | null; end: string | null } {

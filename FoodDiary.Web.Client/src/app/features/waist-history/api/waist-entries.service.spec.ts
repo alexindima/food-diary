@@ -155,11 +155,13 @@ describe('Summary and failure contracts', () => {
         request.flush(buckets);
         expect(received).toHaveBeenCalledWith(buckets);
     });
-    it('falls back to empty summary after a server error', () => {
+    it('propagates summary errors for recovery instead of inventing empty data', () => {
         const received = vi.fn();
-        service.getSummary(filters).subscribe(received);
+        const error = vi.fn();
+        service.getSummary(filters).subscribe({ next: received, error });
         httpMock.expectOne(r => r.url === `${BASE_URL}/summary`).flush({}, { status: 500, statusText: 'Failure' });
-        expect(received).toHaveBeenCalledWith([]);
+        expect(received).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 500 }));
     });
     it('preserves page data and independent recent-entry limit', () => {
         const received = vi.fn();

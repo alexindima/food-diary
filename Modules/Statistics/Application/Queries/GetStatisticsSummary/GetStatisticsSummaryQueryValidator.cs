@@ -21,7 +21,7 @@ public sealed class GetStatisticsSummaryQueryValidator : AbstractValidator<GetSt
             .WithMessage("DateFrom must be earlier than or equal to DateTo.");
 
         RuleFor(x => x.DateTo)
-            .Must((query, dateTo) => TemporalRangePolicy.IsPeriodWithinLimit(query.DateFrom, dateTo))
+            .Must((query, dateTo) => TemporalRangePolicy.IsInstantPeriodWithinLimit(query.DateFrom, dateTo))
             .When(x => x.DateFrom <= x.DateTo)
             .WithErrorCode("Validation.Invalid")
             .WithMessage($"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");

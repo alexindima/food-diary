@@ -30,6 +30,12 @@ describe('weekly review mapper', () => {
         });
     });
 
+    it('does not claim nutrition signals for a week without meal entries', () => {
+        const review = buildWeeklyReview(createWeek({ daysLogged: 0, mealsLogged: 0 }), createTrends({ hydrationChange: 271 }), []);
+        expect(review?.summaryKey).toBe('WEEKLY_CHECK_IN.SUMMARY.EMPTY');
+        expect(review?.insights.map(insight => insight.key)).toEqual(['hydration']);
+    });
+
     it('returns null until weekly data is available', () => {
         expect(buildWeeklyReview(void 0, void 0, [])).toBeNull();
     });

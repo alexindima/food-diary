@@ -215,19 +215,35 @@ export function buildCycleNutritionSummaryView(
     };
 }
 
+function resolveDayNotes(
+    notes: Array<{ date: string; notes: string }>,
+    dateKey: string,
+    bleeding: BleedingEntry[],
+    fertility: FertilitySignal | null,
+): string | null {
+    return (
+        notes.find(note => toDateKey(note.date) === dateKey)?.notes ??
+        bleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ??
+        fertility?.notes ??
+        null
+    );
+}
+
 export function buildCycleDayItems(
     bleedingEntries: BleedingEntry[],
     symptoms: CycleSymptomEntry[],
     fertilitySignals: FertilitySignal[],
-    localeOrOptions: string | { locale: string; menstrualEpisodes: MenstrualEpisode[] },
+    localeOrOptions: string | { locale: string; menstrualEpisodes: MenstrualEpisode[]; dayNotes?: Array<{ date: string; notes: string }> },
 ): CycleDayViewModel[] {
     const locale = typeof localeOrOptions === 'string' ? localeOrOptions : localeOrOptions.locale;
     const menstrualEpisodes = typeof localeOrOptions === 'string' ? [] : localeOrOptions.menstrualEpisodes;
+    const dayNotes = typeof localeOrOptions === 'string' ? [] : (localeOrOptions.dayNotes ?? []);
     const activeSymptoms = symptoms.filter(symptom => symptom.intensity > 0);
     const dates = new Set([
         ...bleedingEntries.map(entry => entry.date),
         ...activeSymptoms.map(symptom => symptom.date),
         ...fertilitySignals.map(signal => signal.date),
+        ...dayNotes.map(note => note.date),
     ]);
     const bleedingStreakByDate = buildBleedingStreakByDate(bleedingEntries);
     return [...dates]
@@ -251,8 +267,7 @@ export function buildCycleDayItems(
                 fertilitySignal,
                 fertilitySignalItems: buildFertilitySignalItems(fertilitySignal),
                 carePromptItems: buildCarePromptItems(dayBleeding, bleedingStreakByDate.get(dateKey) ?? 0),
-                notes:
-                    dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
+                notes: resolveDayNotes(dayNotes, dateKey, dayBleeding, fertilitySignal),
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
                 badgeLabelKey: getDayBadgeLabelKey(dayBleeding),
                 isPeriodStart: startEpisode !== undefined,

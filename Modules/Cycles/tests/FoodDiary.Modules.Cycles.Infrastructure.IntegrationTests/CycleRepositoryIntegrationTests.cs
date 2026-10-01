@@ -66,6 +66,7 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
         Assert.NotEmpty(byId.SymptomEntries);
         Assert.NotEmpty(byId.Factors);
         Assert.NotEmpty(byId.FertilitySignals);
+        Assert.Equal("Daily note", Assert.Single(byId.DayNotes).Notes);
         Assert.Equal(profile.Id, current?.Id);
     }
 
@@ -93,6 +94,7 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
 
         Assert.Multiple(
             () => Assert.False(context.CycleProfiles.Any(item => item.Id == profile.Id)),
+            () => Assert.False(context.Set<CycleDayNote>().Any(item => item.CycleProfileId == profile.Id)),
             () => Assert.False(context.CycleBleedingEntries.Any(item => item.CycleProfileId == profile.Id)),
             () => Assert.False(context.CycleSymptomEntries.Any(item => item.CycleProfileId == profile.Id)),
             () => Assert.False(context.CycleFactors.Any(item => item.CycleProfileId == profile.Id)),
@@ -139,10 +141,12 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
             () => Assert.Equal(2, readModel.BleedingEntries.Count),
             () => Assert.Single(readModel.SymptomEntries),
             () => Assert.Single(readModel.Factors),
-            () => Assert.Single(readModel.FertilitySignals));
+            () => Assert.Single(readModel.FertilitySignals),
+            () => Assert.Equal("Daily note", Assert.Single(readModel.DayNotes!).Notes));
     }
 
     private static void AddCycleDetails(CycleProfile profile, DateOnly today) {
+        profile.SetDayNotes(today.AddDays(-1), "Daily note");
         profile.UpsertBleedingEntry(today.AddDays(-3), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 4, notes: "start");
         profile.UpsertBleedingEntry(today.AddDays(-2), BleedingType.Spotting, CycleFlowLevel.Light, painImpact: 1, notes: "spotting");
         profile.UpsertSymptomEntry(today, CycleSymptomCategory.Pain, 3, ["lower"], "minor");

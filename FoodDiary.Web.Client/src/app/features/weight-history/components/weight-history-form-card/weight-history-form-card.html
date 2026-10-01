@@ -6,6 +6,7 @@
             [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
             [todayLabel]="'WEIGHT_HISTORY.TODAY' | translate"
             [formField]="form().date"
+            [error]="dateError() | translate"
             [showRequiredIndicator]="false"
         />
 
@@ -20,6 +21,7 @@
             [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
             [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
             [formField]="form().weight"
+            [error]="weightError() | translate: weightRange()"
         />
     </div>
 

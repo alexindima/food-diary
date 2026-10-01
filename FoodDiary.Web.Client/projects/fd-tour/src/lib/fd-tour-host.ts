@@ -70,6 +70,7 @@ export class FdTourHostComponent {
     private readonly popover = viewChild<ElementRef<HTMLElement>>('popover');
     private presentedStepKey: string | null = null;
     private cleanupPopoverReveal: (() => void) | null = null;
+    private focusBeforeTour: HTMLElement | null = null;
     protected readonly tour = inject(FdTourService);
     protected readonly targetRect = signal<TourRect | null>(null);
     protected readonly popoverSize = signal<PopoverSize>({
@@ -129,6 +130,7 @@ export class FdTourHostComponent {
             const snapshot = this.tour.snapshot();
             const stepKey = snapshot === null ? null : `${snapshot.tour.id}:${snapshot.stepIndex}:${snapshot.step.id}`;
             if (stepKey !== this.presentedStepKey) {
+                this.updateFocusOrigin(stepKey);
                 this.presentedStepKey = stepKey;
                 this.beginStepPresentation(stepKey, snapshot?.step ?? null);
                 return;
@@ -136,6 +138,17 @@ export class FdTourHostComponent {
 
             this.measureTarget(snapshot?.step ?? null);
             this.schedulePopoverMeasurement();
+        });
+
+        effect(() => {
+            if (this.popoverVisible() && this.tour.snapshot() !== null) {
+                afterNextRender(
+                    () => {
+                        this.focusPopover();
+                    },
+                    { injector: this.injector },
+                );
+            }
         });
 
         if (!isPlatformBrowser(this.platformId)) {
@@ -155,6 +168,7 @@ export class FdTourHostComponent {
         this.document.addEventListener('keydown', handleKeydown);
         this.destroyRef.onDestroy(() => {
             this.cleanupPopoverReveal?.();
+            this.restoreFocus();
             this.getViewport()?.removeEventListener('resize', handleReposition);
             this.document.removeEventListener('scroll', handleReposition, { capture: true });
             this.document.removeEventListener('keydown', handleKeydown);
@@ -183,18 +197,72 @@ export class FdTourHostComponent {
         }
 
         switch (event.key) {
+            case 'Tab': {
+                this.trapFocus(event);
+                break;
+            }
             case 'Escape': {
+                event.preventDefault();
                 this.tour.close();
                 break;
             }
             case 'ArrowRight': {
+                event.preventDefault();
                 this.tour.next();
                 break;
             }
             case 'ArrowLeft': {
+                event.preventDefault();
                 this.tour.previous();
                 break;
             }
+        }
+    }
+
+    private focusPopover(): void {
+        if (!this.popoverVisible() || this.tour.snapshot() === null) {
+            return;
+        }
+        this.popover()?.nativeElement.querySelector<HTMLElement>('button:not(:disabled)')?.focus({ preventScroll: true });
+    }
+
+    private updateFocusOrigin(stepKey: string | null): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+        if (stepKey !== null && this.presentedStepKey === null) {
+            const activeElement = this.document.activeElement;
+            this.focusBeforeTour = activeElement instanceof HTMLElement ? activeElement : null;
+        } else if (stepKey === null) {
+            this.restoreFocus();
+        }
+    }
+
+    private restoreFocus(): void {
+        if (this.focusBeforeTour?.isConnected === true) {
+            this.focusBeforeTour.focus({ preventScroll: true });
+        }
+        this.focusBeforeTour = null;
+    }
+
+    private trapFocus(event: KeyboardEvent): void {
+        const popover = this.popover()?.nativeElement;
+        if (popover === undefined || !this.popoverVisible()) {
+            event.preventDefault();
+            return;
+        }
+        const buttons = [...popover.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')];
+        const first = buttons.at(0);
+        const last = buttons.at(-1);
+        if (first === undefined || last === undefined) {
+            event.preventDefault();
+            return;
+        }
+        const active = this.document.activeElement;
+        const boundary = event.shiftKey ? first : last;
+        if (active === boundary || !popover.contains(active)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus({ preventScroll: true });
         }
     }
 

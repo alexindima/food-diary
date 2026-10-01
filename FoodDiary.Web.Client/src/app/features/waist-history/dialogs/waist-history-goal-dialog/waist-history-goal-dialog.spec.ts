@@ -15,6 +15,7 @@ const createFacade = (): {
     desiredWaistForm: FieldTree<{ date: string; circumference: string }>;
     isSaving: WritableSignal<boolean>;
     isDesiredWaistSaving: WritableSignal<boolean>;
+    goalActionError: WritableSignal<string | null>;
     isEditing: WritableSignal<boolean>;
     entryError: WritableSignal<string | null>;
     entrySaveVersion: WritableSignal<number>;
@@ -31,6 +32,7 @@ const createFacade = (): {
         desiredWaistForm: fields,
         isSaving: signal(false),
         isDesiredWaistSaving: signal(false),
+        goalActionError: signal<string | null>(null),
         isEditing: signal(false),
         entryError: signal<string | null>(null),
         entrySaveVersion: signal(FIXTURE_INITIAL_VERSION),

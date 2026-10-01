@@ -3,7 +3,7 @@ import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { LessonDetail, LessonPage, LessonQuery, LessonSummary } from '../models/lesson.data';
 
@@ -19,7 +19,7 @@ export class LessonService extends ApiService {
 
         return super.get<LessonPage | LessonSummary[]>('', params).pipe(
             map(response => this.normalizePage(response, query)),
-            catchError((error: unknown) => fallbackApiError('Get lessons error', error, this.createEmptyPage(query))),
+            catchError((error: unknown) => rethrowApiError('Get lessons error', error)),
         );
     }
 
@@ -46,19 +46,6 @@ export class LessonService extends ApiService {
             totalLessonCount: response.length,
             readLessonCount: response.filter(lesson => lesson.isRead).length,
             availableCategories: [...new Set(response.map(lesson => lesson.category))],
-        };
-    }
-
-    private createEmptyPage(query: LessonQuery): LessonPage {
-        return {
-            items: [],
-            page: query.page,
-            pageSize: query.pageSize,
-            totalCount: 0,
-            totalPages: 0,
-            totalLessonCount: 0,
-            readLessonCount: 0,
-            availableCategories: [],
         };
     }
 }

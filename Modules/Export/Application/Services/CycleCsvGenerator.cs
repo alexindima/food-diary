@@ -18,6 +18,7 @@ public static class CycleCsvGenerator {
         AppendSymptoms(sb, cycle, dateFrom, dateTo, scope);
         if (scope == CycleExportScope.Sensitive) {
             AppendFertilitySignals(sb, cycle, dateFrom, dateTo);
+            AppendDayNotes(sb, cycle, dateFrom, dateTo);
         }
         AppendFactors(sb, cycle, dateFrom, dateTo, scope);
 
@@ -100,6 +101,13 @@ public static class CycleCsvGenerator {
                 cervicalFluid: signal.CervicalFluid,
                 hadSex: signal.HadSex,
                 notes: signal.Notes);
+        }
+    }
+
+    private static void AppendDayNotes(StringBuilder sb, CycleModel cycle, DateOnly dateFrom, DateOnly dateTo) {
+        foreach (CycleDayNoteModel note in (cycle.DayNotes ?? []).Where(note => IsInRange(note.Date, dateFrom, dateTo)).OrderBy(note => note.Date)) {
+            AppendRow(sb, "DayNote", note.Date, endDate: null, category: null, value: null, flow: null,
+                intensity: null, temperatureCelsius: null, ovulationTest: null, cervicalFluid: null, hadSex: null, notes: note.Notes);
         }
     }
 

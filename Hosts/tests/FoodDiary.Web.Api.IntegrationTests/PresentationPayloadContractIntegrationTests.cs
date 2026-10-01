@@ -538,6 +538,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["averagePeriodLength"] = root.GetProperty("averagePeriodLength").GetInt32(),
             ["lutealLength"] = root.GetProperty("lutealLength").GetInt32(),
             ["bleedingEntriesCount"] = root.GetProperty("bleedingEntries").GetArrayLength(),
+            ["dayNotesCount"] = root.GetProperty("dayNotes").GetArrayLength(),
             ["symptomsCount"] = root.GetProperty("symptoms").GetArrayLength(),
             ["factorsCount"] = root.GetProperty("factors").GetArrayLength(),
             ["fertilitySignalsCount"] = root.GetProperty("fertilitySignals").GetArrayLength(),

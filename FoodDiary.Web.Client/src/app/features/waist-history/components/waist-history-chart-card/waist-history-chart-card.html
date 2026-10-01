@@ -5,7 +5,7 @@
 >
     <ng-content select="[chartControls]" />
 
-    <div class="waist-history-page__chart-viewport">
+    <div class="waist-history-page__chart-viewport" [hidden]="hasError()">
         @if (hasPoints()) {
             <fd-ui-line-chart
                 class="waist-history-page__chart"

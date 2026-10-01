@@ -5764,10 +5764,51 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Sources");
             });
 
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleDayNote", b => {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid");
+
+                b.Property<DateTime>("CreatedOnUtc")
+                    .HasColumnType("timestamp with time zone");
+
+                b.Property<Guid>("CycleProfileId")
+                    .HasColumnType("uuid");
+
+                b.Property<DateOnly>("Date")
+                    .HasColumnType("date");
+
+                b.Property<DateTime?>("ModifiedOnUtc")
+                    .HasColumnType("timestamp with time zone");
+
+                b.Property<string>("Notes")
+                    .IsRequired()
+                    .HasMaxLength(1024)
+                    .HasColumnType("character varying(1024)");
+
+                b.HasKey("Id");
+
+                b.HasIndex("CycleProfileId", "Date")
+                    .IsUnique();
+
+                b.ToTable("CycleDayNotes", (string)null);
+            });
+
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleDayNote", b => {
+                b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
+                    .WithMany("DayNotes")
+                    .HasForeignKey("CycleProfileId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("CycleProfile");
+            });
+
             modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", b => {
                 b.Navigation("BleedingEntries");
 
                 b.Navigation("Consents");
+
+                b.Navigation("DayNotes");
 
                 b.Navigation("Factors");
 
@@ -5839,6 +5880,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", b => {
                 b.Navigation("AdditionalImages");
             });
+
 
 #pragma warning restore 612, 618
         }

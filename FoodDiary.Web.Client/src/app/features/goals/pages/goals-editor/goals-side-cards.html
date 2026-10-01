@@ -28,10 +28,24 @@
                     id="goals-editor-weight"
                     type="number"
                     min="0"
+                    [attr.aria-describedby]="weightInvalid() ? 'goals-editor-weight-error' : null"
+                    [max]="weightMaximum()"
+                    [attr.aria-invalid]="weightInvalid()"
                     [value]="displayBodyTargets().weight"
                     (input)="updateBodyTarget('weight', $event)"
                 /><span>{{ measurements.weightUnitKey() | translate }}</span></span
             >
+            @if (weightInvalid()) {
+                <fd-ui-form-error
+                    id="goals-editor-weight-error"
+                    [error]="
+                        weightInvalid()
+                            ? ('GOALS_PAGE.EDITOR.BODY_RANGE'
+                              | translate: { max: weightMaximum(), unit: (measurements.weightUnitKey() | translate) })
+                            : null
+                    "
+                />
+            }
         </div>
         <div class="goals-editor-body-row">
             <label for="goals-editor-waist">{{ 'GOALS_PAGE.BODY_TARGET_WAIST' | translate }}</label>
@@ -40,10 +54,24 @@
                     id="goals-editor-waist"
                     type="number"
                     min="0"
+                    [attr.aria-describedby]="waistInvalid() ? 'goals-editor-waist-error' : null"
+                    [max]="waistMaximum()"
+                    [attr.aria-invalid]="waistInvalid()"
                     [value]="displayBodyTargets().waist"
                     (input)="updateBodyTarget('waist', $event)"
                 /><span>{{ measurements.lengthUnitKey() | translate }}</span></span
             >
+            @if (waistInvalid()) {
+                <fd-ui-form-error
+                    id="goals-editor-waist-error"
+                    [error]="
+                        waistInvalid()
+                            ? ('GOALS_PAGE.EDITOR.BODY_RANGE'
+                              | translate: { max: waistMaximum(), unit: (measurements.lengthUnitKey() | translate) })
+                            : null
+                    "
+                />
+            }
         </div>
     </section>
 </div>

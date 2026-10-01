@@ -41,6 +41,16 @@ describe('LessonsListGridComponent', () => {
         expect(element.querySelector('.lesson-card__title')?.textContent).toContain('Macros');
         expect(lessonOpen).toHaveBeenCalledWith('lesson-1');
     });
+
+    it('opens a lesson with Space and prevents page scrolling', () => {
+        const fixture = createComponent();
+        const lessonOpen = vi.fn();
+        fixture.componentInstance.lessonOpen.subscribe(lessonOpen);
+        const event = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
+        getElement(fixture).querySelector('.lesson-card')?.dispatchEvent(event);
+        expect(lessonOpen).toHaveBeenCalledWith('lesson-1');
+        expect(event.defaultPrevented).toBe(true);
+    });
 });
 
 function createComponent(

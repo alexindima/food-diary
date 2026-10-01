@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -8,6 +8,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import { MAX_WEIGHT_KG } from '../../lib/weight-history.constants';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
 @Component({
@@ -26,6 +27,13 @@ export class WeightHistoryGoalDialogComponent {
     protected readonly form = this.facade.desiredWeightForm;
     protected readonly weightField = this.facade.desiredWeightForm.weight;
     protected readonly isSaving = this.facade.isDesiredWeightSaving;
+    protected readonly actionError = this.facade.goalActionError;
+
+    protected readonly goalError = computed(() => {
+        const field = this.weightField();
+        return field.invalid() && (field.touched() || field.dirty()) ? 'WEIGHT_HISTORY.GOAL_VALUE_RANGE' : null;
+    });
+    protected readonly goalRange = computed(() => ({ max: this.measurements.displayWeight(MAX_WEIGHT_KG) }));
 
     public constructor() {
         effect(() => {

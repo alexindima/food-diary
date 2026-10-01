@@ -3,6 +3,8 @@
         <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.SENSITIVE_EXPORT_WARNING' | translate }}</p>
         <fd-ui-input
             type="password"
+            autocomplete="current-password"
+            [error]="passwordError()"
             [label]="'CYCLE_TRACKING.SENSITIVE_EXPORT_PASSWORD' | translate"
             [formField]="exportForm.currentPassword"
         />

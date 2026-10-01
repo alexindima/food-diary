@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 482,
-    "componentsWithoutDirectSpecs": 135,
-    "inputs": 1530,
-    "outputs": 518,
+    "componentsWithoutDirectSpecs": 133,
+    "inputs": 1535,
+    "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2043,
-    "consumerEdges": 1207,
+    "translationKeys": 2055,
+    "consumerEdges": 1210,
     "consumedComponents": 306,
     "unconsumedComponents": 175
   },
@@ -3867,7 +3867,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.spec.ts"
     },
     {
       "class": "DesignTokensDocsComponent",
@@ -4071,6 +4071,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "queryChange",
           "type": "string"
@@ -4454,6 +4458,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "checkedChange",
           "type": ""
         },
@@ -4593,6 +4601,11 @@
           "required": false
         },
         {
+          "name": "earliestDate",
+          "type": "string | Date",
+          "required": false
+        },
+        {
           "name": "value",
           "type": "string | Date | null",
           "required": false
@@ -4609,6 +4622,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "valueChange",
           "type": "string | Date | null"
@@ -4731,6 +4748,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "valueChange",
           "type": "FdUiDateRangeValue | null"
         },
@@ -4739,7 +4760,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.spec.ts"
     },
     {
       "class": "FdUiDatetimeInputComponent",
@@ -4795,6 +4816,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "valueChange",
           "type": "string | Date | null"
@@ -5368,6 +5393,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "suffixButtonClicked",
           "type": ""
         },
@@ -5818,6 +5847,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "valueChange",
           "type": "string | number | null"
         },
@@ -5991,6 +6024,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "valueChange",
           "type": "T | null"
         },
@@ -6099,6 +6136,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "levelSelected",
           "type": "number"
@@ -6372,6 +6413,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "valueChange",
           "type": "T | null"
@@ -6737,6 +6782,10 @@
       ],
       "outputs": [
         {
+          "name": "touch",
+          "type": ""
+        },
+        {
           "name": "valueChange",
           "type": "string | number | null"
         },
@@ -6816,6 +6865,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "valueChange",
           "type": "string | null"
@@ -7463,6 +7516,11 @@
           "name": "lesson",
           "type": "LessonDetailViewModel | null",
           "required": true
+        },
+        {
+          "name": "isMarkingRead",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -7598,6 +7656,11 @@
           "name": "plan",
           "type": "MealPlanDetailHeaderViewModel",
           "required": true
+        },
+        {
+          "name": "pendingAction",
+          "type": "'adopt' | 'shopping' | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -14528,6 +14591,11 @@
           "required": true
         },
         {
+          "name": "hasError",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "chartPoints",
           "type": "readonly WaistHistoryChartPoint[]",
           "required": true
@@ -14887,6 +14955,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "hasError",
+          "type": "",
+          "required": false
         },
         {
           "name": "chartPoints",
@@ -19616,6 +19689,7 @@
         "RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT",
         "RECOMMENDATION_TEMPLATES.EMPTY",
         "RECOMMENDATION_TEMPLATES.NAME",
+        "RECOMMENDATION_TEMPLATES.NAME_TOO_LONG",
         "RECOMMENDATION_TEMPLATES.SAVE",
         "RECOMMENDATION_TEMPLATES.TITLE"
       ]
@@ -19688,6 +19762,7 @@
         "ATTENTION.DESCRIPTION",
         "ATTENTION.EMPTY",
         "ATTENTION.INACTIVITY_DAYS",
+        "ATTENTION.INVALID_SETTINGS",
         "ATTENTION.LOAD_ERROR",
         "ATTENTION.SETTINGS",
         "ATTENTION.SNOOZE",
@@ -19929,7 +20004,6 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.html",
       "keys": [
-        "FASTING.DAYS",
         "FASTING.HOURS",
         "FASTING.NO_HISTORY",
         "FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE",
@@ -20003,7 +20077,6 @@
       "keys": [
         "FASTING.AVG_DURATION",
         "FASTING.CURRENT_STREAK",
-        "FASTING.DAYS",
         "FASTING.HOURS",
         "FASTING.NO_STATS",
         "FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE",
@@ -20114,7 +20187,6 @@
         "GAMIFICATION.HABIT_PATH.BEST_STREAK",
         "GAMIFICATION.HABIT_PATH.CLOSEST_GOALS",
         "GAMIFICATION.HABIT_PATH.COLLECTION",
-        "GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW",
         "GAMIFICATION.HABIT_PATH.FILTERS",
         "GAMIFICATION.HABIT_PATH.HEALTH_SCORE_HINT",
         "GAMIFICATION.HABIT_PATH.NEXT_REWARD",
@@ -20134,7 +20206,9 @@
       "feature": "gamification",
       "path": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
       "keys": [
+        "ERRORS.RETRY",
         "GAMIFICATION.LOADING",
+        "GAMIFICATION.LOAD_ERROR",
         "GAMIFICATION.SUBTITLE",
         "GAMIFICATION.TITLE",
         "GAMIFICATION.TOUR.START_TOUR"
@@ -20203,6 +20277,7 @@
         "GOALS_PAGE.BODY_TARGET_WAIST",
         "GOALS_PAGE.BODY_TARGET_WEIGHT",
         "GOALS_PAGE.EDITOR.BODY_HINT",
+        "GOALS_PAGE.EDITOR.BODY_RANGE",
         "GOALS_PAGE.EDITOR.BODY_TITLE",
         "GOALS_PAGE.EDITOR.QUICK_SELECT",
         "GOALS_PAGE.EDITOR.TARGET_VALUE",
@@ -20234,8 +20309,12 @@
       "feature": "lessons",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.html",
       "keys": [
+        "ERRORS.RETRY",
         "LESSONS.BACK",
+        "LESSONS.DETAIL_LOAD_ERROR",
         "LESSONS.DETAIL_TOUR.START_TOUR",
+        "LESSONS.MARK_READ_ERROR",
+        "LESSONS.NOT_FOUND",
         "LESSONS.TITLE"
       ]
     },
@@ -20253,9 +20332,11 @@
       "feature": "lessons",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
       "keys": [
+        "ERRORS.RETRY",
         "LESSONS.ALL_LESSONS",
         "LESSONS.LEVEL_FILTER",
         "LESSONS.LOADING",
+        "LESSONS.LOAD_ERROR",
         "LESSONS.MATERIALS",
         "LESSONS.MIN_READ",
         "LESSONS.OPEN_ARTICLE",
@@ -20291,6 +20372,7 @@
       "keys": [
         "MEAL_PLANS.BACK",
         "MEAL_PLANS.DETAIL_TOUR.START_TOUR",
+        "MEAL_PLANS.DETAIL_UNAVAILABLE",
         "MEAL_PLANS.TITLE"
       ]
     },
@@ -20305,6 +20387,7 @@
       "feature": "meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-header/meal-plan-detail-header.html",
       "keys": [
+        "MEAL_PLANS.ACTION_PENDING",
         "MEAL_PLANS.ADOPT",
         "MEAL_PLANS.GENERATE_SHOPPING_LIST"
       ]
@@ -20315,8 +20398,6 @@
       "keys": [
         "GENERAL.UNITS.KCAL",
         "MEAL_PLANS.CURATED",
-        "MEAL_PLANS.DAYS",
-        "MEAL_PLANS.RECIPES",
         "MEAL_PLANS.RESET_FILTER"
       ]
     },
@@ -20324,6 +20405,8 @@
       "feature": "meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
       "keys": [
+        "MEAL_PLANS.ERROR_LOAD",
+        "MEAL_PLANS.RETRY",
         "MEAL_PLANS.SUBTITLE",
         "MEAL_PLANS.TITLE",
         "MEAL_PLANS.TOUR.START_TOUR"
@@ -20475,7 +20558,6 @@
         "MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED",
         "QUICK_MEAL.AMOUNT",
         "QUICK_MEAL.CLEAR",
-        "QUICK_MEAL.ITEMS",
         "QUICK_MEAL.PREVIEW_EMPTY",
         "QUICK_MEAL.REMOVE_ITEM",
         "QUICK_MEAL.REMOVE_ITEM_NAMED",
@@ -21725,6 +21807,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/components/recommendation-thread/recommendation-thread.html",
       "keys": [
         "DISABLED_HINTS.FORM_INVALID",
+        "ERRORS.RETRY",
         "RECOMMENDATIONS.DISCUSSION.EMPTY",
         "RECOMMENDATIONS.DISCUSSION.LOADING",
         "RECOMMENDATIONS.DISCUSSION.MESSAGE_LABEL",
@@ -21744,6 +21827,7 @@
         "CLIENT_TASKS.OVERDUE",
         "CLIENT_TASKS.REOPEN",
         "CLIENT_TASKS.TITLE",
+        "ERRORS.RETRY",
         "RECOMMENDATIONS.EMPTY_TEXT",
         "RECOMMENDATIONS.EMPTY_TITLE",
         "RECOMMENDATIONS.FROM_GENERIC",
@@ -22547,10 +22631,13 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
       "keys": [
+        "ERRORS.RETRY",
         "WAIST_HISTORY.CURRENT_WAIST",
         "WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL",
         "WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
         "WAIST_HISTORY.CUSTOM_RANGE_TO_LABEL",
+        "WAIST_HISTORY.ERROR_LOAD_CHART",
+        "WAIST_HISTORY.ERROR_LOAD_PAGE",
         "WAIST_HISTORY.GOAL_VALUE",
         "WAIST_HISTORY.INSUFFICIENT_DATA",
         "WAIST_HISTORY.QUICK_ADD",
@@ -22787,11 +22874,14 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
       "keys": [
+        "ERRORS.RETRY",
         "WEIGHT_HISTORY.BMI_CARD_TITLE",
         "WEIGHT_HISTORY.CURRENT_WEIGHT",
         "WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL",
         "WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
         "WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL",
+        "WEIGHT_HISTORY.ERROR_LOAD_CHART",
+        "WEIGHT_HISTORY.ERROR_LOAD_PAGE",
         "WEIGHT_HISTORY.GOAL_VALUE",
         "WEIGHT_HISTORY.INSUFFICIENT_DATA",
         "WEIGHT_HISTORY.QUICK_ADD",
@@ -27324,7 +27414,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "gamification",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27385,7 +27475,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.html",
-      "occurrences": 1,
+      "occurrences": 3,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27403,7 +27493,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
       "occurrences": 1,
       "inputsUsed": [
-        "icon"
+        "icon",
+        "loading"
       ],
       "outputsHandled": []
     },
@@ -27413,7 +27504,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27460,7 +27551,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meal-plans",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27478,7 +27569,10 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-header/meal-plan-detail-header.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "icon",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -27504,6 +27598,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaPressed",
         "fill",
         "size",
         "variant"
@@ -27516,7 +27611,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meal-plans",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -28776,12 +28871,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recommendations",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recommendations/components/recommendation-thread/recommendation-thread.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "disabled",
         "disabledReason",
+        "fill",
         "loading",
-        "type"
+        "type",
+        "variant"
       ],
       "outputsHandled": []
     },
@@ -28791,7 +28888,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recommendations",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.html",
-      "occurrences": 3,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29082,7 +29179,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "waist-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-      "occurrences": 3,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29257,7 +29354,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "weight-history",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
-      "occurrences": 3,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -29697,9 +29794,7 @@
       "consumerFeature": "dietologist",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.html",
       "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
+      "inputsUsed": [],
       "outputsHandled": []
     },
     {
@@ -30378,7 +30473,9 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html",
       "occurrences": 2,
       "inputsUsed": [
+        "earliestDate",
         "label",
+        "latestDate",
         "placeholder",
         "size"
       ],
@@ -30467,6 +30564,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 5,
       "inputsUsed": [
+        "error",
         "label"
       ],
       "outputsHandled": []
@@ -30523,6 +30621,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder",
         "showRequiredIndicator",
@@ -30538,6 +30637,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder",
         "showRequiredIndicator",
@@ -31670,6 +31770,18 @@
       "component": "FdUiFormErrorComponent",
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "dietologist",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.html",
       "occurrences": 1,
@@ -31697,6 +31809,18 @@
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
       "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "goals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
+      "occurrences": 2,
       "inputsUsed": [
         "error"
       ],
@@ -33019,6 +33143,19 @@
       "component": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "message",
+        "severity"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.html",
       "occurrences": 1,
@@ -33458,6 +33595,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "autocomplete",
+        "error",
         "label",
         "type"
       ],
@@ -33498,6 +33637,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.html",
       "occurrences": 2,
       "inputsUsed": [
+        "error",
         "label"
       ],
       "outputsHandled": []
@@ -33676,6 +33816,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
+        "error",
         "label",
         "size",
         "type",
@@ -34064,6 +34205,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "autocomplete",
+        "error",
         "inputMode",
         "label",
         "placeholder",
@@ -34083,6 +34225,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "autocomplete",
+        "error",
         "inputMode",
         "label",
         "placeholder",
@@ -34102,6 +34245,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "autocomplete",
+        "error",
         "inputMode",
         "label",
         "placeholder",
@@ -34121,6 +34265,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "autocomplete",
+        "error",
         "inputMode",
         "label",
         "placeholder",
@@ -37303,6 +37448,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "isLoading",
+        "isMarkingRead",
         "lesson"
       ],
       "outputsHandled": [
@@ -37768,6 +37914,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "pendingAction",
         "plan"
       ],
       "outputsHandled": [
@@ -40582,6 +40729,7 @@
         "chartPoints",
         "desiredWaistCm",
         "goalLabel",
+        "hasError",
         "isLoading",
         "latestDate",
         "latestValue"
@@ -40657,6 +40805,7 @@
         "chartPoints",
         "desiredWeightKg",
         "goalLabel",
+        "hasError",
         "isLoading",
         "latestDate",
         "latestValue"

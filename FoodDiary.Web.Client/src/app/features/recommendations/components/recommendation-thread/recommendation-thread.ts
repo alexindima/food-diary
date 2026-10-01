@@ -25,6 +25,7 @@ export class RecommendationThreadComponent {
     protected readonly comments = signal<RecommendationComment[]>([]);
     protected readonly draft = signal('');
     protected readonly loading = signal(true);
+    protected readonly loadFailed = signal(false);
     protected readonly saving = signal(false);
     protected readonly errorKey = signal<string | null>(null);
 
@@ -70,6 +71,10 @@ export class RecommendationThreadComponent {
         return name.length > 0 ? name : comment.authorEmail;
     }
 
+    protected retryLoad(): void {
+        this.loadComments(this.recommendationId());
+    }
+
     private loadComments(recommendationId: string): void {
         this.loading.set(true);
         this.errorKey.set(null);
@@ -78,10 +83,12 @@ export class RecommendationThreadComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: comments => {
+                    this.loadFailed.set(false);
                     this.comments.set(comments);
                     this.loading.set(false);
                 },
                 error: () => {
+                    this.loadFailed.set(true);
                     this.comments.set([]);
                     this.errorKey.set('RECOMMENDATIONS.DISCUSSION.LOAD_ERROR');
                     this.loading.set(false);

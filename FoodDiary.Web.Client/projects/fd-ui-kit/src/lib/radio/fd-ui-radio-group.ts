@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import type { FdUiRadioOption } from './fd-ui-radio.types';
@@ -28,6 +28,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T 
     public readonly disabled = input(false);
     public readonly value = model<T | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
 
     protected selectOption(option: FdUiRadioOption<T>): void {
         if (this.disabled()) {
@@ -39,6 +40,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T 
 
     protected touchControl(): void {
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected selectOptionByKeyboard(index: number, event: KeyboardEvent): void {

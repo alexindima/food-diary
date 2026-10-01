@@ -23,6 +23,13 @@ import { DietologistClientsListComponent } from './dietologist-clients-list/diet
 import { DIETOLOGIST_CLIENTS_TOUR } from './dietologist-clients-tour';
 
 const BULK_RECOMMENDATION_MAX_LENGTH = 2000;
+const ATTENTION_LIMITS: Record<keyof AttentionSignalSettings, { minimum: number; maximum: number }> = {
+    inactivityDays: { minimum: 1, maximum: 30 },
+    calorieDeviationPercent: { minimum: 5, maximum: 100 },
+    sustainedDays: { minimum: 2, maximum: 14 },
+    weightChangePercent: { minimum: 0.5, maximum: 20 },
+    lookbackDays: { minimum: 7, maximum: 90 },
+};
 const ATTENTION_SNOOZE_DAYS = 7;
 const HOURS_PER_DAY = 24;
 const MINUTES_PER_HOUR = 60;
@@ -64,6 +71,7 @@ export class DietologistClientsPageComponent {
     protected readonly attentionSignals = signal<AttentionSignal[]>([]);
     protected readonly attentionLoading = signal(true);
     protected readonly attentionError = signal(false);
+    protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
     protected readonly attentionSettings = signal<AttentionSignalSettings>({
         inactivityDays: 3,
         calorieDeviationPercent: 25,
@@ -100,12 +108,31 @@ export class DietologistClientsPageComponent {
 
     protected updateAttentionSetting(key: keyof AttentionSignalSettings, rawValue: string): void {
         const value = Number(rawValue);
-        if (Number.isFinite(value) && value > 0) {
+        const { minimum, maximum } = ATTENTION_LIMITS[key];
+        const valid =
+            rawValue.trim().length > 0 &&
+            Number.isFinite(value) &&
+            value >= minimum &&
+            value <= maximum &&
+            (key !== 'inactivityDays' || Number.isInteger(value));
+        this.invalidAttentionSettings.update(keys => {
+            const next = new Set(keys);
+            if (valid) {
+                next.delete(key);
+            } else {
+                next.add(key);
+            }
+            return next;
+        });
+        if (valid) {
             this.attentionSettings.update(settings => ({ ...settings, [key]: value }));
         }
     }
 
     protected applyAttentionSettings(): void {
+        if (this.invalidAttentionSettings().size > 0) {
+            return;
+        }
         this.loadAttentionSignals();
     }
 

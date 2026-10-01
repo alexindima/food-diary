@@ -174,6 +174,15 @@ describe('WeightHistoryFacade loading', () => {
 });
 
 describe('WeightHistoryFacade measurement boundary', () => {
+    it.each(['metric', 'imperial'] as const)('preserves precise stored weight when saving an unchanged %s edit', system => {
+        const preciseWeight = 75.25;
+        measurements.setSystem(system);
+        const entry = { id: 'precise', userId: 'u', date: '2026-04-02', weightKg: preciseWeight };
+        facade.startEdit(entry);
+        expect(Number(facade.formModel().weight)).toBe(system === 'metric' ? preciseWeight : measurements.displayWeight(preciseWeight, 2));
+        facade.submit();
+        expect(weightEntriesService.update).toHaveBeenCalledWith('precise', expect.objectContaining({ weightKg: preciseWeight }));
+    });
     it('converts imperial form input to the canonical API value', () => {
         measurements.setSystem('imperial');
         facade.formModel.set({ date: '2026-04-02', weight: '162.7' });
@@ -184,6 +193,43 @@ describe('WeightHistoryFacade measurement boundary', () => {
             date: '2026-04-02T00:00:00.000Z',
             weightKg: UPDATED_ENTRY_WEIGHT,
         });
+    });
+});
+
+describe('WeightHistoryFacade delete failure', () => {
+    it('retains the entry, suppresses pending duplicates and allows retry', () => {
+        const entry = { id: 'delete-test', userId: 'u', date: '2026-04-02', weightKg: 75 };
+        facade.entries.set([entry]);
+        const request = new Subject<void>();
+        weightEntriesService.remove.mockReturnValue(request);
+        facade.deleteEntry(entry);
+        facade.deleteEntry(entry);
+        expect(weightEntriesService.remove).toHaveBeenCalledTimes(1);
+        request.error(new Error('Unavailable'));
+        expect(facade.deleteError()).toBe('WEIGHT_HISTORY.ERROR_DELETE_ENTRY');
+        expect(facade.entries()).toEqual([entry]);
+        expect(facade.isSaving()).toBe(false);
+        weightEntriesService.remove.mockReturnValue(of(undefined));
+        facade.deleteEntry(entry);
+        expect(weightEntriesService.remove).toHaveBeenCalledTimes(2);
+        expect(facade.deleteError()).toBeNull();
+    });
+});
+
+describe('WeightHistoryFacade goal failures', () => {
+    it('preserves a goal draft on failed save and reports failed cancellation', () => {
+        const original = facade.weightGoal();
+        facade.desiredWeightModel.set({ weight: '70.25' });
+        userService.updateWeightGoal.mockReturnValue(throwError(() => new Error('Unavailable')));
+        facade.saveDesiredWeight();
+        expect(facade.goalActionError()).toBe('WEIGHT_HISTORY.ERROR_SAVE_GOAL');
+        expect(facade.desiredWeightModel().weight).toBe('70.25');
+        expect(facade.weightGoal()).toEqual(original);
+        expect(facade.isDesiredWeightSaving()).toBe(false);
+        facade.cancelWeightGoal();
+        expect(facade.goalActionError()).toBe('WEIGHT_HISTORY.ERROR_CANCEL_GOAL');
+        expect(facade.weightGoal()).toEqual(original);
+        expect(facade.desiredWeightSaveVersion()).toBe(0);
     });
 });
 
@@ -429,7 +475,7 @@ describe('Facade boundary regressions', () => {
         expect(facade.entrySaveVersion()).toBe(0);
         pending.error(new Error('offline'));
         await vi.waitFor(() => {
-            expect(facade.entryError()).toBe('FORM_ERRORS.UNKNOWN');
+            expect(facade.entryError()).toBe('WEIGHT_HISTORY.ERROR_SAVE_ENTRY');
         });
         expect(facade.isSaving()).toBe(false);
         expect(facade.isEditing()).toBe(true);
@@ -471,8 +517,8 @@ describe('Facade editing and goal boundaries', () => {
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();
-        expect(Number(facade.formModel().weight)).toBe(measurements.displayWeight(entry.weightKg));
-        expect(Number(facade.desiredWeightModel().weight)).toBe(measurements.displayWeight(facade.desiredWeightKg() ?? 0));
+        expect(Number(facade.formModel().weight)).toBe(measurements.displayWeight(entry.weightKg, 2));
+        expect(Number(facade.desiredWeightModel().weight)).toBe(measurements.displayWeight(facade.desiredWeightKg() ?? 0, 2));
         measurements.setSystem('metric');
         TestBed.tick();
         expect(Number(facade.formModel().weight)).toBe(entry.weightKg);
@@ -608,4 +654,57 @@ it('forwards history cursors only when requested by the dialog', () => {
     expect(userService.getWeightGoalHistoryPage).not.toHaveBeenCalled();
     facade.getGoalHistoryPage('next').subscribe();
     expect(userService.getWeightGoalHistoryPage).toHaveBeenCalledWith('next');
+});
+
+describe('Goal validation feedback', () => {
+    it.each(['0', '-1', 'abc', '501'])('exposes invalid target %s and avoids saving it', value => {
+        facade.desiredWeightModel.set({ weight: value });
+        expect(facade.desiredWeightForm.weight().invalid()).toBe(true);
+        expect(
+            facade.desiredWeightForm
+                .weight()
+                .errors()
+                .some(error => error.kind === 'goalRange'),
+        ).toBe(true);
+        facade.saveDesiredWeight();
+        expect(userService.updateWeightGoal).not.toHaveBeenCalled();
+        facade.desiredWeightModel.set({ weight: '72,5' });
+        expect(facade.desiredWeightForm.weight().invalid()).toBe(false);
+    });
+});
+
+describe('WeightHistoryFacade loading recovery', () => {
+    it('recovers initial failure and suppresses duplicate pending retries', () => {
+        weightEntriesService.getPageSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+        facade.initialize();
+        TestBed.tick();
+        expect(facade.pageLoadError()).toBe(true);
+        expect(facade.isLoading()).toBe(false);
+        const pending = new Subject<never>();
+        weightEntriesService.getPageSummary.mockReturnValueOnce(pending);
+        facade.retryPageLoad();
+        facade.retryPageLoad();
+        expect(weightEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
+        expect(facade.pageLoadError()).toBe(false);
+        pending.error(new Error('Still unavailable'));
+        expect(facade.pageLoadError()).toBe(true);
+        facade.retryPageLoad();
+        expect(facade.pageLoadError()).toBe(false);
+        expect(facade.isLoading()).toBe(false);
+    });
+    it('retries the selected chart period and retains measurements on failure', () => {
+        facade.initialize();
+        TestBed.tick();
+        const entries = facade.entries();
+        weightEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+        facade.changeRange('week');
+        TestBed.tick();
+        expect(facade.summaryLoadError()).toBe(true);
+        expect(facade.entries()).toEqual(entries);
+        const filters: unknown = weightEntriesService.getSummary.mock.calls.at(-1)?.[0];
+        facade.retrySummaryLoad();
+        expect(weightEntriesService.getSummary).toHaveBeenLastCalledWith(filters);
+        expect(facade.summaryLoadError()).toBe(false);
+        expect(facade.selectedRange()).toBe('week');
+    });
 });

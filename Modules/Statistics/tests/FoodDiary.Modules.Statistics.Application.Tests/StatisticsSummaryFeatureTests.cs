@@ -19,6 +19,19 @@ namespace FoodDiary.Modules.Statistics.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class StatisticsSummaryFeatureTests {
+    [Theory]
+    [InlineData(-840)]
+    [InlineData(240)]
+    [InlineData(840)]
+    public async Task GetStatisticsSummaryQueryValidator_With366LocalDays_AcceptsShiftedInstants(int offsetMinutes) {
+        DateTime from = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMinutes(-offsetMinutes);
+        var query = new GetStatisticsSummaryQuery(Guid.NewGuid(), from, from.AddDays(366).AddTicks(-1), 30);
+
+        ValidationResult result = await new GetStatisticsSummaryQueryValidator().ValidateAsync(query);
+
+        Assert.True(result.IsValid);
+    }
+
     [Fact]
     public async Task GetStatisticsSummaryQueryValidator_WithNonPositiveQuantization_Fails() {
         var validator = new GetStatisticsSummaryQueryValidator();

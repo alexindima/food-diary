@@ -38,15 +38,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: CycleProfile, CycleFactor, CycleConsent, CycleSymptomEntry, CyclePredictionRevision, BleedingEntry, FertilitySignal
-- Public contract files: 23
+- Public contract files: 25
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 23
+- Public contract types: 25
 - Interfaces: 2
-- DTO/read-model/projection types: 19
+- DTO/read-model/projection types: 21
 - Enums: 0
 - Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 0
@@ -57,6 +57,8 @@ No literal attribute-routed controller was associated with this module.
 - `record BleedingEntryReadModel`
 - `record CycleConsentModel`
 - `record CycleConsentReadModel`
+- `record CycleDayNoteModel`
+- `record CycleDayNoteReadModel`
 - `record CycleFactorModel`
 - `record CycleFactorReadModel`
 - `record CycleLogDayModel`
@@ -81,6 +83,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs`
+- [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayNotes.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DeleteProfile.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeCommands.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs`
@@ -94,6 +97,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Time/CycleUtcDateNormalizerTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleAdditionalInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleDayNoteTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleEnumContractTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleInternalOperationsTests.cs`

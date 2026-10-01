@@ -81,3 +81,13 @@ export function buildDraftRequest(draft: GoalsDraft): UpdateGoalsRequest {
 function normalizeDesiredBodyTarget(value: number): number | null {
     return value > 0 ? value : null;
 }
+
+export const BODY_TARGET_MAXIMUMS: Record<BodyTargetKey, number> = { weight: 500, waist: 300 };
+
+export function isBodyTargetValid(key: BodyTargetKey, value: number): boolean {
+    return Number.isFinite(value) && value >= 0 && value <= BODY_TARGET_MAXIMUMS[key];
+}
+
+export function areBodyTargetsValid(targets: Record<BodyTargetKey, number>): boolean {
+    return isBodyTargetValid('weight', targets.weight) && isBodyTargetValid('waist', targets.waist);
+}

@@ -25,6 +25,30 @@ const USER: User = {
     desiredWaistCm: 80,
 };
 
+it('uses totals and recorded days for averages instead of averaging chart buckets', () => {
+    const statistics: MappedStatistics = {
+        date: [new Date('2026-09-01'), new Date('2026-10-01')],
+        calories: [240, 120],
+        nutrientsStatistic: { proteins: [0.8, 1.6], fats: [0.4, 0.8], carbs: [1.3, 2.6], fiber: [0, 0] },
+        aggregatedNutrients: { proteins: 24, fats: 12, carbs: 39, fiber: 0 },
+        mealStructure: { breakfastCalories: 0, lunchCalories: 0, dinnerCalories: 0, snackCalories: 360, mealCount: 3, trackedDayCount: 3 },
+    };
+
+    const view = buildStatisticsDashboardCardsView({
+        statistics,
+        user: USER,
+        weightPoints: [],
+        waistPoints: [],
+        quantizationDays: 30,
+        periodDays: 365,
+        formatDate: date => date.toISOString(),
+    });
+
+    expect(view.overview.trackedDays).toBe(3);
+    expect(view.overview.averageCalories).toBe(120);
+    expect(view.overview.nutrients.map(item => item.current)).toEqual([8, 4, 13, 0]);
+});
+
 describe('statistics dashboard card mapper', () => {
     it('does not interpret missing records as a calorie reduction', () => {
         const result = buildStatisticsDashboardCardsView({
@@ -73,10 +97,10 @@ describe('statistics dashboard card mapper', () => {
             formatDate: date => date.toISOString().slice(0, 10),
         });
 
-        expect(view.overview.trackedDays).toBe(1);
+        expect(view.overview.trackedDays).toBe(2);
         expect(view.overview.daysWithinGoal).toBe(1);
-        expect(view.overview.averageCalories).toBe(1900);
-        expect(view.overview.nutrients[0]).toEqual({ key: 'protein', current: 90, goal: 100 });
+        expect(view.overview.averageCalories).toBe(950);
+        expect(view.overview.nutrients[0]).toEqual({ key: 'protein', current: 45, goal: 100 });
         expect(view.days[1]?.calories).toBeNull();
         expect(view.body.weight).toMatchObject({ key: 'weight', current: 113, change: -3, goal: 75, timeframeDays: 7 });
         expect(view.body.waist).toMatchObject({ key: 'waist', current: 99, change: -2, goal: 80, timeframeDays: 7 });

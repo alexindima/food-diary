@@ -25,7 +25,8 @@ public sealed record CycleProfileReadModel(
     CycleReproductiveState ReproductiveState = CycleReproductiveState.Cycling,
     bool HideFromDashboard = false,
     IReadOnlyCollection<CycleConsentReadModel>? Consents = null,
-    IReadOnlyCollection<CyclePredictionRevisionReadModel>? PredictionRevisions = null) {
+    IReadOnlyCollection<CyclePredictionRevisionReadModel>? PredictionRevisions = null,
+    IReadOnlyCollection<CycleDayNoteReadModel>? DayNotes = null) {
     public bool HasActiveConsent(CycleConsentPurpose purpose) =>
         (Consents ?? []).Any(consent => consent.Purpose == purpose && consent.IsActive);
 }

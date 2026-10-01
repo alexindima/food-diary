@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
@@ -42,6 +43,25 @@ describe('MealPlanListContentComponent', () => {
         expect(element.querySelector('fd-ui-loader')).not.toBeNull();
         expect(element.querySelector('.meal-plan-card')).toBeNull();
     });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- Counts cover English and Russian plural boundaries. */
+    it.each([
+        ['en', 1, 'ONE'],
+        ['en', 2, 'OTHER'],
+        ['ru', 1, 'ONE'],
+        ['ru', 2, 'FEW'],
+        ['ru', 5, 'MANY'],
+        ['ru', 11, 'MANY'],
+        ['ru', 21, 'ONE'],
+    ])('updates card plural labels for %s count %i', (language, count, category) => {
+        const fixture = createComponent({ plans: [{ ...createPlanCard(), durationDays: Number(count), totalRecipes: Number(count) }] });
+        TestBed.inject(TranslateService).use(String(language));
+        fixture.detectChanges();
+        const text = getElement(fixture).querySelector('.meal-plan-card__meta')?.textContent;
+        expect(text).toContain(`MEAL_PLANS.DAYS_${category}`);
+        expect(text).toContain(`MEAL_PLANS.RECIPES_${category}`);
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- Restore the rule after plural boundary cases. */
 });
 
 function createComponent(

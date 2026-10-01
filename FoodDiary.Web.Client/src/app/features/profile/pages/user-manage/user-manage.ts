@@ -369,7 +369,6 @@ export class UserManageComponent {
     private watchDietologistFormChanges(): void {
         effect(() => {
             this.dietologistFormModel();
-            this.dietologistError.set(null);
             this.updateDietologistPermissionsState();
             this.updateDietologistInviteEmailError();
         });
@@ -474,6 +473,7 @@ export class UserManageComponent {
         }
 
         const nextPermissions = getDietologistPermissions(this.dietologistFormModel());
+        this.dietologistError.set(null);
         this.isSavingDietologistPermissions.set(true);
         this.dietologistFacade
             .updatePermissions(nextPermissions)

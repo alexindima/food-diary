@@ -71,7 +71,7 @@ export class WaistEntriesService extends ApiService {
         };
 
         return this.get<WaistEntrySummaryPoint[]>('summary', params).pipe(
-            catchError((error: unknown) => fallbackApiError('Waist summary fetch error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Waist summary fetch error', error)),
         );
     }
 

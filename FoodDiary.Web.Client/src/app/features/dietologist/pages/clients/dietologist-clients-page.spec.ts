@@ -88,6 +88,35 @@ describe('DietologistClientsPageComponent', () => {
     });
 });
 
+describe('Dietologist attention settings validation', () => {
+    it.each(['', '0', '1.5', '31'])('does not request signals for invalid inactivity value %s', value => {
+        createComponent();
+        dietologistService.getAttentionSignals.mockClear();
+        component['updateAttentionSetting']('inactivityDays', value);
+        component['applyAttentionSettings']();
+
+        expect(component['invalidAttentionSettings']().has('inactivityDays')).toBe(true);
+        expect(dietologistService.getAttentionSignals).not.toHaveBeenCalled();
+    });
+
+    it('requires all invalid settings to be corrected before requesting signals', () => {
+        createComponent();
+        dietologistService.getAttentionSignals.mockClear();
+        component['updateAttentionSetting']('calorieDeviationPercent', '101');
+        component['updateAttentionSetting']('weightChangePercent', '0.4');
+        component['updateAttentionSetting']('calorieDeviationPercent', '100');
+        component['applyAttentionSettings']();
+        expect(dietologistService.getAttentionSignals).not.toHaveBeenCalled();
+
+        component['updateAttentionSetting']('weightChangePercent', '0.5');
+        component['applyAttentionSettings']();
+        expect(component['invalidAttentionSettings']().size).toBe(0);
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledWith(
+            expect.objectContaining({ calorieDeviationPercent: 100, weightChangePercent: 0.5 }),
+        );
+    });
+});
+
 function createComponent(): void {
     TestBed.configureTestingModule({
         imports: [DietologistClientsPageComponent],

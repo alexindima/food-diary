@@ -24,4 +24,5 @@ public sealed record CycleHttpResponse(
     int ReproductiveState = 0,
     bool HideFromDashboard = false,
     IReadOnlyCollection<CycleConsentHttpResponse>? Consents = null,
-    IReadOnlyCollection<CyclePredictionRevisionHttpResponse>? PredictionRevisions = null);
+    IReadOnlyCollection<CyclePredictionRevisionHttpResponse>? PredictionRevisions = null,
+    IReadOnlyCollection<CycleDayNoteHttpResponse>? DayNotes = null);

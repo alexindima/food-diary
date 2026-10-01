@@ -35,6 +35,11 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
     }
 
     private static void ConfigureRelationships(EntityTypeBuilder<CycleProfile> builder) {
+        builder.HasMany(profile => profile.DayNotes)
+            .WithOne(note => note.CycleProfile)
+            .HasForeignKey(note => note.CycleProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasMany(e => e.Factors)
             .WithOne(e => e.CycleProfile)
             .HasForeignKey(e => e.CycleProfileId)
@@ -72,6 +77,7 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
     }
 
     private static void ConfigureNavigations(EntityTypeBuilder<CycleProfile> builder) {
+        builder.Navigation(e => e.DayNotes).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.Factors).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.BleedingEntries).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.SymptomEntries).UsePropertyAccessMode(PropertyAccessMode.Field);

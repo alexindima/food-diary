@@ -25101,6 +25101,38 @@
       ]
     },
     {
+      "Name": "CycleDayNoteHttpResponse",
+      "Properties": [
+        {
+          "Name": "cycleProfileId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "notes",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "CycleFactorHttpResponse",
       "Properties": [
         {
@@ -25183,6 +25215,13 @@
           "Type": "array",
           "Nullable": true,
           "ItemReference": "#/components/schemas/CycleConsentHttpResponse"
+        },
+        {
+          "Name": "dayNotes",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/CycleDayNoteHttpResponse"
         },
         {
           "Name": "discreetNotifications",
@@ -25341,6 +25380,12 @@
           "Required": false,
           "Reference": "#/components/schemas/FertilitySignalHttpResponse",
           "Nullable": false
+        },
+        {
+          "Name": "notes",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         },
         {
           "Name": "symptoms",
@@ -32778,7 +32823,8 @@
           "Name": "currentPassword",
           "Required": false,
           "Type": "string",
-          "Nullable": true
+          "Nullable": true,
+          "MaxLength": 256
         },
         {
           "Name": "dateFrom",
@@ -34882,6 +34928,12 @@
           "Nullable": false
         },
         {
+          "Name": "clearNotes",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "clearSymptomCategories",
           "Required": false,
           "Type": "array",
@@ -34900,6 +34952,12 @@
           "Required": false,
           "Reference": "#/components/schemas/FertilitySignalHttpModel",
           "Nullable": false
+        },
+        {
+          "Name": "notes",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         },
         {
           "Name": "symptoms",

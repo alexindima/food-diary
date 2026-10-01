@@ -37,6 +37,33 @@ export class ShoppingListFacade {
     private suppressAutosave = false;
     private pendingSave = false;
     private pendingSelection: string | null = null;
+    private activeSave: Promise<boolean> | null = null;
+
+    public hasUnsavedChanges(): boolean {
+        return this.saveQueue.hasPending() || this.isSaving();
+    }
+
+    public async saveBeforeLeaveAsync(): Promise<boolean> {
+        while (this.activeSave !== null || this.saveQueue.hasPending()) {
+            if (this.activeSave === null) {
+                if (this.isSaving() || this.isLoading()) {
+                    return false;
+                }
+                this.saveQueue.flushNow();
+            }
+            const save = this.activeSave;
+            if (save !== null) {
+                const success = await save;
+                if (this.activeSave === save) {
+                    this.activeSave = null;
+                }
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return !this.isSaving();
+    }
 
     public readonly list = signal<ShoppingList | null>(null);
     public readonly items = signal<ShoppingListItem[]>([]);
@@ -584,6 +611,10 @@ export class ShoppingListFacade {
 
         this.isSaving.set(true);
         const submittedItems = this.items();
+        let finishSave!: (success: boolean) => void;
+        this.activeSave = new Promise<boolean>(resolve => {
+            finishSave = resolve;
+        });
         const payload = {
             name,
             items: submittedItems.map((item, index) => mapShoppingListItemToDto(item, index)),
@@ -611,6 +642,7 @@ export class ShoppingListFacade {
                             this.loadListById(selection);
                         }
                     }
+                    finishSave(true);
                 },
                 error: () => {
                     this.isSaving.set(false);
@@ -619,6 +651,7 @@ export class ShoppingListFacade {
                     this.saveQueue.clearPending();
                     this.applyList(current);
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
+                    finishSave(false);
                 },
             });
     }

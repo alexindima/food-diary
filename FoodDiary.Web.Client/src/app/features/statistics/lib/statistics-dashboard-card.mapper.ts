@@ -40,7 +40,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
     const { statistics, user, weightPoints, waistPoints, quantizationDays, periodDays, formatDate } = input;
     const calorieGoal = user?.dailyCalorieTarget ?? 0;
     const trackedIndexes = getTrackedIndexes(statistics);
-    const averageCalories = average(trackedIndexes.map(index => statistics?.calories[index] ?? 0));
+    const { trackedDayCount, averageCalories } = buildRecordedDayAverages(statistics, trackedIndexes);
     const nutrients = buildNutrients(statistics, user, trackedIndexes);
     const calorieDifferencePercent = trackedIndexes.length > 0 ? getDifferencePercent(averageCalories, calorieGoal) : null;
 
@@ -49,7 +49,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
     return {
         overview: {
             daysWithinGoal: countDaysWithinGoal(statistics, trackedIndexes, calorieGoal),
-            trackedDays: trackedIndexes.length,
+            trackedDays: trackedDayCount,
             periodDays,
             averageCalories,
             calorieGoal,
@@ -193,6 +193,15 @@ function getLongestLoggingStreak(days: readonly StatisticsNutritionDay[]): numbe
     return longest;
 }
 
+function buildRecordedDayAverages(
+    statistics: MappedStatistics | null,
+    trackedIndexes: readonly number[],
+): { trackedDayCount: number; averageCalories: number } {
+    const trackedDayCount = statistics?.mealStructure?.trackedDayCount ?? trackedIndexes.length;
+    const totalCalories = statistics?.calories.reduce((total, value) => total + value, 0) ?? 0;
+    return { trackedDayCount, averageCalories: totalCalories / Math.max(1, trackedDayCount) };
+}
+
 function getTrackedIndexes(statistics: MappedStatistics | null): number[] {
     return (
         statistics?.calories.reduce<number[]>((indexes, calories, index) => {
@@ -211,14 +220,37 @@ function buildNutrients(
     trackedIndexes: readonly number[],
 ): StatisticsNutrientBalanceItem[] {
     const source = [
-        { key: 'protein' as const, values: statistics?.nutrientsStatistic.proteins ?? [], goal: user?.proteinTarget ?? 0 },
-        { key: 'fat' as const, values: statistics?.nutrientsStatistic.fats ?? [], goal: user?.fatTarget ?? 0 },
-        { key: 'carbs' as const, values: statistics?.nutrientsStatistic.carbs ?? [], goal: user?.carbTarget ?? 0 },
-        { key: 'fiber' as const, values: statistics?.nutrientsStatistic.fiber ?? [], goal: user?.fiberTarget ?? 0 },
+        {
+            key: 'protein' as const,
+            total: statistics?.aggregatedNutrients.proteins ?? 0,
+            values: statistics?.nutrientsStatistic.proteins ?? [],
+            goal: user?.proteinTarget ?? 0,
+        },
+        {
+            key: 'fat' as const,
+            total: statistics?.aggregatedNutrients.fats ?? 0,
+            values: statistics?.nutrientsStatistic.fats ?? [],
+            goal: user?.fatTarget ?? 0,
+        },
+        {
+            key: 'carbs' as const,
+            total: statistics?.aggregatedNutrients.carbs ?? 0,
+            values: statistics?.nutrientsStatistic.carbs ?? [],
+            goal: user?.carbTarget ?? 0,
+        },
+        {
+            key: 'fiber' as const,
+            total: statistics?.aggregatedNutrients.fiber ?? 0,
+            values: statistics?.nutrientsStatistic.fiber ?? [],
+            goal: user?.fiberTarget ?? 0,
+        },
     ];
     return source.map(item => ({
         key: item.key,
-        current: average(trackedIndexes.map(index => item.values[index] ?? 0)),
+        current:
+            statistics?.mealStructure !== undefined
+                ? item.total / Math.max(1, statistics.mealStructure.trackedDayCount)
+                : average(trackedIndexes.map(index => item.values[index] ?? 0)),
         goal: item.goal,
     }));
 }

@@ -197,11 +197,15 @@ export class RecipeListComponent {
     }
 
     private async openRecipeDetailAsync(recipe: Recipe): Promise<void> {
+        const currentRecipe = await this.recipeListFacade.getRecipeDetailAsync(recipe.id);
+        if (currentRecipe === null) {
+            return;
+        }
         const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail/recipe-detail');
         this.fdDialogService
             .open(RecipeDetailComponent, {
                 preset: 'detail',
-                data: recipe,
+                data: currentRecipe,
             })
             .afterClosed()
             .subscribe(result => {
@@ -217,7 +221,7 @@ export class RecipeListComponent {
 
                 void this.recipeListFacade.handleDetailActionAsync(
                     actionResult,
-                    recipe,
+                    currentRecipe,
                     this.searchModel().search,
                     this.searchModel().onlyMine,
                 );

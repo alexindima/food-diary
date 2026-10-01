@@ -7,6 +7,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
 import { normalizeProductType } from '../../../products/lib/product-type.utils';
 import { ProductType } from '../../../products/models/product.data';
@@ -51,6 +52,10 @@ export class QuickMealDrawerComponent {
     protected readonly titleId = `fd-quick-meal-title-${QuickMealDrawerComponent.nextId++}`;
 
     protected readonly items = this.quickService.items;
+    private readonly language = injectCurrentLanguage();
+    protected readonly itemsLabelKey = computed(
+        () => `QUICK_MEAL.ITEMS_${new Intl.PluralRules(this.language()).select(this.items().length).toUpperCase()}`,
+    );
     protected readonly details = this.quickService.details;
     protected readonly hasItems = this.quickService.hasItems;
     protected readonly isSaving = this.quickService.isSaving;

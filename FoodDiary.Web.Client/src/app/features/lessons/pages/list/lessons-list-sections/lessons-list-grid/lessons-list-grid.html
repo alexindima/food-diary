@@ -16,6 +16,7 @@
                 [class.lesson-card--read]="lesson.isRead"
                 (click)="lessonOpen.emit(lesson.id)"
                 (keydown.enter)="lessonOpen.emit(lesson.id)"
+                (keydown.space)="$event.preventDefault(); lessonOpen.emit(lesson.id)"
             >
                 <div class="lesson-card__top fd-row fd-justify-between">
                     <span class="lesson-card__category fd-ui-pill fd-ui-pill--compact fd-ui-overline">

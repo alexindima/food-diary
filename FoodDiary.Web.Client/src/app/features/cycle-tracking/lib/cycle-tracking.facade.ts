@@ -70,6 +70,7 @@ export class CycleTrackingFacade {
     public readonly excludingEpisodeId = signal<string | null>(null);
     public readonly deletingEpisodeId = signal<string | null>(null);
     public readonly isExportingCycle = signal(false);
+    public readonly exportError = signal<string | null>(null);
     public readonly daySaveRevision = signal(0);
     public readonly settingsSaveRevision = signal(0);
     public readonly clearingDayDate = signal<string | null>(null);
@@ -383,6 +384,7 @@ export class CycleTrackingFacade {
             return;
         }
 
+        const notes = toOptionalCycleText(formValue.notes);
         const symptoms = buildSymptomPayload(formValue);
         const clearSymptomCategories = buildSymptomClearCategories(formValue, this.editingDayDate(), this.symptoms());
         const fertilitySignal = buildFertilitySignalPayload(formValue);
@@ -398,15 +400,16 @@ export class CycleTrackingFacade {
                               type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
                               flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
                               painImpact: clampCycleSymptom(formValue.pain),
-                              notes: formValue.notes ?? undefined,
-                              clearNotes: false,
+                              clearNotes: notes === undefined,
                           }
                         : null,
                     clearBleeding: this.shouldClearBleeding(formValue),
                     symptoms,
                     clearSymptomCategories,
-                    fertilitySignal,
+                    fertilitySignal: fertilitySignal === null ? null : { ...fertilitySignal, clearNotes: notes === undefined },
                     clearFertilitySignal,
+                    notes,
+                    clearNotes: notes === undefined,
                 })
                 .pipe(
                     finalize(() => {
@@ -445,6 +448,13 @@ export class CycleTrackingFacade {
         const dayDateKey = toCycleDateKey(day.date);
         const updatedCycle = {
             ...current,
+            dayNotes:
+                day.notes === undefined
+                    ? (current.dayNotes ?? [])
+                    : [
+                          ...(current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dayDateKey),
+                          ...(day.notes === null ? [] : [{ date: day.date, notes: day.notes }]),
+                      ],
             bleedingEntries: [
                 ...current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dayDateKey),
                 ...day.bleedingEntries,
@@ -502,7 +512,9 @@ export class CycleTrackingFacade {
         const fertilitySignal = currentCycle.fertilitySignals.find(item => toCycleDateKey(item.date) === dateKey);
         const bleeding = dayBleeding.find(entry => entry.type === BLEEDING_TYPE_BLEEDING) ?? dayBleeding[0];
 
-        this.dayModel.set(buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal));
+        const model = buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal);
+        const notes = currentCycle.dayNotes?.find(note => toCycleDateKey(note.date) === dateKey)?.notes;
+        this.dayModel.set({ ...model, notes: notes ?? model.notes });
         this.editingDayDate.set(date);
     }
 
@@ -627,6 +639,7 @@ export class CycleTrackingFacade {
 
                 const updatedCycle = {
                     ...current,
+                    dayNotes: (current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dateKey),
                     bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
                     symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
                     fertilitySignals: current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dateKey),
@@ -744,11 +757,20 @@ export class CycleTrackingFacade {
     }
 
     public exportCycle(): void {
-        runCycleExport({ cycle: this.cycle(), exporting: this.isExportingCycle }, this.exportService, this.destroyRef);
+        runCycleExport(
+            { cycle: this.cycle(), exporting: this.isExportingCycle, error: this.exportError },
+            this.exportService,
+            this.destroyRef,
+        );
     }
 
     public exportSensitiveCycle(currentPassword: string): void {
-        runCycleExport({ cycle: this.cycle(), exporting: this.isExportingCycle }, this.exportService, this.destroyRef, currentPassword);
+        runCycleExport(
+            { cycle: this.cycle(), exporting: this.isExportingCycle, error: this.exportError },
+            this.exportService,
+            this.destroyRef,
+            currentPassword,
+        );
     }
 
     private loadCycle(): void {

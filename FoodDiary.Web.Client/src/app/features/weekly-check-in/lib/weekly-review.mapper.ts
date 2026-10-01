@@ -20,7 +20,7 @@ export function buildWeeklyReview(
     return {
         daysLogged,
         hasEnoughData,
-        summaryKey: hasEnoughData ? 'WEEKLY_CHECK_IN.SUMMARY.RELIABLE' : 'WEEKLY_CHECK_IN.SUMMARY.LIMITED',
+        summaryKey: getSummaryKey(daysLogged, hasEnoughData),
         focusTitleKey: daysLogged < LOGGING_FOCUS_DAYS ? 'WEEKLY_CHECK_IN.FOCUS.LOGGING_TITLE' : 'WEEKLY_CHECK_IN.FOCUS.CONSISTENCY_TITLE',
         focusDescriptionKey:
             daysLogged < LOGGING_FOCUS_DAYS ? 'WEEKLY_CHECK_IN.FOCUS.LOGGING_DESCRIPTION' : 'WEEKLY_CHECK_IN.FOCUS.CONSISTENCY_DESCRIPTION',
@@ -70,4 +70,11 @@ function createInsight(
     labelKey: string,
 ): WeeklyReviewInsightViewModel {
     return { key, icon, tone, labelKey };
+}
+
+function getSummaryKey(daysLogged: number, hasEnoughData: boolean): string {
+    if (daysLogged === 0) {
+        return 'WEEKLY_CHECK_IN.SUMMARY.EMPTY';
+    }
+    return hasEnoughData ? 'WEEKLY_CHECK_IN.SUMMARY.RELIABLE' : 'WEEKLY_CHECK_IN.SUMMARY.LIMITED';
 }

@@ -18,7 +18,7 @@
   <data name="PeriodSummaryTitle" xml:space="preserve"><value>Сводка за период</value></data>
   <data name="TotalCaloriesTitle" xml:space="preserve"><value>Всего калорий</value></data>
   <data name="KcalUnit" xml:space="preserve"><value>ккал</value></data>
-  <data name="AveragePerDayTitle" xml:space="preserve"><value>Среднее в день</value></data>
+  <data name="AveragePerDayTitle" xml:space="preserve"><value>Среднее за календарный день, включая дни без записей</value></data>
   <data name="TotalForPeriodTitle" xml:space="preserve"><value>Суммарно за период</value></data>
   <data name="ProteinsTitle" xml:space="preserve"><value>Белки</value></data>
   <data name="FatsTitle" xml:space="preserve"><value>Жиры</value></data>

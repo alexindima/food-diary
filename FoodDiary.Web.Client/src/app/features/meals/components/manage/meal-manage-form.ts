@@ -700,7 +700,7 @@ export class MealManageFormComponent {
             return;
         }
 
-        this.setGlobalError('FORM_ERRORS.UNKNOWN');
+        this.setGlobalError('QUICK_MEAL.SAVE_ERROR');
     }
 
     private getSubmitErrorMessage(error?: HttpErrorResponse): string | null {

@@ -18,7 +18,7 @@
   <data name="PeriodSummaryTitle" xml:space="preserve"><value>Period summary</value></data>
   <data name="TotalCaloriesTitle" xml:space="preserve"><value>Total calories</value></data>
   <data name="KcalUnit" xml:space="preserve"><value>kcal</value></data>
-  <data name="AveragePerDayTitle" xml:space="preserve"><value>Average per day</value></data>
+  <data name="AveragePerDayTitle" xml:space="preserve"><value>Average per calendar day, including days without entries</value></data>
   <data name="TotalForPeriodTitle" xml:space="preserve"><value>Total for period</value></data>
   <data name="ProteinsTitle" xml:space="preserve"><value>Proteins</value></data>
   <data name="FatsTitle" xml:space="preserve"><value>Fats</value></data>

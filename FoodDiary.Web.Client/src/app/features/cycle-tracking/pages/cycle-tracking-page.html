@@ -47,6 +47,12 @@
     </fd-page-header>
 
     <fd-page-body>
+        <fd-ui-inline-alert
+            class="cycle-tracking__export-error"
+            severity="danger"
+            [hidden]="!exportError()"
+            [message]="exportError() | translate"
+        />
         @if (!cycle()) {
             <fd-ui-card
                 class="cycle-tracking__setup-card"
@@ -60,6 +66,7 @@
                             class="cycle-tracking__form-control"
                             [label]="'CYCLE_TRACKING.TRACKING_START_DATE' | translate"
                             [formField]="startCycleForm.trackingStartDate"
+                            [error]="trackingStartDateError() | translate"
                         />
                         <fd-ui-select
                             class="cycle-tracking__form-control"
@@ -75,9 +82,12 @@
                         />
                     </div>
                     <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
-                        <fd-ui-checkbox class="cycle-tracking__form-control" [formField]="startCycleForm.cycleTrackingConsentGranted">
-                            {{ 'CYCLE_TRACKING.CONSENT_CYCLE_TRACKING' | translate }}
-                        </fd-ui-checkbox>
+                        <div class="cycle-tracking__form-control fd-stack fd-gap-xs">
+                            <fd-ui-checkbox [formField]="startCycleForm.cycleTrackingConsentGranted">
+                                {{ 'CYCLE_TRACKING.CONSENT_CYCLE_TRACKING' | translate }}
+                            </fd-ui-checkbox>
+                            <fd-ui-form-error [error]="cycleConsentError()" />
+                        </div>
                         <fd-ui-checkbox class="cycle-tracking__form-control" [formField]="startCycleForm.nutritionInsightsConsentGranted">
                             {{ 'CYCLE_TRACKING.CONSENT_NUTRITION' | translate }}
                         </fd-ui-checkbox>
@@ -143,8 +153,8 @@
                                                 | translate
                                                     : {
                                                           samples: prediction.calibrationSampleCount,
-                                                          coverage: prediction.historicalCoveragePercent ?? '—',
-                                                          error: prediction.meanAbsoluteErrorDays ?? '—',
+                                                          coverage: prediction.historicalCoveragePercent ?? 'â€”',
+                                                          error: prediction.meanAbsoluteErrorDays ?? 'â€”',
                                                       }
                                         }}
                                     </p>
@@ -353,7 +363,7 @@
                                                 <div class="cycle-tracking__episode fd-stack fd-gap-xs">
                                                     <div class="fd-row fd-justify-between fd-gap-sm fd-align-center">
                                                         <strong class="fd-ui-action-text">
-                                                            {{ formatEpisodeDate(episode.startDate) }} —
+                                                            {{ formatEpisodeDate(episode.startDate) }} â€”
                                                             {{
                                                                 episode.endDate
                                                                     ? formatEpisodeDate(episode.endDate)

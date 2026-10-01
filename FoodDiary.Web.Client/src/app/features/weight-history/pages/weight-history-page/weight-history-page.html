@@ -44,165 +44,190 @@
     </fd-page-header>
 
     <fd-page-body>
-        <section class="weight-history-page__summary" [attr.aria-label]="'WEIGHT_HISTORY.SUMMARY_TITLE' | translate">
-            <fd-ui-card class="weight-history-page__metric-card">
-                <div class="weight-history-page__metric">
-                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="monitor_weight" size="lg" /></div>
-                    <div>
-                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.CURRENT_WEIGHT' | translate }}</div>
-                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
-                            @if (latestWeight(); as value) {
-                                {{ value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
-                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
-                            } @else {
-                                —
-                            }
+        <div [hidden]="!pageLoadError()">
+            <p role="alert">{{ 'WEIGHT_HISTORY.ERROR_LOAD_PAGE' | translate }}</p>
+            <fd-ui-button (click)="retryPageLoad()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
+        </div>
+        <div [hidden]="pageLoadError()">
+            <p role="alert" [hidden]="deleteError() === null">{{ deleteError() }}</p>
+            <section class="weight-history-page__summary" [attr.aria-label]="'WEIGHT_HISTORY.SUMMARY_TITLE' | translate">
+                <fd-ui-card class="weight-history-page__metric-card">
+                    <div class="weight-history-page__metric">
+                        <div class="weight-history-page__metric-icon"><fd-ui-icon name="monitor_weight" size="lg" /></div>
+                        <div>
+                            <div class="weight-history-page__metric-label fd-ui-body-sm">
+                                {{ 'WEIGHT_HISTORY.CURRENT_WEIGHT' | translate }}
+                            </div>
+                            <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                                @if (latestWeight(); as value) {
+                                    {{ value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
+                                    {{ 'weight' | measurementUnit: measurements.system() | translate }}
+                                } @else {
+                                    —
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            </fd-ui-card>
+                </fd-ui-card>
 
-            <fd-ui-card class="weight-history-page__metric-card">
-                <div class="weight-history-page__metric">
-                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
-                    <div>
-                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.RANGE_CHANGE' | translate }}</div>
-                        <div
-                            class="weight-history-page__metric-value fd-ui-metric-lg"
-                            [class.weight-history-page__metric-value--positive]="weightChange()?.tone === 'positive'"
-                            [class.weight-history-page__metric-value--negative]="weightChange()?.tone === 'negative'"
-                        >
-                            @if (weightChange(); as change) {
-                                {{ change.value > 0 ? '+' : ''
-                                }}{{
-                                    change.value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2
-                                }}
-                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
-                            } @else {
-                                —
-                                <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.INSUFFICIENT_DATA' | translate }}</div>
-                            }
+                <fd-ui-card class="weight-history-page__metric-card">
+                    <div class="weight-history-page__metric">
+                        <div class="weight-history-page__metric-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
+                        <div>
+                            <div class="weight-history-page__metric-label fd-ui-body-sm">
+                                {{ 'WEIGHT_HISTORY.RANGE_CHANGE' | translate }}
+                            </div>
+                            <div
+                                class="weight-history-page__metric-value fd-ui-metric-lg"
+                                [class.weight-history-page__metric-value--positive]="weightChange()?.tone === 'positive'"
+                                [class.weight-history-page__metric-value--negative]="weightChange()?.tone === 'negative'"
+                            >
+                                @if (weightChange(); as change) {
+                                    {{ change.value > 0 ? '+' : ''
+                                    }}{{
+                                        change.value
+                                            | measurementValue: 'weight' : measurements.system()
+                                            | localizedNumber: locale() : 0 : 2
+                                    }}
+                                    {{ 'weight' | measurementUnit: measurements.system() | translate }}
+                                } @else {
+                                    —
+                                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.INSUFFICIENT_DATA' | translate }}</div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            </fd-ui-card>
+                </fd-ui-card>
 
-            <fd-ui-card class="weight-history-page__metric-card">
-                <div class="weight-history-page__metric">
-                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="track_changes" size="lg" /></div>
-                    <div>
-                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.TO_GOAL' | translate }}</div>
-                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
-                            @if (weightToGoal(); as goal) {
-                                {{ goal.value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2 }}
-                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
-                            } @else {
-                                —
-                                <div class="fd-ui-caption fd-ui-text-muted">
+                <fd-ui-card class="weight-history-page__metric-card">
+                    <div class="weight-history-page__metric">
+                        <div class="weight-history-page__metric-icon"><fd-ui-icon name="track_changes" size="lg" /></div>
+                        <div>
+                            <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.TO_GOAL' | translate }}</div>
+                            <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                                @if (weightToGoal(); as goal) {
                                     {{
-                                        (desiredWeightKg() === null ? 'WEIGHT_HISTORY.GOAL_NOT_SET' : 'WEIGHT_HISTORY.INSUFFICIENT_DATA')
+                                        goal.value | measurementValue: 'weight' : measurements.system() | localizedNumber: locale() : 0 : 2
+                                    }}
+                                    {{ 'weight' | measurementUnit: measurements.system() | translate }}
+                                } @else {
+                                    —
+                                    <div class="fd-ui-caption fd-ui-text-muted">
+                                        {{
+                                            (desiredWeightKg() === null
+                                                ? 'WEIGHT_HISTORY.GOAL_NOT_SET'
+                                                : 'WEIGHT_HISTORY.INSUFFICIENT_DATA'
+                                            ) | translate
+                                        }}
+                                    </div>
+                                }
+                            </div>
+                            @if (desiredWeightKg(); as goal) {
+                                <div class="weight-history-page__metric-caption fd-ui-caption">
+                                    {{
+                                        'WEIGHT_HISTORY.GOAL_VALUE'
                                             | translate
+                                                : {
+                                                      value: goal | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
+                                                      unit: 'weight' | measurementUnit | translate,
+                                                  }
                                     }}
                                 </div>
                             }
                         </div>
-                        @if (desiredWeightKg(); as goal) {
-                            <div class="weight-history-page__metric-caption fd-ui-caption">
-                                {{
-                                    'WEIGHT_HISTORY.GOAL_VALUE'
-                                        | translate
-                                            : {
-                                                  value: goal | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
-                                                  unit: 'weight' | measurementUnit | translate,
-                                              }
-                                }}
+                    </div>
+                </fd-ui-card>
+
+                <fd-ui-card class="weight-history-page__metric-card">
+                    <div class="weight-history-page__metric">
+                        <div class="weight-history-page__metric-icon"><fd-ui-icon name="accessibility_new" size="lg" /></div>
+                        <div>
+                            <div class="weight-history-page__metric-label fd-ui-body-sm">
+                                {{ 'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate }}
                             </div>
-                        }
-                    </div>
-                </div>
-            </fd-ui-card>
-
-            <fd-ui-card class="weight-history-page__metric-card">
-                <div class="weight-history-page__metric">
-                    <div class="weight-history-page__metric-icon"><fd-ui-icon name="accessibility_new" size="lg" /></div>
-                    <div>
-                        <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate }}</div>
-                        <div class="weight-history-page__metric-value fd-ui-metric-lg">
-                            {{ (bmiViewModel()?.value | localizedNumber: locale() : 0 : 2) || '—' }}
+                            <div class="weight-history-page__metric-value fd-ui-metric-lg">
+                                {{ (bmiViewModel()?.value | localizedNumber: locale() : 0 : 2) || '—' }}
+                            </div>
+                            @if (bmiViewModel(); as bmi) {
+                                <div class="weight-history-page__metric-caption fd-ui-caption">{{ bmi.status.labelKey | translate }}</div>
+                            }
                         </div>
-                        @if (bmiViewModel(); as bmi) {
-                            <div class="weight-history-page__metric-caption fd-ui-caption">{{ bmi.status.labelKey | translate }}</div>
-                        }
                     </div>
+                </fd-ui-card>
+            </section>
+
+            <div class="weight-history-page__chart-section">
+                <div [hidden]="!summaryLoadError()">
+                    <p role="alert">{{ 'WEIGHT_HISTORY.ERROR_LOAD_CHART' | translate }}</p>
+                    <fd-ui-button (click)="retrySummaryLoad()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
                 </div>
-            </fd-ui-card>
-        </section>
-
-        <div class="weight-history-page__chart-section">
-            <fd-weight-history-chart-card
-                data-tour-id="weight-history-chart"
-                [isLoading]="isSummaryLoading() || isLoading()"
-                [latestValue]="latestWeight()"
-                [latestDate]="latestWeightDate()"
-                [chartPoints]="chartPoints()"
-                [desiredWeightKg]="desiredWeightKg()"
-                [goalLabel]="
-                    'WEIGHT_HISTORY.GOAL_VALUE'
-                        | translate
-                            : {
-                                  value: desiredWeightKg() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
-                                  unit: 'weight' | measurementUnit | translate,
-                              }
-                "
-                (addEntry)="openEntryDialog()"
-                (showLatest)="showLatestMeasurement()"
-            >
-                <fd-period-filter
-                    chartControls
-                    class="weight-history-page__period"
-                    data-tour-id="weight-history-period"
-                    [tabs]="rangeTabs"
-                    [selectedValue]="selectedRange()"
-                    [rangeField]="customRangeForm.range"
-                    [displayRange]="currentRange()"
-                    [hideInactiveRange]="true"
-                    [useSegmentedToggle]="true"
-                    [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
-                    [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
-                    [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    (rangeChange)="changeRange($event)"
-                />
-            </fd-weight-history-chart-card>
-        </div>
-
-        <div class="weight-history-page__insights fd-grid">
-            <fd-weight-history-goal-card
-                data-tour-id="weight-history-goal"
-                [currentWeight]="latestWeight()"
-                [currentWeightDate]="latestWeightDate()"
-                [desiredWeightKg]="desiredWeightKg()"
-                [startWeightKg]="weightGoal().startWeightKg"
-                [startedAtUtc]="weightGoal().startedAtUtc"
-                [hasGoalHistory]="hasCompletedWeightGoals()"
-                [lastCompletedGoal]="lastCompletedWeightGoal()"
-                (configureGoal)="openGoalDialog()"
-                (viewGoalHistory)="openGoalHistoryDialog()"
-            />
-            @defer (on viewport) {
-                <fd-weight-history-entries-card
-                    data-tour-id="weight-history-entries"
-                    [isLoading]="isLoading()"
-                    [entries]="entriesDescending()"
-                    [currentWeight]="latestWeight()"
+                <fd-weight-history-chart-card
+                    data-tour-id="weight-history-chart"
+                    [isLoading]="isSummaryLoading() || isLoading()"
+                    [latestValue]="latestWeight()"
+                    [latestDate]="latestWeightDate()"
+                    [chartPoints]="chartPoints()"
+                    [hasError]="summaryLoadError()"
                     [desiredWeightKg]="desiredWeightKg()"
-                    (editEntry)="startEdit($event)"
-                    (removeEntry)="deleteEntry($event)"
-                    (showAllEntries)="openEntriesDialog()"
+                    [goalLabel]="
+                        'WEIGHT_HISTORY.GOAL_VALUE'
+                            | translate
+                                : {
+                                      value: desiredWeightKg() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2,
+                                      unit: 'weight' | measurementUnit | translate,
+                                  }
+                    "
+                    (addEntry)="openEntryDialog()"
+                    (showLatest)="showLatestMeasurement()"
+                >
+                    <fd-period-filter
+                        chartControls
+                        class="weight-history-page__period"
+                        data-tour-id="weight-history-period"
+                        [tabs]="rangeTabs"
+                        [selectedValue]="selectedRange()"
+                        [rangeField]="customRangeForm.range"
+                        [displayRange]="currentRange()"
+                        [hideInactiveRange]="true"
+                        [useSegmentedToggle]="true"
+                        [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+                        [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
+                        [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                        [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                        (rangeChange)="changeRange($event)"
+                    />
+                </fd-weight-history-chart-card>
+            </div>
+
+            <div class="weight-history-page__insights fd-grid">
+                <fd-weight-history-goal-card
+                    data-tour-id="weight-history-goal"
+                    [currentWeight]="latestWeight()"
+                    [currentWeightDate]="latestWeightDate()"
+                    [desiredWeightKg]="desiredWeightKg()"
+                    [startWeightKg]="weightGoal().startWeightKg"
+                    [startedAtUtc]="weightGoal().startedAtUtc"
+                    [hasGoalHistory]="hasCompletedWeightGoals()"
+                    [lastCompletedGoal]="lastCompletedWeightGoal()"
+                    (configureGoal)="openGoalDialog()"
+                    (viewGoalHistory)="openGoalHistoryDialog()"
                 />
-            } @placeholder {
-                <div class="weight-history-page__placeholder" aria-hidden="true"></div>
-            }
+                <div data-tour-id="weight-history-entries">
+                    @defer (on viewport) {
+                        <fd-weight-history-entries-card
+                            [isLoading]="isLoading()"
+                            [entries]="entriesDescending()"
+                            [currentWeight]="latestWeight()"
+                            [desiredWeightKg]="desiredWeightKg()"
+                            (editEntry)="startEdit($event)"
+                            (removeEntry)="deleteEntry($event)"
+                            (showAllEntries)="openEntriesDialog()"
+                        />
+                    } @placeholder {
+                        <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+                    }
+                </div>
+            </div>
         </div>
     </fd-page-body>
 </div>

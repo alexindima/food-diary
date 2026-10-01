@@ -1,6 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, model, output, signal } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -14,7 +14,7 @@ const DEFAULT_ROWS = 4;
     templateUrl: './fd-ui-textarea.html',
     styleUrls: ['./fd-ui-textarea.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { '[class.fd-ui-textarea-stretch]': 'stretch()' },
+    host: { '[class.fd-ui-textarea-stretch]': 'stretch()', '[attr.id]': 'null' },
 })
 export class FdUiTextareaComponent implements FormValueControl<string | number | null> {
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
@@ -32,6 +32,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected readonly internalValue = signal('');
@@ -70,6 +71,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     protected onBlur(): void {
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onFocus(): void {

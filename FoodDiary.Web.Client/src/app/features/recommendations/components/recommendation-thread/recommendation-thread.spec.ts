@@ -40,6 +40,21 @@ describe('RecommendationThreadComponent', () => {
         expect(fixture.componentInstance['draft']()).toBe('');
     });
 
+    it('hides the empty state on load failure and restores messages after retry', () => {
+        facade.getComments.mockReturnValueOnce(throwError(() => new Error('failed')));
+        const fixture = createComponent();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).not.toContain('RECOMMENDATIONS.DISCUSSION.EMPTY');
+        expect(host.textContent).toContain('RECOMMENDATIONS.DISCUSSION.LOAD_ERROR');
+
+        fixture.componentInstance['retryLoad']();
+        fixture.detectChanges();
+        expect(host.textContent).toContain('Please clarify');
+        expect(fixture.componentInstance['loadFailed']()).toBe(false);
+        expect(fixture.componentInstance['errorKey']()).toBeNull();
+    });
+
     it('keeps the draft and exposes an error when posting fails', () => {
         facade.createComment.mockReturnValueOnce(throwError(() => new Error('failed')));
         const fixture = createComponent();

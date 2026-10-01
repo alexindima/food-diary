@@ -118,6 +118,65 @@ describe('ShoppingListFacade loading and selection', () => {
     });
 });
 
+describe('ShoppingListFacade saves before leaving', () => {
+    it('reports unsaved changes during debounce and request, then clears after success', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const response = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(response);
+        facade.initialize();
+        expect(facade.hasUnsavedChanges()).toBe(false);
+        addMilk(facade);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        response.next({ ...list, items: facade.items() });
+        expect(facade.hasUnsavedChanges()).toBe(false);
+    });
+
+    it('flushes a pending edit and waits for its response before leaving', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const response = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(response);
+        facade.initialize();
+        addMilk(facade);
+        let finished = false;
+        const navigation = facade.saveBeforeLeaveAsync().then(result => {
+            finished = true;
+            return result;
+        });
+        expect(shoppingListService.update).toHaveBeenCalledTimes(1);
+        await waitForAsyncTasksAsync();
+        expect(finished).toBe(false);
+        response.next({ ...list, items: facade.items() });
+        expect(await navigation).toBe(true);
+    });
+
+    it('prevents leaving when the flushed save fails synchronously', async () => {
+        const { facade, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        addMilk(facade);
+        shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
+        expect(await facade.saveBeforeLeaveAsync()).toBe(false);
+    });
+
+    it('saves edits made during an in-flight request before leaving', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const first = new Subject<ShoppingList>();
+        const second = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(first).mockReturnValueOnce(second);
+        facade.initialize();
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        facade.toggleItemChecked(facade.items()[0].id, true);
+        const navigation = facade.saveBeforeLeaveAsync();
+        first.next({ ...list, items: [{ ...facade.items()[0], id: 'saved-item', isChecked: false }] });
+        await waitForAsyncTasksAsync();
+        expect(shoppingListService.update).toHaveBeenCalledTimes(2);
+        second.next({ ...list, items: facade.items() });
+        expect(await navigation).toBe(true);
+    });
+});
+
 describe('ShoppingListFacade item persistence and errors', () => {
     it('preserves edits made during a save and uses the assigned item id in the next request', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();

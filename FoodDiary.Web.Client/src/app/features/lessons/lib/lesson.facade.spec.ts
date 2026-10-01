@@ -1,6 +1,7 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -26,6 +27,77 @@ let translateService: {
 
 describe('LessonFacade', () => {
     beforeEach(setupFacade);
+
+    it('distinguishes a missing lesson from a temporary loading failure', async () => {
+        lessonService.getById.mockReturnValue(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.NotFound })));
+        facade.loadLesson('missing');
+        await waitForAsync(() => facade.hasDetailError());
+        expect(facade.isLessonMissing()).toBe(true);
+        lessonService.getById.mockReturnValue(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })));
+        facade.retryLesson();
+        await waitForAsync(() => facade.hasDetailError() && !facade.isLessonMissing());
+        expect(facade.isLessonMissing()).toBe(false);
+        expect(facade.hasDetailError()).toBe(true);
+    });
+
+    it('exposes detail loading failure and recovers the selected lesson', async () => {
+        lessonService.getById.mockReturnValue(throwError(() => new Error('Unavailable')));
+        facade.loadLesson('lesson-1');
+        await waitForAsync(() => facade.hasDetailError());
+        expect(facade.hasDetailError()).toBe(true);
+        expect(facade.selectedLesson()).toBeNull();
+        lessonService.getById.mockReturnValue(of(createDetail()));
+        facade.retryLesson();
+        await waitForAsync(() => facade.selectedLesson() !== null);
+        expect(facade.hasDetailError()).toBe(false);
+        expect(facade.selectedLesson()?.id).toBe('lesson-1');
+    });
+
+    it('prevents duplicate read requests and retains unread state on failure until retry succeeds', async () => {
+        facade.loadLesson('lesson-1');
+        await waitForAsync(() => facade.selectedLesson() !== null);
+        const request = new Subject<void>();
+        lessonService.markRead.mockReturnValue(request);
+        facade.markRead('lesson-1');
+        facade.markRead('lesson-1');
+        expect(lessonService.markRead).toHaveBeenCalledTimes(1);
+        expect(facade.isMarkingRead()).toBe(true);
+        request.error(new Error('Unavailable'));
+        expect(facade.isMarkingRead()).toBe(false);
+        expect(facade.markReadFailed()).toBe(true);
+        expect(facade.selectedLesson()?.isRead).toBe(false);
+
+        lessonService.markRead.mockReturnValue(of(undefined));
+        facade.markRead('lesson-1');
+        expect(facade.markReadFailed()).toBe(false);
+        expect(facade.selectedLesson()?.isRead).toBe(true);
+        expect(facade.isMarkingRead()).toBe(false);
+    });
+});
+
+describe('LessonFacade catalogue', () => {
+    beforeEach(setupFacade);
+
+    it('retries failed catalogue loading with the selected filters intact', async () => {
+        lessonService.getAll.mockReturnValue(throwError(() => new Error('Unavailable')));
+        facade.loadLessons('Macronutrients');
+        facade.difficultyFilter.set('Beginner');
+        facade.sortOrder.set('shortest');
+        await waitForAsync(() => facade.hasLoadError());
+        expect(facade.hasLoadError()).toBe(true);
+
+        lessonService.getAll.mockReturnValue(of(createPage()));
+        facade.retryLessons();
+        await waitForAsync(() => !facade.hasLoadError() && facade.lessons().length > 0);
+        expect(facade.hasLoadError()).toBe(false);
+        expect(lessonService.getAll).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                category: 'Macronutrients',
+                difficulty: 'Beginner',
+                sort: 'shortest',
+            }),
+        );
+    });
 
     it('loads lessons with normalized current locale and category filter', async () => {
         facade.loadLessons('Macronutrients');

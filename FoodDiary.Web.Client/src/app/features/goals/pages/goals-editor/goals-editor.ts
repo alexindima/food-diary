@@ -7,7 +7,14 @@ import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../s
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../models/goals.data';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
-import { applyMacroPreset, buildDraftRequest, calculateMacroPercent, type GoalsDraft, type GoalsMacroDraft } from './goals-editor.models';
+import {
+    applyMacroPreset,
+    areBodyTargetsValid,
+    buildDraftRequest,
+    calculateMacroPercent,
+    type GoalsDraft,
+    type GoalsMacroDraft,
+} from './goals-editor.models';
 import { GoalsNutritionCardComponent } from './goals-nutrition-card';
 import { GoalsSideCardsComponent } from './goals-side-cards';
 import { GoalsSummaryCardComponent } from './goals-summary-card';
@@ -117,6 +124,9 @@ export class GoalsEditorComponent {
             return this.pendingSave;
         }
         const submittedDraft = this.requireDraft();
+        if (!areBodyTargetsValid(submittedDraft.bodyTargets)) {
+            return false;
+        }
         this.pendingSave = this.saveRequest()(buildDraftRequest(submittedDraft))
             .then(saved => {
                 if (saved && this.draft() === submittedDraft) {

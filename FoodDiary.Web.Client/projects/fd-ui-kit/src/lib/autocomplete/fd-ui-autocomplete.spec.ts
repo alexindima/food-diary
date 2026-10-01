@@ -4,6 +4,22 @@ import { describe, expect, it } from 'vitest';
 import { FdUiAutocompleteComponent } from './fd-ui-autocomplete';
 
 describe('FdUiAutocompleteComponent', () => {
+    it('keeps late suggestions closed after focus moves to another field', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('value', 'Apple');
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector('input');
+        input?.dispatchEvent(new FocusEvent('focus'));
+        fixture.detectChanges();
+        input?.dispatchEvent(new FocusEvent('blur', { relatedTarget: document.createElement('input') }));
+        fixture.componentRef.setInput('options', [{ value: 'Apple', label: 'Apple' }]);
+        fixture.detectChanges();
+
+        expect(input?.getAttribute('aria-expanded')).toBe('false');
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+        expect(fixture.componentInstance.touched()).toBe(true);
+    });
+
     it('should expose the configured accessible name on the clear button', async () => {
         await TestBed.configureTestingModule({ imports: [FdUiAutocompleteComponent] }).compileComponents();
         const fixture: ComponentFixture<FdUiAutocompleteComponent> = TestBed.createComponent(FdUiAutocompleteComponent);

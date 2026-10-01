@@ -78,7 +78,9 @@ public static class CycleHttpMappings {
                     request.FertilitySignal?.ToCommandModel(),
                     request.ClearBleeding,
                     request.ClearSymptomCategories ?? [],
-                    request.ClearFertilitySignal);
+                    request.ClearFertilitySignal,
+                    request.Notes,
+                    request.ClearNotes);
     }
 
     extension(Guid cycleProfileId) {

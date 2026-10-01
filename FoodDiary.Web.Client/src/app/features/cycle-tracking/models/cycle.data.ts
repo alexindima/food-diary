@@ -214,6 +214,11 @@ export type CycleNutritionSummary = {
     algorithmVersion?: string;
 };
 
+export type CycleDayNote = {
+    date: string;
+    notes: string;
+};
+
 export type CycleResponse = {
     id: string;
     userId: string;
@@ -239,6 +244,7 @@ export type CycleResponse = {
     hideFromDashboard: boolean;
     consents?: CycleConsent[];
     predictionRevisions?: CyclePredictionRevision[];
+    dayNotes?: CycleDayNote[];
 };
 
 export type CreateCyclePayload = {
@@ -306,6 +312,7 @@ export type CycleLogDay = {
     bleedingEntries: BleedingEntry[];
     symptoms: CycleSymptomEntry[];
     fertilitySignal?: FertilitySignal | null;
+    notes?: string | null;
 };
 
 export type UpsertCycleDayPayload = {
@@ -316,6 +323,8 @@ export type UpsertCycleDayPayload = {
     clearSymptomCategories?: CycleSymptomCategory[];
     fertilitySignal?: FertilitySignalPayload | null;
     clearFertilitySignal?: boolean;
+    notes?: string | null;
+    clearNotes?: boolean;
 };
 
 export type UpsertCycleFactorPayload = {

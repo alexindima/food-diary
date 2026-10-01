@@ -18,6 +18,7 @@
         />
     }
     <fd-ui-button
+        #overflowTrigger
         class="fd-header-actions-overflow__trigger"
         appearance="toolbar"
         variant="secondary"
@@ -30,7 +31,11 @@
 
     <fd-ui-menu #actionsMenu="fdUiMenu">
         @for (action of menuActions(); track action.id) {
-            <fd-ui-menu-item [disabled]="action.disabled" [disabledReason]="action.disabledReason" (itemClick)="activateAction(action)">
+            <fd-ui-menu-item
+                [disabled]="action.disabled"
+                [disabledReason]="action.disabledReason"
+                (itemClick)="activateAction(action, true)"
+            >
                 @if (action.icon) {
                     <fd-ui-icon [name]="action.icon" />
                 }

@@ -33,6 +33,8 @@ type WaistEntryFormModel = {
     circumference: string;
 };
 
+const WAIST_INPUT_FRACTION_DIGITS = 2;
+
 type DesiredWaistFormModel = {
     circumference: string;
 };
@@ -66,11 +68,15 @@ export class WaistHistoryFacade {
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly entryError = signal<string | null>(null);
+    public readonly deleteError = signal<string | null>(null);
+    public readonly goalActionError = signal<string | null>(null);
     public readonly entrySaveVersion = signal(0);
     public readonly isEditing = signal(false);
     public readonly summaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly rollingMonthSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
+    public readonly pageLoadError = signal(false);
+    public readonly summaryLoadError = signal(false);
     public readonly customRangeModel = signal<WaistCustomRangeFormModel>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
     public readonly waistGoal = signal<DesiredWaistResponse>({ desiredWaistCm: null, startWaistCm: null, startedAtUtc: null });
@@ -82,7 +88,18 @@ export class WaistHistoryFacade {
     public readonly desiredWaistSaveVersion = signal(0);
     public readonly latestEntry = signal<WaistEntry | null>(null);
     public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
-    public readonly desiredWaistForm = form(this.desiredWaistModel);
+    public readonly desiredWaistForm = form(this.desiredWaistModel, path => {
+        validate(path.circumference, ({ value }) => {
+            if (value().trim().length === 0) {
+                return;
+            }
+            const parsed = parseDecimalInput(value());
+            const target = parsed === null ? null : this.measurements.canonicalLength(parsed);
+            return target === null || target <= 0 || target > MAX_DESIRED_WAIST_CM
+                ? { kind: 'goalRange', message: 'Goal is out of range' }
+                : undefined;
+        });
+    });
 
     public readonly formModel = signal<WaistEntryFormModel>({
         date: formatWaistHistoryDateInput(new Date()),
@@ -226,7 +243,11 @@ export class WaistHistoryFacade {
     }
 
     public deleteEntry(entry: WaistEntry): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.isSaving.set(true);
+        this.deleteError.set(null);
         this.waistEntriesService
             .remove(entry.id)
             .pipe(
@@ -235,17 +256,25 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(() => {
-                this.invalidation.reportBodyMetricMutation();
-                this.loadPageSummary(true);
-                this.loadRollingMonthSummaryIfNeeded();
-                if (this.editingEntryId() === entry.id) {
-                    this.resetEditingState();
-                }
+            .subscribe({
+                next: () => {
+                    this.invalidation.reportBodyMetricMutation();
+                    this.loadPageSummary(true);
+                    this.loadRollingMonthSummaryIfNeeded();
+                    if (this.editingEntryId() === entry.id) {
+                        this.resetEditingState();
+                    }
+                },
+                error: () => {
+                    this.deleteError.set(this.translate.instant('WAIST_HISTORY.ERROR_DELETE_ENTRY'));
+                },
             });
     }
 
     public saveDesiredWaist(): void {
+        if (this.isDesiredWaistSaving()) {
+            return;
+        }
         if (this.desiredWaistForm().invalid()) {
             return;
         }
@@ -256,6 +285,7 @@ export class WaistHistoryFacade {
         }
 
         this.isDesiredWaistSaving.set(true);
+        this.goalActionError.set(null);
         this.userService
             .updateWaistGoal(parsedValue)
             .pipe(
@@ -264,17 +294,26 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(goal => {
-                this.invalidation.reportGoalMutation();
-                this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(goal.desiredWaistCm) });
-                this.desiredWaistSaveVersion.update(version => version + 1);
-                this.loadPageSummary(true);
+            .subscribe({
+                next: goal => {
+                    this.invalidation.reportGoalMutation();
+                    this.waistGoal.set(goal);
+                    this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(goal.desiredWaistCm) });
+                    this.desiredWaistSaveVersion.update(version => version + 1);
+                    this.loadPageSummary(true);
+                },
+                error: () => {
+                    this.goalActionError.set(this.translate.instant('WAIST_HISTORY.ERROR_SAVE_GOAL'));
+                },
             });
     }
 
     public cancelWaistGoal(): void {
+        if (this.isDesiredWaistSaving()) {
+            return;
+        }
         this.isDesiredWaistSaving.set(true);
+        this.goalActionError.set(null);
         this.userService
             .updateWaistGoal(null)
             .pipe(
@@ -283,12 +322,17 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(goal => {
-                this.invalidation.reportGoalMutation();
-                this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumference: '' });
-                this.desiredWaistSaveVersion.update(version => version + 1);
-                this.loadPageSummary(true);
+            .subscribe({
+                next: goal => {
+                    this.invalidation.reportGoalMutation();
+                    this.waistGoal.set(goal);
+                    this.desiredWaistModel.set({ circumference: '' });
+                    this.desiredWaistSaveVersion.update(version => version + 1);
+                    this.loadPageSummary(true);
+                },
+                error: () => {
+                    this.goalActionError.set(this.translate.instant('WAIST_HISTORY.ERROR_CANCEL_GOAL'));
+                },
             });
     }
 
@@ -321,6 +365,20 @@ export class WaistHistoryFacade {
         return circumferenceCm === null || circumferenceCm <= 0 || circumferenceCm > MAX_DESIRED_WAIST_CM ? undefined : circumferenceCm;
     }
 
+    public retryPageLoad(): void {
+        if (this.isLoading()) {
+            return;
+        }
+        this.loadPageSummary(true);
+        this.loadRollingMonthSummaryIfNeeded();
+    }
+
+    public retrySummaryLoad(): void {
+        if (!this.isSummaryLoading()) {
+            this.loadEntries(true);
+        }
+    }
+
     private loadEntries(force = false): void {
         const { summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
 
@@ -339,6 +397,8 @@ export class WaistHistoryFacade {
         }
 
         this.lastLoadedRangeKey = rangeKey;
+        this.pageLoadError.set(false);
+        this.summaryLoadError.set(false);
         this.isLoading.set(true);
         this.isSummaryLoading.set(true);
         this.waistEntriesService
@@ -350,21 +410,26 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(page => {
-                const latestEntry = page.entries.at(0) ?? null;
-                this.entries.set(page.entries);
-                this.latestEntry.set(latestEntry);
-                this.summaryPoints.set(page.summary);
-                if (this.selectedRange() === 'month') {
-                    this.rollingMonthSummaryPoints.set(page.summary);
-                }
-                this.userHeightCm.set(page.heightCm);
-                this.waistGoal.set(page.goal);
-                this.waistGoalHistory.set(page.goalHistory);
-                this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(page.goal.desiredWaistCm) });
-                if (!this.isEditing()) {
-                    this.form.circumference().value.set(this.formatDisplayWaist(latestEntry?.circumferenceCm ?? null));
-                }
+            .subscribe({
+                next: page => {
+                    const latestEntry = page.entries.at(0) ?? null;
+                    this.entries.set(page.entries);
+                    this.latestEntry.set(latestEntry);
+                    this.summaryPoints.set(page.summary);
+                    if (this.selectedRange() === 'month') {
+                        this.rollingMonthSummaryPoints.set(page.summary);
+                    }
+                    this.userHeightCm.set(page.heightCm);
+                    this.waistGoal.set(page.goal);
+                    this.waistGoalHistory.set(page.goalHistory);
+                    this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(page.goal.desiredWaistCm) });
+                    if (!this.isEditing()) {
+                        this.form.circumference().value.set(this.formatDisplayWaist(latestEntry?.circumferenceCm ?? null));
+                    }
+                },
+                error: () => {
+                    this.pageLoadError.set(true);
+                },
             });
     }
 
@@ -377,6 +442,7 @@ export class WaistHistoryFacade {
     }
 
     private loadSummary(filters: WaistEntrySummaryFilters, updateRollingMonth = false): void {
+        this.summaryLoadError.set(false);
         this.isSummaryLoading.set(true);
         this.waistEntriesService
             .getSummary(filters)
@@ -386,11 +452,17 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(points => {
-                this.summaryPoints.set(points);
-                if (updateRollingMonth) {
-                    this.rollingMonthSummaryPoints.set(points);
-                }
+            .subscribe({
+                next: points => {
+                    this.summaryPoints.set(points);
+                    if (updateRollingMonth) {
+                        this.rollingMonthSummaryPoints.set(points);
+                    }
+                },
+                error: () => {
+                    this.summaryPoints.set([]);
+                    this.summaryLoadError.set(true);
+                },
             });
     }
 
@@ -403,8 +475,13 @@ export class WaistHistoryFacade {
         this.waistEntriesService
             .getSummary(summaryParams)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(points => {
-                this.rollingMonthSummaryPoints.set(points);
+            .subscribe({
+                next: points => {
+                    this.rollingMonthSummaryPoints.set(points);
+                },
+                error: () => {
+                    this.pageLoadError.set(true);
+                },
             });
     }
 
@@ -419,7 +496,11 @@ export class WaistHistoryFacade {
         if (date === null || parsedValue === null) {
             return null;
         }
-        const circumferenceCm = this.measurements.canonicalLength(parsedValue);
+        const original = this.editingEntry();
+        const circumferenceCm =
+            original !== null && parsedValue === Number(this.formatDisplayWaist(original.circumferenceCm))
+                ? original.circumferenceCm
+                : this.measurements.canonicalLength(parsedValue);
 
         return {
             date,
@@ -442,13 +523,18 @@ export class WaistHistoryFacade {
     }
 
     private formatDisplayWaist(circumferenceCm: number | null): string {
-        return circumferenceCm === null ? '' : this.measurements.displayLength(circumferenceCm).toString();
+        if (circumferenceCm === null) {
+            return '';
+        }
+        return this.measurements.system() === 'metric'
+            ? circumferenceCm.toString()
+            : this.measurements.displayLength(circumferenceCm, WAIST_INPUT_FRACTION_DIGITS).toString();
     }
 
     private handleEntrySaveError(error: unknown): void {
         const responseBody = getRecordProperty(error, 'error');
         const errorCode = getStringProperty(responseBody, 'error');
-        const errorKey = errorCode === 'WaistEntry.AlreadyExists' ? 'WAIST_HISTORY.ERROR_DUPLICATE_DATE' : 'FORM_ERRORS.UNKNOWN';
+        const errorKey = errorCode === 'WaistEntry.AlreadyExists' ? 'WAIST_HISTORY.ERROR_DUPLICATE_DATE' : 'WAIST_HISTORY.ERROR_SAVE_ENTRY';
         this.entryError.set(this.translate.instant(errorKey));
     }
 }

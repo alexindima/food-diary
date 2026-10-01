@@ -8,6 +8,7 @@ import {
     inject,
     input,
     model,
+    output,
     signal,
     viewChild,
 } from '@angular/core';
@@ -54,6 +55,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     public readonly unitLabel = input<string>();
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected displayValue = '';
@@ -124,6 +126,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected onBlur(): void {
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected onFocus(): void {

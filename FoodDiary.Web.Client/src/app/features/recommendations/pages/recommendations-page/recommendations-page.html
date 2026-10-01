@@ -15,10 +15,18 @@
     <fd-page-body>
         <section class="fd-stack fd-gap-md" aria-labelledby="client-tasks-title">
             <h2 id="client-tasks-title" class="fd-ui-card-title">{{ 'CLIENT_TASKS.TITLE' | translate }}</h2>
+            <p class="recommendations-page__state--error fd-ui-body-sm" role="alert" [hidden]="taskActionErrorKey() === null">
+                {{ taskActionErrorKey() | translate }}
+            </p>
             @if (tasksLoading()) {
                 <p class="fd-ui-body-sm" role="status">{{ 'CLIENT_TASKS.LOADING' | translate }}</p>
             } @else if (taskErrorKey(); as taskError) {
-                <p class="recommendations-page__state--error fd-ui-body-sm" role="alert">{{ taskError | translate }}</p>
+                <div class="recommendations-page__state--error fd-stack fd-gap-sm fd-ui-body-sm" role="alert">
+                    <p>{{ taskError | translate }}</p>
+                    <fd-ui-button type="button" variant="secondary" fill="outline" (click)="retryTasks()">
+                        {{ 'ERRORS.RETRY' | translate }}
+                    </fd-ui-button>
+                </div>
             } @else {
                 <div class="fd-stack fd-gap-sm">
                     @for (task of tasks(); track task.id) {
@@ -69,13 +77,22 @@
             }
         </section>
 
+        <p class="recommendations-page__state--error fd-ui-body-sm" role="alert" [hidden]="readErrorKey() === null">
+            {{ readErrorKey() | translate }}
+        </p>
         @if (isLoading()) {
             <section class="recommendations-page__state fd-place-center fd-ui-body-sm" role="status" aria-live="polite">
                 {{ 'RECOMMENDATIONS.LOADING' | translate }}
             </section>
         } @else if (errorKey(); as error) {
-            <section class="recommendations-page__state recommendations-page__state--error fd-place-center fd-ui-body-sm" role="alert">
-                {{ error | translate }}
+            <section
+                class="recommendations-page__state recommendations-page__state--error fd-place-center fd-stack fd-gap-sm fd-ui-body-sm"
+                role="alert"
+            >
+                <p>{{ error | translate }}</p>
+                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="retryRecommendations()">
+                    {{ 'ERRORS.RETRY' | translate }}
+                </fd-ui-button>
             </section>
         } @else if (recommendationItems().length === 0) {
             <section

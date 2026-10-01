@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1552,
+    "candidateFields": 1561,
     "credential": 156,
     "identity": 174,
-    "health": 706,
+    "health": 711,
     "financial": 129,
-    "privateContent": 387,
-    "boundaryFiles": 204,
+    "privateContent": 391,
+    "boundaryFiles": 205,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -316,7 +316,7 @@
       "name": "CurrentPassword",
       "type": "string",
       "path": "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs",
-      "line": 10
+      "line": 16
     },
     {
       "category": "credential",
@@ -2674,6 +2674,13 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleDayNoteReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
       "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "line": 7
     },
@@ -2842,6 +2849,13 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
+      "path": "Modules/Cycles/Contracts/Models/CycleDayNoteModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
       "path": "Modules/Cycles/Contracts/Models/CycleFactorModel.cs",
       "line": 7
     },
@@ -2961,6 +2975,20 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
+      "path": "Modules/Cycles/Domain/Entities/CycleDayNote.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "CycleProfile",
+      "type": "CycleProfile",
+      "path": "Modules/Cycles/Domain/Entities/CycleDayNote.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "CycleProfileId",
       "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 8
     },
@@ -2997,7 +3025,7 @@
       "name": "AverageCycleLength",
       "type": "int",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "health",
@@ -3054,6 +3082,13 @@
       "type": "Guid",
       "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "line": 5
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "health",
@@ -8644,6 +8679,13 @@
     {
       "category": "privateContent",
       "name": "Notes",
+      "type": "string",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleDayNoteReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "line": 11
@@ -8721,6 +8763,13 @@
     {
       "category": "privateContent",
       "name": "Notes",
+      "type": "string",
+      "path": "Modules/Cycles/Contracts/Models/CycleDayNoteModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Contracts/Models/CycleFactorModel.cs",
       "line": 11
@@ -8749,6 +8798,13 @@
     {
       "category": "privateContent",
       "name": "Notes",
+      "type": "string",
+      "path": "Modules/Cycles/Domain/Entities/CycleDayNote.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 12
@@ -8758,7 +8814,7 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 36
+      "line": 37
     },
     {
       "category": "privateContent",
@@ -8780,6 +8836,13 @@
       "type": "string?",
       "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -11224,6 +11287,14 @@
     },
     {
       "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"

@@ -161,6 +161,60 @@ describe('AuthInterceptor refresh flow', () => {
     });
 });
 
+describe('AuthInterceptor credential verification', () => {
+    it('preserves the session when a current password is incorrect', () => {
+        authServiceSpy.getToken.mockReturnValue('valid-token');
+        const onError = vi.fn();
+        http.post('/api/v1/users/password', {}).subscribe({ error: onError });
+
+        httpTesting
+            .expectOne('/api/v1/users/password')
+            .flush(
+                { error: 'User.InvalidPassword', message: 'The current password is incorrect.' },
+                { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' },
+            );
+
+        expect(onError).toHaveBeenCalledOnce();
+        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+
+    it('preserves the session for a password error returned as a download blob', async () => {
+        authServiceSpy.getToken.mockReturnValue('valid-token');
+        const onError = vi.fn();
+        http.post('/api/v1/export/cycle/sensitive', {}, { responseType: 'blob' }).subscribe({ error: onError });
+
+        httpTesting
+            .expectOne('/api/v1/export/cycle/sensitive')
+            .flush(new Blob([JSON.stringify({ error: 'User.InvalidPassword' })], { type: 'application/json' }), {
+                status: HttpStatusCode.Unauthorized,
+                statusText: 'Unauthorized',
+            });
+
+        await vi.waitFor(() => {
+            expect(onError).toHaveBeenCalledOnce();
+        });
+        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+
+    it('does not logout when a refreshed request returns an application error', () => {
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
+        const onError = vi.fn();
+        http.post('/api/v1/export/cycle/sensitive', {}).subscribe({ error: onError });
+        httpTesting
+            .expectOne('/api/v1/export/cycle/sensitive')
+            .flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        httpTesting
+            .expectOne('/api/v1/export/cycle/sensitive')
+            .flush(null, { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
+
+        expect(onError).toHaveBeenCalledOnce();
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('AuthInterceptor error handling', () => {
     it('should not refresh for public auth requests', () => {
         authServiceSpy.getToken.mockReturnValue('some-token');

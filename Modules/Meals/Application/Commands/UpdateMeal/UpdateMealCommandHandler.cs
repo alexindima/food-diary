@@ -1,22 +1,18 @@
 using FoodDiary.Modules.Meals.Application.Mappings;
-using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
-using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Services;
 using FoodDiary.Modules.Users.Contracts.Common;
-using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 public sealed class UpdateMealCommandHandler(
     IMealReadRepository mealReadRepository,
-    IMealProjectionReadRepository mealProjectionReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
     IRecentItemUsageRecorder recentItemUsageRecorder,
@@ -61,21 +57,8 @@ public sealed class UpdateMealCommandHandler(
             values.OldAssetId,
             imageAssetCleanupService,
             cancellationToken).ConfigureAwait(false);
-        return await LoadUpdatedAsync(values.Meal.Id, values.UserId, cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task<Result<MealModel>> LoadUpdatedAsync(
-        MealId mealId,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        MealProjectionReadModel? updated = await mealProjectionReadRepository.GetByIdMealProjectionAsync(
-            mealId,
-            userId,
-            cancellationToken).ConfigureAwait(false);
-
-        return updated is null
-            ? Result.Failure<MealModel>(MealErrors.InvalidData("Failed to load updated meal."))
-            : Result.Success(updated.ToModel());
+        // The command pipeline persists staged changes after this handler returns.
+        return Result.Success(values.Meal.ToModel());
     }
 
 }

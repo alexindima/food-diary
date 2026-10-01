@@ -30,7 +30,8 @@ public static class CycleHttpResponseMappings {
                 (int)model.ReproductiveState,
                 model.HideFromDashboard,
                 ToHttpResponse(model.Consents),
-                ToHttpResponse(model.PredictionRevisions)
+                ToHttpResponse(model.PredictionRevisions),
+                (model.DayNotes ?? []).Select(note => new CycleDayNoteHttpResponse(note.Id, note.CycleProfileId, ToHttpDate(note.Date), note.Notes)).ToList()
             );
         }
     }
@@ -42,7 +43,8 @@ public static class CycleHttpResponseMappings {
                     ToHttpDate(model.Date),
                     model.BleedingEntries.Select(ToHttpResponse).ToList(),
                     model.Symptoms.Select(ToHttpResponse).ToList(),
-                    model.FertilitySignal?.ToHttpResponse());
+                    model.FertilitySignal?.ToHttpResponse(),
+                    model.Notes);
     }
 
     extension(CycleNutritionSummaryModel model) {

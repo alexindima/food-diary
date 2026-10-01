@@ -46,6 +46,7 @@ import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
         ShoppingListManageControlsComponent,
     ],
     providers: [ShoppingListFacade],
+    host: { '(window:beforeunload)': 'onBeforeUnload($event)' },
 })
 export class ShoppingListPageComponent {
     private readonly translateService = inject(TranslateService);
@@ -88,6 +89,17 @@ export class ShoppingListPageComponent {
     });
 
     private readonly isMobileManageOpen = signal(false);
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Router canDeactivate contract is called outside the component.
+    public async saveBeforeLeaveAsync(): Promise<boolean> {
+        return this.facade.saveBeforeLeaveAsync();
+    }
+
+    protected onBeforeUnload(event: BeforeUnloadEvent): void {
+        if (this.facade.hasUnsavedChanges()) {
+            event.preventDefault();
+        }
+    }
 
     public constructor() {
         toObservable(computed(() => this.listSelectModel().id))

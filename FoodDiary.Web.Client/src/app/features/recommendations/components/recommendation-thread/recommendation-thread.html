@@ -3,6 +3,10 @@
 
     @if (loading()) {
         <p class="fd-ui-body-sm" role="status">{{ 'RECOMMENDATIONS.DISCUSSION.LOADING' | translate }}</p>
+    } @else if (loadFailed()) {
+        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="retryLoad()">
+            {{ 'ERRORS.RETRY' | translate }}
+        </fd-ui-button>
     } @else {
         @if (comments().length === 0) {
             <p class="recommendation-thread__empty fd-ui-body-sm">{{ 'RECOMMENDATIONS.DISCUSSION.EMPTY' | translate }}</p>

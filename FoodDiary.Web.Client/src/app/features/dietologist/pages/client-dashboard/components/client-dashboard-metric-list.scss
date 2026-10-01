@@ -23,6 +23,7 @@
 
 .client-dashboard__metric {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--fd-space-xxs);
     padding: var(--fd-space-sm);
     border: var(--fd-border-default);
@@ -35,6 +36,7 @@
 }
 
 .client-dashboard__metric-value {
+    overflow-wrap: anywhere;
     color: var(--fd-color-text);
     font-size: var(--fd-text-title-sm-size);
     line-height: var(--fd-text-title-sm-line-height);

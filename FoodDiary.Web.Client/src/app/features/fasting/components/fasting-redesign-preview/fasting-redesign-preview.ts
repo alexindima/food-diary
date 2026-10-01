@@ -68,6 +68,11 @@ export class FastingRedesignPreviewComponent {
     });
     protected readonly progress = computed(() => Math.min(COMPLETE_PROGRESS, Math.max(0, this.progressPercent())));
     protected readonly primaryAlert = computed(() => this.alerts()[0] ?? null);
+    protected readonly streakDayUnitKey = computed(() => {
+        this.languageVersion();
+        const language = this.translateService.getCurrentLang() ?? 'en';
+        return `FASTING.DAY_UNIT_${new Intl.PluralRules(language).select(this.stats()?.currentStreak ?? 0).toUpperCase()}`;
+    });
     protected readonly personalSummary = computed(() => {
         const stats = this.stats();
         return (

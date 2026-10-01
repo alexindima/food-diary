@@ -16,17 +16,26 @@
         </div>
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="local_fire_department" />
-            <strong>{{ data.week.avgDailyCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+            <strong
+                >{{ data.review.daysLogged > 0 ? (data.week.avgDailyCalories | number: '1.0-0') : '—' }}
+                {{ 'GENERAL.UNITS.KCAL' | translate }}</strong
+            >
             <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
         </div>
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="fitness_center" />
-            <strong>{{ data.week.avgProteins | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}</strong>
+            <strong
+                >{{ data.review.daysLogged > 0 ? (data.week.avgProteins | number: '1.0-1') : '—' }}
+                {{ 'GENERAL.UNITS.G' | translate }}</strong
+            >
             <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
         </div>
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="water_drop" />
-            <strong>{{ data.week.avgDailyHydrationMl | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}</strong>
+            <strong
+                >{{ data.week.totalHydrationMl > 0 ? (data.week.avgDailyHydrationMl | number: '1.0-0') : '—' }}
+                {{ 'GENERAL.UNITS.ML' | translate }}</strong
+            >
             <span>{{ 'WEEKLY_CHECK_IN.REPORT.WATER' | translate }}</span>
         </div>
     </section>

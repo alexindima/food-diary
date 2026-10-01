@@ -16,9 +16,7 @@ export class AdminAchievementsService {
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/achievement-definitions`;
 
     public getAll(): Observable<AdminAchievementDefinition[]> {
-        return loadPagedCollection((page, limit) =>
-            this.http.get<AdminAchievementDefinition[]>(this.baseUrl, { params: { page, limit } }),
-        );
+        return loadPagedCollection((page, limit) => this.http.get<AdminAchievementDefinition[]>(this.baseUrl, { params: { page, limit } }));
     }
 
     public create(request: CreateAdminAchievementDefinitionRequest): Observable<AdminAchievementDefinition> {

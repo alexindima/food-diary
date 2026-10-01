@@ -6,6 +6,7 @@
             [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
             [todayLabel]="'WAIST_HISTORY.TODAY' | translate"
             [formField]="form().date"
+            [error]="dateError() | translate"
             [showRequiredIndicator]="false"
         />
 
@@ -20,6 +21,7 @@
             [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
             [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
             [formField]="form().circumference"
+            [error]="circumferenceError() | translate: circumferenceRange()"
         />
     </div>
 

@@ -1093,7 +1093,11 @@
         "REMOVE_ITEM": "Remove item",
         "REMOVE_ITEM_NAMED": "Remove {{name}} from draft",
         "EDIT_ARIA": "Open meal draft editor",
-        "SAVE_ARIA": "Save meal draft"
+        "SAVE_ARIA": "Save meal draft",
+        "ITEMS_ONE": "item",
+        "ITEMS_FEW": "items",
+        "ITEMS_MANY": "items",
+        "ITEMS_OTHER": "items"
     },
     "ADMIN_BILLING": {
         "SUMMARY_ERROR": "Unable to load the billing summary. Refresh to retry.",
@@ -4098,6 +4102,8 @@
         "FILTER_CATEGORIES": "Categories",
         "FILTER_NUTRITION": "Nutrition",
         "FILTER_CALORIES_FROM": "Calories from",
+        "FILTER_CALORIES_INVALID": "Enter a valid number of calories, zero or greater.",
+        "FILTER_CALORIES_ORDER": "The minimum calories must not exceed the maximum.",
         "FILTER_CALORIES_TO": "Calories to",
         "FILTER_CALORIES_ACTIVE": "Calories range",
         "FILTER_MEDIA": "Media",
@@ -4420,6 +4426,7 @@
         "INGREDIENT_PICKER_TITLE": "Choose an ingredient"
     },
     "PRODUCT_MANAGE": {
+        "SAVE_ERROR": "Could not save the product. Your changes are still here; please try again.",
         "PHOTO_IMPORT_LIMIT": "Values were applied, but photos were not added: a product can have up to 5 photos. Remove unwanted photos and apply again from recognition history.",
         "ADD_TITLE": "Create product",
         "EDIT_TITLE": "Edit Product",
@@ -5067,6 +5074,7 @@
         "NOTIFICATIONS_FASTING_REMINDER_SAVE": "Save timing",
         "NOTIFICATIONS_FASTING_REMINDER_SAVED": "Fasting reminder timing updated.",
         "NOTIFICATIONS_FASTING_REMINDER_ERROR": "The follow-up reminder must be later than the first one.",
+        "NOTIFICATIONS_FASTING_REMINDER_INPUT_ERROR": "Enter whole numbers from 1 to {{max}} hours for both reminders.",
         "FASTING_TELEMETRY_TITLE": "Fasting telemetry summary",
         "FASTING_TELEMETRY_HINT": "Internal summary of persisted fasting reminder and check-in events from client telemetry.",
         "FASTING_TELEMETRY_REFRESH": "Refresh summary",
@@ -5464,6 +5472,12 @@
         "ADD_ENTRY_TITLE": "Add weight",
         "EDIT_ENTRY_TITLE": "Edit weight",
         "ERROR_DUPLICATE_DATE": "A weight entry for this date already exists. Edit the existing entry or choose another date.",
+        "ERROR_SAVE_ENTRY": "Could not save this weight entry. Your changes are still in the form. Please try again.",
+        "ERROR_DELETE_ENTRY": "Could not delete this weight entry. It is still in your history. Please try again.",
+        "ERROR_LOAD_PAGE": "Could not load measurements and goals. Please try again.",
+        "ERROR_LOAD_CHART": "Could not load the chart for the selected period. Please try again.",
+        "ERROR_SAVE_GOAL": "Could not save your weight goal. Your changes are still in the form. Please try again.",
+        "ERROR_CANCEL_GOAL": "Could not cancel your weight goal. It is still active. Please try again.",
         "UPDATE": "Save",
         "CANCEL_EDIT": "Cancel",
         "DELETE": "Delete",
@@ -5505,7 +5519,9 @@
         "GOAL_HISTORY_HINT": "Your current goal will stay in history if you change or cancel it.",
         "GOAL_VALUE_REQUIRED": "Enter a target value.",
         "GOAL_CHANGE_LABEL": "Change",
-        "GOAL_TARGET_LABEL": "Goal:"
+        "GOAL_TARGET_LABEL": "Goal:",
+        "VALUE_RANGE": "Enter a value between {{min}} and {{max}}.",
+        "GOAL_VALUE_RANGE": "Enter a value greater than zero and no more than {{max}}."
     },
     "WAIST_HISTORY": {
         "SUBTITLE": "Body measurements",
@@ -5564,6 +5580,12 @@
         "ADD_ENTRY_TITLE": "Add waist measurement",
         "EDIT_ENTRY_TITLE": "Edit waist measurement",
         "ERROR_DUPLICATE_DATE": "A waist entry for this date already exists. Edit the existing entry or choose another date.",
+        "ERROR_SAVE_ENTRY": "Could not save this waist measurement. Your changes are still in the form. Please try again.",
+        "ERROR_DELETE_ENTRY": "Could not delete this waist measurement. It is still in your history. Please try again.",
+        "ERROR_LOAD_PAGE": "Could not load measurements and goals. Please try again.",
+        "ERROR_LOAD_CHART": "Could not load the chart for the selected period. Please try again.",
+        "ERROR_SAVE_GOAL": "Could not save your waist goal. Your changes are still in the form. Please try again.",
+        "ERROR_CANCEL_GOAL": "Could not cancel your waist goal. It is still active. Please try again.",
         "ADD": "Add",
         "UPDATE": "Save",
         "CANCEL_EDIT": "Cancel",
@@ -5628,7 +5650,9 @@
         "GOAL_HISTORY_HINT": "Your current goal will stay in history if you change or cancel it.",
         "GOAL_VALUE_REQUIRED": "Enter a target value.",
         "GOAL_CHANGE_LABEL": "Change",
-        "GOAL_TARGET_LABEL": "Goal:"
+        "GOAL_TARGET_LABEL": "Goal:",
+        "VALUE_RANGE": "Enter a value between {{min}} and {{max}}.",
+        "GOAL_VALUE_RANGE": "Enter a value greater than zero and no more than {{max}}."
     },
     "CYCLE_TRACKING": {
         "TITLE": "Cycle tracking",
@@ -5730,6 +5754,8 @@
         "SENSITIVE_EXPORT_WARNING": "This file includes private notes and fertility signals. Confirm your current password before downloading it.",
         "SENSITIVE_EXPORT_PASSWORD": "Current password",
         "SENSITIVE_EXPORT_CONFIRM": "Download sensitive export",
+        "EXPORT_FAILED": "Could not download the file. Please try again.",
+        "SENSITIVE_EXPORT_FAILED": "Could not download your private data. Check your current password and try again.",
         "SAVE_CYCLE": "Save cycle",
         "SETTINGS_TITLE": "Cycle settings",
         "SETTINGS_DESCRIPTION": "Adjust how your cycle is tracked. Changes recalculate future estimates without altering your history.",
@@ -5893,7 +5919,8 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
-        }
+        },
+        "CONSENT_REQUIRED": "Consent to storing cycle entries is required to start tracking."
     },
     "FASTING": {
         "REQUEST_ERROR": "Could not complete this action. Check your connection and try again.",
@@ -6241,12 +6268,17 @@
         "BADGE_INTERRUPTED": "Interrupted",
         "BADGE_SKIPPED": "Skipped",
         "BADGE_POSTPONED": "Postponed",
-        "BADGE_INCOMPLETE": "Active"
+        "BADGE_INCOMPLETE": "Active",
+        "DAY_UNIT_ONE": "day",
+        "DAY_UNIT_FEW": "days",
+        "DAY_UNIT_MANY": "days",
+        "DAY_UNIT_OTHER": "days"
     },
     "GAMIFICATION": {
         "TITLE": "Achievements",
         "SUBTITLE": "Build healthy habits — one step at a time",
         "LOADING": "Loading achievements...",
+        "LOAD_ERROR": "Could not load achievements. Please try again.",
         "CURRENT_STREAK": "Current streak",
         "LONGEST_STREAK": "Longest streak",
         "TOTAL_MEALS": "Meals logged",
@@ -6266,7 +6298,10 @@
         "BADGE_MEALS_100": "100 meals",
         "BADGE_MEALS_500": "500 meals",
         "HABIT_PATH": {
-            "DAYS_IN_A_ROW": "days in a row",
+            "DAYS_IN_A_ROW_ONE": "consecutive day",
+            "DAYS_IN_A_ROW_FEW": "consecutive days",
+            "DAYS_IN_A_ROW_MANY": "consecutive days",
+            "DAYS_IN_A_ROW_OTHER": "consecutive days",
             "BEST_STREAK": "Best streak: {{count}}",
             "HEALTH_SCORE_HINT": "Reflects diary consistency and how closely you followed your recent goals.",
             "NEXT_REWARD": "Next reward",
@@ -6329,7 +6364,8 @@
             "TITLE": "Your week at a glance",
             "PAST_WEEK_NO_DATA": "This week ended without any entries, so no weekly insights are available.",
             "LIMITED": "The logged days reveal a few early signals. Add more entries to assess calories and nutrients accurately.",
-            "RELIABLE": "Your entries provide enough context to identify the most useful patterns from this week."
+            "RELIABLE": "Your entries provide enough context to identify the most useful patterns from this week.",
+            "EMPTY": "No meals were logged this week. Start recording your diary to see nutrition patterns."
         },
         "INSIGHTS": {
             "HYDRATION_IMPROVED": "Your water intake increased",
@@ -6395,11 +6431,11 @@
         "METRICS_ARIA": "Weekly metrics",
         "METRICS": {
             "DAYS": "Days with entries",
-            "LOGGED_AVERAGE": "Average on logged days",
+            "LOGGED_AVERAGE": "Daily average",
             "PROTEIN": "Average protein",
             "WEIGHT": "Weight change"
         },
-        "DISCLAIMER": "Averages use only days containing entries.",
+        "DISCLAIMER": "Averages include calendar days without entries: elapsed days for the current week and all seven days for past weeks.",
         "THIS_WEEK": "This week",
         "LAST_WEEK": "Last week",
         "CALORIES": "Avg daily calories",
@@ -6510,6 +6546,7 @@
             "TARGET_VALUE": "Target value",
             "QUICK_SELECT": "Quick select",
             "BODY_TITLE": "Body measurements",
+            "BODY_RANGE": "Enter a value from 0 to {{max}} {{unit}}. Use 0 to clear the target.",
             "BODY_HINT": "Set the body targets you want to track.",
             "CYCLING_HINT": "Use different calorie targets for individual days of the week.",
             "CYCLING_ENABLED_HINT": "Set the calorie target for each day of the week.",
@@ -6682,6 +6719,9 @@
         "STATUS_LOADING": "Loading subscription details...",
         "ERROR_TITLE": "Billing is temporarily unavailable",
         "ERROR_GENERIC": "We couldn't load billing details right now. Please try again.",
+        "ERROR_CHECKOUT": "We couldn't start checkout. Please try again or contact support.",
+        "ERROR_TRIAL": "We couldn't activate your Premium trial. Please try again.",
+        "ERROR_PORTAL": "We couldn't open subscription management. Please try again or contact support.",
         "RETRY_ACTION": "Try again",
         "BANNERS": {
             "CHECKOUT_SUCCESS_TITLE": "Payment received",
@@ -6745,7 +6785,7 @@
             "ITEM_6": "AI-powered summaries plus dietologist collaboration tools"
         },
         "SUPPORT": {
-            "TEXT": "If checkout or billing management does not open correctly, contact"
+            "TEXT": "If the payment page or subscription management does not open, contact"
         },
         "TOUR": {
             "START_TOUR": "Show Premium tour",
@@ -6765,6 +6805,10 @@
         "TITLE": "Nutrition Academy",
         "SUBTITLE": "Learn about nutrition science, one lesson at a time",
         "LOADING": "Loading lessons...",
+        "LOAD_ERROR": "Could not load lessons. Please try again.",
+        "DETAIL_LOAD_ERROR": "Could not load this lesson. Please try again.",
+        "NOT_FOUND": "This lesson was not found. Return to the Academy to choose another lesson.",
+        "MARK_READ_ERROR": "Could not mark this lesson as read. Please try again.",
         "FILTER_ALL": "All",
         "START_LEARNING": "Start learning",
         "START": "Start",
@@ -6780,9 +6824,9 @@
         "RECOMMENDED": "Recommended for you",
         "OPEN_ARTICLE": "Open article",
         "ALL_LESSONS": "All lessons",
-        "MATERIALS": "materials",
+        "MATERIALS": "Materials",
         "STATUS_COMPLETED": "Completed",
-        "EMPTY": "No lessons available yet.",
+        "EMPTY": "No lessons found. Try changing your search or filters.",
         "COMPLETED": "completed",
         "BACK": "Back to lessons",
         "MARK_READ": "Mark as read",
@@ -6834,6 +6878,14 @@
         "EMPTY": "No meal plans found.",
         "DAYS": "{{ count }} days",
         "RECIPES": "{{ count }} recipes",
+        "DAYS_ONE": "{{ count }} day",
+        "DAYS_FEW": "{{ count }} days",
+        "DAYS_MANY": "{{ count }} days",
+        "DAYS_OTHER": "{{ count }} days",
+        "RECIPES_ONE": "{{ count }} recipe",
+        "RECIPES_FEW": "{{ count }} recipes",
+        "RECIPES_MANY": "{{ count }} recipes",
+        "RECIPES_OTHER": "{{ count }} recipes",
         "CURATED": "Curated",
         "BACK": "Back to plans",
         "ADOPT": "Add to my plans",
@@ -6880,6 +6932,12 @@
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this plan."
         },
         "EMPTY_FILTERED": "No plans match this diet type.",
+        "ERROR_LOAD": "Could not load meal plans. Please try again.",
+        "ERROR_ADOPT": "Could not add this plan to your plans. Please try again.",
+        "ACTION_PENDING": "Please wait for the current action to finish.",
+        "ERROR_SHOPPING_LIST": "Could not create the shopping list. Please try again.",
+        "RETRY": "Try again",
+        "DETAIL_UNAVAILABLE": "This meal plan is unavailable or could not be loaded. Return to the list and try again.",
         "RESET_FILTER": "Show all plans"
     },
     "TDEE_CARD": {
@@ -7081,9 +7139,9 @@
             "DISCONNECT_ERROR": "Failed to disconnect client.",
             "METRICS": {
                 "CALORIES": "Calories in period",
-                "PROTEIN": "Protein",
-                "FATS": "Fats",
-                "CARBS": "Carbs",
+                "PROTEIN": "Protein, average per calendar day",
+                "FATS": "Fat, average per calendar day",
+                "CARBS": "Carbs, average per calendar day",
                 "WEIGHT": "Latest weight",
                 "WAIST": "Latest waist",
                 "HYDRATION": "Water in period",
@@ -7181,6 +7239,7 @@
         "TITLE": "Recommendation templates",
         "EMPTY": "No templates yet.",
         "NAME": "Template name",
+        "NAME_TOO_LONG": "Use no more than 120 characters for the template name.",
         "SAVE": "Save current text as template",
         "CREATED": "Template saved.",
         "SAVE_ERROR": "Failed to save the template.",
@@ -7194,9 +7253,9 @@
         "TEXT": "Recommendation",
         "SEND": "Review and send to {{ count }}",
         "CONFIRM_TITLE": "Send bulk recommendation?",
-        "CONFIRM_MESSAGE": "A separate recommendation will be sent to {{ count }} clients.",
+        "CONFIRM_MESSAGE": "Each selected client will receive a separate recommendation. Number of recipients: {{ count }}.",
         "CONFIRM": "Send",
-        "SUCCESS": "Recommendation sent to {{ count }} clients.",
+        "SUCCESS": "Recommendation sent. Number of recipients: {{ count }}.",
         "PARTIAL_ERROR": "Sent with partial results: {{ failed }} of {{ total }} failed.",
         "ERROR": "Failed to send the recommendation. Retry is safe."
     },
@@ -7230,6 +7289,7 @@
         "TITLE": "Needs attention",
         "DESCRIPTION": "Objective signals based only on data each client currently shares. Sparse data is never treated as a negative health conclusion.",
         "SETTINGS": "Signal settings",
+        "INVALID_SETTINGS": "Enter a whole number of days from 1 to 30, calorie deviation from 5 to 100%, and weight change from 0.5 to 20%.",
         "INACTIVITY_DAYS": "Diary inactivity, days",
         "CALORIE_DEVIATION": "Calorie deviation, %",
         "WEIGHT_CHANGE": "Weight change, %",

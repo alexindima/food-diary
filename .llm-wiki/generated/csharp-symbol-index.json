@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4310,
-    "symbols": 4241,
+    "sourceFiles": 4316,
+    "symbols": 4247,
     "interfaceImplementationLinks": 192,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2215,
+      "class": 2218,
       "enum": 65,
       "interface": 403,
-      "record": 1438,
-      "record struct": 120
+      "record": 1440,
+      "record struct": 121
     },
     "roles": {
       "Command": 224,
       "CommandHandler": 219,
-      "Configuration": 96,
+      "Configuration": 97,
       "Controller": 108,
-      "Entity": 99,
+      "Entity": 100,
       "Event": 19,
       "Factory": 14,
       "Handler": 7,
@@ -32,17 +32,17 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1740,
+      "Other": 1742,
       "Query": 297,
       "QueryHandler": 213,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 160,
-      "Response": 233,
+      "Response": 234,
       "Service": 162,
       "Validator": 233,
-      "ValueObject": 114,
+      "ValueObject": 115,
       "WriteRepository": 47
     }
   },
@@ -7580,6 +7580,13 @@
       "line": 4
     },
     {
+      "name": "CycleDayNoteReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleDayNoteReadModel.cs",
+      "line": 2
+    },
+    {
       "name": "CycleFactorReadModel",
       "kind": "record",
       "role": "Other",
@@ -7951,6 +7958,13 @@
       "line": 4
     },
     {
+      "name": "CycleDayNoteModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleDayNoteModel.cs",
+      "line": 2
+    },
+    {
       "name": "CycleFactorModel",
       "kind": "record",
       "role": "Other",
@@ -8112,6 +8126,13 @@
       "line": 6
     },
     {
+      "name": "CycleDayNote",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/CycleDayNote.cs",
+      "line": 5
+    },
+    {
       "name": "CycleFactor",
       "kind": "class",
       "role": "Entity",
@@ -8172,6 +8193,13 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleConsentId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleDayNoteId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleDayNoteId.cs",
       "line": 4
     },
     {
@@ -8259,6 +8287,13 @@
       "line": 7
     },
     {
+      "name": "CycleDayNoteConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleDayNoteConfiguration.cs",
+      "line": 7
+    },
+    {
       "name": "CycleFactorConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -8319,6 +8354,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleConsentHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleDayNoteHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs",
       "line": 2
     },
     {
@@ -11361,7 +11403,7 @@
     },
     {
       "name": "SensitiveCycleExportHttpRequest",
-      "kind": "record",
+      "kind": "class",
       "role": "Request",
       "path": "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs",
       "line": 6
@@ -18553,7 +18595,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
-      "line": 16
+      "line": 13
     },
     {
       "name": "UpdateMealCommandValidator",

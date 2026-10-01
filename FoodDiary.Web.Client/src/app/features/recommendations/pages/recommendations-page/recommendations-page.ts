@@ -57,6 +57,8 @@ export class RecommendationsPageComponent {
     protected readonly taskErrorKey = signal<string | null>(null);
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly selectedRecommendationId = signal<string | null>(null);
+    protected readonly taskActionErrorKey = signal<string | null>(null);
+    protected readonly readErrorKey = signal<string | null>(null);
     protected readonly markingReadIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly isLoading = signal(true);
     protected readonly errorKey = signal<string | null>(null);
@@ -85,6 +87,7 @@ export class RecommendationsPageComponent {
         }
 
         this.markingReadIds.update(ids => new Set(ids).add(recommendation.id));
+        this.readErrorKey.set(null);
         this.recommendationsFacade
             .markAsRead(recommendation.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -102,7 +105,7 @@ export class RecommendationsPageComponent {
                     });
                 },
                 error: () => {
-                    this.errorKey.set('RECOMMENDATIONS.MARK_READ_ERROR');
+                    this.readErrorKey.set('RECOMMENDATIONS.MARK_READ_ERROR');
                     this.markingReadIds.update(ids => {
                         const nextIds = new Set(ids);
                         nextIds.delete(recommendation.id);
@@ -127,7 +130,7 @@ export class RecommendationsPageComponent {
         }
 
         this.changingTaskIds.update(ids => new Set(ids).add(task.id));
-        this.taskErrorKey.set(null);
+        this.taskActionErrorKey.set(null);
         this.recommendationsFacade
             .changeTaskStatus(task.id, status)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -137,10 +140,18 @@ export class RecommendationsPageComponent {
                     this.removeChangingTaskId(task.id);
                 },
                 error: () => {
-                    this.taskErrorKey.set('CLIENT_TASKS.CHANGE_ERROR');
+                    this.taskActionErrorKey.set('CLIENT_TASKS.CHANGE_ERROR');
                     this.removeChangingTaskId(task.id);
                 },
             });
+    }
+
+    protected retryRecommendations(): void {
+        this.loadRecommendations();
+    }
+
+    protected retryTasks(): void {
+        this.loadTasks();
     }
 
     private loadRecommendations(): void {
@@ -165,6 +176,7 @@ export class RecommendationsPageComponent {
 
     private loadTasks(): void {
         this.tasksLoading.set(true);
+        this.taskErrorKey.set(null);
         this.recommendationsFacade
             .getMyTasks()
             .pipe(takeUntilDestroyed(this.destroyRef))

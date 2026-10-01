@@ -5,4 +5,5 @@ public sealed record CycleLogDayModel(
     DateOnly Date,
     IReadOnlyCollection<BleedingEntryModel> BleedingEntries,
     IReadOnlyCollection<CycleSymptomEntryModel> Symptoms,
-    FertilitySignalModel? FertilitySignal);
+    FertilitySignalModel? FertilitySignal,
+    string? Notes = null);

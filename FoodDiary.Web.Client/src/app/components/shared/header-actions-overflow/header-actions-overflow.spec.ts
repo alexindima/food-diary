@@ -15,7 +15,7 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
                 type="button"
                 aria-label="First action"
                 [attr.data-fd-overflow-primary]="primary() ? true : null"
-                (click)="firstClicks.set(firstClicks() + 1)"
+                (click)="recordFirstAction()"
             >
                 <span class="fd-ui-icon__glyph">edit</span>
             </button>
@@ -33,6 +33,12 @@ class TestHostComponent {
     public readonly showSecond = signal(false);
     public readonly firstClicks = signal(0);
     public readonly secondClicks = signal(0);
+    public firstActionFocus: Element | null = null;
+
+    public recordFirstAction(): void {
+        this.firstActionFocus = document.activeElement;
+        this.firstClicks.update(value => value + 1);
+    }
 }
 
 describe('HeaderActionsOverflowComponent', () => {
@@ -104,6 +110,21 @@ describe('HeaderActionsOverflowComponent', () => {
         expect(getMenuItems().map(item => item.textContent.trim())).toEqual(['deleteSecond action']);
     });
 
+    it('uses visible action text without decorative icon glyphs for compact buttons', async () => {
+        component.primary.set(true);
+        component.showSecond.set(true);
+        await settleAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const original = host.querySelector<HTMLButtonElement>('[data-fd-overflow-primary]');
+        original?.removeAttribute('aria-label');
+        original?.insertAdjacentHTML('beforeend', '<span>New list</span><span aria-hidden="true">hidden hint</span>');
+        await settleAsync();
+
+        const primary = host.querySelector<HTMLButtonElement>('.fd-header-actions-overflow__primary button');
+        expect(primary?.getAttribute('aria-label')).toBe('New list');
+        expect(primary?.querySelector('.fd-ui-icon__glyph')?.textContent).toBe('edit');
+    });
+
     it('proxies menu item clicks to the original action', async () => {
         component['showSecond'].set(true);
         await settleAsync();
@@ -117,5 +138,30 @@ describe('HeaderActionsOverflowComponent', () => {
 
         expect(component['firstClicks']()).toBe(1);
         expect(component['secondClicks']()).toBe(0);
+    });
+});
+
+describe('Header action focus handoff', () => {
+    it('focuses the stable trigger before launching a temporary menu action', async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(TestHostComponent);
+        fixture.componentInstance.showSecond.set(true);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+            '.fd-header-actions-overflow__trigger button',
+        );
+        trigger?.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const item = TestBed.inject(OverlayContainer).getContainerElement().querySelector<HTMLButtonElement>('.fd-ui-menu__item');
+        item?.focus();
+        item?.click();
+        expect(fixture.componentInstance.firstActionFocus).toBe(trigger);
+        expect(fixture.componentInstance.firstClicks()).toBe(1);
     });
 });

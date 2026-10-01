@@ -41,24 +41,23 @@
     </fd-page-header>
 
     <fd-page-body>
+        <fd-period-filter
+            class="statistics__period"
+            data-tour-id="statistics-period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeField]="customRangeForm.range"
+            [displayRange]="currentRange()"
+            [hideInactiveRange]="true"
+            [useSegmentedToggle]="true"
+            [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
+            [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
+            [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
         @if (hasLoadError()) {
             <fd-error-state (retry)="reload()" />
-        } @else {
-            <fd-period-filter
-                class="statistics__period"
-                data-tour-id="statistics-period"
-                [tabs]="rangeTabs"
-                [selectedValue]="selectedRange()"
-                [rangeField]="customRangeForm.range"
-                [displayRange]="currentRange()"
-                [hideInactiveRange]="true"
-                [useSegmentedToggle]="true"
-                [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
-                [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
-                [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                (rangeChange)="changeRange($event)"
-            />
         }
         @if (!hasLoadError() && isLoading() && !hasStatisticsResponse()) {
             <div class="statistics__skeleton-grid">

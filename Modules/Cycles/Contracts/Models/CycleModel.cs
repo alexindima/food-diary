@@ -26,4 +26,5 @@ public sealed record CycleModel(
     CycleReproductiveState ReproductiveState = CycleReproductiveState.Cycling,
     bool HideFromDashboard = false,
     IReadOnlyCollection<CycleConsentModel>? Consents = null,
-    IReadOnlyCollection<CyclePredictionRevisionModel>? PredictionRevisions = null);
+    IReadOnlyCollection<CyclePredictionRevisionModel>? PredictionRevisions = null,
+    IReadOnlyCollection<CycleDayNoteModel>? DayNotes = null);

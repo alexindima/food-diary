@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
@@ -245,6 +245,10 @@ export class RecipeListFacade {
 
     public getFavoriteRecipe(favorite: FavoriteRecipe): Observable<Recipe | null> {
         return this.recipeService.getById(favorite.recipeId);
+    }
+
+    public async getRecipeDetailAsync(recipeId: string): Promise<Recipe | null> {
+        return firstValueFrom(this.recipeService.getById(recipeId, false).pipe(catchError(() => of(null))));
     }
 
     public removeFavorite(favorite: FavoriteRecipe): Observable<void> {

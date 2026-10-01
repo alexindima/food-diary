@@ -49,22 +49,19 @@ describe('LessonService', () => {
         request.flush(page);
     });
 
-    it('returns empty list when lesson loading fails', () => {
-        service.getAll({ locale: 'en', sort: 'recommended', page: 1, pageSize: 20 }).subscribe(result => {
-            expect(result).toEqual({
-                items: [],
-                page: 1,
-                pageSize: 20,
-                totalCount: 0,
-                totalPages: 0,
-                totalLessonCount: 0,
-                readLessonCount: 0,
-                availableCategories: [],
-            });
+    it('propagates load failures instead of inventing an empty catalogue', () => {
+        let failed = false;
+        service.getAll({ locale: 'en', sort: 'recommended', page: 1, pageSize: 20 }).subscribe({
+            next: () => expect.fail('Failed loading must not return an empty catalogue'),
+            error: (error: unknown) => {
+                failed = true;
+                expect(error).toBeDefined();
+            },
         });
 
         const request = httpMock.expectOne(`${environment.apiUrls.lessons}/?locale=en&sort=recommended&page=1&limit=20`);
         request.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+        expect(failed).toBe(true);
     });
 
     it('adapts the legacy array response during a rolling deployment', () => {

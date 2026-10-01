@@ -217,9 +217,10 @@ describe('CycleTrackingFacade day saving', () => {
             type: BLEEDING_TYPE_BLEEDING,
             flow: CYCLE_FLOW_MEDIUM,
             painImpact: 5,
-            notes: 'note',
             clearNotes: false,
         });
+        expect(payload.notes).toBe('note');
+        expect(payload.clearNotes).toBe(false);
         expect(payload.symptoms).toContainEqual({ category: 0, intensity: 5, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).toContainEqual({ category: 1, intensity: 3, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).toContainEqual({ category: 3, intensity: 6, tags: [], note: null, clearNote: false });
@@ -653,6 +654,30 @@ describe('CycleTrackingFacade menstrual episodes', () => {
 });
 
 describe('CycleTrackingFacade export', () => {
+    it('shows export failures and clears feedback when retrying', () => {
+        facade.initialize();
+        exportService.exportCycle.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        facade.exportCycle();
+
+        expect(facade.exportError()).toBe('CYCLE_TRACKING.EXPORT_FAILED');
+        expect(facade.isExportingCycle()).toBe(false);
+        facade.exportCycle();
+        expect(facade.exportError()).toBeNull();
+    });
+
+    it('shows private export feedback when password verification fails', () => {
+        facade.initialize();
+        exportService.exportSensitiveCycle.mockReturnValueOnce(throwError(() => new Error('invalid password')));
+
+        facade.exportSensitiveCycle('invalid-password');
+
+        expect(facade.exportError()).toBe('CYCLE_TRACKING.SENSITIVE_EXPORT_FAILED');
+        expect(facade.isExportingCycle()).toBe(false);
+        facade.exportSensitiveCycle('correct-password');
+        expect(facade.exportError()).toBeNull();
+    });
+
     it('exports the current cycle from tracking start to today', () => {
         facade.initialize();
 
@@ -835,4 +860,65 @@ it('cancels initial loading when the facade scope is destroyed and ignores a lat
     expect(cancelled).toHaveBeenCalledOnce();
     expect(facade.isLoading()).toBe(false);
     expect(facade.cycle()).toBeNull();
+});
+
+describe('Cycle day notes without clinical entries', () => {
+    it('sends a notes-only day, restores it for editing and explicitly clears it', async () => {
+        cyclesService.upsertDay.mockReturnValue(
+            of({
+                cycleProfileId: 'cycle-1',
+                date: '2026-04-02',
+                bleedingEntries: [],
+                symptoms: [],
+                fertilitySignal: null,
+                notes: 'Quiet day',
+            }),
+        );
+        facade.initialize();
+        facade.dayModel.update(value => ({ ...value, date: '2026-04-02', notes: '  Quiet day  ' }));
+        facade.saveDay();
+        await vi.waitFor(() => {
+            expect(facade.daySaveRevision()).toBe(1);
+        });
+        expect(cyclesService.upsertDay).toHaveBeenCalledWith(
+            'cycle-1',
+            expect.objectContaining({
+                notes: 'Quiet day',
+                clearNotes: false,
+                bleeding: null,
+                symptoms: [],
+                fertilitySignal: null,
+            }),
+        );
+        facade.editDay('2026-04-02');
+        expect(facade.dayModel().notes).toBe('Quiet day');
+        cyclesService.upsertDay.mockReturnValue(
+            of({
+                cycleProfileId: 'cycle-1',
+                date: '2026-04-02',
+                bleedingEntries: [],
+                symptoms: [],
+                fertilitySignal: null,
+                notes: null,
+            }),
+        );
+        facade.dayModel.update(value => ({ ...value, notes: '' }));
+        facade.saveDay();
+        await vi.waitFor(() => {
+            expect(facade.daySaveRevision()).toBe(2);
+        });
+        expect(cyclesService.upsertDay).toHaveBeenLastCalledWith(
+            'cycle-1',
+            expect.objectContaining({ notes: undefined, clearNotes: true }),
+        );
+        expect(facade.cycle()?.dayNotes).toEqual([]);
+    });
+    it('loads a persisted note and removes it when clearing the day', () => {
+        cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), dayNotes: [{ date: '2026-04-02', notes: 'Persisted' }] }));
+        facade.initialize();
+        facade.editDay('2026-04-02');
+        expect(facade.dayModel().notes).toBe('Persisted');
+        facade.clearDay('2026-04-02');
+        expect(facade.cycle()?.dayNotes).toEqual([]);
+    });
 });

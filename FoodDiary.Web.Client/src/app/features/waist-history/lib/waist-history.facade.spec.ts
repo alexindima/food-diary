@@ -70,6 +70,20 @@ beforeEach(() => {
     measurements.setSystem('metric');
 });
 
+describe('WaistHistoryFacade edit precision', () => {
+    it.each(['metric', 'imperial'] as const)('preserves stored circumference in an unchanged %s edit', system => {
+        const preciseWaist = 82.55;
+        measurements.setSystem(system);
+        const entry = { id: 'precise', userId: 'u', date: '2026-04-02', circumferenceCm: preciseWaist };
+        facade.startEdit(entry);
+        expect(Number(facade.formModel().circumference)).toBe(
+            system === 'metric' ? preciseWaist : measurements.displayLength(preciseWaist, 2),
+        );
+        facade.submit();
+        expect(waistEntriesService.update).toHaveBeenCalledWith('precise', expect.objectContaining({ circumferenceCm: preciseWaist }));
+    });
+});
+
 describe('WaistHistoryFacade entry history pagination', () => {
     it.each([undefined, '2026-03-29'])('loads entry history only on demand with date cursor %s', dateTo => {
         facade.initialize();
@@ -97,6 +111,43 @@ describe('WaistHistoryFacade entry history pagination', () => {
 
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledExactlyOnceWith(failure);
+    });
+});
+
+describe('WaistHistoryFacade delete failure', () => {
+    it('retains the entry, suppresses pending duplicates and allows retry', () => {
+        const entry = { id: 'delete-test', userId: 'u', date: '2026-04-02', circumferenceCm: 82 };
+        facade.entries.set([entry]);
+        const request = new Subject<void>();
+        waistEntriesService.remove.mockReturnValue(request);
+        facade.deleteEntry(entry);
+        facade.deleteEntry(entry);
+        expect(waistEntriesService.remove).toHaveBeenCalledTimes(1);
+        request.error(new Error('Unavailable'));
+        expect(facade.deleteError()).toBe('WAIST_HISTORY.ERROR_DELETE_ENTRY');
+        expect(facade.entries()).toEqual([entry]);
+        expect(facade.isSaving()).toBe(false);
+        waistEntriesService.remove.mockReturnValue(of(undefined));
+        facade.deleteEntry(entry);
+        expect(waistEntriesService.remove).toHaveBeenCalledTimes(2);
+        expect(facade.deleteError()).toBeNull();
+    });
+});
+
+describe('WaistHistoryFacade goal failures', () => {
+    it('preserves a goal draft on failed save and reports failed cancellation', () => {
+        const original = facade.waistGoal();
+        facade.desiredWaistModel.set({ circumference: '80.25' });
+        userService.updateWaistGoal.mockReturnValue(throwError(() => new Error('Unavailable')));
+        facade.saveDesiredWaist();
+        expect(facade.goalActionError()).toBe('WAIST_HISTORY.ERROR_SAVE_GOAL');
+        expect(facade.desiredWaistModel().circumference).toBe('80.25');
+        expect(facade.waistGoal()).toEqual(original);
+        expect(facade.isDesiredWaistSaving()).toBe(false);
+        facade.cancelWaistGoal();
+        expect(facade.goalActionError()).toBe('WAIST_HISTORY.ERROR_CANCEL_GOAL');
+        expect(facade.waistGoal()).toEqual(original);
+        expect(facade.desiredWaistSaveVersion()).toBe(0);
     });
 });
 
@@ -354,7 +405,7 @@ describe('Facade boundary regressions', () => {
         expect(facade.entrySaveVersion()).toBe(0);
         pending.error(new Error('offline'));
         await vi.waitFor(() => {
-            expect(facade.entryError()).toBe('FORM_ERRORS.UNKNOWN');
+            expect(facade.entryError()).toBe('WAIST_HISTORY.ERROR_SAVE_ENTRY');
         });
         expect(facade.isSaving()).toBe(false);
         expect(facade.isEditing()).toBe(true);
@@ -396,8 +447,8 @@ describe('Facade editing and goal boundaries', () => {
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();
-        expect(Number(facade.formModel().circumference)).toBe(measurements.displayLength(entry.circumferenceCm));
-        expect(Number(facade.desiredWaistModel().circumference)).toBe(measurements.displayLength(facade.desiredWaistCm() ?? 0));
+        expect(Number(facade.formModel().circumference)).toBe(measurements.displayLength(entry.circumferenceCm, 2));
+        expect(Number(facade.desiredWaistModel().circumference)).toBe(measurements.displayLength(facade.desiredWaistCm() ?? 0, 2));
         measurements.setSystem('metric');
         TestBed.tick();
         expect(Number(facade.formModel().circumference)).toBe(entry.circumferenceCm);
@@ -536,4 +587,57 @@ it('forwards history cursors only when requested by the dialog', () => {
     expect(userService.getWaistGoalHistoryPage).not.toHaveBeenCalled();
     facade.getGoalHistoryPage('next').subscribe();
     expect(userService.getWaistGoalHistoryPage).toHaveBeenCalledWith('next');
+});
+
+describe('Goal validation feedback', () => {
+    it.each(['0', '-1', 'abc', '301'])('exposes invalid target %s and avoids saving it', value => {
+        facade.desiredWaistModel.set({ circumference: value });
+        expect(facade.desiredWaistForm.circumference().invalid()).toBe(true);
+        expect(
+            facade.desiredWaistForm
+                .circumference()
+                .errors()
+                .some(error => error.kind === 'goalRange'),
+        ).toBe(true);
+        facade.saveDesiredWaist();
+        expect(userService.updateWaistGoal).not.toHaveBeenCalled();
+        facade.desiredWaistModel.set({ circumference: '72,5' });
+        expect(facade.desiredWaistForm.circumference().invalid()).toBe(false);
+    });
+});
+
+describe('WaistHistoryFacade loading recovery', () => {
+    it('recovers initial failure and suppresses duplicate pending retries', () => {
+        waistEntriesService.getPageSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+        facade.initialize();
+        TestBed.tick();
+        expect(facade.pageLoadError()).toBe(true);
+        expect(facade.isLoading()).toBe(false);
+        const pending = new Subject<never>();
+        waistEntriesService.getPageSummary.mockReturnValueOnce(pending);
+        facade.retryPageLoad();
+        facade.retryPageLoad();
+        expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
+        expect(facade.pageLoadError()).toBe(false);
+        pending.error(new Error('Still unavailable'));
+        expect(facade.pageLoadError()).toBe(true);
+        facade.retryPageLoad();
+        expect(facade.pageLoadError()).toBe(false);
+        expect(facade.isLoading()).toBe(false);
+    });
+    it('retries the selected chart period and retains measurements on failure', () => {
+        facade.initialize();
+        TestBed.tick();
+        const entries = facade.entries();
+        waistEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+        facade.changeRange('week');
+        TestBed.tick();
+        expect(facade.summaryLoadError()).toBe(true);
+        expect(facade.entries()).toEqual(entries);
+        const filters: unknown = waistEntriesService.getSummary.mock.calls.at(-1)?.[0];
+        facade.retrySummaryLoad();
+        expect(waistEntriesService.getSummary).toHaveBeenLastCalledWith(filters);
+        expect(facade.summaryLoadError()).toBe(false);
+        expect(facade.selectedRange()).toBe('week');
+    });
 });

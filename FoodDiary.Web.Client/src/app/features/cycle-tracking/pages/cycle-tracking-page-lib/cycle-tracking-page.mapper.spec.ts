@@ -484,3 +484,17 @@ describe('cycle period metadata mapper', () => {
         ]);
     });
 });
+
+describe('Notes-only day history', () => {
+    it('shows the note without fabricating symptoms or bleeding', () => {
+        const items = buildCycleDayItems([], [], [], {
+            locale: 'ru',
+            menstrualEpisodes: [],
+            dayNotes: [{ date: '2026-04-02', notes: 'Quiet day' }],
+        });
+        expect(items).toHaveLength(1);
+        expect(items[0].notes).toBe('Quiet day');
+        expect(items[0].symptoms).toEqual([]);
+        expect(items[0].bleedingEntries).toEqual([]);
+    });
+});

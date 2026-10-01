@@ -4,6 +4,7 @@
         [label]="startLabel()"
         [size]="size()"
         [placeholder]="startPlaceholder()"
+        [latestDate]="rangeModel().end ?? undefined"
         (blur)="touchRange()"
     />
     <span class="fd-ui-date-range-input__divider" aria-hidden="true">&mdash;</span>
@@ -12,6 +13,7 @@
         [label]="endLabel()"
         [size]="size()"
         [placeholder]="endPlaceholder()"
+        [earliestDate]="rangeModel().start ?? undefined"
         (blur)="touchRange()"
     />
 </div>

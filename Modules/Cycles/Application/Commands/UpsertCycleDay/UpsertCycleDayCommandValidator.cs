@@ -5,6 +5,15 @@ namespace FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleDay;
 
 public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCommand> {
     public UpsertCycleDayCommandValidator() {
+        RuleFor(x => x.Notes)
+            .Must(value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Notes must be at most {CycleProfile.MaxNotesLength} characters.");
+        RuleFor(x => x)
+            .Must(value => !(value.ClearNotes && !string.IsNullOrWhiteSpace(value.Notes)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Notes cannot be provided when ClearNotes is true.");
+
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

@@ -33,7 +33,7 @@ public sealed class GetStatisticsQueryHandler(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        if (!TemporalRangePolicy.IsPeriodWithinLimit(request.DateFrom, request.DateTo)) {
+        if (!TemporalRangePolicy.IsInstantPeriodWithinLimit(request.DateFrom, request.DateTo)) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(
                 Errors.Validation.Invalid(
                     nameof(request.DateTo),

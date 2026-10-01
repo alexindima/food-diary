@@ -1,9 +1,11 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { map } from 'rxjs';
 
 import { LocalizedDatePipe } from '../../../../../shared/i18n/localized-date.pipe';
 import {
@@ -45,6 +47,13 @@ const RECENT_ACHIEVEMENT_LIMIT = 2;
 })
 export class GamificationHabitPathComponent {
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly translate = inject(TranslateService);
+    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: this.translate.getCurrentLang() ?? 'en',
+    });
+    protected readonly streakDayLabelKey = computed(
+        () => `GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW_${new Intl.PluralRules(this.language()).select(this.currentStreak()).toUpperCase()}`,
+    );
 
     public readonly currentStreak = input.required<number>();
     public readonly longestStreak = input.required<number>();

@@ -13,6 +13,7 @@ export class GamificationFacade {
     });
 
     public readonly isLoading = computed(() => this.dataResource.isLoading());
+    public readonly hasError = computed(() => this.dataResource.error() !== undefined);
     public readonly data = computed(() => (this.dataResource.hasValue() ? this.dataResource.value() : null));
 
     public readonly currentStreak = computed(() => this.data()?.currentStreak ?? 0);

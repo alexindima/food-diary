@@ -37,7 +37,8 @@ public static class CycleMappings {
                 consent.Purpose,
                 consent.GrantedAtUtc,
                 consent.RevokedAtUtc)).ToList(),
-            (profile.PredictionRevisions ?? []).Select(ToModel).ToList());
+            (profile.PredictionRevisions ?? []).Select(ToModel).ToList(),
+            (profile.DayNotes ?? []).Select(note => new CycleDayNoteModel(note.Id, note.CycleProfileId, note.Date, note.Notes)).ToList());
 
     public static CycleModel ToModel(this CycleProfile profile, CyclePredictionsModel? predictions = null, DateOnly? currentDate = null) =>
         new(
@@ -86,7 +87,8 @@ public static class CycleMappings {
                     revision.HistoricalCoveragePercent,
                     revision.MeanAbsoluteErrorDays,
                     revision.ReasonCodes.Split('|', StringSplitOptions.RemoveEmptyEntries),
-                    revision.AlgorithmVersion)).ToList());
+                    revision.AlgorithmVersion)).ToList(),
+            profile.DayNotes.Select(note => new CycleDayNoteModel(note.Id.Value, note.CycleProfileId.Value, note.Date, note.Notes)).ToList());
 
     private static CyclePredictionRevisionModel ToModel(CyclePredictionRevisionReadModel revision) =>
         new(
@@ -241,6 +243,7 @@ public static class CycleMappings {
                     .Where(signal => signal.Date == date)
                     .Select(signal => signal.ToModel())
                     .FirstOrDefault()
-                : null);
+                : null,
+            profile.DayNotes.FirstOrDefault(note => note.Date == date)?.Notes);
     }
 }

@@ -13,7 +13,7 @@ internal sealed partial class DiaryPdfGenerator {
                 PeriodSummaryTitle: "Period summary",
                 TotalCaloriesTitle: "Total calories",
                 KcalUnit: "kcal",
-                AveragePerDayTitle: "Average per day",
+                AveragePerDayTitle: "Average per calendar day, including days without entries",
                 TotalForPeriodTitle: "Total for period",
                 ProteinsTitle: "Proteins",
                 FatsTitle: "Fats",

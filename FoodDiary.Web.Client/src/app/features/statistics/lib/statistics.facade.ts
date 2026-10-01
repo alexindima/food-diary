@@ -56,7 +56,7 @@ export class StatisticsFacade {
     public readonly isLoading = this.statisticsRequest.isLoading;
     public readonly isBodyLoading = this.statisticsRequest.isLoading;
     public readonly hasStatisticsResponse = this.statisticsRequest.hasData;
-    public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null && !this.statisticsRequest.hasData());
+    public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
     public readonly hasBodyLoadError = this.hasLoadError;
     public readonly exportingFormat = signal<ExportFormat | null>(null);
     public readonly chartStatisticsData = computed(() => this.statisticsRequest.data()?.statistics ?? null);

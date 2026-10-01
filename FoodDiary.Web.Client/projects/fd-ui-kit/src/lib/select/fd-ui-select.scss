@@ -153,6 +153,8 @@
 
 .fd-ui-select__menu {
     width: 100%;
+    max-height: min(320px, 60vh);
+    overflow-y: auto;
     min-width: 100%;
     box-sizing: border-box;
     display: flex;
@@ -170,6 +172,7 @@
 
 .fd-ui-select__menu-item {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     width: 100%;
     border: none;

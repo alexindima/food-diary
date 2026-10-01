@@ -70,7 +70,7 @@ export class WeightEntriesService extends ApiService {
         };
 
         return this.get<WeightEntrySummaryPoint[]>('summary', params).pipe(
-            catchError((error: unknown) => fallbackApiError('Weight summary fetch error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Weight summary fetch error', error)),
         );
     }
 

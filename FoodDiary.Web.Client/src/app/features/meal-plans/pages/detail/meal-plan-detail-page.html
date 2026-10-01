@@ -24,11 +24,23 @@
             <fd-meal-plan-detail-header
                 data-tour-id="meal-plan-detail-header"
                 [plan]="plan.header"
+                [pendingAction]="facade.pendingAction()"
                 (adoptPlan)="adopt()"
                 (generateShoppingList)="generateShoppingList()"
             />
 
+            @if (facade.actionErrorKey(); as errorKey) {
+                <p role="alert">{{ errorKey | translate }}</p>
+            }
+
             <fd-meal-plan-detail-days data-tour-id="meal-plan-detail-days" [days]="plan.days" />
+        } @else {
+            <div class="fd-stack fd-align-center fd-gap-sm">
+                <p role="status">{{ 'MEAL_PLANS.DETAIL_UNAVAILABLE' | translate }}</p>
+                <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">
+                    {{ 'MEAL_PLANS.BACK' | translate }}
+                </fd-ui-button>
+            </div>
         }
     </fd-page-body>
 </div>

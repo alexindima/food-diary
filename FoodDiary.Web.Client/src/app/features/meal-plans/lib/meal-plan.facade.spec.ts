@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -72,6 +72,20 @@ describe('MealPlanFacade', () => {
         expect(onSuccess).toHaveBeenCalledOnce();
     });
 
+    it('recovers from catalog failure while preserving the diet filter', async () => {
+        mealPlanService.getPage.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+        facade.loadPlans('Keto');
+        await waitForAsync(() => facade.hasLoadError());
+        expect(facade.hasLoadError()).toBe(true);
+        expect(facade.plans()).toEqual([]);
+
+        facade.retryPlans();
+        await waitForAsync(() => facade.plans().length > 0);
+        expect(facade.hasLoadError()).toBe(false);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto');
+        expect(facade.plans()).toEqual([createSummary()]);
+    });
+
     it('runs success callback after generating a shopping list', () => {
         const onSuccess = vi.fn();
 
@@ -79,6 +93,28 @@ describe('MealPlanFacade', () => {
 
         expect(mealPlanService.generateShoppingList).toHaveBeenCalledWith('plan-1');
         expect(onSuccess).toHaveBeenCalledOnce();
+    });
+
+    it('blocks repeated actions until shopping creation fails and permits retry', () => {
+        const response = new Subject<ShoppingList>();
+        mealPlanService.generateShoppingList.mockReturnValueOnce(response);
+        const onSuccess = vi.fn();
+        facade.generateShoppingList('plan-1', onSuccess);
+        facade.generateShoppingList('plan-1', onSuccess);
+        facade.adopt('plan-1', onSuccess);
+        expect(mealPlanService.generateShoppingList).toHaveBeenCalledOnce();
+        expect(mealPlanService.adopt).not.toHaveBeenCalled();
+        expect(facade.pendingAction()).toBe('shopping');
+
+        response.error(new Error('Unavailable'));
+        expect(facade.pendingAction()).toBeNull();
+        expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_SHOPPING_LIST');
+        expect(onSuccess).not.toHaveBeenCalled();
+
+        facade.generateShoppingList('plan-1', onSuccess);
+        expect(facade.actionErrorKey()).toBeNull();
+        expect(onSuccess).toHaveBeenCalledOnce();
+        expect(facade.pendingAction()).toBeNull();
     });
 });
 

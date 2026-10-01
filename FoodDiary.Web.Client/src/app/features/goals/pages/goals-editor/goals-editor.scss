@@ -260,6 +260,10 @@
     gap: var(--fd-space-md);
     padding-top: var(--fd-space-sm);
 }
+.goals-editor-body-row fd-ui-form-error {
+    grid-column: 1 / -1;
+}
+
 .goals-editor-body-row label {
     color: var(--fd-color-text);
 }

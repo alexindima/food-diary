@@ -4,7 +4,7 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -104,6 +104,47 @@ describe('UserManageComponent dietologist profile sharing', () => {
         fixture.detectChanges();
 
         expect(component['dietologistFormModel']().shareProfile).toBe(false);
+    });
+});
+
+describe('UserManageComponent dietologist permission failure recovery', () => {
+    it('keeps the save error visible after restoring failed permission changes', async () => {
+        await createComponentAsync({
+            invitationId: 'inv-1',
+            status: 'Accepted',
+            email: 'diet@example.com',
+            firstName: null,
+            lastName: null,
+            dietologistUserId: 'diet-1',
+            permissions: {
+                shareProfile: true,
+                shareMeals: true,
+                shareStatistics: true,
+                shareWeight: true,
+                shareWaist: true,
+                shareGoals: true,
+                shareHydration: true,
+                shareFasting: true,
+            },
+            createdAtUtc: '2026-04-15T00:00:00Z',
+            expiresAtUtc: '2026-04-22T00:00:00Z',
+            acceptedAtUtc: '2026-04-15T01:00:00Z',
+        });
+        dietologistService.updatePermissions.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+
+        component['updateDietologistPermission']('shareMeals', false);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(component['dietologistFormModel']().shareMeals).toBe(true);
+        expect(component['dietologistError']()).toBe('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
+
+        component['updateDietologistPermission']('shareMeals', false);
+        fixture.detectChanges();
+        expect(component['dietologistError']()).toBeNull();
+        expect(component['dietologistFormModel']().shareMeals).toBe(false);
     });
 });
 

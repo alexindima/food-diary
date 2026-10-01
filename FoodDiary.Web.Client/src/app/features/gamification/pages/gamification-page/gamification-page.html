@@ -15,6 +15,9 @@
     <fd-page-body>
         @if (isLoading()) {
             <div class="gamification__loader fd-ui-body-sm">{{ 'GAMIFICATION.LOADING' | translate }}</div>
+        } @else if (hasError()) {
+            <p role="alert">{{ 'GAMIFICATION.LOAD_ERROR' | translate }}</p>
+            <fd-ui-button (click)="retryLoad()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
         } @else {
             <fd-gamification-habit-path
                 [currentStreak]="currentStreak()"

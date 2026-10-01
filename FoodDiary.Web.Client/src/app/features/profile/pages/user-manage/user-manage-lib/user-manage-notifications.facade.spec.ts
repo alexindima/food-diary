@@ -19,6 +19,8 @@ const FOLLOW_UP_REMINDER_HOURS = 14;
 const MANUAL_FIRST_REMINDER_HOURS = 5;
 const MANUAL_FOLLOW_UP_REMINDER_HOURS = 13;
 const TEST_NOTIFICATION_DELAY_SECONDS = 20;
+const FRACTIONAL_REMINDER_HOURS = 12.5;
+const EXCESSIVE_REMINDER_HOURS = 169;
 
 describe('UserManageNotificationsFacade sync', () => {
     it('syncs reminder state from user and tracks notifications view once', () => {
@@ -132,6 +134,34 @@ describe('UserManageNotificationsFacade connected devices', () => {
 });
 
 describe('UserManageNotificationsFacade fasting reminders', () => {
+    it.each(['', ' ', '12.5', FRACTIONAL_REMINDER_HOURS, 0, -1, EXCESSIVE_REMINDER_HOURS, '12 hours'])(
+        'rejects invalid visible reminder input %s',
+        async value => {
+            const { facade, toast } = setup();
+            const service = TestBed.inject(UserManageNotificationsFacade);
+            service.onFastingReminderHoursChange(value, 'first');
+            await service.saveFastingReminderHoursAsync();
+            expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+            expect(toast.error).toHaveBeenCalledWith('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_INPUT_ERROR');
+        },
+    );
+
+    it('allows saving after both invalid fields are corrected', async () => {
+        const { facade } = setup();
+        const service = TestBed.inject(UserManageNotificationsFacade);
+        service.onFastingReminderHoursChange('', 'first');
+        service.onFastingReminderHoursChange('12.5', 'followUp');
+        service.onFastingReminderHoursChange(FIRST_REMINDER_HOURS, 'first');
+        await service.saveFastingReminderHoursAsync();
+        expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+        service.onFastingReminderHoursChange(FOLLOW_UP_REMINDER_HOURS, 'followUp');
+        await service.saveFastingReminderHoursAsync();
+        expect(facade.updateNotificationPreferencesAsync).toHaveBeenCalledWith({
+            fastingCheckInReminderHours: FIRST_REMINDER_HOURS,
+            fastingCheckInFollowUpReminderHours: FOLLOW_UP_REMINDER_HOURS,
+        });
+    });
+
     it('rejects invalid fasting reminder order before saving preferences', async () => {
         const { facade, toast } = setup();
         const service = TestBed.inject(UserManageNotificationsFacade);

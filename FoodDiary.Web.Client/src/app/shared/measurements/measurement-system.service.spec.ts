@@ -13,6 +13,9 @@ import {
     poundsToKilograms,
 } from './measurement-system.service';
 
+const MAX_WEIGHT_KG = 500;
+const MAX_WAIST_CM = 300;
+const BODY_TARGET_PRECISION = 2;
 const WEIGHT_KG = 72.5;
 const WEIGHT_LB = 159.8;
 const ROUND_TRIP_WEIGHT_KG = 72.48;
@@ -25,6 +28,11 @@ const HEIGHT_IN = 11;
 const ROUND_TRIP_HEIGHT_CM = 180.3;
 
 describe('measurement conversions', () => {
+    it('preserves canonical body-goal limits at two decimal display precision', () => {
+        expect(poundsToKilograms(kilogramsToPounds(MAX_WEIGHT_KG, BODY_TARGET_PRECISION))).toBe(MAX_WEIGHT_KG);
+        expect(inchesToCentimeters(centimetersToInches(MAX_WAIST_CM, BODY_TARGET_PRECISION))).toBe(MAX_WAIST_CM);
+    });
+
     it('converts kilograms and pounds at the UI boundary', () => {
         expect(kilogramsToPounds(WEIGHT_KG)).toBe(WEIGHT_LB);
         expect(poundsToKilograms(WEIGHT_LB)).toBeCloseTo(ROUND_TRIP_WEIGHT_KG, 2);

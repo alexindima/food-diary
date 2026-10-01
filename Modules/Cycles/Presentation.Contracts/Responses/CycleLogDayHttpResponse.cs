@@ -5,4 +5,5 @@ public sealed record CycleLogDayHttpResponse(
     DateTime Date,
     IReadOnlyCollection<BleedingEntryHttpResponse> BleedingEntries,
     IReadOnlyCollection<CycleSymptomEntryHttpResponse> Symptoms,
-    FertilitySignalHttpResponse? FertilitySignal);
+    FertilitySignalHttpResponse? FertilitySignal,
+    string? Notes = null);

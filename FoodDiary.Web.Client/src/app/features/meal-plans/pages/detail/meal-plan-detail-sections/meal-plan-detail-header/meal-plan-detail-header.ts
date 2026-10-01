@@ -13,6 +13,7 @@ import type { MealPlanDetailHeaderViewModel } from '../../../../lib/meal-plan-vi
 })
 export class MealPlanDetailHeaderComponent {
     public readonly plan = input.required<MealPlanDetailHeaderViewModel>();
+    public readonly pendingAction = input<'adopt' | 'shopping' | null>(null);
     public readonly adoptPlan = output();
     public readonly generateShoppingList = output();
 }

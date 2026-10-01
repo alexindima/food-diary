@@ -45,9 +45,15 @@ export class ShoppingListBrowserComponent {
             .trim()
             .toLocaleLowerCase(),
     );
-    protected readonly matches = this.browser.lists;
-    protected readonly completed = computed(() => this.matches().filter(list => list.completed === true));
-    protected readonly visible = computed(() => this.matches().filter(list => this.query().length > 0 || list.completed !== true));
+    protected readonly matches = computed(() => {
+        const current = new Map(this.lists().map(list => [list.id, list]));
+        return this.browser.lists().map(list => {
+            const latest = current.get(list.id) ?? list;
+            return { ...latest, completed: latest.itemsCount > 0 && latest.remainingCount === 0 };
+        });
+    });
+    protected readonly completed = computed(() => this.matches().filter(list => list.completed));
+    protected readonly visible = computed(() => this.matches().filter(list => this.query().length > 0 || !list.completed));
     protected status(list: ShoppingListSummary): string {
         if (list.completed === true) {
             return this.translate.instant('SHOPPING_LIST.DONE_STATUS');

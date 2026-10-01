@@ -159,6 +159,19 @@ describe('StatisticsFacade export', () => {
 });
 
 describe('StatisticsFacade errors', () => {
+    it('shows an error instead of presenting previous data as the newly selected period', () => {
+        facade.initialize();
+        TestBed.tick();
+        expect(facade.hasStatisticsResponse()).toBe(true);
+        statisticsService.getSummary.mockReturnValueOnce(throwError(() => new Error('load failed')));
+
+        facade.changeRange('year');
+        TestBed.tick();
+
+        expect(facade.selectedRange()).toBe('year');
+        expect(facade.hasLoadError()).toBe(true);
+    });
+
     it('marks load error when aggregated statistics request fails', () => {
         statisticsService.getSummary.mockReturnValueOnce(throwError(() => new Error('load failed')));
 

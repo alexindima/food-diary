@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
-    "componentsWithoutDirectSpecs": 135,
+    "componentsWithoutDirectSpecs": 133,
     "criticalSymbolsWithoutTestReferences": 44,
     "explicitDebtMarkers": 12
   },
@@ -3055,16 +3055,6 @@
       "specPath": null
     },
     {
-      "class": "FdTourHostComponent",
-      "selector": "fd-tour-host",
-      "feature": "fd-tour",
-      "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "DesignTokensDocsComponent",
       "selector": "fd-design-tokens-docs",
       "feature": "fd-ui-kit",
@@ -3270,71 +3260,6 @@
       "specPath": null
     },
     {
-      "class": "FdUiDateRangeInputComponent",
-      "selector": "fd-ui-date-range-input",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html",
-      "inputs": [
-        {
-          "name": "startPlaceholder",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "endPlaceholder",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "startLabel",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "endLabel",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "size",
-          "type": "FdUiFieldSize",
-          "required": false
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "controlDisabled",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "value",
-          "type": "FdUiDateRangeValue | null",
-          "required": false
-        },
-        {
-          "name": "touched",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "valueChange",
-          "type": "FdUiDateRangeValue | null"
-        },
-        {
-          "name": "touchedChange",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "FdUiDatetimeInputComponent",
       "selector": "fd-ui-datetime-input",
       "feature": "fd-ui-kit",
@@ -3388,6 +3313,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "touch",
+          "type": ""
+        },
         {
           "name": "valueChange",
           "type": "string | Date | null"

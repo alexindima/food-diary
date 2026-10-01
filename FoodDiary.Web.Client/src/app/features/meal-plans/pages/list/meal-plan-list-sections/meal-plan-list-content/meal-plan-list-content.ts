@@ -1,9 +1,11 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
+import { map } from 'rxjs';
 
 import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
 import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mapper';
@@ -16,9 +18,17 @@ import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mappe
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealPlanListContentComponent {
+    private readonly translate = inject(TranslateService);
+    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: this.translate.getCurrentLang() ?? 'en',
+    });
     public readonly isLoading = input.required<boolean>();
     public readonly plans = input.required<MealPlanCardViewModel[]>();
     public readonly filtered = input(false);
     public readonly filterReset = output();
     public readonly planOpen = output<string>();
+
+    protected countLabelKey(type: 'DAYS' | 'RECIPES', count: number): string {
+        return `MEAL_PLANS.${type}_${new Intl.PluralRules(this.language()).select(count).toUpperCase()}`;
+    }
 }

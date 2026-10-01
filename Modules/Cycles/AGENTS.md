@@ -37,6 +37,8 @@ Own the cycle read DTOs, GetCurrentCycleQuery consumed by Dashboard and Export. 
 
 Consumer Contracts must not reference Cycles Domain. Preserve enum values and wire fields.
 
-CyclesDbContext is the fourth owned runtime context (ADR 0040), containing the profile and seven owned child types. Shared UoW, central migrations, composed reads and purge remain; no User aggregate enters the runtime model.
+CyclesDbContext is the fourth owned runtime context (ADR 0040), containing the profile and eight owned child types. Shared UoW, central migrations, composed reads and purge remain; no User aggregate enters the runtime model.
 
 Read use cases are owner requests dispatched through ISender. Keep current-profile and nutrition orchestration in their query handlers; the internal nutrition calculator and reused prediction/revision algorithms retain their existing calculations. Export preserves user access, sensitive-export credential verification and CSV fields. Keep only ICycleWriteRepository and ICycleReadModelRepository; do not restore ICycleRepository, ICycleReadRepository or the unused CycleDayErrors. Domain invariants are tested in this module.
+
+Day notes are owned CycleDayNote children keyed by profile and calendar date. ClearDay and profile deletion remove them; notes do not create bleeding, symptom or fertility observations. General day text is exposed through the current-profile/day contracts and only included in the sensitive CSV export.

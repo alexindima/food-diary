@@ -9,6 +9,7 @@ import {
     inject,
     input,
     model,
+    output,
     signal,
 } from '@angular/core';
 import { disabled as disabledRule, form, FormField, type FormValueControl } from '@angular/forms/signals';
@@ -43,6 +44,7 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
     public readonly size = input<FdUiFieldSize>('md');
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected readonly dateModel = signal<string | null>(null);
@@ -145,6 +147,8 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         }
 
         this.touched.set(true);
+
+        this.touch.emit();
     }
 
     protected focusTimeInput(timeInput: HTMLInputElement): void {
@@ -168,6 +172,7 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
 
         this.isFocused.set(false);
         this.touched.set(true);
+        this.touch.emit();
     }
 
     private emitValue(): void {

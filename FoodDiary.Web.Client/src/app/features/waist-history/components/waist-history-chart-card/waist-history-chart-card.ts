@@ -40,6 +40,7 @@ export class WaistHistoryChartCardComponent {
     public readonly showLatest = output();
     protected readonly measurements = inject(MeasurementSystemService);
     public readonly isLoading = input.required<boolean>();
+    public readonly hasError = input(false);
     public readonly chartPoints = input.required<readonly WaistHistoryChartPoint[]>();
     public readonly desiredWaistCm = input.required<number | null>();
     public readonly goalLabel = input.required<string>();

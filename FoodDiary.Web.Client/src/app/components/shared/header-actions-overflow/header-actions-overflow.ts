@@ -1,5 +1,15 @@
-import type { ElementRef } from '@angular/core';
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    ElementRef,
+    inject,
+    input,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     FdUiButtonComponent,
@@ -44,6 +54,7 @@ const ACTION_SELECTOR = 'button, a[href], [role="button"]';
 export class HeaderActionsOverflowComponent {
     private readonly actionsContainer = viewChild.required<ElementRef<HTMLElement>>('actionsContainer');
     private readonly destroyRef = inject(DestroyRef);
+    private readonly overflowTrigger = viewChild<ElementRef<HTMLElement>, ElementRef<HTMLElement>>('overflowTrigger', { read: ElementRef });
 
     public readonly gap = input<'page-header' | 'sm'>('page-header');
 
@@ -73,11 +84,14 @@ export class HeaderActionsOverflowComponent {
         });
     }
 
-    protected activateAction(action: HeaderOverflowAction): void {
+    protected activateAction(action: HeaderOverflowAction, fromMenu = false): void {
         if (action.disabled) {
             return;
         }
 
+        if (fromMenu) {
+            this.overflowTrigger()?.nativeElement.querySelector<HTMLButtonElement>('button')?.focus();
+        }
         action.target.click();
     }
 
@@ -116,7 +130,13 @@ export class HeaderActionsOverflowComponent {
         const metadata = target.closest<HTMLElement>('[data-fd-overflow-label]');
         const metadataLabel = metadata?.getAttribute('data-fd-overflow-label')?.trim();
         const ariaLabel = target.getAttribute('aria-label')?.trim();
-        const textLabel = target.textContent.trim();
+        const textContent = target.cloneNode(true);
+        if (textContent instanceof HTMLElement) {
+            for (const decorative of textContent.querySelectorAll('[aria-hidden="true"], [hidden], .fd-ui-icon__glyph')) {
+                decorative.remove();
+            }
+        }
+        const textLabel = textContent.textContent?.trim();
         const titleLabel = target.getAttribute('title')?.trim();
 
         return this.firstNonEmpty(metadataLabel, ariaLabel, textLabel, titleLabel) ?? '';

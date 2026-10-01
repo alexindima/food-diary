@@ -40,6 +40,7 @@ export class WeightHistoryChartCardComponent {
     public readonly showLatest = output();
     protected readonly measurements = inject(MeasurementSystemService);
     public readonly isLoading = input.required<boolean>();
+    public readonly hasError = input(false);
     public readonly chartPoints = input.required<readonly WeightHistoryChartPoint[]>();
     public readonly desiredWeightKg = input.required<number | null>();
     public readonly goalLabel = input.required<string>();

@@ -11,6 +11,7 @@ import {
     Injector,
     input,
     model,
+    output,
     signal,
     viewChild,
 } from '@angular/core';
@@ -58,6 +59,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<T | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
 
     protected readonly internalValue = signal<T | null>(null);
@@ -118,6 +120,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         this.internalValue.set(option.value);
         this.value.set(this.internalValue());
         this.touched.set(true);
+        this.touch.emit();
         this.closeMenu();
     }
 
@@ -129,6 +132,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         if (!this.isOpen()) {
             this.isFocused.set(false);
             this.touched.set(true);
+            this.touch.emit();
         }
     }
 
@@ -236,6 +240,9 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         }
 
         action();
+        if (this.isOpen()) {
+            this.scrollActiveOptionIntoView();
+        }
         return true;
     }
 
@@ -249,6 +256,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         afterNextRender(
             () => {
                 this.listboxRef()?.nativeElement.focus();
+                this.scrollActiveOptionIntoView();
             },
             { injector: this.injector },
         );
@@ -256,5 +264,9 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
 
     protected getOptionId(index: number): string {
         return `${this.id()}-option-${index}`;
+    }
+
+    private scrollActiveOptionIntoView(): void {
+        this.listboxRef()?.nativeElement.children.item(this.activeIndex())?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
 }

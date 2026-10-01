@@ -110,6 +110,7 @@ export class FdUiSatietyScaleComponent implements FormValueControl<number | null
     public readonly levels = input<FdUiSatietyScaleLevel[]>(DEFAULT_SATIETY_LEVELS);
     public readonly value = model<number | null>(null);
     public readonly touched = model(false);
+    public readonly touch = output();
     public readonly disabled = input(false);
     public readonly levelSelected = output<number>();
 
@@ -129,11 +130,13 @@ export class FdUiSatietyScaleComponent implements FormValueControl<number | null
         this.selectedValue = level;
         this.value.set(level);
         this.touched.set(true);
+        this.touch.emit();
         this.levelSelected.emit(level);
     }
 
     protected touchControl(): void {
         this.touched.set(true);
+        this.touch.emit();
     }
 
     protected isSelected(level: number): boolean {

@@ -27,7 +27,7 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
         }
 
         bool periodWithinLimit = timeZone is null
-            ? TemporalRangePolicy.IsPeriodWithinLimit(dateFrom, dateTo)
+            ? TemporalRangePolicy.IsInstantPeriodWithinLimit(dateFrom, dateTo)
             : LocalCalendar.DateAt(NormalizeUtcInstant(dateTo), timeZone).DayNumber - LocalCalendar.DateAt(NormalizeUtcInstant(dateFrom), timeZone).DayNumber < TemporalRangePolicy.MaxPeriodDays;
         if (!periodWithinLimit) {
             return Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(

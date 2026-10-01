@@ -3,7 +3,7 @@ import { catchError, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
@@ -21,11 +21,7 @@ export class MealPlanService extends ApiService {
 
         return super
             .get<PageOf<MealPlanSummary>>('', params)
-            .pipe(
-                catchError((error: unknown) =>
-                    fallbackApiError('Get meal plans error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
-                ),
-            );
+            .pipe(catchError((error: unknown) => rethrowApiError('Get meal plans error', error)));
     }
 
     public getById(id: string): Observable<MealPlan> {

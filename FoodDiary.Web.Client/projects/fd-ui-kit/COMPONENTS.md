@@ -228,6 +228,8 @@ Multi-line input.
 
 Dropdown select based on the design-system menu/overlay primitives.
 
+Long option lists scroll within a bounded menu. Opening the menu and navigating with arrows, Home, or End keeps the active option visible.
+
 Use `appearance="text"` with `ariaLabel` and no visible `label` for compact toolbar sorting. It preserves the selected value, chevron, focus ring, listbox and keyboard behavior without an input background or border. The default `appearance="field"` is unchanged.
 
 **Inputs**
@@ -311,7 +313,7 @@ Date + time input (value as `YYYY-MM-DDTHH:mm`).
 
 #### `fd-ui-date-range-input`
 
-Date range wrapper with two date inputs.
+Date range wrapper with two date inputs. Each calendar is bounded by the other endpoint: the start cannot be after the end, and the end cannot be before the start. A single-day range is allowed.
 
 **Inputs**
 
@@ -853,6 +855,8 @@ The image preview dialog accepts an optional zero-based `initialIndex` for openi
 
 `fd-ui-input` supports `controlReadonly` for read-only presentation when used with Signal Forms `formField`, which owns the `readonly` binding.
 
+Signal Forms controls expose a `touch` output when an interaction finishes, in addition to the existing `touched` model. This lets `formField` mark the bound field as touched and display validation errors after blur or selection. Updating the control's `touched` model alone does not notify Signal Forms.
+
 Textarea supports `[stretch]="true"` to fill an available flex/grid height (for example, beside an image gallery). Its default row-based sizing is unchanged.
 
 ## fd-ui-autocomplete
@@ -863,4 +867,4 @@ Textarea supports `[stretch]="true"` to fill an available flex/grid height (for 
 
 ### Manual calendar date entry
 
-`fd-ui-date-input` accepts `allowManualInput` (default `false`). Set it for distant dates such as birth dates. It uses the native date field for direct keyboard entry and validates min/max before emitting an ISO calendar date; the calendar button remains available. Use `latestDate` for an upper bound alongside Signal Forms, where `max` is owned by the field binding. `invalidDateLabel` supplies the localized message for an invalid manual date. Date input and calendar use the current translation language unless a calendar locale is explicitly provided.
+`fd-ui-date-input` accepts `allowManualInput` (default `false`). Set it for distant dates such as birth dates. It uses the native date field for direct keyboard entry and validates min/max before emitting an ISO calendar date; the calendar button remains available. Use `latestDate` for an upper bound and `earliestDate` for a lower bound alongside Signal Forms, where `max` and `min` are owned by the field binding. `invalidDateLabel` supplies the localized message for an invalid manual date. Date input and calendar use the current translation language unless a calendar locale is explicitly provided.

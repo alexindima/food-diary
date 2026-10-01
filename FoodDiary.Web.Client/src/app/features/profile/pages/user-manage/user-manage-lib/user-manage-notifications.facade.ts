@@ -10,7 +10,6 @@ import {
     type FastingReminderPreset,
     resolveFastingReminderPresetId,
 } from '../../../../../shared/lib/fasting-reminder-presets';
-import { parseIntegerInput } from '../../../../../shared/lib/number.utils';
 import type { User } from '../../../../../shared/models/user.data';
 import { BrowserNotificationCapabilityService } from '../../../../../shared/notifications/browser-notification-capability.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
@@ -39,6 +38,7 @@ export class UserManageNotificationsFacade {
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly languageVersion = signal(0);
     private readonly hasTrackedNotificationsView = signal(false);
+    private readonly invalidReminderFields = new Set<'first' | 'followUp'>();
 
     public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
     public readonly notificationsChangedVersion = this.notificationService.notificationsChangedVersion;
@@ -74,6 +74,7 @@ export class UserManageNotificationsFacade {
     }
 
     public syncFromUser(user: User): void {
+        this.invalidReminderFields.clear();
         this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours);
         this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours);
 
@@ -133,21 +134,22 @@ export class UserManageNotificationsFacade {
     }
 
     public onFastingReminderHoursChange(value: string | number, field: 'first' | 'followUp'): void {
-        const parsed = parseIntegerInput(value);
-        if (parsed === null) {
+        const parsed = typeof value === 'number' ? value : value.trim().length === 0 ? Number.NaN : Number(value);
+        if (!Number.isInteger(parsed) || parsed < 1 || parsed > MAX_FASTING_REMINDER_HOURS) {
+            this.invalidReminderFields.add(field);
             return;
         }
-
-        const normalized = Math.max(1, Math.min(MAX_FASTING_REMINDER_HOURS, parsed));
+        this.invalidReminderFields.delete(field);
         if (field === 'first') {
-            this.fastingCheckInReminderHours.set(normalized);
+            this.fastingCheckInReminderHours.set(parsed);
             return;
         }
 
-        this.fastingCheckInFollowUpReminderHours.set(normalized);
+        this.fastingCheckInFollowUpReminderHours.set(parsed);
     }
 
     public applyFastingReminderPreset(preset: FastingReminderPreset): void {
+        this.invalidReminderFields.clear();
         this.fastingCheckInReminderHours.set(preset.firstReminderHours);
         this.fastingCheckInFollowUpReminderHours.set(preset.followUpReminderHours);
         this.frontendObservability.recordFastingReminderPresetSelected({
@@ -164,6 +166,14 @@ export class UserManageNotificationsFacade {
 
         const firstReminder = this.fastingCheckInReminderHours();
         const followUpReminder = this.fastingCheckInFollowUpReminderHours();
+        if (this.invalidReminderFields.size > 0) {
+            this.toastService.error(
+                this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_INPUT_ERROR', {
+                    max: MAX_FASTING_REMINDER_HOURS,
+                }),
+            );
+            return;
+        }
         if (followUpReminder <= firstReminder) {
             this.toastService.error(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_ERROR'));
             return;

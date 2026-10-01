@@ -5,6 +5,7 @@
     (close)="close()"
 >
     <form class="fd-stack fd-gap-lg" [formRoot]="form" (submit)="submit($event)">
+        <p role="alert" [hidden]="actionError() === null">{{ actionError() }}</p>
         <fd-ui-input
             type="text"
             inputMode="decimal"
@@ -15,6 +16,7 @@
             [label]="'WAIST_HISTORY.DESIRED_WAIST_LABEL' | translate"
             [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
             [formField]="waistField"
+            [error]="goalError() | translate: goalRange()"
         />
         @if (desiredWaistCm() !== null) {
             <div class="fd-ui-text-muted fd-ui-body-sm">{{ 'WAIST_HISTORY.GOAL_HISTORY_HINT' | translate }}</div>

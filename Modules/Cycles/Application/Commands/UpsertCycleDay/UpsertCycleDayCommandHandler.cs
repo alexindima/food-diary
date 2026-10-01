@@ -72,6 +72,7 @@ public sealed class UpsertCycleDayCommandHandler(
     }
 
     private static void ApplyLog(CycleProfile profile, UpsertCycleDayCommand command) {
+        profile.SetDayNotes(command.Date, command.Notes, command.ClearNotes);
         ApplyBleeding(profile, command);
         ApplySymptoms(profile, command);
         ApplyFertilitySignal(profile, command);

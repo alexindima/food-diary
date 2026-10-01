@@ -7,6 +7,9 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Export.Presentation.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.Export.Presentation.Requests;
 
 namespace FoodDiary.Modules.Export.Presentation.Tests;
 
@@ -70,6 +73,30 @@ public sealed class ExportControllerTests {
         Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
         Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
         Assert.Equal(180, query.TimeZoneOffsetMinutes);
+    }
+
+    [Theory]
+    [InlineData(-840, true)]
+    [InlineData(840, true)]
+    [InlineData(-841, false)]
+    [InlineData(841, false)]
+    public void SensitiveCycleRequest_MvcValidation_AcceptsBoundedOffsets(int offset, bool expectedValid) {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddMvc();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        var context = new ActionContext {
+            HttpContext = new DefaultHttpContext { RequestServices = provider },
+        };
+        var request = new SensitiveCycleExportHttpRequest(
+            new DateTime(2026, 10, 1), new DateTime(2026, 10, 1), "test-password", offset);
+
+        provider.GetRequiredService<IObjectModelValidator>().Validate(context, validationState: null, prefix: string.Empty, model: request);
+
+        Assert.Equal(expectedValid, context.ModelState.IsValid);
+        if (!expectedValid) {
+            Assert.Contains(nameof(SensitiveCycleExportHttpRequest.TimeZoneOffsetMinutes), context.ModelState.Keys, StringComparer.Ordinal);
+        }
     }
 
     private static ExportController CreateController(ISender sender) =>

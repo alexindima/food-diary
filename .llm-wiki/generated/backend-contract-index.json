@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1306,
+    "contracts": 1307,
     "ambiguousContracts": 2,
-    "consumerEdges": 10146,
-    "productionConsumerEdges": 5815,
-    "testConsumerEdges": 4331,
-    "consumedContracts": 1306,
+    "consumerEdges": 10150,
+    "productionConsumerEdges": 5817,
+    "testConsumerEdges": 4333,
+    "consumedContracts": 1307,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -3389,6 +3389,23 @@
       ],
       "definitionPaths": [
         "Modules/Cycles/Presentation.Contracts/Responses/CycleConsentHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CycleDayNoteHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -19624,7 +19641,7 @@
         "Request"
       ],
       "kinds": [
-        "record"
+        "class"
       ],
       "areas": [
         "FoodDiary"
@@ -34674,6 +34691,32 @@
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "CycleDayNoteHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CycleDayNoteHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Responses/CycleDayNoteHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "CycleFactorHttpResponse",
@@ -51908,7 +51951,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "GetStatisticsSummaryQuery",
@@ -75267,6 +75310,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleDayNoteId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -86539,19 +86595,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application.Abstractions/Common/IMealRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IMealProjectionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Meals/Application.Abstractions/Common/IMealProjectionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -144124,6 +144167,19 @@
         "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Presentation.Tests/ExportControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SensitiveCycleExportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Presentation/Requests/SensitiveCycleExportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -151225,6 +151281,19 @@
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs",
       "isTest": true,
       "referenceCount": 11
+    },
+    {
+      "contract": "UpsertCycleDayCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayNotes.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "UpsertCycleDayCommand",

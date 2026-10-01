@@ -11,6 +11,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     private const int DefaultPeriodLength = 5;
     private const int DefaultLutealLength = 14;
 
+    private readonly List<CycleDayNote> _dayNotes = [];
     private readonly List<CycleFactor> _factors = [];
     private readonly List<BleedingEntry> _bleedingEntries = [];
     private readonly List<CycleSymptomEntry> _symptomEntries = [];
@@ -35,6 +36,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     public bool HideFromDashboard { get; private set; }
     public string? Notes { get; private set; }
 
+    public IReadOnlyCollection<CycleDayNote> DayNotes => _dayNotes.AsReadOnly();
     public IReadOnlyCollection<CycleFactor> Factors => _factors.AsReadOnly();
     public IReadOnlyCollection<BleedingEntry> BleedingEntries => _bleedingEntries.AsReadOnly();
     public IReadOnlyCollection<CycleSymptomEntry> SymptomEntries => _symptomEntries.AsReadOnly();
@@ -208,6 +210,27 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         SetModified();
     }
 
+    public void SetDayNotes(DateOnly date, string? notes, bool clearNotes = false) {
+        string? normalized = NormalizeNotes(notes);
+        EnsureClearConflict(clearNotes, normalized, nameof(clearNotes), nameof(notes));
+        if (clearNotes) {
+            if (_dayNotes.RemoveAll(note => note.Date == date) > 0) {
+                SetModified();
+            }
+            return;
+        }
+        if (normalized is null) {
+            return;
+        }
+        CycleDayNote? existing = _dayNotes.FirstOrDefault(note => note.Date == date);
+        if (existing is null) {
+            _dayNotes.Add(CycleDayNote.Create(Id, date, normalized));
+        } else {
+            existing.Update(normalized);
+        }
+        SetModified();
+    }
+
     public BleedingEntry UpsertBleedingEntry(
         DateOnly date,
         BleedingType type,
@@ -334,6 +357,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
     public bool ClearDay(DateOnly date) {
         int removedCount =
+            _dayNotes.RemoveAll(note => note.Date == date) +
             _bleedingEntries.RemoveAll(entry => entry.Date == date) +
             _symptomEntries.RemoveAll(entry => entry.Date == date) +
             _fertilitySignals.RemoveAll(signal => signal.Date == date);

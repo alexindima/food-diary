@@ -9,6 +9,17 @@ const CHART_VALUE = 74.2;
 const DESIRED_WEIGHT = 70;
 
 describe('WeightHistoryChartCardComponent', () => {
+    it('hides the empty-data message when chart loading failed', async () => {
+        const { fixture } = await setupComponentAsync([]);
+        fixture.componentRef.setInput('hasError', true);
+        fixture.detectChanges();
+        const viewport = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.weight-history-page__chart-viewport');
+        expect(viewport?.hidden).toBe(true);
+        fixture.componentRef.setInput('hasError', false);
+        fixture.detectChanges();
+        expect(viewport?.hidden).toBe(false);
+    });
+
     it('keeps a stable chart viewport while loading', async () => {
         const { fixture } = await setupComponentAsync([], true);
 

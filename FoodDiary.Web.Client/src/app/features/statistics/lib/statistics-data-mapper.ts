@@ -120,6 +120,7 @@ export function getCurrentDateRange(
 
     if (range === 'year') {
         start.setFullYear(end.getFullYear() - 1);
+        start.setDate(start.getDate() + 1);
         return { start, end };
     }
 

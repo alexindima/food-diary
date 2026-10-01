@@ -7,6 +7,9 @@ public static class TemporalRangePolicy {
     public static bool IsPeriodWithinLimit(DateTime dateFrom, DateTime dateTo) =>
         dateFrom <= dateTo && GetInclusiveDayCount(dateFrom, dateTo) <= MaxPeriodDays;
 
+    public static bool IsInstantPeriodWithinLimit(DateTime dateFrom, DateTime dateTo) =>
+        dateFrom <= dateTo && dateTo - dateFrom < TimeSpan.FromDays(MaxPeriodDays);
+
     public static bool IsPeriodWithinLimit(DateTimeOffset dateFrom, DateTimeOffset dateTo) =>
         dateFrom <= dateTo && dateTo - dateFrom <= TimeSpan.FromDays(MaxPeriodDays);
 
@@ -77,7 +80,7 @@ public static class TemporalRangePolicy {
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays) {
-        ValidateBucketArguments(dateFrom, dateTo, quantizationDays);
+        ValidateBucketArguments(dateFrom, dateTo, quantizationDays, instantRange: true);
 
         var buckets = new List<(DateTime Start, DateTime End)>();
         long bucketLengthTicks = TimeSpan.FromDays(quantizationDays).Ticks;
@@ -98,12 +101,12 @@ public static class TemporalRangePolicy {
         return buckets;
     }
 
-    private static void ValidateBucketArguments(DateTime dateFrom, DateTime dateTo, int quantizationDays) {
+    private static void ValidateBucketArguments(DateTime dateFrom, DateTime dateTo, int quantizationDays, bool instantRange = false) {
         ArgumentOutOfRangeException.ThrowIfGreaterThan(dateFrom, dateTo);
         ArgumentOutOfRangeException.ThrowIfLessThan(quantizationDays, 1);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(quantizationDays, MaxQuantizationDays);
 
-        if (!IsPeriodWithinLimit(dateFrom, dateTo)) {
+        if (!(instantRange ? IsInstantPeriodWithinLimit(dateFrom, dateTo) : IsPeriodWithinLimit(dateFrom, dateTo))) {
             throw new ArgumentOutOfRangeException(
                 nameof(dateTo),
                 $"The period must not exceed {MaxPeriodDays} days.");

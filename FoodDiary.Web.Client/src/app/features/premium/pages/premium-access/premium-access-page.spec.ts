@@ -82,8 +82,8 @@ describe('PremiumAccessPageComponent checkout', () => {
         await component['startCheckoutAsync']('monthly');
 
         expect(fakeDocument.location.href).toBe('');
-        expect(component['errorMessage']()).toBe('Checkout URL is missing.');
-        expect(toastService.error).toHaveBeenCalledWith('Checkout URL is missing.');
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(toastService.error).toHaveBeenCalledWith('PREMIUM_PAGE.ERROR_CHECKOUT');
     });
 
     it('does not create a second checkout session while checkout is loading', async () => {

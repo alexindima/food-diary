@@ -72,6 +72,15 @@ export class WeightHistoryPageComponent {
     protected readonly currentRange = this.facade.currentRange;
     protected readonly entries = this.facade.entries;
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly deleteError = this.facade.deleteError;
+    protected readonly pageLoadError = this.facade.pageLoadError;
+    protected readonly summaryLoadError = this.facade.summaryLoadError;
+    protected readonly retryPageLoad = (): void => {
+        this.facade.retryPageLoad();
+    };
+    protected readonly retrySummaryLoad = (): void => {
+        this.facade.retrySummaryLoad();
+    };
     protected readonly desiredWeightKg = this.facade.desiredWeightKg;
     protected readonly weightGoal = this.facade.weightGoal;
     protected readonly hasCompletedWeightGoals = this.facade.hasCompletedWeightGoals;

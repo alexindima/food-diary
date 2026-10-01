@@ -48,6 +48,23 @@ describe('GamificationPageComponent', () => {
 
         expect(element.textContent).toContain('GAMIFICATION.LOADING');
     });
+
+    it('hides achievement metrics on failure and offers retry', () => {
+        facade.hasError.set(true);
+        const fixture = createComponent();
+        const element = getElement(fixture);
+
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain('GAMIFICATION.LOAD_ERROR');
+        expect(element.querySelector('fd-gamification-habit-path')).toBeNull();
+        const retry = [...element.querySelectorAll('button')].find(button => button.textContent.includes('ERRORS.RETRY'));
+        expect(retry).toBeDefined();
+        retry?.click();
+        expect(facade.initialize).toHaveBeenCalledTimes(2);
+
+        facade.hasError.set(false);
+        fixture.detectChanges();
+        expect(element.querySelector('fd-gamification-habit-path')).not.toBeNull();
+    });
 });
 
 function createComponent(): ComponentFixture<GamificationPageComponent> {
@@ -63,6 +80,7 @@ function getElement(fixture: ComponentFixture<GamificationPageComponent>): HTMLE
 
 type GamificationFacadeMock = {
     isLoading: ReturnType<typeof signal<boolean>>;
+    hasError: ReturnType<typeof signal<boolean>>;
     currentStreak: ReturnType<typeof signal<number>>;
     longestStreak: ReturnType<typeof signal<number>>;
     totalMealsLogged: ReturnType<typeof signal<number>>;
@@ -75,6 +93,7 @@ type GamificationFacadeMock = {
 function createFacadeMock(): GamificationFacadeMock {
     return {
         isLoading: signal(false),
+        hasError: signal(false),
         currentStreak: signal(CURRENT_STREAK),
         longestStreak: signal(LONGEST_STREAK),
         totalMealsLogged: signal(TOTAL_MEALS_LOGGED),

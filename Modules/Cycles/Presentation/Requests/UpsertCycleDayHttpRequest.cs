@@ -7,4 +7,6 @@ public sealed record UpsertCycleDayHttpRequest(
     FertilitySignalHttpModel? FertilitySignal,
     bool ClearBleeding = false,
     IReadOnlyCollection<int>? ClearSymptomCategories = null,
-    bool ClearFertilitySignal = false);
+    bool ClearFertilitySignal = false,
+    string? Notes = null,
+    bool ClearNotes = false);

@@ -64,6 +64,7 @@ import { ClientDashboardNoticesComponent } from './components/client-dashboard-n
 import { ClientDashboardSummaryCardComponent } from './components/client-dashboard-summary-card';
 
 const RECOMMENDATION_MAX_LENGTH = 2000;
+const TEMPLATE_NAME_MAX_LENGTH = 120;
 const TASK_TITLE_MAX_LENGTH = 200;
 const TASK_DETAILS_MAX_LENGTH = 2000;
 const CLIENT_DASHBOARD_TREND_DAYS = 14;
@@ -194,6 +195,16 @@ export class ClientDashboardComponent {
         },
     );
     protected readonly taskModel = signal<TaskFormModel>({ title: '', details: '', dueDate: '' });
+    protected readonly templateNameTooLong = computed(
+        () => this.recommendationModel().templateName.trim().length > TEMPLATE_NAME_MAX_LENGTH,
+    );
+    protected readonly templateInvalid = computed(
+        () =>
+            this.recommendationModel().templateName.trim().length === 0 ||
+            this.recommendationModel().text.trim().length === 0 ||
+            this.templateNameTooLong() ||
+            this.recommendationForm().invalid(),
+    );
     private readonly submitTaskFormAsync = async (): Promise<void> => {
         await this.submitTaskAsync();
     };
@@ -356,7 +367,13 @@ export class ClientDashboardComponent {
         const model = this.recommendationModel();
         const name = model.templateName.trim();
         const text = model.text.trim();
-        if (name.length === 0 || text.length === 0 || this.savingTemplate()) {
+        if (
+            name.length === 0 ||
+            name.length > TEMPLATE_NAME_MAX_LENGTH ||
+            text.length === 0 ||
+            text.length > RECOMMENDATION_MAX_LENGTH ||
+            this.savingTemplate()
+        ) {
             return;
         }
 
@@ -417,7 +434,7 @@ export class ClientDashboardComponent {
 
     private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
-        if (client === null || this.recommendationForm().invalid() || this.savingRecommendation()) {
+        if (client === null || this.recommendationForm.text().invalid() || this.savingRecommendation()) {
             this.recommendationForm().markAsTouched();
             return;
         }
