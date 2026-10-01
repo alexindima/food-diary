@@ -74,6 +74,48 @@ describe('DietologistInvitationPageComponent error state', () => {
     });
 });
 
+describe('DietologistInvitationPageComponent action recovery', () => {
+    it.each([
+        { action: 'accept', method: 'acceptInvitationForCurrentUser', success: 'accepted', error: 'DIETOLOGIST_INVITATION.ERROR_ACCEPT' },
+        {
+            action: 'decline',
+            method: 'declineInvitationForCurrentUser',
+            success: 'declined',
+            error: 'DIETOLOGIST_INVITATION.ERROR_DECLINE',
+        },
+    ] as const)('keeps the invitation actionable after a failed $action and allows retry', ({ action, method, success, error }) => {
+        dietologistService.getInvitationForCurrentUser.mockReturnValue(
+            of({
+                invitationId: 'inv-1',
+                clientUserId: 'client-1',
+                clientEmail: 'client@example.com',
+                clientFirstName: 'Client',
+                clientLastName: null,
+                status: 'Pending',
+                createdAtUtc: '2026-04-15T00:00:00Z',
+                expiresAtUtc: '2026-04-22T00:00:00Z',
+            }),
+        );
+        dietologistService[method]
+            .mockReturnValueOnce(throwError(() => new Error('temporarily unavailable')))
+            .mockReturnValueOnce(of(void 0));
+        createComponent();
+        component[action]();
+        fixture.detectChanges();
+        expect(component['state']()).toBe('ready');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain(error);
+        expect(host.textContent).toContain('DIETOLOGIST_INVITATION.ACCEPT');
+        expect(host.textContent).toContain('DIETOLOGIST_INVITATION.DECLINE');
+        expect(component['isSubmitting']()).toBe(false);
+        component[action]();
+        fixture.detectChanges();
+        expect(component['state']()).toBe(success);
+        expect(component['errorMessage']()).toBeNull();
+        expect(dietologistService[method]).toHaveBeenCalledTimes(2);
+    });
+});
+
 function createComponent(): void {
     TestBed.configureTestingModule({
         imports: [DietologistInvitationPageComponent],

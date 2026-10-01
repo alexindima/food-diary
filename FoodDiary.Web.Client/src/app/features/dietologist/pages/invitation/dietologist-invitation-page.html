@@ -13,6 +13,7 @@
             <p class="dietologist-invitation__meta fd-ui-caption">
                 {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: currentInvitation.expiresDateLabel } }}
             </p>
+            <fd-ui-form-error [error]="errorMessage()" />
             <div class="dietologist-invitation__actions fd-row fd-wrap fd-gap-sm">
                 <fd-ui-button type="button" variant="primary" [loading]="isSubmitting()" (click)="accept()">
                     {{ 'DIETOLOGIST_INVITATION.ACCEPT' | translate }}

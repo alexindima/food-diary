@@ -72,6 +72,7 @@ export class DietologistInvitationPageComponent {
             return;
         }
 
+        this.errorMessage.set(null);
         this.isSubmitting.set(true);
         this.dietologistFacade
             .acceptInvitationForCurrentUser(invitationId)
@@ -87,7 +88,6 @@ export class DietologistInvitationPageComponent {
                     this.state.set('accepted');
                 },
                 error: () => {
-                    this.state.set('error');
                     this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_ACCEPT'));
                 },
             });
@@ -99,6 +99,7 @@ export class DietologistInvitationPageComponent {
             return;
         }
 
+        this.errorMessage.set(null);
         this.isSubmitting.set(true);
         this.dietologistFacade
             .declineInvitationForCurrentUser(invitationId)
@@ -113,7 +114,6 @@ export class DietologistInvitationPageComponent {
                     this.state.set('declined');
                 },
                 error: () => {
-                    this.state.set('error');
                     this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_DECLINE'));
                 },
             });

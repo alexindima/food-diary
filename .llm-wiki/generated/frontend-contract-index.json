@@ -31860,7 +31860,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "dietologist",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "error"
       ],
