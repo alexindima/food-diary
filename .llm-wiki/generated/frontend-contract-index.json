@@ -35653,7 +35653,8 @@
         "selectedValue",
         "shrinkItems",
         "size",
-        "stackOnNarrow"
+        "stackOnNarrow",
+        "wrapOnNarrow"
       ],
       "outputsHandled": [
         "selectedValueChange"
@@ -35674,7 +35675,8 @@
         "selectedValue",
         "shrinkItems",
         "size",
-        "stackOnNarrow"
+        "stackOnNarrow",
+        "wrapOnNarrow"
       ],
       "outputsHandled": [
         "selectedValueChange"

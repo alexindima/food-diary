@@ -1045,17 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5afdc910275edca5087402461c92a935bce467feace52b1b8a3e9994a8f9cf93"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "82f78b3e81640113802ec0ca2b6fdd8f7a724b3e5558a0b87e357724e1b46cf6"
+          "sha256": "e06d2cf241e7fc93cf424abb7df3b9d0f719eba08fe3ad25c15415ef19827be3"
         }
       ],
-      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
+      "reason": "Restore responsive container targeting and narrow wrapping for all fasting protocol selectors; avoid display-contents size-query containers",
       "baseRef": "HEAD",
-      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
-      "reviewedAtUtc": "2026-10-01T20:39:35.6192420Z"
+      "gitHead": "1f6b854731e07d915d043b84f14789f8144f740e",
+      "reviewedAtUtc": "2026-10-01T21:00:04.9388177Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1139,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "5afdc910275edca5087402461c92a935bce467feace52b1b8a3e9994a8f9cf93"
+          "sha256": "e06d2cf241e7fc93cf424abb7df3b9d0f719eba08fe3ad25c15415ef19827be3"
         }
       ],
-      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
+      "reason": "Restore responsive container targeting and narrow wrapping for all fasting protocol selectors; avoid display-contents size-query containers",
       "baseRef": "HEAD",
-      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
-      "reviewedAtUtc": "2026-10-01T20:39:34.1543304Z"
+      "gitHead": "1f6b854731e07d915d043b84f14789f8144f740e",
+      "reviewedAtUtc": "2026-10-01T21:00:04.4566990Z"
     },
     {
       "pageId": "workflow.query-context",
