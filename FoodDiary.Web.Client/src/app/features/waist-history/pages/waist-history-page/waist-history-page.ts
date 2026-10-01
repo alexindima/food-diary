@@ -120,7 +120,7 @@ export class WaistHistoryPageComponent {
         }
 
         const direction = Math.sign(goal - start);
-        return direction === 0 ? 0 : Math.max(0, (goal - current) * direction);
+        return direction === 0 ? Math.abs(goal - current) : Math.max(0, (goal - current) * direction);
     });
 
     protected readonly rangeTabs = WAIST_HISTORY_RANGE_TABS;

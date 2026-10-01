@@ -76,7 +76,7 @@ export class WeightGoalHistoryDialogComponent {
     private calculateProgress(goal: WeightGoalHistoryItem, currentWeight: number): number {
         const totalDistance = Math.abs(goal.targetWeightKg - goal.startWeightKg);
         if (totalDistance === 0) {
-            return PERCENT_MAX;
+            return currentWeight === goal.targetWeightKg ? PERCENT_MAX : 0;
         }
         const direction = Math.sign(goal.targetWeightKg - goal.startWeightKg);
         const completed = (currentWeight - goal.startWeightKg) * direction;

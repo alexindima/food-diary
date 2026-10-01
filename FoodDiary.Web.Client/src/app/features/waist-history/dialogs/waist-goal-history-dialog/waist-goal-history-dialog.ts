@@ -71,7 +71,7 @@ export class WaistGoalHistoryDialogComponent {
     private calculateProgress(goal: WaistGoalHistoryItem, current: number): number {
         const total = Math.abs(goal.targetWaistCm - goal.startWaistCm);
         if (total === 0) {
-            return PERCENT_MAX;
+            return current === goal.targetWaistCm ? PERCENT_MAX : 0;
         }
         return Math.min(
             PERCENT_MAX,

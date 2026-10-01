@@ -43,6 +43,8 @@ describe('Weight goal progress', () => {
         { start: 100, current: 110, goal: 80, change: 10, remaining: 30, percent: 0 },
         { start: 100, current: 75, goal: 80, change: -25, remaining: 0, percent: 100 },
         { start: 80, current: 80, goal: 80, change: 0, remaining: 0, percent: 100 },
+        { start: 75, current: 80, goal: 75, change: 5, remaining: 5, percent: 0 },
+        { start: 75, current: 70, goal: 75, change: -5, remaining: 5, percent: 0 },
     ])('computes start $start/current $current/goal $goal', ({ start, current, goal, change, remaining, percent }) => {
         const { component, root } = setup(current, goal, start);
         expect(component['progress']()?.change).toBe(change);

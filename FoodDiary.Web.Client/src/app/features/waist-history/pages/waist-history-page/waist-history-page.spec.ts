@@ -26,6 +26,8 @@ const FIXTURE_JUNE_LAST_DAY = 30;
 const FIXTURE_REFERENCE_MEASUREMENT = 80;
 const FIXTURE_CURRENT_MEASUREMENT = 78;
 const FIXTURE_TARGET_MEASUREMENT = 75;
+const FIXTURE_ABOVE_GOAL_MEASUREMENT = 85;
+const FIXTURE_GOAL_DISTANCE = 5;
 const ENTRY = { id: 'entry', userId: 'u', date: '2026-06-20', circumferenceCm: 80 };
 async function setupAsync(): Promise<{
     fixture: ComponentFixture<WaistHistoryPageComponent>;
@@ -209,4 +211,13 @@ describe('History page periods and KPI states', () => {
         facade.waistGoal.set({ desiredWaistCm: 80, startWaistCm: 80, startedAtUtc: null });
         expect(component['waistToGoal']()).toBe(0);
     });
+    it.each([FIXTURE_TARGET_MEASUREMENT, FIXTURE_ABOVE_GOAL_MEASUREMENT])(
+        'reports distance after moving away from an equal-start-and-target goal to %s',
+        current => {
+            const { component, facade } = context;
+            facade.waistGoal.set({ desiredWaistCm: 80, startWaistCm: 80, startedAtUtc: null });
+            facade.latestEntry.set({ ...ENTRY, circumferenceCm: current });
+            expect(component['waistToGoal']()).toBe(FIXTURE_GOAL_DISTANCE);
+        },
+    );
 });

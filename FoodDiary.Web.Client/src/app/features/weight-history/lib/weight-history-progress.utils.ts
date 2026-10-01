@@ -10,5 +10,5 @@ export function getWeightChangeTone(change: number | null, currentWeight: number
 
 export function getWeightRemainingToGoal(startWeightKg: number, currentWeight: number, desiredWeightKg: number): number {
     const goalDirection = Math.sign(desiredWeightKg - startWeightKg);
-    return goalDirection === 0 ? 0 : Math.max(0, (desiredWeightKg - currentWeight) * goalDirection);
+    return goalDirection === 0 ? Math.abs(desiredWeightKg - currentWeight) : Math.max(0, (desiredWeightKg - currentWeight) * goalDirection);
 }

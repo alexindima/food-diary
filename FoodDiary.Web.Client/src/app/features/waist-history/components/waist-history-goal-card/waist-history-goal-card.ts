@@ -80,8 +80,12 @@ export class WaistHistoryGoalCardComponent {
         const totalDistance = Math.abs(goal - start);
         const completedDistance = (current - start) * direction;
         const percent =
-            totalDistance === 0 ? PERCENT_MAX : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
-        const remaining = Math.max(0, (goal - current) * direction);
+            totalDistance === 0
+                ? current === goal
+                    ? PERCENT_MAX
+                    : 0
+                : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
+        const remaining = direction === 0 ? Math.abs(goal - current) : Math.max(0, (goal - current) * direction);
         const daysElapsed = this.daysBetweenEntries();
         const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;

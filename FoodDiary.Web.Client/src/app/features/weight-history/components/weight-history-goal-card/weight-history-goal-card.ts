@@ -79,7 +79,11 @@ export class WeightHistoryGoalCardComponent {
         const totalDistance = Math.abs(goal - oldest);
         const completedDistance = (current - oldest) * goalDirection;
         const percent =
-            totalDistance === 0 ? PERCENT_MAX : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
+            totalDistance === 0
+                ? current === goal
+                    ? PERCENT_MAX
+                    : 0
+                : Math.min(PERCENT_MAX, Math.max(0, (completedDistance / totalDistance) * PERCENT_MAX));
         const change = current - oldest;
         const remaining = getWeightRemainingToGoal(oldest, current, goal);
         const daysElapsed = this.daysBetweenEntries();
