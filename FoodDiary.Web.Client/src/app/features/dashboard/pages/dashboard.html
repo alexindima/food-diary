@@ -256,6 +256,7 @@
                             [state]="blockStates.tdee"
                             [insight]="tdeeInsight()"
                             [isLoading]="isLoading()"
+                            [isApplyingGoal]="facade.isApplyingTdeeGoal()"
                             (blockClick)="openTdeeInsight($event)"
                             (applyGoal)="applyTdeeGoal($event)"
                         />

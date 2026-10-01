@@ -40,7 +40,13 @@
                                 {{ 'TDEE_CARD.KCAL_DAY' | translate }}</span
                             >
                         </div>
-                        <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="applyGoal.emit($event)">
+                        <fd-ui-button
+                            variant="secondary"
+                            fill="outline"
+                            size="sm"
+                            [loading]="isApplyingGoal()"
+                            (click)="applyGoal.emit($event)"
+                        >
                             {{ 'TDEE_CARD.APPLY' | translate }}
                         </fd-ui-button>
                     </div>

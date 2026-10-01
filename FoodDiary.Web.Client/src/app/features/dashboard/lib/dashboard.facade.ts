@@ -55,6 +55,8 @@ export class DashboardFacade {
     private readonly goalsService = inject(GoalsService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
+    private tdeeGoalRequest: Promise<boolean> | null = null;
+    public readonly isApplyingTdeeGoal = signal(false);
     public readonly layout = inject(DashboardLayoutService);
     public async openMealDetailsAsync(mealId: string): Promise<void> {
         const meal = this.meals().find(item => item.id === mealId);
@@ -230,12 +232,45 @@ export class DashboardFacade {
     }
 
     public applyTdeeGoal(target: number): void {
-        this.goalsService
-            .updateGoals({ dailyCalorieTarget: target })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.loadDashboardSnapshot(false);
-            });
+        if (this.isApplyingTdeeGoal()) {
+            return;
+        }
+        void this.applyTdeeGoalAsync(target).then(saved => {
+            if (!saved) {
+                this.toastService.error(this.translateService.instant('TDEE_CARD.APPLY_ERROR'));
+            }
+        });
+    }
+
+    public async applyTdeeGoalAsync(target: number): Promise<boolean> {
+        if (this.tdeeGoalRequest !== null) {
+            return this.tdeeGoalRequest;
+        }
+        if (!Number.isFinite(target) || target <= 0) {
+            return false;
+        }
+        this.isApplyingTdeeGoal.set(true);
+        this.tdeeGoalRequest = this.persistTdeeGoalAsync(target).finally(() => {
+            this.tdeeGoalRequest = null;
+            this.isApplyingTdeeGoal.set(false);
+        });
+        return this.tdeeGoalRequest;
+    }
+
+    private async persistTdeeGoalAsync(target: number): Promise<boolean> {
+        try {
+            const goals = await firstValueFrom(
+                this.goalsService.updateGoals({ dailyCalorieTarget: target }).pipe(takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
+            );
+            if (goals === null) {
+                return false;
+            }
+            this.loadDashboardSnapshot(false);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     public async openTdeeDetailsAsync(): Promise<TdeeInsightDialogAction | undefined> {
@@ -244,7 +279,7 @@ export class DashboardFacade {
             this.dialogService
                 .open<TdeeInsightDialogComponentType, TdeeInsightDialogData, TdeeInsightDialogAction | undefined>(
                     TdeeInsightDialogComponent,
-                    { size: 'md', data: { insight: this.tdeeInsight() } },
+                    { size: 'md', data: { insight: this.tdeeInsight(), applyGoalAsync: this.applyTdeeGoalAsync.bind(this) } },
                 )
                 .afterClosed(),
         );

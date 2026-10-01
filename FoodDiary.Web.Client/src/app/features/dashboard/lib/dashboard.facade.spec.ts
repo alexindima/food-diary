@@ -270,14 +270,16 @@ describe('DashboardFacade actions', () => {
         expect(hydrationService.addEntry).toHaveBeenNthCalledWith(2, SECOND_HYDRATION_AMOUNT_ML, expect.any(Date));
     });
 
-    it('should update calorie goal and reload snapshot after applying TDEE suggestion', () => {
+    it('should update calorie goal and reload snapshot after applying TDEE suggestion', async () => {
         const { facade, dashboardService, goalsService } = setupFacade();
         facade.initialize();
 
         facade.applyTdeeGoal(TDEE_TARGET);
 
         expect(goalsService.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: TDEE_TARGET });
-        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => {
+            expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
+        });
     });
 
     it('should keep snapshot when hydration refresh fails after update succeeds', () => {
@@ -586,7 +588,9 @@ describe('DashboardFacade view data (2)', () => {
         const dialog = { afterClosed: (): Observable<undefined> => of(undefined) };
         open.mockReturnValue(dialog as ReturnType<FdUiDialogService['open']>);
         await expect(facade.openTdeeDetailsAsync()).resolves.toBeUndefined();
-        expect(open).toHaveBeenCalledWith(expect.any(Function), { size: 'md', data: { insight: null } });
+        expect(open).toHaveBeenCalledWith(expect.any(Function), expect.objectContaining({ size: 'md' }));
+        expect(open.mock.calls[0]?.[1]?.data).toMatchObject({ insight: null });
+        expect(open.mock.calls[0]?.[1]?.data).toHaveProperty('applyGoalAsync', expect.any(Function));
     });
     it('cancels a pending water write when the page is destroyed', () => {
         const { facade, hydrationService, dashboardService } = setupFacade();
@@ -637,6 +641,61 @@ function mockMealDialog(result: { action: string; id: string }): void {
     const dialog = { afterClosed: (): Observable<typeof result> => of(result) };
     vi.spyOn(TestBed.inject(FdUiDialogService), 'open').mockReturnValue(dialog as ReturnType<FdUiDialogService['open']>);
 }
+
+describe('Dashboard TDEE goal application failure', () => {
+    it('reports a rejected update without refreshing the unchanged dashboard', async () => {
+        const { facade, goalsService, dashboardService } = setupFacade();
+        facade.initialize();
+        const loads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
+        goalsService.updateGoals.mockReturnValueOnce(of(null));
+        facade.applyTdeeGoal(TDEE_TARGET);
+        await vi.waitFor(() => {
+            expect(vi.spyOn(TestBed.inject(FdUiToastService), 'error')).toHaveBeenCalledWith('TDEE_CARD.APPLY_ERROR');
+        });
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(loads);
+    });
+
+    it('ignores duplicate card actions while the goal update is pending', () => {
+        const { facade, goalsService } = setupFacade();
+        const pending = new Subject<null>();
+        goalsService.updateGoals.mockReturnValue(pending);
+        facade.applyTdeeGoal(TDEE_TARGET);
+        facade.applyTdeeGoal(TDEE_TARGET);
+        expect(goalsService.updateGoals).toHaveBeenCalledOnce();
+        pending.next(null);
+        pending.complete();
+    });
+});
+
+describe('Dashboard asynchronous TDEE persistence', () => {
+    it.each([of(null), throwError(() => new Error('offline'))])(
+        'returns a failed result and allows retry without a stale refresh',
+        async failed => {
+            const { facade, goalsService, dashboardService } = setupFacade();
+            facade.initialize();
+            const loads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
+            goalsService.updateGoals.mockReturnValueOnce(failed);
+            expect(await facade.applyTdeeGoalAsync(TDEE_TARGET)).toBe(false);
+            expect(facade.isApplyingTdeeGoal()).toBe(false);
+            expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(loads);
+            expect(await facade.applyTdeeGoalAsync(TDEE_TARGET)).toBe(true);
+            expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(loads + 1);
+        },
+    );
+
+    it('cancels a goal write when the page is destroyed and does not refresh', async () => {
+        const { facade, goalsService, dashboardService } = setupFacade();
+        const pending = new Subject<null>();
+        goalsService.updateGoals.mockReturnValue(pending);
+        const saving = facade.applyTdeeGoalAsync(TDEE_TARGET);
+        expect(facade.isApplyingTdeeGoal()).toBe(true);
+        TestBed.resetTestingModule();
+        expect(await saving).toBe(false);
+        expect(pending.observed).toBe(false);
+        expect(facade.isApplyingTdeeGoal()).toBe(false);
+        expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
+    });
+});
 
 function setupFacade(): {
     facade: DashboardFacade;

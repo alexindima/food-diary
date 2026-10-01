@@ -3,11 +3,11 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1538,
+    "inputs": 1542,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2057,
+    "translationKeys": 2058,
     "consumerEdges": 1210,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -2073,6 +2073,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isApplyingGoal",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -2259,6 +2264,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isApplyingGoal",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -2285,6 +2295,11 @@
           "name": "effectiveTdee",
           "type": "number",
           "required": true
+        },
+        {
+          "name": "isApplyingGoal",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -2337,6 +2352,11 @@
           "name": "showSuggestion",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isApplying",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -19556,6 +19576,7 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "TDEE_CARD.APPLY",
         "TDEE_DIALOG.ACTIONS.GOALS",
         "TDEE_DIALOG.ACTIONS.MEAL",
@@ -19603,6 +19624,7 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.html",
       "keys": [
+        "TDEE_CARD.APPLY_ERROR",
         "TDEE_DIALOG.TITLE"
       ]
     },
@@ -24537,6 +24559,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
+        "isApplyingGoal",
         "isHistorical",
         "isLoading",
         "shouldRender",
@@ -26993,6 +27016,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "fill",
+        "loading",
         "size",
         "variant"
       ],
@@ -27021,8 +27045,11 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.html",
       "occurrences": 5,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
+        "loading",
         "type",
         "variant"
       ],
@@ -30982,6 +31009,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "bodyScrollInset",
+        "dismissible",
         "size",
         "title"
       ],
@@ -40340,6 +40368,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
+        "isApplyingGoal",
         "isHistorical",
         "isLoading"
       ],
@@ -40356,7 +40385,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "effectiveTdee",
-        "insight"
+        "insight",
+        "isApplyingGoal"
       ],
       "outputsHandled": [
         "applyGoal"
@@ -40383,6 +40413,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "isApplying",
         "showSuggestion"
       ],
       "outputsHandled": [

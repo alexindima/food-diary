@@ -25,6 +25,7 @@ export class TdeeInsightCardContentComponent {
 
     public readonly insight = input.required<TdeeInsight | null>();
     public readonly effectiveTdee = input.required<number>();
+    public readonly isApplyingGoal = input(false);
     public readonly applyGoal = output<Event>();
 
     protected readonly confidenceLabel = computed(() => {

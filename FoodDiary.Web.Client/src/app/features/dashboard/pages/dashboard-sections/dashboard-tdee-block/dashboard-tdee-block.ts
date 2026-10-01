@@ -25,6 +25,7 @@ export class DashboardTdeeBlockComponent {
     public readonly insight = input.required<DashboardTdeeInsight>();
     public readonly isHistorical = input(false);
     public readonly isLoading = input.required<boolean>();
+    public readonly isApplyingGoal = input(false);
 
     public readonly blockClick = output<Event>();
     public readonly applyGoal = output<number>();

@@ -2239,6 +2239,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isApplyingGoal",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -2285,6 +2290,11 @@
           "name": "showSuggestion",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isApplying",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [

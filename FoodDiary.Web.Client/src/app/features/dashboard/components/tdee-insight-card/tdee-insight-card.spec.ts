@@ -68,6 +68,23 @@ describe('TdeeInsightCardComponent', () => {
         expect(host.textContent).not.toContain('TDEE_CARD.CURRENT_ESTIMATE_NOTICE');
     });
 
+    it('disables application while the request is pending and restores it for retry', async () => {
+        const { component, fixture } = await setupComponentAsync(createInsight());
+        const applied = vi.fn();
+        component.applyGoal.subscribe(applied);
+        fixture.componentRef.setInput('isApplyingGoal', true);
+        fixture.detectChanges();
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.tdee-card__calculated-goal button');
+        expect(button?.disabled).toBe(true);
+        button?.click();
+        component['onApplyGoal']();
+        expect(applied).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('isApplyingGoal', false);
+        fixture.detectChanges();
+        button?.click();
+        expect(applied).toHaveBeenCalledExactlyOnceWith(SUGGESTED_TARGET);
+    });
+
     it('does not emit when suggested target is missing', async () => {
         const { component } = await setupComponentAsync({ ...createInsight(), suggestedCalorieTarget: null });
         const applySpy = vi.fn();

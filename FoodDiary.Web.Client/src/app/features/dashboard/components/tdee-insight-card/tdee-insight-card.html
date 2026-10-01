@@ -18,6 +18,7 @@
                 <fd-tdee-insight-card-content
                     [insight]="insight()"
                     [effectiveTdee]="currentEffectiveTdee"
+                    [isApplyingGoal]="isApplyingGoal()"
                     (applyGoal)="onApplyGoal($event)"
                 />
             } @else {

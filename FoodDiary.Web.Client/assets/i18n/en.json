@@ -6958,6 +6958,7 @@
         "WEIGHT_TREND": "Weight trend",
         "SUGGESTED_GOAL": "Suggested goal: {{ value }} kcal",
         "APPLY": "Apply",
+        "APPLY_ERROR": "Could not apply the calorie target. Please try again.",
         "CONFIDENCE": {
             "LOW": "Low confidence",
             "MEDIUM": "Medium confidence",

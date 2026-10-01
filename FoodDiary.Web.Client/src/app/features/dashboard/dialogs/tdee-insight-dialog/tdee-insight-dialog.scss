@@ -112,10 +112,6 @@
     }
 }
 
-.tdee-dialog__footer {
-    padding-inline: var(--fd-space-dialog-padding);
-}
-
 @media #{variables.$media-mobile} {
     .tdee-dialog__metrics {
         grid-template-columns: 1fr;

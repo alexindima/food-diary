@@ -3431,7 +3431,7 @@
       "role": "Component",
       "selector": "fd-tdee-insight-dialog-footer",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.ts",
-      "line": 15
+      "line": 14
     },
     {
       "name": "TdeeInsightDialogHintComponent",
@@ -3466,7 +3466,7 @@
       "role": "Component",
       "selector": "fd-tdee-insight-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.ts",
-      "line": 38
+      "line": 40
     },
     {
       "name": "DashboardLayoutService",
@@ -6985,8 +6985,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4000,
-      "russianProperties": 4000,
+      "englishProperties": 4001,
+      "russianProperties": 4001,
       "countsMatch": true
     },
     {

@@ -236,6 +236,7 @@ class DashboardTestState {
         cycle: signal(null),
         isCycleLoading: signal(false),
         tdeeInsight: signal(null),
+        isApplyingTdeeGoal: signal(false),
         weightTrend: { weightTrendCurrent: signal(null), weightTrendChange: signal(null), weightTrendSeries: signal([]) },
         waistTrend: { waistTrendCurrent: signal(null), waistTrendChange: signal(null), waistTrendSeries: signal([]) },
         desiredWeightKg: signal(null),

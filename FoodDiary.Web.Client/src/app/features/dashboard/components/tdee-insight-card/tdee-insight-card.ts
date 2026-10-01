@@ -18,12 +18,16 @@ export class TdeeInsightCardComponent {
     public readonly insight = input.required<TdeeInsight | null>();
     public readonly isHistorical = input(false);
     public readonly isLoading = input.required<boolean>();
+    public readonly isApplyingGoal = input(false);
     public readonly applyGoal = output<number>();
 
     protected readonly effectiveTdee = computed(() => getEffectiveTdee(this.insight()));
 
     protected onApplyGoal(event?: Event): void {
         event?.stopPropagation();
+        if (this.isApplyingGoal()) {
+            return;
+        }
 
         const target = this.insight()?.suggestedCalorieTarget;
         if (target !== null && target !== undefined) {

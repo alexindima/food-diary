@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import {
@@ -25,6 +26,7 @@ const MIN_FOOD_WINDOW_DAYS = 14;
     imports: [
         TranslatePipe,
         FdUiDialogComponent,
+        FdUiDialogFooterDirective,
         TdeeInsightDialogFooterComponent,
         TdeeInsightDialogHintComponent,
         TdeeInsightDialogMetricsComponent,
@@ -40,6 +42,8 @@ export class TdeeInsightDialogComponent {
     private readonly data = inject<TdeeInsightDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
 
     protected readonly insight = this.data?.insight ?? null;
+    protected readonly isApplying = signal(false);
+    protected readonly applyFailed = signal(false);
     protected readonly effectiveTdee = getEffectiveTdee(this.insight);
     protected readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
     protected readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
@@ -75,16 +79,35 @@ export class TdeeInsightDialogComponent {
     ];
 
     protected close(action?: TdeeInsightDialogAction): void {
-        this.dialogRef.close(action);
+        if (!this.isApplying()) {
+            this.dialogRef.close(action);
+        }
     }
 
-    protected applySuggestion(): void {
+    protected async applySuggestionAsync(): Promise<void> {
+        if (this.data === null || this.isApplying()) {
+            return;
+        }
         const target = this.insight?.suggestedCalorieTarget;
         if (target === null || target === undefined || target <= 0) {
             return;
         }
-
-        this.close({ type: 'applyGoal', target });
+        const wasDisabled = this.dialogRef.disableClose;
+        this.isApplying.set(true);
+        this.applyFailed.set(false);
+        this.dialogRef.disableClose = true;
+        try {
+            if (await this.data.applyGoalAsync(target)) {
+                this.dialogRef.close();
+            } else {
+                this.applyFailed.set(true);
+            }
+        } catch {
+            this.applyFailed.set(true);
+        } finally {
+            this.isApplying.set(false);
+            this.dialogRef.disableClose = wasDisabled;
+        }
     }
 
     private hasBodyTrendValue(): boolean {

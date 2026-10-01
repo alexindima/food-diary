@@ -422,10 +422,6 @@ export class DashboardComponent {
                 void this.openGoalsAsync();
                 break;
             }
-            case 'applyGoal': {
-                this.applyTdeeGoal(action.target);
-                break;
-            }
             case undefined: {
                 break;
             }
