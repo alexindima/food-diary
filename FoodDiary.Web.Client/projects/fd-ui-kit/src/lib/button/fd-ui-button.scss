@@ -4,6 +4,10 @@
     min-width: var(--fd-button-host-min-width);
 }
 
+:host([hidden]) {
+    display: none;
+}
+
 .fd-ui-button {
     appearance: none;
     background: var(--fd-button-background-default);

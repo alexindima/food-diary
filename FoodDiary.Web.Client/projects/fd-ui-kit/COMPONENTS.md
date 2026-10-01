@@ -403,6 +403,8 @@ Shared ligature icon wrapper used by the design system.
 
 Primary button component.
 
+The native `hidden` attribute on the component host removes the button from layout and keyboard navigation. Bind `[hidden]` when the action should remain mounted while temporarily unavailable.
+
 **Inputs**
 
 - `type?: 'button' | 'submit' | 'reset'`
