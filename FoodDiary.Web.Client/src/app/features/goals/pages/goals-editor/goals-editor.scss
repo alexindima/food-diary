@@ -6,6 +6,7 @@
 
 .goals-editor {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--fd-space-page-card-gap);
     padding-bottom: var(--fd-space-xl);
 
