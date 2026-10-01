@@ -1966,6 +1966,16 @@
           "name": "actionLabel",
           "type": "string | null",
           "required": true
+        },
+        {
+          "name": "isSaving",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "saveFailed",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [

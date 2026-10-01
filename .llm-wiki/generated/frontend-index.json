@@ -3473,7 +3473,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DashboardFacade",
@@ -3571,7 +3571,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 100
+      "line": 101
     },
     {
       "name": "DietologistService",
@@ -6817,7 +6817,7 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/features/dashboard/dashboard.routes.ts",
-      "line": 5
+      "line": 7
     },
     {
       "path": "",
@@ -6985,8 +6985,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3998,
-      "russianProperties": 3998,
+      "englishProperties": 4000,
+      "russianProperties": 4000,
       "countsMatch": true
     },
     {

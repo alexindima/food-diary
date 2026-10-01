@@ -7706,11 +7706,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/notice-banner/notice-banner.ts",
-      "nonBlankLines": 28,
-      "decisionPoints": 3,
+      "nonBlankLines": 29,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.06
+      "structuralRiskScore": 6.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog-item/notifications-dialog-item.ts",
@@ -8546,11 +8546,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dashboard.routes.ts",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.ts",
@@ -8650,11 +8650,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.ts",
-      "nonBlankLines": 166,
-      "decisionPoints": 31,
+      "nonBlankLines": 184,
+      "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.82
+      "structuralRiskScore": 56.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.ts",
@@ -8778,11 +8778,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-edit-hint/dashboard-edit-hint.ts",
-      "nonBlankLines": 16,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-fasting-block/dashboard-fasting-block.ts",
@@ -8842,11 +8842,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "nonBlankLines": 448,
-      "decisionPoints": 43,
+      "nonBlankLines": 456,
+      "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 73.46
+      "structuralRiskScore": 75.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",

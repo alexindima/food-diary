@@ -80,6 +80,8 @@
             [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
             [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
             [class.dashboard__settings-action--active]="layout.isEditingLayout()"
+            [disabled]="layout.isSaving()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
             [attr.aria-pressed]="layout.isEditingLayout()"
             (click)="layout.openSettings()"
         />
@@ -132,7 +134,12 @@
                     }
                     @let blockStates = dashboardBlockStates();
                     @if (layout.isEditingLayout()) {
-                        <fd-dashboard-edit-hint [actionLabel]="editSaveActionLabel()" (save)="layout.save()" />
+                        <fd-dashboard-edit-hint
+                            [actionLabel]="editSaveActionLabel()"
+                            [isSaving]="layout.isSaving()"
+                            [saveFailed]="layout.saveFailed()"
+                            (save)="layout.saveAsync()"
+                        />
                     }
 
                     <ng-template #hydrationBlock>

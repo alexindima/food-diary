@@ -24,7 +24,15 @@
         </div>
     </div>
     @if (showAction()) {
-        <fd-ui-button class="fd-notice__action fd-nowrap" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
+        <fd-ui-button
+            class="fd-notice__action fd-nowrap"
+            type="button"
+            variant="secondary"
+            fill="text"
+            size="sm"
+            [loading]="actionLoading()"
+            (click)="onAction()"
+        >
             {{ actionLabel() }}
         </fd-ui-button>
     }

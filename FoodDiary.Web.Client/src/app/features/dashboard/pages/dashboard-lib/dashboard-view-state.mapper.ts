@@ -42,7 +42,7 @@ export function buildDashboardBlockState(options: {
         role: isInteractive ? 'button' : null,
         tabIndex: isInteractive ? 0 : EMPTY_INDEX,
         ariaPressed: options.editing ? options.isVisible : null,
-        ariaDisabled: options.editing && stateOptions.locked === true ? !options.canToggle : null,
+        ariaDisabled: options.editing && !options.canToggle ? true : null,
         ariaLabel: options.ariaLabel,
         inert: options.editing ? '' : null,
     };

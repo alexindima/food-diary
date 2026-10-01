@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "29396d4b4c44d0e4d3704e3331fb09c75b5a66e7d342b02d95c4c8b52b4f7a12"
+          "sha256": "aa344b6e15f15baece497ddc4daf30c455fe6b4f2fdbbb529896282aeccd07ef"
         }
       ],
-      "reason": "Reviewed current architecture changes: Meals update drops unused projection read dependency without changing project references, command markers, persistence ownership or host registration; Cycles day notes stay within owning Domain/Application/PersistenceModel boundaries and existing scalar profile FK. All2116 architecture tests and API build passed. Generated health metrics are navigation evidence, not a claim of exhaustive audit completion.",
+      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:13:03.4580878Z"
+      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
+      "reviewedAtUtc": "2026-10-01T12:37:21.3688408Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "13485eb1ce8711a1eb37459f05255abe082c7bbaf3ecb9ba9d982c3a1bca92e6"
+          "sha256": "3ad91006e324aa4cc8bbf03ea1594f97e019f172d5bc44000d6689edb5d3ca0e"
         }
       ],
-      "reason": "Reviewed refreshed quality index against numeric/filter/statistics regression tests and full verify4068app457UI4tour177admin plus2116architecture. Six controller convention failures in unchanged source and Docker unavailable recorded as failures/unexecuted, not completion.",
+      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T09:53:49.9879351Z"
+      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
+      "reviewedAtUtc": "2026-10-01T12:37:22.7336724Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,21 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "13485eb1ce8711a1eb37459f05255abe082c7bbaf3ecb9ba9d982c3a1bca92e6"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "74fb8632f9c34dfd4875b5760965fcc91d95da200296ddbc4d945b45605b20d1"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d71c13a1c9846c5643a9ecd1f1ed7cce0778a17186255d4a6378748cf424574d"
+          "sha256": "3ad91006e324aa4cc8bbf03ea1594f97e019f172d5bc44000d6689edb5d3ca0e"
         }
       ],
-      "reason": "Refreshed quality and health inventory leave user/date scope, secret handling and logging unchanged; Other includes untyped entries already presented as Other. Real QA-only runtime and sensitive-data boundaries reviewed.",
+      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T09:53:50.8327135Z"
+      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
+      "reviewedAtUtc": "2026-10-01T12:37:23.7251648Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1052,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "d09feab7498db3886b16594eebba4ef988d649dac727049143d805056fe81032"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "67db0b8e4b2125f77c4c15e3cb6ca86fe8831a8d206f8afadda7c52c59f6ac63"
+          "sha256": "5fafce6f0f397819b90cba6e2cf2d7cd174876a57736c5b7a274839bfe1462a5"
         }
       ],
-      "reason": "Reviewed statistics frontend mappings and contract consumers, conditional Other row and existing translated dynamic label; trace ownership remains Meals aggregation then Statistics/Dashboard adapters. No new dependency or runtime registration.",
+      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T09:36:15.8467813Z"
+      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
+      "reviewedAtUtc": "2026-10-01T12:37:24.9478765Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1147,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e56bb6bf3f5c923d91ff0bdcc13915d0380f553264eddca7debe05131f773348"
+          "sha256": "d09feab7498db3886b16594eebba4ef988d649dac727049143d805056fe81032"
         }
       ],
-      "reason": "Reviewed nutrient-input numeric output contract and its six NutritionEditor bindings, real Signal Forms regression, EN/RU manual meal runtime,457UI and4058app tests. Product picker inputs/selected-product output unchanged; unit label uses existing enum/key pair with6componenttests and rendered G/ML/PCS evidence.",
+      "reason": "Dashboard layout failure preserves drafts; saveAsync rename covered in updated page tests; child route guard awaits real persistence. EN desktop and RU mobile failures retries pending locks leave decisions and default restoration verified; shared loading optional. No backend contract or ownership change.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T08:48:20.4798724Z"
+      "gitHead": "851fa046eed3bac38a9b1561aa3dd830d19de3b6",
+      "reviewedAtUtc": "2026-10-01T12:37:22.0173769Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
@@ -27,7 +27,7 @@ describe('DashboardLayoutService', () => {
         expect(service.visibleBlocks()).toContain('meals');
     });
 
-    it('tracks layout changes during editing and persists changed layout on save', () => {
+    it('tracks layout changes during editing and persists changed layout on save', async () => {
         const { service, userService } = setupService();
 
         service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary'] });
@@ -37,7 +37,7 @@ describe('DashboardLayoutService', () => {
 
         expect(service.hasLayoutChanges()).toBe(true);
 
-        service.save();
+        expect(await service.saveAsync()).toBe(true);
 
         expect(service.isEditingLayout()).toBe(false);
         expect(userService.updateDashboardLayout).toHaveBeenCalledWith({
@@ -79,7 +79,7 @@ describe('Dashboard layout invariants', () => {
         expect(service.visibleBlocks()).toEqual(['summary', 'hydration']);
         service.openSettings();
         service.toggleBlock('summary');
-        service.save();
+        void service.saveAsync();
         expect(service.visibleBlocks()).toEqual(['summary', 'hydration']);
         expect(userService.updateDashboardLayout).not.toHaveBeenCalled();
     });
@@ -111,19 +111,19 @@ describe('Dashboard layout invariants', () => {
 });
 
 describe('Dashboard layout persistence', () => {
-    it.each([null, {}])('keeps the chosen local layout when the API returns %s', response => {
+    it('keeps the chosen layout when a successful response omits the layout', async () => {
         const { service, userService } = setupService();
-        userService.updateDashboardLayout.mockReturnValueOnce(of(response));
+        userService.updateDashboardLayout.mockReturnValueOnce(of({}));
         service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary'] });
         service.openSettings();
         service.toggleBlock('hydration');
-        service.save();
+        expect(await service.saveAsync()).toBe(true);
         expect(service.visibleBlocks()).toEqual(['summary']);
         expect(service.hasLayoutChanges()).toBe(false);
         expect(service.isEditingLayout()).toBe(false);
     });
 
-    it('normalizes the layout returned by the server', () => {
+    it('normalizes the layout returned by the server', async () => {
         const { service, userService } = setupService();
         userService.updateDashboardLayout.mockReturnValueOnce(
             of({ dashboardLayout: { web: ['weight', 'weight', 'unknown'], mobile: ['summary'] } }),
@@ -132,7 +132,7 @@ describe('Dashboard layout persistence', () => {
         expect(service.hasAsideBlocks()).toBe(false);
         service.openSettings();
         service.toggleBlock('hydration');
-        service.save();
+        expect(await service.saveAsync()).toBe(true);
         expect(service.visibleBlocks()).toEqual(['summary', 'weight']);
         expect(service.hasAsideBlocks()).toBe(true);
     });
@@ -144,11 +144,58 @@ describe('Dashboard layout persistence', () => {
         service.initializeLayout({ web: ['summary'], mobile: ['summary'] });
         service.openSettings();
         service.toggleBlock('hydration');
-        service.save();
+        void service.saveAsync();
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
         pending.next({ dashboardLayout: { web: ['summary', 'weight'], mobile: ['summary'] } });
         expect(service.visibleBlocks()).toEqual(['summary', 'hydration']);
+    });
+});
+
+describe('Dashboard layout save recovery', () => {
+    it.each([of(null), throwError(() => new Error('offline'))])(
+        'keeps an unsaved draft after a failed request and retries',
+        async failed => {
+            const { service, userService } = setupService();
+            service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary', 'meals'] });
+            service.openSettings();
+            service.toggleBlock('hydration');
+            userService.updateDashboardLayout.mockReturnValueOnce(failed);
+            expect(await service.saveAsync()).toBe(false);
+            expect(service.saveFailed()).toBe(true);
+            expect(service.isEditingLayout()).toBe(true);
+            expect(service.hasLayoutChanges()).toBe(true);
+            expect(service.visibleBlocks()).toEqual(['summary']);
+            expect(await service.saveAsync()).toBe(true);
+            expect(service.saveFailed()).toBe(false);
+            expect(service.hasLayoutChanges()).toBe(false);
+            expect(userService.updateDashboardLayout).toHaveBeenLastCalledWith({ web: ['summary'], mobile: ['summary', 'meals'] });
+        },
+    );
+
+    it('deduplicates pending saves and locks the draft until the response', async () => {
+        const { service, userService } = setupService();
+        const pending = new Subject<{ dashboardLayout: DashboardLayoutSettings }>();
+        service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary'] });
+        service.openSettings();
+        service.toggleBlock('hydration');
+        userService.updateDashboardLayout.mockReturnValueOnce(pending);
+        const save = service.saveAsync();
+        const duplicateSave = service.saveAsync();
+        expect(service.isSaving()).toBe(true);
+        expect(service.hasLayoutChanges()).toBe(true);
+        service.toggleBlock('meals');
+        service.openSettings();
+        service.discard();
+        expect(service.visibleBlocks()).toEqual(['summary']);
+        expect(service.isEditingLayout()).toBe(true);
+        expect(userService.updateDashboardLayout).toHaveBeenCalledOnce();
+        pending.next({ dashboardLayout: { web: ['summary'], mobile: ['summary'] } });
+        pending.complete();
+        expect(await save).toBe(true);
+        expect(await duplicateSave).toBe(true);
+        expect(service.isSaving()).toBe(false);
+        expect(service.isEditingLayout()).toBe(false);
     });
 });
 

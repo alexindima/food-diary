@@ -1,5 +1,6 @@
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 
 import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
 import { UserService } from '../../../shared/api/user.service';
@@ -19,6 +20,7 @@ export class DashboardLayoutService {
     private readonly layoutInitialized = signal<boolean>(false);
     private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
     private readonly viewportWidth = signal<number>(this.config.defaultViewportWidth);
+    private saveRequest: Promise<boolean> | null = null;
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
         web: [...(DEFAULT_LAYOUT.web ?? [])],
@@ -26,6 +28,8 @@ export class DashboardLayoutService {
     });
 
     public readonly isEditingLayout = signal<boolean>(false);
+    public readonly isSaving = signal(false);
+    public readonly saveFailed = signal(false);
 
     public readonly layoutKey = computed<'web' | 'mobile'>(() =>
         this.viewportWidth() < this.config.mobileBreakpointPx ? 'mobile' : 'web',
@@ -65,28 +69,39 @@ export class DashboardLayoutService {
     }
 
     public openSettings(): void {
-        const next = !this.isEditingLayout();
-        this.isEditingLayout.set(next);
-        if (!next) {
-            this.persistLayoutIfChanged();
-            this.layoutSnapshot.set(null);
-        } else {
-            this.layoutSnapshot.set(this.normalizeLayout(this.layoutSettings()));
-        }
-    }
-
-    public save(): void {
-        if (!this.isEditingLayout()) {
+        if (this.isSaving()) {
             return;
         }
+        if (this.isEditingLayout()) {
+            void this.saveAsync();
+            return;
+        }
+        this.saveFailed.set(false);
+        this.layoutSnapshot.set(this.normalizeLayout(this.layoutSettings()));
+        this.isEditingLayout.set(true);
+    }
 
-        this.isEditingLayout.set(false);
-        this.persistLayoutIfChanged();
-        this.layoutSnapshot.set(null);
+    public async saveAsync(): Promise<boolean> {
+        if (this.saveRequest !== null) {
+            return this.saveRequest;
+        }
+        if (!this.isEditingLayout()) {
+            return true;
+        }
+        if (!this.hasLayoutChanges()) {
+            this.finishEditing();
+            return true;
+        }
+        this.isSaving.set(true);
+        this.saveFailed.set(false);
+        this.saveRequest = this.persistLayoutAsync(this.normalizeLayout(this.layoutSettings())).finally(() => {
+            this.saveRequest = null;
+        });
+        return this.saveRequest;
     }
 
     public discard(): void {
-        if (!this.isEditingLayout()) {
+        if (!this.isEditingLayout() || this.isSaving()) {
             return;
         }
 
@@ -94,8 +109,7 @@ export class DashboardLayoutService {
         if (snapshot !== null) {
             this.layoutSettings.set(this.normalizeLayout(snapshot));
         }
-        this.isEditingLayout.set(false);
-        this.layoutSnapshot.set(null);
+        this.finishEditing();
     }
 
     public shouldRenderBlock(blockId: string): boolean {
@@ -107,7 +121,7 @@ export class DashboardLayoutService {
     }
 
     public canToggleBlock(blockId: string): boolean {
-        return blockId !== 'summary';
+        return blockId !== 'summary' && !this.isSaving();
     }
 
     public toggleBlock(blockId: string): void {
@@ -164,28 +178,30 @@ export class DashboardLayoutService {
         return ['summary', ...values.filter(item => item !== 'summary' && fallback.includes(item))];
     }
 
-    private persistLayout(): void {
-        const layout = this.normalizeLayout(this.layoutSettings());
-        this.userService
-            .updateDashboardLayout(layout)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => {
-                if (user?.dashboardLayout !== undefined && user.dashboardLayout !== null) {
-                    this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout));
-                } else {
-                    this.layoutSettings.set(layout);
-                }
+    private async persistLayoutAsync(layout: DashboardLayoutSettings): Promise<boolean> {
+        try {
+            const user = await firstValueFrom(this.userService.updateDashboardLayout(layout).pipe(takeUntilDestroyed(this.destroyRef)), {
+                defaultValue: null,
             });
+            if (user === null) {
+                this.saveFailed.set(true);
+                return false;
+            }
+            this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout ?? layout));
+            this.finishEditing();
+            return true;
+        } catch {
+            this.saveFailed.set(true);
+            return false;
+        } finally {
+            this.isSaving.set(false);
+        }
     }
 
-    private persistLayoutIfChanged(): void {
-        const current = this.normalizeLayout(this.layoutSettings());
-        const previous = this.layoutSnapshot();
-        if (previous !== null && this.areLayoutsEqual(previous, current)) {
-            return;
-        }
-
-        this.persistLayout();
+    private finishEditing(): void {
+        this.isEditingLayout.set(false);
+        this.layoutSnapshot.set(null);
+        this.saveFailed.set(false);
     }
 
     private areLayoutsEqual(a: DashboardLayoutSettings, b: DashboardLayoutSettings): boolean {

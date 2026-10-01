@@ -15,6 +15,7 @@ export class NoticeBannerComponent {
     public readonly title = input<string>('');
     public readonly message = input<string>('');
     public readonly actionLabel = input<string | null>(null);
+    public readonly actionLoading = input(false);
     public readonly action = output();
 
     protected readonly showAction = computed(() => {
@@ -24,7 +25,7 @@ export class NoticeBannerComponent {
 
     protected onAction(): void {
         const actionLabel = this.actionLabel();
-        if (actionLabel === null || actionLabel.length === 0) {
+        if (actionLabel === null || actionLabel.length === 0 || this.actionLoading()) {
             return;
         }
         this.action.emit();

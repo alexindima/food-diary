@@ -3,11 +3,11 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1535,
+    "inputs": 1538,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2055,
+    "translationKeys": 2057,
     "consumerEdges": 1210,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -1774,6 +1774,16 @@
           "name": "actionLabel",
           "type": "string | null",
           "required": true
+        },
+        {
+          "name": "isSaving",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "saveFailed",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -13019,6 +13029,11 @@
           "name": "actionLabel",
           "type": "string | null",
           "required": false
+        },
+        {
+          "name": "actionLoading",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -19596,6 +19611,8 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-edit-hint/dashboard-edit-hint.html",
       "keys": [
         "DASHBOARD.SETTINGS.HINT",
+        "DASHBOARD.SETTINGS.SAVE_ERROR",
+        "DASHBOARD.SETTINGS.SAVING",
         "DASHBOARD.SETTINGS.TITLE"
       ]
     },
@@ -19644,6 +19661,7 @@
         "DASHBOARD.LOADING",
         "DASHBOARD.SUBTITLE",
         "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
+        "DISABLED_HINTS.OPERATION_BUSY",
         "MEAL_LIST.ADD_MANUALLY_BUTTON"
       ]
     },
@@ -24395,7 +24413,9 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
       "occurrences": 1,
       "inputsUsed": [
-        "actionLabel"
+        "actionLabel",
+        "isSaving",
+        "saveFailed"
       ],
       "outputsHandled": [
         "save"
@@ -26570,6 +26590,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "fill",
+        "loading",
         "size",
         "type",
         "variant"
@@ -27018,6 +27039,7 @@
         "appearance",
         "ariaLabel",
         "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "variant"
@@ -38142,6 +38164,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "actionLabel",
+        "actionLoading",
         "message",
         "title",
         "type"

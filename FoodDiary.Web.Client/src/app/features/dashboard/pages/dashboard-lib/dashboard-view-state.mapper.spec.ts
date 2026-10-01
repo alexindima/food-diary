@@ -77,6 +77,18 @@ describe('dashboard view state mapper', () => {
         });
     });
 
+    it('announces a temporarily unavailable widget toggle during saving', () => {
+        expect(
+            buildDashboardBlockState({
+                blockId: 'hydration',
+                editing: true,
+                isVisible: true,
+                canToggle: false,
+                ariaLabel: 'Water',
+            }).ariaDisabled,
+        ).toBe(true);
+    });
+
     it('detects aside blocks', () => {
         expect(isDashboardAsideBlock('hydration')).toBe(true);
         expect(isDashboardAsideBlock('summary')).toBe(false);

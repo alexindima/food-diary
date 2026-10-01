@@ -870,6 +870,8 @@
             "TITLE": "Dashboard editing",
             "HINT": "Click a card to hide or show it. Summary is always visible.",
             "SAVE": "Save changes",
+            "SAVING": "Saving changes…",
+            "SAVE_ERROR": "Could not save the dashboard layout. Your changes are still here. Try saving again.",
             "VISIBLE": "Visible",
             "HIDDEN": "Hidden",
             "LOCKED": "Required"

@@ -69,6 +69,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
     selector: 'fd-dashboard',
     host: {
         class: 'dashboard-host',
+        '(window:beforeunload)': 'onBeforeUnload($event)',
     },
     imports: [
         NgTemplateOutlet,
@@ -242,14 +243,18 @@ export class DashboardComponent {
                 editingLabelKey: 'DASHBOARD.FASTING_EDIT_TITLE',
                 defaultLabelKey: 'FASTING.TITLE',
             }),
-            summary: stateFor('summary', { locked: true }),
-            meals: stateFor('meals'),
-            hydration: stateFor('hydration'),
-            cycle: stateFor('cycle'),
-            weight: stateFor('weight', { alwaysInteractive: true, defaultLabelKey: 'WEIGHT_CARD.TITLE' }),
-            waist: stateFor('waist', { alwaysInteractive: true, defaultLabelKey: 'WAIST_CARD.TITLE' }),
-            tdee: stateFor('tdee', { defaultLabelKey: 'TDEE_CARD.TITLE' }),
-            advice: stateFor('advice'),
+            summary: stateFor('summary', { locked: true, editingLabelKey: 'DASHBOARD.DAY_SUMMARY.TITLE' }),
+            meals: stateFor('meals', { editingLabelKey: 'DASHBOARD.MEALS_TITLE' }),
+            hydration: stateFor('hydration', { editingLabelKey: 'HYDRATION_CARD.TITLE' }),
+            cycle: stateFor('cycle', { editingLabelKey: 'CYCLE_CARD.TITLE' }),
+            weight: stateFor('weight', {
+                alwaysInteractive: true,
+                defaultLabelKey: 'WEIGHT_CARD.TITLE',
+                editingLabelKey: 'WEIGHT_CARD.TITLE',
+            }),
+            waist: stateFor('waist', { alwaysInteractive: true, defaultLabelKey: 'WAIST_CARD.TITLE', editingLabelKey: 'WAIST_CARD.TITLE' }),
+            tdee: stateFor('tdee', { defaultLabelKey: 'TDEE_CARD.TITLE', editingLabelKey: 'TDEE_CARD.TITLE' }),
+            advice: stateFor('advice', { editingLabelKey: 'DASHBOARD.ADVICE_TITLE' }),
         };
     });
 
@@ -276,9 +281,7 @@ export class DashboardComponent {
         });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),
-            save: () => {
-                this.layout.save();
-            },
+            save: this.layout.saveAsync.bind(this.layout),
             discard: () => {
                 this.layout.discard();
             },
@@ -472,6 +475,12 @@ export class DashboardComponent {
 
         this.resizeObserver.observe(element);
         this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
+    }
+
+    protected onBeforeUnload(event: BeforeUnloadEvent): void {
+        if (this.layout.hasLayoutChanges()) {
+            event.preventDefault();
+        }
     }
 
     private formatSelectedDate(): string {

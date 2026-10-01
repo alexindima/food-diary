@@ -111,6 +111,26 @@ describe('NoticeBannerComponent computed state', () => {
     });
 });
 
+describe('Notice banner pending action', () => {
+    it('blocks duplicate actions while loading', async () => {
+        const { component, el, fixture } = await setupNoticeBannerAsync();
+        fixture.componentRef.setInput('actionLabel', 'Save');
+        fixture.componentRef.setInput('actionLoading', true);
+        fixture.detectChanges();
+        const action = vi.fn();
+        component.action.subscribe(action);
+        const button = el.querySelector<HTMLButtonElement>('button');
+        expect(button?.disabled).toBe(true);
+        button?.click();
+        component['onAction']();
+        expect(action).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('actionLoading', false);
+        fixture.detectChanges();
+        button?.click();
+        expect(action).toHaveBeenCalledOnce();
+    });
+});
+
 describe('NoticeBannerComponent type variants', () => {
     const types = ['info', 'warning', 'error'] as const;
 

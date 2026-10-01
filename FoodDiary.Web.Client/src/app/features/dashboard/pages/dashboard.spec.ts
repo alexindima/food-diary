@@ -7,12 +7,12 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../services/navigation.service';
-import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
@@ -127,7 +127,7 @@ describe('Dashboard page actions and localization', () => {
         expect(navigation.navigateToFastingAsync).not.toHaveBeenCalled();
         expect(facade.openTdeeDetailsAsync).not.toHaveBeenCalled();
         child('fd-dashboard-edit-hint').triggerEventHandler('save');
-        expect(layout.save).toHaveBeenCalledOnce();
+        expect(layout.saveAsync).toHaveBeenCalledOnce();
     });
 
     it('connects card actions to the correct facade and navigation operations', async () => {
@@ -190,6 +190,32 @@ describe('Dashboard page actions and localization', () => {
     });
 });
 
+describe('Dashboard layout draft protection', () => {
+    it.each([false, true])('returns the asynchronous save result to the navigation guard (saved=%s)', async saved => {
+        const { layout, unsaved } = await setupAsync();
+        const pendingSave = firstValueFrom(of(saved));
+        layout.saveAsync.mockReturnValue(pendingSave);
+        const handler = unsaved.register.mock.calls[0]?.[0] as UnsavedChangesHandler;
+        expect(handler.save()).toBe(pendingSave);
+        expect(await handler.save()).toBe(saved);
+    });
+
+    it('warns before unloading only while a dashboard draft has changes', async () => {
+        const { layout } = await setupAsync();
+        const clean = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(clean);
+        expect(clean.defaultPrevented).toBe(false);
+        layout.hasLayoutChanges.set(true);
+        const dirty = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(dirty);
+        expect(dirty.defaultPrevented).toBe(true);
+        layout.hasLayoutChanges.set(false);
+        const saved = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(saved);
+        expect(saved.defaultPrevented).toBe(false);
+    });
+});
+
 class DashboardTestState {
     public readonly facade = {
         selectedDate: signal(new Date()),
@@ -232,6 +258,8 @@ class DashboardTestState {
     };
     public readonly layout = {
         isEditingLayout: signal(false),
+        isSaving: signal(false),
+        saveFailed: signal(false),
         hasLayoutChanges: signal(false),
         visibleBlocks: signal(['summary', 'meals', 'hydration', 'tdee']),
         hasAsideBlocks: signal(true),
@@ -239,7 +267,7 @@ class DashboardTestState {
         isBlockVisible: vi.fn(() => true),
         canToggleBlock: vi.fn(() => true),
         toggleBlock: vi.fn(),
-        save: vi.fn(),
+        saveAsync: vi.fn(),
         discard: vi.fn(),
         openSettings: vi.fn(),
         updateViewportWidth: vi.fn(),

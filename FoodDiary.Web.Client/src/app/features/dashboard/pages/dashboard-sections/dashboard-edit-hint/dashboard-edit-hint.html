@@ -3,6 +3,10 @@
     type="info"
     [title]="'DASHBOARD.SETTINGS.TITLE' | translate"
     [message]="'DASHBOARD.SETTINGS.HINT' | translate"
-    [actionLabel]="actionLabel()"
+    [actionLabel]="isSaving() ? ('DASHBOARD.SETTINGS.SAVING' | translate) : actionLabel()"
+    [actionLoading]="isSaving()"
     (action)="save.emit()"
 />
+@if (saveFailed()) {
+    <p role="alert" class="fd-ui-body-sm">{{ 'DASHBOARD.SETTINGS.SAVE_ERROR' | translate }}</p>
+}
