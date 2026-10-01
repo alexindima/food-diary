@@ -61,6 +61,7 @@
                     role="progressbar"
                     aria-valuemin="0"
                     aria-valuemax="100"
+                    [attr.aria-label]="phaseLabelKey() | translate"
                     [attr.aria-valuenow]="progress()"
                 >
                     <span class="fasting-redesign__timeline-progress" [style.width.%]="progress()"></span>

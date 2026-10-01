@@ -50,6 +50,7 @@ describe('Waist goal progress', () => {
         expect(component['progress']()?.change).toBe(change);
         expect(component['progress']()?.remaining).toBe(remaining);
         expect(component['progress']()?.percent).toBeCloseTo(percent);
+        expect(root.querySelector('[role="progressbar"]')?.getAttribute('aria-label')).toBe('WAIST_HISTORY.GOAL_PROGRESS_TITLE');
         const labels = Array.from(root.querySelectorAll('.waist-history-page__goal-stat .fd-ui-caption')).map(e => e.textContent);
         expect(labels).toEqual(['WAIST_HISTORY.GOAL_START_WAIST', 'WAIST_HISTORY.GOAL_PERIOD_CHANGE', 'WAIST_HISTORY.GOAL_CURRENT_WAIST']);
         const stats = root.querySelectorAll('.waist-history-page__goal-stat');

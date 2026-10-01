@@ -208,6 +208,33 @@ describe('FastingRedesignPreviewComponent', () => {
 
 // eslint-disable-next-line max-lines-per-function -- notes, alerts, and insights exercise the same fully rendered component contract.
 describe('FastingRedesignPreviewComponent notes', () => {
+    it.each([
+        ['FastingWindow', 'FASTING.FASTING_WINDOW'],
+        ['EatingWindow', 'FASTING.EATING_WINDOW'],
+    ] as const)('names the timeline for its %s phase', async (occurrenceKind, expectedName) => {
+        await TestBed.configureTestingModule({
+            imports: [FastingRedesignPreviewComponent],
+            providers: [provideTranslateTesting()],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(FastingRedesignPreviewComponent);
+        for (const [name, value] of Object.entries({
+            session: createSession({ occurrenceKind }),
+            stats: null,
+            history: [],
+            elapsedFormatted: '01:00:00',
+            remainingFormatted: '15:00:00',
+            progressPercent: TEST_PROGRESS_PERCENT,
+            now: new Date('2026-08-11T16:00:00Z'),
+            selectedDurationHours: INTERMITTENT_HOURS,
+        })) {
+            fixture.componentRef.setInput(name, value);
+        }
+        fixture.detectChanges();
+        const timeline = (fixture.nativeElement as HTMLElement).querySelector('.fasting-redesign__timeline');
+        expect(timeline?.getAttribute('aria-label')).toBe(expectedName);
+        expect(timeline?.getAttribute('aria-valuenow')).toBe(String(TEST_PROGRESS_PERCENT));
+    });
+
     it('keeps active notes visible and opens historical session details from its row', async () => {
         await TestBed.configureTestingModule({
             imports: [FastingRedesignPreviewComponent],

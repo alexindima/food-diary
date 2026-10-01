@@ -33,6 +33,7 @@
                 role="progressbar"
                 aria-valuemin="0"
                 aria-valuemax="100"
+                [attr.aria-label]="'WAIST_HISTORY.GOAL_PROGRESS_TITLE' | translate"
                 [attr.aria-valuenow]="progress.percent"
             >
                 <div class="waist-history-page__goal-progress-value" [style.width.%]="progress.percent"></div>
