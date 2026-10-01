@@ -149,6 +149,15 @@ export class CycleTrackingPageComponent {
     protected readonly settingsForm = this.facade.settingsForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
+    protected readonly factorError = this.facade.factorError;
+    protected readonly factorStartDateError = computed(() => {
+        const field = this.factorForm.startDate();
+        return field.invalid() && field.touched() ? 'FORM_ERRORS.REQUIRED' : null;
+    });
+    protected readonly factorEndDateError = computed(() => {
+        const field = this.factorForm.endDate();
+        return field.touched() && field.errors().some(error => error.kind === 'dateOrder') ? 'CYCLE_TRACKING.FACTOR_DATE_ORDER' : null;
+    });
     protected readonly episodeForm = this.facade.episodeForm;
 
     protected readonly predictions = this.facade.predictions;

@@ -260,6 +260,7 @@
 
     &__factor-item {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: var(--fd-space-sm);
@@ -275,7 +276,9 @@
     }
 
     &__factor-copy {
+        flex: 1 1 auto;
         min-width: 0;
+        overflow-wrap: anywhere;
     }
 
     &__factor-actions {

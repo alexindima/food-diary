@@ -779,6 +779,143 @@ describe('CycleTrackingFacade factors', () => {
     });
 });
 
+describe('CycleTrackingFacade factor drafts', () => {
+    it('discards a cancelled draft and resets field interaction state', () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        facade.factorModel.update(value => ({ ...value, notes: 'cancelled', startDate: null }));
+        facade.factorForm().markAsTouched();
+
+        facade.cancelFactorEdit();
+
+        expect(facade.editingFactorId()).toBeNull();
+        expect(facade.factorModel().notes).toBeNull();
+        expect(facade.factorModel().startDate).not.toBeNull();
+        expect(facade.factorForm().touched()).toBe(false);
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+    });
+
+    it('clears an existing note when the editor is emptied', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        facade.factorModel.update(value => ({ ...value, notes: '   ' }));
+
+        await submit(facade.factorForm);
+
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ clearNotes: true }));
+    });
+
+    it('resets the new-factor form after a successful save', async () => {
+        facade.initialize();
+        facade.factorModel.update(value => ({ ...value, notes: 'saved note' }));
+
+        await submit(facade.factorForm);
+
+        expect(facade.factorModel().notes).toBeNull();
+        expect(facade.editingFactorId()).toBeNull();
+    });
+
+    it('rejects an end date before the start date without sending a request', async () => {
+        facade.initialize();
+        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02', endDate: '2026-04-01' }));
+
+        expect(facade.factorForm().invalid()).toBe(true);
+        expect(await submit(facade.factorForm)).toBe(false);
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+    });
+});
+
+describe('CycleTrackingFacade factor save lifecycle', () => {
+    it('retains a failed draft and resolves submission so the user can retry', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        facade.factorModel.update(value => ({ ...value, notes: 'retry note' }));
+        cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        await expect(submit(facade.factorForm)).resolves.toBe(true);
+
+        expect(facade.isSavingFactor()).toBe(false);
+        expect(facade.editingFactorId()).toBe('factor-1');
+        expect(facade.factorModel().notes).toBe('retry note');
+        expect(facade.factorError()).toBe('CYCLE_TRACKING.SAVE_FACTOR_FAILED');
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledTimes(2);
+        expect(facade.factorError()).toBeNull();
+    });
+
+    it('keeps the pending editor stable and prevents overlapping saves', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        const pending = new Subject<CycleResponse>();
+        cyclesService.upsertFactor.mockReturnValue(pending);
+        const submission = submit(facade.factorForm);
+
+        facade.cancelFactorEdit();
+        facade.editFactor('missing-factor');
+        facade.saveFactor();
+
+        expect(facade.editingFactorId()).toBe('factor-1');
+        expect(facade.factorForm.notes().disabled()).toBe(true);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
+        pending.next(createCycleResponse());
+        pending.complete();
+        await submission;
+    });
+});
+
+describe('CycleTrackingFacade ending factors', () => {
+    it('shows a recoverable error and leaves the factor unchanged when ending fails', async () => {
+        facade.initialize();
+        cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        await facade.endFactorTodayAsync('factor-1');
+
+        expect(facade.factorError()).toBe('CYCLE_TRACKING.END_FACTOR_FAILED');
+        expect(facade.factors()[0].endDate).toBeNull();
+        expect(facade.isSavingFactor()).toBe(false);
+        await facade.endFactorTodayAsync('factor-1');
+        expect(cyclesService.upsertFactor).toHaveBeenCalledTimes(2);
+        expect(facade.factorError()).toBeNull();
+    });
+
+    it('protects the editor and prevents saving while a factor is being ended', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        const pending = new Subject<CycleResponse>();
+        cyclesService.upsertFactor.mockReturnValue(pending);
+        const ending = facade.endFactorTodayAsync('factor-1');
+
+        facade.cancelFactorEdit();
+        facade.saveFactor();
+
+        expect(facade.editingFactorId()).toBe('factor-1');
+        expect(facade.factorForm.notes().disabled()).toBe(true);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
+        pending.next(createCycleResponse());
+        pending.complete();
+        await ending;
+        expect(facade.editingFactorId()).toBeNull();
+        expect(facade.factorModel().notes).toBeNull();
+    });
+
+    it('accepts the same start and end day', async () => {
+        facade.initialize();
+        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-01', endDate: '2026-04-01' }));
+
+        expect(facade.factorForm().invalid()).toBe(false);
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
+    });
+
+    it('does not clear an existing note through a blank new-factor form', async () => {
+        facade.initialize();
+
+        await submit(facade.factorForm);
+
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ clearNotes: false }));
+    });
+});
+
 describe('CycleTrackingFacade menstrual episodes', () => {
     it('toggles prediction exclusion and applies the returned cycle', async () => {
         facade.initialize();

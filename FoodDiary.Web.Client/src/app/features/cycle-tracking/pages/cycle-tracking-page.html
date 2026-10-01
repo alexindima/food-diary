@@ -274,7 +274,11 @@
                             data-tour-id="cycle-tracking-factors"
                             [title]="'CYCLE_TRACKING.FACTORS_TITLE' | translate"
                         >
-                            <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="factorForm">
+                            <form
+                                class="cycle-tracking__form fd-stack fd-gap-card-header"
+                                [formRoot]="factorForm"
+                                [attr.aria-busy]="isSavingFactor()"
+                            >
                                 <fd-ui-select
                                     [label]="'CYCLE_TRACKING.FACTOR_TYPE' | translate"
                                     [options]="factorTypeOptions()"
@@ -284,10 +288,13 @@
                                     <fd-ui-date-input
                                         [label]="'CYCLE_TRACKING.FACTOR_START_DATE' | translate"
                                         [formField]="factorForm.startDate"
+                                        [error]="factorStartDateError() | translate"
                                     />
                                     <fd-ui-date-input
                                         [label]="'CYCLE_TRACKING.FACTOR_END_DATE' | translate"
                                         [formField]="factorForm.endDate"
+                                        [earliestDate]="factorForm.startDate().value() ?? undefined"
+                                        [error]="factorEndDateError() | translate"
                                     />
                                 </div>
                                 <fd-ui-textarea
@@ -295,8 +302,14 @@
                                     [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
                                     [formField]="factorForm.notes"
                                 />
+                                <fd-ui-form-error [error]="factorError()" />
                                 <div class="cycle-tracking__actions fd-ui-actions">
-                                    <fd-ui-button type="submit" [loading]="isSavingFactor()">
+                                    <fd-ui-button
+                                        type="submit"
+                                        [loading]="isSavingFactor()"
+                                        [disabled]="isSavingFactor()"
+                                        [disabledReason]="isSavingFactor() ? ('CYCLE_TRACKING.REQUEST_PENDING' | translate) : null"
+                                    >
                                         {{
                                             (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate
                                         }}
@@ -306,6 +319,8 @@
                                         variant="secondary"
                                         fill="text"
                                         [hidden]="!editingFactorId()"
+                                        [disabled]="isSavingFactor()"
+                                        [disabledReason]="isSavingFactor() ? ('CYCLE_TRACKING.REQUEST_PENDING' | translate) : null"
                                         (click)="cancelFactorEdit()"
                                     >
                                         {{ 'CYCLE_TRACKING.CANCEL_EDIT' | translate }}

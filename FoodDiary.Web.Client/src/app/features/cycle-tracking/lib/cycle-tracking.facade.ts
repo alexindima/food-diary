@@ -75,6 +75,7 @@ export class CycleTrackingFacade {
     public readonly daySaveRevision = signal(0);
     public readonly settingsSaveRevision = signal(0);
     public readonly settingsError = signal<string | null>(null);
+    public readonly factorError = signal<string | null>(null);
     public readonly clearingDayDate = signal<string | null>(null);
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
@@ -204,8 +205,17 @@ export class CycleTrackingFacade {
     public readonly factorForm = form(
         this.factorModel,
         path => {
+            disabled(path, { when: () => this.isSavingFactor() });
             required(path.type);
             required(path.startDate);
+            validate(path.endDate, context => {
+                const start = context.valueOf(path.startDate);
+                const end = context.value();
+                if (start === null || end === null || start.length === 0 || end.length === 0) {
+                    return;
+                }
+                return toCycleDateKey(end) < toCycleDateKey(start) ? { kind: 'dateOrder' } : undefined;
+            });
         },
         {
             submission: {
@@ -594,7 +604,7 @@ export class CycleTrackingFacade {
 
     private async saveFactorAsync(): Promise<void> {
         const currentCycle = this.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.isSavingFactor()) {
             return;
         }
 
@@ -603,39 +613,50 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const formValue = this.factorModel();
-        if (formValue.type === null || formValue.startDate === null || formValue.startDate.length === 0) {
+        const payload = this.buildFactorPayload(this.factorModel());
+        if (payload === null) {
             return;
         }
 
-        const payload: UpsertCycleFactorPayload = {
+        this.factorError.set(null);
+        this.isSavingFactor.set(true);
+        try {
+            const cycle = await firstValueFrom(this.cyclesService.upsertFactor(currentCycle.id, payload));
+            this.cycle.set(cycle);
+            this.resetFactorForm();
+            this.loadNutritionSummary(cycle);
+        } catch {
+            this.factorError.set('CYCLE_TRACKING.SAVE_FACTOR_FAILED');
+        } finally {
+            this.isSavingFactor.set(false);
+        }
+    }
+
+    private buildFactorPayload(formValue: CycleFactorFormModel): UpsertCycleFactorPayload | null {
+        if (formValue.type === null || formValue.startDate === null || formValue.startDate.length === 0) {
+            return null;
+        }
+        const notes = toOptionalCycleText(formValue.notes);
+        return {
             type: formValue.type,
             startDate: toCycleDateKey(formValue.startDate),
             endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
-            notes: toOptionalCycleText(formValue.notes),
-            clearNotes: false,
+            notes,
+            clearNotes: this.editingFactorId() !== null && notes === undefined,
         };
-
-        this.isSavingFactor.set(true);
-        const cycle = await firstValueFrom(
-            this.cyclesService.upsertFactor(currentCycle.id, payload).pipe(
-                finalize(() => {
-                    this.isSavingFactor.set(false);
-                }),
-            ),
-        );
-        this.editingFactorId.set(null);
-        this.cycle.set(cycle);
-        this.loadNutritionSummary(cycle);
     }
 
     public editFactor(factorId: string): void {
+        if (this.isSavingFactor()) {
+            return;
+        }
         const factor = this.factors().find(item => item.id === factorId);
         if (factor === undefined) {
             return;
         }
 
-        this.factorModel.set({
+        this.factorError.set(null);
+        this.factorForm().reset({
             type: factor.type,
             startDate: toCycleDateKey(factor.startDate),
             endDate: factor.endDate === null || factor.endDate === undefined ? null : toCycleDateKey(factor.endDate),
@@ -645,35 +666,56 @@ export class CycleTrackingFacade {
     }
 
     public cancelFactorEdit(): void {
+        if (this.isSavingFactor()) {
+            return;
+        }
+        this.factorError.set(null);
+        this.resetFactorForm();
+    }
+
+    private resetFactorForm(): void {
         this.editingFactorId.set(null);
+        this.factorForm().reset({
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: formatDateInputValue(new Date()),
+            endDate: null,
+            notes: null,
+        });
     }
 
     public endFactorToday(factorId: string): void {
+        void this.endFactorTodayAsync(factorId);
+    }
+
+    public async endFactorTodayAsync(factorId: string): Promise<void> {
         const currentCycle = this.cycle();
         const factor = this.factors().find(item => item.id === factorId);
         if (currentCycle === null || factor === undefined || this.isSavingFactor()) {
             return;
         }
 
+        this.factorError.set(null);
         this.isSavingFactor.set(true);
-        this.cyclesService
-            .upsertFactor(currentCycle.id, {
-                type: factor.type,
-                startDate: toCycleDateKey(factor.startDate),
-                endDate: formatDateInputValue(new Date()),
-                notes: factor.notes ?? undefined,
-                clearNotes: false,
-            })
-            .pipe(
-                finalize(() => {
-                    this.isSavingFactor.set(false);
+        try {
+            const cycle = await firstValueFrom(
+                this.cyclesService.upsertFactor(currentCycle.id, {
+                    type: factor.type,
+                    startDate: toCycleDateKey(factor.startDate),
+                    endDate: formatDateInputValue(new Date()),
+                    notes: factor.notes ?? undefined,
+                    clearNotes: false,
                 }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(cycle => {
-                this.cycle.set(cycle);
-                this.loadNutritionSummary(cycle);
-            });
+            );
+            this.cycle.set(cycle);
+            if (this.editingFactorId() === factorId) {
+                this.resetFactorForm();
+            }
+            this.loadNutritionSummary(cycle);
+        } catch {
+            this.factorError.set('CYCLE_TRACKING.END_FACTOR_FAILED');
+        } finally {
+            this.isSavingFactor.set(false);
+        }
     }
 
     public clearDay(date: string): void {
