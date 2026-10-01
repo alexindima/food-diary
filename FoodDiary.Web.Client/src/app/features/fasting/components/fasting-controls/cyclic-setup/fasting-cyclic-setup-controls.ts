@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
+import { normalizeCyclicDays, normalizeIntermittentFastHours } from '../../../lib/fasting-input-normalization';
 import type { FastingProtocol } from '../../../models/fasting.data';
 
 @Component({
@@ -16,6 +17,9 @@ import type { FastingProtocol } from '../../../models/fasting.data';
     },
 })
 export class FastingCyclicSetupControlsComponent {
+    protected readonly normalizeCyclicDays = normalizeCyclicDays;
+    protected readonly normalizeIntermittentFastHours = normalizeIntermittentFastHours;
+
     public readonly cyclicPresetOptions = input.required<FdUiSegmentedToggleOption[]>();
     public readonly cyclicEatDayProtocolOptions = input.required<FdUiSegmentedToggleOption[]>();
     public readonly selectedCyclicPresetValue = input.required<string>();

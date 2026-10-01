@@ -20,6 +20,7 @@
                         type="number"
                         size="sm"
                         [label]="'FASTING.CYCLIC_FAST_DAYS_SHORT' | translate"
+                        [numberNormalizer]="normalizeCyclicDays"
                         [value]="cyclicFastDays()"
                         (valueChange)="cyclicFastDaysChange.emit(normalizeNumericControlValue($event))"
                     />
@@ -29,6 +30,7 @@
                         type="number"
                         size="sm"
                         [label]="'FASTING.CYCLIC_EAT_DAYS_SHORT' | translate"
+                        [numberNormalizer]="normalizeCyclicDays"
                         [value]="cyclicEatDays()"
                         (valueChange)="cyclicEatDaysChange.emit(normalizeNumericControlValue($event))"
                     />
@@ -63,6 +65,7 @@
                         type="number"
                         size="sm"
                         [label]="'FASTING.FAST_HOURS_SHORT' | translate"
+                        [numberNormalizer]="normalizeIntermittentFastHours"
                         [value]="cyclicEatDayFastHours()"
                         (valueChange)="cyclicEatDayFastHoursChange.emit(normalizeNumericControlValue($event))"
                     />

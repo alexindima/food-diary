@@ -58,6 +58,7 @@
                                     type="number"
                                     size="sm"
                                     [label]="'FASTING.ADD_HOURS' | translate"
+                                    [numberNormalizer]="normalizeFastingHours"
                                     [value]="extendHours()"
                                     (valueChange)="extendHoursChange.emit(normalizeNumericControlValue($event))"
                                 />
@@ -137,6 +138,7 @@
                                     type="number"
                                     size="sm"
                                     [label]="'FASTING.REDUCE_HOURS' | translate"
+                                    [numberNormalizer]="normalizeFastingHours"
                                     [value]="reduceHours()"
                                     (valueChange)="reduceHoursChange.emit(normalizeNumericControlValue($event))"
                                 />

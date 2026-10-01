@@ -74,6 +74,10 @@ function requireInput(host: HTMLElement): HTMLInputElement {
     return input;
 }
 
+const NORMALIZED_MAX_HOURS = 23;
+const FRACTIONAL_HOURS = 1.5;
+const NEGATIVE_FRACTIONAL_VALUE = -1.5;
+
 describe('FdUiInputComponent Signal Forms touch', () => {
     it('marks the bound field touched when the native input loses focus', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();
@@ -87,6 +91,46 @@ describe('FdUiInputComponent Signal Forms touch', () => {
 });
 
 describe('FdUiInputComponent', () => {
+    it('keeps repeated normalized numeric edits consistent in the control and emitted value', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('value', 1);
+        fixture.componentRef.setInput('numberNormalizer', (value: number | null) =>
+            Math.trunc(Math.max(1, Math.min(NORMALIZED_MAX_HOURS, value ?? 1))),
+        );
+        fixture.detectChanges();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+
+        for (const [raw, expected] of [
+            ['-1', 1],
+            ['-2', 1],
+            ['24', NORMALIZED_MAX_HOURS],
+            ['25', NORMALIZED_MAX_HOURS],
+            ['1.5', 1],
+            ['', 1],
+        ] as const) {
+            input().value = raw;
+            input().dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(component.value()).toBe(expected);
+            expect(input().value).toBe(String(expected));
+        }
+        expect(changed).not.toHaveBeenCalledWith(-1);
+        expect(changed).not.toHaveBeenCalledWith(FRACTIONAL_HOURS);
+    });
+
+    it('preserves unconstrained numeric input by default', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.detectChanges();
+        input().value = '-1.5';
+        input().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.value()).toBe(NEGATIVE_FRACTIONAL_VALUE);
+        expect(input().value).toBe('-1.5');
+    });
+
     it('should create', async () => {
         const { component } = await setupInputAsync();
 

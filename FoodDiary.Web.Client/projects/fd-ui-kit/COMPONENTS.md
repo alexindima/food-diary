@@ -172,6 +172,7 @@ Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text
 - `required?: boolean`
 - `readonly?: boolean`
 - `maxLength?: number`
+- `numberNormalizer?: (value: number | null) => number | null` (opt-in normalization of numeric edits and autofill; keeps the visible value and emitted value consistent, including repeated edits at the same boundary)
 - `step?: string | number`
 - `size?: 'sm' | 'md' | 'lg'`
 - `fillColor?: string | null` (custom background)

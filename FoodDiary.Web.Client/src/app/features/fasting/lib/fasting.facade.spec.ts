@@ -10,6 +10,7 @@ import { FastingService } from '../api/fasting.service';
 import type { FastingMessage, FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
 
+const FRACTIONAL_DRAFT_DURATION = 1.5;
 const OUT_OF_RANGE_DURATION = 100;
 const MAX_INTERVAL_HOURS = 23;
 const EATING_DAYS = 3;
@@ -430,6 +431,25 @@ describe('FastingFacade setup modes and target changes', () => {
 describe('FastingFacade lifecycle regression (1)', () => {
     beforeEach(setupFacade);
     afterEach(teardownFacade);
+    it('normalizes custom durations and cyclic days to the whole numbers accepted by the API', () => {
+        facade.setCustomHours(FRACTIONAL_DRAFT_DURATION);
+        facade.setCustomIntermittentFastHours(FRACTIONAL_DRAFT_DURATION);
+        facade.setCyclicFastDays(FRACTIONAL_DRAFT_DURATION);
+        facade.setCyclicEatDays(FRACTIONAL_DRAFT_DURATION);
+        facade.setCyclicEatDayFastHours(FRACTIONAL_DRAFT_DURATION);
+        facade.setExtendHours(FRACTIONAL_DRAFT_DURATION);
+        facade.setReduceHours(FRACTIONAL_DRAFT_DURATION);
+
+        expect([
+            facade.customHours(),
+            facade.customIntermittentFastHours(),
+            facade.cyclicFastDays(),
+            facade.cyclicEatDays(),
+            facade.cyclicEatDayFastHours(),
+            facade.extendHours(),
+            facade.reduceHours(),
+        ]).toEqual([1, 1, 1, 1, 1, 1, 1]);
+    });
     it('clamps custom intervals and cyclic days before starting', () => {
         facade.selectMode('intermittent');
         facade.selectProtocol('CustomIntermittent');

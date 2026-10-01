@@ -3,7 +3,7 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1543,
+    "inputs": 1544,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
@@ -5308,6 +5308,11 @@
         {
           "name": "localizedNumber",
           "type": "",
+          "required": false
+        },
+        {
+          "name": "numberNormalizer",
+          "type": "(value: number | null) => number | null",
           "required": false
         },
         {
@@ -33737,6 +33742,7 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
+        "numberNormalizer",
         "size",
         "type",
         "value"
@@ -33754,6 +33760,7 @@
       "occurrences": 3,
       "inputsUsed": [
         "label",
+        "numberNormalizer",
         "size",
         "type",
         "value"
@@ -33771,6 +33778,7 @@
       "occurrences": 2,
       "inputsUsed": [
         "label",
+        "numberNormalizer",
         "size",
         "type",
         "value"

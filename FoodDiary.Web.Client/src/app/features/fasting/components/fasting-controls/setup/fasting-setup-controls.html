@@ -39,6 +39,7 @@
                                 type="number"
                                 size="sm"
                                 [label]="'FASTING.FAST_HOURS_SHORT' | translate"
+                                [numberNormalizer]="normalizeIntermittentFastHours"
                                 [value]="customIntermittentFastHours()"
                                 (valueChange)="customIntermittentFastHoursChange.emit(normalizeNumericControlValue($event))"
                             />
@@ -74,6 +75,7 @@
                                 type="number"
                                 size="sm"
                                 [label]="'FASTING.CUSTOM_HOURS' | translate"
+                                [numberNormalizer]="normalizeFastingHours"
                                 [value]="customHours()"
                                 (valueChange)="customHoursChange.emit(normalizeNumericControlValue($event))"
                             />

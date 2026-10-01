@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5690,
+    "productionFiles": 5691,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 977,
@@ -5530,11 +5530,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.stories.ts",
-      "nonBlankLines": 138,
-      "decisionPoints": 0,
+      "nonBlankLines": 151,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
+      "structuralRiskScore": 4.52
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.tokens.ts",
@@ -5546,11 +5546,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "nonBlankLines": 227,
-      "decisionPoints": 36,
+      "nonBlankLines": 244,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.54
+      "structuralRiskScore": 64.88
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/level-indicator/fd-ui-level-indicator.stories.ts",
@@ -9258,19 +9258,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-extended/fasting-active-extended-controls.ts",
-      "nonBlankLines": 85,
+      "nonBlankLines": 87,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.7
+      "structuralRiskScore": 16.74
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/cyclic-setup/fasting-cyclic-setup-controls.ts",
-      "nonBlankLines": 35,
+      "nonBlankLines": 38,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
@@ -9290,11 +9290,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/setup/fasting-setup-controls.ts",
-      "nonBlankLines": 55,
+      "nonBlankLines": 58,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.1
+      "structuralRiskScore": 1.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-end-confirm-dialog/fasting-end-confirm-dialog.ts",
@@ -9433,6 +9433,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting-input-normalization.ts",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.78
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting-page.constants.ts",
       "nonBlankLines": 28,
       "decisionPoints": 0,
@@ -9482,11 +9490,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "nonBlankLines": 563,
+      "nonBlankLines": 561,
       "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.26
+      "structuralRiskScore": 77.22
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/models/fasting.data.ts",

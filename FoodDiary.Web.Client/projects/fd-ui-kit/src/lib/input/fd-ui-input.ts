@@ -57,6 +57,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'>('text');
     public readonly localizedNumber = input(false);
+    public readonly numberNormalizer = input<(value: number | null) => number | null>();
     public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
@@ -155,8 +156,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
             return;
         }
 
-        this.internalValue.set(value);
-        this.value.set(this.toModelValue(value));
+        this.updateInputValue(value);
     }
 
     protected onBlur(): void {
@@ -220,8 +220,26 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         this.internalValue.set(value);
 
         if (!this.disabled()) {
-            this.value.set(this.toModelValue(value));
+            this.updateInputValue(value);
         }
+    }
+
+    private updateInputValue(raw: string): void {
+        const parsed = this.toModelValue(raw);
+        const normalizer = this.numberNormalizer();
+        if (normalizer !== undefined && typeof parsed !== 'string' && this.type() === 'number') {
+            const normalized = normalizer(parsed);
+            const display = normalized === null ? '' : String(normalized);
+            this.internalValue.set(display);
+            const control = this.control()?.nativeElement;
+            if (control !== undefined) {
+                control.value = display;
+            }
+            this.value.set(normalized);
+            return;
+        }
+        this.internalValue.set(raw);
+        this.value.set(parsed);
     }
 
     private toModelValue(value: string): string | number | null {

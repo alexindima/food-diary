@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1823,
+    "typescriptFiles": 1824,
     "symbols": 708,
     "routes": 104,
     "features": 45,
@@ -3802,14 +3802,14 @@
       "role": "Component",
       "selector": "fd-fasting-active-extended-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-extended/fasting-active-extended-controls.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "FastingCyclicSetupControlsComponent",
       "role": "Component",
       "selector": "fd-fasting-cyclic-setup-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/cyclic-setup/fasting-cyclic-setup-controls.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "FastingControlsComponent",
@@ -3823,7 +3823,7 @@
       "role": "Component",
       "selector": "fd-fasting-setup-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/setup/fasting-setup-controls.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "FastingEndConfirmDialogComponent",
@@ -3935,7 +3935,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "line": 57
+      "line": 55
     },
     {
       "name": "FastingAlertsSectionComponent",

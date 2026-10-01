@@ -13,6 +13,7 @@ const meta: Meta<FdUiInputComponent> = {
             control: 'select',
             options: ['text', 'number', 'password', 'email', 'tel'],
         },
+        numberNormalizer: { control: false },
         error: { control: 'text' },
         required: { control: 'boolean' },
         readonly: { control: 'boolean' },
@@ -152,5 +153,19 @@ export const Measurement: Story = {
         required: true,
         showRequiredIndicator: false,
         selectOnFocus: true,
+    },
+};
+
+const MIN_NORMALIZED_HOURS = 1;
+const MAX_NORMALIZED_HOURS = 23;
+
+export const NormalizedWholeHours: Story = {
+    args: {
+        label: 'Fasting hours (1–23)',
+        type: 'number',
+        value: MIN_NORMALIZED_HOURS,
+        step: 1,
+        numberNormalizer: value =>
+            Math.max(MIN_NORMALIZED_HOURS, Math.min(MAX_NORMALIZED_HOURS, Math.trunc(value ?? MIN_NORMALIZED_HOURS))),
     },
 };

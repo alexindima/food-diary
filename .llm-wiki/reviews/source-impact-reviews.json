@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a03157cec9546f6f792ee92d935c343f87679a32279a74ef3bc65c1fa3057e68"
+          "sha256": "af447d0ba6c59de135f9fc687652d69721b8e56f947db450b9bb77d2e6cb40a1"
         }
       ],
-      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
+      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
       "baseRef": "HEAD",
-      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
-      "reviewedAtUtc": "2026-10-01T20:04:22.4852815Z"
+      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
+      "reviewedAtUtc": "2026-10-01T20:39:34.6493175Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a03157cec9546f6f792ee92d935c343f87679a32279a74ef3bc65c1fa3057e68"
+          "sha256": "af447d0ba6c59de135f9fc687652d69721b8e56f947db450b9bb77d2e6cb40a1"
         }
       ],
-      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
+      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
       "baseRef": "HEAD",
-      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
-      "reviewedAtUtc": "2026-10-01T20:04:23.0550260Z"
+      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
+      "reviewedAtUtc": "2026-10-01T20:39:35.1404418Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7e0da292cc2925c2983d929f0fcead511c7fbd7131cb0566dae21ee5cba9d90f"
+          "sha256": "5afdc910275edca5087402461c92a935bce467feace52b1b8a3e9994a8f9cf93"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "7403eb9cfca0787af8e11b1833632a74c3da2a3d33dbb3b7c8a21b419b9a0b6a"
+          "sha256": "82f78b3e81640113802ec0ca2b6fdd8f7a724b3e5558a0b87e357724e1b46cf6"
         }
       ],
-      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
+      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
       "baseRef": "HEAD",
-      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
-      "reviewedAtUtc": "2026-10-01T20:04:23.7711393Z"
+      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
+      "reviewedAtUtc": "2026-10-01T20:39:35.6192420Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7e0da292cc2925c2983d929f0fcead511c7fbd7131cb0566dae21ee5cba9d90f"
+          "sha256": "5afdc910275edca5087402461c92a935bce467feace52b1b8a3e9994a8f9cf93"
         }
       ],
-      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
+      "reason": "Fasting numeric normalization with shared opt-in input support; focused tests and desktop/mobile interaction evidence",
       "baseRef": "HEAD",
-      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
-      "reviewedAtUtc": "2026-10-01T20:04:21.9362531Z"
+      "gitHead": "93340d528dfddc83f74ee936adda83aa614c5103",
+      "reviewedAtUtc": "2026-10-01T20:39:34.1543304Z"
     },
     {
       "pageId": "workflow.query-context",

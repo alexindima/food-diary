@@ -4,6 +4,7 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
+import { normalizeFastingHours, normalizeIntermittentFastHours } from '../../../lib/fasting-input-normalization';
 import type { FastingMode, FastingProtocol } from '../../../models/fasting.data';
 import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyclic-setup-controls';
 
@@ -18,6 +19,9 @@ import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyc
     },
 })
 export class FastingSetupControlsComponent {
+    protected readonly normalizeFastingHours = normalizeFastingHours;
+    protected readonly normalizeIntermittentFastHours = normalizeIntermittentFastHours;
+
     public readonly modeOptions = input.required<FdUiSegmentedToggleOption[]>();
     public readonly selectedMode = input.required<FastingMode>();
     public readonly intermittentProtocolOptions = input.required<FdUiSegmentedToggleOption[]>();

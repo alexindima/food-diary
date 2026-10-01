@@ -31,11 +31,9 @@ import {
     FASTING_HISTORY_PAGE_SIZE,
     FASTING_PROMPT_SNOOZE_HOURS,
     MAX_CHECK_IN_LEVEL,
-    MAX_CYCLIC_DAYS,
-    MAX_FASTING_HOURS,
-    MAX_INTERMITTENT_FAST_HOURS,
     MIN_FASTING_HOURS,
 } from './fasting.constants';
+import { normalizeCyclicDays, normalizeFastingHours, normalizeIntermittentFastHours } from './fasting-input-normalization';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 import {
     calculateFastingElapsedMs,
@@ -580,15 +578,15 @@ export class FastingFacade {
     }
 
     private clampFastingHours(hours: number): number {
-        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_FASTING_HOURS, hours));
+        return normalizeFastingHours(hours);
     }
 
     private clampIntermittentFastHours(hours: number): number {
-        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_INTERMITTENT_FAST_HOURS, hours));
+        return normalizeIntermittentFastHours(hours);
     }
 
     private clampCyclicDays(days: number): number {
-        return Math.max(MIN_FASTING_HOURS, Math.min(MAX_CYCLIC_DAYS, days));
+        return normalizeCyclicDays(days);
     }
 
     private clampCheckInLevel(level: number): number {

@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
+import { normalizeFastingHours } from '../../../lib/fasting-input-normalization';
 import type { FastingCustomActionState } from '../fasting-controls.types';
 
 @Component({
@@ -16,6 +17,8 @@ import type { FastingCustomActionState } from '../fasting-controls.types';
     },
 })
 export class FastingActiveExtendedControlsComponent {
+    protected readonly normalizeFastingHours = normalizeFastingHours;
+
     public readonly canExtendActiveSession = input.required<boolean>();
     public readonly isExtendPanelExpanded = input.required<boolean>();
     public readonly isReducePanelExpanded = input.required<boolean>();
