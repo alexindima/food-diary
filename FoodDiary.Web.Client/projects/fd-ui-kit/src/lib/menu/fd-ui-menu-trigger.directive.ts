@@ -3,6 +3,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import type { FdUiMenuComponent } from './fd-ui-menu';
 
 const MENU_OFFSET_Y = 8;
@@ -22,6 +23,7 @@ export class FdUiMenuTriggerDirective {
     private readonly destroyRef = inject(DestroyRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly viewContainerRef = inject(ViewContainerRef);
+    private readonly button = inject(FdUiButtonComponent, { optional: true, self: true });
     private activeSubscriptions = new Subscription();
 
     public readonly menu = input<FdUiMenuComponent | null>(null, { alias: 'fdUiMenuTrigger' });
@@ -150,7 +152,11 @@ export class FdUiMenuTriggerDirective {
 
         this.overlayRef.detach();
         if (restoreFocus) {
-            this.elementRef.nativeElement.focus();
+            if (this.button !== null) {
+                this.button.focus();
+            } else {
+                this.elementRef.nativeElement.focus();
+            }
         }
     }
 

@@ -1821,7 +1821,7 @@
       "role": "Directive",
       "selector": "[fdUiMenuTrigger]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-trigger.directive.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "FdUiMenuComponent",

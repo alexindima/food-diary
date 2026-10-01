@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
@@ -21,7 +21,7 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
     ],
 })
 export class FdUiMenuItemComponent {
-    private readonly host = inject<ElementRef<HTMLButtonElement>>(ElementRef);
+    private readonly controlRef = viewChild.required<ElementRef<HTMLButtonElement>>('control');
     private readonly parentMenu = inject(FD_UI_MENU, { optional: true });
     private readonly document = inject(DOCUMENT);
 
@@ -36,11 +36,11 @@ export class FdUiMenuItemComponent {
     protected readonly effectiveDisabledReason = computed(() => (this.disabled() ? this.disabledReason() : null));
 
     protected focus(): void {
-        this.host.nativeElement.focus();
+        this.controlRef().nativeElement.focus();
     }
 
     protected isFocused(): boolean {
-        return this.document.activeElement === this.host.nativeElement;
+        return this.document.activeElement === this.controlRef().nativeElement;
     }
 
     protected selectMenuItem(event: Event): void {

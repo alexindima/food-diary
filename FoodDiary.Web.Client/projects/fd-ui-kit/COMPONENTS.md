@@ -415,6 +415,10 @@ Primary button component.
 - `ariaLabel?: string`
 - `ariaPressed?: boolean | null` (pressed state for toggle-style buttons)
 
+**Methods**
+
+- `focus()` focuses the native button after rendering; disabled and loading buttons remain unfocusable.
+
 ### Cards
 
 #### `fd-ui-card`
@@ -764,6 +768,8 @@ Reusable section wrapper for `content`, `loading`, `empty`, and `error` states i
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
 
 Context menu components.
+
+Triggers support native buttons and `fd-ui-button`. Escape and item selection restore focus to the trigger's native button. Tab closes the menu without restoring focus. Arrow keys, Home, and End focus enabled menu items and skip disabled items.
 
 #### `fd-ui-loader`
 

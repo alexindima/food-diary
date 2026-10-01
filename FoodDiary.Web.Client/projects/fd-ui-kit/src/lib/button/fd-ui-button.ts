@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, type ElementRef, input, viewChild } from '@angular/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 
@@ -14,6 +14,7 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon';
     },
 })
 export class FdUiButtonComponent {
+    private readonly controlRef = viewChild.required<ElementRef<HTMLButtonElement>>('control');
     public readonly type = input<FdUiButtonType>('button');
     public readonly variant = input<FdUiButtonVariant>('primary');
     public readonly fill = input<FdUiButtonFill>('solid');
@@ -56,6 +57,11 @@ export class FdUiButtonComponent {
         ].filter((className): className is string => Boolean(className)),
     );
     protected readonly effectiveDisabledReason = computed(() => (this.disabled() ? this.disabledReason() : null));
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by menu triggers, not a template internal.
+    public focus(): void {
+        this.controlRef().nativeElement.focus();
+    }
 }
 
 export type FdUiButtonType = 'button' | 'submit' | 'reset';
