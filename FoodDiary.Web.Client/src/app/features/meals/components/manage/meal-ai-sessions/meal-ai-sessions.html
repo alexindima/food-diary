@@ -61,7 +61,7 @@
                             variant="secondary"
                             fill="text"
                             size="sm"
-                            [attr.aria-expanded]="row.isExpanded"
+                            [ariaExpanded]="row.isExpanded"
                             (click)="toggleAiSessionExpanded(row.index)"
                         >
                             @if (row.isExpanded) {

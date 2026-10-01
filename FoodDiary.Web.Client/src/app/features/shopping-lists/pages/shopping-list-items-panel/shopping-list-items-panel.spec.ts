@@ -85,6 +85,21 @@ describe('ShoppingListItemsPanelComponent', () => {
         expect(component['pendingItems']()[0].id).toBe('item-1');
     });
 
+    it('exposes purchased group expansion on the focusable toggle', async () => {
+        const { fixture } = await setupItemsPanelAsync();
+        const element = fixture.nativeElement as HTMLElement;
+        const toggle = element.querySelector<HTMLButtonElement>('.shopping-list__purchased-toggle button');
+        if (toggle === null) {
+            throw new Error('Purchased group toggle is missing');
+        }
+        expect(toggle.getAttribute('aria-expanded')).toBe('true');
+        expect(element.querySelectorAll('.shopping-list__purchased li')).toHaveLength(1);
+        toggle.click();
+        fixture.detectChanges();
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        expect(element.querySelectorAll('.shopping-list__purchased li')).toHaveLength(0);
+    });
+
     it('builds localized unit options and item view models', async () => {
         const { component } = await setupItemsPanelAsync();
 

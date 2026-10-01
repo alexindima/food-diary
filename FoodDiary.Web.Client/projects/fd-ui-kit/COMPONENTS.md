@@ -416,6 +416,7 @@ Primary button component.
 - `fullWidth?: boolean`
 - `ariaLabel?: string`
 - `ariaPressed?: boolean | null` (pressed state for toggle-style buttons)
+- `ariaExpanded?: boolean | null` (expanded state on the native button for disclosure controls; omitted by default)
 
 **Methods**
 

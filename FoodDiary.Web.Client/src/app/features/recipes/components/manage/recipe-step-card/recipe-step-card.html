@@ -29,7 +29,7 @@
                     [icon]="expandedIcon()"
                     [disabled]="busy() || uploading()"
                     [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                    [attr.aria-expanded]="isExpanded()"
+                    [ariaExpanded]="isExpanded()"
                     [fdUiHint]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"

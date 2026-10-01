@@ -248,7 +248,7 @@
                                     type="button"
                                     variant="secondary"
                                     fill="outline"
-                                    [attr.aria-expanded]="openDiscussionId() === item.id"
+                                    [ariaExpanded]="openDiscussionId() === item.id"
                                     (click)="toggleDiscussion(item.id)"
                                 >
                                     {{ 'RECOMMENDATIONS.DISCUSSION.TITLE' | translate }}

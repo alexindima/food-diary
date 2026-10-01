@@ -47,7 +47,7 @@
                     class="fasting__history-toggle"
                     variant="secondary"
                     fill="text"
-                    [attr.aria-expanded]="item.isExpanded"
+                    [ariaExpanded]="item.isExpanded"
                     [attr.aria-controls]="item.checkInRegionId"
                     (click)="historyToggle.emit(session.id)"
                 >

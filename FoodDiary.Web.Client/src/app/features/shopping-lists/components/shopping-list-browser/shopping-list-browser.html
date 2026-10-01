@@ -33,7 +33,7 @@
                 variant="secondary"
                 fill="text"
                 [icon]="completedOpen() ? 'expand_more' : 'chevron_right'"
-                [attr.aria-expanded]="completedOpen()"
+                [ariaExpanded]="completedOpen()"
                 (click)="completedOpen.set(!completedOpen())"
                 >{{ 'SHOPPING_LIST.COMPLETED_GROUP' | translate }} · {{ completed().length }}</fd-ui-button
             >

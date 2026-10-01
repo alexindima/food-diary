@@ -3,7 +3,7 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1542,
+    "inputs": 1543,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
@@ -4315,6 +4315,11 @@
         },
         {
           "name": "ariaPressed",
+          "type": "boolean | null",
+          "required": false
+        },
+        {
+          "name": "ariaExpanded",
           "type": "boolean | null",
           "required": false
         },
@@ -27092,6 +27097,7 @@
       "occurrences": 17,
       "inputsUsed": [
         "appearance",
+        "ariaExpanded",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -27377,6 +27383,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-item/fasting-history-item.html",
       "occurrences": 2,
       "inputsUsed": [
+        "ariaExpanded",
         "fill",
         "type",
         "variant"
@@ -27725,6 +27732,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.html",
       "occurrences": 3,
       "inputsUsed": [
+        "ariaExpanded",
         "ariaLabel",
         "fill",
         "icon",
@@ -28696,6 +28704,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
       "occurrences": 4,
       "inputsUsed": [
+        "ariaExpanded",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -28966,6 +28975,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.html",
       "occurrences": 3,
       "inputsUsed": [
+        "ariaExpanded",
         "fill",
         "fullWidth",
         "icon",
@@ -29027,6 +29037,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
       "inputsUsed": [
+        "ariaExpanded",
         "ariaLabel",
         "disabled",
         "disabledReason",

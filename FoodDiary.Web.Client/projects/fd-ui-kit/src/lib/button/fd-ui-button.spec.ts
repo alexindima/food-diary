@@ -34,6 +34,16 @@ function setupButton(): ButtonTestContext {
 }
 
 describe('FdUiButtonComponent', () => {
+    it('exposes disclosure state on the native button only when provided', () => {
+        const { button, fixture } = setupButton();
+        expect(button().hasAttribute('aria-expanded')).toBe(false);
+        for (const expanded of [false, true, null]) {
+            fixture.componentRef.setInput('ariaExpanded', expanded);
+            fixture.detectChanges();
+            expect(button().getAttribute('aria-expanded')).toBe(expanded === null ? null : String(expanded));
+        }
+    });
+
     it('should create', () => {
         const { component } = setupButton();
 

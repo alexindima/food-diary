@@ -6,6 +6,7 @@ const meta: Meta<FdUiButtonComponent> = {
     title: 'Components/Button',
     component: FdUiButtonComponent,
     tags: ['autodocs'],
+    args: { ariaExpanded: null },
     argTypes: {
         variant: {
             control: 'select',
@@ -37,6 +38,7 @@ const meta: Meta<FdUiButtonComponent> = {
         disabled: { control: 'boolean' },
         fullWidth: { control: 'boolean' },
         ariaLabel: { control: 'text' },
+        ariaExpanded: { control: 'boolean', description: 'Expanded state for disclosure controls' },
     },
     render: args => ({
         props: args,
@@ -49,6 +51,7 @@ const meta: Meta<FdUiButtonComponent> = {
             [disabled]="disabled"
             [fullWidth]="fullWidth"
             [ariaLabel]="ariaLabel"
+            [ariaExpanded]="ariaExpanded"
             [type]="type">Button</fd-ui-button>`,
     }),
 };
