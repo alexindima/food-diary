@@ -360,6 +360,8 @@ The component reuses `fd-ui-calendar` with `selectionMode="week"`. The calendar 
 
 Specialized numeric input for nutrition cards.
 
+In number mode, emits numbers or `null` for an empty field. Decimal commas are normalized; a leading minus sign is preserved for form validation. Incomplete numeric input emits `NaN` while retaining the typed text.
+
 **Inputs**
 
 - `label: string`

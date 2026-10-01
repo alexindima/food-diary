@@ -91,6 +91,7 @@
         "REQUIRED": "This field is required",
         "USER_EXISTS": "User with this email already exists",
         "EMAIL": "Incorrect email",
+        "INVALID_NUMBER": "Enter a valid number",
         "INVALID_CREDENTIALS": "Invalid login or password",
         "AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET": "At least one of the values for fats, proteins, or carbs must be greater than 0.",
         "NON_EMPTY_ARRAY": "At least one item must be added",

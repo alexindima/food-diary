@@ -17,4 +17,5 @@ public sealed record AggregatedStatisticsHttpResponse(
     double DinnerCalories,
     double SnackCalories,
     int MealCount,
-    int TrackedDayCount);
+    int TrackedDayCount,
+    double OtherCalories = 0);

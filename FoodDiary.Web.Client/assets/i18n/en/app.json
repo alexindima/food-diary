@@ -246,7 +246,8 @@
                     "BREAKFAST": "Breakfast",
                     "LUNCH": "Lunch",
                     "DINNER": "Dinner",
-                    "SNACK": "Snacks"
+                    "SNACK": "Snacks",
+                    "OTHER": "Other"
                 }
             },
             "STABILITY": {
@@ -886,6 +887,8 @@
         "FILTER_NUTRITION": "Calories",
         "FILTER_CALORIES_FROM": "Calories from",
         "FILTER_CALORIES_TO": "Calories to",
+        "FILTER_CALORIES_INVALID": "Enter a valid number of calories, zero or greater.",
+        "FILTER_CALORIES_ORDER": "Calories from must be less than or equal to calories to.",
         "FILTER_CALORIES_ACTIVE": "Calories range",
         "FILTER_MEDIA": "Photo",
         "FILTER_HAS_IMAGE": "Has photo",

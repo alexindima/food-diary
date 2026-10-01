@@ -23263,6 +23263,13 @@
           "Nullable": false
         },
         {
+          "Name": "otherCalories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
           "Name": "snackCalories",
           "Required": false,
           "Type": "number",

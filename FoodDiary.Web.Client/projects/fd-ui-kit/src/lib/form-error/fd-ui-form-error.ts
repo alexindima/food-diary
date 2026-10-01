@@ -26,6 +26,7 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
         required: (): string => 'FORM_ERRORS.REQUIRED',
         requiredTrue: (): string => 'FORM_ERRORS.REQUIRED',
         email: (): string => 'FORM_ERRORS.EMAIL',
+        invalidNumber: (): string => 'FORM_ERRORS.INVALID_NUMBER',
         minlength: (error?: unknown): FdValidationErrorConfig => ({
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
             params: { requiredLength: getNumberProperty(error, 'requiredLength') },

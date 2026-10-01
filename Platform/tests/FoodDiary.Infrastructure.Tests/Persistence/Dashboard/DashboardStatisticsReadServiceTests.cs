@@ -27,7 +27,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         DateTime to = from.AddDays(365).AddHours(1);
         DateTime[] dates = [to, from.AddTicks(-1), from.AddDays(7), from, from.AddDays(1).AddTicks(-1),
             from.AddDays(1), to.AddTicks(1), from.AddDays(100), from.AddDays(7).AddTicks(-1)];
-        Meal[] meals = [.. dates.Select((date, index) => CreateMeal(user.Id, date, 100 + (index * 0.17), 10 + (index * 0.13), (MealType)(index % 4)))];
+        Meal[] meals = [.. dates.Select((date, index) => CreateMeal(user.Id, date, 100 + (index * 0.17), 10 + (index * 0.13), index == 7 ? null : (MealType)(index % 5)))];
         context.Meals.AddRange(meals);
         context.Meals.Add(CreateMeal(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), from, 9999, 9999));
         await context.SaveChangesAsync();
@@ -58,6 +58,7 @@ public sealed class DashboardStatisticsReadServiceTests {
             Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Lunch).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.LunchCalories);
             Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Dinner).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.DinnerCalories);
             Assert.Equal(Math.Round(expected.Where(meal => meal.MealType == MealType.Snack).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.SnackCalories);
+            Assert.Equal(Math.Round(expected.Where(meal => meal.MealType is null or MealType.Other).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven), actual.OtherCalories);
             Assert.Equal(expected.Length, actual.MealCount);
             Assert.Equal(expected.Select(meal => meal.Date.Date).Distinct().Count(), actual.TrackedDayCount);
         }

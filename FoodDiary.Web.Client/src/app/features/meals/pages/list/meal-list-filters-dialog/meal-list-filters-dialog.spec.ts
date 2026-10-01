@@ -92,6 +92,34 @@ describe('MealListFiltersDialogComponent', () => {
     });
 });
 
+describe('MealListFiltersDialogComponent calorie validation', () => {
+    it('keeps reversed bounds open and permits correcting the range', async () => {
+        const { component, dialogRef } = await setupComponentAsync(null);
+        component['caloriesFromValue'] = '500';
+        component['caloriesToValue'] = '100';
+        component['onApply']();
+
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(component['caloriesError']()).toBe('MEAL_LIST.FILTER_CALORIES_ORDER');
+        expect(component['caloriesFromValue']).toBe('500');
+        component['caloriesToValue'] = '500';
+        component['onApply']();
+        expect(dialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ caloriesFrom: 500, caloriesTo: 500 }));
+        expect(component['caloriesError']()).toBe('');
+    });
+
+    it.each([-1, Number.NaN, Number.POSITIVE_INFINITY, 'invalid'])('rejects invalid bound %s', async value => {
+        const { component, dialogRef } = await setupComponentAsync(null);
+        component['caloriesFromValue'] = value;
+        component['onApply']();
+
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(component['caloriesError']()).toBe('MEAL_LIST.FILTER_CALORIES_INVALID');
+        component['onReset']();
+        expect(component['caloriesError']()).toBe('');
+    });
+});
+
 async function setupComponentAsync(initialDateRange: FdUiDateRangeValue | null): Promise<{
     component: MealListFiltersDialogComponent;
     dialogRef: { close: ReturnType<typeof vi.fn> };

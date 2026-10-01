@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "442f507b571ef1efcfe93f22444ae66c91370fe4b616aa4e3a14161851dfca9e"
+          "sha256": "5cb355c1a0a8678624aeeb5845f29841255cf31ea9f3d5ad3c85497760777134"
         }
       ],
-      "reason": "Reviewed actual normalized Swagger and payload diff: optional independent cycle-note fields and response schema added, existing test-only endpoint preserved. Sensitive export offset bounds remain unchanged; password maximum 256 is now explicit in Swagger and was already enforced by application validation. Local success/error behavior verified; Docker contract tests remain unverified.",
+      "reason": "Reviewed additive OtherCalories response field with default zero, updated payload/OpenAPI snapshots and compared live Swagger. Existing response fields/routes/status codes unchanged. Docker integration snapshots remain unexecuted; focused application/aggregation and live EN/RU UI confirm behavior.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-09-30T23:25:53.8304006Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:36:12.5763447Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -763,13 +763,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5dec7af01ea6968b7a39075ca5707d8687f8f2700d5f59f15f63888e47a6b8a6"
+          "sha256": "d71c13a1c9846c5643a9ecd1f1ed7cce0778a17186255d4a6378748cf424574d"
         }
       ],
-      "reason": "Reviewed private cycle-note collection and deletion, user-scoped cycle access and password verification for sensitive export. Browser confirmed standard CSV excludes personal note, sensitive CSV includes it only after correct password, invalid password preserves session, and delete removes the test journal. No provider-sharing or production configuration changed; credentials never entered repository files.",
+      "reason": "Reviewed regenerated inventories after optional OtherCalories default. Existing user scope/date predicate, health data boundaries and logging remain; no new retention, sharing, providers or secret handling. Local QA-only nutrition evidence verified.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-09-30T23:25:49.0971035Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:51:12.3076421Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31e9fbd883c697605ac848dd7b2562e23ea1756d8b6f69c2af877828ca675cb6"
+          "sha256": "13485eb1ce8711a1eb37459f05255abe082c7bbaf3ecb9ba9d982c3a1bca92e6"
         }
       ],
-      "reason": "Reviewed focused regressions and executed evidence: full frontend4057 app/454 UIkit/4 tour/177 admin, 2116 architecture,216 Meals,162 Cycles application and111 Cycles domain tests pass. Risk remains in uncompleted user journeys and Docker migration/provider integration; this commit is an audit checkpoint and does not claim exhaustive coverage.",
+      "reason": "Reviewed refreshed quality index against numeric/filter/statistics regression tests and full verify4068app457UI4tour177admin plus2116architecture. Six controller convention failures in unchanged source and Docker unavailable recorded as failures/unexecuted, not completion.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:11:35.8798652Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:53:49.9879351Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a7e032af4a3e5930832bd9589ff9995176dff29aafad28e83a845f8c84fa102"
+          "sha256": "74fb8632f9c34dfd4875b5760965fcc91d95da200296ddbc4d945b45605b20d1"
         }
       ],
-      "reason": "Reviewed affected runtime topology against source: API response mapping and user-facing failure recovery change; no worker schedule, external client registration, webhook, retry policy or mail transport changes. Existing shared command save owns Meals persistence. New cycle day-note table remains deployment-sensitive and Docker migration validation remains explicitly unverified.",
+      "reason": "Runtime metadata regeneration reflects changed statistics model fingerprint; application composition, workers, providers, cancellation and retry behavior unchanged. API build and real PostgreSQL-backed statistics/summary and frontend EN/RU verified.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:13:50.2296133Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:51:12.7980657Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,21 +898,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31e9fbd883c697605ac848dd7b2562e23ea1756d8b6f69c2af877828ca675cb6"
+          "sha256": "13485eb1ce8711a1eb37459f05255abe082c7bbaf3ecb9ba9d982c3a1bca92e6"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a7e032af4a3e5930832bd9589ff9995176dff29aafad28e83a845f8c84fa102"
+          "sha256": "74fb8632f9c34dfd4875b5760965fcc91d95da200296ddbc4d945b45605b20d1"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5dec7af01ea6968b7a39075ca5707d8687f8f2700d5f59f15f63888e47a6b8a6"
+          "sha256": "d71c13a1c9846c5643a9ecd1f1ed7cce0778a17186255d4a6378748cf424574d"
         }
       ],
-      "reason": "Reviewed changed sensitive boundaries: cycle notes remain current-user scoped; sensitive export requires current password with existing application limits and bounded offset; frontend preserves credential-verification401 without bypassing server authorization, while refresh failure still logs out. EN/RU errors and export flows tested with local QA users. No credentials or tokens staged; this checkpoint does not assert a full security scan or Docker/provider coverage.",
+      "reason": "Refreshed quality and health inventory leave user/date scope, secret handling and logging unchanged; Other includes untyped entries already presented as Other. Real QA-only runtime and sensitive-data boundaries reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:13:51.2964015Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:53:50.8327135Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1052,18 +1052,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "495fce3ba363859cb8aaf781701da4bb7a3e3d2ede929b165d9b2e6a47bdef8e"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "df2435a45e5b8e93c73d5bdc6648b8426b7695204786853eee11bb8a7d7691e6"
+          "sha256": "67db0b8e4b2125f77c4c15e3cb6ca86fe8831a8d206f8afadda7c52c59f6ac63"
         }
       ],
-      "reason": "Traced UpdateMeal controller through command handler, staged repository write, AsNoTracking projection and CommandTransactionBehavior; confirmed old response before pipeline save, replaced with current aggregate mapping, regression216tests and livePATCH/GET verified. Traced shared input blur through installed FormValueControl touch output and EN/RU consumer validation;454UIkit tests passed.",
+      "reason": "Reviewed statistics frontend mappings and contract consumers, conditional Other row and existing translated dynamic label; trace ownership remains Meals aggregation then Statistics/Dashboard adapters. No new dependency or runtime registration.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:13:52.5741653Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T09:36:15.8467813Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1151,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "495fce3ba363859cb8aaf781701da4bb7a3e3d2ede929b165d9b2e6a47bdef8e"
+          "sha256": "e56bb6bf3f5c923d91ff0bdcc13915d0380f553264eddca7debe05131f773348"
         }
       ],
-      "reason": "Reviewed preserved UI control inputs and values plus additive void touch outputs required by installed Angular FormValueControl. 454 UI-kit tests, full app/admin/tour verification, and EN/RU blur validation runtime passed. Autocomplete late-response focus and option selection covered; date-range opposite bounds and mobile tour focus verified.",
+      "reason": "Reviewed nutrient-input numeric output contract and its six NutritionEditor bindings, real Signal Forms regression, EN/RU manual meal runtime,457UI and4058app tests. Product picker inputs/selected-product output unchanged; unit label uses existing enum/key pair with6componenttests and rendered G/ML/PCS evidence.",
       "baseRef": "HEAD",
-      "gitHead": "1ddb09dc72717c703fbc06c9d48a10095bf2c9fa",
-      "reviewedAtUtc": "2026-10-01T08:11:34.2228849Z"
+      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
+      "reviewedAtUtc": "2026-10-01T08:48:20.4798724Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -17,4 +17,5 @@ public sealed record AggregatedStatisticsModel(
     double DinnerCalories = 0,
     double SnackCalories = 0,
     int MealCount = 0,
-    int TrackedDayCount = 0);
+    int TrackedDayCount = 0,
+    double OtherCalories = 0);

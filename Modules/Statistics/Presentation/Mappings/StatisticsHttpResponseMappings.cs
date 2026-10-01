@@ -25,7 +25,8 @@ public static class StatisticsHttpResponseMappings {
                 model.DinnerCalories,
                 model.SnackCalories,
                 model.MealCount,
-                model.TrackedDayCount
+                model.TrackedDayCount,
+                model.OtherCalories
             );
         }
     }

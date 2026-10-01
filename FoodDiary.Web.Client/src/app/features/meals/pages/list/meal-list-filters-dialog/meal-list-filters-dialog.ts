@@ -64,6 +64,7 @@ export class MealListFiltersDialogComponent {
     protected readonly selectedMealTypes = signal<string[]>(this.normalizeMealTypes(this.data.mealTypes));
     protected caloriesFromValue: number | string | null = this.data.caloriesFrom ?? null;
     protected caloriesToValue: number | string | null = this.data.caloriesTo ?? null;
+    protected readonly caloriesError = signal('');
     protected readonly binaryOptions: FdUiSegmentedToggleOption[] = [
         { value: 'any', label: this.translate.instant('MEAL_LIST.FILTER_ANY') },
         { value: 'yes', label: this.translate.instant('MEAL_LIST.FILTER_YES') },
@@ -90,16 +91,28 @@ export class MealListFiltersDialogComponent {
         this.selectedMealTypes.set([]);
         this.caloriesFromValue = null;
         this.caloriesToValue = null;
+        this.caloriesError.set('');
         this.imageValue = 'any';
         this.aiValue = 'any';
     }
 
     protected onApply(): void {
+        const caloriesFrom = this.toNumberOrNull(this.caloriesFromValue);
+        const caloriesTo = this.toNumberOrNull(this.caloriesToValue);
+        if (caloriesFrom === undefined || caloriesTo === undefined) {
+            this.caloriesError.set('MEAL_LIST.FILTER_CALORIES_INVALID');
+            return;
+        }
+        if (caloriesFrom !== null && caloriesTo !== null && caloriesFrom > caloriesTo) {
+            this.caloriesError.set('MEAL_LIST.FILTER_CALORIES_ORDER');
+            return;
+        }
+        this.caloriesError.set('');
         this.dialogRef.close({
             dateRange: this.formModel().dateRange,
             mealTypes: this.selectedMealTypes(),
-            caloriesFrom: this.toNumberOrNull(this.caloriesFromValue),
-            caloriesTo: this.toNumberOrNull(this.caloriesToValue),
+            caloriesFrom,
+            caloriesTo,
             hasImage: this.fromBinaryValue(this.imageValue),
             hasAiSession: this.fromBinaryValue(this.aiValue),
         });
@@ -126,13 +139,13 @@ export class MealListFiltersDialogComponent {
         this.aiValue = this.normalizeBinaryValue(value);
     }
 
-    private toNumberOrNull(value: number | string | null): number | null {
-        if (value === null || value === '') {
+    private toNumberOrNull(value: number | string | null): number | null | undefined {
+        if (value === null || (typeof value === 'string' && value.trim() === '')) {
             return null;
         }
 
         const numericValue = typeof value === 'number' ? value : Number(value);
-        return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : null;
+        return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : undefined;
     }
 
     private toBinaryValue(value: boolean | null): 'any' | 'yes' | 'no' {

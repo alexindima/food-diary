@@ -38,6 +38,9 @@
                     [(value)]="caloriesToValue"
                 />
             </div>
+            @if (caloriesError()) {
+                <p class="fd-ui-error-text" role="alert">{{ caloriesError() | translate }}</p>
+            }
         </section>
 
         <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">

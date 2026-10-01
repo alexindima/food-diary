@@ -15,6 +15,7 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
     let lunchCalories = 0;
     let dinnerCalories = 0;
     let snackCalories = 0;
+    let otherCalories = 0;
     let mealCount = 0;
     let trackedDayCount = 0;
 
@@ -34,6 +35,7 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
         lunchCalories += stat.lunchCalories ?? 0;
         dinnerCalories += stat.dinnerCalories ?? 0;
         snackCalories += stat.snackCalories ?? 0;
+        otherCalories += stat.otherCalories ?? 0;
         mealCount += stat.mealCount ?? 0;
         trackedDayCount += stat.trackedDayCount ?? 0;
     });
@@ -58,6 +60,7 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
             lunchCalories,
             dinnerCalories,
             snackCalories,
+            otherCalories,
             mealCount,
             trackedDayCount,
         },

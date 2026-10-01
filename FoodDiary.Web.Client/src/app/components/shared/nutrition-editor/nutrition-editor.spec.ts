@@ -1,14 +1,18 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { form } from '@angular/forms/signals';
+import { form, min, validate } from '@angular/forms/signals';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NutritionEditorComponent, type NutritionFormModel } from './nutrition-editor';
 
+const MANUAL_DECIMAL_CALORIES = 123.5;
+
 type NutritionEditorTestContext = {
     fixture: ComponentFixture<NutritionEditorComponent>;
     el: HTMLElement;
+    formModel: ReturnType<typeof signal<NutritionFormModel>>;
+    nutritionForm: ReturnType<typeof form<NutritionFormModel>>;
 };
 
 async function setupNutritionEditorAsync(): Promise<NutritionEditorTestContext> {
@@ -26,7 +30,12 @@ async function setupNutritionEditorAsync(): Promise<NutritionEditorTestContext> 
         fiber: 0,
         alcohol: 0,
     });
-    const nutritionForm = TestBed.runInInjectionContext(() => form(formModel));
+    const nutritionForm = TestBed.runInInjectionContext(() =>
+        form(formModel, path => {
+            min(path.calories, 0);
+            validate(path.calories, ({ value }) => (Number.isFinite(value()) ? undefined : { kind: 'invalidNumber' }));
+        }),
+    );
     fixture.componentRef.setInput('form', {
         calories: nutritionForm.calories,
         proteins: nutritionForm.proteins,
@@ -43,8 +52,39 @@ async function setupNutritionEditorAsync(): Promise<NutritionEditorTestContext> 
     return {
         fixture,
         el: fixture.nativeElement as HTMLElement,
+        formModel,
+        nutritionForm,
     };
 }
+
+describe('NutritionEditorComponent numeric form binding', () => {
+    it('should bind typed calories as numbers and reject negative values', async () => {
+        const { fixture, el, formModel, nutritionForm } = await setupNutritionEditorAsync();
+        fixture.detectChanges();
+        const input = el.querySelector<HTMLInputElement>('.nutrition-editor__input--calories input');
+        if (input === null) {
+            throw new Error('Expected calories input.');
+        }
+
+        input.value = '123,5';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(formModel().calories).toBe(MANUAL_DECIMAL_CALORIES);
+        expect(nutritionForm.calories().valid()).toBe(true);
+
+        input.value = '-1';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(formModel().calories).toBe(-1);
+        expect(
+            nutritionForm
+                .calories()
+                .errors()
+                .map(error => error.kind),
+        ).toEqual(['min']);
+        expect(input.value).toBe('-1');
+    });
+});
 
 describe('NutritionEditorComponent', () => {
     it('should not render error containers when errors are absent', async () => {

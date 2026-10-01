@@ -78,7 +78,11 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
 
     public constructor() {
         effect(() => {
-            this.setValue(this.value());
+            const value = this.value();
+            if (this.type() === 'number' && Object.is(this.toNumericValue(this.displayValue), value)) {
+                return;
+            }
+            this.setValue(value);
         });
     }
 
@@ -114,7 +118,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
             this.displayValue = sanitized;
             target.value = sanitized;
             this.updateInputMeasure(sanitized);
-            this.value.set(sanitized);
+            this.value.set(this.toNumericValue(sanitized));
             return;
         }
 
@@ -138,14 +142,19 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
             return '';
         }
 
+        const sign = value.startsWith('-') ? '-' : '';
         const normalized = value.replace(',', '.').replaceAll(/[^\d.]/g, '');
         const parts = normalized.split('.');
 
         if (parts.length <= 1) {
-            return normalized;
+            return `${sign}${normalized}`;
         }
 
-        return `${parts[0]}.${parts.slice(1).join('')}`;
+        return `${sign}${parts[0]}.${parts.slice(1).join('')}`;
+    }
+
+    private toNumericValue(value: string): number | null {
+        return value.trim() === '' ? null : Number(value);
     }
 
     private updateInputMeasure(value: string): void {

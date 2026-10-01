@@ -39,7 +39,7 @@ export type StatisticsTrendInsight = {
 
 export type StatisticsNutrientBalanceItem = StatisticsNutrientProgress;
 
-export type StatisticsMealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+export type StatisticsMealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'other';
 
 export type StatisticsMealStructureItem = {
     key: StatisticsMealType;

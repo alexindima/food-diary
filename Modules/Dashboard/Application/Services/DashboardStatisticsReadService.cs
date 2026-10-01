@@ -17,6 +17,6 @@ internal sealed class DashboardStatisticsReadService(IMealNutritionStatisticsRea
             : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([.. result.Value.Select(bucket => new DashboardStatisticsBucketReadModel(
                 bucket.DateFrom, bucket.DateTo, bucket.TotalCalories, bucket.AverageProteins, bucket.AverageFats, bucket.AverageCarbs, bucket.AverageFiber,
                 bucket.TotalProteins, bucket.TotalFats, bucket.TotalCarbs, bucket.TotalFiber, bucket.BreakfastCalories, bucket.LunchCalories, bucket.DinnerCalories,
-                bucket.SnackCalories, bucket.MealCount, bucket.TrackedDayCount))]);
+                bucket.SnackCalories, bucket.MealCount, bucket.TrackedDayCount, bucket.OtherCalories))]);
     }
 }

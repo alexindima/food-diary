@@ -22,5 +22,6 @@ internal static class StatisticsMappings {
             model.DinnerCalories,
             model.SnackCalories,
             model.MealCount,
-            model.TrackedDayCount);
+            model.TrackedDayCount,
+            model.OtherCalories);
 }

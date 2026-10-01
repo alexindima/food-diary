@@ -43,6 +43,9 @@
     &__bar-segment--snack {
         background: var(--fd-color-orange-500);
     }
+    &__bar-segment--other {
+        background: var(--fd-color-gray-600);
+    }
     &__table {
         margin-top: var(--fd-space-md);
     }
@@ -69,6 +72,9 @@
     }
     &__row--snack {
         --meal-color: var(--fd-color-orange-500);
+    }
+    &__row--other {
+        --meal-color: var(--fd-color-gray-600);
     }
     &__label {
         display: inline-flex;

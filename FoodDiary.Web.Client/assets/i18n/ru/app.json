@@ -210,7 +210,8 @@
                     "BREAKFAST": "Завтрак",
                     "LUNCH": "Обед",
                     "DINNER": "Ужин",
-                    "SNACK": "Перекусы"
+                    "SNACK": "Перекусы",
+                    "OTHER": "Другое"
                 }
             },
             "STABILITY": {
@@ -869,6 +870,8 @@
         "FILTER_NUTRITION": "Калорийность",
         "FILTER_CALORIES_FROM": "Калории от",
         "FILTER_CALORIES_TO": "Калории до",
+        "FILTER_CALORIES_INVALID": "Введите корректное число калорий не меньше нуля.",
+        "FILTER_CALORIES_ORDER": "Калории от должны быть не больше калорий до.",
         "FILTER_CALORIES_ACTIVE": "Диапазон калорий",
         "FILTER_MEDIA": "Фото",
         "FILTER_HAS_IMAGE": "Есть фото",

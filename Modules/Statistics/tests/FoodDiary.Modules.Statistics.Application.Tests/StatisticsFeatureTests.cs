@@ -153,7 +153,8 @@ public class StatisticsFeatureTests {
                 TotalProteins: 100,
                 TotalFats: 50,
                 TotalCarbs: 200,
-                TotalFiber: 20)]),
+                TotalFiber: 20,
+                OtherCalories: 300)]),
             CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 2);
 
@@ -162,6 +163,7 @@ public class StatisticsFeatureTests {
         ResultAssert.Success(result);
         AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(1000, bucket.TotalCalories);
+        Assert.Equal(300, bucket.OtherCalories);
         Assert.Equal(100, bucket.TotalProteins);
         Assert.Equal(50, bucket.TotalFats);
         Assert.Equal(200, bucket.TotalCarbs);

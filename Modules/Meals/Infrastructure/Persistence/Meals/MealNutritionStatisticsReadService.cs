@@ -111,11 +111,12 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
             SumCalories(bucketMeals, MealType.Dinner),
             SumCalories(bucketMeals, MealType.Snack),
             bucketMeals.Count,
-            bucketMeals.Select(meal => timeZone is null ? DateOnly.FromDateTime(meal.Date) : LocalCalendar.DateAt(meal.Date, timeZone)).Distinct().Count());
+            bucketMeals.Select(meal => timeZone is null ? DateOnly.FromDateTime(meal.Date) : LocalCalendar.DateAt(meal.Date, timeZone)).Distinct().Count(),
+            SumCalories(bucketMeals, MealType.Other));
     }
 
     private static double SumCalories(IEnumerable<MealNutritionProjection> meals, MealType mealType) =>
-        Math.Round(meals.Where(meal => meal.MealType == mealType).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven);
+        Math.Round(meals.Where(meal => (meal.MealType ?? MealType.Other) == mealType).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven);
 
     private static int GetBucketDayCount(DateTime bucketStart, DateTime bucketEnd) {
         double totalDays = (bucketEnd - bucketStart).TotalDays;

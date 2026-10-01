@@ -5,6 +5,12 @@ import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input';
 
 const NUMERIC_VALUE = 100;
 const CLAMPED_INPUT_SIZE = 5;
+const INTEGER_INPUT_VALUE = 123;
+const DECIMAL_INPUT_VALUE = 123.5;
+const COMMA_INPUT_VALUE = 12.5;
+const NEGATIVE_INPUT_VALUE = -1.5;
+const FRACTIONAL_INPUT_VALUE = 0.5;
+const INTERMEDIATE_INPUT_VALUE = 1.5;
 
 type NutrientInputTestContext = {
     component: FdUiNutrientInputComponent;
@@ -176,7 +182,7 @@ describe('FdUiNutrientInputComponent input handling', () => {
         inputEl.value = '123';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(component.value()).toBe('123');
+        expect(component.value()).toBe(INTEGER_INPUT_VALUE);
     });
 
     it('should sanitize non-numeric characters for number type', async () => {
@@ -187,7 +193,7 @@ describe('FdUiNutrientInputComponent input handling', () => {
         inputEl.value = '12abc3.5';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(component.value()).toBe('123.5');
+        expect(component.value()).toBe(DECIMAL_INPUT_VALUE);
         expect(component['displayValue']).toBe('123.5');
     });
 
@@ -199,7 +205,43 @@ describe('FdUiNutrientInputComponent input handling', () => {
         inputEl.value = '12,5';
         inputEl.dispatchEvent(new Event('input'));
 
-        expect(component.value()).toBe('12.5');
+        expect(component.value()).toBe(COMMA_INPUT_VALUE);
+    });
+
+    it('should preserve negative values for form validation', async () => {
+        const { component, fixture, input } = await setupNutrientInputAsync();
+        input().value = '-1.5';
+        input().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(component.value()).toBe(NEGATIVE_INPUT_VALUE);
+        expect(input().value).toBe('-1.5');
+    });
+
+    it('should emit null for an empty number input', async () => {
+        const { component, input } = await setupNutrientInputAsync();
+        component.value.set(INTEGER_INPUT_VALUE);
+        input().value = '';
+        input().dispatchEvent(new Event('input'));
+
+        expect(component.value()).toBeNull();
+    });
+
+    it('should retain intermediate decimal text while emitting numeric values', async () => {
+        const { component, fixture, input } = await setupNutrientInputAsync();
+        for (const [text, value] of [
+            ['.', Number.NaN],
+            ['.5', FRACTIONAL_INPUT_VALUE],
+            ['1.', 1],
+            ['1.5', INTERMEDIATE_INPUT_VALUE],
+        ] as const) {
+            input().value = text;
+            input().dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            expect(component.value()).toBe(value);
+            expect(input().value).toBe(text);
+        }
     });
 
     it('should not sanitize text type input', async () => {

@@ -126,6 +126,38 @@ describe('statistics dashboard card mapper', () => {
 });
 
 describe('statistics meal structure mapper', () => {
+    it('includes Other meals in total calories and meal shares', () => {
+        const statistics: MappedStatistics = {
+            date: [new Date('2026-10-01')],
+            calories: [1326],
+            nutrientsStatistic: { proteins: [0], fats: [0], carbs: [0], fiber: [0] },
+            aggregatedNutrients: { proteins: 0, fats: 0, carbs: 0, fiber: 0 },
+            mealStructure: {
+                breakfastCalories: 0,
+                lunchCalories: 0,
+                dinnerCalories: 0,
+                snackCalories: 120,
+                otherCalories: 1206,
+                mealCount: 6,
+                trackedDayCount: 1,
+            },
+        };
+        const view = buildStatisticsDashboardCardsView({
+            statistics,
+            user: USER,
+            weightPoints: [],
+            waistPoints: [],
+            quantizationDays: 1,
+            periodDays: 7,
+            formatDate: date => date.toISOString(),
+        });
+
+        expect(view.mealStructure.totalCalories).toBe(1326);
+        expect(view.mealStructure.dominantMeal).toBe('other');
+        expect(view.mealStructure.items.find(item => item.key === 'other')).toEqual({ key: 'other', calories: 1206, percentage: 91 });
+        expect(view.mealStructure.items.find(item => item.key === 'snack')?.percentage).toBe(9);
+    });
+
     it('allocates rounded meal shares to exactly one hundred percent', () => {
         const statistics: MappedStatistics = {
             date: [new Date('2026-08-09T00:00:00Z')],

@@ -14,6 +14,7 @@ export type AggregatedStatistics = {
     lunchCalories?: number;
     dinnerCalories?: number;
     snackCalories?: number;
+    otherCalories?: number;
     mealCount?: number;
     trackedDayCount?: number;
 };
@@ -48,6 +49,7 @@ export type MealStructureTotals = {
     lunchCalories: number;
     dinnerCalories: number;
     snackCalories: number;
+    otherCalories?: number;
     mealCount: number;
     trackedDayCount: number;
 };

@@ -23,7 +23,7 @@
                                 {{ item.product.brand }} &middot;
                             }
                             {{ item.product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{ item.product.baseAmount
-                            }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
+                            }}{{ `PRODUCT_AMOUNT_UNITS_SHORT.${item.product.baseUnit}` | translate }}
                         </div>
                     </div>
                     <span class="product-select__action fd-inline-center">

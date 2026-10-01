@@ -13,6 +13,15 @@ const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 
 describe('ProductListDialogContentComponent', () => {
+    it.each([MeasurementUnit.G, MeasurementUnit.ML, MeasurementUnit.PCS])('renders nutrition per %s', baseUnit => {
+        const { fixture } = setupComponent([{ product: createProduct({ baseUnit }), imageUrl: undefined }]);
+
+        expect(getText(fixture)).toContain(`PRODUCT_AMOUNT_UNITS_SHORT.${baseUnit}`);
+        if (baseUnit !== MeasurementUnit.G) {
+            expect(getText(fixture)).not.toContain('PRODUCT_AMOUNT_UNITS_SHORT.G');
+        }
+    });
+
     it('renders product rows and emits selected product', () => {
         const { fixture, component } = setupComponent([
             {

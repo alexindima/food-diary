@@ -1709,7 +1709,7 @@
       "role": "Component",
       "selector": "fd-ui-form-error",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
-      "line": 144
+      "line": 145
     },
     {
       "name": "FdUiHintOverlayComponent",
@@ -6985,16 +6985,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3995,
-      "russianProperties": 3995,
+      "englishProperties": 3998,
+      "russianProperties": 3998,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1086,
-      "russianProperties": 1086,
+      "englishProperties": 1087,
+      "russianProperties": 1087,
       "countsMatch": true
     },
     {

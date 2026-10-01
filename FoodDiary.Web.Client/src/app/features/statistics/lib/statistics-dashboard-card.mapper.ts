@@ -81,6 +81,7 @@ function buildMealStructure(statistics: MappedStatistics | null): StatisticsMeal
         { key: 'lunch', calories: totals.lunchCalories },
         { key: 'dinner', calories: totals.dinnerCalories },
         { key: 'snack', calories: totals.snackCalories },
+        ...((totals.otherCalories ?? 0) > 0 ? [{ key: 'other' as const, calories: totals.otherCalories ?? 0 }] : []),
     ];
     const periodCalories = source.reduce((sum, item) => sum + item.calories, 0);
     const trackedDayCount = totals.trackedDayCount;

@@ -23,6 +23,12 @@ const FIRST_TOTAL_FIBER = 40;
 const SECOND_TOTAL_FIBER = 75;
 
 describe('statistics-statistics.mapper', () => {
+    it('sums other meal calories across buckets and accepts older responses', () => {
+        const result = mapStatistics([{ ...createStat('2026-05-01'), otherCalories: FIRST_CALORIES }, createStat('2026-05-02', true)]);
+
+        expect(result.mealStructure?.otherCalories).toBe(FIRST_CALORIES);
+    });
+
     it('maps statistics series and aggregates nutrients', () => {
         const result = mapStatistics([createStat('2026-05-01'), createStat('2026-05-02', true)]);
 
