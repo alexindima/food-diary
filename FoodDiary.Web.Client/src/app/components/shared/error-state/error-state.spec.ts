@@ -14,6 +14,7 @@ describe('ErrorStateComponent', () => {
 
         expect(getHost(fixture).textContent).toContain('ERRORS.LOAD_FAILED_TITLE');
         expect(getHost(fixture).textContent).toContain('ERRORS.LOAD_FAILED_MESSAGE');
+        expect(getHost(fixture).querySelector('[role="alert"]')?.textContent).toContain('ERRORS.LOAD_FAILED_MESSAGE');
         expect(retry).toHaveBeenCalledOnce();
     });
 
