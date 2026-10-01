@@ -133,6 +133,17 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
 }
 
 describe('ShoppingListPageComponent form and item actions', () => {
+    it('passes the product link to the item editor', async () => {
+        const { component, facade, dialogService } = await setupShoppingListPageAsync();
+        facade.items.set([{ ...SHOPPING_LIST_ITEM, productId: 'product-1' }]);
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(undefined) });
+
+        component['editItem'](SHOPPING_LIST_ITEM.id);
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(dialogService.open.mock.calls[0]?.[1]).toMatchObject({ data: { productId: 'product-1' } });
+    });
+
     it('initializes facade and mirrors selected list/name into controls', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
 

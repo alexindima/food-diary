@@ -19,7 +19,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import { ShoppingItemEditComponent } from '../../dialogs/shopping-item-edit/shopping-item-edit';
+import { ShoppingItemEditComponent, type ShoppingItemEditData } from '../../dialogs/shopping-item-edit/shopping-item-edit';
 import { ShoppingMergePreviewComponent } from '../../dialogs/shopping-merge-preview/shopping-merge-preview';
 import { type ShoppingListDraftItem, ShoppingListFacade } from '../../lib/shopping-list.facade';
 import { planShoppingConsolidation, type ShoppingMergeGroup } from '../../lib/shopping-list-consolidation';
@@ -166,9 +166,10 @@ export class ShoppingListPageComponent {
             return;
         }
         this.dialogService
-            .open<ShoppingItemEditComponent, ShoppingListDraftItem, ShoppingListDraftItem>(ShoppingItemEditComponent, {
+            .open<ShoppingItemEditComponent, ShoppingItemEditData, ShoppingListDraftItem>(ShoppingItemEditComponent, {
                 preset: 'form',
                 data: {
+                    productId: item.productId ?? null,
                     name: item.name,
                     amount: item.amount ?? null,
                     unit: item.unit ?? null,

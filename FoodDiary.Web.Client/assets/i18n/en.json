@@ -5377,6 +5377,7 @@
         "PURCHASED_PROGRESS": "Purchased {{checked}} of {{total}}",
         "PURCHASED": "Purchased",
         "EDIT_ITEM": "Edit item",
+        "PRODUCT_IDENTITY_HINT": "The name and unit come from the linked product. You can change the amount, note and category.",
         "SAVE_ITEM": "Save",
         "CREATE_NAMED_LIST": "Create “{{name}}”",
         "CLEAR_PURCHASED": "Remove purchased items",

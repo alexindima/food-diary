@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c7028a60cb40fa3a10020c5567e137bb8666235efb2a9385fca162a09c383c7a"
+          "sha256": "a03157cec9546f6f792ee92d935c343f87679a32279a74ef3bc65c1fa3057e68"
         }
       ],
-      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
+      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
-      "reviewedAtUtc": "2026-10-01T18:30:46.2658413Z"
+      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
+      "reviewedAtUtc": "2026-10-01T20:04:22.4852815Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c7028a60cb40fa3a10020c5567e137bb8666235efb2a9385fca162a09c383c7a"
+          "sha256": "a03157cec9546f6f792ee92d935c343f87679a32279a74ef3bc65c1fa3057e68"
         }
       ],
-      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
+      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
-      "reviewedAtUtc": "2026-10-01T18:30:46.7601893Z"
+      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
+      "reviewedAtUtc": "2026-10-01T20:04:23.0550260Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1cd12b22d9ba808ec9f75c2ea06f1d663ae234dfec6e6194b8bf7362223577ef"
+          "sha256": "7e0da292cc2925c2983d929f0fcead511c7fbd7131cb0566dae21ee5cba9d90f"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6bafc0dddd7fffc45c22e8587633c79fb6a02503bf8ff4639da5e7883a28d735"
+          "sha256": "7403eb9cfca0787af8e11b1833632a74c3da2a3d33dbb3b7c8a21b419b9a0b6a"
         }
       ],
-      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
+      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
-      "reviewedAtUtc": "2026-10-01T18:30:47.1926801Z"
+      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
+      "reviewedAtUtc": "2026-10-01T20:04:23.7711393Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1cd12b22d9ba808ec9f75c2ea06f1d663ae234dfec6e6194b8bf7362223577ef"
+          "sha256": "7e0da292cc2925c2983d929f0fcead511c7fbd7131cb0566dae21ee5cba9d90f"
         }
       ],
-      "reason": "Independent weekly goal error and retry states verified with preserved closed week presentation",
+      "reason": "Final shopping editor checks retain product identity, manual edits and localized guidance after test lint cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "cf6474f25b7dfeddbfd02c102da88645b99c8fa6",
-      "reviewedAtUtc": "2026-10-01T18:30:45.7498631Z"
+      "gitHead": "a18daacb12bd3bfc8f6e13ad84bb6fe388f4c066",
+      "reviewedAtUtc": "2026-10-01T20:04:21.9362531Z"
     },
     {
       "pageId": "workflow.query-context",

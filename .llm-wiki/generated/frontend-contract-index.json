@@ -7,7 +7,7 @@
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2054,
+    "translationKeys": 2055,
     "consumerEdges": 1211,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -22331,6 +22331,7 @@
         "SHOPPING_LIST.ADD_ITEM_NOTE",
         "SHOPPING_LIST.ADD_ITEM_UNIT",
         "SHOPPING_LIST.EDIT_ITEM",
+        "SHOPPING_LIST.PRODUCT_IDENTITY_HINT",
         "SHOPPING_LIST.SAVE_ITEM"
       ]
     },
@@ -34217,6 +34218,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
       "occurrences": 4,
       "inputsUsed": [
+        "controlReadonly",
         "label",
         "type"
       ],

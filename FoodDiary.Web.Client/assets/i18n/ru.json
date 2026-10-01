@@ -6668,6 +6668,7 @@
         "PURCHASED_PROGRESS": "Куплено {{checked}} из {{total}}",
         "PURCHASED": "Куплено",
         "EDIT_ITEM": "Редактировать",
+        "PRODUCT_IDENTITY_HINT": "Название и единица берутся из связанного продукта. Можно изменить количество, заметку и категорию.",
         "SAVE_ITEM": "Сохранить",
         "CREATE_NAMED_LIST": "Создать «{{name}}»",
         "CLEAR_PURCHASED": "Удалить купленные",

@@ -7,6 +7,32 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { ShoppingItemEditComponent } from './shopping-item-edit';
 
 describe('shopping item editing', () => {
+    it.each([null, 'product-1'])('keeps product identity fixed only for linked items (%s)', async productId => {
+        const ref = { close: vi.fn() };
+        await TestBed.configureTestingModule({
+            imports: [ShoppingItemEditComponent],
+            providers: [
+                provideTranslateTesting(),
+                { provide: FdUiDialogRef, useValue: ref },
+                {
+                    provide: FD_UI_DIALOG_DATA,
+                    useValue: { productId, name: 'Oats', amount: 150, unit: 'G', category: null, note: null },
+                },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(ShoppingItemEditComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector<HTMLInputElement>('fd-ui-input input')?.readOnly).toBe(productId !== null);
+        expect(element.querySelector<HTMLButtonElement>('fd-ui-select button')?.disabled).toBe(productId !== null);
+        expect(element.textContent.includes('SHOPPING_LIST.PRODUCT_IDENTITY_HINT')).toBe(productId !== null);
+        expect(element.querySelector<HTMLInputElement>('input[type="number"]')?.disabled).toBe(false);
+        fixture.componentInstance['draft'].update(value => ({ ...value, amount: 200, note: 'For breakfast' }));
+        fixture.componentInstance['save'](new Event('submit'));
+        expect(ref.close).toHaveBeenCalledWith(expect.objectContaining({ name: 'Oats', unit: 'G', amount: 200, note: 'For breakfast' }));
+    });
+
     it('returns valid edits and rejects blank names and invalid amounts', async () => {
         const ref = { close: vi.fn() };
         await TestBed.configureTestingModule({

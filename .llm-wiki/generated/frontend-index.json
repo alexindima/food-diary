@@ -5468,7 +5468,7 @@
       "role": "Component",
       "selector": "fd-shopping-item-edit",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
-      "line": 22
+      "line": 24
     },
     {
       "name": "ShoppingListBrowserDialogComponent",
@@ -6985,8 +6985,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4002,
-      "russianProperties": 4002,
+      "englishProperties": 4003,
+      "russianProperties": 4003,
       "countsMatch": true
     },
     {
