@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, model, signal, viewChildren } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -25,6 +25,7 @@ const MAX_PHOTOS = 5;
 })
 export class ImageGalleryEditorComponent {
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly photoTriggers = viewChildren<FdUiButtonComponent, ElementRef<HTMLElement>>('photoTrigger', { read: ElementRef });
     public readonly compact = input(false);
     public readonly editor = input(false);
     public readonly photos = model.required<ImageSelection[]>();
@@ -33,12 +34,22 @@ export class ImageGalleryEditorComponent {
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);
+    protected readonly uploadAppearance = computed(() => {
+        if (this.editor() && this.photos().length > 0) {
+            return 'hidden';
+        }
+        if (this.photos().length > 0) {
+            return 'tile';
+        }
+        return this.compact() ? 'compact' : 'preview';
+    });
 
     protected preview(index: number): void {
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
             width: 'var(--fd-size-dialog-media-width)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
+            restoreFocus: this.photoTriggers()[index]?.nativeElement.querySelector('button') ?? true,
             data: { collageImages: this.photos().map(photo => ({ url: photo.url ?? '' })), initialIndex: index },
         });
     }
@@ -50,6 +61,7 @@ export class ImageGalleryEditorComponent {
     );
 
     protected readonly maxPhotos = MAX_PHOTOS;
+    protected readonly hasUploadError = signal(false);
     protected readonly clearRequest = signal(0);
     protected addBatch(photos: ImageSelection[]): void {
         this.photos.set([...this.photos(), ...photos].slice(0, MAX_PHOTOS));

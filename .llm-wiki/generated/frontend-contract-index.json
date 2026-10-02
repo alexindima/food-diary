@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "summary": {
     "components": 482,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "inputs": 1551,
-    "outputs": 530,
+    "outputs": 531,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
     "translationKeys": 2064,
@@ -12561,7 +12561,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.spec.ts"
     },
     {
       "class": "ImageUploadFieldComponent",
@@ -12706,6 +12706,10 @@
         {
           "name": "imagePreparationFailed",
           "type": ""
+        },
+        {
+          "name": "hasErrorChange",
+          "type": "boolean"
         },
         {
           "name": "valueChange",

@@ -304,11 +304,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "nonBlankLines": 559,
+      "nonBlankLines": 563,
       "decisionPoints": 75,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.68
+      "structuralRiskScore": 123.76
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
@@ -7618,11 +7618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
-      "nonBlankLines": 71,
-      "decisionPoints": 11,
+      "nonBlankLines": 83,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.92
+      "structuralRiskScore": 24.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field-crop.utils.ts",
@@ -7634,11 +7634,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "nonBlankLines": 559,
+      "nonBlankLines": 563,
       "decisionPoints": 75,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.68
+      "structuralRiskScore": 123.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.utils.ts",

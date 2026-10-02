@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a9ef70fd812b9005364ea3826a30a0f4d0fad5c632138578c0f47722e6f565d0"
+          "sha256": "aae08e4bec03046b665d050a361997d1f58d25356eda8ff1c7a2d130d9ccbc2c"
         }
       ],
-      "reason": "Reviewed generated health changes from new direct weekly-goal-dialog spec. Existing feature ownership, project graph and dependency direction are unchanged; no removal candidates were acted on.",
+      "reason": "Reviewed gallery validation fix: hidden appearance hides upload controls while retaining live error alerts; gallery receives an error-presence output and displays the error row at full width without duplicating controls. Existing photos and max5 behavior preserved. Native RU invalid type,20MB+1,corruptPNG,countlimit/recovery and mobile390 checks passed; focused17tests passed. No backend API, persistence, credentials or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:16:41.4920975Z"
+      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
+      "reviewedAtUtc": "2026-10-02T11:36:10.5681555Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e57b7ff98053fae41b539a76aa7c09e22359883457aaa6efd13ce562b661ac1e"
+          "sha256": "05123ad5e1beeed19b3179d94028541c041239edd97507c86ddb4f11ada8e6bc"
         }
       ],
-      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
+      "reason": "Reviewed final gallery fixes: invalid uploads in populated galleries expose full-width alerts while upload controls stay hidden; max5/removal/recovery and mobile rendering retained. Preview now passes the stable native photo action button as CDK restoreFocus, avoiding a detached menuitem. Native first/second photo Escape and navigation then Close restore exact owning button; focused19 tests passed, scoped lint passed. No backend API/persistence/provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:20:57.7557805Z"
+      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
+      "reviewedAtUtc": "2026-10-02T11:52:58.6284515Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e57b7ff98053fae41b539a76aa7c09e22359883457aaa6efd13ce562b661ac1e"
+          "sha256": "05123ad5e1beeed19b3179d94028541c041239edd97507c86ddb4f11ada8e6bc"
         }
       ],
-      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
+      "reason": "Reviewed final gallery fixes: invalid uploads in populated galleries expose full-width alerts while upload controls stay hidden; max5/removal/recovery and mobile rendering retained. Preview now passes the stable native photo action button as CDK restoreFocus, avoiding a detached menuitem. Native first/second photo Escape and navigation then Close restore exact owning button; focused19 tests passed, scoped lint passed. No backend API/persistence/provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:20:58.3505487Z"
+      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
+      "reviewedAtUtc": "2026-10-02T11:52:59.6252240Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "a42e6a47d752e5e21abe7fade7fb405129a03e7eca9fd269f04722a620498a18"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "76a802e88c6b22bcf9683814bc4ec8bd351aba6c96f7a29b8c5ea531ebb34c19"
+          "sha256": "970427af9b1c7946fca025ce50c983d56e66a644377a7711c16a5e83fd75de14"
         }
       ],
-      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
+      "reason": "Reviewed gallery validation fix: hidden appearance hides upload controls while retaining live error alerts; gallery receives an error-presence output and displays the error row at full width without duplicating controls. Existing photos and max5 behavior preserved. Native RU invalid type,20MB+1,corruptPNG,countlimit/recovery and mobile390 checks passed; focused17tests passed. No backend API, persistence, credentials or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:20:58.8020072Z"
+      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
+      "reviewedAtUtc": "2026-10-02T11:36:14.2181814Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d30b0dfb99cc92092648329677708ee1804b46c52032cae35bdb2c2fd20a1298"
+          "sha256": "a42e6a47d752e5e21abe7fade7fb405129a03e7eca9fd269f04722a620498a18"
         }
       ],
-      "reason": "Reviewed weekly goal dialog template and consumer in weekly-check-in page. Existing API payloads and localization keys unchanged. Dismissible input now follows pending state; native ENdesktop and RU390 checks show blocked Escape, retained error/draft and restored dismissal; EN retryPUT200 preserves existing5day reminder-off goal.",
+      "reason": "Reviewed gallery validation fix: hidden appearance hides upload controls while retaining live error alerts; gallery receives an error-presence output and displays the error row at full width without duplicating controls. Existing photos and max5 behavior preserved. Native RU invalid type,20MB+1,corruptPNG,countlimit/recovery and mobile390 checks passed; focused17tests passed. No backend API, persistence, credentials or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:16:43.4184683Z"
+      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
+      "reviewedAtUtc": "2026-10-02T11:36:11.3723602Z"
     },
     {
       "pageId": "workflow.query-context",

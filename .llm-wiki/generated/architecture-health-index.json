@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -4787,70 +4787,6 @@
         },
         {
           "name": "manualAction",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "ImageGalleryEditorComponent",
-      "selector": "fd-image-gallery-editor",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
-      "inputs": [
-        {
-          "name": "compact",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "editor",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "photos",
-          "type": "ImageSelection[]",
-          "required": true
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "scanning",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "reviewing",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "cover",
-          "type": "ImageSelection | null",
-          "required": false
-        },
-        {
-          "name": "uploading",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "photosChange",
-          "type": "ImageSelection[]"
-        },
-        {
-          "name": "coverChange",
-          "type": "ImageSelection | null"
-        },
-        {
-          "name": "uploadingChange",
           "type": ""
         }
       ],

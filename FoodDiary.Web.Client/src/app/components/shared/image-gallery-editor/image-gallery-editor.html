@@ -4,6 +4,7 @@
             <div class="recognition-photos__item" [class.recognition-photos__item--scanning]="scanning() && $first">
                 @if (editor()) {
                     <fd-ui-button
+                        #photoTrigger
                         class="recognition-photos__preview"
                         fill="text"
                         [ariaLabel]="'PRODUCT_AI_DIALOG.PHOTO_ACTIONS' | translate: { index: $index + 1 }"
@@ -64,8 +65,8 @@
             <fd-image-upload-field
                 #uploader
                 acceptedTypes="image/jpeg,image/png,image/webp"
-                [class.recognition-photos__uploader-hidden]="editor() && photos().length > 0"
-                [appearance]="photos().length ? 'tile' : compact() ? 'compact' : 'preview'"
+                [class.recognition-photos__uploader-hidden]="editor() && photos().length > 0 && !hasUploadError()"
+                [appearance]="uploadAppearance()"
                 [class.recognition-photos__add]="photos().length > 0"
                 [showRecommendation]="false"
                 [multiple]="true"
@@ -83,6 +84,7 @@
                 (imagePreparationStarted)="uploading.set(true)"
                 (imagePreparationFailed)="uploading.set(false)"
                 (imageChanged)="add($event)"
+                (hasErrorChange)="hasUploadError.set($event)"
             />
             @for (slot of emptySlots(); track slot) {
                 <fd-ui-button

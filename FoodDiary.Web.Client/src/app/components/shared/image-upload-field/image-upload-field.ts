@@ -102,6 +102,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly imageChanged = output<ImageSelection | null>();
     public readonly imagePreparationStarted = output<string>();
     public readonly imagePreparationFailed = output();
+    public readonly hasErrorChange = output<boolean>();
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
     private readonly cropSurfaceRef = viewChild<ElementRef<HTMLDivElement>>('cropSurface');
@@ -127,6 +128,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
     public constructor() {
+        effect(() => {
+            this.hasErrorChange.emit(this.error() !== null);
+        });
         this.destroyRef.onDestroy(() => {
             this.clearPreparationPreview();
         });
