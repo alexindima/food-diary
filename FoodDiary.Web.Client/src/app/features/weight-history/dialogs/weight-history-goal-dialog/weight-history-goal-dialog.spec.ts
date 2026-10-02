@@ -230,3 +230,19 @@ function findGoalButton(root: HTMLElement, text: string): HTMLButtonElement {
     }
     return button;
 }
+
+describe('Weight goal pending dismissal', () => {
+    it('blocks Escape/backdrop and explicit close until failure releases the dialog', () => {
+        const { fixture, facade, component, close } = setup();
+        facade.isDesiredWeightSaving.set(true);
+        fixture.detectChanges();
+        component['close']();
+        expect(close).not.toHaveBeenCalled();
+        expect(TestBed.inject(FdUiDialogRef).disableClose).toBe(true);
+        facade.isDesiredWeightSaving.set(false);
+        fixture.detectChanges();
+        expect(TestBed.inject(FdUiDialogRef).disableClose).toBe(false);
+        component['close']();
+        expect(close).toHaveBeenCalledOnce();
+    });
+});

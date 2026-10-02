@@ -664,3 +664,19 @@ describe('WaistHistoryFacade pending entry edits', () => {
         });
     });
 });
+
+describe('Waist goal pending draft', () => {
+    it('locks the target until failure and preserves the draft for retry', () => {
+        facade.desiredWaistModel.set({ circumference: '70.5' });
+        const pending = new Subject<never>();
+        userService.updateWaistGoal.mockReturnValueOnce(pending);
+        facade.saveDesiredWaist();
+        TestBed.tick();
+        expect(facade.desiredWaistForm.circumference().disabled()).toBe(true);
+        pending.error(new Error('Unavailable'));
+        TestBed.tick();
+        expect(facade.desiredWaistForm.circumference().disabled()).toBe(false);
+        expect(facade.desiredWaistModel()).toEqual({ circumference: '70.5' });
+        expect(facade.goalActionError()).toBe('WAIST_HISTORY.ERROR_SAVE_GOAL');
+    });
+});

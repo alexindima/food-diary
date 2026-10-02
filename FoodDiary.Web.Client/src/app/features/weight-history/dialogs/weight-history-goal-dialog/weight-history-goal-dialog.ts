@@ -37,6 +37,9 @@ export class WeightHistoryGoalDialogComponent {
 
     public constructor() {
         effect(() => {
+            this.dialogRef.disableClose = this.isSaving();
+        });
+        effect(() => {
             if (this.facade.desiredWeightSaveVersion() > this.initialSaveVersion) {
                 this.dialogRef.close();
             }
@@ -62,6 +65,9 @@ export class WeightHistoryGoalDialogComponent {
     }
 
     protected close(): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.dialogRef.close();
     }
 }

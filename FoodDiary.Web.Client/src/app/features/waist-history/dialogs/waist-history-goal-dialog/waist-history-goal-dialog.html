@@ -4,7 +4,7 @@
     [dismissible]="!isSaving()"
     (close)="close()"
 >
-    <form class="fd-stack fd-gap-lg" [formRoot]="form" (submit)="submit($event)">
+    <form class="fd-stack fd-gap-lg" [formRoot]="form" [attr.aria-busy]="isSaving()" (submit)="submit($event)">
         <p role="alert" [hidden]="actionError() === null">{{ actionError() }}</p>
         <fd-ui-input
             type="text"

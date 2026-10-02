@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bf8cd0de4616ce40af73be5dbbf2f282d4b186e1978cc9a3f624ebf73e198b1"
+          "sha256": "355f950a501461f4462154d0b9f2fb8ebd2a14477e7d989c96d1d22ec89b4510"
         }
       ],
-      "reason": "Current refreshed index reviewed against measurement locks, duplicate-submit guards and dialog close effects. Six old-code regression failures then412 measurement tests pass; native390/1280 pending and503 recovery plus real201/200/204 CRUD with persistence confirmed. No structural ownership or dependency changes.",
+      "reason": "Reviewed target-field signal disable rules and dialog ref dismissal state for weight/waist goals. Four regressions fail before fix;416 measurement tests pass after fix. Native goal PUT503 at390/1280 retains70,5, disables input and blocksEscape, then unlocks withlocalizederror. Existing success/cancel lifecycle tests remain green. Quality index is navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
-      "reviewedAtUtc": "2026-10-02T21:45:14.2337540Z"
+      "gitHead": "7d19efc6fba4fa774c1d7a91e9accd6869db21f7",
+      "reviewedAtUtc": "2026-10-02T22:04:14.9023727Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bf8cd0de4616ce40af73be5dbbf2f282d4b186e1978cc9a3f624ebf73e198b1"
+          "sha256": "355f950a501461f4462154d0b9f2fb8ebd2a14477e7d989c96d1d22ec89b4510"
         }
       ],
-      "reason": "Current measurement UI diff contains only disabled signal-form rules, transient close blocking and busy hints; no identity, health-data payload, provider, cache, persistence, authorization or logging changes. All own fixtures cleaned via204, mocked503 owner-only browser interception.",
+      "reason": "Goal changes only transient field availability, aria-busy and pending dialog dismissal. No health-data API payload, authorization, provider, persistence, credentials or logging changes. Native proof intercepts existing owner-account goalPUT with503 and never alters persisted goals.",
       "baseRef": "HEAD",
-      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
-      "reviewedAtUtc": "2026-10-02T21:45:23.1779090Z"
+      "gitHead": "7d19efc6fba4fa774c1d7a91e9accd6869db21f7",
+      "reviewedAtUtc": "2026-10-02T22:04:18.7262018Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

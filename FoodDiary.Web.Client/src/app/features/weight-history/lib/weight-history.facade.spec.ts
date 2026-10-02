@@ -731,3 +731,19 @@ describe('WeightHistoryFacade pending entry edits', () => {
         });
     });
 });
+
+describe('Weight goal pending draft', () => {
+    it('locks the target until failure and preserves the draft for retry', () => {
+        facade.desiredWeightModel.set({ weight: '70.5' });
+        const pending = new Subject<never>();
+        userService.updateWeightGoal.mockReturnValueOnce(pending);
+        facade.saveDesiredWeight();
+        TestBed.tick();
+        expect(facade.desiredWeightForm.weight().disabled()).toBe(true);
+        pending.error(new Error('Unavailable'));
+        TestBed.tick();
+        expect(facade.desiredWeightForm.weight().disabled()).toBe(false);
+        expect(facade.desiredWeightModel()).toEqual({ weight: '70.5' });
+        expect(facade.goalActionError()).toBe('WEIGHT_HISTORY.ERROR_SAVE_GOAL');
+    });
+});

@@ -32,9 +32,14 @@ export class WaistHistoryGoalDialogComponent {
         const field = this.waistField();
         return field.invalid() && (field.touched() || field.dirty()) ? 'WAIST_HISTORY.GOAL_VALUE_RANGE' : null;
     });
-    protected readonly goalRange = computed(() => ({ max: this.measurements.displayLength(MAX_DESIRED_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS) }));
+    protected readonly goalRange = computed(() => ({
+        max: this.measurements.displayLength(MAX_DESIRED_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS),
+    }));
 
     public constructor() {
+        effect(() => {
+            this.dialogRef.disableClose = this.isSaving();
+        });
         effect(() => {
             if (this.facade.desiredWaistSaveVersion() > this.initialSaveVersion) {
                 this.dialogRef.close();
@@ -61,6 +66,9 @@ export class WaistHistoryGoalDialogComponent {
     }
 
     protected close(): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.dialogRef.close();
     }
 }

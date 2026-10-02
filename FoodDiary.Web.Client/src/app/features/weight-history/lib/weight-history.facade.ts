@@ -122,6 +122,7 @@ export class WeightHistoryFacade {
 
     public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
     public readonly desiredWeightForm = form(this.desiredWeightModel, path => {
+        disabled(path.weight, { when: () => this.isDesiredWeightSaving() });
         validate(path.weight, ({ value }) => {
             if (value().trim().length === 0) {
                 return;

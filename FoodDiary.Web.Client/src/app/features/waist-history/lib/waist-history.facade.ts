@@ -87,6 +87,7 @@ export class WaistHistoryFacade {
     public readonly latestEntry = signal<WaistEntry | null>(null);
     public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
     public readonly desiredWaistForm = form(this.desiredWaistModel, path => {
+        disabled(path.circumference, { when: () => this.isDesiredWaistSaving() });
         validate(path.circumference, ({ value }) => {
             if (value().trim().length === 0) {
                 return;
