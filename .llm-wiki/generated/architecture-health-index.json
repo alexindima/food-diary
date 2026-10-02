@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 131,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -381,12 +381,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.spec.ts"
     },
     {
-      "class": "SensitiveCycleExportDialogComponent",
-      "selector": "fd-sensitive-cycle-export-dialog",
+      "class": "CycleExportDialogComponent",
+      "selector": "fd-cycle-export-dialog",
       "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
-      "specPath": null
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.spec.ts"
     },
     {
       "class": "DashboardNotificationSettingsDialogComponent",
@@ -1804,16 +1804,6 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "SensitiveCycleExportDialogComponent",
-      "selector": "fd-sensitive-cycle-export-dialog",
-      "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

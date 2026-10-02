@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1827,
+    "typescriptFiles": 1830,
     "symbols": 708,
     "routes": 104,
     "features": 45,
-    "specs": 659,
+    "specs": 661,
     "localeFiles": 5,
     "roles": {
       "Component": 477,
@@ -459,6 +459,7 @@
         "CycleDayEditorDrawerComponent",
         "CycleDayItemComponent",
         "CycleDaysCardComponent",
+        "CycleExportDialogComponent",
         "CycleFactorItemComponent",
         "CycleFactorListComponent",
         "CycleNutritionSummaryCardComponent",
@@ -467,14 +468,15 @@
         "CycleSettingsDrawerComponent",
         "CycleTrackingFacade",
         "CycleTrackingPageComponent",
-        "CyclesService",
-        "SensitiveCycleExportDialogComponent"
+        "CyclesService"
       ],
       "routes": [
         ""
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-export-range.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-factor-status.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.mapper.spec.ts",
@@ -3240,18 +3242,18 @@
       "line": 20
     },
     {
-      "name": "SensitiveCycleExportDialogComponent",
+      "name": "CycleExportDialogComponent",
       "role": "Component",
-      "selector": "fd-sensitive-cycle-export-dialog",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
-      "line": 18
+      "selector": "fd-cycle-export-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
+      "line": 34
     },
     {
       "name": "CycleTrackingFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 65
+      "line": 66
     },
     {
       "name": "CycleCalendarCardComponent",
@@ -3342,7 +3344,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 110
+      "line": 111
     },
     {
       "name": "DashboardService",
@@ -6987,8 +6989,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4034,
-      "russianProperties": 4034,
+      "englishProperties": 4041,
+      "russianProperties": 4041,
       "countsMatch": true
     },
     {

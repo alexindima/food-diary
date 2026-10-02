@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "01830e64694544f9f144eea6a5194984be2a91ab97879c9807ac8761eaaa5ea9"
+          "sha256": "d27d5cff0ff7f59def97f80af66a9d4ad9f927720610862c0e41dac7c0ac9fd8"
         }
       ],
-      "reason": "Refreshed architecture index reviewed: existing cycle components gain inputs; no projects, dependency edges or selector removals. Native pending and retry behavior verified.",
+      "reason": "Removed nowunused privatepassworddialog aftersingleconsumersearch; shared exportdialog replaces both pageactions with existingUIkitprimitives. No newproject/moduledependencies; nativeEN1280/RU390 and4882plus4tests verified.",
       "baseRef": "HEAD",
-      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
-      "reviewedAtUtc": "2026-10-02T05:42:42.7767474Z"
+      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
+      "reviewedAtUtc": "2026-10-02T06:23:17.0889450Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "149b6f9dfec91f31d16ad2b37ebfcca0b8f8a52c058b0a60866943efcceeb8c8"
+          "sha256": "f257b996937c4fa620583e5f83a5177285fd9450227ac6c463ec80f9be6e1e73"
         }
       ],
-      "reason": "Generated risk delta reflects facade confirmation guards and2regressioncases. Reviewed pending/error/finalize branches;4872tests and finalbuild pass.",
+      "reason": "Riskdelta reflects newshared dialog anddatehelper plus10range/regressioncases and4componentcases. Full4882tests pass and4componenttests independently; finalcomponentlintpass.",
       "baseRef": "HEAD",
-      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
-      "reviewedAtUtc": "2026-10-02T05:42:44.6190145Z"
+      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
+      "reviewedAtUtc": "2026-10-02T06:23:19.0898581Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "149b6f9dfec91f31d16ad2b37ebfcca0b8f8a52c058b0a60866943efcceeb8c8"
+          "sha256": "f257b996937c4fa620583e5f83a5177285fd9450227ac6c463ec80f9be6e1e73"
         }
       ],
-      "reason": "UI-only error and pending state; no token,log,persistence,authorization or external sharing change. Own fixtures cleaned and RU baseline activeconsents restored to core0.",
+      "reason": "Password remains transient dialogresult, sensitive endpointPOST unchanged; standardGETCSV excludes privateandfertilitymarkers onrealstoredfixture. No retention/auth/log/providerchange; exactownfixturescleaned204.",
       "baseRef": "HEAD",
-      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
-      "reviewedAtUtc": "2026-10-02T05:42:45.6287427Z"
+      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
+      "reviewedAtUtc": "2026-10-02T06:23:20.1702070Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ef116edcf63207cc50fc0b7cd3aaa6f9c43eb938a44406a46cc28cbc4583c132"
+          "sha256": "fd8c8a124d4b6f719b9e992969c921fe2810554dd21082260d6a91275e30bcbd"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "dc1a1b41827730848e0878ec8b1d7ee02264e1ddb3b6e56488f85c6151cf2acb"
+          "sha256": "4eeb2d9dcbd29361fc0fe13387454a55b3861b453bf949e7928f661a843b4c36"
         }
       ],
-      "reason": "Current settings checkbox binds fertilitySignalsConsentGranted through facade to purpose1 UpdateCycleConsent; backend RevokeConsent clears signals. New disclosure uses existing hint beforeSave; unchanged mutation flow.",
+      "reason": "Traced header actions -> common dialog -> selectedrange facade -> runCycleExport -> existing ExportService GETstandard/POSTsensitive. Selected dates survive nativequery; backendlimit366 preserved.",
       "baseRef": "HEAD",
-      "gitHead": "37db6d6245d1c0def46a9c6d51ca7778aae68569",
-      "reviewedAtUtc": "2026-10-02T05:54:46.6324582Z"
+      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
+      "reviewedAtUtc": "2026-10-02T06:23:21.2696005Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ef116edcf63207cc50fc0b7cd3aaa6f9c43eb938a44406a46cc28cbc4583c132"
+          "sha256": "fd8c8a124d4b6f719b9e992969c921fe2810554dd21082260d6a91275e30bcbd"
         }
       ],
-      "reason": "Reviewed existing checkbox hint input and settings template consumption, EN/RU copy; no API or component contract change. EN1280 andRU390 screenshots inspected; Cancel with stored fertilityrecord preserves data; backend existing revocation clears records verified natively.",
+      "reason": "Reviewed dialogdata/result/rangeinput,passwordconditional, pageconsumers and facade/workflowmapping. Existing endpoints unchanged. Real longhistory zeroGETinvalid, selected366daysGET200CSV; RUorder/future/password validation andCancel0requests.",
       "baseRef": "HEAD",
-      "gitHead": "37db6d6245d1c0def46a9c6d51ca7778aae68569",
-      "reviewedAtUtc": "2026-10-02T05:54:45.2992511Z"
+      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
+      "reviewedAtUtc": "2026-10-02T06:23:17.9915801Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 482,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 131,
     "inputs": 1551,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2061,
-    "consumerEdges": 1214,
+    "translationKeys": 2063,
+    "consumerEdges": 1216,
     "consumedComponents": 306,
     "unconsumedComponents": 175
   },
@@ -1433,6 +1433,16 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.spec.ts"
     },
     {
+      "class": "CycleExportDialogComponent",
+      "selector": "fd-cycle-export-dialog",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.spec.ts"
+    },
+    {
       "class": "CycleFactorItemComponent",
       "selector": "fd-cycle-factor-item",
       "feature": "cycle-tracking",
@@ -1615,16 +1625,6 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "SensitiveCycleExportDialogComponent",
-      "selector": "fd-sensitive-cycle-export-dialog",
-      "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -19267,12 +19267,13 @@
     },
     {
       "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "keys": [
         "COMMON.CANCEL",
-        "CYCLE_TRACKING.SENSITIVE_EXPORT_CONFIRM",
+        "CYCLE_TRACKING.EXPORT_FROM",
+        "CYCLE_TRACKING.EXPORT_RANGE_HINT",
+        "CYCLE_TRACKING.EXPORT_TO",
         "CYCLE_TRACKING.SENSITIVE_EXPORT_PASSWORD",
-        "CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE",
         "CYCLE_TRACKING.SENSITIVE_EXPORT_WARNING"
       ]
     },
@@ -26926,7 +26927,7 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
         "appearance",
@@ -30685,6 +30686,18 @@
       "selector": "fd-ui-date-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
       "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDateInputComponent",
+      "selector": "fd-ui-date-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
+      "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -31067,7 +31080,7 @@
       "selector": "fd-ui-dialog",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "cycle-tracking",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "dismissible",
@@ -31899,6 +31912,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"
@@ -33770,7 +33795,7 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "cycle-tracking",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "autocomplete",

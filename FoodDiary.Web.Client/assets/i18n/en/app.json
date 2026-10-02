@@ -2301,6 +2301,14 @@
         "GOAL_VALUE_RANGE": "Enter a value greater than zero and no more than {{max}}."
     },
     "CYCLE_TRACKING": {
+        "EXPORT_RANGE_HINT": "Choose the dates to include. Each file can cover up to 366 days between its start and end. For longer histories, download separate periods.",
+        "EXPORT_FROM": "Export from",
+        "EXPORT_TO": "Export through",
+        "EXPORT_DATES_REQUIRED": "Choose valid start and end dates.",
+        "EXPORT_DATE_ORDER": "The end date must be on or after the start date.",
+        "EXPORT_FUTURE_DATE": "Choose an end date no later than today.",
+        "EXPORT_RANGE_TOO_LONG": "Choose a period of up to 366 days between the start and end dates.",
+
         "TITLE": "Cycle tracking",
         "SUBTITLE": "Log menstrual days and daily symptoms in one place",
         "SUBTITLE_V2": "Your private journal for patterns, wellbeing, and cycle estimates",

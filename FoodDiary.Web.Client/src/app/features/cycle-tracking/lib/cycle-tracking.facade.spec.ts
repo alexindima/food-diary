@@ -1422,6 +1422,24 @@ describe('CycleTrackingFacade menstrual episode success', () => {
 });
 
 describe('CycleTrackingFacade export', () => {
+    it('passes a selected historical range to the standard export', () => {
+        facade.initialize();
+        const range = { dateFrom: '2025-10-01', dateTo: '2026-01-01' };
+        facade.exportCycle(range);
+        expect(exportService.exportCycle).toHaveBeenCalledWith(expect.objectContaining(range));
+        expect(exportService.exportSensitiveCycle).not.toHaveBeenCalled();
+    });
+
+    it('passes the same selected range and password to the sensitive export', () => {
+        facade.initialize();
+        const range = { dateFrom: '2025-10-01', dateTo: '2026-01-01' };
+        facade.exportSensitiveCycle('test-password', range);
+        expect(exportService.exportSensitiveCycle).toHaveBeenCalledWith(
+            expect.objectContaining({ ...range, currentPassword: 'test-password' }),
+        );
+        expect(exportService.exportCycle).not.toHaveBeenCalled();
+    });
+
     it('shows export failures and clears feedback when retrying', () => {
         facade.initialize();
         exportService.exportCycle.mockReturnValueOnce(throwError(() => new Error('offline')));

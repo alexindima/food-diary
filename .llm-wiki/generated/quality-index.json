@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5692,
+    "productionFiles": 5693,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 977,
@@ -56,11 +56,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 980,
+      "nonBlankLines": 982,
       "decisionPoints": 140,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 229.6
+      "structuralRiskScore": 229.64
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
@@ -8233,12 +8233,12 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
-      "nonBlankLines": 37,
-      "decisionPoints": 2,
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
+      "nonBlankLines": 57,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.74
+      "structuralRiskScore": 5.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-day.mapper.ts",
@@ -8249,12 +8249,20 @@
       "structuralRiskScore": 29.42
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-export.workflow.ts",
-      "nonBlankLines": 39,
-      "decisionPoints": 3,
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-export-range.ts",
+      "nonBlankLines": 28,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.28
+      "structuralRiskScore": 11.06
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-export.workflow.ts",
+      "nonBlankLines": 41,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-factor-status.utils.ts",
@@ -8274,11 +8282,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 980,
+      "nonBlankLines": 982,
       "decisionPoints": 140,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 229.6
+      "structuralRiskScore": 229.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",
@@ -8434,11 +8442,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 446,
-      "decisionPoints": 36,
+      "nonBlankLines": 468,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 62.92
+      "structuralRiskScore": 69.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",

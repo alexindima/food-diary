@@ -22,8 +22,9 @@ import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
-import { SensitiveCycleExportDialogComponent } from '../dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog';
+import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
+import { toCycleDateKey } from '../lib/cycle-tracking.mapper';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FACTOR_TYPE_LACTATION,
@@ -440,16 +441,38 @@ export class CycleTrackingPageComponent {
     }
 
     protected exportCycle(): void {
-        this.facade.exportCycle();
+        this.openExportDialog(false);
     }
 
     protected exportSensitiveCycle(): void {
+        this.openExportDialog(true);
+    }
+
+    private openExportDialog(sensitive: boolean): void {
+        const cycle = this.cycle();
+        if (cycle === null || this.isExportingCycle()) {
+            return;
+        }
+        const today = formatDateInputValue(new Date());
         this.dialogService
-            .open(SensitiveCycleExportDialogComponent, { preset: 'form' })
+            .open(CycleExportDialogComponent, {
+                preset: 'form',
+                data: { sensitive, today, dateFrom: toCycleDateKey(cycle.trackingStartDate), dateTo: today },
+            })
             .afterClosed()
-            .pipe(filter((password): password is string => typeof password === 'string' && password.length > 0))
-            .subscribe(password => {
-                this.facade.exportSensitiveCycle(password);
+            .pipe(
+                filter(
+                    (selection): selection is CycleExportSelection =>
+                        selection !== null && typeof selection === 'object' && 'dateFrom' in selection,
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(selection => {
+                if (selection.currentPassword === undefined) {
+                    this.facade.exportCycle(selection);
+                } else {
+                    this.facade.exportSensitiveCycle(selection.currentPassword, selection);
+                }
             });
     }
 

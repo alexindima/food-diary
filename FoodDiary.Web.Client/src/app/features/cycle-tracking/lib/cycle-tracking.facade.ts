@@ -1,5 +1,6 @@
 import { buildDayEditModel, buildFertilitySignalPayload, buildSymptomClearCategories, buildSymptomPayload } from './cycle-day.mapper';
 import { runCycleExport } from './cycle-export.workflow';
+import type { CycleExportRange } from './cycle-export-range';
 import {
     createDefaultCycleDayFormModel,
     type CycleDayFormModel,
@@ -1000,20 +1001,21 @@ export class CycleTrackingFacade {
         return this.isEpisodeBusy();
     }
 
-    public exportCycle(): void {
+    public exportCycle(range?: CycleExportRange): void {
         runCycleExport(
             { cycle: this.cycle(), exporting: this.isExportingCycle, error: this.exportError },
             this.exportService,
             this.destroyRef,
+            { range },
         );
     }
 
-    public exportSensitiveCycle(currentPassword: string): void {
+    public exportSensitiveCycle(currentPassword: string, range?: CycleExportRange): void {
         runCycleExport(
             { cycle: this.cycle(), exporting: this.isExportingCycle, error: this.exportError },
             this.exportService,
             this.destroyRef,
-            currentPassword,
+            { currentPassword, range },
         );
     }
 

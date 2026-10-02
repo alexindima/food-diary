@@ -1,0 +1,30 @@
+<fd-ui-dialog
+    size="sm"
+    [title]="(data.sensitive ? 'CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE' : 'CYCLE_TRACKING.EXPORT_CYCLE') | translate"
+    [dismissible]="false"
+>
+    <form class="fd-stack fd-gap-md" [formRoot]="exportForm">
+        <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.EXPORT_RANGE_HINT' | translate }}</p>
+        <fd-ui-date-input [label]="'CYCLE_TRACKING.EXPORT_FROM' | translate" [formField]="exportForm.dateFrom" />
+        <fd-ui-date-input [label]="'CYCLE_TRACKING.EXPORT_TO' | translate" [formField]="exportForm.dateTo" />
+        <fd-ui-form-error [hidden]="rangeError() === null" [error]="rangeError()" />
+        @if (data.sensitive) {
+            <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.SENSITIVE_EXPORT_WARNING' | translate }}</p>
+            <fd-ui-input
+                type="password"
+                autocomplete="current-password"
+                [label]="'CYCLE_TRACKING.SENSITIVE_EXPORT_PASSWORD' | translate"
+                [error]="passwordError() | translate"
+                [formField]="exportForm.currentPassword"
+            />
+        }
+        <div fdUiDialogFooter class="fd-row fd-justify-end fd-gap-sm">
+            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="cancel()">{{
+                'COMMON.CANCEL' | translate
+            }}</fd-ui-button>
+            <fd-ui-button type="submit" appearance="brand-action" (click)="submit()">{{
+                (data.sensitive ? 'CYCLE_TRACKING.SENSITIVE_EXPORT_CONFIRM' : 'CYCLE_TRACKING.EXPORT_CYCLE') | translate
+            }}</fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>

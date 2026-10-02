@@ -5,22 +5,24 @@ import { finalize } from 'rxjs';
 import type { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import type { CycleResponse } from '../models/cycle.data';
+import type { CycleExportRange } from './cycle-export-range';
 import { toCycleDateKey } from './cycle-tracking.mapper';
 
 export function runCycleExport(
     state: { cycle: CycleResponse | null; exporting: WritableSignal<boolean>; error: WritableSignal<string | null> },
     service: Pick<ExportService, 'exportCycle' | 'exportSensitiveCycle'>,
     destroyRef: DestroyRef,
-    currentPassword?: string,
+    options: { currentPassword?: string; range?: CycleExportRange } = {},
 ): void {
     const { cycle, exporting } = state;
+    const { currentPassword, range: selectedRange } = options;
     if (currentPassword === '' || cycle === null || exporting()) {
         return;
     }
 
     const range = {
-        dateFrom: toCycleDateKey(cycle.trackingStartDate),
-        dateTo: formatDateInputValue(new Date()),
+        dateFrom: selectedRange?.dateFrom ?? toCycleDateKey(cycle.trackingStartDate),
+        dateTo: selectedRange?.dateTo ?? formatDateInputValue(new Date()),
         timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
     };
     state.error.set(null);
