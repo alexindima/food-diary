@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6875c6157ada1ae103e49804d0194bc253e28c2d878a5d69f899b6966761b3f5"
+          "sha256": "ebf861d7a87ca10fdcd0b0fb1599c5b4f7a6f308f80f3da6e8872e1c3c9a6114"
         }
       ],
-      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
+      "reason": "Reviewed shared select implementation, HTML overlay events, existing navigation/disabled behavior and direct consumers in public catalog. Option selection now restores actual native trigger focus; generic outside dismissal is unchanged and disabled options remain blocked. Added DOM regression for Enter and Space focus after overlay closes; native RU390 keyboard selection and following Tab reach next field, EN pointer selection and Escape preserve trigger focus. No API, auth, storage or sensitive-data boundary change; Storybook build passed and full frontend verification is running.",
       "baseRef": "HEAD",
-      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
-      "reviewedAtUtc": "2026-10-02T06:48:21.9909703Z"
+      "gitHead": "180181c700933d54a228cd5065a49e531e1768ee",
+      "reviewedAtUtc": "2026-10-02T07:05:46.0114813Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6875c6157ada1ae103e49804d0194bc253e28c2d878a5d69f899b6966761b3f5"
+          "sha256": "ebf861d7a87ca10fdcd0b0fb1599c5b4f7a6f308f80f3da6e8872e1c3c9a6114"
         }
       ],
-      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
+      "reason": "Reviewed shared select implementation, HTML overlay events, existing navigation/disabled behavior and direct consumers in public catalog. Option selection now restores actual native trigger focus; generic outside dismissal is unchanged and disabled options remain blocked. Added DOM regression for Enter and Space focus after overlay closes; native RU390 keyboard selection and following Tab reach next field, EN pointer selection and Escape preserve trigger focus. No API, auth, storage or sensitive-data boundary change; Storybook build passed and full frontend verification is running.",
       "baseRef": "HEAD",
-      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
-      "reviewedAtUtc": "2026-10-02T06:48:22.7642672Z"
+      "gitHead": "180181c700933d54a228cd5065a49e531e1768ee",
+      "reviewedAtUtc": "2026-10-02T07:05:46.9516123Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

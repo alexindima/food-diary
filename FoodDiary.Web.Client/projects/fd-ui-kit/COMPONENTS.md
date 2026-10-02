@@ -230,6 +230,7 @@ Multi-line input.
 #### `fd-ui-select`
 
 Dropdown select based on the design-system menu/overlay primitives.
+Selecting an option with Enter, Space, or a pointer closes the menu and returns focus to the trigger so keyboard navigation can continue.
 
 Long option lists scroll within a bounded menu. Opening the menu and navigating with arrows, Home, or End keeps the active option visible.
 

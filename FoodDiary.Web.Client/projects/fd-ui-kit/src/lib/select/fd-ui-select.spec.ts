@@ -47,6 +47,26 @@ describe('FdUiSelectComponent', () => {
     });
 });
 
+describe('FdUiSelectComponent selection focus', () => {
+    it.each(['Enter', ' '])('returns focus to the trigger after selection with %s', async key => {
+        const { fixture, component, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        control.focus();
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        fixture.detectChanges();
+        const menu = document.querySelector<HTMLElement>('[role="listbox"]');
+        expect(menu).not.toBeNull();
+        menu?.focus();
+        menu?.dispatchEvent(new KeyboardEvent('keydown', { key }));
+        fixture.detectChanges();
+        expect(component.value()).toBe('apple');
+        expect(document.activeElement).toBe(control);
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+    });
+});
+
 describe('FdUiSelectComponent rendering', () => {
     it('supports keyboard selection in text appearance without a visible label', async () => {
         const { fixture, component, requireElement, host } = await setupSelectAsync();

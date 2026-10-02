@@ -122,6 +122,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         this.touched.set(true);
         this.touch.emit();
         this.closeMenu();
+        this.controlRef()?.nativeElement.focus();
     }
 
     protected onFocus(): void {
