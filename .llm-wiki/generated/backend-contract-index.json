@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1307,
     "ambiguousContracts": 2,
-    "consumerEdges": 10160,
+    "consumerEdges": 10162,
     "productionConsumerEdges": 5819,
-    "testConsumerEdges": 4341,
+    "testConsumerEdges": 4343,
     "consumedContracts": 1307,
     "unconsumedContracts": 0
   },
@@ -149445,6 +149445,19 @@
         "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/MenstrualEpisodeDateValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "UpdateMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -149474,6 +149487,19 @@
       "consumerPath": "Modules/Cycles/Presentation/Mappings/CycleHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "UpdateMenstrualEpisodeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/UpdateMenstrualEpisodeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "UpdateMenstrualEpisodeHttpRequest",

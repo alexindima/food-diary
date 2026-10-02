@@ -55,20 +55,20 @@
       "structuralRiskScore": 236.14
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
+      "nonBlankLines": 956,
+      "decisionPoints": 134,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 220.12
+    },
+    {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
       "nonBlankLines": 881,
       "decisionPoints": 133,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 219.12
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 948,
-      "decisionPoints": 130,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 213.96
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
@@ -8274,11 +8274,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 948,
-      "decisionPoints": 130,
+      "nonBlankLines": 956,
+      "decisionPoints": 134,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 213.96
+      "structuralRiskScore": 220.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",
@@ -8434,11 +8434,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 438,
-      "decisionPoints": 30,
+      "nonBlankLines": 443,
+      "decisionPoints": 32,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 53.76
+      "structuralRiskScore": 56.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",
@@ -20762,11 +20762,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
@@ -56055,9 +56055,10 @@
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/MenstrualEpisodeDateValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

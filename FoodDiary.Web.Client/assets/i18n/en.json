@@ -5885,6 +5885,7 @@
         "CLEAR_DAY_FAILED": "Could not clear the day. Your entries are still saved. Please try again.",
         "DAY_CLEARED_REFRESH_FAILED": "The day was cleared, but the cycle history and predictions could not be refreshed. Retry loading your cycle data.",
         "EPISODE_SAVE_FAILED": "Could not save the period dates. Your changes are still here. Please try again.",
+        "EPISODE_DATE_ORDER": "End date must be on or after the start date.",
         "EPISODE_PREDICTION_FAILED": "Could not change whether this period is used in predictions. Please try again.",
         "EPISODE_DELETE_FAILED": "Could not delete the period confirmation. It is still saved. Please try again.",
         "SAVE_DAY_FAILED": "Could not save the day. Your changes remain in the form. Please try again.",

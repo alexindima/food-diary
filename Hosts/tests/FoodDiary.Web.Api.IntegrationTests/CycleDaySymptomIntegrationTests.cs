@@ -247,6 +247,41 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
             () => Assert.Equal(new string('x', 128), stored.GetProperty("cervicalFluid").GetString()));
     }
 
+    [RequiresDockerFact]
+    public async Task UpdateEpisode_RejectsEndBeforeStartAndAcceptsDateBoundaries() {
+        HttpClient client = factory.CreateClient();
+        string token = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        Guid profileId = await CreateCycleAsync(client);
+        var start = new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        HttpResponseMessage confirmed = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/period-start", new { Date = start });
+        confirmed.EnsureSuccessStatusCode();
+        using var initial = JsonDocument.Parse(await confirmed.Content.ReadAsStringAsync());
+        Guid episodeId = Assert.Single(initial.RootElement.GetProperty("menstrualEpisodes").EnumerateArray()).GetProperty("id").GetGuid();
+        string url = $"/api/v1/cycles/{profileId}/menstrual-episodes/{episodeId}";
+        HttpResponseMessage invalid = await client.PutAsJsonAsync(url, new UpdateMenstrualEpisodeHttpRequest(start, start.AddDays(-1)));
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+        using var error = JsonDocument.Parse(await invalid.Content.ReadAsStringAsync());
+        using var snapshot = JsonDocument.Parse(await File.ReadAllTextAsync(
+            SnapshotPathResolver.GetPath("cycle-episode-date-validation-contract.json")));
+        var actual = new {
+            Status = (int)invalid.StatusCode,
+            Error = error.RootElement.GetProperty("error").GetString(),
+            Fields = error.RootElement.GetProperty("errors").EnumerateObject().Select(static field => field.Name)
+                .Order(StringComparer.Ordinal).ToArray(),
+        };
+        Assert.Equal(JsonSerializer.Serialize(snapshot.RootElement), JsonSerializer.Serialize(actual));
+        HttpResponseMessage current = await client.GetAsync("/api/v1/cycles/current");
+        current.EnsureSuccessStatusCode();
+        using var persisted = JsonDocument.Parse(await current.Content.ReadAsStringAsync());
+        JsonElement episode = Assert.Single(persisted.RootElement.GetProperty("menstrualEpisodes").EnumerateArray());
+        Assert.Equal(start, episode.GetProperty("startDate").GetDateTime());
+        foreach (DateTime? end in new DateTime?[] { start, start.AddDays(1), null }) {
+            HttpResponseMessage valid = await client.PutAsJsonAsync(url, new UpdateMenstrualEpisodeHttpRequest(start, end));
+            Assert.Equal(HttpStatusCode.OK, valid.StatusCode);
+        }
+    }
+
     private static async Task<Guid> CreateCycleAsync(HttpClient client) {
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/cycles",

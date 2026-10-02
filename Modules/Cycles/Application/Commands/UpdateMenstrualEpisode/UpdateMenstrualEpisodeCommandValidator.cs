@@ -9,6 +9,7 @@ public sealed class UpdateMenstrualEpisodeCommandValidator : AbstractValidator<U
         RuleFor(command => command.StartDate).NotEmpty();
         RuleFor(command => command.EndDate)
             .GreaterThanOrEqualTo(command => command.StartDate)
+            .WithErrorCode("Validation.Invalid")
             .When(command => command.EndDate.HasValue);
     }
 }

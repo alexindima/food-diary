@@ -1340,6 +1340,25 @@ describe('CycleTrackingFacade menstrual episodes', () => {
 });
 
 describe('CycleTrackingFacade menstrual episode success', () => {
+    it('rejects an episode end before its start without sending a request', async () => {
+        facade.initialize();
+        facade.editMenstrualEpisode('episode-1');
+        facade.episodeModel.update(value => ({ ...value, endDate: '2026-03-31' }));
+
+        await submit(facade.episodeForm);
+
+        expect(facade.episodeForm.endDate().errors()).toEqual(expect.arrayContaining([expect.objectContaining({ kind: 'dateOrder' })]));
+        expect(cyclesService.updateMenstrualEpisode).not.toHaveBeenCalled();
+        expect(facade.editingEpisodeId()).toBe('episode-1');
+    });
+
+    it.each([null, '2026-04-01', '2026-04-02'])('accepts valid episode end %s', endDate => {
+        facade.initialize();
+        facade.editMenstrualEpisode('episode-1');
+        facade.episodeModel.update(value => ({ ...value, endDate }));
+        expect(facade.episodeForm().invalid()).toBe(false);
+    });
+
     it('toggles prediction exclusion and applies the returned cycle', async () => {
         facade.initialize();
 

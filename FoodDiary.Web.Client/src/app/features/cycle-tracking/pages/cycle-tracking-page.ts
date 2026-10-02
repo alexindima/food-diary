@@ -172,6 +172,11 @@ export class CycleTrackingPageComponent {
         return field.touched() && field.errors().some(error => error.kind === 'dateOrder') ? 'CYCLE_TRACKING.FACTOR_DATE_ORDER' : null;
     });
     protected readonly episodeForm = this.facade.episodeForm;
+    protected readonly episodeEndDateError = computed(() => {
+        const field = this.episodeForm.endDate();
+        const touched = field.touched() || this.episodeForm.startDate().touched();
+        return touched && field.errors().some(error => error.kind === 'dateOrder') ? 'CYCLE_TRACKING.EPISODE_DATE_ORDER' : null;
+    });
 
     protected readonly predictions = this.facade.predictions;
     protected readonly bleedingEntries = this.facade.bleedingEntries;

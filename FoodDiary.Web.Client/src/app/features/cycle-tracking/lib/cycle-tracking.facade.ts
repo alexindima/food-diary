@@ -267,6 +267,14 @@ export class CycleTrackingFacade {
         path => {
             required(path.startDate);
             disabled(path, { when: () => this.isEpisodeBusy() });
+            validate(path.endDate, context => {
+                const start = context.valueOf(path.startDate);
+                const end = context.value();
+                if (start === null || end === null || start.length === 0 || end.length === 0) {
+                    return;
+                }
+                return toCycleDateKey(end) < toCycleDateKey(start) ? { kind: 'dateOrder' } : undefined;
+            });
         },
         {
             submission: {
