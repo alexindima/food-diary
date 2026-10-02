@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb09db8ed96cd440fb1157a9d2c33954932e82f3058f16a1f99da7741a3d7c35"
+          "sha256": "a00e5315cdd13e9f7751a6de2078d4ffd172673fbd462d580a5d49745a4027f7"
         }
       ],
-      "reason": "Reviewed bulk request key identity bound to normalized text and sorted recipients; unchanged retries deduplicate and edited text/recipient requests receive new keys. Real API save-then-response-loss and client reload evidence plus 20 focused tests, lint/build passed; unrelated admin edits excluded.",
+      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "82f59d693736329f17ddf87f004bf9a34a2f82c4",
-      "reviewedAtUtc": "2026-10-02T14:31:33.6312617Z"
+      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
+      "reviewedAtUtc": "2026-10-02T15:06:10.7233863Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb09db8ed96cd440fb1157a9d2c33954932e82f3058f16a1f99da7741a3d7c35"
+          "sha256": "a00e5315cdd13e9f7751a6de2078d4ffd172673fbd462d580a5d49745a4027f7"
         }
       ],
-      "reason": "Reviewed bulk request key identity bound to normalized text and sorted recipients; unchanged retries deduplicate and edited text/recipient requests receive new keys. Real API save-then-response-loss and client reload evidence plus 20 focused tests, lint/build passed; unrelated admin edits excluded.",
+      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "82f59d693736329f17ddf87f004bf9a34a2f82c4",
-      "reviewedAtUtc": "2026-10-02T14:31:34.5218469Z"
+      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
+      "reviewedAtUtc": "2026-10-02T15:06:11.7506968Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,18 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1edff0093fccf6f684c5444dfa974c6371633940668d987e6f583e44926e56c7"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "bee7dceb3907cdfe233f583101c680996f4c6afdac74e43ee3e3d29e62c1fe5c"
+          "sha256": "905d4d76660cbebbd74300ee583405051f3950eb1d4dd06f0f1ca3ba6ab99420"
         }
       ],
-      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
+      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
-      "reviewedAtUtc": "2026-10-02T14:15:24.0059719Z"
+      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
+      "reviewedAtUtc": "2026-10-02T15:06:12.7209401Z"
     },
     {
       "pageId": "workflow-verification-planner",

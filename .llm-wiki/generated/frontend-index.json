@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1841,
+    "typescriptFiles": 1842,
     "symbols": 711,
     "routes": 106,
     "features": 46,
-    "specs": 665,
+    "specs": 666,
     "localeFiles": 5,
     "roles": {
       "Component": 478,
@@ -178,6 +178,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/admin-catalog.facade.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.spec.ts"
       ]
     },
@@ -2270,14 +2271,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/admin-catalog.facade.ts",
-      "line": 8
+      "line": 12
     },
     {
       "name": "AdminCatalogComponent",
       "role": "Component",
       "selector": "fd-admin-catalog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.ts",
-      "line": 21
+      "line": 17
     },
     {
       "name": "AdminDailyAdvicesService",
