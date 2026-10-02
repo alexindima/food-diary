@@ -1,5 +1,9 @@
+import { formatDate, registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
@@ -66,6 +70,10 @@ describe('UserManageSecurityCardComponent', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-password-method button')).toBeNull();
     });
 
+    it('formats session timestamps in the selected language and updates them when the language changes', async () => {
+        await verifySessionDateLocalesAsync(await createFixtureAsync(true));
+    });
+
     async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
         await TestBed.configureTestingModule({
             imports: [UserManageSecurityCardComponent],
@@ -86,3 +94,32 @@ describe('UserManageSecurityCardComponent', () => {
         return fixture;
     }
 });
+
+async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManageSecurityCardComponent>): Promise<void> {
+    registerLocaleData(localeRu);
+    const translate = TestBed.inject(TranslateService);
+    const timestamp = '2026-10-02T19:37:23Z';
+    fixture.componentInstance['activeSessions'].isLoading.set(false);
+    fixture.componentInstance['activeSessions'].error.set(false);
+    fixture.componentInstance['activeSessions'].sessions.set([
+        {
+            id: 'current-session',
+            isCurrent: true,
+            authProvider: 'password',
+            browser: 'Edge',
+            operatingSystem: 'Windows',
+            deviceType: 'Desktop',
+            createdAtUtc: timestamp,
+            lastActiveAtUtc: timestamp,
+        },
+    ]);
+
+    for (const language of ['ru', 'en', 'ru']) {
+        await firstValueFrom(translate.use(language));
+        fixture.detectChanges();
+        const description = (fixture.nativeElement as HTMLElement).querySelector(
+            '.user-manage__sessions .user-manage__login-method-description',
+        );
+        expect(description?.textContent).toContain(formatDate(timestamp, 'medium', language));
+    }
+}

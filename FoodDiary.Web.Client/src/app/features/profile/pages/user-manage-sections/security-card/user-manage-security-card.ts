@@ -6,6 +6,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { ActiveSessionsFacade } from '../../../lib/active-sessions.facade';
 import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
@@ -33,6 +34,7 @@ export class UserManageSecurityCardComponent {
     private readonly googleButton = viewChild<ElementRef<HTMLDivElement>>('googleButton');
     private initializationStarted = false;
     protected readonly activeSessions = inject(ActiveSessionsFacade);
+    protected readonly locale = injectCurrentLanguage();
 
     public readonly email = input.required<string>();
     public readonly hasGoogleIdentity = input.required<boolean>();

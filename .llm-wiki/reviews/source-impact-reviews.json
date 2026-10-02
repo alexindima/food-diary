@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "355f950a501461f4462154d0b9f2fb8ebd2a14477e7d989c96d1d22ec89b4510"
+          "sha256": "a6c60a6ce1f00c3f6147f5b027ea570455263e592319ed1881b08600d1da7233"
         }
       ],
-      "reason": "Reviewed target-field signal disable rules and dialog ref dismissal state for weight/waist goals. Four regressions fail before fix;416 measurement tests pass after fix. Native goal PUT503 at390/1280 retains70,5, disables input and blocksEscape, then unlocks withlocalizederror. Existing success/cancel lifecycle tests remain green. Quality index is navigation evidence.",
+      "reason": "Reviewed generated quality changes against current security card source: only two lines add the existing selected-language signal; structural score80to82 lines10.60to10.64. Regression failed old DatePipe English output and focused21 tests pass ru-en-ru date rendering and auth interceptor. Foreign admin node remains separately owned.",
       "baseRef": "HEAD",
-      "gitHead": "7d19efc6fba4fa774c1d7a91e9accd6869db21f7",
-      "reviewedAtUtc": "2026-10-02T22:04:14.9023727Z"
+      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
+      "reviewedAtUtc": "2026-10-02T22:40:53.4753174Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "355f950a501461f4462154d0b9f2fb8ebd2a14477e7d989c96d1d22ec89b4510"
+          "sha256": "a6c60a6ce1f00c3f6147f5b027ea570455263e592319ed1881b08600d1da7233"
         }
       ],
-      "reason": "Goal changes only transient field availability, aria-busy and pending dialog dismissal. No health-data API payload, authorization, provider, persistence, credentials or logging changes. Native proof intercepts existing owner-account goalPUT with503 and never alters persisted goals.",
+      "reason": "Reviewed locale-only DatePipe argument and existing injectCurrentLanguage signal in current profile security card. API session DTO, tokens, authenticated ownership, session revoke commands and persistence are unchanged. Native RU390/1280 dates match selected language without new data exposure;21 focused tests pass. Separate revoke503 UI recovery defect is recorded for next change.",
       "baseRef": "HEAD",
-      "gitHead": "7d19efc6fba4fa774c1d7a91e9accd6869db21f7",
-      "reviewedAtUtc": "2026-10-02T22:04:18.7262018Z"
+      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
+      "reviewedAtUtc": "2026-10-02T22:41:18.0921089Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6eab7b0dccb93a5c040ed07bfa0b2022f26226d3ee3ce59052409286e56c122c"
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "561b95bd5f2b72e1b2253196aaca88edc3493901fa9f83f37d1e163123f2f53a"
         }
       ],
-      "reason": "Frontend contract index adds only existing fd-ui-button disabled/disabledReason bindings and existing bilingual operation-busy translation use in weight and waist entry forms. No component inputs, outputs, selectors or HTTP contracts changed. Both consumer forms verified native pending/failure and real create/edit/delete.",
+      "reason": "Reviewed frontend index diff against component declaration: security-card source location moves line30to31 due locale helper import. Selector, route, providers and feature ownership remain unchanged. Current source and21focused tests confirm DatePipe locale signal updates ru-en-ru; nativeRU390/1280 dates are localized.",
       "baseRef": "HEAD",
-      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
-      "reviewedAtUtc": "2026-10-02T21:45:11.0178016Z"
+      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
+      "reviewedAtUtc": "2026-10-02T22:41:26.5564797Z"
     },
     {
       "pageId": "workflow-verification-planner",

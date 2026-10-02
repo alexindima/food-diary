@@ -93,7 +93,7 @@
                     </div>
                     <div class="user-manage__login-method-description fd-ui-body-sm">
                         {{ session.deviceType || ('USER_MANAGE.UNKNOWN_DEVICE' | translate) }} ·
-                        {{ session.lastActiveAtUtc | date: 'medium' }}
+                        {{ session.lastActiveAtUtc | date: 'medium' : undefined : locale() }}
                     </div>
                 </div>
                 @if (!session.isCurrent) {

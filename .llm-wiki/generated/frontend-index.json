@@ -5017,7 +5017,7 @@
       "role": "Component",
       "selector": "fd-user-manage-security-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "line": 30
+      "line": 31
     },
     {
       "name": "UserManageTelegramConnectionComponent",
