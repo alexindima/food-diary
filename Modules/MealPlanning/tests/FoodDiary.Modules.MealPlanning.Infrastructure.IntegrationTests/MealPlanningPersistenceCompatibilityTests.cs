@@ -15,6 +15,44 @@ namespace FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetPageSummaryReadModels_FiltersOwnedAndCuratedPlansBeforeCountingAndPaging() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"plan-filter-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var other = User.Create($"plan-filter-other-{Guid.NewGuid():N}@example.com", "hash");
+        var ownBalanced = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(owner.Id, "Own balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
+        var ownKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(owner.Id, "Own keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        var foreignKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(other.Id, "Private keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        var curatedBalanced = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateCurated("Curated balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
+        var curatedKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateCurated("Curated keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        context.AddRange(owner, other, ownBalanced, ownKeto, foreignKeto, curatedBalanced, curatedKeto);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
+
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> firstItems, int firstTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> secondItems, int secondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> beyondItems, int beyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 3, limit: 1);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> balancedItems, int balancedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Balanced, page: 1, limit: 50);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> allItems, int allTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50);
+
+        Guid firstId = Assert.Single(firstItems).Id;
+        Guid secondId = Assert.Single(secondItems).Id;
+        Assert.Multiple(
+            () => Assert.Equal(2, firstTotal),
+            () => Assert.Equal(curatedKeto.Id.Value, firstId),
+            () => Assert.Equal(2, secondTotal),
+            () => Assert.Equal(ownKeto.Id.Value, secondId),
+            () => Assert.Equal(2, beyondTotal),
+            () => Assert.Empty(beyondItems),
+            () => Assert.Equal(2, balancedTotal),
+            () => Assert.Equal(new[] { curatedBalanced.Id.Value, ownBalanced.Id.Value }, balancedItems.Select(plan => plan.Id)),
+            () => Assert.Equal(4, allTotal),
+            () => Assert.Equal(4, allItems.Count),
+            () => Assert.DoesNotContain(allItems, plan => plan.Id == foreignKeto.Id),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
+
+    [RequiresDockerFact]
     public async Task GetPlanWithDays_LoadsProductIngredientSnapshotsForEachRecipe() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"plan-snapshot-{Guid.NewGuid():N}@example.com", "hash");

@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "59a6b587e402036699eb2b0158374fd61e2c595e9f43db88dfe91197c7eb95e5"
+          "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed source fingerprint-only runtime topology refresh. Diet applies across unchanged owner-or-curated access; no runtime, auth, provider or delivery declarations change. PostgreSQL regression proves private exclusion and paging. Both workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:03.4982824Z"
+      "gitHead": "cb7e4c9c4ac9e5545ebd388d652d6badee7e4fbb",
+      "reviewedAtUtc": "2026-10-02T09:28:58.8178932Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -897,14 +897,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8e1dcf1b037720f9531a66d51020c02a563f348cf7193aa1071bf0f91c959746"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
         }
       ],
-      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
+      "reason": "Reviewed source fingerprint-only runtime topology refresh. Diet applies across unchanged owner-or-curated access; no runtime, auth, provider or delivery declarations change. PostgreSQL regression proves private exclusion and paging. Both workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:19:15.2049754Z"
+      "gitHead": "cb7e4c9c4ac9e5545ebd388d652d6badee7e4fbb",
+      "reviewedAtUtc": "2026-10-02T09:28:59.1190547Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

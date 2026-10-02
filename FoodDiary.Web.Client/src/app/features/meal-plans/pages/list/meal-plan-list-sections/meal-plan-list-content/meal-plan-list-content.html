@@ -34,10 +34,12 @@
                         >~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
                     >
                 </div>
-                <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text" [hidden]="!plan.isCurated">
-                    <fd-ui-icon name="verified" size="sm" />
-                    {{ 'MEAL_PLANS.CURATED' | translate }}
-                </div>
+                @if (plan.isCurated) {
+                    <div class="meal-plan-card__curated fd-ui-pill fd-ui-pill--compact fd-ui-action-text">
+                        <fd-ui-icon name="verified" size="sm" />
+                        {{ 'MEAL_PLANS.CURATED' | translate }}
+                    </div>
+                }
             </div>
         }
     </div>
