@@ -62,7 +62,7 @@ export type CyclePredictionViewModel = {
     nextPeriodRangeLabel: string;
     ovulationRangeLabel: string;
     pmsRangeLabel: string;
-    confidenceLabel: string;
+    confidenceKey: string;
     dataSufficiencyKey: string;
     completedCycleCount: number;
     usedEpisodeCount: number;

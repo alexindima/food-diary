@@ -96,7 +96,7 @@ describe('CycleCurrentCardComponent', () => {
             nextPeriodRangeLabel: 'Apr 29 - May 1',
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: 'Apr 23 - Apr 28',
-            confidenceLabel: 'Moderate',
+            confidenceKey: 'CYCLE_TRACKING.CONFIDENCE_MEDIUM',
             hasPredictionRanges: true,
             limitedReasonKey: null,
         });

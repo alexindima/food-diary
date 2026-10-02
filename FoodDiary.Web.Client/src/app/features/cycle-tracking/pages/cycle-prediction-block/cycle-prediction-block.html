@@ -71,7 +71,7 @@
                 (prediction().limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
                     ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
                     : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
-                ) | translate: { confidence: prediction().confidenceLabel }
+                ) | translate: { confidence: (prediction().confidenceKey | translate) }
             }}
         </span>
         <span class="fd-ui-body-sm">

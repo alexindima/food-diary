@@ -251,7 +251,7 @@ describe('cycle tracking prediction mapper', () => {
             nextPeriodRangeLabel: 'Apr 29 - May 1',
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: '',
-            confidenceLabel: 'Moderate',
+            confidenceKey: 'CYCLE_TRACKING.CONFIDENCE_MEDIUM',
             dataSufficiencyKey: 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE',
             completedCycleCount: 0,
             usedEpisodeCount: 0,
@@ -541,5 +541,38 @@ describe('Notes-only day history', () => {
         expect(items[0].notes).toBe('Quiet day');
         expect(items[0].symptoms).toEqual([]);
         expect(items[0].bleedingEntries).toEqual([]);
+    });
+});
+
+describe('cycle prediction confidence localization', () => {
+    it.each([
+        ['Established', 'Low', 'SUFFICIENCY_ESTABLISHED'],
+        ['Limited', 'High', 'SUFFICIENCY_LIMITED'],
+        ['Insufficient', 'High', 'SUFFICIENCY_INSUFFICIENT'],
+        ['Unavailable', 'High', 'SUFFICIENCY_UNAVAILABLE'],
+        ['FutureValue', 'High', 'SUFFICIENCY_UNAVAILABLE'],
+        [undefined, 'Learning', 'CONFIDENCE_LEARNING'],
+        [undefined, 'Low', 'CONFIDENCE_LOW'],
+        [undefined, 'Medium', 'CONFIDENCE_MEDIUM'],
+        [undefined, 'Moderate', 'CONFIDENCE_MEDIUM'],
+        [undefined, 'High', 'CONFIDENCE_HIGH'],
+        [undefined, 'FutureValue', 'SUFFICIENCY_UNAVAILABLE'],
+    ])('maps sufficiency %s and legacy confidence %s to localized copy', (dataSufficiency, confidence, key) => {
+        const view = buildCyclePredictionView(
+            {
+                nextPeriodStartFrom: null,
+                nextPeriodStartTo: null,
+                ovulationFrom: null,
+                ovulationTo: null,
+                pmsWindowStart: null,
+                pmsWindowEnd: null,
+                dataSufficiency,
+                confidence,
+                rationale: '',
+            },
+            'ru-RU',
+        );
+
+        expect(view?.confidenceKey).toBe(`CYCLE_TRACKING.${key}`);
     });
 });

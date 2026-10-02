@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
+          "sha256": "e57b7ff98053fae41b539a76aa7c09e22359883457aaa6efd13ce562b661ac1e"
         }
       ],
-      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
+      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
-      "reviewedAtUtc": "2026-10-02T10:19:09.6510763Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:20:57.7557805Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
+          "sha256": "e57b7ff98053fae41b539a76aa7c09e22359883457aaa6efd13ce562b661ac1e"
         }
       ],
-      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
+      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
-      "reviewedAtUtc": "2026-10-02T10:19:11.9855688Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:20:58.3505487Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,13 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "98df99b8909800f5b6a865b565bf81d5e1458e94993f6c5cb14eed1c99c293f3"
+          "sha256": "76a802e88c6b22bcf9683814bc4ec8bd351aba6c96f7a29b8c5ea531ebb34c19"
         }
       ],
-      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
+      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
-      "reviewedAtUtc": "2026-10-02T09:57:22.6753490Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:20:58.8020072Z"
     },
     {
       "pageId": "workflow-verification-planner",
