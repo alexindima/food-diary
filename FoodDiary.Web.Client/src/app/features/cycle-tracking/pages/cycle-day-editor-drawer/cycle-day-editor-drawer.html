@@ -164,6 +164,7 @@
                     [label]="'CYCLE_TRACKING.NOTES' | translate"
                     [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
                     [formField]="dayForm().notes"
+                    [error]="notesError() | translate"
                 />
 
                 @if (fertilityEnabled()) {

@@ -262,6 +262,47 @@ describe('CycleTrackingFacade day saving', () => {
     });
 });
 
+describe('CycleTrackingFacade day note validation', () => {
+    it('retains an oversized day draft without saving through either entrypoint', async () => {
+        facade.initialize();
+        setValidDayForm();
+        const notes = 'я'.repeat(NOTE_LIMIT + 1);
+        facade.dayModel.update(value => ({ ...value, notes }));
+        await submit(facade.dayForm);
+        facade.saveDay();
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        expect(facade.dayForm.notes().invalid()).toBe(true);
+        expect(facade.dayForm.notes().touched()).toBe(true);
+        expect(facade.dayModel().notes).toBe(notes);
+        expect(facade.daySaveRevision()).toBe(0);
+    });
+
+    it.each([
+        ['Cyrillic limit', 'я'.repeat(NOTE_LIMIT)],
+        ['outer Unicode whitespace', `\u0085 ${'я'.repeat(NOTE_LIMIT)} \u0085`],
+        ['emoji limit', '🙂'.repeat(EMOJI_NOTE_LIMIT)],
+        ['whitespace only', ' '.repeat(NOTE_LIMIT + 1)],
+    ])('saves a server-valid %s day note', async (_label, notes) => {
+        facade.initialize();
+        setValidDayForm();
+        facade.dayModel.update(value => ({ ...value, notes }));
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
+    });
+
+    it('allows correcting a rejected day note and saving once', async () => {
+        facade.initialize();
+        setValidDayForm();
+        facade.dayModel.update(value => ({ ...value, notes: `${'🙂'.repeat(EMOJI_NOTE_LIMIT)}x` }));
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        facade.dayModel.update(value => ({ ...value, notes: 'corrected day note' }));
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
+        expect(cyclesService.upsertDay).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ notes: 'corrected day note' }));
+    });
+});
+
 describe('CycleTrackingFacade duration validation', () => {
     it.each(['averageCycleLength', 'averagePeriodLength', 'lutealLength'] as const)(
         'rejects fractional %s when starting tracking',

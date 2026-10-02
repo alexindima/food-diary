@@ -188,6 +188,9 @@ export class CycleTrackingFacade {
         this.dayModel,
         path => {
             required(path.date);
+            validate(path.notes, context =>
+                getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined,
+            );
         },
         {
             submission: {

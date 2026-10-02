@@ -1,5 +1,5 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -54,6 +54,11 @@ export class CycleDayEditorDrawerComponent {
     public readonly ovulationTestOptions = input.required<Array<FdUiSelectOption<OvulationTestResult>>>();
     public readonly fertilityEnabled = input(false);
     public readonly closed = output();
+
+    protected readonly notesError = computed(() => {
+        const field = this.dayForm().notes();
+        return field.touched() && field.errors().some(error => error.kind === 'notesTooLong') ? 'CYCLE_TRACKING.DAY_NOTES_TOO_LONG' : null;
+    });
 
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS.filter(field => field.key !== 'pain');
     protected readonly symptomSeverityOptions: FdUiSegmentedToggleOption[] = [

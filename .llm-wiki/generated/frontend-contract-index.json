@@ -36851,6 +36851,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder"
       ],
