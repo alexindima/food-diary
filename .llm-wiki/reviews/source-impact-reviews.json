@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aaf158a5a5e22425a05c723bc099ad8e4d81b294e5dd6229b6150ae26f320ff9"
+          "sha256": "b548e757d4989944b58adb8e2654cbf19cda240bd2db9e462301a10cf55df9ba"
         }
       ],
-      "reason": "Verified dashboard midnight rollover with scoped local-day clock, explicit dates remain stable, hydration uses current selected date; 111 focused tests and native desktop/mobile real API evidence. Concurrent admin-create edits are excluded from this commit.",
+      "reason": "Verified short Extended fasting labels now show localized hours in hero and weekly rhythm; Intermittent ratios remain unchanged. Two RU/EN regression cases and 63 focused tests passed, build and scoped lint passed. Native 390/1280 controlled DST fixtures preserve one-hour elapsed duration and show 2h hero/1h weekly labels. No database writes or HTTP changes; concurrent admin-create edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "49b2c412c399e1e6f5d8dcd6c2d482e8e8adf50a",
-      "reviewedAtUtc": "2026-10-02T16:32:36.1166471Z"
+      "gitHead": "a04eb1baa4e9915337c6f30fce5a2570f35fd55c",
+      "reviewedAtUtc": "2026-10-02T16:55:02.0240002Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aaf158a5a5e22425a05c723bc099ad8e4d81b294e5dd6229b6150ae26f320ff9"
+          "sha256": "b548e757d4989944b58adb8e2654cbf19cda240bd2db9e462301a10cf55df9ba"
         }
       ],
-      "reason": "Verified dashboard midnight rollover with scoped local-day clock, explicit dates remain stable, hydration uses current selected date; 111 focused tests and native desktop/mobile real API evidence. Concurrent admin-create edits are excluded from this commit.",
+      "reason": "Verified short Extended fasting labels now show localized hours in hero and weekly rhythm; Intermittent ratios remain unchanged. Two RU/EN regression cases and 63 focused tests passed, build and scoped lint passed. Native 390/1280 controlled DST fixtures preserve one-hour elapsed duration and show 2h hero/1h weekly labels. No database writes or HTTP changes; concurrent admin-create edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "49b2c412c399e1e6f5d8dcd6c2d482e8e8adf50a",
-      "reviewedAtUtc": "2026-10-02T16:32:36.9789182Z"
+      "gitHead": "a04eb1baa4e9915337c6f30fce5a2570f35fd55c",
+      "reviewedAtUtc": "2026-10-02T16:55:02.7796062Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

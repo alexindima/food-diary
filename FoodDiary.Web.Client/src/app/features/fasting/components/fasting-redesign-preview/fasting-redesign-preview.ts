@@ -161,9 +161,9 @@ export class FastingRedesignPreviewComponent {
         }
 
         const duration = session?.plannedDurationHours ?? this.selectedDurationHours();
-        return duration < HOURS_PER_DAY
-            ? `${duration}:${HOURS_PER_DAY - duration}`
-            : `${duration} ${this.translateService.instant('FASTING.HOURS')}`;
+        return session?.planType === 'Extended' || duration >= HOURS_PER_DAY
+            ? `${duration} ${this.translateService.instant('FASTING.HOURS')}`
+            : `${duration}:${HOURS_PER_DAY - duration}`;
     });
     protected readonly targetAt = computed(() => {
         const session = this.session();
@@ -325,7 +325,7 @@ function buildRhythmDay(
     const progress = completedCount === 0 ? PARTIAL_PROGRESS : (completedCount / sessions.length) * COMPLETE_PROGRESS;
     const durationLabel =
         sessions.length === 1
-            ? `${sessions[0].plannedDurationHours}:${Math.max(0, HOURS_PER_DAY - sessions[0].plannedDurationHours)}`
+            ? formatRhythmProtocol(sessions[0], translate)
             : translate('FASTING.REDESIGN.SESSIONS_COUNT', { count: sessions.length });
 
     return {
@@ -334,6 +334,12 @@ function buildRhythmDay(
         progress,
         completed: completedCount === sessions.length,
     };
+}
+
+function formatRhythmProtocol(session: FastingSession, translate: (key: string) => string): string {
+    return session.planType === 'Extended'
+        ? `${session.plannedDurationHours} ${translate('FASTING.HOURS')}`
+        : `${session.plannedDurationHours}:${Math.max(0, HOURS_PER_DAY - session.plannedDurationHours)}`;
 }
 
 function startOfLocalWeek(date: Date): Date {

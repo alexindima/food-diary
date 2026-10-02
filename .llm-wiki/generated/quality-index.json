@@ -535,20 +535,20 @@
       "structuralRiskScore": 102.76
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
+      "nonBlankLines": 320,
+      "decisionPoints": 64,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 102.4
+    },
+    {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
       "nonBlankLines": 815,
       "decisionPoints": 57,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 101.8
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "nonBlankLines": 315,
-      "decisionPoints": 63,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.8
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
@@ -9442,11 +9442,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "nonBlankLines": 315,
-      "decisionPoints": 63,
+      "nonBlankLines": 320,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.8
+      "structuralRiskScore": 102.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.ts",

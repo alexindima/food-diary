@@ -140,6 +140,40 @@ describe('FastingRedesignPreviewComponent', () => {
         expect(component['protocolLabel']()).toBe('72 h');
     });
 
+    it('labels a short extended fast in hours in both the hero and weekly rhythm', () => {
+        const session = createSession({
+            planType: 'Extended',
+            plannedDurationHours: 2,
+            startedAtUtc: new Date(TUESDAY_MORNING_START).toISOString(),
+            endedAtUtc: new Date(TUESDAY_MORNING_END).toISOString(),
+            status: 'Completed',
+        });
+        fixture.componentRef.setInput('session', session);
+        fixture.componentRef.setInput('history', [session]);
+        fixture.componentRef.setInput('now', new Date(TUESDAY_AFTERNOON));
+        expect(component['protocolLabel']()).toBe('2 ч');
+        expect(component['rhythmDays']()[1].durationLabel).toBe('2 ч');
+        hoursLabel = 'h';
+        languageChanges.next({ lang: 'en' });
+        expect(component['protocolLabel']()).toBe('2 h');
+        expect(component['rhythmDays']()[1].durationLabel).toBe('2 h');
+    });
+
+    it('keeps intermittent fasting ratios in the hero and weekly rhythm', () => {
+        const session = createSession({
+            planType: 'Intermittent',
+            plannedDurationHours: INTERMITTENT_HOURS,
+            startedAtUtc: new Date(TUESDAY_MORNING_START).toISOString(),
+            endedAtUtc: new Date(TUESDAY_MORNING_END).toISOString(),
+            status: 'Completed',
+        });
+        fixture.componentRef.setInput('session', session);
+        fixture.componentRef.setInput('history', [session]);
+        fixture.componentRef.setInput('now', new Date(TUESDAY_AFTERNOON));
+        expect(component['protocolLabel']()).toBe('16:8');
+        expect(component['rhythmDays']()[1].durationLabel).toBe('16:8');
+    });
+
     it('describes the current and next phases of a cyclic session', () => {
         const cyclicSession = createSession({
             planType: 'Cyclic',
