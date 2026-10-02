@@ -5,10 +5,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { AttentionSignal } from '../../../../shared/models/dietologist.data';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
@@ -33,6 +34,49 @@ beforeEach(() => {
     router = {
         navigate: vi.fn().mockResolvedValue(true),
     };
+});
+
+describe('Dietologist attention action pending state', () => {
+    it.each(['success', 'error'] as const)('blocks conflicting attention actions while pending and recovers after %s', outcome => {
+        const request = new Subject<void>();
+        dietologistService.setAttentionSignalState.mockReturnValueOnce(request);
+        createComponent();
+        const attentionSignal: AttentionSignal = {
+            id: 'signal-pending',
+            clientUserId: 'client-1',
+            clientDisplayName: 'QA client',
+            type: 'MaterialWeightChange',
+            severity: 'High',
+            reason: 'MaterialWeightChange',
+            detectedAtUtc: '2026-10-02T12:00:00Z',
+            snoozedUntilUtc: null,
+        };
+        component['attentionSignals'].set([attentionSignal]);
+
+        component['acknowledgeSignal'](attentionSignal);
+        fixture.detectChanges();
+        const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('article button'));
+        expect(buttons).toHaveLength(2);
+        expect(buttons.every(button => (button as HTMLButtonElement).disabled)).toBe(true);
+        component['snoozeSignal'](attentionSignal);
+        component['acknowledgeSignal'](attentionSignal);
+        expect(dietologistService.setAttentionSignalState).toHaveBeenCalledTimes(1);
+
+        if (outcome === 'success') {
+            request.next();
+            request.complete();
+            expect(component['attentionSignals']()).toEqual([]);
+        } else {
+            request.error(new Error('failed'));
+            fixture.detectChanges();
+            expect(component['attentionSignals']()).toEqual([attentionSignal]);
+            expect(buttons.every(button => !(button as HTMLButtonElement).disabled)).toBe(true);
+            component['snoozeSignal'](attentionSignal);
+            expect(dietologistService.setAttentionSignalState).toHaveBeenCalledTimes(2);
+            expect(component['attentionSignals']()).toEqual([]);
+        }
+        expect(component['pendingAttentionIds']().size).toBe(0);
+    });
 });
 
 describe('DietologistClientsPageComponent', () => {

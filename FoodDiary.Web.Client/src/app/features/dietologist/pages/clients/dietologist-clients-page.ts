@@ -11,6 +11,7 @@ import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialo
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { finalize } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '../../../../shared/models/dietologist.data';
@@ -67,6 +68,7 @@ export class DietologistClientsPageComponent {
     protected readonly loading = signal(true);
     protected readonly loadError = signal(false);
     protected readonly attentionSignals = signal<AttentionSignal[]>([]);
+    protected readonly pendingAttentionIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly attentionItems = computed(() => {
         this.languageVersion();
         const language = resolveTranslateLanguage(this.translateService);
@@ -234,9 +236,22 @@ export class DietologistClientsPageComponent {
         action: 'Acknowledge' | 'Snooze',
         snoozedUntilUtc: string | null = null,
     ): void {
+        if (this.pendingAttentionIds().has(attentionSignal.id)) {
+            return;
+        }
+        this.pendingAttentionIds.update(ids => new Set([...ids, attentionSignal.id]));
         this.dietologistFacade
             .setAttentionSignalState(attentionSignal, action, snoozedUntilUtc)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => {
+                    this.pendingAttentionIds.update(ids => {
+                        const next = new Set(ids);
+                        next.delete(attentionSignal.id);
+                        return next;
+                    });
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe({
                 next: () => {
                     this.attentionSignals.update(signals => signals.filter(item => item.id !== attentionSignal.id));

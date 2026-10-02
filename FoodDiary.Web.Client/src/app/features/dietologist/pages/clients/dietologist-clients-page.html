@@ -93,10 +93,22 @@
                             <p class="fd-ui-body-sm">{{ `ATTENTION.REASON.${signal.reason}` | translate }}</p>
                             <time [attr.datetime]="signal.detectedAtUtc">{{ signal.detectedDateLabel }}</time>
                             <div class="fd-row fd-gap-sm">
-                                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="acknowledgeSignal(signal)">
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    fill="outline"
+                                    [loading]="pendingAttentionIds().has(signal.id)"
+                                    (click)="acknowledgeSignal(signal)"
+                                >
                                     {{ 'ATTENTION.ACKNOWLEDGE' | translate }}
                                 </fd-ui-button>
-                                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="snoozeSignal(signal)">
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    fill="outline"
+                                    [loading]="pendingAttentionIds().has(signal.id)"
+                                    (click)="snoozeSignal(signal)"
+                                >
                                     {{ 'ATTENTION.SNOOZE' | translate }}
                                 </fd-ui-button>
                             </div>

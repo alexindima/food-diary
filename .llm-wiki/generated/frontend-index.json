@@ -3705,7 +3705,7 @@
       "role": "Component",
       "selector": "fd-dietologist-clients-page",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.ts",
-      "line": 55
+      "line": 56
     },
     {
       "name": "DietologistInvitationPageComponent",
