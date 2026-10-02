@@ -27,6 +27,7 @@ public static class ProductsModuleRegistration {
         services.AddScoped<IProductSnapshotReadService>(static provider => new ProductSnapshotReadService(
             provider.GetRequiredService<ProductsDbContext>().Products, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IProductRepository, CachedProductRepository>();
+        services.AddScoped<IProductCatalogIdReadService>(provider => new ProductCatalogIdReadService(provider.GetRequiredService<ProductsDbContext>(), CreateTransactionSynchronizer(provider)));
         services.AddScoped<IProductReadRepository>(static provider => provider.GetRequiredService<IProductRepository>());
         services.AddScoped<IProductWriteRepository>(static provider => provider.GetRequiredService<IProductRepository>());
         services.AddScoped<IProductMutationTransactionRunner, EfProductMutationTransactionRunner>();

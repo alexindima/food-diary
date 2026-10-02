@@ -39,20 +39,21 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
-- Public contract files: 15
+- Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 15
-- Interfaces: 9
+- Public contract types: 16
+- Interfaces: 10
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class RecipeErrors`
 - `interface IRecipeAccessService`
+- `interface IRecipeCatalogIdReadService`
 - `interface IRecipeLookupService`
 - `interface IRecipeMutationTransactionRunner`
 - `interface IRecipeNutritionWriter`
@@ -73,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/RecipeSnapshotCompatibilityTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ApplicationDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs`
@@ -100,7 +102,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Validation.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.cs`
 
 ## Working Rule
 

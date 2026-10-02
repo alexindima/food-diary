@@ -26,5 +26,6 @@ public record CreateProductCommand(
     double AlcoholPerBase,
     string Visibility
 ) : ICommand<Result<ProductModel>>, IUserRequest {
+    internal Guid? CatalogImportId { get; init; }
     public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
 }

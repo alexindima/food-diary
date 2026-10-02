@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4317,
-    "symbols": 4248,
-    "interfaceImplementationLinks": 192,
+    "sourceFiles": 4335,
+    "symbols": 4266,
+    "interfaceImplementationLinks": 194,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2219,
+      "class": 2227,
       "enum": 65,
-      "interface": 403,
-      "record": 1440,
+      "interface": 405,
+      "record": 1448,
       "record struct": 121
     },
     "roles": {
-      "Command": 224,
-      "CommandHandler": 219,
+      "Command": 226,
+      "CommandHandler": 221,
       "Configuration": 97,
-      "Controller": 108,
+      "Controller": 110,
       "Entity": 100,
       "Event": 19,
       "Factory": 14,
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1743,
-      "Query": 297,
-      "QueryHandler": 213,
+      "Other": 1747,
+      "Query": 299,
+      "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 160,
       "Response": 234,
-      "Service": 162,
+      "Service": 166,
       "Validator": 233,
       "ValueObject": 115,
       "WriteRepository": 47
@@ -20656,6 +20656,13 @@
       "line": 2
     },
     {
+      "name": "IProductCatalogIdReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+      "line": 2
+    },
+    {
       "name": "IProductMutationTransactionRunner",
       "kind": "interface",
       "role": "Other",
@@ -20766,6 +20773,20 @@
       "role": "Validator",
       "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "ImportCatalogProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportCatalogProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommandHandler.cs",
+      "line": 9
     },
     {
       "name": "ProductUpdateApplier",
@@ -20887,6 +20908,20 @@
       "line": 5
     },
     {
+      "name": "CatalogProductImportResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/CatalogProductImportResult.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogProductModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/CatalogProductModel.cs",
+      "line": 2
+    },
+    {
       "name": "ProductImageModel",
       "kind": "record",
       "role": "Other",
@@ -20920,6 +20955,20 @@
       "role": "Other",
       "path": "Modules/Products/Application/Models/PublicProductModel.cs",
       "line": 2
+    },
+    {
+      "name": "ExportCatalogProductsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportCatalogProductsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQueryHandler.cs",
+      "line": 10
     },
     {
       "name": "GetProductByIdQuery",
@@ -21272,6 +21321,13 @@
       "line": 15
     },
     {
+      "name": "ProductCatalogIdReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+      "line": 8
+    },
+    {
       "name": "ProductLookupService",
       "kind": "class",
       "role": "Service",
@@ -21291,6 +21347,13 @@
       "role": "Other",
       "path": "Modules/Products/PersistenceModel/ProductsPersistenceModelRegistration.cs",
       "line": 4
+    },
+    {
+      "name": "AdminCatalogProductsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "line": 19
     },
     {
       "name": "ProductsController",
@@ -21888,6 +21951,13 @@
       "line": 2
     },
     {
+      "name": "IRecipeCatalogIdReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Recipes/Application.Abstractions/Common/IRecipeCatalogIdReadService.cs",
+      "line": 2
+    },
+    {
       "name": "IRecipeMutationTransactionRunner",
       "kind": "interface",
       "role": "Other",
@@ -22012,6 +22082,20 @@
       "role": "Validator",
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "ImportCatalogRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportCatalogRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommandHandler.cs",
+      "line": 9
     },
     {
       "name": "RecipeUpdateApplier",
@@ -22140,6 +22224,20 @@
       "line": 5
     },
     {
+      "name": "CatalogRecipeImportResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/CatalogRecipeImportResult.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Models/CatalogRecipeModel.cs",
+      "line": 4
+    },
+    {
       "name": "PublicRecipeIngredientModel",
       "kind": "record",
       "role": "Other",
@@ -22215,6 +22313,20 @@
       "role": "Validator",
       "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
       "line": 6
+    },
+    {
+      "name": "ExportCatalogRecipesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportCatalogRecipesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQueryHandler.cs",
+      "line": 11
     },
     {
       "name": "GetPublicRecipeQuery",
@@ -22665,6 +22777,13 @@
       "line": 7
     },
     {
+      "name": "RecipeCatalogIdReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Recipes/Infrastructure/Services/RecipeCatalogIdReadService.cs",
+      "line": 8
+    },
+    {
       "name": "RecipeLookupService",
       "kind": "class",
       "role": "Service",
@@ -22698,6 +22817,13 @@
       "role": "Other",
       "path": "Modules/Recipes/PersistenceModel/RecipesPersistenceModelRegistration.cs",
       "line": 4
+    },
+    {
+      "name": "AdminCatalogRecipesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "line": 19
     },
     {
       "name": "PublicRecipesController",
@@ -30717,6 +30843,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IProductCatalogIdReadService",
+      "interfacePath": "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+      "implementation": "ProductCatalogIdReadService",
+      "implementationPath": "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IProductLookupService",
       "interfacePath": "Modules/Products/Contracts/Common/IProductLookupService.cs",
       "implementation": "ProductLookupService",
@@ -30770,6 +30903,13 @@
       "interfacePath": "Modules/Recipes/Contracts/Common/IRecipeAccessService.cs",
       "implementation": "RecipeAccessService",
       "implementationPath": "Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipeCatalogIdReadService",
+      "interfacePath": "Modules/Recipes/Application.Abstractions/Common/IRecipeCatalogIdReadService.cs",
+      "implementation": "RecipeCatalogIdReadService",
+      "implementationPath": "Modules/Recipes/Infrastructure/Services/RecipeCatalogIdReadService.cs",
       "confidence": "naming-convention"
     },
     {

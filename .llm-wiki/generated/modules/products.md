@@ -39,19 +39,20 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
-- Public contract files: 13
+- Public contract files: 14
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 13
-- Interfaces: 8
+- Public contract types: 14
+- Interfaces: 9
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class ProductErrors`
+- `interface IProductCatalogIdReadService`
 - `interface IProductLookupService`
 - `interface IProductMutationTransactionRunner`
 - `interface IProductOverviewReadService`
@@ -70,6 +71,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ApplicationDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CatalogProductImportTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductSearchSuggestionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs`
@@ -98,7 +100,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/FoodQualityScoreTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/NutritionContractTests.cs`
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FavoriteProductSourceReadServiceTests.cs`
-- [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
 
 ## Working Rule
 

@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "aff5595586b1110ceeebcb2f160835067ebd60af7d28fae31816d9b72f3d0580"
+          "sha256": "331a42860e0637bac8db87a7319045511ca07ddcff710c814b887f6a1731451d"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed merged master snapshot: six catalog routes and six schemas added; every existing endpoint and schema is semantically unchanged. Semantic compatibility gate reports zero breaking changes and zero restrictions. Backend host build and 183 admin tests passed; database integration remains unverified because Docker was unavailable.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:02.2543255Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:47.6144381Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "844817275b6f57320f53570c61a0815523719ac80741acd98a4285749c9fd216"
+          "sha256": "7e49ae5e2fcca8f39adf1ed4454e9ddaccd0aa2feec902bdfc58e5d6cbdf8ef0"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:02.7564948Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:48.9355373Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -763,13 +763,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d71c13a1c9846c5643a9ecd1f1ed7cce0778a17186255d4a6378748cf424574d"
+          "sha256": "479615ebb3c6b84e99a8f0b2e7eaf6fd8a3e9f9e0945316f4f12beb11ac02fae"
         }
       ],
-      "reason": "Reviewed regenerated inventories after optional OtherCalories default. Existing user scope/date predicate, health data boundaries and logging remain; no new retention, sharing, providers or secret handling. Local QA-only nutrition evidence verified.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T09:51:12.3076421Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:49.8599109Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "05123ad5e1beeed19b3179d94028541c041239edd97507c86ddb4f11ada8e6bc"
+          "sha256": "ab7f2392e44eb09a28b4d3608149813f3c94ee3c77722ffcf6785dc42cfb7fb2"
         }
       ],
-      "reason": "Reviewed final gallery fixes: invalid uploads in populated galleries expose full-width alerts while upload controls stay hidden; max5/removal/recovery and mobile rendering retained. Preview now passes the stable native photo action button as CDK restoreFocus, avoiding a detached menuitem. Native first/second photo Escape and navigation then Close restore exact owning button; focused19 tests passed, scoped lint passed. No backend API/persistence/provider changes.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
-      "reviewedAtUtc": "2026-10-02T11:52:58.6284515Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:50.8410364Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
+          "sha256": "781cbf734dd17b83f98ddea05529512ae4bcab82cd993e3d9047f67daca3aebe"
         }
       ],
-      "reason": "Reviewed source fingerprint-only runtime topology refresh. Diet applies across unchanged owner-or-curated access; no runtime, auth, provider or delivery declarations change. PostgreSQL regression proves private exclusion and paging. Both workflows remain accurate.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "cb7e4c9c4ac9e5545ebd388d652d6badee7e4fbb",
-      "reviewedAtUtc": "2026-10-02T09:28:58.8178932Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:51.5690462Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,13 +898,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "05123ad5e1beeed19b3179d94028541c041239edd97507c86ddb4f11ada8e6bc"
+          "sha256": "ab7f2392e44eb09a28b4d3608149813f3c94ee3c77722ffcf6785dc42cfb7fb2"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "781cbf734dd17b83f98ddea05529512ae4bcab82cd993e3d9047f67daca3aebe"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "479615ebb3c6b84e99a8f0b2e7eaf6fd8a3e9f9e0945316f4f12beb11ac02fae"
         }
       ],
-      "reason": "Reviewed final gallery fixes: invalid uploads in populated galleries expose full-width alerts while upload controls stay hidden; max5/removal/recovery and mobile rendering retained. Preview now passes the stable native photo action button as CDK restoreFocus, avoiding a detached menuitem. Native first/second photo Escape and navigation then Close restore exact owning button; focused19 tests passed, scoped lint passed. No backend API/persistence/provider changes.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
-      "reviewedAtUtc": "2026-10-02T11:52:59.6252240Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:52.3849267Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a42e6a47d752e5e21abe7fade7fb405129a03e7eca9fd269f04722a620498a18"
+          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "970427af9b1c7946fca025ce50c983d56e66a644377a7711c16a5e83fd75de14"
+          "sha256": "e97ad33eb6c9b83e3a7fe22c611bb046ce8dae1556e84e2d318414dab3b27fc3"
         }
       ],
-      "reason": "Reviewed gallery validation fix: hidden appearance hides upload controls while retaining live error alerts; gallery receives an error-presence output and displays the error row at full width without duplicating controls. Existing photos and max5 behavior preserved. Native RU invalid type,20MB+1,corruptPNG,countlimit/recovery and mobile390 checks passed; focused17tests passed. No backend API, persistence, credentials or provider sharing changes.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
-      "reviewedAtUtc": "2026-10-02T11:36:14.2181814Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:53.1474801Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a42e6a47d752e5e21abe7fade7fb405129a03e7eca9fd269f04722a620498a18"
+          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
         }
       ],
-      "reason": "Reviewed gallery validation fix: hidden appearance hides upload controls while retaining live error alerts; gallery receives an error-presence output and displays the error row at full width without duplicating controls. Existing photos and max5 behavior preserved. Native RU invalid type,20MB+1,corruptPNG,countlimit/recovery and mobile390 checks passed; focused17tests passed. No backend API, persistence, credentials or provider sharing changes.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "57259faab9d0b8f98256d962c2ca8cdeba6cdc19",
-      "reviewedAtUtc": "2026-10-02T11:36:11.3723602Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:53.8733560Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1164,7 +1172,7 @@
       "reason": "Two MailInbox HTTP query records replace scalar controller parameters without changing persistence ownership, service topology, hosted workers, dependency injection, or external clients.",
       "baseRef": "HEAD",
       "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
-      "reviewedAtUtc": "2026-09-30T07:54:25.6253930Z"
+      "reviewedAtUtc": "2026-09-30T07:54:25.625393Z"
     },
     {
       "pageId": "workflow.review-diff",

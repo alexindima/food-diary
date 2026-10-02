@@ -15,5 +15,5 @@ internal static class RecipeCreateFactory {
             values.ImageAssetId,
             command.PrepTime ?? 0,
             command.CookTime,
-            values.Visibility);
+            values.Visibility, importId: command.CatalogImportId is { } id ? new FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId(id) : null);
 }
