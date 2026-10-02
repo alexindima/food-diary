@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 483,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "inputs": 1551,
     "outputs": 531,
     "apiCalls": 276,
@@ -4771,7 +4771,7 @@
           "type": "Date | null"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.spec.ts"
     },
     {
       "class": "FdUiDateRangeInputComponent",
@@ -25787,6 +25787,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
+        "ariaExpanded",
         "ariaLabel",
         "disabled",
         "fill",

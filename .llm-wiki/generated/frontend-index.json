@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1842,
+    "typescriptFiles": 1843,
     "symbols": 711,
     "routes": 106,
     "features": 46,
-    "specs": 666,
+    "specs": 667,
     "localeFiles": 5,
     "roles": {
       "Component": 478,
@@ -1634,7 +1634,7 @@
       "role": "Component",
       "selector": "fd-ui-date-picker-button",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
-      "line": 16
+      "line": 28
     },
     {
       "name": "FdUiDateRangeInputComponent",

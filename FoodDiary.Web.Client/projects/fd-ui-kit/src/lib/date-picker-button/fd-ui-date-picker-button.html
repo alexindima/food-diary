@@ -1,4 +1,5 @@
 <fd-ui-button
+    #trigger
     #origin="cdkOverlayOrigin"
     cdkOverlayOrigin
     class="fd-ui-date-picker-button__trigger"
@@ -8,6 +9,7 @@
     [disabled]="disabled()"
     [icon]="icon()"
     [ariaLabel]="ariaLabel()"
+    [ariaExpanded]="isOpen()"
     [fdUiHint]="hint()"
     (click)="open()"
 />
@@ -18,16 +20,18 @@
     [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayOpen]="isOpen()"
     [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayPush]="true"
     [cdkConnectedOverlayPositions]="[
         { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
         { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 8 },
         { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
     ]"
     (backdropClick)="close()"
+    (attach)="focusCalendar()"
     (detach)="close()"
     (overlayKeydown)="onOverlayKeydown($event)"
 >
-    <div class="fd-ui-date-picker-button__panel" tabindex="-1">
+    <div #panel class="fd-ui-date-picker-button__panel" tabindex="-1">
         <fd-ui-calendar
             [locale]="locale()"
             [value]="value()"

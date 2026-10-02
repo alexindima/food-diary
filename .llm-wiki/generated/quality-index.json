@@ -5226,11 +5226,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
-      "nonBlankLines": 54,
-      "decisionPoints": 6,
+      "nonBlankLines": 97,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.08
+      "structuralRiskScore": 22.94
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.stories.ts",

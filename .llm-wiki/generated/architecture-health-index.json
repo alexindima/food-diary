@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 42,
     "explicitDebtMarkers": 12
   },
@@ -3179,62 +3179,6 @@
         {
           "name": "selectedValuesChange",
           "type": "string[]"
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "FdUiDatePickerButtonComponent",
-      "selector": "fd-ui-date-picker-button",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-picker-button/fd-ui-date-picker-button.html",
-      "inputs": [
-        {
-          "name": "value",
-          "type": "Date | null",
-          "required": false
-        },
-        {
-          "name": "locale",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "min",
-          "type": "Date | null",
-          "required": false
-        },
-        {
-          "name": "max",
-          "type": "Date | null",
-          "required": false
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "hint",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "icon",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "valueChange",
-          "type": "Date | null"
         }
       ],
       "specPath": null

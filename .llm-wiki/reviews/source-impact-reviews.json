@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ce999f12b371487388bac543562ce6953f3e95165f9ba3eb41d86f8270d2ec66"
+          "sha256": "db2d361ffd2874e17997889c49dbd706a9068f358160842419693e50b42a8c86"
         }
       ],
-      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
+      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
-      "reviewedAtUtc": "2026-10-02T15:19:47.3151459Z"
+      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
+      "reviewedAtUtc": "2026-10-02T16:02:34.1154413Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aca39be8b2b471458779cbd3b668d74caa98f5a1f9b5813e5fcf4698a5eac824"
+          "sha256": "dd20179c0fab0df68cf41da45132847bb2697f085b86c79976144952d39c30bf"
         }
       ],
-      "reason": "Reviewed calendar rapid keyboard selection and focus continuity, including retaining latest pending selection through further keyboard input. Three DOM regressions and all 482 UI-kit tests passed, scoped lint/guards and final app build passed. Native UTC+14 immediate ArrowLeft/Enter and PageDown/Enter select March7 and April7. Public API and localized copy unchanged.",
+      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1a7f4fee496b3d1ecca79e9af50c8fffb8b4b578",
-      "reviewedAtUtc": "2026-10-02T15:44:13.9429645Z"
+      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
+      "reviewedAtUtc": "2026-10-02T16:02:35.7617400Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aca39be8b2b471458779cbd3b668d74caa98f5a1f9b5813e5fcf4698a5eac824"
+          "sha256": "dd20179c0fab0df68cf41da45132847bb2697f085b86c79976144952d39c30bf"
         }
       ],
-      "reason": "Reviewed calendar rapid keyboard selection and focus continuity, including retaining latest pending selection through further keyboard input. Three DOM regressions and all 482 UI-kit tests passed, scoped lint/guards and final app build passed. Native UTC+14 immediate ArrowLeft/Enter and PageDown/Enter select March7 and April7. Public API and localized copy unchanged.",
+      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1a7f4fee496b3d1ecca79e9af50c8fffb8b4b578",
-      "reviewedAtUtc": "2026-10-02T15:44:14.8032346Z"
+      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
+      "reviewedAtUtc": "2026-10-02T16:02:36.5863698Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "d72aec1ac5ecb95c5d03177c991a334f983a03486b86aa0e62e6fde1296a7a10"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "905d4d76660cbebbd74300ee583405051f3950eb1d4dd06f0f1ca3ba6ab99420"
+          "sha256": "b4ddfd494457529cfd3d994a7ac55f40c02f1b6b29895f837157659c49a98c0b"
         }
       ],
-      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
+      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
-      "reviewedAtUtc": "2026-10-02T15:06:12.7209401Z"
+      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
+      "reviewedAtUtc": "2026-10-02T16:02:37.4291656Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1edff0093fccf6f684c5444dfa974c6371633940668d987e6f583e44926e56c7"
+          "sha256": "d72aec1ac5ecb95c5d03177c991a334f983a03486b86aa0e62e6fde1296a7a10"
         }
       ],
-      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
+      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
-      "reviewedAtUtc": "2026-10-02T14:15:20.3074854Z"
+      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
+      "reviewedAtUtc": "2026-10-02T16:02:34.8661795Z"
     },
     {
       "pageId": "workflow.query-context",
