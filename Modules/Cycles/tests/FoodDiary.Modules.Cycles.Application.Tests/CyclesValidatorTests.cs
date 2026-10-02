@@ -26,7 +26,7 @@ public class CyclesValidatorTests {
             .TestValidateAsync(CreateDayCommand(
                 bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: text, ClearNotes: false),
                 symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], text, ClearNote: false)],
-                fertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: null, CervicalFluid: text, HadSex: null, Notes: text, ClearNotes: false)));
+                fertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: null, CervicalFluid: null, HadSex: null, Notes: text, ClearNotes: false)));
 
         if (invalid) {
             create.ShouldHaveValidationErrorFor(command => command.Notes).WithErrorCode("Validation.Invalid");
@@ -34,7 +34,6 @@ public class CyclesValidatorTests {
             day.ShouldHaveValidationErrorFor("Bleeding.Notes").WithErrorCode("Validation.Invalid");
             day.ShouldHaveValidationErrorFor("Symptoms[0].Note").WithErrorCode("Validation.Invalid");
             day.ShouldHaveValidationErrorFor("FertilitySignal.Notes").WithErrorCode("Validation.Invalid");
-            day.ShouldHaveValidationErrorFor("FertilitySignal.CervicalFluid").WithErrorCode("Validation.Invalid");
         } else {
             create.ShouldNotHaveAnyValidationErrors();
             factor.ShouldNotHaveAnyValidationErrors();

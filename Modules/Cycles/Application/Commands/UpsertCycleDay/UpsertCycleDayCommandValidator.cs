@@ -98,11 +98,14 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
                 .WithErrorCode("Validation.Invalid")
                 .WithMessage($"Notes must be at most {CycleProfile.MaxNotesLength} characters.");
             RuleFor(x => x.CervicalFluid)
-                .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+                .Must(static value => value is null || value.Trim().Length <= FertilitySignal.MaxCervicalFluidLength)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage($"CervicalFluid must be at most {CycleProfile.MaxNotesLength} characters.");
+                .WithMessage($"CervicalFluid must be at most {FertilitySignal.MaxCervicalFluidLength} characters.");
 
-            RuleFor(x => x.BasalBodyTemperatureCelsius).InclusiveBetween(34, 42).When(x => x.BasalBodyTemperatureCelsius.HasValue);
+            RuleFor(x => x.BasalBodyTemperatureCelsius)
+                .InclusiveBetween(34, 42)
+                .WithErrorCode("Validation.Invalid")
+                .When(x => x.BasalBodyTemperatureCelsius.HasValue);
             RuleFor(x => x.OvulationTestResult)
                 .Must(static result => result.HasValue && Enum.IsDefined((OvulationTestResult)result.Value))
                 .When(x => x.OvulationTestResult.HasValue);

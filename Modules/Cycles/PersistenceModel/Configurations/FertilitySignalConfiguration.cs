@@ -19,7 +19,7 @@ internal sealed class FertilitySignalConfiguration : IEntityTypeConfiguration<Fe
 
         builder.Property(e => e.Date).HasColumnType("date");
         builder.Property(e => e.OvulationTestResult).HasConversion<string>().HasMaxLength(32);
-        builder.Property(e => e.CervicalFluid).HasMaxLength(128);
+        builder.Property(e => e.CervicalFluid).HasMaxLength(FertilitySignal.MaxCervicalFluidLength);
         builder.Property(e => e.Notes).HasMaxLength(1024);
 
         builder.HasIndex(e => new { e.CycleProfileId, e.Date }).IsUnique();

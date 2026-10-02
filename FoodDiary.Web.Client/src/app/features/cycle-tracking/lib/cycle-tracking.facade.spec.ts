@@ -19,6 +19,9 @@ import {
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
 const NOTE_LIMIT = 1024;
+const CERVICAL_LIMIT = 128;
+const TEMPERATURE_MIN = 34;
+const TEMPERATURE_MAX = 42;
 const EMOJI_NOTE_LIMIT = NOTE_LIMIT / 2;
 const LOGGED_CYCLE_DAYS = 4;
 const FRACTIONAL_DAY = 0.5;
@@ -111,6 +114,41 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(CycleTrackingFacade);
+});
+
+describe('CycleTrackingFacade fertility validation', () => {
+    it.each([TEMPERATURE_MIN - 1, TEMPERATURE_MAX + 1, Number.NaN, Number.POSITIVE_INFINITY])(
+        'rejects invalid temperature %s before sending a day',
+        async temperature => {
+            facade.initialize();
+            setValidDayForm();
+            facade.dayModel.update(value => ({ ...value, basalBodyTemperatureCelsius: temperature }));
+            expect(facade.dayForm.basalBodyTemperatureCelsius().invalid()).toBe(true);
+            await submit(facade.dayForm);
+            expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        },
+    );
+
+    it.each([null, TEMPERATURE_MIN, TEMPERATURE_MAX])('accepts optional and boundary temperatures %s', async temperature => {
+        facade.initialize();
+        setValidDayForm();
+        facade.dayModel.update(value => ({ ...value, basalBodyTemperatureCelsius: temperature }));
+        expect(facade.dayForm.basalBodyTemperatureCelsius().invalid()).toBe(false);
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
+    });
+
+    it('rejects overlong fluid and sends a corrected trimmed boundary', async () => {
+        facade.initialize();
+        setValidDayForm();
+        facade.dayModel.update(value => ({ ...value, cervicalFluid: 'x'.repeat(CERVICAL_LIMIT + 1) }));
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        facade.dayModel.update(value => ({ ...value, cervicalFluid: `  ${'x'.repeat(CERVICAL_LIMIT)}  ` }));
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
+        expect(cyclesService.upsertDay.mock.calls[0]?.[1].fertilitySignal?.cervicalFluid).toBe('x'.repeat(CERVICAL_LIMIT));
+    });
 });
 
 describe('CycleTrackingFacade loading recovery', () => {

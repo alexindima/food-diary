@@ -197,6 +197,56 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Equal(JsonValueKind.Null, root.GetProperty("fertilitySignal").ValueKind);
     }
 
+    [RequiresDockerFact]
+    public async Task UpsertFertility_RejectsInvalidValuesAndPersistsBoundaries() {
+        HttpClient client = factory.CreateClient();
+        string token = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        Guid profileId = await CreateCycleAsync(client);
+        var signal = new FertilitySignalHttpModel(BasalBodyTemperatureCelsius: 36.62,
+            OvulationTestResult: null, CervicalFluid: "saved", HadSex: false, Notes: null, ClearNotes: false);
+        var request = new UpsertCycleDayHttpRequest(new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+            Bleeding: null, Symptoms: [], FertilitySignal: signal);
+        foreach ((string scenario, FertilitySignalHttpModel invalidSignal) in new[] {
+            ("temperature-below-range", signal with { BasalBodyTemperatureCelsius = 33.99 }),
+            ("temperature-above-range", signal with { BasalBodyTemperatureCelsius = 42.01 }),
+            ("cervical-fluid-too-long", signal with { CervicalFluid = new string('x', 129) }),
+        }) {
+            HttpResponseMessage invalid = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/days",
+                request with { FertilitySignal = invalidSignal });
+            Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+            using var error = JsonDocument.Parse(await invalid.Content.ReadAsStringAsync());
+            Assert.Equal("Validation.Invalid", error.RootElement.GetProperty("error").GetString());
+            using var snapshots = JsonDocument.Parse(await File.ReadAllTextAsync(
+                SnapshotPathResolver.GetPath("cycle-fertility-validation-contract.json")));
+            var actual = new {
+                Status = (int)invalid.StatusCode,
+                Error = error.RootElement.GetProperty("error").GetString(),
+                Fields = error.RootElement.GetProperty("errors").EnumerateObject()
+                    .Select(static field => field.Name).Order(StringComparer.Ordinal).ToArray(),
+            };
+            Assert.Equal(JsonSerializer.Serialize(snapshots.RootElement.GetProperty(scenario)),
+                JsonSerializer.Serialize(actual));
+        }
+        foreach (double temperature in new[] { 34.0, 42.0 }) {
+            HttpResponseMessage valid = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/days",
+                request with {
+                    FertilitySignal = signal with {
+                        BasalBodyTemperatureCelsius = temperature,
+                        CervicalFluid = "  " + new string('x', 128) + "  ",
+                    },
+                });
+            Assert.Equal(HttpStatusCode.OK, valid.StatusCode);
+        }
+        HttpResponseMessage current = await client.GetAsync("/api/v1/cycles/current");
+        current.EnsureSuccessStatusCode();
+        using var body = JsonDocument.Parse(await current.Content.ReadAsStringAsync());
+        JsonElement stored = Assert.Single(body.RootElement.GetProperty("fertilitySignals").EnumerateArray());
+        Assert.Multiple(
+            () => Assert.Equal(42, stored.GetProperty("basalBodyTemperatureCelsius").GetDouble()),
+            () => Assert.Equal(new string('x', 128), stored.GetProperty("cervicalFluid").GetString()));
+    }
+
     private static async Task<Guid> CreateCycleAsync(HttpClient client) {
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/cycles",

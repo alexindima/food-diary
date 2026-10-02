@@ -50,10 +50,13 @@ import {
     DEFAULT_LUTEAL_LENGTH,
     MAX_AVERAGE_CYCLE_LENGTH,
     MAX_AVERAGE_PERIOD_LENGTH,
+    MAX_BASAL_BODY_TEMPERATURE,
+    MAX_CERVICAL_FLUID_LENGTH,
     MAX_CYCLE_NOTES_LENGTH,
     MAX_LUTEAL_LENGTH,
     MIN_AVERAGE_CYCLE_LENGTH,
     MIN_AVERAGE_PERIOD_LENGTH,
+    MIN_BASAL_BODY_TEMPERATURE,
     MIN_LUTEAL_LENGTH,
 } from './cycle-tracking.config';
 import { clampCycleSymptom, getCycleNotesLength, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
@@ -194,6 +197,14 @@ export class CycleTrackingFacade {
         path => {
             disabled(path, { when: () => this.isSavingDay() });
             required(path.date);
+            min(path.basalBodyTemperatureCelsius, MIN_BASAL_BODY_TEMPERATURE);
+            max(path.basalBodyTemperatureCelsius, MAX_BASAL_BODY_TEMPERATURE);
+            validate(path.basalBodyTemperatureCelsius, ({ value }) =>
+                value() !== null && !Number.isFinite(value()) ? { kind: 'temperatureRange' } : undefined,
+            );
+            validate(path.cervicalFluid, context =>
+                getCycleNotesLength(context.value()) > MAX_CERVICAL_FLUID_LENGTH ? { kind: 'cervicalFluidTooLong' } : undefined,
+            );
             validate(path.notes, context =>
                 getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined,
             );

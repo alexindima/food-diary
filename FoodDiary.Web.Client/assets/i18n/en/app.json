@@ -2515,6 +2515,8 @@
         "FACTOR_END_DATE": "End date",
         "FACTOR_DATE_ORDER": "End date must be on or after the start date.",
         "SAVE_FACTOR_FAILED": "Could not save the factor. Your changes are still here. Please try again.",
+        "TEMPERATURE_RANGE": "Enter a temperature from 34 to 42 °C.",
+        "CERVICAL_FLUID_TOO_LONG": "Use no more than 128 characters, excluding surrounding spaces.",
         "LOAD_FAILED": "Could not load your cycle data. Please try again.",
         "RETRY_LOAD": "Retry",
         "CLEAR_DAY_FAILED": "Could not clear the day. Your entries are still saved. Please try again.",

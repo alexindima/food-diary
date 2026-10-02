@@ -5,6 +5,7 @@ using FoodDiary.Domain.Primitives;
 namespace FoodDiary.Modules.Cycles.Domain.Entities;
 
 public sealed class FertilitySignal : Entity<FertilitySignalId> {
+    public const int MaxCervicalFluidLength = 128;
     public CycleProfileId CycleProfileId { get; private set; }
     public DateOnly Date { get; private set; }
     public double? BasalBodyTemperatureCelsius { get; private set; }
@@ -38,7 +39,7 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
             Date = date,
             BasalBodyTemperatureCelsius = basalBodyTemperatureCelsius,
             OvulationTestResult = ovulationTestResult,
-            CervicalFluid = CycleProfile.NormalizeNotes(cervicalFluid),
+            CervicalFluid = NormalizeCervicalFluid(cervicalFluid),
             HadSex = hadSex,
             Notes = CycleProfile.NormalizeNotes(notes),
         };
@@ -56,7 +57,7 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
         bool clearNotes) {
         EnsureTemperature(basalBodyTemperatureCelsius);
         EnsureOptionalDefined(ovulationTestResult, nameof(ovulationTestResult));
-        string? normalizedCervicalFluid = CycleProfile.NormalizeNotes(cervicalFluid);
+        string? normalizedCervicalFluid = NormalizeCervicalFluid(cervicalFluid);
         string? normalizedNotes = notes is not null ? CycleProfile.NormalizeNotes(notes) : Notes;
 
         BasalBodyTemperatureCelsius = basalBodyTemperatureCelsius;
@@ -69,6 +70,16 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
             Notes = normalizedNotes;
         }
         SetModified();
+    }
+
+    private static string? NormalizeCervicalFluid(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+        string normalized = value.Trim();
+        return normalized.Length > MaxCervicalFluidLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Cervical fluid must be at most {MaxCervicalFluidLength} characters.")
+            : normalized;
     }
 
     private static void EnsureTemperature(double? value) {

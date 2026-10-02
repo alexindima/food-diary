@@ -35,6 +35,9 @@ export const CYCLE_SYMPTOM_FIELDS: readonly CycleSymptomField[] = [
 
 export const DEFAULT_AVERAGE_CYCLE_LENGTH = 28;
 export const MAX_CYCLE_NOTES_LENGTH = 1024;
+export const MAX_CERVICAL_FLUID_LENGTH = 128;
+export const MIN_BASAL_BODY_TEMPERATURE = 34;
+export const MAX_BASAL_BODY_TEMPERATURE = 42;
 export const DEFAULT_AVERAGE_PERIOD_LENGTH = 5;
 export const MIN_AVERAGE_CYCLE_LENGTH = 18;
 export const MAX_AVERAGE_CYCLE_LENGTH = 60;

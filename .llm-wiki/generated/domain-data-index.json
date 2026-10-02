@@ -4,7 +4,7 @@
     "domainTypes": 230,
     "entities": 89,
     "valueObjects": 93,
-    "invariants": 532,
+    "invariants": 533,
     "persistenceMappings": 93,
     "indexes": 174,
     "relationships": 37
@@ -2318,23 +2318,30 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Cervical fluid must be at most {MaxCervicalFluidLength} characters.\")",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
+      "line": 81
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Basal body temperature must be in range [34, 42].\")",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 80
+      "line": 91
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 86
+      "line": 97
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 93
+      "line": 104
     },
     {
       "area": "FoodDiary",

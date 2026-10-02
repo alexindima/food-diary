@@ -3053,14 +3053,14 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "health",
@@ -8828,7 +8828,7 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",

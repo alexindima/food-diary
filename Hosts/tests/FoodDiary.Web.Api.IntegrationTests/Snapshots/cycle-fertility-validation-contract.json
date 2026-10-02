@@ -1,0 +1,23 @@
+{
+  "temperature-below-range": {
+    "Status": 400,
+    "Error": "Validation.Invalid",
+    "Fields": [
+      "fertilitySignal.basalBodyTemperatureCelsius"
+    ]
+  },
+  "temperature-above-range": {
+    "Status": 400,
+    "Error": "Validation.Invalid",
+    "Fields": [
+      "fertilitySignal.basalBodyTemperatureCelsius"
+    ]
+  },
+  "cervical-fluid-too-long": {
+    "Status": 400,
+    "Error": "Validation.Invalid",
+    "Fields": [
+      "fertilitySignal.cervicalFluid"
+    ]
+  }
+}

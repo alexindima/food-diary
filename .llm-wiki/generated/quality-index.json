@@ -80,11 +80,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 891,
-      "decisionPoints": 121,
+      "nonBlankLines": 902,
+      "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.32
+      "structuralRiskScore": 201.04
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -8266,19 +8266,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.config.ts",
-      "nonBlankLines": 46,
+      "nonBlankLines": 49,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
+      "structuralRiskScore": 0.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 891,
-      "decisionPoints": 121,
+      "nonBlankLines": 902,
+      "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.32
+      "structuralRiskScore": 201.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",
@@ -8330,11 +8330,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.ts",
-      "nonBlankLines": 118,
-      "decisionPoints": 5,
+      "nonBlankLines": 126,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.86
+      "structuralRiskScore": 13.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-day-item.ts",
@@ -20810,11 +20810,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-      "nonBlankLines": 101,
+      "nonBlankLines": 104,
       "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.52
+      "structuralRiskScore": 20.58
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
@@ -21194,11 +21194,11 @@
     },
     {
       "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
-      "nonBlankLines": 82,
-      "decisionPoints": 9,
+      "nonBlankLines": 92,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.14
+      "structuralRiskScore": 16.84
     },
     {
       "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
@@ -56190,11 +56190,12 @@
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
       "line": 5,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs",
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayNotes.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FertilitySignalValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

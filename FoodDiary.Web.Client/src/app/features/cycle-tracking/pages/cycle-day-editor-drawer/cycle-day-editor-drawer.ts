@@ -63,6 +63,15 @@ export class CycleDayEditorDrawerComponent {
         return field.touched() && field.errors().some(error => error.kind === 'notesTooLong') ? 'CYCLE_TRACKING.DAY_NOTES_TOO_LONG' : null;
     });
 
+    protected readonly temperatureError = computed(() => {
+        const field = this.dayForm().basalBodyTemperatureCelsius();
+        return field.touched() && field.invalid() ? 'CYCLE_TRACKING.TEMPERATURE_RANGE' : null;
+    });
+    protected readonly cervicalFluidError = computed(() => {
+        const field = this.dayForm().cervicalFluid();
+        return field.touched() && field.invalid() ? 'CYCLE_TRACKING.CERVICAL_FLUID_TOO_LONG' : null;
+    });
+
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS.filter(field => field.key !== 'pain');
     protected readonly symptomSeverityOptions: FdUiSegmentedToggleOption[] = [
         { value: SYMPTOM_SEVERITY_MILD_VALUE, labelKey: 'CYCLE_TRACKING.PAIN_LEVEL_3' },
