@@ -9,7 +9,7 @@ import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { AttentionSignal } from '../../../../shared/models/dietologist.data';
+import type { AttentionSignal, BulkRecommendationResult } from '../../../../shared/models/dietologist.data';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
@@ -23,6 +23,7 @@ let dietologistService: {
     bulkCreateRecommendations: ReturnType<typeof vi.fn>;
 };
 let router: { navigate: ReturnType<typeof vi.fn> };
+let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     dietologistService = {
@@ -34,7 +35,88 @@ beforeEach(() => {
     router = {
         navigate: vi.fn().mockResolvedValue(true),
     };
+    dialogService = { open: vi.fn(() => ({ afterClosed: (): Observable<boolean> => of(false) })) };
 });
+
+describe('Dietologist bulk recommendation recovery', () => {
+    it.each([true, false])('keeps failed recipients and text after partial result (first succeeded: %s)', firstSucceeded => {
+        prepareBulkRecommendation();
+        const result: BulkRecommendationResult = {
+            idempotencyKey: 'first-key',
+            recipients: [bulkRecipient('client-1', firstSucceeded), bulkRecipient('client-2', false)],
+        };
+        dietologistService.bulkCreateRecommendations.mockReturnValueOnce(of(result)).mockReturnValueOnce(
+            of({
+                ...result,
+                recipients: result.recipients
+                    .filter(recipient => !recipient.succeeded)
+                    .map(recipient => bulkRecipient(recipient.clientUserId, true)),
+            }),
+        );
+
+        component['sendBulkRecommendation']();
+        expect(component['bulkModel']().text).toBe('QA recommendation');
+        expect([...component['selectedClientIds']()]).toEqual(firstSucceeded ? ['client-2'] : ['client-1', 'client-2']);
+        const firstKey = dietologistService.bulkCreateRecommendations.mock.calls[0][2] as string;
+        component['sendBulkRecommendation']();
+        expect(dietologistService.bulkCreateRecommendations.mock.calls[1][0]).toEqual(
+            firstSucceeded ? ['client-2'] : ['client-1', 'client-2'],
+        );
+        expect(dietologistService.bulkCreateRecommendations.mock.calls[1][2]).not.toBe(firstKey);
+        expect(component['bulkModel']().text).toBe('');
+        expect(component['selectedClientIds']().size).toBe(0);
+    });
+
+    it('locks the draft while pending and preserves the request key for retry after an unknown failure', () => {
+        prepareBulkRecommendation();
+        const request = new Subject<BulkRecommendationResult>();
+        dietologistService.bulkCreateRecommendations.mockReturnValueOnce(request).mockReturnValueOnce(
+            of({
+                idempotencyKey: 'retry-key',
+                recipients: [bulkRecipient('client-1', true), bulkRecipient('client-2', true)],
+            }),
+        );
+        component['sendBulkRecommendation']();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('textarea')?.disabled).toBe(true);
+        expect(
+            Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).every(
+                checkbox => checkbox.disabled,
+            ),
+        ).toBe(true);
+        component['sendBulkRecommendation']();
+        expect(dietologistService.bulkCreateRecommendations).toHaveBeenCalledTimes(1);
+
+        request.error(new Error('response lost'));
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('textarea')?.disabled).toBe(false);
+        expect(component['bulkModel']().text).toBe('QA recommendation');
+        expect(component['selectedClientIds']().size).toBe(2);
+        component['sendBulkRecommendation']();
+        expect(dietologistService.bulkCreateRecommendations.mock.calls[1]).toEqual(
+            dietologistService.bulkCreateRecommendations.mock.calls[0],
+        );
+    });
+});
+
+function bulkRecipient(clientUserId: string, succeeded: boolean): BulkRecommendationResult['recipients'][number] {
+    return {
+        clientUserId,
+        succeeded,
+        recommendationId: succeeded ? 'recommendation-id' : null,
+        wasAlreadyProcessed: false,
+        errorCode: succeeded ? null : 'QA.Error',
+    };
+}
+
+function prepareBulkRecommendation(): void {
+    dietologistService.getMyClients.mockReturnValueOnce(of([createClient(), createClient({ userId: 'client-2' })]));
+    dialogService.open.mockReturnValue({ afterClosed: (): Observable<boolean> => of(true) });
+    createComponent();
+    component['toggleClientSelection']('client-1', true);
+    component['toggleClientSelection']('client-2', true);
+    component['bulkModel'].set({ text: 'QA recommendation' });
+}
 
 describe('Dietologist attention action pending state', () => {
     it.each(['success', 'error'] as const)('blocks conflicting attention actions while pending and recovers after %s', outcome => {
@@ -197,7 +279,7 @@ function createComponent(): void {
             { provide: Router, useValue: router },
             {
                 provide: FdUiDialogService,
-                useValue: { open: vi.fn(() => ({ afterClosed: (): Observable<boolean> => of(false) })) },
+                useValue: dialogService,
             },
             { provide: FdUiToastService, useValue: { success: vi.fn(), error: vi.fn() } },
         ],

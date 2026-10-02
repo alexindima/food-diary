@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -94,6 +94,7 @@ export class DietologistClientsPageComponent {
     protected readonly bulkForm = form(this.bulkModel, path => {
         required(path.text);
         maxLength(path.text, BULK_RECOMMENDATION_MAX_LENGTH);
+        disabled(path.text, { when: () => this.bulkSending() });
     });
     protected readonly clientItems = computed<ClientCardViewModel[]>(() => {
         this.languageVersion();
@@ -272,12 +273,13 @@ export class DietologistClientsPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: result => {
-                    const failedCount = result.recipients.filter(recipient => !recipient.succeeded).length;
+                    const failedRecipients = result.recipients.filter(recipient => !recipient.succeeded);
+                    const failedCount = failedRecipients.length;
                     this.bulkSending.set(false);
                     this.bulkIdempotencyKey.set(null);
-                    this.selectedClientIds.set(new Set<string>());
-                    this.bulkModel.set({ text: '' });
+                    this.selectedClientIds.set(new Set(failedRecipients.map(recipient => recipient.clientUserId)));
                     if (failedCount === 0) {
+                        this.bulkModel.set({ text: '' });
                         this.toastService.success(
                             this.translateService.instant('BULK_RECOMMENDATIONS.SUCCESS', { count: result.recipients.length }),
                         );

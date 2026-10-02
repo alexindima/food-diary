@@ -142,6 +142,7 @@
                                     type="checkbox"
                                     [id]="`bulk-client-${client.userId}`"
                                     [checked]="selectedClientIds().has(client.userId)"
+                                    [disabled]="bulkSending()"
                                     (change)="toggleClientSelection(client.userId, clientCheckbox.checked)"
                                 />
                                 <label class="dietologist-clients__recipient" [for]="`bulk-client-${client.userId}`">
