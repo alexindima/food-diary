@@ -138,7 +138,7 @@
                                         <span class="fd-ui-body-sm">
                                             {{
                                                 'CYCLE_TRACKING.PREDICTION_CONFIDENCE'
-                                                    | translate: { confidence: prediction.confidenceLabel }
+                                                    | translate: { confidence: (prediction.confidenceKey | translate) }
                                             }}
                                         </span>
                                     </div>
@@ -186,7 +186,7 @@
                                             (prediction.limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
                                                 ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
                                                 : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
-                                            ) | translate: { confidence: prediction.confidenceLabel }
+                                            ) | translate: { confidence: (prediction.confidenceKey | translate) }
                                         }}
                                     </p>
                                 </div>

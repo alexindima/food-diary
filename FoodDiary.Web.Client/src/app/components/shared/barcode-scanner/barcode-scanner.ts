@@ -26,6 +26,7 @@ export class BarcodeScannerComponent {
 
     private stream: MediaStream | null = null;
     private animationFrameId: number | null = null;
+    private isClosed = false;
     private readonly detector: BarcodeDetector | null = null;
 
     public constructor() {
@@ -62,11 +63,19 @@ export class BarcodeScannerComponent {
 
     private async startCameraAsync(): Promise<void> {
         try {
-            this.stream = await this.browserWindow.getUserMediaAsync({
+            const stream = await this.browserWindow.getUserMediaAsync({
                 video: { facingMode: 'environment' },
             });
+            if (this.isClosed || this.destroyRef.destroyed) {
+                stream.getTracks().forEach(track => { track.stop(); });
+                return;
+            }
+            this.stream = stream;
             // Wait for next tick so viewChild is available
             setTimeout(() => {
+                if (this.isClosed || this.destroyRef.destroyed) {
+                    return;
+                }
                 const video = this.videoRef()?.nativeElement;
                 if (video !== undefined) {
                     video.srcObject = this.stream;
@@ -76,13 +85,15 @@ export class BarcodeScannerComponent {
                 }
             });
         } catch {
-            this.isCameraError.set(true);
+            if (!this.isClosed && !this.destroyRef.destroyed) {
+                this.isCameraError.set(true);
+            }
         }
     }
 
     private scanLoop(): void {
         const video = this.videoRef()?.nativeElement;
-        if (video === undefined || this.detector === null) {
+        if (video === undefined || this.isClosed || this.detector === null) {
             return;
         }
 
@@ -99,6 +110,9 @@ export class BarcodeScannerComponent {
                     return;
                 }
                 const barcodes = await detector.detect(video);
+                if (this.isClosed) {
+                    return;
+                }
                 if (barcodes.length > 0) {
                     this.stopCamera();
                     this.dialogRef.close(barcodes[0]?.rawValue ?? null);
@@ -112,6 +126,7 @@ export class BarcodeScannerComponent {
     }
 
     private stopCamera(): void {
+        this.isClosed = true;
         this.browserWindow.cancelAnimationFrame(this.animationFrameId);
         this.animationFrameId = null;
         this.stream?.getTracks().forEach(track => {

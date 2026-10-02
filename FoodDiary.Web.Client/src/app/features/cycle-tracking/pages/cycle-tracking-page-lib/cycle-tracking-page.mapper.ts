@@ -146,7 +146,10 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         nextPeriodRangeLabel,
         ovulationRangeLabel,
         pmsRangeLabel,
-        confidenceLabel: prediction.dataSufficiency ?? prediction.confidence,
+        confidenceKey:
+            prediction.dataSufficiency === undefined
+                ? getConfidenceKey(prediction.confidence)
+                : getDataSufficiencyKey(prediction.dataSufficiency),
         dataSufficiencyKey: getDataSufficiencyKey(prediction.dataSufficiency),
         completedCycleCount: prediction.completedCycleCount ?? 0,
         usedEpisodeCount: prediction.usedEpisodeCount ?? 0,
@@ -171,6 +174,26 @@ function getLimitedReasonKey(prediction: CyclePredictions, hasPredictionRanges: 
     return isLearning === true ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING' : 'CYCLE_TRACKING.PREDICTIONS_LIMITED';
 }
 
+function getConfidenceKey(value: string): string {
+    switch (value) {
+        case 'Learning': {
+            return 'CYCLE_TRACKING.CONFIDENCE_LEARNING';
+        }
+        case 'Low': {
+            return 'CYCLE_TRACKING.CONFIDENCE_LOW';
+        }
+        case 'Medium':
+        case 'Moderate': {
+            return 'CYCLE_TRACKING.CONFIDENCE_MEDIUM';
+        }
+        case 'High': {
+            return 'CYCLE_TRACKING.CONFIDENCE_HIGH';
+        }
+        default: {
+            return 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE';
+        }
+    }
+}
 function getDataSufficiencyKey(value: string | undefined): string {
     switch (value) {
         case 'Established': {

@@ -232,7 +232,7 @@
       "reason": "Reviewed new scalar session capability and adapter, JSON refreshToken removal and all cookie consumers; full solution compiles.",
       "baseRef": "HEAD",
       "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:19.2050530Z"
+      "reviewedAtUtc": "2026-10-02T11:35:19.205053Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1937c0babdda5b2eeaa9665538636edd7ef052717af78e50db21fe4df39f696c"
+          "sha256": "dde069e167f9a3e54d173446114470afa73ac6332a56df76bf28e9378e032cc6"
         }
       ],
-      "reason": "Reviewed current tests for session revocation, impersonation, token serialization, active/deleted response parity and bounded UTF8 emails; provider-backed checks blocked by Docker.",
+      "reason": "Reviewed combined index after committed master integration: security regressions retain3408passing backend cases and66auth frontend cases; inherited cycle/barcode tests remain intact. Index is navigation evidence; PostgreSQL endpoint verification remains blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:22.6887264Z"
+      "gitHead": "8c114dcdf9bd6b62a23f3f31d4a012c72e01b59e",
+      "reviewedAtUtc": "2026-10-02T11:49:13.6128178Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,21 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1937c0babdda5b2eeaa9665538636edd7ef052717af78e50db21fe4df39f696c"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "912f2da0067409e3241a5ca42cedd662b290cceec219fb912020b847f33ae476"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "cb23cababd1f8f1fa2ea79736430bd4d2e5b097cbede5d306f36681bef95bae4"
+          "sha256": "dde069e167f9a3e54d173446114470afa73ac6332a56df76bf28e9378e032cc6"
         }
       ],
-      "reason": "Independent security review and parent boundary checks complete; HTTP session revocation, HTML encoding, cookie-only refresh serialization and MailRelay bounds covered. Existing SignalR connection revocation and public image migration remain follow-up work.",
+      "reason": "Reviewed combined index after committed master integration: security regressions retain3408passing backend cases and66auth frontend cases; inherited cycle/barcode tests remain intact. Index is navigation evidence; PostgreSQL endpoint verification remains blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:27.6085296Z"
+      "gitHead": "8c114dcdf9bd6b62a23f3f31d4a012c72e01b59e",
+      "reviewedAtUtc": "2026-10-02T11:49:18.0885546Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1053,13 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "98df99b8909800f5b6a865b565bf81d5e1458e94993f6c5cb14eed1c99c293f3"
+          "sha256": "76a802e88c6b22bcf9683814bc4ec8bd351aba6c96f7a29b8c5ea531ebb34c19"
         }
       ],
-      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
+      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
       "baseRef": "HEAD",
-      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
-      "reviewedAtUtc": "2026-10-02T09:57:22.6753490Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:20:58.8020072Z"
     },
     {
       "pageId": "workflow-verification-planner",
