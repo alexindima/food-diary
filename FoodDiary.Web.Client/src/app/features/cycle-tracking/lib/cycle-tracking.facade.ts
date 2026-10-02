@@ -80,7 +80,11 @@ export class CycleTrackingFacade {
     public readonly deletingEpisodeId = signal<string | null>(null);
     public readonly episodeError = signal<string | null>(null);
     public readonly isEpisodeBusy = computed(
-        () => this.isSavingEpisode() || this.excludingEpisodeId() !== null || this.deletingEpisodeId() !== null,
+        () =>
+            this.isSavingEpisode() ||
+            this.excludingEpisodeId() !== null ||
+            this.deletingEpisodeId() !== null ||
+            this.confirmingPeriodStartDate() !== null,
     );
     public readonly isExportingCycle = signal(false);
     public readonly exportError = signal<string | null>(null);
@@ -91,7 +95,11 @@ export class CycleTrackingFacade {
     public readonly factorError = signal<string | null>(null);
     public readonly clearingDayDate = signal<string | null>(null);
     public readonly dayClearError = signal<string | null>(null);
-    private readonly isDayMutationPending = computed(() => this.isSavingDay() || this.clearingDayDate() !== null);
+    public readonly confirmingPeriodStartDate = signal<string | null>(null);
+    public readonly periodStartError = signal<string | null>(null);
+    private readonly isDayMutationPending = computed(
+        () => this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null,
+    );
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
     public readonly editingEpisodeId = signal<string | null>(null);
@@ -849,15 +857,32 @@ export class CycleTrackingFacade {
 
     public confirmPeriodStart(date: string): void {
         const currentCycle = this.cycle();
-        if (currentCycle === null) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.isDayMutationPending() || this.isEpisodeBusy()) {
             return;
         }
 
+        const dateKey = toCycleDateKey(date);
+        if (dateKey.length === 0) {
+            return;
+        }
+        this.periodStartError.set(null);
+        this.confirmingPeriodStartDate.set(date);
+
         this.cyclesService
-            .confirmPeriodStart(currentCycle.id, toCycleDateKey(date))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(cycle => {
-                this.cycle.set(cycle);
+            .confirmPeriodStart(currentCycle.id, dateKey)
+            .pipe(
+                finalize(() => {
+                    this.confirmingPeriodStartDate.set(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: cycle => {
+                    this.cycle.set(cycle);
+                },
+                error: () => {
+                    this.periodStartError.set('CYCLE_TRACKING.CONFIRM_PERIOD_START_FAILED');
+                },
             });
     }
 

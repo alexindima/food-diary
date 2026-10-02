@@ -5918,6 +5918,7 @@
         "CANCEL_EDIT": "Cancel editing",
         "CLEAR_DAY": "Clear day",
         "CONFIRM_PERIOD_START": "Confirm as period start",
+        "CONFIRM_PERIOD_START_FAILED": "Could not confirm the period start. Your entries are still saved. Please try again.",
         "PERIOD_START_INFERRED": "Suggested start",
         "PERIOD_START_CONFIRMED": "Start confirmed",
         "EPISODE_HISTORY_TITLE": "Period history",

@@ -1,5 +1,6 @@
 <fd-ui-card class="cycle-tracking__card" [title]="titleKey() | translate">
     <fd-ui-form-error [hidden]="clearError() === null" [error]="clearError()" />
+    <fd-ui-form-error [hidden]="confirmationError() === null" [error]="confirmationError()" />
     @if (isLoading()) {
         <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
     } @else if (items().length === 0) {
@@ -10,6 +11,8 @@
                 <fd-cycle-day-item
                     [item]="item"
                     [isClearing]="clearingDate() === item.date"
+                    [isConfirming]="confirmingDate() === item.date"
+                    [isConfirmationPending]="confirmingDate() !== null"
                     (editDay)="editDay.emit($event)"
                     (clearDay)="clearDay.emit($event)"
                     (confirmPeriodStart)="confirmPeriodStart.emit($event)"

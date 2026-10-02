@@ -207,6 +207,8 @@
                         [items]="recentDayItems()"
                         [clearingDate]="clearingDayDate()"
                         [clearError]="dayClearError()"
+                        [confirmingDate]="confirmingPeriodStartDate()"
+                        [confirmationError]="periodStartError()"
                         [hasMore]="hasMoreHistory()"
                         [isExpanded]="isHistoryExpanded()"
                         (editDay)="editDay($event)"

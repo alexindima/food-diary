@@ -3,7 +3,7 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1547,
+    "inputs": 1551,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
@@ -1331,6 +1331,16 @@
           "name": "isClearing",
           "type": "",
           "required": false
+        },
+        {
+          "name": "isConfirming",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "isConfirmationPending",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -1378,6 +1388,16 @@
         },
         {
           "name": "clearError",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "confirmingDate",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "confirmationError",
           "type": "string | null",
           "required": false
         },
@@ -24183,6 +24203,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "isClearing",
+        "isConfirmationPending",
+        "isConfirming",
         "item"
       ],
       "outputsHandled": [
@@ -24201,6 +24223,8 @@
       "inputsUsed": [
         "clearError",
         "clearingDate",
+        "confirmationError",
+        "confirmingDate",
         "hasMore",
         "isExpanded",
         "isLoading",
@@ -31896,7 +31920,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "error"
       ],

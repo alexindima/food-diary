@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e184682e7be16230c987ec6c857cb786e1ea36d6a8fc6a517efd06df75df063e"
+          "sha256": "01830e64694544f9f144eea6a5194984be2a91ab97879c9807ac8761eaaa5ea9"
         }
       ],
-      "reason": "Validate cycle duration integers and preserve settings drafts with visible save errors and retry",
+      "reason": "Refreshed architecture index reviewed: existing cycle components gain inputs; no projects, dependency edges or selector removals. Native pending and retry behavior verified.",
       "baseRef": "HEAD",
-      "gitHead": "1a8fc39392cfbaf72635077a16bb1af2a63946e0",
-      "reviewedAtUtc": "2026-10-01T21:47:59.7974352Z"
+      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
+      "reviewedAtUtc": "2026-10-02T05:42:42.7767474Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "de48432cd1d5bf694f7931970c79e087e2c5f588f8d21e8e61e7acb3e4568f9d"
+          "sha256": "149b6f9dfec91f31d16ad2b37ebfcca0b8f8a52c058b0a60866943efcceeb8c8"
         }
       ],
-      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
+      "reason": "Generated risk delta reflects facade confirmation guards and2regressioncases. Reviewed pending/error/finalize branches;4872tests and finalbuild pass.",
       "baseRef": "HEAD",
-      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
-      "reviewedAtUtc": "2026-10-02T04:18:58.3601691Z"
+      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
+      "reviewedAtUtc": "2026-10-02T05:42:44.6190145Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "de48432cd1d5bf694f7931970c79e087e2c5f588f8d21e8e61e7acb3e4568f9d"
+          "sha256": "149b6f9dfec91f31d16ad2b37ebfcca0b8f8a52c058b0a60866943efcceeb8c8"
         }
       ],
-      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
+      "reason": "UI-only error and pending state; no token,log,persistence,authorization or external sharing change. Own fixtures cleaned and RU baseline activeconsents restored to core0.",
       "baseRef": "HEAD",
-      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
-      "reviewedAtUtc": "2026-10-02T04:18:58.7533459Z"
+      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
+      "reviewedAtUtc": "2026-10-02T05:42:45.6287427Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b0eaa3f3c1cc00158346bc74e8f3c30a04c422df4a4d8cd9404254353d8c860b"
+          "sha256": "7f065820dcaca9637bebae4a80cb6cf0d26854dfcc1fb07ea4f4cea4d7b3e757"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0ea95297aade5d77647111b81816de8c3c0edc84e3de74b035729fec49b02b3e"
+          "sha256": "a950870e7a905dae7ba0419802430bd26bc4cab9dafd8866545b229940f2c9f6"
         }
       ],
-      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
+      "reason": "Confirmed page to facade to CyclesService period-start PUT and card/item input bindings in current source; API payload unchanged; real5303 retry200verified.",
       "baseRef": "HEAD",
-      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
-      "reviewedAtUtc": "2026-10-02T04:18:59.2150445Z"
+      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
+      "reviewedAtUtc": "2026-10-02T05:42:46.6585164Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b0eaa3f3c1cc00158346bc74e8f3c30a04c422df4a4d8cd9404254353d8c860b"
+          "sha256": "7f065820dcaca9637bebae4a80cb6cf0d26854dfcc1fb07ea4f4cea4d7b3e757"
         }
       ],
-      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
+      "reason": "Reviewed card/item inputs and page consumers, EN/RU translations and unchanged period-start API. Native503,200 retry,RU390 and pending duplicate suppression verified;4872frontendtests pass.",
       "baseRef": "HEAD",
-      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
-      "reviewedAtUtc": "2026-10-02T04:18:57.9422566Z"
+      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
+      "reviewedAtUtc": "2026-10-02T05:42:43.6389777Z"
     },
     {
       "pageId": "workflow.query-context",

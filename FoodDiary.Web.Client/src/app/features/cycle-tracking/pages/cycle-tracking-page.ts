@@ -136,6 +136,8 @@ export class CycleTrackingPageComponent {
     protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly exportError = this.facade.exportError;
+    protected readonly periodStartError = this.facade.periodStartError;
+    protected readonly confirmingPeriodStartDate = this.facade.confirmingPeriodStartDate;
     protected readonly dayClearError = this.facade.dayClearError;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly editingDayDate = this.facade.editingDayDate;
@@ -298,7 +300,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected editDay(date: string): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
             return;
         }
         this.facade.editDay(date);
@@ -307,7 +309,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected cancelDayEdit(): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
             return;
         }
         this.facade.cancelDayEdit();
@@ -315,7 +317,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected openDayEditor(): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
             return;
         }
         const today = new Date();
@@ -338,6 +340,7 @@ export class CycleTrackingPageComponent {
             this.isDeletingCycle() ||
             this.isSavingDay() ||
             this.clearingDayDate() !== null ||
+            this.confirmingPeriodStartDate() !== null ||
             this.cycle() === null
         ) {
             return;

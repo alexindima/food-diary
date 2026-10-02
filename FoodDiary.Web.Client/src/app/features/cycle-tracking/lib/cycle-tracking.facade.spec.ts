@@ -30,6 +30,7 @@ const SEVERE_SYMPTOM_INTENSITY = 9;
 let facade: CycleTrackingFacade;
 let cyclesService: {
     clearDay: ReturnType<typeof vi.fn<CyclesService['clearDay']>>;
+    confirmPeriodStart: ReturnType<typeof vi.fn<CyclesService['confirmPeriodStart']>>;
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
     deleteCycle: ReturnType<typeof vi.fn<CyclesService['deleteCycle']>>;
     deleteMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['deleteMenstrualEpisode']>>;
@@ -51,6 +52,7 @@ beforeEach(() => {
         getCurrent: vi.fn<CyclesService['getCurrent']>().mockReturnValue(of(createCycleResponse())),
         getNutritionSummary: vi.fn<CyclesService['getNutritionSummary']>().mockReturnValue(of(createNutritionSummary())),
         clearDay: vi.fn<CyclesService['clearDay']>().mockReturnValue(of(void 0)),
+        confirmPeriodStart: vi.fn<CyclesService['confirmPeriodStart']>().mockReturnValue(of(createCycleResponse())),
         create: vi.fn<CyclesService['create']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -596,6 +598,43 @@ describe('CycleTrackingFacade settings saving', () => {
         expect(success).toBe(true);
         expect(cyclesService.updateSettings).toHaveBeenCalledOnce();
         expect(facade.settingsSaveRevision()).toBe(1);
+    });
+});
+
+describe('CycleTrackingFacade period start recovery', () => {
+    it('retains records on failure and updates them on retry', () => {
+        facade.initialize();
+        const original = facade.cycle();
+        cyclesService.confirmPeriodStart.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        facade.confirmPeriodStart('2026-04-02');
+        expect(facade.cycle()).toBe(original);
+        expect(facade.periodStartError()).toBe('CYCLE_TRACKING.CONFIRM_PERIOD_START_FAILED');
+        expect(facade.confirmingPeriodStartDate()).toBeNull();
+        const confirmed = { ...createCycleResponse(), predictions: null };
+        cyclesService.confirmPeriodStart.mockReturnValueOnce(of(confirmed));
+        facade.confirmPeriodStart('2026-04-02');
+        expect(facade.periodStartError()).toBeNull();
+        expect(facade.cycle()).toEqual(confirmed);
+        expect(cyclesService.confirmPeriodStart).toHaveBeenCalledTimes(2);
+    });
+
+    it('prevents duplicate confirmation and conflicting day actions until completion', () => {
+        facade.initialize();
+        setValidDayForm();
+        const pending = new Subject<CycleResponse>();
+        cyclesService.confirmPeriodStart.mockReturnValue(pending);
+        facade.confirmPeriodStart('2026-04-02T00:00:00.000Z');
+        facade.confirmPeriodStart('2026-04-02');
+        facade.clearDay('2026-04-02');
+        facade.saveDay();
+        expect(cyclesService.confirmPeriodStart).toHaveBeenCalledExactlyOnceWith('cycle-1', '2026-04-02');
+        expect(cyclesService.clearDay).not.toHaveBeenCalled();
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        expect(facade.isEpisodeBusy()).toBe(true);
+        pending.next(createCycleResponse());
+        pending.complete();
+        expect(facade.confirmingPeriodStartDate()).toBeNull();
+        expect(facade.isEpisodeBusy()).toBe(false);
     });
 });
 

@@ -20,6 +20,8 @@ export class CycleDaysCardComponent {
     public readonly items = input.required<CycleDayViewModel[]>();
     public readonly clearingDate = input<string | null>(null);
     public readonly clearError = input<string | null>(null);
+    public readonly confirmingDate = input<string | null>(null);
+    public readonly confirmationError = input<string | null>(null);
     public readonly hasMore = input(false);
     public readonly isExpanded = input(false);
     public readonly editDay = output<string>();

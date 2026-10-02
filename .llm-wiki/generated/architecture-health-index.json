@@ -1689,6 +1689,16 @@
           "name": "isClearing",
           "type": "",
           "required": false
+        },
+        {
+          "name": "isConfirming",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "isConfirmationPending",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [

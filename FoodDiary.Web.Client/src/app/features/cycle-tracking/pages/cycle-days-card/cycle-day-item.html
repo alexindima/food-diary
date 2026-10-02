@@ -26,7 +26,7 @@
                 variant="secondary"
                 icon="edit"
                 [ariaLabel]="'CYCLE_TRACKING.EDIT_DAY' | translate"
-                [disabled]="isClearing()"
+                [disabled]="isClearing() || isConfirmationPending()"
                 [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                 (click)="editDay.emit(item().date)"
             />
@@ -38,7 +38,8 @@
                     variant="secondary"
                     icon="check_circle"
                     [ariaLabel]="'CYCLE_TRACKING.CONFIRM_PERIOD_START' | translate"
-                    [disabled]="isClearing()"
+                    [loading]="isConfirming()"
+                    [disabled]="isClearing() || isConfirmationPending()"
                     [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                     (click)="confirmPeriodStart.emit(item().date)"
                 />
@@ -50,7 +51,7 @@
                 variant="danger"
                 icon="delete"
                 [loading]="isClearing()"
-                [disabled]="isClearing()"
+                [disabled]="isClearing() || isConfirmationPending()"
                 [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                 [ariaLabel]="'CYCLE_TRACKING.CLEAR_DAY' | translate"
                 (click)="clearDay.emit(item().date)"
