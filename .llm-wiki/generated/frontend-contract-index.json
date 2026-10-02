@@ -7,7 +7,7 @@
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2058,
+    "translationKeys": 2060,
     "consumerEdges": 1214,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -19425,6 +19425,8 @@
         "CYCLE_TRACKING.ALL_DATA_HINT",
         "CYCLE_TRACKING.BLEEDING_DAYS_COUNT",
         "CYCLE_TRACKING.CANCEL_EDIT",
+        "CYCLE_TRACKING.CLEAR_EPISODE_END_DATE",
+        "CYCLE_TRACKING.CLEAR_FACTOR_END_DATE",
         "CYCLE_TRACKING.CONSENT_CYCLE_TRACKING",
         "CYCLE_TRACKING.CONSENT_FERTILITY",
         "CYCLE_TRACKING.CONSENT_NUTRITION",
@@ -30671,6 +30673,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 5,
       "inputsUsed": [
+        "clearAriaLabel",
         "earliestDate",
         "error",
         "label"
