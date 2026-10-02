@@ -99,6 +99,7 @@ export function buildCycleOverviewView(cycle: CycleResponse | null, locale: stri
         ...cycle.bleedingEntries.map(entry => toDateKey(entry.date)),
         ...cycle.symptoms.map(entry => toDateKey(entry.date)),
         ...cycle.fertilitySignals.map(entry => toDateKey(entry.date)),
+        ...(cycle.dayNotes ?? []).map(entry => toDateKey(entry.date)),
     ]);
     const bleedingDateKeys = new Set(cycle.bleedingEntries.map(entry => toDateKey(entry.date)));
     const days: CycleOverviewDayViewModel[] = [];

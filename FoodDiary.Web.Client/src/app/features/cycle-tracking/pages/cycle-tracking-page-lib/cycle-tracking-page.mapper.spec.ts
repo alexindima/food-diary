@@ -147,6 +147,25 @@ describe('cycle tracking page mapper', () => {
     it('returns null when there is no current cycle', () => {
         expect(buildCycleCurrentView(null, 'en-US')).toBeNull();
     });
+});
+
+describe('cycle tracking overview mapper', () => {
+    it('marks a notes-only day as tracked and offers to review the existing record', () => {
+        const view = buildCycleOverviewView(
+            {
+                ...CYCLE,
+                bleedingEntries: [],
+                symptoms: [],
+                fertilitySignals: [],
+                dayNotes: [{ date: '2026-04-16T00:00:00Z', notes: 'Quiet day' }],
+            },
+            'en-US',
+            new Date(OVERVIEW_YEAR, OVERVIEW_MONTH_INDEX, OVERVIEW_DAY),
+        );
+        expect(view?.hasTodayEntry).toBe(true);
+        expect(view?.days.find(day => day.isToday)?.isTracked).toBe(true);
+        expect(view?.days.find(day => day.dateKey === '2026-04-15')?.isTracked).toBe(false);
+    });
 
     it('builds a today-first overview around the current date', () => {
         const view = buildCycleOverviewView(

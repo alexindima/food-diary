@@ -18,6 +18,7 @@ import { filter } from 'rxjs';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
@@ -291,6 +292,11 @@ export class CycleTrackingPageComponent {
     }
 
     protected openDayEditor(): void {
+        const today = new Date();
+        if (buildCycleOverviewView(this.cycle(), this.appLocale(), today)?.hasTodayEntry === true) {
+            this.editDay(formatDateInputValue(today));
+            return;
+        }
         this.facade.cancelDayEdit();
         this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);

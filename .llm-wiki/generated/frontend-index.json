@@ -3342,7 +3342,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 109
+      "line": 110
     },
     {
       "name": "DashboardService",
