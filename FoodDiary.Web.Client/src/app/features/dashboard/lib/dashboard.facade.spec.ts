@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
@@ -16,6 +16,7 @@ import { DashboardService } from '../api/dashboard.service';
 import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
+import { DashboardLocalDayFacade } from './dashboard-local-day.facade';
 
 const UPDATED_HYDRATION_ML = 750;
 const TEST_YEAR = 2026;
@@ -39,6 +40,53 @@ const SECOND_HYDRATION_AMOUNT_ML = 150;
 const TDEE_TARGET = 2300;
 const DEFAULT_SNAPSHOT_CALORIES = 1200;
 const UPDATED_SNAPSHOT_CALORIES = 1800;
+const MIDNIGHT_DELAY_MS = 1000;
+
+describe('Dashboard midnight rollover', () => {
+    afterEach(() => {
+        TestBed.resetTestingModule();
+        vi.useRealTimers();
+    });
+
+    it('reloads implicit today at local midnight', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-10-02T23:59:59'));
+        const { facade, dashboardService } = setupFacade();
+        facade.initialize();
+        vi.advanceTimersByTime(MIDNIGHT_DELAY_MS);
+        expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
+        expect(facade.isTodaySelected()).toBe(true);
+        expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(2);
+        expect(dashboardService.getSnapshot).toHaveBeenLastCalledWith(expect.objectContaining({ date: new Date('2026-10-03T00:00:00Z') }));
+    });
+
+    it('keeps an explicitly selected date and removes today-only actions at midnight', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-10-02T23:59:59'));
+        const { facade, dashboardService } = setupFacade();
+        facade.initialize(new Date('2026-10-02T00:00:00'));
+        expect(facade.isTodaySelected()).toBe(true);
+        vi.advanceTimersByTime(MIDNIGHT_DELAY_MS);
+        expect(facade.selectedDate()).toEqual(new Date('2026-10-02T00:00:00'));
+        expect(facade.isTodaySelected()).toBe(false);
+        expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
+        facade.setSelectedDate();
+        expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
+        expect(facade.isTodaySelected()).toBe(true);
+    });
+
+    it('uses the new day for the first hydration click when the midnight timer was delayed', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-10-02T23:59:59'));
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        const afterMidnight = new Date('2026-10-03T00:01:00');
+        vi.setSystemTime(afterMidnight);
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
+        expect(hydrationService.addEntry).toHaveBeenCalledExactlyOnceWith(HYDRATION_AMOUNT_ML, afterMidnight);
+    });
+});
 
 describe('Dashboard meal details', () => {
     it('opens the detail dialog and navigates only when Edit is selected', async () => {
@@ -732,6 +780,7 @@ function setupFacade(): {
     TestBed.configureTestingModule({
         providers: [
             DashboardFacade,
+            DashboardLocalDayFacade,
             { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },
             { provide: NutritionDataInvalidationService, useValue: { reportMealMutation: vi.fn() } },
             { provide: MealService, useValue: { repeat: vi.fn(), deleteById: vi.fn() } },

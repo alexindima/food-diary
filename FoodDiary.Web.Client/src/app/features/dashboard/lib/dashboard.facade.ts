@@ -30,6 +30,7 @@ import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
+import { DashboardLocalDayFacade } from './dashboard-local-day.facade';
 import {
     createMealPreviewSignal,
     createMealRingSignal,
@@ -43,6 +44,8 @@ import { resolveDashboardNutritionInsight } from './nutrition-insight.policy';
 @Injectable()
 export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
+    private readonly localDay = inject(DashboardLocalDayFacade);
+    private followsToday = true;
     private readonly mealService = inject(MealService);
     private readonly navigationService = inject(NavigationService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
@@ -142,7 +145,7 @@ export class DashboardFacade {
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
-        const today = normalizeDate(new Date());
+        const today = this.localDay.today();
         return this.selectedDate().getTime() === today.getTime();
     });
     public readonly snapshot = this.snapshotRequest.data;
@@ -192,14 +195,21 @@ export class DashboardFacade {
     public readonly placeholderIcon = placeholderIcon;
     public readonly placeholderLabel = placeholderLabel;
 
+    public constructor() {
+        this.localDay.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            if (this.followsToday && this.initialized()) {
+                this.setSelectedDate();
+            }
+        });
+    }
+
     public initialize(date?: Date): void {
         if (this.initialized()) {
             return;
         }
 
-        if (date !== undefined) {
-            this.selectedDate.set(normalizeDate(date));
-        }
+        this.followsToday = date === undefined;
+        this.selectedDate.set(normalizeDate(date ?? this.localDay.refresh()));
         this.initialized.set(true);
         this.loadDashboardSnapshot();
 
@@ -208,8 +218,9 @@ export class DashboardFacade {
         });
     }
 
-    public setSelectedDate(date: Date): void {
-        const normalized = normalizeDate(date);
+    public setSelectedDate(date?: Date): void {
+        this.followsToday = date === undefined;
+        const normalized = normalizeDate(date ?? this.localDay.refresh());
         if (normalized.getTime() === this.selectedDate().getTime()) {
             return;
         }
@@ -222,6 +233,7 @@ export class DashboardFacade {
         if (this.isHydrationLoading()) {
             return;
         }
+        this.localDay.refresh();
         const targetDate = getHydrationDateUtc(this.selectedDate());
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
             next: () => {

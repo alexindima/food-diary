@@ -38,6 +38,7 @@ import { DashboardFacade } from '../lib/dashboard.facade';
 import { parseDashboardDate } from '../lib/dashboard-date.utils';
 import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-priority';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
+import { DashboardLocalDayFacade } from '../lib/dashboard-local-day.facade';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
@@ -93,7 +94,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardTdeeBlockComponent,
         DashboardAdviceBlockComponent,
     ],
-    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardFacade],
+    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardLocalDayFacade, DashboardFacade],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -272,7 +273,7 @@ export class DashboardComponent {
             this.fastingPriorityOnOpen.set(shouldPrioritizeDashboardFasting(this.fastingCurrentSession(), Date.now()));
         });
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            const date = parseDashboardDate(params.get('date')) ?? new Date();
+            const date = parseDashboardDate(params.get('date')) ?? undefined;
             this.facade.initialize(date);
             this.facade.setSelectedDate(date);
         });

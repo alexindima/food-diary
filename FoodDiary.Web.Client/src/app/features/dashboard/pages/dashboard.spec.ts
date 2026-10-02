@@ -181,6 +181,14 @@ describe('Dashboard page actions and localization', () => {
         expect(facade.setSelectedDate).toHaveBeenLastCalledWith(new Date('2026-09-03T00:00:00'));
     });
 
+    it('follows today when the route has no valid explicit date', async () => {
+        const { facade, params } = await setupAsync();
+        params.next(convertToParamMap({}));
+        expect(facade.setSelectedDate).toHaveBeenLastCalledWith(undefined);
+        params.next(convertToParamMap({ date: 'invalid' }));
+        expect(facade.setSelectedDate).toHaveBeenLastCalledWith(undefined);
+    });
+
     it('updates the calendar locale and dated title when the language changes', async () => {
         const { fixture, facade, child } = await setupAsync();
         const translate = TestBed.inject(TranslateService);

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5721,
+    "productionFiles": 5722,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 983,
@@ -623,6 +623,14 @@
       "structuralRiskScore": 92.52
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
+      "nonBlankLines": 340,
+      "decisionPoints": 57,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 92.3
+    },
+    {
       "path": ".llm-wiki/tools/Update-LlmWikiTaskWorkspace.ps1",
       "nonBlankLines": 305,
       "decisionPoints": 56,
@@ -709,14 +717,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 87.68
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "nonBlankLines": 329,
-      "decisionPoints": 54,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.58
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -8729,6 +8729,14 @@
       "structuralRiskScore": 56.18
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-local-day.facade.ts",
+      "nonBlankLines": 55,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.1
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.ts",
       "nonBlankLines": 148,
       "decisionPoints": 26,
@@ -8746,11 +8754,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "nonBlankLines": 329,
-      "decisionPoints": 54,
+      "nonBlankLines": 340,
+      "decisionPoints": 57,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.58
+      "structuralRiskScore": 92.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.ts",
@@ -8914,11 +8922,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "nonBlankLines": 455,
+      "nonBlankLines": 456,
       "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.6
+      "structuralRiskScore": 76.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",

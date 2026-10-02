@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dd20179c0fab0df68cf41da45132847bb2697f085b86c79976144952d39c30bf"
+          "sha256": "aaf158a5a5e22425a05c723bc099ad8e4d81b294e5dd6229b6150ae26f320ff9"
         }
       ],
-      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
+      "reason": "Verified dashboard midnight rollover with scoped local-day clock, explicit dates remain stable, hydration uses current selected date; 111 focused tests and native desktop/mobile real API evidence. Concurrent admin-create edits are excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
-      "reviewedAtUtc": "2026-10-02T16:02:35.7617400Z"
+      "gitHead": "49b2c412c399e1e6f5d8dcd6c2d482e8e8adf50a",
+      "reviewedAtUtc": "2026-10-02T16:32:36.1166471Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dd20179c0fab0df68cf41da45132847bb2697f085b86c79976144952d39c30bf"
+          "sha256": "aaf158a5a5e22425a05c723bc099ad8e4d81b294e5dd6229b6150ae26f320ff9"
         }
       ],
-      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
+      "reason": "Verified dashboard midnight rollover with scoped local-day clock, explicit dates remain stable, hydration uses current selected date; 111 focused tests and native desktop/mobile real API evidence. Concurrent admin-create edits are excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
-      "reviewedAtUtc": "2026-10-02T16:02:36.5863698Z"
+      "gitHead": "49b2c412c399e1e6f5d8dcd6c2d482e8e8adf50a",
+      "reviewedAtUtc": "2026-10-02T16:32:36.9789182Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,18 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d72aec1ac5ecb95c5d03177c991a334f983a03486b86aa0e62e6fde1296a7a10"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "b4ddfd494457529cfd3d994a7ac55f40c02f1b6b29895f837157659c49a98c0b"
+          "sha256": "562d32c312729af6b3e7e5d86632149360b4deb7080644411301694c521cc893"
         }
       ],
-      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
+      "reason": "Verified dashboard midnight rollover with scoped local-day clock, explicit dates remain stable, hydration uses current selected date; 111 focused tests and native desktop/mobile real API evidence. Concurrent admin-create edits are excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
-      "reviewedAtUtc": "2026-10-02T16:02:37.4291656Z"
+      "gitHead": "49b2c412c399e1e6f5d8dcd6c2d482e8e8adf50a",
+      "reviewedAtUtc": "2026-10-02T16:32:37.5691779Z"
     },
     {
       "pageId": "workflow-verification-planner",

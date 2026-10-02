@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1843,
-    "symbols": 711,
+    "typescriptFiles": 1845,
+    "symbols": 712,
     "routes": 106,
     "features": 46,
-    "specs": 667,
+    "specs": 668,
     "localeFiles": 5,
     "roles": {
       "Component": 478,
       "Directive": 12,
-      "Facade": 71,
+      "Facade": 72,
       "Other": 19,
       "Pipe": 4,
       "Service": 127
@@ -527,6 +527,7 @@
         "DashboardFastingCardComponent",
         "DashboardHydrationBlockComponent",
         "DashboardLayoutService",
+        "DashboardLocalDayFacade",
         "DashboardMealsBlockComponent",
         "DashboardNotificationSettingsDialogComponent",
         "DashboardNotificationSettingsFacade",
@@ -565,6 +566,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-calendar-timezone.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-date.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-local-day.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-trend.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.spec.ts",
@@ -3520,11 +3522,18 @@
       "line": 15
     },
     {
+      "name": "DashboardLocalDayFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-local-day.facade.ts",
+      "line": 10
+    },
+    {
       "name": "DashboardFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "DashboardBlockHostDirective",
@@ -3615,7 +3624,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 101
+      "line": 102
     },
     {
       "name": "DietologistService",
