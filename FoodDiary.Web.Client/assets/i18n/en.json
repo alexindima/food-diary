@@ -5225,7 +5225,7 @@
         "TOUR": {
             "START_TOUR": "Show profile tour",
             "ACCOUNT_TITLE": "Account settings",
-            "ACCOUNT_DESCRIPTION": "Update your name, email, language, theme, and password settings.",
+            "ACCOUNT_DESCRIPTION": "Update your personal details, language, time zone, and measurement units.",
             "BILLING_TITLE": "Subscription",
             "BILLING_DESCRIPTION": "Review your current billing state and open subscription management.",
             "BODY_TITLE": "Body profile",
