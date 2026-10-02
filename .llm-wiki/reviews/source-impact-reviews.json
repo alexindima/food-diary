@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ebf861d7a87ca10fdcd0b0fb1599c5b4f7a6f308f80f3da6e8872e1c3c9a6114"
+          "sha256": "7f88254600572b6a51ebcd356ac09d4166fb828d1c0e439d5dbe4083e0e4ac91"
         }
       ],
-      "reason": "Reviewed shared select implementation, HTML overlay events, existing navigation/disabled behavior and direct consumers in public catalog. Option selection now restores actual native trigger focus; generic outside dismissal is unchanged and disabled options remain blocked. Added DOM regression for Enter and Space focus after overlay closes; native RU390 keyboard selection and following Tab reach next field, EN pointer selection and Escape preserve trigger focus. No API, auth, storage or sensitive-data boundary change; Storybook build passed and full frontend verification is running.",
+      "reason": "Reviewed shared select Tab behavior and existing overlay/control consumers. Tab handling closes the overlay and synchronously restores trigger focus without preventDefault, allowing native Tab/ShiftTab order; occurs before options-empty guard. Four DOM regressions assert unchanged value, dismissal and uncanceled event with populated/empty options in both directions. Native EN desktop and RU390 confirm forward language/backward category focus, no value change; EN ArrowDown then Tab causes zero public-catalog requests. Public inputs, API, persisted data and auth boundaries unchanged; Storybook passed.",
       "baseRef": "HEAD",
-      "gitHead": "180181c700933d54a228cd5065a49e531e1768ee",
-      "reviewedAtUtc": "2026-10-02T07:05:46.0114813Z"
+      "gitHead": "31a0a23279131be9eb33727d196c5238a3357ca2",
+      "reviewedAtUtc": "2026-10-02T07:18:20.8669413Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ebf861d7a87ca10fdcd0b0fb1599c5b4f7a6f308f80f3da6e8872e1c3c9a6114"
+          "sha256": "7f88254600572b6a51ebcd356ac09d4166fb828d1c0e439d5dbe4083e0e4ac91"
         }
       ],
-      "reason": "Reviewed shared select implementation, HTML overlay events, existing navigation/disabled behavior and direct consumers in public catalog. Option selection now restores actual native trigger focus; generic outside dismissal is unchanged and disabled options remain blocked. Added DOM regression for Enter and Space focus after overlay closes; native RU390 keyboard selection and following Tab reach next field, EN pointer selection and Escape preserve trigger focus. No API, auth, storage or sensitive-data boundary change; Storybook build passed and full frontend verification is running.",
+      "reason": "Reviewed shared select Tab behavior and existing overlay/control consumers. Tab handling closes the overlay and synchronously restores trigger focus without preventDefault, allowing native Tab/ShiftTab order; occurs before options-empty guard. Four DOM regressions assert unchanged value, dismissal and uncanceled event with populated/empty options in both directions. Native EN desktop and RU390 confirm forward language/backward category focus, no value change; EN ArrowDown then Tab causes zero public-catalog requests. Public inputs, API, persisted data and auth boundaries unchanged; Storybook passed.",
       "baseRef": "HEAD",
-      "gitHead": "180181c700933d54a228cd5065a49e531e1768ee",
-      "reviewedAtUtc": "2026-10-02T07:05:46.9516123Z"
+      "gitHead": "31a0a23279131be9eb33727d196c5238a3357ca2",
+      "reviewedAtUtc": "2026-10-02T07:18:21.6036222Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

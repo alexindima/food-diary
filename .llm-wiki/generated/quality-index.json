@@ -5850,11 +5850,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "nonBlankLines": 232,
-      "decisionPoints": 33,
+      "nonBlankLines": 237,
+      "decisionPoints": 34,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 54.14
+      "structuralRiskScore": 55.74
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.ts",

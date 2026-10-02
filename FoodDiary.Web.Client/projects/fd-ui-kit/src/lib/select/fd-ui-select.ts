@@ -199,6 +199,12 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     }
 
     protected onListboxKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Tab') {
+            this.closeMenu();
+            this.controlRef()?.nativeElement.focus();
+            return;
+        }
+
         const options = this.options();
         if (options.length === 0) {
             return;

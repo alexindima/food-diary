@@ -231,6 +231,7 @@ Multi-line input.
 
 Dropdown select based on the design-system menu/overlay primitives.
 Selecting an option with Enter, Space, or a pointer closes the menu and returns focus to the trigger so keyboard navigation can continue.
+Tab and Shift+Tab dismiss the open menu without changing the value and continue to the next or previous control in the normal tab order.
 
 Long option lists scroll within a bounded menu. Opening the menu and navigating with arrows, Home, or End keeps the active option visible.
 

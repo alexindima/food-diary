@@ -67,6 +67,33 @@ describe('FdUiSelectComponent selection focus', () => {
     });
 });
 
+describe('FdUiSelectComponent tab dismissal', () => {
+    it.each([
+        { shiftKey: false, empty: false },
+        { shiftKey: true, empty: false },
+        { shiftKey: false, empty: true },
+        { shiftKey: true, empty: true },
+    ])('dismisses without changing the value or preventing Tab ($shiftKey, $empty)', async ({ shiftKey, empty }) => {
+        const { fixture, component, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', empty ? [] : TEST_OPTIONS);
+        component.value.set('banana');
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        fixture.detectChanges();
+        const menu = document.querySelector<HTMLElement>('[role="listbox"]');
+        expect(menu).not.toBeNull();
+        menu?.focus();
+        const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true });
+        menu?.dispatchEvent(event);
+        fixture.detectChanges();
+        expect(component.value()).toBe('banana');
+        expect(event.defaultPrevented).toBe(false);
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+        expect(document.activeElement).toBe(control);
+    });
+});
+
 describe('FdUiSelectComponent rendering', () => {
     it('supports keyboard selection in text appearance without a visible label', async () => {
         const { fixture, component, requireElement, host } = await setupSelectAsync();
@@ -420,7 +447,7 @@ describe('FdUiSelectComponent keyboard and wrapper interactions', () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
-        const event = new KeyboardEvent('keydown', { key: 'Tab' });
+        const event = new KeyboardEvent('keydown', { key: 'F2' });
         const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
 
         component['openMenu']();
