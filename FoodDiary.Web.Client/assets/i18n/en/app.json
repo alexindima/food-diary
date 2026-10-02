@@ -2515,6 +2515,8 @@
         "FACTOR_END_DATE": "End date",
         "FACTOR_DATE_ORDER": "End date must be on or after the start date.",
         "SAVE_FACTOR_FAILED": "Could not save the factor. Your changes are still here. Please try again.",
+        "LOAD_FAILED": "Could not load your cycle data. Please try again.",
+        "RETRY_LOAD": "Retry",
         "CLEAR_DAY_FAILED": "Could not clear the day. Your entries are still saved. Please try again.",
         "SAVE_DAY_FAILED": "Could not save the day. Your changes remain in the form. Please try again.",
         "DAY_SAVED_REFRESH_FAILED": "Your day was saved, but estimates could not be refreshed. Please try again.",

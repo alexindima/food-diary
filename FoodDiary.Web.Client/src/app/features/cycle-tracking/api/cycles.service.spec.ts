@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -101,13 +101,31 @@ describe('CyclesService current cycle', () => {
         req.flush(MOCK_CYCLE);
     });
 
-    it('should return null on getCurrent error', () => {
+    it('returns null only for a successful empty response', () => {
         service.getCurrent().subscribe(cycle => {
             expect(cycle).toBeNull();
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/current`);
-        req.flush('Not found', { status: 404, statusText: 'Not Found' });
+        req.flush(null, { status: 204, statusText: 'No Content' });
+    });
+
+    it('propagates unavailable errors rather than returning an empty profile', () => {
+        const unavailableStatus = 503;
+        let receivedStatus: number | undefined;
+        service.getCurrent().subscribe({
+            next: () => {
+                throw new Error('A failed request must not emit an empty profile');
+            },
+            error: (error: unknown) => {
+                if (error instanceof HttpErrorResponse) {
+                    receivedStatus = error.status;
+                }
+            },
+        });
+        const req = httpMock.expectOne(`${BASE_URL}/current`);
+        req.flush('Unavailable', { status: unavailableStatus, statusText: 'Service Unavailable' });
+        expect(receivedStatus).toBe(unavailableStatus);
     });
 
     it('should get nutrition summary', () => {

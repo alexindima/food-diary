@@ -21,9 +21,7 @@ export class CyclesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.cycles;
 
     public getCurrent(): Observable<CycleResponse | null> {
-        return this.get<CycleResponse | null>('current').pipe(
-            catchError((error: unknown) => fallbackApiError('Cycle fetch error', error, null)),
-        );
+        return this.get<CycleResponse | null>('current').pipe(catchError((error: unknown) => rethrowApiError('Cycle fetch error', error)));
     }
 
     public getNutritionSummary(dateFrom: string, dateTo: string): Observable<CycleNutritionSummary | null> {

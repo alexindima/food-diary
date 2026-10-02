@@ -3,7 +3,8 @@
 .cycle-tracking {
     --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
 
-    &__export-error[hidden] {
+    &__export-error[hidden],
+    &__setup-card[hidden] {
         display: none;
     }
 

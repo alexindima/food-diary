@@ -53,10 +53,23 @@
             [hidden]="!exportError()"
             [message]="exportError() | translate"
         />
+        <fd-ui-inline-alert
+            class="cycle-tracking__export-error"
+            role="alert"
+            severity="danger"
+            [hidden]="!loadError()"
+            [message]="loadError() | translate"
+            [primaryActionLabel]="'CYCLE_TRACKING.RETRY_LOAD' | translate"
+            (primaryAction)="retryLoad()"
+        />
+        <div class="cycle-tracking__loader fd-ui-body-sm" role="status" [hidden]="!isLoading()">
+            {{ 'CYCLE_TRACKING.LOADING' | translate }}
+        </div>
         @if (!cycle()) {
             <fd-ui-card
                 class="cycle-tracking__setup-card"
                 data-tour-id="cycle-tracking-setup"
+                [hidden]="!showCycleSetup()"
                 [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate"
             >
                 <p class="cycle-tracking__setup-copy fd-ui-body">{{ 'CYCLE_TRACKING.CREATE_CYCLE_DESCRIPTION' | translate }}</p>

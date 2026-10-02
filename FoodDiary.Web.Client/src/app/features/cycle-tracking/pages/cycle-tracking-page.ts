@@ -120,6 +120,8 @@ export class CycleTrackingPageComponent {
     protected readonly isHistoryExpanded = signal(false);
 
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly loadError = this.facade.loadError;
+    protected readonly showCycleSetup = computed(() => this.cycle() === null && !this.isLoading() && this.loadError() === null);
     protected readonly isSavingCycle = this.facade.isSavingCycle;
     protected readonly settingsError = this.facade.settingsError;
     protected readonly isSavingSettings = this.facade.isSavingSettings;
@@ -282,6 +284,10 @@ export class CycleTrackingPageComponent {
 
     protected saveFactor(): void {
         this.facade.saveFactor();
+    }
+
+    protected retryLoad(): void {
+        this.facade.initialize();
     }
 
     protected editDay(date: string): void {

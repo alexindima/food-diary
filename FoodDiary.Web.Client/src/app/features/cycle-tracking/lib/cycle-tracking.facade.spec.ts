@@ -113,6 +113,43 @@ beforeEach(() => {
     facade = TestBed.inject(CycleTrackingFacade);
 });
 
+describe('CycleTrackingFacade loading recovery', () => {
+    it('exposes failed initial loading and recovers on a new request', () => {
+        cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        facade.initialize();
+        expect(facade.loadError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
+        expect(facade.isLoading()).toBe(false);
+        expect(facade.cycle()).toBeNull();
+        facade.initialize();
+        expect(facade.loadError()).toBeNull();
+        expect(facade.cycle()?.id).toBe('cycle-1');
+    });
+
+    it('retains the loaded profile and nutrition summary on reload failure', () => {
+        facade.initialize();
+        const cycle = facade.cycle();
+        const nutrition = facade.nutritionSummary();
+        cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        facade.initialize();
+        expect(facade.loadError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
+        expect(facade.cycle()).toEqual(cycle);
+        expect(facade.nutritionSummary()).toEqual(nutrition);
+    });
+
+    it('ignores duplicate loading while the initial request is pending', () => {
+        const pending = new Subject<CycleResponse | null>();
+        cyclesService.getCurrent.mockReturnValue(pending);
+        facade.initialize();
+        facade.initialize();
+        expect(cyclesService.getCurrent).toHaveBeenCalledOnce();
+        pending.next(null);
+        pending.complete();
+        expect(facade.isLoading()).toBe(false);
+        expect(facade.loadError()).toBeNull();
+        expect(facade.cycle()).toBeNull();
+    });
+});
+
 describe('CycleTrackingFacade current cycle', () => {
     it('loads current cycle on initialize', () => {
         facade.initialize();

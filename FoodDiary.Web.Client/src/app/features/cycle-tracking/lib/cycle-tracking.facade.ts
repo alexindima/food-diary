@@ -65,6 +65,7 @@ export class CycleTrackingFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly isLoading = signal(false);
+    public readonly loadError = signal<string | null>(null);
     public readonly isSavingCycle = signal(false);
     public readonly isSavingSettings = signal(false);
     public readonly isDeletingCycle = signal(false);
@@ -926,6 +927,10 @@ export class CycleTrackingFacade {
     }
 
     private loadCycle(): void {
+        if (this.isLoading()) {
+            return;
+        }
+        this.loadError.set(null);
         this.isLoading.set(true);
         this.cyclesService
             .getCurrent()
@@ -935,12 +940,17 @@ export class CycleTrackingFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(cycle => {
-                this.cycle.set(cycle);
-                if (cycle !== null) {
-                    this.cancelSettingsEdit();
-                }
-                this.loadNutritionSummary(cycle);
+            .subscribe({
+                next: cycle => {
+                    this.cycle.set(cycle);
+                    if (cycle !== null) {
+                        this.cancelSettingsEdit();
+                    }
+                    this.loadNutritionSummary(cycle);
+                },
+                error: () => {
+                    this.loadError.set('CYCLE_TRACKING.LOAD_FAILED');
+                },
             });
     }
 
