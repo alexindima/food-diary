@@ -91,7 +91,7 @@ export class MealManualItemDialogComponent {
         if (product !== null) {
             return this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_PRODUCT_META', {
                 amount: product.baseAmount,
-                unit: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${product.baseUnit.toUpperCase()}`),
+                unit: this.translateService.instant(`PRODUCT_AMOUNT_UNITS_SHORT.${product.baseUnit.toUpperCase()}`),
                 calories: Math.round(product.caloriesPerBase),
             });
         }
