@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c703ca69928033cac55b7367d63bae4cc4353752d89fdc3eabf5598fd4693b1d"
+          "sha256": "ce999f12b371487388bac543562ce6953f3e95165f9ba3eb41d86f8270d2ec66"
         }
       ],
-      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
+      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
       "baseRef": "HEAD",
-      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
-      "reviewedAtUtc": "2026-10-02T12:12:05.6985878Z"
+      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
+      "reviewedAtUtc": "2026-10-02T15:19:47.3151459Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a00e5315cdd13e9f7751a6de2078d4ffd172673fbd462d580a5d49745a4027f7"
+          "sha256": "5dfa6d1784a2f890764ea036a38a5ff10b5664c60aa465ff34d1e632c192286d"
         }
       ],
-      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
+      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
       "baseRef": "HEAD",
-      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
-      "reviewedAtUtc": "2026-10-02T15:06:10.7233863Z"
+      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
+      "reviewedAtUtc": "2026-10-02T15:19:48.2917216Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a00e5315cdd13e9f7751a6de2078d4ffd172673fbd462d580a5d49745a4027f7"
+          "sha256": "5dfa6d1784a2f890764ea036a38a5ff10b5664c60aa465ff34d1e632c192286d"
         }
       ],
-      "reason": "Catalog component orchestration moved to its scoped facade; preserved JSON version, API calls, dependency order, size limits, partial failure and retry semantics. Nine focused tests and rendered controlled-failure retry passed. Unrelated user-create dialog changes excluded from this commit.",
+      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
       "baseRef": "HEAD",
-      "gitHead": "0a6006a7a13772664c80d8ec89919106d88cdb2c",
-      "reviewedAtUtc": "2026-10-02T15:06:11.7506968Z"
+      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
+      "reviewedAtUtc": "2026-10-02T15:19:49.3126249Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

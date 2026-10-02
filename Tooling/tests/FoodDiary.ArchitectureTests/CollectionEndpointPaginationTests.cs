@@ -188,6 +188,10 @@ public sealed class CollectionEndpointPaginationTests {
             "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs#ListReady",
             "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs#GetWebPushSubscriptions",
             "Modules/Notifications/Presentation/Controllers/NotificationsController.cs#GetNotifications",
+            // Catalog exports reject totals above 5000 and read public projections in pages of 100.
+            // Boundary coverage: ExportCatalogProductsQueryTests and ExportCatalogRecipesQueryTests.
+            "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs#Export",
+            "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs#Export",
             "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs#GetCategories",
             "Modules/Wearables/Presentation/Controllers/WearablesController.cs#GetConnections",
         };

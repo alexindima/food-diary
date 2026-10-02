@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "criticalSymbolsWithoutTestReferences": 42,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5013,26 +5013,6 @@
       "coveredThrough": []
     },
     {
-      "name": "AdminCatalogProductsController",
-      "role": "Controller",
-      "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
-      "line": 19,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "AdminCatalogRecipesController",
-      "role": "Controller",
-      "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
-      "line": 19,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
@@ -5077,26 +5057,6 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
       "line": 17,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "ExportCatalogProductsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQueryHandler.cs",
-      "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "ExportCatalogRecipesQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQueryHandler.cs",
-      "line": 11,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

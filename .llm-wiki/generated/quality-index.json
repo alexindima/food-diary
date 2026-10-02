@@ -9,8 +9,8 @@
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 983,
-    "criticalSymbolsWithTestReferences": 937,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "criticalSymbolsWithTestReferences": 941,
+    "criticalSymbolsWithoutTestReferences": 42,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -36101,8 +36101,8 @@
       "nonBlankLines": 29,
       "decisionPoints": 4,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 13.58
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.58
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQuery.cs",
@@ -36565,8 +36565,8 @@
       "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.8
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.8
     },
     {
       "path": "Modules/Products/Presentation/Controllers/ProductSuggestionsController.cs",
@@ -37725,8 +37725,8 @@
       "nonBlankLines": 34,
       "decisionPoints": 4,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 13.68
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.68
     },
     {
       "path": "Modules/Recipes/Application/Queries/GetPublicRecipe/GetPublicRecipeQuery.cs",
@@ -38309,8 +38309,8 @@
       "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.8
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.8
     },
     {
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
@@ -49517,9 +49517,11 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
       "line": 19,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -49527,9 +49529,11 @@
       "role": "Controller",
       "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
       "line": 19,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -50528,13 +50532,14 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/ProductsController.cs",
       "line": 16,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
-        "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50986,9 +50991,11 @@
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ExportCatalogProductsQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -50996,9 +51003,11 @@
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQueryHandler.cs",
       "line": 11,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExportCatalogRecipesQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
