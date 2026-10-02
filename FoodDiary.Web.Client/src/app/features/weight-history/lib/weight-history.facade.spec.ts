@@ -708,3 +708,26 @@ describe('WeightHistoryFacade loading recovery', () => {
         expect(facade.selectedRange()).toBe('week');
     });
 });
+
+describe('WeightHistoryFacade pending entry edits', () => {
+    it('locks the date and measurement until failure and retains the draft for retry', async () => {
+        const draft = { date: '2026-04-02', weight: '75.5' };
+        facade.formModel.set(draft);
+        const request = new Subject<never>();
+        weightEntriesService.create.mockReturnValue(request);
+        facade.submit();
+        TestBed.tick();
+        expect(facade.form.date().disabled()).toBe(true);
+        expect(facade.form.weight().disabled()).toBe(true);
+        facade.submit();
+        expect(weightEntriesService.create).toHaveBeenCalledOnce();
+        request.error(new Error('Unavailable'));
+        TestBed.tick();
+        expect(facade.form.date().disabled()).toBe(false);
+        expect(facade.form.weight().disabled()).toBe(false);
+        expect(facade.formModel()).toEqual(draft);
+        await vi.waitFor(() => {
+            expect(facade.entryError()).toBe('WEIGHT_HISTORY.ERROR_SAVE_ENTRY');
+        });
+    });
+});

@@ -24,6 +24,9 @@ export class WaistHistoryEntryDialogComponent {
 
     public constructor() {
         effect(() => {
+            this.dialogRef.disableClose = this.isSaving();
+        });
+        effect(() => {
             if (this.facade.entrySaveVersion() > this.initialSaveVersion) {
                 this.dialogRef.close();
             }
@@ -31,6 +34,9 @@ export class WaistHistoryEntryDialogComponent {
     }
 
     protected close(): void {
+        if (this.isSaving()) {
+            return;
+        }
         if (this.isEditing()) {
             this.facade.cancelEdit();
         }

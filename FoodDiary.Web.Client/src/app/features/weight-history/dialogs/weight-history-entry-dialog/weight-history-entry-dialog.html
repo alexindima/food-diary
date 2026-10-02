@@ -1,7 +1,7 @@
 <fd-ui-dialog
     size="sm"
     [title]="(isEditing() ? 'WEIGHT_HISTORY.EDIT_ENTRY_TITLE' : 'WEIGHT_HISTORY.ADD_ENTRY_TITLE') | translate"
-    [dismissible]="true"
+    [dismissible]="!isSaving()"
     (close)="close()"
 >
     <fd-weight-history-form-card

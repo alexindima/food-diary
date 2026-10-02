@@ -1,6 +1,6 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, required, validate } from '@angular/forms/signals';
+import { disabled, form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize, firstValueFrom } from 'rxjs';
 
@@ -101,6 +101,8 @@ export class WeightHistoryFacade {
     public readonly form = form(
         this.formModel,
         path => {
+            disabled(path.date, { when: () => this.isSaving() });
+            disabled(path.weight, { when: () => this.isSaving() });
             required(path.date);
             required(path.weight);
             validate(path.weight, ({ value }) => {
@@ -187,6 +189,9 @@ export class WeightHistoryFacade {
     }
 
     private async submitAsync(): Promise<void> {
+        if (this.isSaving()) {
+            return;
+        }
         if (this.form().invalid()) {
             this.form().markAsTouched();
             return;

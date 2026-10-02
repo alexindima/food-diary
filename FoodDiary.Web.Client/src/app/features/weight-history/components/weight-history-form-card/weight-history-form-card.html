@@ -1,4 +1,4 @@
-<form class="weight-history-page__form fd-stack fd-gap-lg" [formRoot]="form()">
+<form class="weight-history-page__form fd-stack fd-gap-lg" [formRoot]="form()" [attr.aria-busy]="isSaving()">
     <div class="weight-history-page__form-row weight-history-page__form-row--compact fd-grid fd-gap-lg">
         <fd-ui-date-input
             class="weight-history-page__form-control"
@@ -26,7 +26,14 @@
     </div>
 
     <div class="weight-history-page__form-actions fd-row fd-wrap fd-justify-end fd-gap-actions">
-        <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            fill="text"
+            [disabled]="isSaving()"
+            [disabledReason]="isSaving() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+            (click)="editCancel.emit()"
+        >
             {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
         </fd-ui-button>
         <fd-ui-button type="submit" [loading]="isSaving()">

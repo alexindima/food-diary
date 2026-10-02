@@ -641,3 +641,26 @@ describe('WaistHistoryFacade loading recovery', () => {
         expect(facade.selectedRange()).toBe('week');
     });
 });
+
+describe('WaistHistoryFacade pending entry edits', () => {
+    it('locks the date and measurement until failure and retains the draft for retry', async () => {
+        const draft = { date: '2026-04-02', circumference: '75.5' };
+        facade.formModel.set(draft);
+        const request = new Subject<never>();
+        waistEntriesService.create.mockReturnValue(request);
+        facade.submit();
+        TestBed.tick();
+        expect(facade.form.date().disabled()).toBe(true);
+        expect(facade.form.circumference().disabled()).toBe(true);
+        facade.submit();
+        expect(waistEntriesService.create).toHaveBeenCalledOnce();
+        request.error(new Error('Unavailable'));
+        TestBed.tick();
+        expect(facade.form.date().disabled()).toBe(false);
+        expect(facade.form.circumference().disabled()).toBe(false);
+        expect(facade.formModel()).toEqual(draft);
+        await vi.waitFor(() => {
+            expect(facade.entryError()).toBe('WAIST_HISTORY.ERROR_SAVE_ENTRY');
+        });
+    });
+});

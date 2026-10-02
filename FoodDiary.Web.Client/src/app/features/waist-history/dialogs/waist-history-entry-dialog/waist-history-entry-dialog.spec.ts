@@ -100,3 +100,27 @@ describe('Waist entry dialog lifecycle', () => {
         expect(close).not.toHaveBeenCalled();
     });
 });
+
+describe('Waist entry pending dismissal', () => {
+    it.each([false, true])('blocks dismissal and editing reset while saving with editing=%s', editing => {
+        const { fixture, facade, component, close } = setup();
+        facade.isEditing.set(editing);
+        facade.isSaving.set(true);
+        fixture.detectChanges();
+        component['close']();
+        expect(close).not.toHaveBeenCalled();
+        expect(facade.cancelEdit).not.toHaveBeenCalled();
+        expect(TestBed.inject(FdUiDialogRef).disableClose).toBe(true);
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('.fd-ui-dialog__close')).toBeNull();
+        expect(root.querySelector('button[type="button"]:disabled')).not.toBeNull();
+        facade.isSaving.set(false);
+        facade.entryError.set('Retry saving');
+        fixture.detectChanges();
+        expect(TestBed.inject(FdUiDialogRef).disableClose).toBe(false);
+        expect(root.textContent).toContain('Retry saving');
+        component['close']();
+        expect(close).toHaveBeenCalledOnce();
+        expect(facade.cancelEdit).toHaveBeenCalledTimes(editing ? 1 : 0);
+    });
+});

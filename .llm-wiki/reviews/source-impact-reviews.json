@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a6643093718402afe29d80eaea60e0c286409edce8c0e93bace0f5006fbd9c45"
+          "sha256": "1bf8cd0de4616ce40af73be5dbbf2f282d4b186e1978cc9a3f624ebf73e198b1"
         }
       ],
-      "reason": "Reviewed recipe pending-save form lock and cancellation guard. Regression tests fail on old code and31 focused component/add/edit tests pass, covering saving, publication and language checks, disabled edits and draft recovery after failure. Native delayed PATCH confirms one request and no lost edit. Quality index changes remain navigation evidence.",
+      "reason": "Current refreshed index reviewed against measurement locks, duplicate-submit guards and dialog close effects. Six old-code regression failures then412 measurement tests pass; native390/1280 pending and503 recovery plus real201/200/204 CRUD with persistence confirmed. No structural ownership or dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "0c2550b732f5d6edfc7373eb2c3adfe9f014819a",
-      "reviewedAtUtc": "2026-10-02T21:07:22.4355407Z"
+      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
+      "reviewedAtUtc": "2026-10-02T21:45:14.2337540Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a6643093718402afe29d80eaea60e0c286409edce8c0e93bace0f5006fbd9c45"
+          "sha256": "1bf8cd0de4616ce40af73be5dbbf2f282d4b186e1978cc9a3f624ebf73e198b1"
         }
       ],
-      "reason": "Recipe form locking changes only transient UI availability while an existing owner-scoped save is pending. No API payload, authorization, provider sharing, credentials, logging or persistence changes. Native QA uses owned private recipe and image fixtures; mock503 and response delays do not change foreign records.",
+      "reason": "Current measurement UI diff contains only disabled signal-form rules, transient close blocking and busy hints; no identity, health-data payload, provider, cache, persistence, authorization or logging changes. All own fixtures cleaned via204, mocked503 owner-only browser interception.",
       "baseRef": "HEAD",
-      "gitHead": "0c2550b732f5d6edfc7373eb2c3adfe9f014819a",
-      "reviewedAtUtc": "2026-10-02T21:07:25.5317171Z"
+      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
+      "reviewedAtUtc": "2026-10-02T21:45:23.1779090Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "435719a317c27ebe264d3528dc3f9c6cfa6c43cf147d5296d1e0e9c4ab27a74f"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "32c2f838c8c2f618a7792e5017ec042d88aff0ef10c5f3380707038faf22083f"
+          "sha256": "6eab7b0dccb93a5c040ed07bfa0b2022f26226d3ee3ce59052409286e56c122c"
         }
       ],
-      "reason": "Verified fasting page to facade to getHistory caller and dialog data flow in current sources. Frontend indexes only shift overview method and dialog declaration line positions; selectors, HTTP endpoint and response shape retain their existing navigation boundaries.",
+      "reason": "Frontend contract index adds only existing fd-ui-button disabled/disabledReason bindings and existing bilingual operation-busy translation use in weight and waist entry forms. No component inputs, outputs, selectors or HTTP contracts changed. Both consumer forms verified native pending/failure and real create/edit/delete.",
       "baseRef": "HEAD",
-      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
-      "reviewedAtUtc": "2026-10-02T20:11:12.3217920Z"
+      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
+      "reviewedAtUtc": "2026-10-02T21:45:11.0178016Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1139,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "435719a317c27ebe264d3528dc3f9c6cfa6c43cf147d5296d1e0e9c4ab27a74f"
+          "sha256": "6eab7b0dccb93a5c040ed07bfa0b2022f26226d3ee3ce59052409286e56c122c"
         }
       ],
-      "reason": "Reviewed fasting history dialog data signal supplied by its page, localized alert and retained retry action; service propagates transport errors to the facade. Native keyboard503/retry and186focused tests cover the changed path; generated contract diff only shifts overview source line.",
+      "reason": "Reviewed both measurement form-card selectors and consumers: existing isSaving input drives existing button disabled/disabledReason and aria-busy, public inputs/output payloads unchanged. Signal fields disable during pending mutations; dialog ref blocks backdrop/Escape. Existing EN/RU busy key reused.412 focused tests and native390/1280 create/error/edit/retry/delete persistence prove loading,disabled,error,recovery and keyboard states.",
       "baseRef": "HEAD",
-      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
-      "reviewedAtUtc": "2026-10-02T20:11:07.6607135Z"
+      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
+      "reviewedAtUtc": "2026-10-02T21:46:36.6340681Z"
     },
     {
       "pageId": "workflow.query-context",

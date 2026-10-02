@@ -22734,6 +22734,7 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "WAIST_HISTORY.ADD",
         "WAIST_HISTORY.CANCEL_EDIT",
         "WAIST_HISTORY.CIRCUMFERENCE_LABEL",
@@ -22982,6 +22983,7 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "WEIGHT_HISTORY.ADD",
         "WEIGHT_HISTORY.CANCEL_EDIT",
         "WEIGHT_HISTORY.DATE_LABEL",
@@ -29333,6 +29335,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "loading",
         "type",
@@ -29508,6 +29512,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "loading",
         "type",
