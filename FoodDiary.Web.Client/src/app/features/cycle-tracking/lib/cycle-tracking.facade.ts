@@ -49,12 +49,13 @@ import {
     DEFAULT_LUTEAL_LENGTH,
     MAX_AVERAGE_CYCLE_LENGTH,
     MAX_AVERAGE_PERIOD_LENGTH,
+    MAX_CYCLE_NOTES_LENGTH,
     MAX_LUTEAL_LENGTH,
     MIN_AVERAGE_CYCLE_LENGTH,
     MIN_AVERAGE_PERIOD_LENGTH,
     MIN_LUTEAL_LENGTH,
 } from './cycle-tracking.config';
-import { clampCycleSymptom, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
+import { clampCycleSymptom, getCycleNotesLength, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
 
 @Injectable()
 export class CycleTrackingFacade {
@@ -210,6 +211,10 @@ export class CycleTrackingFacade {
             disabled(path, { when: () => this.isSavingFactor() });
             required(path.type);
             required(path.startDate);
+            validate(path.notes, context => {
+                // Match the trimmed payload and the server's Unicode whitespace trimming.
+                return getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined;
+            });
             validate(path.endDate, context => {
                 const start = context.valueOf(path.startDate);
                 const end = context.value();

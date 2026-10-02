@@ -6,6 +6,7 @@ const DAY_END_SECONDS = 59;
 const DAY_END_MILLISECONDS = 999;
 const ISO_DATE_KEY_LENGTH = 10;
 const ISO_YEAR_LENGTH = 4;
+const SERVER_NOTE_WHITE_SPACE = /\p{White_Space}/u;
 
 export function clampCycleSymptom(value: number | null | undefined): number {
     if (value === null || value === undefined || Number.isNaN(value)) {
@@ -27,6 +28,20 @@ export function toNullableCycleNumber(value: number | string | null | undefined)
 export function toOptionalCycleText(value: string | null | undefined): string | undefined {
     const trimmed = value?.trim();
     return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
+}
+
+export function getCycleNotesLength(value: string | null | undefined): number {
+    // Match the payload's JavaScript trim followed by the server's Unicode whitespace trim.
+    const notes = toOptionalCycleText(value) ?? '';
+    let start = 0;
+    let end = notes.length;
+    while (start < end && SERVER_NOTE_WHITE_SPACE.test(notes.charAt(start))) {
+        start++;
+    }
+    while (end > start && SERVER_NOTE_WHITE_SPACE.test(notes.charAt(end - 1))) {
+        end--;
+    }
+    return end - start;
 }
 
 export function normalizeCycleStartOfDay(value: Date): Date {

@@ -34,6 +34,7 @@ export const CYCLE_SYMPTOM_FIELDS: readonly CycleSymptomField[] = [
 ];
 
 export const DEFAULT_AVERAGE_CYCLE_LENGTH = 28;
+export const MAX_CYCLE_NOTES_LENGTH = 1024;
 export const DEFAULT_AVERAGE_PERIOD_LENGTH = 5;
 export const MIN_AVERAGE_CYCLE_LENGTH = 18;
 export const MAX_AVERAGE_CYCLE_LENGTH = 60;

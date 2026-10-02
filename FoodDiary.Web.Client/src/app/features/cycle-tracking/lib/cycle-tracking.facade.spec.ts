@@ -18,6 +18,8 @@ import {
 } from '../models/cycle.data';
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
+const NOTE_LIMIT = 1024;
+const EMOJI_NOTE_LIMIT = NOTE_LIMIT / 2;
 const LOGGED_CYCLE_DAYS = 4;
 const FRACTIONAL_DAY = 0.5;
 const SEVERE_SYMPTOM_INTENSITY = 9;
@@ -778,6 +780,46 @@ describe('CycleTrackingFacade factors', () => {
             clearNotes: false,
         });
         expect(typeof payload.endDate).toBe('string');
+    });
+});
+
+describe('CycleTrackingFacade factor drafts', () => {
+    it('rejects an oversized edited note without losing the draft or sending a request', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        const notes = 'я'.repeat(NOTE_LIMIT + 1);
+        facade.factorModel.update(value => ({ ...value, notes }));
+        await submit(facade.factorForm);
+        expect(facade.factorForm.notes().invalid()).toBe(true);
+        expect(facade.factorForm.notes().touched()).toBe(true);
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+        expect(facade.factorModel().notes).toBe(notes);
+        expect(facade.editingFactorId()).toBe('factor-1');
+    });
+
+    it.each([
+        ['limit', 'a'.repeat(NOTE_LIMIT)],
+        ['trimmed limit', `  ${'я'.repeat(NOTE_LIMIT)}  `],
+        ['Unicode whitespace at the limit', `\u0085${'я'.repeat(NOTE_LIMIT)}\u0085`],
+        ['empty whitespace', ' '.repeat(NOTE_LIMIT + 1)],
+        ['emoji limit', '🙂'.repeat(EMOJI_NOTE_LIMIT)],
+    ])('accepts %s notes that the server accepts', async (_label, notes) => {
+        facade.initialize();
+        facade.factorModel.update(value => ({ ...value, notes }));
+        expect(facade.factorForm.notes().invalid()).toBe(false);
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
+    });
+
+    it('allows correcting a rejected draft and then saves once', async () => {
+        facade.initialize();
+        facade.factorModel.update(value => ({ ...value, notes: `${'🙂'.repeat(EMOJI_NOTE_LIMIT)}x` }));
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+        facade.factorModel.update(value => ({ ...value, notes: 'valid note' }));
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ notes: 'valid note' }));
     });
 });
 

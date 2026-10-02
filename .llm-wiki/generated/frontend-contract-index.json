@@ -36864,6 +36864,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder"
       ],

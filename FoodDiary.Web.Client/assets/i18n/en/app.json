@@ -2515,6 +2515,7 @@
         "FACTOR_END_DATE": "End date",
         "FACTOR_DATE_ORDER": "End date must be on or after the start date.",
         "SAVE_FACTOR_FAILED": "Could not save the factor. Your changes are still here. Please try again.",
+        "FACTOR_NOTES_TOO_LONG": "The factor note must contain no more than 1024 characters.",
         "FACTOR_IDENTITY_CONFLICT": "Another factor of this type already starts on this date. Choose a different type or start date.",
         "END_FACTOR_FAILED": "Could not end the factor. Please try again.",
         "FACTOR_PREGNANCY": "Pregnancy",

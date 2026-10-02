@@ -150,6 +150,12 @@ export class CycleTrackingPageComponent {
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
     protected readonly factorError = this.facade.factorError;
+    protected readonly factorNotesError = computed(() => {
+        const field = this.factorForm.notes();
+        return field.touched() && field.errors().some(error => error.kind === 'notesTooLong')
+            ? 'CYCLE_TRACKING.FACTOR_NOTES_TOO_LONG'
+            : null;
+    });
     protected readonly factorStartDateError = computed(() => {
         const field = this.factorForm.startDate();
         return field.invalid() && field.touched() ? 'FORM_ERRORS.REQUIRED' : null;

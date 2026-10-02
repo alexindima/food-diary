@@ -301,6 +301,7 @@
                                     [label]="'CYCLE_TRACKING.NOTES' | translate"
                                     [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
                                     [formField]="factorForm.notes"
+                                    [error]="factorNotesError() | translate"
                                 />
                                 <fd-ui-form-error [error]="factorError()" />
                                 <div class="cycle-tracking__actions fd-ui-actions">

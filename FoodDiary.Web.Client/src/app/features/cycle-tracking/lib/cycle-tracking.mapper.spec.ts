@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     clampCycleSymptom,
+    getCycleNotesLength,
     normalizeCycleEndOfDay,
     normalizeCycleStartOfDay,
     toCycleDateKey,
@@ -9,6 +10,8 @@ import {
     toOptionalCycleText,
 } from './cycle-tracking.mapper';
 
+const NOTE_LIMIT = 1024;
+const INTERNAL_WHITESPACE_LENGTH = 2048;
 const MAX_SYMPTOM = 10;
 const VALID_TEMPERATURE = 36.6;
 const NOON_HOUR = 12;
@@ -17,6 +20,18 @@ const DAY_END_PART = 59;
 const DAY_END_MILLISECONDS = 999;
 
 describe('cycle tracking mapper', () => {
+    it.each([
+        { name: 'counts internal whitespace', value: `a${' '.repeat(INTERNAL_WHITESPACE_LENGTH)}b`, length: 2050 },
+        { name: 'trims interleaved outer whitespace', value: `\u0085 ${'я'.repeat(NOTE_LIMIT)} \u0085`, length: 1024 },
+        {
+            name: 'preserves BOM characters behind server whitespace',
+            value: `\u0085\uFEFF${'я'.repeat(NOTE_LIMIT)}\uFEFF\u0085`,
+            length: 1026,
+        },
+    ])('$name when counting the persisted note', ({ value, length }) => {
+        expect(getCycleNotesLength(value)).toBe(length);
+    });
+
     it('clamps symptom values and handles missing or invalid input', () => {
         expect(clampCycleSymptom(-1)).toBe(0);
         expect(clampCycleSymptom(MAX_SYMPTOM + 1)).toBe(MAX_SYMPTOM);
