@@ -262,6 +262,67 @@ describe('CycleTrackingFacade day saving', () => {
     });
 });
 
+describe('CycleTrackingFacade day save recovery', () => {
+    it('retains a rejected draft and allows an unchanged retry', async () => {
+        facade.initialize();
+        setValidDayForm();
+        const draft = facade.dayModel();
+        cyclesService.upsertDay.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        await submit(facade.dayForm);
+        expect(facade.dayModel()).toEqual(draft);
+        expect(facade.isSavingDay()).toBe(false);
+        expect(facade.daySaveRevision()).toBe(0);
+        expect(facade.dayError()).toBe('CYCLE_TRACKING.SAVE_DAY_FAILED');
+        await submit(facade.dayForm);
+        expect(cyclesService.upsertDay).toHaveBeenCalledTimes(2);
+        expect(facade.daySaveRevision()).toBe(1);
+        expect(facade.dayError()).toBeNull();
+    });
+
+    it('locks the draft against duplicate saves, cancellation and editing while pending', async () => {
+        facade.initialize();
+        setValidDayForm();
+        const pending = new Subject<CycleLogDay>();
+        cyclesService.upsertDay.mockReturnValue(pending);
+        const draft = facade.dayModel();
+        facade.saveDay();
+        expect(facade.dayForm.notes().disabled()).toBe(true);
+        facade.saveDay();
+        facade.cancelDayEdit();
+        facade.editDay('2026-04-01');
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
+        expect(facade.dayModel()).toEqual(draft);
+        pending.error(new Error('unavailable'));
+        await vi.waitFor(() => {
+            expect(facade.isSavingDay()).toBe(false);
+        });
+    });
+
+    it('retains a saved day when refreshing predictions fails and permits retry', async () => {
+        facade.initialize();
+        setValidDayForm();
+        cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('refresh unavailable')));
+        await submit(facade.dayForm);
+        expect(facade.bleedingEntries()).toHaveLength(1);
+        expect(facade.isSavingDay()).toBe(false);
+        expect(facade.daySaveRevision()).toBe(0);
+        expect(facade.dayError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+        await submit(facade.dayForm);
+        expect(facade.daySaveRevision()).toBe(1);
+    });
+
+    it('recognizes the HTTP client empty fallback as a failed refresh after saving', async () => {
+        facade.initialize();
+        setValidDayForm();
+        cyclesService.getCurrent.mockReturnValueOnce(of(null));
+        await submit(facade.dayForm);
+        expect(facade.bleedingEntries()).toHaveLength(1);
+        expect(facade.dayError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+        expect(facade.daySaveRevision()).toBe(0);
+        expect(facade.isSavingDay()).toBe(false);
+    });
+});
+
 describe('CycleTrackingFacade day note validation', () => {
     it('retains an oversized day draft without saving through either entrypoint', async () => {
         facade.initialize();

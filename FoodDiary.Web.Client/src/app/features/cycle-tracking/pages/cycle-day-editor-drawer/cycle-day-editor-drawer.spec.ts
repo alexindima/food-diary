@@ -72,6 +72,22 @@ describe('CycleDayEditorDrawerComponent', () => {
         expect(closed).toHaveBeenCalledOnce();
     });
 
+    it('blocks closing and editing the rendered form while saving', () => {
+        const closed = vi.fn();
+        fixture.componentInstance.closed.subscribe(closed);
+        fixture.componentRef.setInput('isSaving', true);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('textarea')?.matches(':disabled')).toBe(true);
+        expect(root.querySelector('.cycle-drawer__segments button')?.matches(':disabled')).toBe(true);
+        fixture.componentInstance['close']();
+        expect(closed).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('isSaving', false);
+        fixture.detectChanges();
+        fixture.componentInstance['close']();
+        expect(closed).toHaveBeenCalledOnce();
+    });
+
     it('toggles symptoms with a mild default and allows changing severity', () => {
         fixture.componentInstance['toggleSymptom']('nausea');
 

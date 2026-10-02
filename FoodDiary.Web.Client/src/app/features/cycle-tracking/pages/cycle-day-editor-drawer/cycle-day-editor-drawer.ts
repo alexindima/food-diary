@@ -4,6 +4,7 @@ import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -38,6 +39,7 @@ const SYMPTOM_SEVERITY_SEVERE_VALUE = String(SYMPTOM_SEVERITY_SEVERE);
         FormRoot,
         FdUiButtonComponent,
         FdUiDateInputComponent,
+        FdUiFormErrorComponent,
         FdUiInputComponent,
         FdUiSegmentedToggleComponent,
         FdUiSelectComponent,
@@ -50,6 +52,7 @@ const SYMPTOM_SEVERITY_SEVERE_VALUE = String(SYMPTOM_SEVERITY_SEVERE);
 export class CycleDayEditorDrawerComponent {
     public readonly dayForm = input.required<FieldTree<CycleDayFormModel>>();
     public readonly isSaving = input.required<boolean>();
+    public readonly saveError = input<string | null>(null);
     public readonly editingDate = input<string | null>(null);
     public readonly ovulationTestOptions = input.required<Array<FdUiSelectOption<OvulationTestResult>>>();
     public readonly fertilityEnabled = input(false);
@@ -74,6 +77,9 @@ export class CycleDayEditorDrawerComponent {
     protected readonly CYCLE_FLOW_HEAVY = CYCLE_FLOW_HEAVY;
 
     protected close(): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.advancedOpen.set(false);
         this.closed.emit();
     }

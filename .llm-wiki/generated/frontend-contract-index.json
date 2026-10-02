@@ -3,12 +3,12 @@
   "summary": {
     "components": 482,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1545,
+    "inputs": 1546,
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
     "translationKeys": 2057,
-    "consumerEdges": 1212,
+    "consumerEdges": 1213,
     "consumedComponents": 306,
     "unconsumedComponents": 175
   },
@@ -1285,6 +1285,11 @@
           "name": "isSaving",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "saveError",
+          "type": "string | null",
+          "required": false
         },
         {
           "name": "editingDate",
@@ -19292,6 +19297,7 @@
         "CYCLE_TRACKING.NOTES_PLACEHOLDER",
         "CYCLE_TRACKING.OVULATION_TEST",
         "CYCLE_TRACKING.PRIVATE_DATA_NOTE",
+        "CYCLE_TRACKING.REQUEST_PENDING",
         "CYCLE_TRACKING.SYMPTOMS_HINT",
         "CYCLE_TRACKING.SYMPTOMS_TITLE",
         "CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL",
@@ -24151,7 +24157,8 @@
         "editingDate",
         "fertilityEnabled",
         "isSaving",
-        "ovulationTestOptions"
+        "ovulationTestOptions",
+        "saveError"
       ],
       "outputsHandled": [
         "closed"
@@ -26904,6 +26911,8 @@
         "appearance",
         "ariaLabel",
         "ariaPressed",
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "loading",
@@ -31849,6 +31858,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"

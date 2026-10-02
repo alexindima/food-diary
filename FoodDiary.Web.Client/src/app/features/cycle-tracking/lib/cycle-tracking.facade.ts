@@ -40,6 +40,7 @@ import {
     type FertilitySignalPayload,
     type MenstrualEpisode,
     type UpdateCycleSettingsPayload,
+    type UpsertCycleDayPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
 import { getCycleFactorStatus } from './cycle-factor-status.utils';
@@ -76,6 +77,7 @@ export class CycleTrackingFacade {
     public readonly isExportingCycle = signal(false);
     public readonly exportError = signal<string | null>(null);
     public readonly daySaveRevision = signal(0);
+    public readonly dayError = signal<string | null>(null);
     public readonly settingsSaveRevision = signal(0);
     public readonly settingsError = signal<string | null>(null);
     public readonly factorError = signal<string | null>(null);
@@ -187,6 +189,7 @@ export class CycleTrackingFacade {
     public readonly dayForm = form(
         this.dayModel,
         path => {
+            disabled(path, { when: () => this.isSavingDay() });
             required(path.date);
             validate(path.notes, context =>
                 getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined,
@@ -454,7 +457,7 @@ export class CycleTrackingFacade {
 
     private async saveDayAsync(): Promise<void> {
         const currentCycle = this.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.isSavingDay()) {
             return;
         }
 
@@ -475,19 +478,14 @@ export class CycleTrackingFacade {
         const fertilitySignal = buildFertilitySignalPayload(formValue);
         const clearFertilitySignal = this.shouldClearFertilitySignal(fertilitySignal);
 
+        this.dayError.set(null);
         this.isSavingDay.set(true);
-        const day = await firstValueFrom(
-            this.cyclesService
-                .upsertDay(currentCycle.id, {
+        let savedToServer = false;
+        try {
+            const day = await firstValueFrom(
+                this.cyclesService.upsertDay(currentCycle.id, {
                     date: toCycleDateKey(date),
-                    bleeding: formValue.isBleeding
-                        ? {
-                              type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
-                              flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
-                              painImpact: clampCycleSymptom(formValue.pain),
-                              clearNotes: notes === undefined,
-                          }
-                        : null,
+                    bleeding: this.buildDayBleedingPayload(formValue, notes === undefined),
                     clearBleeding: this.shouldClearBleeding(formValue),
                     symptoms,
                     clearSymptomCategories,
@@ -495,22 +493,36 @@ export class CycleTrackingFacade {
                     clearFertilitySignal,
                     notes,
                     clearNotes: notes === undefined,
-                })
-                .pipe(
-                    finalize(() => {
-                        this.isSavingDay.set(false);
-                    }),
-                ),
-        );
-        this.applySavedDay(day, clearFertilitySignal);
-        await this.refreshPredictionsAsync();
+                }),
+            );
+            savedToServer = true;
+            this.applySavedDay(day, clearFertilitySignal);
+            await this.refreshPredictionsAsync();
+        } catch {
+            this.dayError.set(savedToServer ? 'CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED' : 'CYCLE_TRACKING.SAVE_DAY_FAILED');
+            return;
+        } finally {
+            this.isSavingDay.set(false);
+        }
         this.daySaveRevision.update(revision => revision + 1);
+    }
+
+    private buildDayBleedingPayload(formValue: CycleDayFormModel, clearNotes: boolean): UpsertCycleDayPayload['bleeding'] {
+        if (!formValue.isBleeding) {
+            return null;
+        }
+        return {
+            type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
+            flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
+            painImpact: clampCycleSymptom(formValue.pain),
+            clearNotes,
+        };
     }
 
     private async refreshPredictionsAsync(): Promise<void> {
         const refreshedCycle = await firstValueFrom(this.cyclesService.getCurrent());
         if (refreshedCycle === null) {
-            return;
+            throw new Error('Cycle predictions refresh returned no profile.');
         }
 
         this.cycle.update(current =>
@@ -587,7 +599,7 @@ export class CycleTrackingFacade {
 
     public editDay(date: string): void {
         const currentCycle = this.cycle();
-        if (currentCycle === null) {
+        if (currentCycle === null || this.isSavingDay()) {
             return;
         }
 
@@ -599,13 +611,18 @@ export class CycleTrackingFacade {
 
         const model = buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal);
         const notes = currentCycle.dayNotes?.find(note => toCycleDateKey(note.date) === dateKey)?.notes;
-        this.dayModel.set({ ...model, notes: notes ?? model.notes });
+        this.dayError.set(null);
+        this.dayForm().reset({ ...model, notes: notes ?? model.notes });
         this.editingDayDate.set(date);
     }
 
     public cancelDayEdit(): void {
+        if (this.isSavingDay()) {
+            return;
+        }
+        this.dayError.set(null);
         this.editingDayDate.set(null);
-        this.dayModel.set(createDefaultCycleDayFormModel());
+        this.dayForm().reset(createDefaultCycleDayFormModel());
     }
 
     public saveFactor(): void {

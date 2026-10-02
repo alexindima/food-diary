@@ -3251,7 +3251,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 61
+      "line": 62
     },
     {
       "name": "CycleCalendarCardComponent",
@@ -3279,7 +3279,7 @@
       "role": "Component",
       "selector": "fd-cycle-day-editor-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.ts",
-      "line": 50
+      "line": 52
     },
     {
       "name": "CycleDayItemComponent",
@@ -6987,8 +6987,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4018,
-      "russianProperties": 4018,
+      "englishProperties": 4020,
+      "russianProperties": 4020,
       "countsMatch": true
     },
     {

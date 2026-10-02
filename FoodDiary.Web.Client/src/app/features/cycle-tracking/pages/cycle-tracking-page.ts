@@ -125,6 +125,7 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingSettings = this.facade.isSavingSettings;
     protected readonly isDeletingCycle = this.facade.isDeletingCycle;
     protected readonly isSavingDay = this.facade.isSavingDay;
+    protected readonly dayError = this.facade.dayError;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
     protected readonly excludingEpisodeId = this.facade.excludingEpisodeId;
@@ -247,7 +248,9 @@ export class CycleTrackingPageComponent {
         });
         effect(() => {
             if (this.facade.daySaveRevision() > 0) {
-                this.cancelDayEdit();
+                untracked(() => {
+                    this.cancelDayEdit();
+                });
             }
         });
         effect(() => {
@@ -281,17 +284,26 @@ export class CycleTrackingPageComponent {
     }
 
     protected editDay(date: string): void {
+        if (this.isSavingDay()) {
+            return;
+        }
         this.facade.editDay(date);
         this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);
     }
 
     protected cancelDayEdit(): void {
+        if (this.isSavingDay()) {
+            return;
+        }
         this.facade.cancelDayEdit();
         this.isDayEditorOpen.set(false);
     }
 
     protected openDayEditor(): void {
+        if (this.isSavingDay()) {
+            return;
+        }
         const today = new Date();
         if (buildCycleOverviewView(this.cycle(), this.appLocale(), today)?.hasTodayEntry === true) {
             this.editDay(formatDateInputValue(today));
@@ -307,7 +319,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected openSettings(): void {
-        if (this.isSavingSettings() || this.isDeletingCycle() || this.cycle() === null) {
+        if (this.isSavingSettings() || this.isDeletingCycle() || this.isSavingDay() || this.cycle() === null) {
             return;
         }
         this.facade.cancelSettingsEdit();

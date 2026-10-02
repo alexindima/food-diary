@@ -61,7 +61,10 @@
     }
 
     &__body {
+        min-width: 0;
         min-height: 0;
+        margin: 0;
+        border: 0;
         padding: var(--fd-space-card-padding-y) var(--fd-space-card-padding-x);
         overflow-y: auto;
     }
@@ -155,6 +158,10 @@
         padding: var(--fd-space-card-padding-y) var(--fd-space-card-padding-x);
         border-top: var(--fd-border-muted);
         background: var(--fd-bg-surface-raised);
+    }
+
+    &__error {
+        grid-column: 1 / -1;
     }
 
     &__privacy {

@@ -4,6 +4,7 @@
         type="button"
         tabindex="-1"
         [attr.aria-label]="'COMMON.CLOSE' | translate"
+        [disabled]="isSaving()"
         (click)="close()"
     ></button>
     <aside
@@ -27,12 +28,14 @@
                 fill="text"
                 icon="close"
                 [ariaLabel]="'COMMON.CLOSE' | translate"
+                [disabled]="isSaving()"
+                [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                 (click)="close()"
             />
         </header>
 
         <form class="cycle-drawer__form" [formRoot]="dayForm()">
-            <div class="cycle-drawer__body fd-stack fd-gap-card-content">
+            <fieldset class="cycle-drawer__body fd-stack fd-gap-card-content" [disabled]="isSaving()">
                 <fd-ui-date-input [label]="'CYCLE_TRACKING.DAY_DATE' | translate" [formField]="dayForm().date" />
 
                 <fieldset class="cycle-drawer__fieldset fd-stack fd-gap-xs">
@@ -194,13 +197,27 @@
                         }
                     </div>
                 }
-            </div>
+            </fieldset>
 
             <footer class="cycle-drawer__footer fd-grid fd-gap-sm">
-                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="close()">
+                <fd-ui-form-error class="cycle-drawer__error" [hidden]="saveError() === null" [error]="saveError()" />
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    fill="outline"
+                    [disabled]="isSaving()"
+                    [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
+                    (click)="close()"
+                >
                     {{ 'COMMON.CANCEL' | translate }}
                 </fd-ui-button>
-                <fd-ui-button type="submit" appearance="brand-action" [loading]="isSaving()">
+                <fd-ui-button
+                    type="submit"
+                    appearance="brand-action"
+                    [loading]="isSaving()"
+                    [disabled]="isSaving()"
+                    [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
+                >
                     {{ (editingDate() ? 'CYCLE_TRACKING.UPDATE_DAY' : 'CYCLE_TRACKING.SAVE_DAY') | translate }}
                 </fd-ui-button>
                 <p class="cycle-drawer__privacy fd-ui-caption">{{ 'CYCLE_TRACKING.PRIVATE_DATA_NOTE' | translate }}</p>
