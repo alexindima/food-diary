@@ -99,6 +99,38 @@ describe('Dietologist bulk recommendation recovery', () => {
     });
 });
 
+describe('Dietologist bulk retry request identity', () => {
+    it.each(['text', 'recipients', 'selection-order', 'whitespace'] as const)('handles %s changes after an unknown failure', change => {
+        prepareBulkRecommendation();
+        dietologistService.bulkCreateRecommendations
+            .mockReturnValueOnce(throwError(() => new Error('response lost')))
+            .mockReturnValueOnce(of({ idempotencyKey: 'retry-key', recipients: [bulkRecipient('client-1', true)] }));
+        component['sendBulkRecommendation']();
+        const firstKey = dietologistService.bulkCreateRecommendations.mock.calls[0][2] as string;
+
+        if (change === 'text') {
+            component['bulkModel'].set({ text: 'QA revised recommendation' });
+        } else if (change === 'recipients') {
+            component['toggleClientSelection']('client-2', false);
+        } else if (change === 'selection-order') {
+            component['toggleClientSelection']('client-1', false);
+            component['toggleClientSelection']('client-1', true);
+        } else {
+            component['bulkModel'].set({ text: '  QA recommendation  ' });
+        }
+        component['sendBulkRecommendation']();
+        const secondKey = dietologistService.bulkCreateRecommendations.mock.calls[1][2] as string;
+        if (change === 'text' || change === 'recipients') {
+            expect(secondKey).not.toBe(firstKey);
+        } else {
+            expect(secondKey).toBe(firstKey);
+        }
+        expect(dietologistService.bulkCreateRecommendations.mock.calls[1][1]).toBe(
+            change === 'text' ? 'QA revised recommendation' : 'QA recommendation',
+        );
+    });
+});
+
 function bulkRecipient(clientUserId: string, succeeded: boolean): BulkRecommendationResult['recipients'][number] {
     return {
         clientUserId,

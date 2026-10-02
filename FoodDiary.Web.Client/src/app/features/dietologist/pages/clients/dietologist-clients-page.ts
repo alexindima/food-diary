@@ -89,7 +89,7 @@ export class DietologistClientsPageComponent {
     });
     protected readonly selectedClientIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly bulkSending = signal(false);
-    private readonly bulkIdempotencyKey = signal<string | null>(null);
+    private readonly bulkRequest = signal<{ key: string; fingerprint: string } | null>(null);
     protected readonly bulkModel = signal({ text: '' });
     protected readonly bulkForm = form(this.bulkModel, path => {
         required(path.text);
@@ -265,8 +265,10 @@ export class DietologistClientsPageComponent {
     }
 
     private executeBulkRecommendation(clientIds: string[], text: string): void {
-        const idempotencyKey = this.bulkIdempotencyKey() ?? crypto.randomUUID();
-        this.bulkIdempotencyKey.set(idempotencyKey);
+        const fingerprint = JSON.stringify([text, [...clientIds].sort()]);
+        const previousRequest = this.bulkRequest();
+        const idempotencyKey = previousRequest?.fingerprint === fingerprint ? previousRequest.key : crypto.randomUUID();
+        this.bulkRequest.set({ key: idempotencyKey, fingerprint });
         this.bulkSending.set(true);
         this.dietologistFacade
             .bulkCreateRecommendations(clientIds, text, idempotencyKey)
@@ -276,7 +278,7 @@ export class DietologistClientsPageComponent {
                     const failedRecipients = result.recipients.filter(recipient => !recipient.succeeded);
                     const failedCount = failedRecipients.length;
                     this.bulkSending.set(false);
-                    this.bulkIdempotencyKey.set(null);
+                    this.bulkRequest.set(null);
                     this.selectedClientIds.set(new Set(failedRecipients.map(recipient => recipient.clientUserId)));
                     if (failedCount === 0) {
                         this.bulkModel.set({ text: '' });

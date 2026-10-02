@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "147728bcc9665d4c01f6a363fede60505a9e781890560ad88c19054c2fabe926"
+          "sha256": "eb09db8ed96cd440fb1157a9d2c33954932e82f3058f16a1f99da7741a3d7c35"
         }
       ],
-      "reason": "Reviewed bulk partial-result retry retaining failed recipients and text, success clearing, pending draft locks and unknown delivery idempotency preservation. Controlled desktop/mobile browser flows and focused tests; unrelated admin edits excluded.",
+      "reason": "Reviewed bulk request key identity bound to normalized text and sorted recipients; unchanged retries deduplicate and edited text/recipient requests receive new keys. Real API save-then-response-loss and client reload evidence plus 20 focused tests, lint/build passed; unrelated admin edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "6b4983aed138363f642edd56883a5abaf11a3d85",
-      "reviewedAtUtc": "2026-10-02T14:24:58.8149651Z"
+      "gitHead": "82f59d693736329f17ddf87f004bf9a34a2f82c4",
+      "reviewedAtUtc": "2026-10-02T14:31:33.6312617Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "147728bcc9665d4c01f6a363fede60505a9e781890560ad88c19054c2fabe926"
+          "sha256": "eb09db8ed96cd440fb1157a9d2c33954932e82f3058f16a1f99da7741a3d7c35"
         }
       ],
-      "reason": "Reviewed bulk partial-result retry retaining failed recipients and text, success clearing, pending draft locks and unknown delivery idempotency preservation. Controlled desktop/mobile browser flows and focused tests; unrelated admin edits excluded.",
+      "reason": "Reviewed bulk request key identity bound to normalized text and sorted recipients; unchanged retries deduplicate and edited text/recipient requests receive new keys. Real API save-then-response-loss and client reload evidence plus 20 focused tests, lint/build passed; unrelated admin edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "6b4983aed138363f642edd56883a5abaf11a3d85",
-      "reviewedAtUtc": "2026-10-02T14:24:59.6560503Z"
+      "gitHead": "82f59d693736329f17ddf87f004bf9a34a2f82c4",
+      "reviewedAtUtc": "2026-10-02T14:31:34.5218469Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

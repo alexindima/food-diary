@@ -9066,11 +9066,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.ts",
-      "nonBlankLines": 288,
-      "decisionPoints": 16,
+      "nonBlankLines": 290,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.76
+      "structuralRiskScore": 28.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-tour.ts",
