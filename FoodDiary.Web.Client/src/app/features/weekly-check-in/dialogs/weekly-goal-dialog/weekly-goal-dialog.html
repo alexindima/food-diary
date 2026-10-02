@@ -3,6 +3,7 @@
     size="md"
     [title]="data.titleKey | translate"
     [subtitle]="'WEEKLY_CHECK_IN.GOAL.DIALOG_SUBTITLE' | translate"
+    [dismissible]="!isSaving()"
 >
     <section class="weekly-goal-dialog__section">
         <h3 class="fd-ui-section-title">{{ 'WEEKLY_CHECK_IN.GOAL.FREQUENCY_TITLE' | translate }}</h3>

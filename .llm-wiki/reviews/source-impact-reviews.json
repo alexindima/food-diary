@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d27d5cff0ff7f59def97f80af66a9d4ad9f927720610862c0e41dac7c0ac9fd8"
+          "sha256": "a9ef70fd812b9005364ea3826a30a0f4d0fad5c632138578c0f47722e6f565d0"
         }
       ],
-      "reason": "Removed nowunused privatepassworddialog aftersingleconsumersearch; shared exportdialog replaces both pageactions with existingUIkitprimitives. No newproject/moduledependencies; nativeEN1280/RU390 and4882plus4tests verified.",
+      "reason": "Reviewed generated health changes from new direct weekly-goal-dialog spec. Existing feature ownership, project graph and dependency direction are unchanged; no removal candidates were acted on.",
       "baseRef": "HEAD",
-      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
-      "reviewedAtUtc": "2026-10-02T06:23:17.0889450Z"
+      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
+      "reviewedAtUtc": "2026-10-02T08:16:41.4920975Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "30aef56e9537f7725d4bdab1c3a7e7afe5514ff95b36ca55cbb8b15ece1a6f6f"
+          "sha256": "8e1dcf1b037720f9531a66d51020c02a563f348cf7193aa1071bf0f91c959746"
         }
       ],
-      "reason": "Reviewed both goal dialog/facade/measurement-service flows and native accepted imperial maxima. Goal max hint now shares existing two-decimal input precision constants within each feature; metric500kg/300cm limits, canonical conversion, API payloads, validation and data storage unchanged. Four component regression cases cover metric/imperial max parameters; native EN confirms hints1102.31lb and118.11in. Index changes track relocated constants and tests; no module boundary, auth, persistence, or consent changes. Initial lint failures fixed by named test fixtures and whitespace, final full verification running.",
+      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
       "baseRef": "HEAD",
-      "gitHead": "a8e2e688db7aa10d42476514db6336db9734fac5",
-      "reviewedAtUtc": "2026-10-02T07:53:22.3825313Z"
+      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
+      "reviewedAtUtc": "2026-10-02T08:19:13.4269430Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "30aef56e9537f7725d4bdab1c3a7e7afe5514ff95b36ca55cbb8b15ece1a6f6f"
+          "sha256": "8e1dcf1b037720f9531a66d51020c02a563f348cf7193aa1071bf0f91c959746"
         }
       ],
-      "reason": "Reviewed both goal dialog/facade/measurement-service flows and native accepted imperial maxima. Goal max hint now shares existing two-decimal input precision constants within each feature; metric500kg/300cm limits, canonical conversion, API payloads, validation and data storage unchanged. Four component regression cases cover metric/imperial max parameters; native EN confirms hints1102.31lb and118.11in. Index changes track relocated constants and tests; no module boundary, auth, persistence, or consent changes. Initial lint failures fixed by named test fixtures and whitespace, final full verification running.",
+      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
       "baseRef": "HEAD",
-      "gitHead": "a8e2e688db7aa10d42476514db6336db9734fac5",
-      "reviewedAtUtc": "2026-10-02T07:53:23.8428771Z"
+      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
+      "reviewedAtUtc": "2026-10-02T08:19:15.2049754Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "d30b0dfb99cc92092648329677708ee1804b46c52032cae35bdb2c2fd20a1298"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "7f8f552553f255481b80f1b7425f52affae4ed0bafb1ea097406fb6be9e3aa07"
+          "sha256": "ec8333c689869cf35067701e9b2a11b894579f7e3c726f081c8b07c977e8ce15"
         }
       ],
-      "reason": "Reviewed both goal dialog/facade/measurement-service flows and native accepted imperial maxima. Goal max hint now shares existing two-decimal input precision constants within each feature; metric500kg/300cm limits, canonical conversion, API payloads, validation and data storage unchanged. Four component regression cases cover metric/imperial max parameters; native EN confirms hints1102.31lb and118.11in. Index changes track relocated constants and tests; no module boundary, auth, persistence, or consent changes. Initial lint failures fixed by named test fixtures and whitespace, final full verification running.",
+      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
       "baseRef": "HEAD",
-      "gitHead": "a8e2e688db7aa10d42476514db6336db9734fac5",
-      "reviewedAtUtc": "2026-10-02T07:53:25.2405029Z"
+      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
+      "reviewedAtUtc": "2026-10-02T08:19:16.8452167Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a984a8e549a55101248b747f431819731d088e0402235eff93ecb5eaf406295c"
+          "sha256": "d30b0dfb99cc92092648329677708ee1804b46c52032cae35bdb2c2fd20a1298"
         }
       ],
-      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
+      "reason": "Reviewed weekly goal dialog template and consumer in weekly-check-in page. Existing API payloads and localization keys unchanged. Dismissible input now follows pending state; native ENdesktop and RU390 checks show blocked Escape, retained error/draft and restored dismissal; EN retryPUT200 preserves existing5day reminder-off goal.",
       "baseRef": "HEAD",
-      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
-      "reviewedAtUtc": "2026-10-02T06:48:24.0241719Z"
+      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
+      "reviewedAtUtc": "2026-10-02T08:16:43.4184683Z"
     },
     {
       "pageId": "workflow.query-context",

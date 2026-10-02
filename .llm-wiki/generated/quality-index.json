@@ -12938,11 +12938,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
-      "nonBlankLines": 79,
+      "nonBlankLines": 82,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.08
+      "structuralRiskScore": 12.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",

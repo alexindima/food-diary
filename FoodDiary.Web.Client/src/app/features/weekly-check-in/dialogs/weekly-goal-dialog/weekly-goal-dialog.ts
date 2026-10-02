@@ -64,6 +64,8 @@ export class WeeklyGoalDialogComponent {
             return;
         }
 
+        const wasDisabled = this.dialogRef.disableClose;
+        this.dialogRef.disableClose = true;
         this.isSaving.set(true);
         this.saveFailed.set(false);
         const reminderEnabled = this.reminderEnabled();
@@ -81,6 +83,7 @@ export class WeeklyGoalDialogComponent {
             this.saveFailed.set(true);
         } finally {
             this.isSaving.set(false);
+            this.dialogRef.disableClose = wasDisabled;
         }
     }
 

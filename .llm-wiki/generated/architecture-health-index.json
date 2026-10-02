@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -1122,7 +1122,7 @@
       "feature": "weekly-check-in",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.spec.ts"
     },
     {
       "class": "WeeklyReviewDialogComponent",
@@ -5020,16 +5020,6 @@
       "feature": "weekly-check-in",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeeklyGoalDialogComponent",
-      "selector": "fd-weekly-goal-dialog",
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

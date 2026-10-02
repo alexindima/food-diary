@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 482,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "inputs": 1551,
     "outputs": 530,
     "apiCalls": 272,
@@ -14976,7 +14976,7 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.spec.ts"
     },
     {
       "class": "WeeklyReviewDialogComponent",
@@ -31464,6 +31464,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "dismissible",
         "size",
         "subtitle",
         "title"
