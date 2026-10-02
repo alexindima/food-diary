@@ -7,7 +7,7 @@
     "outputs": 531,
     "apiCalls": 276,
     "templatesWithTranslations": 344,
-    "translationKeys": 2076,
+    "translationKeys": 2077,
     "consumerEdges": 1218,
     "consumedComponents": 306,
     "unconsumedComponents": 176
@@ -21634,6 +21634,7 @@
         "RECIPE_CARD.ADD_TO_MEAL",
         "RECIPE_DETAIL.DELETE_BUTTON",
         "RECIPE_DETAIL.DUPLICATE_BUTTON",
+        "RECIPE_DETAIL.DUPLICATE_ERROR",
         "RECIPE_DETAIL.EDIT_BUTTON"
       ]
     },

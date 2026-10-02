@@ -51,6 +51,11 @@
     </div>
 
     <div fdUiDialogFooter class="recipe-detail__footer fd-stack fd-gap-sm">
+        @if (duplicateError()) {
+            <p class="fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
+                {{ 'RECIPE_DETAIL.DUPLICATE_ERROR' | translate }}
+            </p>
+        }
         @if (warningMessage) {
             <span class="recipe-detail__warning fd-ui-body-sm">{{ warningMessage | translate }}</span>
         }

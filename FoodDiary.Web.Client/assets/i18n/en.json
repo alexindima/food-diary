@@ -641,6 +641,7 @@
             "ITEMS_MORE": "Show {{count}} more",
             "ITEMS_HIDE": "Hide"
         },
+        "DUPLICATE_ERROR": "Could not copy the recipe. Please try again.",
         "COOK_MODE": {
             "EMPTY": "No cooking steps yet.",
             "PROGRESS": "Step {{current}} of {{total}}",

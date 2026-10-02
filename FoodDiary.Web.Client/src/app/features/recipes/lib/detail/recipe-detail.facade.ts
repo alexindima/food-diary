@@ -26,6 +26,7 @@ export class RecipeDetailFacade {
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly isDuplicateInProgress = signal(false);
+    public readonly duplicateError = signal(false);
 
     private readonly cancelFavoriteCheck = new Subject<void>();
     private initialFavoriteState = false;
@@ -79,6 +80,7 @@ export class RecipeDetailFacade {
         }
 
         this.isDuplicateInProgress.set(true);
+        this.duplicateError.set(false);
         this.recipeService
             .duplicate(recipe.id)
             .pipe(take(1), takeUntilDestroyed(this.destroyRef))
@@ -88,6 +90,7 @@ export class RecipeDetailFacade {
                 },
                 error: () => {
                     this.isDuplicateInProgress.set(false);
+                    this.duplicateError.set(true);
                 },
             });
     }

@@ -641,6 +641,7 @@
             "ITEMS_MORE": "Показать ещё {{count}}",
             "ITEMS_HIDE": "Свернуть"
         },
+        "DUPLICATE_ERROR": "Не удалось скопировать рецепт. Попробуйте ещё раз.",
         "COOK_MODE": {
             "EMPTY": "Шагов приготовления пока нет.",
             "PROGRESS": "Шаг {{current}} из {{total}}",

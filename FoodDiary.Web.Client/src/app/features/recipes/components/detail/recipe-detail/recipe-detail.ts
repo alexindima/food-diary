@@ -39,6 +39,7 @@ export class RecipeDetailComponent {
 
     protected readonly isFavorite = this.recipeDetailFacade.isFavorite;
     protected readonly isFavoriteLoading = this.recipeDetailFacade.isFavoriteLoading;
+    protected readonly duplicateError = this.recipeDetailFacade.duplicateError;
     protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
     protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',

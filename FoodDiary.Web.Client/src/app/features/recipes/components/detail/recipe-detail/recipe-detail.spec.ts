@@ -4,7 +4,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -207,6 +207,21 @@ describe('RecipeDetailComponent actions', () => {
         component['onDuplicate']();
 
         expect(mockRecipeService.duplicate).toHaveBeenCalledWith('1');
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '2', action: 'Duplicate' }));
+    });
+
+    it('renders copy failure inside the open recipe dialog and clears it on retry', () => {
+        mockRecipeService.duplicate.mockReturnValueOnce(throwError(() => new Error('copy failed')));
+        component['onDuplicate']();
+        fixture.detectChanges();
+
+        const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]');
+        expect(alert?.textContent).toContain('RECIPE_DETAIL.DUPLICATE_ERROR');
+        expect(mockDialogRef.close).not.toHaveBeenCalled();
+
+        component['onDuplicate']();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '2', action: 'Duplicate' }));
     });
 

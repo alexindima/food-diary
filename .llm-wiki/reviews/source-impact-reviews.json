@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e9fb8b7cdad27de55b61bbedc0fc6b8a5cbd9cfb694961ae41e978249ccf766d"
+          "sha256": "551179619643882950f03d664f4533bb6cb8743bbe0563e1ce129cb5773b43fa"
         }
       ],
-      "reason": "Reviewed per-signal pending attention action guard, loading buttons, completion and error recovery; controlled browser duplicate reproduction and retry checks, focused regression tests. Admin dialog edits excluded.",
+      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "7d961518edc891d00589a88d43c7b7c54d35452d",
-      "reviewedAtUtc": "2026-10-02T13:44:20.4314854Z"
+      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
+      "reviewedAtUtc": "2026-10-02T14:15:21.5327329Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e9fb8b7cdad27de55b61bbedc0fc6b8a5cbd9cfb694961ae41e978249ccf766d"
+          "sha256": "551179619643882950f03d664f4533bb6cb8743bbe0563e1ce129cb5773b43fa"
         }
       ],
-      "reason": "Reviewed per-signal pending attention action guard, loading buttons, completion and error recovery; controlled browser duplicate reproduction and retry checks, focused regression tests. Admin dialog edits excluded.",
+      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "7d961518edc891d00589a88d43c7b7c54d35452d",
-      "reviewedAtUtc": "2026-10-02T13:44:22.9890167Z"
+      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
+      "reviewedAtUtc": "2026-10-02T14:15:22.8454119Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "1edff0093fccf6f684c5444dfa974c6371633940668d987e6f583e44926e56c7"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "96635eeb0046e8a8be6897d2500c3ec15ffa588c576fa08fe70bcd9d8e1ec72f"
+          "sha256": "bee7dceb3907cdfe233f583101c680996f4c6afdac74e43ee3e3d29e62c1fe5c"
         }
       ],
-      "reason": "Reviewed per-signal pending attention action guard, loading buttons, completion and error recovery; controlled browser duplicate reproduction and retry checks, focused regression tests. Admin dialog edits excluded.",
+      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "7d961518edc891d00589a88d43c7b7c54d35452d",
-      "reviewedAtUtc": "2026-10-02T13:44:25.3243375Z"
+      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
+      "reviewedAtUtc": "2026-10-02T14:15:24.0059719Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
+          "sha256": "1edff0093fccf6f684c5444dfa974c6371633940668d987e6f583e44926e56c7"
         }
       ],
-      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
+      "reason": "Reviewed recipe copy failure state rendered inside dialog, localized EN/RU text, retry recovery, native mobile visibility and real copy/edit/save/delete journey. Unrelated admin dialog edits excluded.",
       "baseRef": "HEAD",
-      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
-      "reviewedAtUtc": "2026-10-02T12:05:53.873356Z"
+      "gitHead": "5bfe08bb266e47df91c1e5ba990f83834c647025",
+      "reviewedAtUtc": "2026-10-02T14:15:20.3074854Z"
     },
     {
       "pageId": "workflow.query-context",

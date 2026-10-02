@@ -134,6 +134,11 @@ describe('RecipeDetailFacade actions', () => {
 
         expect(facade.isDuplicateInProgress()).toBe(false);
         expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(facade.duplicateError()).toBe(true);
+        facade.duplicate(createRecipe());
+        expect(facade.duplicateError()).toBe(false);
+        expect(recipeService.duplicate).toHaveBeenCalledTimes(2);
+        expect(dialogRef.close).toHaveBeenCalledWith(new RecipeDetailActionResult(DUPLICATED_RECIPE_ID, 'Duplicate', false));
     });
 });
 

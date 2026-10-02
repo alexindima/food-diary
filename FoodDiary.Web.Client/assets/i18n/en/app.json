@@ -564,6 +564,7 @@
         "EDIT_BUTTON": "Edit",
         "DELETE_BUTTON": "Delete",
         "DUPLICATE_BUTTON": "Duplicate & edit",
+        "DUPLICATE_ERROR": "Could not copy the recipe. Please try again.",
         "ADD_FAVORITE": "Add to favorites",
         "REMOVE_FAVORITE": "Remove from favorites",
         "WARNING_IN_USE": "Recipe is used in meals and cannot be removed.",
