@@ -283,6 +283,8 @@ Date input (value as `YYYY-MM-DD`).
 
 Providing `clearAriaLabel` enables an optional clear button that emits `null`; pass a localized accessible name.
 
+Escape closes an open calendar without dismissing its enclosing dialog, including when focus remains on the calendar button. Once the calendar is closed, Escape remains available to the enclosing dialog.
+
 **Inputs**
 
 - `label?: string`

@@ -31,6 +31,7 @@ let uniqueId = 0;
     templateUrl: './fd-ui-date-input.html',
     styleUrls: ['./fd-ui-date-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '(keydown)': 'onOverlayKeydown($event)' },
 })
 export class FdUiDateInputComponent implements FormValueControl<string | Date | null> {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -223,18 +224,16 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
                 break;
             }
             case 'Escape': {
-                if (this.isOpen()) {
-                    event.preventDefault();
-                    this.closeDatePicker();
-                }
+                this.onOverlayKeydown(event);
                 break;
             }
         }
     }
 
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && this.isOpen()) {
             event.preventDefault();
+            event.stopPropagation();
             this.closeDatePicker();
         }
     }

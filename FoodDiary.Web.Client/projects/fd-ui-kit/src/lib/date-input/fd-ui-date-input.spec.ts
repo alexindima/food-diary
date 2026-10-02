@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { fdUiFormatDateInputValue } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from './fd-ui-date-input';
 
@@ -55,6 +56,7 @@ describe('FdUiDateInputComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FdUiDateInputComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiDateInputComponent);
@@ -301,6 +303,25 @@ function registerStateTests(): void {
 
 function registerInteractionTests(): void {
     describe('interaction', () => {
+        it.each(['input', '.fd-ui-date-input__suffix'])('keeps the enclosing dialog open when escaping the calendar from %s', selector => {
+            const dismissParent = vi.fn();
+            const parent = document.createElement('div');
+            parent.addEventListener('keydown', dismissParent);
+            parent.append(host());
+            component['openDatePicker']();
+            fixture.detectChanges();
+
+            const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+            requireElement(selector).dispatchEvent(escape);
+
+            expect(component['isOpen']()).toBe(false);
+            expect(escape.defaultPrevented).toBe(true);
+            expect(dismissParent).not.toHaveBeenCalled();
+
+            requireElement(selector).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+            expect(dismissParent).toHaveBeenCalledOnce();
+        });
+
         it('should not change value when selected date is null', () => {
             component.value.set(MARCH_DATE_STRING);
             fixture.detectChanges();

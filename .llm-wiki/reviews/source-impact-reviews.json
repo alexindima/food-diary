@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8e1dcf1b037720f9531a66d51020c02a563f348cf7193aa1071bf0f91c959746"
+          "sha256": "0b01c6bb280a001f83526c6c7acaf845211911a24908a2692d3661dc9ec91a05"
         }
       ],
-      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
+      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:19:13.4269430Z"
+      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
+      "reviewedAtUtc": "2026-10-02T09:57:19.9676478Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -897,14 +897,18 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "0b01c6bb280a001f83526c6c7acaf845211911a24908a2692d3661dc9ec91a05"
+        },
+        {
           "path": ".llm-wiki/generated/runtime-topology.json",
           "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
         }
       ],
-      "reason": "Reviewed source fingerprint-only runtime topology refresh. Diet applies across unchanged owner-or-curated access; no runtime, auth, provider or delivery declarations change. PostgreSQL regression proves private exclusion and paging. Both workflows remain accurate.",
+      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cb7e4c9c4ac9e5545ebd388d652d6badee7e4fbb",
-      "reviewedAtUtc": "2026-10-02T09:28:59.1190547Z"
+      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
+      "reviewedAtUtc": "2026-10-02T09:57:21.5728080Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,18 +1048,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d30b0dfb99cc92092648329677708ee1804b46c52032cae35bdb2c2fd20a1298"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "ec8333c689869cf35067701e9b2a11b894579f7e3c726f081c8b07c977e8ce15"
+          "sha256": "98df99b8909800f5b6a865b565bf81d5e1458e94993f6c5cb14eed1c99c293f3"
         }
       ],
-      "reason": "Rechecked final weekly goal component spec: close control exists before save, disappears pending and returns after rejection; deferred tests retain draft/retry and restore existing disableClose. Native EN/RU supports pending Escape, 503 feedback and unchanged PUT200 retry. No API, security or ownership changes.",
+      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:19:16.8452167Z"
+      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
+      "reviewedAtUtc": "2026-10-02T09:57:22.6753490Z"
     },
     {
       "pageId": "workflow-verification-planner",

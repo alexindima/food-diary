@@ -1610,7 +1610,7 @@
       "role": "Component",
       "selector": "fd-ui-date-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "FdUiDatePickerButtonComponent",
