@@ -182,6 +182,38 @@ function registerSelectionTests(): void {
 
 function registerNavigationTests(): void {
     describe('navigation', () => {
+        it('selects the latest arrow target when Enter arrives before focus renders', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            expect(component.value()).toEqual(new Date(TEST_YEAR, MARCH_INDEX, TEST_DAY - 2));
+        });
+
+        it('selects the next month target before its new cells render', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            expect(component.value()).toEqual(new Date(TEST_YEAR, APRIL_INDEX, TEST_DAY));
+        });
+
+        it('continues navigation from the selected target while focus is pending', async () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            for (const key of ['ArrowLeft', 'Enter', 'ArrowRight', 'Enter']) {
+                original.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+            }
+            expect(component.value()).toEqual(MARCH_DATE);
+            fixture.detectChanges();
+            await waitForAsyncTasksAsync();
+            expect(document.activeElement?.getAttribute('data-date')).toBe('2025-03-15');
+        });
+
         it('should move display month with header controls', () => {
             component['showNextMonth']();
             expect(component.displayMonth()?.getMonth()).toBe(APRIL_INDEX);

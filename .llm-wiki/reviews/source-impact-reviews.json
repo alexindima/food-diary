@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5dfa6d1784a2f890764ea036a38a5ff10b5664c60aa465ff34d1e632c192286d"
+          "sha256": "aca39be8b2b471458779cbd3b668d74caa98f5a1f9b5813e5fcf4698a5eac824"
         }
       ],
-      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
+      "reason": "Reviewed calendar rapid keyboard selection and focus continuity, including retaining latest pending selection through further keyboard input. Three DOM regressions and all 482 UI-kit tests passed, scoped lint/guards and final app build passed. Native UTC+14 immediate ArrowLeft/Enter and PageDown/Enter select March7 and April7. Public API and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
-      "reviewedAtUtc": "2026-10-02T15:19:48.2917216Z"
+      "gitHead": "1a7f4fee496b3d1ecca79e9af50c8fffb8b4b578",
+      "reviewedAtUtc": "2026-10-02T15:44:13.9429645Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5dfa6d1784a2f890764ea036a38a5ff10b5664c60aa465ff34d1e632c192286d"
+          "sha256": "aca39be8b2b471458779cbd3b668d74caa98f5a1f9b5813e5fcf4698a5eac824"
         }
       ],
-      "reason": "Reviewed catalog exports as bounded admin-only transfer endpoints: existing handlers cap totals at 5000 and read public pages of 100. Four boundary tests verify 5000 succeeds in 50 pages, 5001 fails immediately, anonymous public scope and CancellationToken; five pagination guards passed. No production API or payload changes.",
+      "reason": "Reviewed calendar rapid keyboard selection and focus continuity, including retaining latest pending selection through further keyboard input. Three DOM regressions and all 482 UI-kit tests passed, scoped lint/guards and final app build passed. Native UTC+14 immediate ArrowLeft/Enter and PageDown/Enter select March7 and April7. Public API and localized copy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f1c723b07ac61883b7f541e2f91487f646955c39",
-      "reviewedAtUtc": "2026-10-02T15:19:49.3126249Z"
+      "gitHead": "1a7f4fee496b3d1ecca79e9af50c8fffb8b4b578",
+      "reviewedAtUtc": "2026-10-02T15:44:14.8032346Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

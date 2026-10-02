@@ -80,6 +80,7 @@ export class FdUiCalendarComponent {
     private readonly injector = inject(Injector);
     private readonly today = this.stripTime(new Date());
     private readonly activeDate = signal<Date>(this.today);
+    private pendingFocusDate: Date | null = null;
 
     public readonly value = model<Date | null>(null);
     public readonly displayMonth = model<Date | null>(null);
@@ -170,6 +171,9 @@ export class FdUiCalendarComponent {
         }
 
         const normalized = this.selectionMode() === 'week' ? this.startOfWeek(date) : this.stripTime(date);
+        if (this.pendingFocusDate !== null) {
+            this.focusCell(normalized);
+        }
         this.activeDate.set(normalized);
         this.value.set(normalized);
     }
@@ -183,7 +187,7 @@ export class FdUiCalendarComponent {
     }
 
     protected onCellKeydown(event: KeyboardEvent, date: Date): void {
-        const nextDate = this.getNextDateForKey(event, date);
+        const nextDate = this.getNextDateForKey(event, this.pendingFocusDate ?? date);
 
         if (nextDate === null) {
             return;
@@ -233,8 +237,13 @@ export class FdUiCalendarComponent {
     }
 
     private focusCell(date: Date): void {
+        this.pendingFocusDate = date;
         afterNextRender(
             () => {
+                if (this.pendingFocusDate?.getTime() !== date.getTime()) {
+                    return;
+                }
+                this.pendingFocusDate = null;
                 const iso = this.toIsoDate(date);
                 const host = this.host.nativeElement;
                 const cell = host.querySelector(`[data-date="${iso}"]`);
