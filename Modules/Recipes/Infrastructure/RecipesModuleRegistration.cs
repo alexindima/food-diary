@@ -25,6 +25,7 @@ public static class RecipesModuleRegistration {
         services.AddScoped<IRecipeRepository>(provider => new RecipeRepository(
             provider.GetRequiredService<RecipesDbContext>(), provider.GetRequiredService<IProductSnapshotReadService>(),
             provider.GetRequiredService<IRecipeUsageQuery>(), CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IRecipeCatalogIdReadService>(provider => new RecipeCatalogIdReadService(provider.GetRequiredService<RecipesDbContext>(), CreateTransactionSynchronizer(provider)));
         services.AddScoped<IRecipeReadRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());
         services.AddScoped<IRecipeWriteRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());
         services.AddScoped<IRecipeNutritionWriter>(static provider => provider.GetRequiredService<IRecipeRepository>());

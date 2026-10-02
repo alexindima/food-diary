@@ -1495,6 +1495,364 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/catalog/products/export",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogProductModel"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogProductModel"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogProductModel"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/catalog/products/import",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "409",
+            "413",
+            "500",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/catalog/products/preview",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CatalogProductModel",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "413",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/CatalogProductImportResult",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/catalog/recipes/export",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogRecipeModel"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogRecipeModel"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/CatalogRecipeModel"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/catalog/recipes/import",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "409",
+            "413",
+            "500",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/catalog/recipes/preview",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CatalogRecipeModel",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "413",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/CatalogRecipeImportResult",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/daily-advices",
       "Operations": [
         {
@@ -23241,6 +23599,296 @@
       ]
     },
     {
+      "Name": "CatalogProductImportResult",
+      "Properties": [
+        {
+          "Name": "errors",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "CatalogProductModel",
+      "Properties": [
+        {
+          "Name": "alcoholPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "barcode",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "baseAmount",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "baseUnit",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "brand",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "caloriesPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "carbsPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "category",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "defaultPortionAmount",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "fatsPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "fiberPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "name",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "productType",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "proteinsPerBase",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "CatalogRecipeImportResult",
+      "Properties": [
+        {
+          "Name": "errors",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "CatalogRecipeModel",
+      "Properties": [
+        {
+          "Name": "calculateNutritionAutomatically",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "category",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "cookTime",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "language",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "languageConfirmed",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "manualAlcohol",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "manualCalories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "manualCarbs",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "manualFats",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "manualFiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "manualProteins",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "name",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "prepTime",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "servings",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "steps",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/RecipeStepInput"
+        }
+      ]
+    },
+    {
       "Name": "ChangeClientTaskStatusHttpRequest",
       "Properties": [
         {
@@ -31348,6 +31996,44 @@
       ]
     },
     {
+      "Name": "RecipeIngredientInput",
+      "Properties": [
+        {
+          "Name": "amount",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        },
+        {
+          "Name": "amountText",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "nestedRecipeId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "productId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "textName",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "RecipeLikeStatusHttpResponse",
       "Properties": [
         {
@@ -31486,6 +32172,57 @@
         },
         {
           "Name": "stepNumber",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "title",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "RecipeStepInput",
+      "Properties": [
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "imageAssetIds",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "ingredients",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/RecipeIngredientInput"
+        },
+        {
+          "Name": "order",
           "Required": false,
           "Type": "integer",
           "Format": "int32",

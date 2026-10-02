@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1784,
-    "symbols": 689,
-    "routes": 102,
-    "features": 44,
-    "specs": 644,
+    "typescriptFiles": 1791,
+    "symbols": 692,
+    "routes": 104,
+    "features": 45,
+    "specs": 645,
     "localeFiles": 5,
     "roles": {
-      "Component": 467,
+      "Component": 468,
       "Directive": 12,
-      "Facade": 66,
+      "Facade": 67,
       "Other": 19,
       "Pipe": 4,
-      "Service": 121
+      "Service": 122
     }
   },
   "features": [
@@ -163,6 +163,22 @@
       "routes": [],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
+      ]
+    },
+    {
+      "area": "admin",
+      "name": "admin-catalog",
+      "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog",
+      "symbols": [
+        "AdminCatalogComponent",
+        "AdminCatalogFacade",
+        "AdminCatalogService"
+      ],
+      "routes": [
+        ""
+      ],
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.spec.ts"
       ]
     },
     {
@@ -1968,7 +1984,7 @@
       "role": "Component",
       "selector": "app-root",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "line": 58
+      "line": 60
     },
     {
       "name": "AdminAchievementsService",
@@ -2193,6 +2209,27 @@
       "selector": "fd-admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.ts",
       "line": 37
+    },
+    {
+      "name": "AdminCatalogService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
+      "line": 9
+    },
+    {
+      "name": "AdminCatalogFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/admin-catalog.facade.ts",
+      "line": 8
+    },
+    {
+      "name": "AdminCatalogComponent",
+      "role": "Component",
+      "selector": "fd-admin-catalog",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.ts",
+      "line": 21
     },
     {
       "name": "AdminDailyAdvicesService",
@@ -6285,94 +6322,99 @@
   ],
   "routes": [
     {
-      "path": "analytics/retention",
+      "path": "catalog",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 5
     },
     {
-      "path": "audit",
+      "path": "analytics/retention",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 9
     },
     {
-      "path": "bugs",
+      "path": "audit",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 13
     },
     {
-      "path": "",
+      "path": "bugs",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 17
     },
     {
-      "path": "users",
+      "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 21
     },
     {
-      "path": "ai-usage",
+      "path": "users",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 25
     },
     {
-      "path": "acquisition",
+      "path": "ai-usage",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 29
     },
     {
-      "path": "ai-prompts",
+      "path": "acquisition",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 33
     },
     {
-      "path": "billing",
+      "path": "ai-prompts",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 37
     },
     {
-      "path": "email-templates",
+      "path": "billing",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 41
     },
     {
+      "path": "email-templates",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
+      "line": 45
+    },
+    {
       "path": "outgoing-emails",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 46
+      "line": 50
     },
     {
       "path": "mail-inbox",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 51
+      "line": 55
     },
     {
       "path": "daily-advices",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 55
+      "line": 59
     },
     {
       "path": "lessons",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 59
+      "line": 63
     },
     {
       "path": "achievements",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 63
+      "line": 67
     },
     {
       "path": "moderation",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 67
+      "line": 71
     },
     {
       "path": "unauthorized",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 71
+      "line": 75
     },
     {
       "path": "**",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "line": 75
+      "line": 79
     },
     {
       "path": "",
@@ -6403,6 +6445,11 @@
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
       "line": 8
+    },
+    {
+      "path": "",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/admin-catalog.routes.ts",
+      "line": 7
     },
     {
       "path": "",
@@ -6808,8 +6855,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1032,
-      "russianProperties": 1032,
+      "englishProperties": 1065,
+      "russianProperties": 1065,
       "countsMatch": true
     },
     {

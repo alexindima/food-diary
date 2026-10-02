@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 472,
-    "componentsWithoutDirectSpecs": 130,
+    "components": 473,
+    "componentsWithoutDirectSpecs": 131,
     "inputs": 1510,
     "outputs": 508,
-    "apiCalls": 269,
-    "templatesWithTranslations": 332,
-    "translationKeys": 1970,
-    "consumerEdges": 1172,
+    "apiCalls": 273,
+    "templatesWithTranslations": 333,
+    "translationKeys": 1982,
+    "consumerEdges": 1174,
     "consumedComponents": 302,
-    "unconsumedComponents": 169
+    "unconsumedComponents": 170
   },
   "components": [
     {
@@ -327,6 +327,16 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
+    },
+    {
+      "class": "AdminCatalogComponent",
+      "selector": "fd-admin-catalog",
+      "feature": "admin-catalog",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminDailyAdvicesComponent",
@@ -15065,6 +15075,54 @@
       "resolvedUrlExpression": "this.url"
     },
     {
+      "feature": "admin-catalog",
+      "method": "GET",
+      "responseType": "CatalogProduct[]",
+      "urlExpression": "`${this.baseUrl}/products/export`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
+      "line": 15,
+      "publicMethod": "exportCatalog",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/catalog`",
+      "resolvedUrlExpression": "`${this.baseUrl}/products/export`"
+    },
+    {
+      "feature": "admin-catalog",
+      "method": "GET",
+      "responseType": "CatalogRecipe[]",
+      "urlExpression": "`${this.baseUrl}/recipes/export`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
+      "line": 16,
+      "publicMethod": "exportCatalog",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/catalog`",
+      "resolvedUrlExpression": "`${this.baseUrl}/recipes/export`"
+    },
+    {
+      "feature": "admin-catalog",
+      "method": "POST",
+      "responseType": "CatalogResult",
+      "urlExpression": "`${this.baseUrl}/${kind}/preview`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
+      "line": 21,
+      "publicMethod": "preview",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/catalog`",
+      "resolvedUrlExpression": "`${this.baseUrl}/${kind}/preview`"
+    },
+    {
+      "feature": "admin-catalog",
+      "method": "POST",
+      "responseType": "CatalogResult",
+      "urlExpression": "`${this.baseUrl}/${kind}/import`",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
+      "line": 26,
+      "publicMethod": "importItem",
+      "transport": "HttpClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/catalog`",
+      "resolvedUrlExpression": "`${this.baseUrl}/${kind}/import`"
+    },
+    {
       "feature": "admin-daily-advices",
       "method": "GET",
       "responseType": "AdminDailyAdvice[]",
@@ -18312,6 +18370,24 @@
         "ADMIN_COMMON.LOADING",
         "ADMIN_COMMON.NEXT",
         "ADMIN_COMMON.PREVIOUS"
+      ]
+    },
+    {
+      "feature": "admin-catalog",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
+      "keys": [
+        "ADMIN_CATALOG_TRANSFER.BUSY",
+        "ADMIN_CATALOG_TRANSFER.CONFIRM",
+        "ADMIN_CATALOG_TRANSFER.CONFIRM_HELP",
+        "ADMIN_CATALOG_TRANSFER.EMPTY",
+        "ADMIN_CATALOG_TRANSFER.EXPORT",
+        "ADMIN_CATALOG_TRANSFER.HELP",
+        "ADMIN_CATALOG_TRANSFER.IMPORT_DISABLED",
+        "ADMIN_CATALOG_TRANSFER.MEDIA",
+        "ADMIN_CATALOG_TRANSFER.PROGRESS",
+        "ADMIN_CATALOG_TRANSFER.REPORT",
+        "ADMIN_CATALOG_TRANSFER.SELECT_FILE",
+        "ADMIN_CATALOG_TRANSFER.SUMMARY"
       ]
     },
     {
@@ -25293,6 +25369,21 @@
         "disabled",
         "disabledReason",
         "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-catalog",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
+      "occurrences": 4,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "type",
+        "variant"
       ],
       "outputsHandled": []
     },
@@ -34043,6 +34134,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "admin-catalog",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",

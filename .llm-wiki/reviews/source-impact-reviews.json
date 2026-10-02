@@ -207,14 +207,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "1fef5bee2105f3ab91027a621544ceb13e12b772cf9e4e5aeb684d01b81e3fb8"
         }
       ],
-      "reason": "CI now verifies the selected API baseline contains the OpenAPI snapshot, preserving bootstrap fallback while clearing the expected native probe exit code; no API contract changed.",
+      "reason": "Reviewed new catalog endpoints and the generated running-API snapshot: six admin-role protected routes and six additive schemas; every prior endpoint and schema is semantically unchanged. The compatibility workflow remains current.",
       "baseRef": "HEAD",
-      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
-      "reviewedAtUtc": "2026-09-28T10:29:00.9249991Z"
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T10:56:22.5086711Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7c9479af4e536660f8a865e77d33cf9f6bf9c2848ba07fe3ec7fe5d41b18250e"
+          "sha256": "5d114a5a90554aff4652ec819a7f4d1b4677ce8539c0f6f4e046cde1e52c2d6b"
         }
       ],
-      "reason": "Reviewed regenerated architecture health: PublicRecipeGalleryComponent now has a direct spec and leaves the missing-spec list; dependency graph and enforcement are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:58.180122Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:09.5585333Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,21 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "5ae874e3007773b3336826ada723f2172698f79b4353327e2cdf264b5bcc7c5e"
-        },
-        {
-          "path": "Shared/FoodDiary.Application.Contracts/AGENTS.md",
-          "sha256": "7eecb987ccbf5368f307ea7f9ab018180372b4f1e78e4eee81a4785aa623a7a7"
-        },
-        {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "391125250c4a2fd613282fbc5a662d820af5b75301b970cc404b890f1d194423"
+          "sha256": "68dbbd78aff4a2f795afd0794d3bdc838efe7632a0e7a4d60b02a3c5915a4430"
         }
       ],
-      "reason": "Reviewed canonical shared contract namespaces and public recipe query mappings, length constraints and OpenAPI snapshot. Owner contract guidance remains current; API compatibility against the last successful CI baseline passed.",
-      "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:26.0644741Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:12.9242709Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -783,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "247c0ee44863038e4c430b26a73ea0ade4369187c46f83e516292a6d4693be5b"
+          "sha256": "e2bad0d3159437a028bc25230a2fdd4e2e8eb688476741364819d1ea80a3ddb9"
         }
       ],
-      "reason": "Sensitive-data index changes only refresh source line locations. Public recipe tests verify hidden private ingredients and absence of owner identifiers and comments; no data lifecycle or provider changes.",
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
       "baseRef": "HEAD",
-      "gitHead": "aadd46930a12cc0622742ba9e08f6c4e90bee319",
-      "reviewedAtUtc": "2026-09-27T23:48:13.0219088Z"
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:18.4945880Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
+          "sha256": "0d3e2e1db2e7aaa82bbc0b2539ba3b3c0620c53ca24a0fefaca59699a1f2dcda"
         }
       ],
-      "reason": "Updated the generated quality index after the dependency-triggered lint compatibility change; the boolean behavior remains unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
-      "reviewedAtUtc": "2026-09-28T07:48:05.3599619Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:22.9264729Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
+          "sha256": "ec705f001141015d863da51b3634fe4e3b218d85f9d30cef591998e8e5e3f502"
         }
       ],
-      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
-      "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:57.1335445Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:25.8230357Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aeb98a4a4191cb3f0eb3d126f9f35e8d52bcd9bceb6bfdae576fc084b156f418"
+          "sha256": "0d3e2e1db2e7aaa82bbc0b2539ba3b3c0620c53ca24a0fefaca59699a1f2dcda"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7bc4dfdf028426dec5e9a2f60393aaed8376514c33e3e9f02473e8dccc06d1fe"
+          "sha256": "ec705f001141015d863da51b3634fe4e3b218d85f9d30cef591998e8e5e3f502"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "e2bad0d3159437a028bc25230a2fdd4e2e8eb688476741364819d1ea80a3ddb9"
         }
       ],
-      "reason": "No privacy or security boundary changed.",
-      "baseRef": "origin/master",
-      "gitHead": "b592854f0d32c4e1b1102ed2675511d674f01bc5",
-      "reviewedAtUtc": "2026-09-28T07:48:05.8368245Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:29.6834842Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
+          "sha256": "bc530a8c9dbd5cf125380828d4b791c916f3aff48f1379fad87581cd2d3b5c65"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d5e25df0563bbb8e58ab56cfe48e8db64eaa8681e6f9aef117ba1bb357db58e8"
+          "sha256": "880ea90a6b8489035ae11e9877976c5baadb9a3c71004a64af4a7deae2134c7b"
         }
       ],
-      "reason": "Reviewed frontend inventory diff: two new Recipes spec files and the public gallery direct-spec link are now discoverable. Existing trace behavior and evidence limitations remain accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:56.1880684Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:33.0250295Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1167,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3cb9a4cc9e90a306ed3008aa93b80a1b860045e5eb3072eeb4e33d24b8ea10ae"
+          "sha256": "bc530a8c9dbd5cf125380828d4b791c916f3aff48f1379fad87581cd2d3b5c65"
         }
       ],
-      "reason": "Reviewed frontend contract diff: the public gallery direct spec link is now indexed and missing-spec count decreases by one. Inputs, outputs and consumer edges are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "3ad02c988044b69a1cf6a1c32d4aec5683df3b74",
-      "reviewedAtUtc": "2026-09-28T01:46:57.2541167Z"
+      "reason": "Reviewed the catalog delta and refreshed generated indexes. Architecture: 2111 guardrails pass and owner-only no-tracking ID projections are inventoried. Backend contracts: new transfer DTOs dispatch existing owner create commands, preserve source IDs, and retain existing transaction ownership; 365 owner application tests pass, while PostgreSQL integration remains unverified because Docker is unavailable. Frontend contracts and tracing: the guarded lazy catalog route, component-scoped facade, locale pairs and six API calls were verified in source; 181 admin tests and rendered preview, dependency ordering, partial failure, retry, report download and mobile overflow checks pass. Privacy and security: public-only export excludes user IDs and private comments, admin authorization protects all routes, anonymous requests return 401 and private ID collisions are rejected. Runtime and quality: imports remain explicit per-record requests using existing mutation runners, with no new jobs, providers, migrations or cross-module aggregate writes. These generic workflow pages remain current; the generated changes add catalog navigation evidence rather than changing the documented review methods.",
+      "baseRef": "HEAD",
+      "gitHead": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+      "reviewedAtUtc": "2026-10-02T11:02:15.8339854Z"
     },
     {
       "pageId": "workflow.query-context",

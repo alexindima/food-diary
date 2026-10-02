@@ -87,7 +87,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? comment = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
-        Visibility visibility = Visibility.Public) {
+        Visibility visibility = Visibility.Public, ProductId? importId = null) {
         EnsureUserId(userId);
         DomainGuard.Defined(baseUnit, nameof(baseUnit));
         DomainGuard.Defined(productType, nameof(productType));
@@ -111,7 +111,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
 
         var product = new Product {
-            Id = ProductId.New(),
+            Id = importId ?? ProductId.New(),
             UserId = userId,
             Visibility = visibility,
         };

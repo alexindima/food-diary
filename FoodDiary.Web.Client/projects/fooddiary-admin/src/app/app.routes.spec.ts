@@ -9,6 +9,7 @@ import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.rou
 import { adminAuditRoutes } from './features/admin-audit/admin-audit.routes';
 import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
 import { adminBugsRoutes } from './features/admin-bugs/admin-bugs.routes';
+import { adminCatalogRoutes } from './features/admin-catalog/admin-catalog.routes';
 import { adminDailyAdvicesRoutes } from './features/admin-daily-advices/admin-daily-advices.routes';
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
@@ -20,6 +21,7 @@ import { adminRetentionRoutes } from './features/admin-retention/admin-retention
 import { adminUsersRoutes } from './features/admin-users/admin-users.routes';
 
 const protectedFeatureRoutes: Routes[] = [
+    adminCatalogRoutes,
     adminRetentionRoutes,
     adminAuditRoutes,
     adminBugsRoutes,
