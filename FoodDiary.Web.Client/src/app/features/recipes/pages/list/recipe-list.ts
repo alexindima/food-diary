@@ -185,7 +185,7 @@ export class RecipeListComponent {
     }
 
     protected retryLoad(): void {
-        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
+        this.reloadCurrentPage();
     }
 
     protected async onAddRecipeClickAsync(): Promise<void> {

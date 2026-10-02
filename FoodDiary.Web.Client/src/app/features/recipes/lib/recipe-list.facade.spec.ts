@@ -437,6 +437,26 @@ describe('RecipeListFacade edge cases', () => {
 });
 
 describe('RecipeListFacade recovery and navigation', () => {
+    it('retains the requested later page after loading fails', () => {
+        recipeService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        facade.loadRecipes(2, PAGE_LIMIT, {}, false).subscribe();
+
+        expect(facade.currentPageIndex()).toBe(1);
+        expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
+        expect(facade.recipeData.isLoading()).toBe(false);
+    });
+
+    it.each([false, true])('resets the retry page when a new first-page query fails: filtered=%s', filtered => {
+        facade.currentPageIndex.set(1);
+        recipeService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
+
+        facade.loadRecipes(1, PAGE_LIMIT, filtered ? { search: 'Rice', hasImage: false } : {}, filtered).subscribe();
+
+        expect(facade.currentPageIndex()).toBe(0);
+        expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
+    });
+
     it('preserves favorite count after refresh failure and releases loading state', async () => {
         facade.favoriteTotalCount.set(2);
         favoriteRecipeService.getPage.mockReturnValueOnce(throwError(() => new Error('offline')));

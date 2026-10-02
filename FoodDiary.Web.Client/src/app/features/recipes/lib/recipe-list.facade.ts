@@ -74,6 +74,7 @@ export class RecipeListFacade {
         }
         this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
         this.cancelLoad.next();
+        this.currentPageIndex.set(page - 1);
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
@@ -104,6 +105,7 @@ export class RecipeListFacade {
     public loadInitialOverview(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
         this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
         this.cancelLoad.next();
+        this.currentPageIndex.set(page - 1);
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;

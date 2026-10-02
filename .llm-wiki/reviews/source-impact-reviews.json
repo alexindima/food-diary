@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e62868b5cf2a3fa9e26a16cb881861316d1ddd4d9e931ceecc53e9d70f49859a"
+          "sha256": "2f4426ef3c0ead802da9cfd707612b4f14e945b93d71174ef0bfd29e259f251f"
         }
       ],
-      "reason": "Reviewed bounded history error state, preserving loaded rows and pagination, pending request guard and same-page recovery. New service/facade regressions and186executed tests provide behavior evidence; quality index remains static navigation.",
+      "reason": "RecipeListFacade request-page tracking and RecipeListComponent retry have regression coverage for failed later pages and filtered or unfiltered first-page resets; 60 focused tests pass and native 503 retry restores page 2. The quality index remains navigation evidence, not execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
-      "reviewedAtUtc": "2026-10-02T20:11:09.3285763Z"
+      "gitHead": "2dfe9348c0321e9a79694c6441df8681f4268bfe",
+      "reviewedAtUtc": "2026-10-02T20:32:31.0895625Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e62868b5cf2a3fa9e26a16cb881861316d1ddd4d9e931ceecc53e9d70f49859a"
+          "sha256": "2f4426ef3c0ead802da9cfd707612b4f14e945b93d71174ef0bfd29e259f251f"
         }
       ],
-      "reason": "Reviewed history failure handling: UI stores an existing translation key and preserves owner-scoped records; API error propagation adds no credentials, logs, provider sharing or persistence. Browser-only failure fixtures and read-only real paging checks verify recovery.",
+      "reason": "Reviewed recipe retry diff: transient requested-page signals and existing reload delegation preserve search filters and includePublic ownership choice. No authentication, authorization, credentials, provider, logging or private-data lifecycle changes. Native fixtures inject 503 without catalog data mutations.",
       "baseRef": "HEAD",
-      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
-      "reviewedAtUtc": "2026-10-02T20:11:10.8347085Z"
+      "gitHead": "2dfe9348c0321e9a79694c6441df8681f4268bfe",
+      "reviewedAtUtc": "2026-10-02T20:32:34.1379505Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -324,9 +324,25 @@ describe('RecipeListComponent search and recovery', () => {
     it('retries loading and delegates new recipe navigation', async () => {
         const { component } = setupComponent();
         component['retryLoad']();
-        expect(facade.loadInitialOverview).toHaveBeenCalledTimes(2);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
         await component['onAddRecipeClickAsync']();
         expect(facade.navigateToAddRecipeAsync).toHaveBeenCalledTimes(1);
+    });
+
+    it('retries the requested page with the current search and filters', () => {
+        const { component } = setupComponent();
+        facade.currentPageIndex.set(SECOND_PAGE_INDEX);
+        component['searchModel'].update(model => ({ ...model, search: 'Rice', onlyMine: true, hasImage: false }));
+
+        component['retryLoad']();
+
+        expect(facade.loadRecipes).toHaveBeenCalledWith(
+            SECOND_PAGE,
+            PAGE_SIZE,
+            { ...emptyRecipeFilters(), search: 'Rice', hasImage: false },
+            true,
+        );
+        expect(facade.loadInitialOverview).toHaveBeenCalledTimes(1);
     });
 
     it('keeps unavailable favorites from opening or adding a meal', () => {
