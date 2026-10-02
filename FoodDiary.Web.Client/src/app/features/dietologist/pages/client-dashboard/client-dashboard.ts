@@ -18,7 +18,7 @@ import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, t
 
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { formatDateInputValue, normalizeEndOfLocalDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type {
     ClientSummary,
@@ -477,7 +477,7 @@ export class ClientDashboardComponent {
                     .createTask(client.userId, {
                         title: value.title.trim(),
                         details: value.details.trim() === '' ? null : value.details.trim(),
-                        dueAtUtc: dueDate?.toISOString() ?? null,
+                        dueAtUtc: dueDate === null ? null : normalizeEndOfLocalDay(dueDate).toISOString(),
                     })
                     .pipe(takeUntilDestroyed(this.destroyRef)),
             );

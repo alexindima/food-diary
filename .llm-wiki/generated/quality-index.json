@@ -759,14 +759,6 @@
       "structuralRiskScore": 85.38
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 644,
-      "decisionPoints": 48,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 84.88
-    },
-    {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "nonBlankLines": 177,
       "decisionPoints": 54,
@@ -781,6 +773,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 84.32
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
+      "nonBlankLines": 644,
+      "decisionPoints": 47,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 83.38
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.ts",
@@ -8963,10 +8963,10 @@
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
       "nonBlankLines": 644,
-      "decisionPoints": 48,
+      "decisionPoints": 47,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 84.88
+      "structuralRiskScore": 83.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.ts",

@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "73e44bad2cb85a7f1b31c3c0f63ee208ecf32f6ff94700d6bc9f46b9579a3ee3"
+          "sha256": "9c5494ffebad78616582484ff5d28aee2b21b18c75e3be4e5677c7cd3b84ef62"
         }
       ],
-      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
+      "reason": "Reviewed date-only task deadline conversion to local end of day, existing UTC API compatibility, focused regression cases and native creation/completion. Auth test fixtures aligned with current cookie-only refresh contract; no runtime auth change.",
       "baseRef": "HEAD",
-      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
-      "reviewedAtUtc": "2026-10-02T12:12:08.6547717Z"
+      "gitHead": "580514d44c5eed41c9023d29bb42dabb3dc93caf",
+      "reviewedAtUtc": "2026-10-02T13:12:12.2129195Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,21 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "73e44bad2cb85a7f1b31c3c0f63ee208ecf32f6ff94700d6bc9f46b9579a3ee3"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "960414f07538b13a7ad5632cbbb0f981a3dda2ef4a94d1cae0f81e74e31c6daf"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e771ce55b13fedfea07c7caf5437471d2e1d80a253bac9f591d117786e4b2c84"
+          "sha256": "9c5494ffebad78616582484ff5d28aee2b21b18c75e3be4e5677c7cd3b84ef62"
         }
       ],
-      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
+      "reason": "Reviewed date-only task deadline conversion to local end of day, existing UTC API compatibility, focused regression cases and native creation/completion. Auth test fixtures aligned with current cookie-only refresh contract; no runtime auth change.",
       "baseRef": "HEAD",
-      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
-      "reviewedAtUtc": "2026-10-02T12:12:10.9106319Z"
+      "gitHead": "580514d44c5eed41c9023d29bb42dabb3dc93caf",
+      "reviewedAtUtc": "2026-10-02T13:12:13.5339431Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

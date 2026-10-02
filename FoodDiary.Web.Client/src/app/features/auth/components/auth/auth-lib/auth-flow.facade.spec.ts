@@ -149,7 +149,6 @@ function createApiError(error: string): unknown {
 function createAuthResponse(language: string): AuthResponse {
     return {
         accessToken: 'access-token',
-        refreshToken: 'refresh-token',
         user: {
             id: 'user-id',
             email: 'user@example.com',

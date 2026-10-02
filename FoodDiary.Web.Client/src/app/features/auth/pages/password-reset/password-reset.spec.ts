@@ -25,7 +25,6 @@ const USER: User = {
 };
 const AUTH_RESPONSE: AuthResponse = {
     accessToken: 'access-token',
-    refreshToken: 'refresh-token',
     user: USER,
 };
 const DEFAULT_QUERY_PARAMS = { userId: 'user-1', token: 'tok-abc' };

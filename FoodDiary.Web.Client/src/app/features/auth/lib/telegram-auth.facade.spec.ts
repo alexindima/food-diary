@@ -77,7 +77,6 @@ describe('TelegramAuthFacade', () => {
     it('accepts a Telegram-only session and clears the used ticket', async () => {
         const response: AuthResponse = {
             accessToken: 'access',
-            refreshToken: 'refresh',
             user: {
                 id: 'user',
                 email: null,

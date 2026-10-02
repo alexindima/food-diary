@@ -20,6 +20,10 @@ const SELECTED_DAY = 22;
 const PERIOD_START_DAY = 16;
 const MAY_MONTH_INDEX = 4;
 const OVERLONG_TEMPLATE_NAME_LENGTH = 121;
+const DEADLINE_HOUR = 23;
+const DEADLINE_MINUTE = 59;
+const DEADLINE_SECOND = 59;
+const DEADLINE_MILLISECOND = 999;
 let dietologistService: {
     getMyClients: ReturnType<typeof vi.fn>;
     getClientDashboard: ReturnType<typeof vi.fn>;
@@ -80,6 +84,37 @@ beforeEach(() => {
 describe('ClientDashboardComponent', () => {
     registerLoadingTests();
     registerActionTests();
+});
+
+describe('ClientDashboardComponent task deadlines', () => {
+    it.each(['2026-10-02', '2026-03-29', '2026-10-25'])('keeps the whole selected due day available: %s', async dueDate => {
+        createComponent('client-1');
+        dietologistService.createTask.mockReturnValue(of({ id: 'task-1' }));
+        component['taskModel'].set({ title: 'Daily task', details: '', dueDate });
+
+        await component['submitTaskAsync']();
+
+        const [year, month, day] = dueDate.split('-').map(Number);
+        expect(dietologistService.createTask).toHaveBeenCalledWith('client-1', {
+            title: 'Daily task',
+            details: null,
+            dueAtUtc: new Date(year, month - 1, day, DEADLINE_HOUR, DEADLINE_MINUTE, DEADLINE_SECOND, DEADLINE_MILLISECOND).toISOString(),
+        });
+    });
+
+    it('preserves an optional absent deadline', async () => {
+        createComponent('client-1');
+        dietologistService.createTask.mockReturnValue(of({ id: 'task-1' }));
+        component['taskModel'].set({ title: 'Anytime task', details: '', dueDate: '' });
+
+        await component['submitTaskAsync']();
+
+        expect(dietologistService.createTask).toHaveBeenCalledWith('client-1', {
+            title: 'Anytime task',
+            details: null,
+            dueAtUtc: null,
+        });
+    });
 });
 
 function registerLoadingTests(): void {
