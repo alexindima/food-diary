@@ -1327,6 +1327,42 @@
         "REQUIRED_FIELDS": "Complete the required fields.",
         "PERIOD_90d": "Last 90 days"
     },
+    "ADMIN_CATALOG_TRANSFER": {
+        "BUSY": "Wait for the current operation to finish.",
+        "IMPORT_DISABLED": "Review a file without errors and with entries ready to import.",
+        "IMPORT_STOPPED": "Import stopped. The report shows entries already saved. Fix the error or retry.",
+        "FILE_TOO_LARGE": "The file exceeds 5 MB.",
+        "EXPORT": "Export catalog",
+        "HELP": "JSON version 1 preserves IDs, nutrition, steps and ingredient links. Imports add new public entries; existing IDs are skipped. Up to 5000 entries of each type and 5 MB per import file.",
+        "EMPTY": "Choose a catalog file to review its contents before importing.",
+        "PRODUCT_LINKS": "A recipe references a product absent from the file and the public catalog.",
+        "RECIPE_LINKS": "Recipe references are missing or contain a cycle.",
+        "SELECT_FILE": "Choose JSON and preview",
+        "CONFIRM": "Confirm import",
+        "SUMMARY": "Ready: {{ready}} · Skipped: {{skipped}} · Imported: {{imported}} · Errors: {{invalid}}",
+        "STATUS": {
+            "failed": "Failed",
+            "imported": "Imported",
+            "invalid": "Invalid",
+            "ready": "Ready",
+            "skipped": "Already exists"
+        },
+        "EXPORT_FAILED": "Export failed. Check your connection and the catalog size, then retry.",
+        "REPORT": "Download report",
+        "KIND": {
+            "products": "Product",
+            "recipes": "Recipe"
+        },
+        "ITEM_FAILED": "The entry could not be imported. Check its data and ingredient references, then retry.",
+        "DUPLICATE_IDS": "The file contains duplicate IDs.",
+        "MEDIA": "Images are transferred as URLs only. Media files, galleries, private comments and provider links are not included.",
+        "PROGRESS": "Processing: {{completed}} / {{total}}",
+        "PREVIEW_FAILED": "The file could not be validated. Check its format and your connection.",
+        "INVALID_FILE": "Unsupported catalog file. Use fooddiary-catalog JSON version 1 with products and recipes arrays.",
+        "CONFIRM_HELP": "Review the results before importing. Each entry is saved separately; an error stops the operation. You can retry safely using the same IDs.",
+        "TITLE": "Catalog",
+        "SUBTITLE": "Import and export public products and recipes"
+    },
     "ADMIN_NAV": {
         "DASHBOARD": "Dashboard",
         "ACCOUNTS": "Accounts",

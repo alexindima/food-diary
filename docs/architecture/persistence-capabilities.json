@@ -2,6 +2,16 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs": {
+      "module": "Products",
+      "capabilities": ["entity:Product"],
+      "reason": "Owner-only no-tracking scalar identity/public-status lookup for add-only administrative catalog imports. Joins the existing transaction through the registration synchronizer; returns no aggregate or private content and performs no writes."
+    },
+    "Modules/Recipes/Infrastructure/Services/RecipeCatalogIdReadService.cs": {
+      "module": "Recipes",
+      "capabilities": ["entity:Recipe"],
+      "reason": "Owner-only no-tracking scalar identity/public-status lookup for add-only administrative catalog imports. Joins the existing transaction through the registration synchronizer; returns no aggregate or private content and performs no writes."
+    },
     "Modules/Hydration/Infrastructure/Persistence/EfHydrationOperationTransactionRunner.cs": {
       "module": "Hydration",
       "capabilities": [
@@ -1643,7 +1653,7 @@
         "tracked:Product"
       ],
       "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "4bee041fa27c4d10ebc5129901f0793e9d8829fb39706a07c3e74480b78a3e74"
+      "technicalSourceSha256": "ad42dc1a0a1300651dd111055863b552f4326cf16d0e7909e356e935224dc708"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1661,7 +1671,7 @@
         "context:Database"
       ],
       "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "e9b9c7db4b0858cd2468b382b66b58aadd74a8e162ac1022132aac8cf3de123c"
+      "technicalSourceSha256": "fcafd9cc0ae8aa9dbbae6c27f009b6a170ace89d360661e1959c08812e94beb9"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",

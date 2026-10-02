@@ -6,6 +6,10 @@ export const routes: Routes = [
         loadChildren: async () => import('./features/admin-meal-plans/admin-meal-plans.routes').then(module => module.adminMealPlansRoutes),
     },
     {
+        path: 'catalog',
+        loadChildren: async () => import('./features/admin-catalog/admin-catalog.routes').then(module => module.adminCatalogRoutes),
+    },
+    {
         path: 'analytics/retention',
         loadChildren: async () => import('./features/admin-retention/admin-retention.routes').then(module => module.adminRetentionRoutes),
     },

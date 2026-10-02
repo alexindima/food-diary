@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
-    "routedStandaloneComponents": 66,
+    "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 42,
+    "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -1316,6 +1316,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminCatalogComponent",
+      "selector": "fd-admin-catalog",
+      "feature": "admin-catalog",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -4793,70 +4803,6 @@
       "specPath": null
     },
     {
-      "class": "ImageGalleryEditorComponent",
-      "selector": "fd-image-gallery-editor",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
-      "inputs": [
-        {
-          "name": "compact",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "editor",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "photos",
-          "type": "ImageSelection[]",
-          "required": true
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "scanning",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "reviewing",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "cover",
-          "type": "ImageSelection | null",
-          "required": false
-        },
-        {
-          "name": "uploading",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "photosChange",
-          "type": "ImageSelection[]"
-        },
-        {
-          "name": "coverChange",
-          "type": "ImageSelection | null"
-        },
-        {
-          "name": "uploadingChange",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "NutritionEditorMessagesComponent",
       "selector": "fd-nutrition-editor-messages",
       "feature": "shared",
@@ -5067,6 +5013,26 @@
       "coveredThrough": []
     },
     {
+      "name": "AdminCatalogProductsController",
+      "role": "Controller",
+      "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "line": 19,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminCatalogRecipesController",
+      "role": "Controller",
+      "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "line": 19,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
@@ -5111,6 +5077,26 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
       "line": 17,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ExportCatalogProductsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQueryHandler.cs",
+      "line": 10,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ExportCatalogRecipesQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQueryHandler.cs",
+      "line": 11,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -56,6 +56,7 @@ public sealed class CreateProductCommandHandler(
             comment: command.Comment,
             imageUrl: values.ImageUrl,
             imageAssetId: values.ImageAssetId,
-            visibility: values.Visibility
+            visibility: values.Visibility,
+            importId: command.CatalogImportId is { } id ? new FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId(id) : null
         );
 }

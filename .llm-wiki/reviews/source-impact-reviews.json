@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "af1cbad048da5b5b1955be822e6627eb3dd81739b3528e91725489b4c689ee10"
+          "sha256": "8f323608fefdd0feaf2da7213ae4d062ea38df18fd7e7bb5542a19bbe63c1edc"
         }
       ],
-      "reason": "Reviewed intentional removal of AuthenticationHttpResponse.refreshToken, cookie-based browser consumers and updated integration tests; compatibility workflow remains accurate.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:22:05.6379949Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:05.0421151Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8dc7a62ee1d10d5081a30da42a73ec501149a6e2c0214b1f6d1b303c0cedd293"
+          "sha256": "c703ca69928033cac55b7367d63bae4cc4353752d89fdc3eabf5598fd4693b1d"
         }
       ],
-      "reason": "Reviewed existing production edges: host uses an Identity capability, infrastructure owns the adapter; no production references added.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:16.9845372Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:05.6985878Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "f125011625d3377d9299a7c71db4429c6d6398fee1ed16a8230eac7e4b056d28"
+          "sha256": "b4c77ae036906d9d3b416fe4863e471a3179b460d1a383991591538e6b8ac57a"
         }
       ],
-      "reason": "Reviewed new scalar session capability and adapter, JSON refreshToken removal and all cookie consumers; full solution compiles.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:19.205053Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:07.0192339Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -763,13 +763,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "cb23cababd1f8f1fa2ea79736430bd4d2e5b097cbede5d306f36681bef95bae4"
+          "sha256": "e771ce55b13fedfea07c7caf5437471d2e1d80a253bac9f591d117786e4b2c84"
         }
       ],
-      "reason": "Reviewed credential minimization in JSON, profile HTML encoding, cancellation and absence of new logs/sharing; image policies remain outside this patch.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:20.9971725Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:07.7685056Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dde069e167f9a3e54d173446114470afa73ac6332a56df76bf28e9378e032cc6"
+          "sha256": "73e44bad2cb85a7f1b31c3c0f63ee208ecf32f6ff94700d6bc9f46b9579a3ee3"
         }
       ],
-      "reason": "Reviewed combined index after committed master integration: security regressions retain3408passing backend cases and66auth frontend cases; inherited cycle/barcode tests remain intact. Index is navigation evidence; PostgreSQL endpoint verification remains blocked by Docker.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "8c114dcdf9bd6b62a23f3f31d4a012c72e01b59e",
-      "reviewedAtUtc": "2026-10-02T11:49:13.6128178Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:08.6547717Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "912f2da0067409e3241a5ca42cedd662b290cceec219fb912020b847f33ae476"
+          "sha256": "960414f07538b13a7ad5632cbbb0f981a3dda2ef4a94d1cae0f81e74e31c6daf"
         }
       ],
-      "reason": "Reviewed added uncached owned-session lookup and MailRelay pre-persistence limits; existing transaction synchronization, cancellation, retries and delivery retained.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:25.9260894Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:09.7261946Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,13 +898,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dde069e167f9a3e54d173446114470afa73ac6332a56df76bf28e9378e032cc6"
+          "sha256": "73e44bad2cb85a7f1b31c3c0f63ee208ecf32f6ff94700d6bc9f46b9579a3ee3"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "960414f07538b13a7ad5632cbbb0f981a3dda2ef4a94d1cae0f81e74e31c6daf"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "e771ce55b13fedfea07c7caf5437471d2e1d80a253bac9f591d117786e4b2c84"
         }
       ],
-      "reason": "Reviewed combined index after committed master integration: security regressions retain3408passing backend cases and66auth frontend cases; inherited cycle/barcode tests remain intact. Index is navigation evidence; PostgreSQL endpoint verification remains blocked by Docker.",
+      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "8c114dcdf9bd6b62a23f3f31d4a012c72e01b59e",
-      "reviewedAtUtc": "2026-10-02T11:49:18.0885546Z"
+      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
+      "reviewedAtUtc": "2026-10-02T12:12:10.9106319Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1052,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "76a802e88c6b22bcf9683814bc4ec8bd351aba6c96f7a29b8c5ea531ebb34c19"
+          "sha256": "e97ad33eb6c9b83e3a7fe22c611bb046ce8dae1556e84e2d318414dab3b27fc3"
         }
       ],
-      "reason": "Reviewed local audit fixes: cycle prediction templates translate status keys with existing sufficiency precedence and safe unknown fallback; EN/RU labels align. Barcode scanner stops delayed media streams after close/destroy and prevents resumed scans; controlled browser reproduction and focused regressions cover cleanup. No API, persistence, credentials, ownership or provider sharing changes.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:20:58.8020072Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:53.1474801Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d30b0dfb99cc92092648329677708ee1804b46c52032cae35bdb2c2fd20a1298"
+          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
         }
       ],
-      "reason": "Reviewed weekly goal dialog template and consumer in weekly-check-in page. Existing API payloads and localization keys unchanged. Dismissible input now follows pending state; native ENdesktop and RU390 checks show blocked Escape, retained error/draft and restored dismissal; EN retryPUT200 preserves existing5day reminder-off goal.",
+      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:16:43.4184683Z"
+      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
+      "reviewedAtUtc": "2026-10-02T12:05:53.873356Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -96,12 +96,12 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         ImageAssetId? imageAssetId = null,
         int? prepTime = null,
         int? cookTime = null,
-        Visibility visibility = Visibility.Public, string language = "en") {
+        Visibility visibility = Visibility.Public, string language = "en", RecipeId? importId = null) {
         EnsureUserId(userId);
         DomainGuard.Defined(visibility, nameof(visibility));
 
         var recipe = new Recipe {
-            Id = RecipeId.New(),
+            Id = importId ?? RecipeId.New(),
             UserId = userId,
         };
         recipe.ApplyDetailsState(new RecipeDetailsState(

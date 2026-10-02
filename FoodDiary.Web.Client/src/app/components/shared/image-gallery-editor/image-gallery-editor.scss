@@ -125,6 +125,7 @@
     }
     .recognition-photos__strip > fd-image-upload-field {
         grid-column: 1 / -1;
+        width: 100%;
         --image-preview-height: calc(125cqw + var(--fd-space-sm) / 4);
     }
     .recognition-photos__strip > .recognition-photos__uploader-hidden {

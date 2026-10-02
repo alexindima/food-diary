@@ -25,6 +25,7 @@ public record CreateRecipeCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeModel>>, IUserRequest {
+    internal Guid? CatalogImportId { get; init; }
     public bool LanguageConfirmed { get; init; }
     public string? Language { get; init; }
     public IReadOnlyList<Guid>? ImageAssetIds { get; init; }

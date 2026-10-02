@@ -416,8 +416,7 @@
     }
 
     &--appearance-hidden {
-        .image-upload-field__dropzone,
-        .image-upload-field__error {
+        .image-upload-field__dropzone {
             display: none;
         }
     }

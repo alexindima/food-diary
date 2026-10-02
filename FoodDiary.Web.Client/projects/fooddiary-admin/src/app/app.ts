@@ -27,6 +27,7 @@ const ADMIN_PAGE_HEADERS: Readonly<Record<string, AdminPageHeader>> = {
     '/email-templates': { title: 'ADMIN_NAV.TEMPLATES', subtitle: 'ADMIN_SUBTITLE.TEMPLATES' },
     '/mail-inbox': { title: 'ADMIN_NAV.MAIL', subtitle: 'ADMIN_SUBTITLE.MAIL' },
     '/daily-advices': { title: 'ADMIN_NAV.DAILY_ADVICES', subtitle: 'ADMIN_SUBTITLE.DAILY_ADVICES' },
+    '/catalog': { title: 'ADMIN_CATALOG_TRANSFER.TITLE', subtitle: 'ADMIN_CATALOG_TRANSFER.SUBTITLE' },
     '/lessons': { title: 'ADMIN_NAV.LESSONS', subtitle: 'ADMIN_SUBTITLE.LESSONS' },
     '/achievements': { title: 'ADMIN_NAV.ACHIEVEMENTS', subtitle: 'ADMIN_SUBTITLE.ACHIEVEMENTS' },
     '/moderation': { title: 'ADMIN_NAV.MODERATION', subtitle: 'ADMIN_SUBTITLE.MODERATION' },
@@ -34,6 +35,7 @@ const ADMIN_PAGE_HEADERS: Readonly<Record<string, AdminPageHeader>> = {
 
 const ADMIN_TOOL_LINKS = [
     { id: 'meal-plans', icon: 'restaurant_menu', key: 'ADMIN_MEAL_PLANS.TITLE', route: '/meal-plans' },
+    { id: 'catalog', icon: 'import_export', key: 'ADMIN_CATALOG_TRANSFER.TITLE', route: '/catalog' },
     { id: 'ai-usage', icon: 'smart_toy', key: 'ADMIN_NAV.AI', route: '/ai-usage' },
     { id: 'retention', icon: 'timeline', key: 'ADMIN_NAV.RETENTION', route: '/analytics/retention' },
     { id: 'audit', icon: 'history', key: 'ADMIN_NAV.AUDIT', route: '/audit' },

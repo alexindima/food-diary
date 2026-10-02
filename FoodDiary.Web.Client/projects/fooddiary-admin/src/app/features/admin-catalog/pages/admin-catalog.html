@@ -1,0 +1,79 @@
+<div class="fd-grid fd-gap-md">
+    <p>{{ 'ADMIN_CATALOG_TRANSFER.HELP' | translate }}</p>
+    <p>{{ 'ADMIN_CATALOG_TRANSFER.MEDIA' | translate }}</p>
+    <div class="fd-row fd-gap-sm fd-flex-wrap">
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            [disabled]="busy()"
+            [disabledReason]="'ADMIN_CATALOG_TRANSFER.BUSY' | translate"
+            (click)="exportAsync()"
+        >
+            {{ 'ADMIN_CATALOG_TRANSFER.EXPORT' | translate }}
+        </fd-ui-button>
+        <!-- The UI kit has no JSON file picker; a labelled native input uses its button trigger. -->
+        <label for="catalog-file" hidden>{{ 'ADMIN_CATALOG_TRANSFER.SELECT_FILE' | translate }}</label>
+        <input
+            #fileInput
+            id="catalog-file"
+            type="file"
+            accept="application/json,.json"
+            hidden
+            [disabled]="busy()"
+            (change)="previewFileAsync($event)"
+        />
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            [disabled]="busy()"
+            [disabledReason]="'ADMIN_CATALOG_TRANSFER.BUSY' | translate"
+            (click)="fileInput.click()"
+        >
+            {{ 'ADMIN_CATALOG_TRANSFER.SELECT_FILE' | translate }}
+        </fd-ui-button>
+    </div>
+    @if (busy()) {
+        <p role="status">{{ 'ADMIN_CATALOG_TRANSFER.PROGRESS' | translate: { completed: completed(), total: total() } }}</p>
+    }
+    @if (error(); as errorKey) {
+        <p role="alert" class="fd-ui-error-text">{{ errorKey | translate }}</p>
+    }
+    @if (report().length > 0) {
+        <p role="status">{{ 'ADMIN_CATALOG_TRANSFER.SUMMARY' | translate: counts() }}</p>
+        <p>{{ 'ADMIN_CATALOG_TRANSFER.CONFIRM_HELP' | translate }}</p>
+        <div class="fd-row fd-gap-sm fd-flex-wrap">
+            <fd-ui-button
+                type="button"
+                [disabled]="!canImport()"
+                [disabledReason]="'ADMIN_CATALOG_TRANSFER.IMPORT_DISABLED' | translate"
+                (click)="importAsync()"
+            >
+                {{ 'ADMIN_CATALOG_TRANSFER.CONFIRM' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                [disabled]="busy()"
+                [disabledReason]="'ADMIN_CATALOG_TRANSFER.BUSY' | translate"
+                (click)="downloadReport()"
+            >
+                {{ 'ADMIN_CATALOG_TRANSFER.REPORT' | translate }}
+            </fd-ui-button>
+        </div>
+        @for (row of rows(); track row.kind + row.id) {
+            <article>
+                <strong>{{ row.name }}</strong>
+                <span>
+                    · {{ `ADMIN_CATALOG_TRANSFER.KIND.${row.kind}` | translate }} ·
+                    {{ `ADMIN_CATALOG_TRANSFER.STATUS.${row.status}` | translate }}</span
+                >
+                @for (detail of row.errors; track $index) {
+                    <p class="fd-ui-error-text">{{ detail | translate }}</p>
+                }
+            </article>
+        }
+        <fd-ui-pagination [length]="report().length" [pageSize]="pageSize" [pageIndex]="page()" (pageIndexChange)="page.set($event)" />
+    } @else if (!busy() && !error()) {
+        <p>{{ 'ADMIN_CATALOG_TRANSFER.EMPTY' | translate }}</p>
+    }
+</div>
