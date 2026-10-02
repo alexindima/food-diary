@@ -104,6 +104,7 @@ describe('FdUiDateInputComponent', () => {
     registerLabelTests();
     registerValueAccessorTests();
     registerStateTests();
+    registerCalendarFocusTests();
     registerInteractionTests();
 });
 
@@ -297,6 +298,53 @@ function registerStateTests(): void {
             fixture.detectChanges();
 
             expect(requireInputElement('.fd-ui-date-input__control').value).not.toBe('Today');
+        });
+    });
+}
+
+function registerCalendarFocusTests(): void {
+    describe('calendar focus', () => {
+        it.each(['escape', 'selection'])('returns calendar focus to the date field after %s', action => {
+            component.value.set(MARCH_DATE_STRING);
+            fixture.detectChanges();
+            component['openDatePicker']();
+            fixture.detectChanges();
+            const day = document
+                .getElementById(`${component.id()}-dialog`)
+                ?.querySelector<HTMLButtonElement>(`[data-date="${MARCH_DATE_STRING}"]`);
+            if (day === undefined || day === null) {
+                throw new Error('Expected selected calendar day to exist.');
+            }
+            day.focus();
+            expect(document.activeElement).toBe(day);
+
+            if (action === 'escape') {
+                component['onOverlayKeydown'](new KeyboardEvent('keydown', { key: 'Escape' }));
+            } else {
+                day.click();
+            }
+            fixture.detectChanges();
+
+            expect(component['isOpen']()).toBe(false);
+            expect(document.activeElement).toBe(requireInputElement('input'));
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+        });
+
+        it('keeps focus on an outside control when closing the calendar', () => {
+            const outside = document.createElement('button');
+            document.body.append(outside);
+            try {
+                component['openDatePicker']();
+                fixture.detectChanges();
+                outside.focus();
+                component['closeDatePicker']();
+                fixture.detectChanges();
+
+                expect(component['isOpen']()).toBe(false);
+                expect(document.activeElement).toBe(outside);
+            } finally {
+                outside.remove();
+            }
         });
     });
 }

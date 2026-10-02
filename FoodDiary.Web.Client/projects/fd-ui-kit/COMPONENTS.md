@@ -285,6 +285,8 @@ Providing `clearAriaLabel` enables an optional clear button that emits `null`; p
 
 Escape closes an open calendar without dismissing its enclosing dialog, including when focus remains on the calendar button. Once the calendar is closed, Escape remains available to the enclosing dialog.
 
+Closing the calendar restores focus to the date field when focus was inside the calendar, including after date selection and Escape.
+
 **Inputs**
 
 - `label?: string`

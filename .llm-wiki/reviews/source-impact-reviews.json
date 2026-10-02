@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0b01c6bb280a001f83526c6c7acaf845211911a24908a2692d3661dc9ec91a05"
+          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
         }
       ],
-      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
+      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
-      "reviewedAtUtc": "2026-10-02T09:57:19.9676478Z"
+      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
+      "reviewedAtUtc": "2026-10-02T10:19:09.6510763Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,17 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0b01c6bb280a001f83526c6c7acaf845211911a24908a2692d3661dc9ec91a05"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
+          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
         }
       ],
-      "reason": "Reviewed date-input host Escape behavior and DOM bubbling regressions. Generated changes only adjust component source line and structural metrics; no provider, privacy, authorization or transport change. Runtime browser proves open calendar Escape preserves the day draft, closed calendar permits enclosing dismissal. Workflow guidance remains accurate.",
+      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1c62d0d557220f10e299a5ae3d3cbeaf3d082af4",
-      "reviewedAtUtc": "2026-10-02T09:57:21.5728080Z"
+      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
+      "reviewedAtUtc": "2026-10-02T10:19:11.9855688Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

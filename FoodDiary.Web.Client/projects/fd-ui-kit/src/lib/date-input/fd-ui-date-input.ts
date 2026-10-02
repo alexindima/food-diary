@@ -164,10 +164,14 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             return;
         }
 
+        const restoreFocus = this.document.getElementById(`${this.id()}-dialog`)?.contains(this.document.activeElement) === true;
         this.isOpen.set(false);
         this.isFocused.set(false);
         this.touched.set(true);
         this.touch.emit();
+        if (restoreFocus && !this.disabled()) {
+            this.host.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
+        }
     }
 
     protected onDateSelect(value: Date | null): void {
