@@ -328,6 +328,7 @@ export type UpsertCycleDayPayload = {
 };
 
 export type UpsertCycleFactorPayload = {
+    factorId?: string;
     type: CycleFactorType;
     startDate: string;
     endDate?: string | null;

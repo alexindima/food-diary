@@ -6,6 +6,11 @@ namespace FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
 
 public sealed class UpsertCycleFactorCommandValidator : AbstractValidator<UpsertCycleFactorCommand> {
     public UpsertCycleFactorCommandValidator() {
+        RuleFor(x => x.FactorId)
+            .Must(static id => id is null || id.Value != Guid.Empty)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("FactorId is invalid.");
+
         RuleFor(x => x.Notes)
             .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
             .WithErrorCode("Validation.Invalid")

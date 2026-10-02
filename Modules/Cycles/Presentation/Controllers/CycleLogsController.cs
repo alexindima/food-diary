@@ -31,6 +31,7 @@ public sealed class CycleLogsController(ISender mediator) : AuthorizedController
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> UpsertFactor(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleFactorHttpRequest request) =>
         HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
 }

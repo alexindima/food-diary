@@ -3250,7 +3250,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 58
+      "line": 59
     },
     {
       "name": "CycleCalendarCardComponent",
@@ -6986,8 +6986,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4013,
-      "russianProperties": 4013,
+      "englishProperties": 4014,
+      "russianProperties": 4014,
       "countsMatch": true
     },
     {

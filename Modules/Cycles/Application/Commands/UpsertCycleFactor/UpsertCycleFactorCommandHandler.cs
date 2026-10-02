@@ -56,7 +56,20 @@ public sealed class UpsertCycleFactorCommandHandler(
             return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
-        profile.UpsertFactor((CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);
+        if (command.FactorId is Guid factorId) {
+            if (factorId == Guid.Empty || !profile.Factors.Any(factor => factor.Id.Value == factorId)) {
+                return Result.Failure<CycleModel>(Errors.Validation.Invalid(nameof(command.FactorId), "Cycle factor was not found in this profile."));
+            }
+            try {
+                profile.UpdateFactor(new CycleFactorId(factorId), (CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);
+            } catch (InvalidOperationException) {
+                return Result.Failure<CycleModel>(CycleErrors.FactorIdentityConflict());
+            } catch (ArgumentException exception) {
+                return Result.Failure<CycleModel>(Errors.Validation.Invalid(exception.ParamName ?? nameof(command.FactorId), exception.Message));
+            }
+        } else {
+            profile.UpsertFactor((CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);
+        }
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);

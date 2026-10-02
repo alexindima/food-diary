@@ -102,7 +102,8 @@ public static class CycleHttpMappings {
                     DateOnly.FromDateTime(request.StartDate),
                     request.EndDate.HasValue ? DateOnly.FromDateTime(request.EndDate.Value) : null,
                     request.Notes,
-                    request.ClearNotes);
+                    request.ClearNotes,
+                    request.FactorId);
     }
 
     extension(ConfirmPeriodStartHttpRequest request) {

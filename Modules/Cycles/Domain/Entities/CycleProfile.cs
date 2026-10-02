@@ -274,6 +274,21 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return entry;
     }
 
+    public CycleFactor UpdateFactor(CycleFactorId factorId, CycleFactorType type, DateOnly startDate, DateOnly? endDate, string? notes, bool clearNotes = false) {
+        if (factorId == CycleFactorId.Empty) {
+            throw new ArgumentException("Factor id must not be empty.", nameof(factorId));
+        }
+        CycleFactor factor = _factors.FirstOrDefault(item => item.Id == factorId)
+            ?? throw new KeyNotFoundException("Cycle factor was not found.");
+        if (_factors.Exists(item => item.Id != factorId && item.Type == type && item.StartDate == startDate)) {
+            throw new InvalidOperationException("A factor of this type already starts on this date.");
+        }
+        factor.Update(type, startDate, endDate, notes, clearNotes);
+        Confidence = CalculateConfidence();
+        SetModified();
+        return factor;
+    }
+
     public CycleFactor UpsertFactor(CycleFactorType type, DateOnly startDate, DateOnly? endDate, string? notes, bool clearNotes = false) {
         CycleFactor? existing = _factors.FirstOrDefault(factor => factor.Type == type && factor.StartDate == startDate);
         if (existing is not null) {

@@ -16,6 +16,7 @@ import { finalize, firstValueFrom } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
+import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -625,8 +626,12 @@ export class CycleTrackingFacade {
             this.cycle.set(cycle);
             this.resetFactorForm();
             this.loadNutritionSummary(cycle);
-        } catch {
-            this.factorError.set('CYCLE_TRACKING.SAVE_FACTOR_FAILED');
+        } catch (error: unknown) {
+            this.factorError.set(
+                getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Cycle.FactorIdentityConflict'
+                    ? 'CYCLE_TRACKING.FACTOR_IDENTITY_CONFLICT'
+                    : 'CYCLE_TRACKING.SAVE_FACTOR_FAILED',
+            );
         } finally {
             this.isSavingFactor.set(false);
         }
@@ -637,7 +642,9 @@ export class CycleTrackingFacade {
             return null;
         }
         const notes = toOptionalCycleText(formValue.notes);
+        const factorId = this.editingFactorId();
         return {
+            ...(factorId === null ? {} : { factorId }),
             type: formValue.type,
             startDate: toCycleDateKey(formValue.startDate),
             endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
@@ -699,6 +706,7 @@ export class CycleTrackingFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService.upsertFactor(currentCycle.id, {
+                    factorId: factor.id,
                     type: factor.type,
                     startDate: toCycleDateKey(factor.startDate),
                     endDate: formatDateInputValue(new Date()),

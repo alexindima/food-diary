@@ -5,4 +5,5 @@ public sealed record UpsertCycleFactorHttpRequest(
     DateTime StartDate,
     DateTime? EndDate,
     string? Notes,
-    bool ClearNotes);
+    bool ClearNotes,
+    Guid? FactorId = null);

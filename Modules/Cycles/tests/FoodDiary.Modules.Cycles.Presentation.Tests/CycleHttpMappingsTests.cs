@@ -21,6 +21,16 @@ namespace FoodDiary.Modules.Cycles.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class CycleHttpMappingsTests {
     [Fact]
+    public void UpsertCycleFactorRequest_WithoutId_DeserializesLegacyPayload() {
+        const string json = """{"type":2,"startDate":"2026-04-01T00:00:00Z","endDate":null,"notes":null,"clearNotes":false}""";
+        UpsertCycleFactorHttpRequest? request = System.Text.Json.JsonSerializer.Deserialize<UpsertCycleFactorHttpRequest>(json,
+            System.Text.Json.JsonSerializerOptions.Web);
+        Assert.NotNull(request);
+        Assert.Null(request.FactorId);
+        Assert.Null(request.ToCommand(Guid.NewGuid(), Guid.NewGuid()).FactorId);
+    }
+
+    [Fact]
     public void CreateCycleRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         DateTime trackingStartDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -96,7 +106,8 @@ public sealed class CycleHttpMappingsTests {
             StartDate: new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
             EndDate: null,
             Notes: null,
-            ClearNotes: true);
+            ClearNotes: true,
+            FactorId: Guid.NewGuid());
 
         UpsertCycleFactorCommand command = request.ToCommand(userId, cycleProfileId);
 
@@ -105,6 +116,7 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(request.Type, command.Type);
         Assert.Equal(DateOnly.FromDateTime(request.StartDate), command.StartDate);
         Assert.True(command.ClearNotes);
+        Assert.Equal(request.FactorId, command.FactorId);
     }
 
     [Fact]

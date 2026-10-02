@@ -770,6 +770,7 @@ describe('CycleTrackingFacade factors', () => {
         const payload = cyclesService.upsertFactor.mock.calls[0][1];
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', payload);
         expect(payload).toMatchObject({
+            factorId: 'factor-1',
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
             startDate: '2026-04-01',
             notes: 'pill',
@@ -780,6 +781,28 @@ describe('CycleTrackingFacade factors', () => {
 });
 
 describe('CycleTrackingFacade factor drafts', () => {
+    it('sends the selected id when changing the start date', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02' }));
+        await submit(facade.factorForm);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith(
+            'cycle-1',
+            expect.objectContaining({ factorId: 'factor-1', startDate: '2026-04-02' }),
+        );
+    });
+
+    it('retains the draft and explains an identity conflict', async () => {
+        facade.initialize();
+        facade.editFactor('factor-1');
+        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02', notes: 'draft' }));
+        cyclesService.upsertFactor.mockReturnValue(throwError(() => ({ error: { error: 'Cycle.FactorIdentityConflict' } })));
+        await submit(facade.factorForm);
+        expect(facade.factorError()).toBe('CYCLE_TRACKING.FACTOR_IDENTITY_CONFLICT');
+        expect(facade.editingFactorId()).toBe('factor-1');
+        expect(facade.factorModel().notes).toBe('draft');
+    });
+
     it('discards a cancelled draft and resets field interaction state', () => {
         facade.initialize();
         facade.editFactor('factor-1');

@@ -11,5 +11,6 @@ public record UpsertCycleFactorCommand(
     DateOnly StartDate,
     DateOnly? EndDate,
     string? Notes,
-    bool ClearNotes
+    bool ClearNotes,
+    Guid? FactorId = null
 ) : ICommand<Result<CycleModel>>, IUserRequest;

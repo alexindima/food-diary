@@ -37,9 +37,16 @@ public sealed class CycleFactor : Entity<CycleFactorId> {
     }
 
     public void Update(DateOnly? endDate, string? notes, bool clearNotes) {
-        EnsureRange(StartDate, endDate);
+        Update(Type, StartDate, endDate, notes, clearNotes);
+    }
+
+    public void Update(CycleFactorType type, DateOnly startDate, DateOnly? endDate, string? notes, bool clearNotes) {
+        EnsureDefined(type, nameof(type));
+        EnsureRange(startDate, endDate);
         string? normalizedNotes = notes is not null ? CycleProfile.NormalizeNotes(notes) : Notes;
 
+        Type = type;
+        StartDate = startDate;
         EndDate = endDate;
         if (clearNotes) {
             Notes = null;

@@ -13,6 +13,38 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     [RequiresDockerFact]
+    public async Task UpsertFactor_WithId_ChangesDateWithoutDuplicatingAndRejectsCollision() {
+        HttpClient client = factory.CreateClient();
+        string token = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        Guid profileId = await CreateCycleAsync(client);
+        var request = new UpsertCycleFactorHttpRequest((int)CycleFactorType.HormonalContraception,
+            new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), EndDate: null, Notes: "first", ClearNotes: false);
+        HttpResponseMessage created = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", request);
+        created.EnsureSuccessStatusCode();
+        using var initial = JsonDocument.Parse(await created.Content.ReadAsStringAsync());
+        Guid factorId = initial.RootElement.GetProperty("factors")[0].GetProperty("id").GetGuid();
+        UpsertCycleFactorHttpRequest editedRequest = request with { FactorId = factorId, StartDate = request.StartDate.AddDays(1) };
+        HttpResponseMessage edited = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", editedRequest);
+        edited.EnsureSuccessStatusCode();
+        using var updated = JsonDocument.Parse(await edited.Content.ReadAsStringAsync());
+        JsonElement factors = updated.RootElement.GetProperty("factors");
+        Assert.Equal(1, factors.GetArrayLength());
+        Assert.Equal(factorId, factors[0].GetProperty("id").GetGuid());
+        Assert.Equal(editedRequest.StartDate.Date, factors[0].GetProperty("startDate").GetDateTime().Date);
+        HttpResponseMessage second = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", request);
+        second.EnsureSuccessStatusCode();
+        HttpResponseMessage conflict = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", request with { FactorId = factorId });
+        Assert.Equal(HttpStatusCode.Conflict, conflict.StatusCode);
+        using var error = JsonDocument.Parse(await conflict.Content.ReadAsStringAsync());
+        Assert.Equal("Cycle.FactorIdentityConflict", error.RootElement.GetProperty("error").GetString());
+        HttpResponseMessage current = await client.GetAsync("/api/v1/cycles/current");
+        current.EnsureSuccessStatusCode();
+        using var persisted = JsonDocument.Parse(await current.Content.ReadAsStringAsync());
+        Assert.Equal(2, persisted.RootElement.GetProperty("factors").GetArrayLength());
+    }
+
+    [RequiresDockerFact]
     public async Task CreateCycle_WithOversizedNotes_ReturnsValidationErrorAndAcceptsTrimmedLimit() {
         HttpClient client = factory.CreateClient();
         string token = await RegisterAndGetAccessTokenAsync(client);

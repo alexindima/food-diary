@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1307,
     "ambiguousContracts": 2,
-    "consumerEdges": 10157,
+    "consumerEdges": 10159,
     "productionConsumerEdges": 5819,
-    "testConsumerEdges": 4338,
+    "testConsumerEdges": 4340,
     "consumedContracts": 1307,
     "unconsumedContracts": 0
   },
@@ -151551,6 +151551,19 @@
         "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.FactorEditing.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "UpsertCycleFactorCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -151616,9 +151629,22 @@
         "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UpsertCycleFactorHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "UpsertCycleFactorHttpRequest",

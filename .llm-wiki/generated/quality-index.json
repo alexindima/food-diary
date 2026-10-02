@@ -104,11 +104,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 837,
+      "nonBlankLines": 845,
       "decisionPoints": 113,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 186.24
+      "structuralRiskScore": 186.4
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
@@ -143,6 +143,14 @@
       "structuralRiskScore": 158.24
     },
     {
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "nonBlankLines": 552,
+      "decisionPoints": 97,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 156.54
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
       "nonBlankLines": 417,
       "decisionPoints": 96,
@@ -165,14 +173,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 152.5
-    },
-    {
-      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "nonBlankLines": 538,
-      "decisionPoints": 92,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 148.76
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
@@ -8266,11 +8266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 837,
+      "nonBlankLines": 845,
       "decisionPoints": 113,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 186.24
+      "structuralRiskScore": 186.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",
@@ -8290,11 +8290,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/models/cycle.data.ts",
-      "nonBlankLines": 320,
+      "nonBlankLines": 321,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.4
+      "structuralRiskScore": 6.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.ts",
@@ -20810,27 +20810,27 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 5,
+      "nonBlankLines": 71,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 19.92
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 3,
+      "nonBlankLines": 41,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.24
+      "structuralRiskScore": 8.82
     },
     {
       "path": "Modules/Cycles/Application/DependencyInjection.cs",
@@ -20922,11 +20922,11 @@
     },
     {
       "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Cycles/Contracts/Models/BleedingEntryModel.cs",
@@ -21146,11 +21146,11 @@
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 63,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.14
+      "structuralRiskScore": 10.26
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
@@ -21162,11 +21162,11 @@
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "nonBlankLines": 538,
-      "decisionPoints": 92,
+      "nonBlankLines": 552,
+      "decisionPoints": 97,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 148.76
+      "structuralRiskScore": 156.54
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CycleProfileSettings.cs",
@@ -21490,11 +21490,11 @@
     },
     {
       "path": "Modules/Cycles/Presentation/Controllers/CycleLogsController.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
+      "structuralRiskScore": 2.66
     },
     {
       "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
@@ -21522,11 +21522,11 @@
     },
     {
       "path": "Modules/Cycles/Presentation/Mappings/CycleHttpMappings.cs",
-      "nonBlankLines": 137,
+      "nonBlankLines": 138,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.24
+      "structuralRiskScore": 4.26
     },
     {
       "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
@@ -21602,11 +21602,11 @@
     },
     {
       "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/DailyAdvices/Application.Abstractions/Common/DailyAdviceErrors.cs",
@@ -49099,9 +49099,10 @@
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.FactorCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.FactorCommands.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.FactorEditing.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
