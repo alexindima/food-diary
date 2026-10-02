@@ -2654,7 +2654,7 @@
             "CHANGE_PROTOCOL": "Change protocol",
             "SETTINGS_TITLE": "Fasting settings",
             "MODE_DESCRIPTION_INTERMITTENT": "A daily rhythm alternating between a fasting period and an eating window.",
-            "MODE_DESCRIPTION_EXTENDED": "A continuous fast lasting 24 hours or longer.",
+            "MODE_DESCRIPTION_EXTENDED": "A continuous fast for your chosen duration.",
             "MODE_DESCRIPTION_CYCLIC": "Alternate several fasting and eating days using the selected schedule.",
             "INTERMITTENT_SELECTION_SUMMARY": "{{ hours }}h fasting → {{ eatHours }}h eating",
             "EXTENDED_SELECTION_SUMMARY": "Continuous fast · {{ hours }}h",

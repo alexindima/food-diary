@@ -5506,7 +5506,7 @@
             "CHANGE_PROTOCOL": "Изменить протокол",
             "SETTINGS_TITLE": "Настройка голодания",
             "MODE_DESCRIPTION_INTERMITTENT": "Ежедневный ритм с чередованием периода поста и окна питания.",
-            "MODE_DESCRIPTION_EXTENDED": "Непрерывное голодание продолжительностью от 24 часов.",
+            "MODE_DESCRIPTION_EXTENDED": "Непрерывное голодание выбранной продолжительности.",
             "MODE_DESCRIPTION_CYCLIC": "Чередование нескольких дней поста и питания по выбранной схеме.",
             "INTERMITTENT_SELECTION_SUMMARY": "{{ hours }} ч голодания → {{ eatHours }} ч питания",
             "EXTENDED_SELECTION_SUMMARY": "Непрерывное голодание · {{ hours }} ч",
