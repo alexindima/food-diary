@@ -17,6 +17,7 @@
 .recommendation-thread__message p {
     margin: 0;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 .recommendation-thread__composer textarea {
