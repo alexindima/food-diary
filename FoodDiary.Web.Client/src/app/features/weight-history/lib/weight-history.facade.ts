@@ -21,7 +21,7 @@ import type {
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
 } from '../models/weight-entry.data';
-import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from './weight-history.constants';
+import { MAX_WEIGHT_KG, MIN_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 import { buildBmiViewModel } from './weight-history-bmi.mapper';
 import { buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
@@ -37,8 +37,6 @@ type WeightEntryFormModel = {
     date: string;
     weight: string;
 };
-
-const WEIGHT_INPUT_FRACTION_DIGITS = 2;
 
 type DesiredWeightFormModel = {
     weight: string;

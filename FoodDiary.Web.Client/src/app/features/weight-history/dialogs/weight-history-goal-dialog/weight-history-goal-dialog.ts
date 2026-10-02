@@ -8,7 +8,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import { MAX_WEIGHT_KG } from '../../lib/weight-history.constants';
+import { MAX_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS } from '../../lib/weight-history.constants';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
 @Component({
@@ -33,7 +33,7 @@ export class WeightHistoryGoalDialogComponent {
         const field = this.weightField();
         return field.invalid() && (field.touched() || field.dirty()) ? 'WEIGHT_HISTORY.GOAL_VALUE_RANGE' : null;
     });
-    protected readonly goalRange = computed(() => ({ max: this.measurements.displayWeight(MAX_WEIGHT_KG) }));
+    protected readonly goalRange = computed(() => ({ max: this.measurements.displayWeight(MAX_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS) }));
 
     public constructor() {
         effect(() => {

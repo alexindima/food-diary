@@ -8,7 +8,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import { MAX_DESIRED_WAIST_CM } from '../../lib/waist-history.constants';
+import { MAX_DESIRED_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS } from '../../lib/waist-history.constants';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
 @Component({
@@ -32,7 +32,7 @@ export class WaistHistoryGoalDialogComponent {
         const field = this.waistField();
         return field.invalid() && (field.touched() || field.dirty()) ? 'WAIST_HISTORY.GOAL_VALUE_RANGE' : null;
     });
-    protected readonly goalRange = computed(() => ({ max: this.measurements.displayLength(MAX_DESIRED_WAIST_CM) }));
+    protected readonly goalRange = computed(() => ({ max: this.measurements.displayLength(MAX_DESIRED_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS) }));
 
     public constructor() {
         effect(() => {

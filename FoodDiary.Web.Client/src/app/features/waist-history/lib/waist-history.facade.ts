@@ -16,7 +16,7 @@ import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
-import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
+import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
 import { buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 import {
@@ -32,8 +32,6 @@ type WaistEntryFormModel = {
     date: string;
     circumference: string;
 };
-
-const WAIST_INPUT_FRACTION_DIGITS = 2;
 
 type DesiredWaistFormModel = {
     circumference: string;

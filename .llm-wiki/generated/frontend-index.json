@@ -5725,7 +5725,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.ts",
-      "line": 47
+      "line": 45
     },
     {
       "name": "WaistHistoryPageComponent",
@@ -5900,7 +5900,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
-      "line": 52
+      "line": 50
     },
     {
       "name": "WeightHistoryPageComponent",

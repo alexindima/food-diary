@@ -5,11 +5,14 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WeightHistoryGoalDialogComponent } from './weight-history-goal-dialog';
 
 const FIXTURE_INITIAL_VERSION = 7;
 const FIXTURE_TARGET_MEASUREMENT = 75;
+const FIXTURE_METRIC_LIMIT = 500;
+const FIXTURE_IMPERIAL_LIMIT = 1102.31;
 const createFacade = (): {
     form: FieldTree<{ date: string; weight: string }>;
     desiredWeightForm: FieldTree<{ date: string; weight: string }>;
@@ -64,6 +67,23 @@ function setup(): {
     fixture.detectChanges();
     return { fixture, facade, component: fixture.componentInstance, close };
 }
+describe('Weight goal limit precision', () => {
+    it.each([
+        ['metric', FIXTURE_METRIC_LIMIT],
+        ['imperial', FIXTURE_IMPERIAL_LIMIT],
+    ] as const)('shows the limit in %s with input precision', (system, max) => {
+        const { component } = setup();
+        const measurements = TestBed.inject(MeasurementSystemService);
+        const original = measurements.system();
+        try {
+            measurements.setSystem(system);
+            expect(component['goalRange']()).toEqual({ max });
+        } finally {
+            measurements.setSystem(original);
+        }
+    });
+});
+
 describe('Weight goal dialog lifecycle', () => {
     it('does not close for an old save or loading-state changes', () => {
         const { fixture, facade, close } = setup();
