@@ -34,7 +34,8 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         AuthPayload? payload = JsonSerializer.Deserialize<AuthPayload>(body, JsonOptions);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(payload.RefreshToken));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
+        Assert.DoesNotContain("refreshToken", body, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(email, payload.User.Email);
     }
 
@@ -106,9 +107,9 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
-        Assert.False(string.IsNullOrWhiteSpace(authPayload.RefreshToken));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(registerResponse)));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.RefreshToken);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationResponseCookies.ReadRefreshToken(registerResponse));
         HttpResponseMessage response = await client.GetAsync("/api/v1/products");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

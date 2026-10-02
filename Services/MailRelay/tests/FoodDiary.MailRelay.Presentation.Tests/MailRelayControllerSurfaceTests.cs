@@ -6,6 +6,13 @@ namespace FoodDiary.MailRelay.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayControllerSurfaceTests {
+    [Fact]
+    public void Enqueue_HasExplicitRequestSizeBudget() {
+        System.Reflection.MethodInfo action = typeof(MailRelayQueueController).GetMethod(nameof(MailRelayQueueController.Enqueue))!;
+        RequestSizeLimitAttribute limit = Assert.Single(action.GetCustomAttributes(typeof(RequestSizeLimitAttribute), inherit: false).Cast<RequestSizeLimitAttribute>());
+        Assert.Equal(FoodDiary.MailRelay.Domain.Emails.RelayEmailMessageLimits.MaximumRequestBytes, ((Microsoft.AspNetCore.Http.Metadata.IRequestSizeLimitMetadata)limit).MaxRequestBodySize);
+    }
+
     public static TheoryData<Type, string, int> ControllerContracts => new() {
         { typeof(MailRelayDeliveryEventsController), "api/email/events", 2 },
         { typeof(MailRelayMessagesController), "api/email/messages", 2 },

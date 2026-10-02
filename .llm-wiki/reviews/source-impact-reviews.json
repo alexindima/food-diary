@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "aff5595586b1110ceeebcb2f160835067ebd60af7d28fae31816d9b72f3d0580"
+          "sha256": "af1cbad048da5b5b1955be822e6627eb3dd81739b3528e91725489b4c689ee10"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed intentional removal of AuthenticationHttpResponse.refreshToken, cookie-based browser consumers and updated integration tests; compatibility workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:02.2543255Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:22:05.6379949Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a9ef70fd812b9005364ea3826a30a0f4d0fad5c632138578c0f47722e6f565d0"
+          "sha256": "8dc7a62ee1d10d5081a30da42a73ec501149a6e2c0214b1f6d1b303c0cedd293"
         }
       ],
-      "reason": "Reviewed generated health changes from new direct weekly-goal-dialog spec. Existing feature ownership, project graph and dependency direction are unchanged; no removal candidates were acted on.",
+      "reason": "Reviewed existing production edges: host uses an Identity capability, infrastructure owns the adapter; no production references added.",
       "baseRef": "HEAD",
-      "gitHead": "a406e2a059d66f6a63a148850ae55ef0190e9514",
-      "reviewedAtUtc": "2026-10-02T08:16:41.4920975Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:16.9845372Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "844817275b6f57320f53570c61a0815523719ac80741acd98a4285749c9fd216"
+          "sha256": "f125011625d3377d9299a7c71db4429c6d6398fee1ed16a8230eac7e4b056d28"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed new scalar session capability and adapter, JSON refreshToken removal and all cookie consumers; full solution compiles.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:02.7564948Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:19.2050530Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -763,13 +763,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d71c13a1c9846c5643a9ecd1f1ed7cce0778a17186255d4a6378748cf424574d"
+          "sha256": "cb23cababd1f8f1fa2ea79736430bd4d2e5b097cbede5d306f36681bef95bae4"
         }
       ],
-      "reason": "Reviewed regenerated inventories after optional OtherCalories default. Existing user scope/date predicate, health data boundaries and logging remain; no new retention, sharing, providers or secret handling. Local QA-only nutrition evidence verified.",
+      "reason": "Reviewed credential minimization in JSON, profile HTML encoding, cancellation and absence of new logs/sharing; image policies remain outside this patch.",
       "baseRef": "HEAD",
-      "gitHead": "a34d72f361e86e07b6ed75142052974ebce5eb05",
-      "reviewedAtUtc": "2026-10-01T09:51:12.3076421Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:20.9971725Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
+          "sha256": "1937c0babdda5b2eeaa9665538636edd7ef052717af78e50db21fe4df39f696c"
         }
       ],
-      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
+      "reason": "Reviewed current tests for session revocation, impersonation, token serialization, active/deleted response parity and bounded UTF8 emails; provider-backed checks blocked by Docker.",
       "baseRef": "HEAD",
-      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
-      "reviewedAtUtc": "2026-10-02T10:19:09.6510763Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:22.6887264Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d1c709139e74ed02a82b02beb2b7736522691ba4d30275b24852b7a5cb532c3c"
+          "sha256": "912f2da0067409e3241a5ca42cedd662b290cceec219fb912020b847f33ae476"
         }
       ],
-      "reason": "Reviewed source fingerprint-only runtime topology refresh. Diet applies across unchanged owner-or-curated access; no runtime, auth, provider or delivery declarations change. PostgreSQL regression proves private exclusion and paging. Both workflows remain accurate.",
+      "reason": "Reviewed added uncached owned-session lookup and MailRelay pre-persistence limits; existing transaction synchronization, cancellation, retries and delivery retained.",
       "baseRef": "HEAD",
-      "gitHead": "cb7e4c9c4ac9e5545ebd388d652d6badee7e4fbb",
-      "reviewedAtUtc": "2026-10-02T09:28:58.8178932Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:25.9260894Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,13 +898,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8ebd41a5dcd81eb54321f8e8bf28784ead3fbad5a691c5e676830b00a41b5924"
+          "sha256": "1937c0babdda5b2eeaa9665538636edd7ef052717af78e50db21fe4df39f696c"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "912f2da0067409e3241a5ca42cedd662b290cceec219fb912020b847f33ae476"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "cb23cababd1f8f1fa2ea79736430bd4d2e5b097cbede5d306f36681bef95bae4"
         }
       ],
-      "reason": "Reviewed structural metric refresh from date-input focus restoration. Calendar selection/Escape returns focus only when active element belongs to the popup; unrelated control focus is preserved and disabled input is not focused. Native drawer/export checks and DOM regressions cover behavior; provider, identity and data contracts stay unchanged. Both workflows remain accurate.",
+      "reason": "Independent security review and parent boundary checks complete; HTTP session revocation, HTML encoding, cookie-only refresh serialization and MailRelay bounds covered. Existing SignalR connection revocation and public image migration remain follow-up work.",
       "baseRef": "HEAD",
-      "gitHead": "543731f3a57e7395de01a3ee7cda72df44b46992",
-      "reviewedAtUtc": "2026-10-02T10:19:11.9855688Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:27.6085296Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1154,13 +1162,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ffaa9c2b3096f0234fc5157735e02d91751f274f2f24fc028f242185bfeb0526"
+          "sha256": "63998e1bb96e643ee374dce62d4d07c3c9c8bfd25c7662c271b95ff364a633b7"
         }
       ],
-      "reason": "Two MailInbox HTTP query records replace scalar controller parameters without changing persistence ownership, service topology, hosted workers, dependency injection, or external clients.",
+      "reason": "Reviewed current repository catalog and newly declared Identity capability/adapter; navigation documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "56373a0001771793bd5f8cfd42e9bb12fcd6ba02",
-      "reviewedAtUtc": "2026-09-30T07:54:25.6253930Z"
+      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
+      "reviewedAtUtc": "2026-10-02T11:35:24.3328081Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -58,7 +58,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
-    public async Task RegisterHandler_WhenEmailBelongsToDeletedAccount_ReturnsAccountDeleted() {
+    public async Task RegisterHandler_WhenEmailBelongsToDeletedAccount_ReturnsSameConflict() {
         var deletedUser = User.Create("deleted-register@example.com", "hashed");
         deletedUser.DeleteAccount(DateTime.UtcNow);
         var repository = new StubUserRepository(deletedUser);
@@ -74,7 +74,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.Equal("Validation.Conflict", result.Error.Code);
         Assert.Equal(0, repository.AddCallCount);
         Assert.Null(tokenService.LastUser);
         Assert.Null(tokenService.LastPrincipal);

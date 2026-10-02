@@ -16,6 +16,7 @@ public sealed class MailRelayQueueController(ISender sender) : AuthorizedMailRel
         HandleOk(MailRelayEmailHttpMappings.ToQueueStatsQuery(), static value => value.ToHttpResponse());
 
     [HttpPost("send")]
+    [RequestSizeLimit(EnqueueMailRelayEmailCommandValidator.MaximumRequestBytes)]
     [ProducesResponseType<EnqueueMailRelayEmailResponse>(StatusCodes.Status202Accepted)]
     public Task<IActionResult> Enqueue(EnqueueMailRelayEmailRequest request) =>
         HandleAccepted(

@@ -130,6 +130,42 @@ public sealed class DietologistEmailSenderTests {
         IEmailTemplateProvider? templateProvider = null) =>
         new(options ?? DefaultOptions, templateProvider ?? CreateTemplateProvider(), outbox);
 
+    [Theory]
+    [InlineData(false, "<a href=\"https://attacker.invalid\">Click</a>")]
+    [InlineData(true, "<img src=x onerror=alert(1)>")]
+    [InlineData(true, "\" autofocus onfocus=alert(1) &")]
+    public async Task SendDietologistInvitationAsync_EncodesNamesInHtmlButKeepsPlainText(bool storedTemplate, string name) {
+        EmailMessage? captured = null;
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        outbox.EnqueueAsync(Arg.Do<EmailMessage>(message => captured = message), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        IEmailTemplateProvider templates = CreateTemplateProvider(storedTemplate
+            ? new EmailTemplateContent("Invite {{clientName}}", "<p title=\"{{clientName}}\">{{clientName}}</p>", "{{clientName}}")
+            : null);
+        DietologistEmailSender sender = CreateSender(outbox, templateProvider: templates);
+
+        await sender.SendDietologistInvitationAsync(new DietologistInvitationMessage("diet@example.com", Guid.NewGuid(), "token", name, ClientLastName: null, "en"), CancellationToken.None);
+
+        Assert.NotNull(captured);
+        Assert.Contains(System.Net.WebUtility.HtmlEncode(name), captured.HtmlBody, StringComparison.Ordinal);
+        Assert.DoesNotContain(name, captured.HtmlBody, StringComparison.Ordinal);
+        Assert.Contains(name, captured.TextBody!, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SendDietologistInvitationAsync_DoesNotInterpretTokensInsideInsertedValues() {
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox, options: new EmailOptions {
+            FromAddress = "noreply@fooddiary.club",
+            FromName = "{{clientName}}",
+            FrontendBaseUrl = "https://fooddiary.club",
+        }, templateProvider: CreateTemplateProvider(new EmailTemplateContent("Invite", "<p>{{brand}}</p><p>{{clientName}}</p>", "{{brand}}")));
+
+        await sender.SendDietologistInvitationAsync(CreateMessage("diet@example.com"), CancellationToken.None);
+
+        Assert.Contains("<p>{{clientName}}</p>", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("<p>Test User</p>", getSent().HtmlBody, StringComparison.Ordinal);
+    }
+
     private static DietologistInvitationMessage CreateMessage(
         string toEmail, string language = "en") =>
         new(toEmail, Guid.NewGuid(), "token-value", "Test", "User", language);

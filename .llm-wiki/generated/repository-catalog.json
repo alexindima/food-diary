@@ -13540,6 +13540,10 @@
             "version": null
           },
           {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
             "name": "xunit",
             "version": null
           },

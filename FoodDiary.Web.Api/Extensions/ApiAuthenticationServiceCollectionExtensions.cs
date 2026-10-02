@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Authentication.Contracts.Options;
 using System.Text;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -64,7 +65,9 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 IUserAccessTokenSecurityReader securityReader = context.HttpContext.RequestServices
                     .GetRequiredService<IUserAccessTokenSecurityReader>();
                 bool isCurrent = await AccessTokenSecurityStateValidator
-                    .IsCurrentAsync(context.Principal, securityReader, context.HttpContext.RequestAborted)
+                    .IsCurrentAsync(context.Principal, securityReader,
+                        context.HttpContext.RequestServices.GetRequiredService<IUserAccessTokenSessionReader>(),
+                        context.HttpContext.RequestAborted)
                     .ConfigureAwait(false);
                 if (!isCurrent) {
                     context.Fail("The token is no longer valid for the current account security state.");

@@ -5,6 +5,10 @@ public sealed class MailRelayEmailUseCases(
     IMailRelayDispatchNotifier dispatchNotifier,
     IMailRelayDeliveryPolicy deliveryPolicy) {
     public async Task<Result<Guid>> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+        if (!RelayEmailMessageLimits.IsWithinBounds(request)) {
+            return Result.Failure<Guid>(new Error("Validation.Invalid", "Email exceeds the recipient or message size limits.", Kind: ErrorKind.Validation));
+        }
+
         Result policyResult = deliveryPolicy.CanEnqueue(request);
         if (policyResult.IsFailure) {
             return Result.Failure<Guid>(policyResult.Error!);

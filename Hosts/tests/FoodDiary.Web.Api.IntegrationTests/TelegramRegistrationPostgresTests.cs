@@ -187,7 +187,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using var profileBody = JsonDocument.Parse(await profile.Content.ReadAsStringAsync());
         Assert.Equal(expectedEmail, profileBody.RootElement.GetProperty("email").GetString());
         using HttpResponseMessage refresh = await client.PostAsJsonAsync("/api/v1/auth/refresh",
-            new { RefreshToken = authentication.GetProperty("refreshToken").GetString() });
+            new { });
         Assert.Equal(HttpStatusCode.OK, refresh.StatusCode);
         using var refreshed = JsonDocument.Parse(await refresh.Content.ReadAsStringAsync());
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshed.RootElement.GetProperty("accessToken").GetString());

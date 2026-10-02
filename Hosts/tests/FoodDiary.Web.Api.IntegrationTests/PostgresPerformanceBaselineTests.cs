@@ -199,8 +199,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(payload.RefreshToken));
-        return payload;
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
+        return payload with { RefreshToken = AuthenticationResponseCookies.ReadRefreshToken(response) };
     }
 
     private static async Task<AuthPayload> RefreshAsync(HttpClient client, string refreshToken) {
@@ -211,8 +211,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.RefreshToken));
-        return payload;
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
+        return payload with { RefreshToken = AuthenticationResponseCookies.ReadRefreshToken(response) };
     }
 
     private async Task SeedProductsAsync(string email, int count) {

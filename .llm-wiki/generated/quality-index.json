@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5694,
+    "productionFiles": 5697,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 977,
-    "criticalSymbolsWithTestReferences": 934,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithTestReferences": 935,
+    "criticalSymbolsWithoutTestReferences": 42,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -4674,11 +4674,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 3,
+      "nonBlankLines": 39,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.08
+      "structuralRiskScore": 14.78
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
@@ -4690,11 +4690,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "nonBlankLines": 82,
+      "nonBlankLines": 85,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.14
+      "structuralRiskScore": 12.2
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
@@ -13434,11 +13434,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "nonBlankLines": 58,
+      "nonBlankLines": 57,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.66
+      "structuralRiskScore": 17.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/google-auth.data.ts",
@@ -23610,11 +23610,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Services/DietologistEmailSender.cs",
-      "nonBlankLines": 135,
-      "decisionPoints": 4,
+      "nonBlankLines": 140,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.7
+      "structuralRiskScore": 10.3
     },
     {
       "path": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
@@ -28578,11 +28578,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
@@ -29593,6 +29593,14 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Identity/Contracts/Authentication/Common/PasswordResetMessage.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -29786,11 +29794,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "nonBlankLines": 56,
+      "nonBlankLines": 57,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
+      "structuralRiskScore": 2.64
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -29855,6 +29863,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -30370,11 +30386,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
@@ -39962,11 +39978,11 @@
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 69,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.42
+      "structuralRiskScore": 4.38
     },
     {
       "path": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
@@ -43746,11 +43762,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 26,
       "decisionPoints": 4,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 13.46
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.52
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
@@ -43978,11 +43994,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 1,
+      "nonBlankLines": 38,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 3.76
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
@@ -44255,6 +44271,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageLimits.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.14
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
@@ -44714,11 +44738,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 2.46
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
@@ -50120,8 +50144,9 @@
       "role": "Controller",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
       "line": 12,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -53411,7 +53436,7 @@
       "name": "AccessTokenSecurityStateValidator",
       "role": "Validator",
       "path": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
-      "line": 7,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AccessTokenSecurityStateValidatorTests.cs"
@@ -54090,9 +54115,11 @@
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

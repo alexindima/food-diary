@@ -35,6 +35,7 @@ public static class IdentityModuleRegistration {
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddScoped<IRefreshTokenSessionRepository>(provider => new RefreshTokenSessionRepository(
             provider.GetRequiredService<IdentityDbContext>().UserRefreshTokenSessions, provider.GetRequiredService<IdentityDbContext>().Database, CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IUserAccessTokenSessionReader, AccessTokenSessionReader>();
         services.AddScoped<IUserSessionRevocationService>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());

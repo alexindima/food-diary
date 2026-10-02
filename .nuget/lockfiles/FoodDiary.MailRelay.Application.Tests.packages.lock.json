@@ -44,6 +44,15 @@
           "Microsoft.TestPlatform.TestHost": "18.9.0"
         }
       },
+      "NSubstitute": {
+        "type": "Direct",
+        "requested": "[6.1.0, )",
+        "resolved": "6.1.0",
+        "contentHash": "4RKj/p9l0rylPcH+8EXMVbC4yNyfadUdzBFxog2caVThkMQpDw8Q+468mkFMjEmsFt+jXJSdtTwgVNkWzyCsHw==",
+        "dependencies": {
+          "Castle.Core": "5.1.1"
+        }
+      },
       "Roslynator.Analyzers": {
         "type": "Direct",
         "requested": "[4.16.1, )",
@@ -67,6 +76,14 @@
         "resolved": "3.1.5",
         "contentHash": "tKi7dSTwP4m5m9eXPM2Ime4Kn7xNf4x4zT9sdLO/G4hZVnQCRiMTWoSZqI/pYTVeI27oPPqHBKYI/DjJ9GsYgA=="
       },
+      "Castle.Core": {
+        "type": "Transitive",
+        "resolved": "5.1.1",
+        "contentHash": "rpYtIczkzGpf+EkZgDr9CClTdemhsrwA/W5hMoPjLkRFnXzH44zDLoovXeKtmxb1ykXK9aJVODSpiJml8CTw2g==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "6.0.0"
+        }
+      },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
         "resolved": "18.9.0",
@@ -89,6 +106,11 @@
         "dependencies": {
           "Microsoft.TestPlatform.ObjectModel": "18.9.0"
         }
+      },
+      "System.Diagnostics.EventLog": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "lcyUiXTsETK2ALsZrX+nWuHSIQeazhqPphLfaRxzdGaG93+0kELqpgEHtwWOlQe7+jSFnKwaCAgL4kjeZCQJnw=="
       },
       "xunit.abstractions": {
         "type": "Transitive",

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1307,
+    "contracts": 1308,
     "ambiguousContracts": 2,
-    "consumerEdges": 10162,
-    "productionConsumerEdges": 5819,
-    "testConsumerEdges": 4343,
-    "consumedContracts": 1307,
+    "consumerEdges": 10177,
+    "productionConsumerEdges": 5825,
+    "testConsumerEdges": 4352,
+    "consumedContracts": 1308,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -15141,6 +15141,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -38419,6 +38436,19 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "EnqueueMailRelayEmailCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "EnqueueMailRelayEmailCommand",
@@ -74038,7 +74068,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 15
     },
     {
       "contract": "IEmailOutbox",
@@ -74480,7 +74510,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "IEmailTemplateProvider",
@@ -84319,6 +84349,19 @@
         "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs"
       ],
       "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IMailRelayDeliveryPolicy",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs"
+      ],
+      "consumerArea": "MailRelay",
       "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -84374,6 +84417,19 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailRelayDispatchNotifier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDispatchNotifier.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IMailRelayDispatchNotifier",
@@ -84634,6 +84690,19 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailRelayQueueStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IMailRelayQueueStore",
@@ -105014,6 +105083,19 @@
         "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -118458,7 +118540,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AccessTokenSecurityStateValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 16
     },
     {
       "contract": "IUserAccessTokenSecurityReader",
@@ -118550,6 +118632,71 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/UsersSecurityReaderOwnershipTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AccessTokenSecurityStateValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
     },
     {
       "contract": "IUserAchievementStore",
@@ -121864,7 +122011,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IUserLookupRepository",
@@ -125400,7 +125547,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IUserRoleCatalogService",
@@ -126167,7 +126314,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IUserWriteRepository",
@@ -129650,6 +129797,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndProductsFlowTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "LoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationSecurityRegressionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -140374,6 +140534,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/RefreshTokenHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationSecurityRegressionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RefreshTokenHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RefreshTokenHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -140611,6 +140784,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationSecurityRegressionTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "RegisterHttpRequest",
@@ -141050,6 +141236,19 @@
         "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs"
       ],
       "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageLimits.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RelayEmailMessageRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
       "isTest": false,
       "referenceCount": 1
@@ -141131,6 +141330,19 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "RelayEmailMessageRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EnqueueMailRelayEmailLimitsTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "RelayEmailMessageRequest",

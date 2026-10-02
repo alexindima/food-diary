@@ -21,9 +21,7 @@ internal sealed class UserAuthenticationRegistrationService(
             .GetByEmailIncludingDeletedAsync(registration.Email, cancellationToken)
             .ConfigureAwait(false);
         if (existingUser is not null) {
-            return existingUser.DeletedAt is not null
-                ? Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted)
-                : Result.Failure<UserAuthenticationPrincipalModel>(EmailAlreadyExists);
+            return Result.Failure<UserAuthenticationPrincipalModel>(EmailAlreadyExists);
         }
 
         var user = User.Create(registration.Email, passwordHasher.Hash(registration.Password));

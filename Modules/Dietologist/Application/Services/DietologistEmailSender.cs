@@ -1,6 +1,8 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Email.Contracts.Email.Common;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace FoodDiary.Modules.Dietologist.Application.Services;
 
@@ -26,7 +28,7 @@ public sealed class DietologistEmailSender(
             : ApplyTemplateTokens(template.Subject, link, brand, clientName);
         string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
             ? fallbackHtml
-            : ApplyTemplateTokens(template.HtmlBody, link, brand, clientName);
+            : ApplyTemplateTokens(template.HtmlBody, WebUtility.HtmlEncode(link), WebUtility.HtmlEncode(brand), WebUtility.HtmlEncode(clientName));
         string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
             ? fallbackText
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
@@ -77,15 +79,18 @@ public sealed class DietologistEmailSender(
 
         return (
             subject,
-            BuildTemplate(subject, intro, ctaLabel, link, footer, brand),
+            BuildTemplate(WebUtility.HtmlEncode(subject), WebUtility.HtmlEncode(intro), WebUtility.HtmlEncode(ctaLabel),
+                WebUtility.HtmlEncode(link), WebUtility.HtmlEncode(footer), WebUtility.HtmlEncode(brand)),
             $"{intro}\n\n{ctaLabel}: {link}\n\n{footer}");
     }
 
     private static string ApplyTemplateTokens(string value, string link, string brand, string clientName) {
-        return value
-            .Replace("{{link}}", link, StringComparison.OrdinalIgnoreCase)
-            .Replace("{{brand}}", brand, StringComparison.OrdinalIgnoreCase)
-            .Replace("{{clientName}}", clientName, StringComparison.OrdinalIgnoreCase);
+        return Regex.Replace(value, "\\{\\{(?<token>link|brand|clientName)\\}\\}", match =>
+            match.Groups["token"].Value.ToLowerInvariant() switch {
+                "link" => link,
+                "brand" => brand,
+                _ => clientName,
+            }, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(1));
     }
 
     private static string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer, string brand) =>

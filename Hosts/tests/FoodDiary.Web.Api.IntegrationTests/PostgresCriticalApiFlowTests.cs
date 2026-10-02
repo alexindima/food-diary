@@ -57,9 +57,9 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
         Assert.NotNull(registerPayload);
-        Assert.False(string.IsNullOrWhiteSpace(registerPayload.RefreshToken));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(registerResponse)));
 
-        string originalRefreshToken = registerPayload.RefreshToken;
+        string originalRefreshToken = AuthenticationResponseCookies.ReadRefreshToken(registerResponse);
         HttpResponseMessage refreshResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/refresh",
             new RefreshTokenHttpRequest(originalRefreshToken));
@@ -68,8 +68,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
         Assert.NotNull(refreshPayload);
         Assert.False(string.IsNullOrWhiteSpace(refreshPayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(refreshPayload.RefreshToken));
-        Assert.NotEqual(originalRefreshToken, refreshPayload.RefreshToken, StringComparer.Ordinal);
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(refreshResponse)));
+        Assert.NotEqual(originalRefreshToken, AuthenticationResponseCookies.ReadRefreshToken(refreshResponse), StringComparer.Ordinal);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshPayload.AccessToken);
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
@@ -111,7 +111,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.OK, restoreResponse.StatusCode);
         Assert.NotNull(restorePayload);
         Assert.False(string.IsNullOrWhiteSpace(restorePayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(restorePayload.RefreshToken));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(restoreResponse)));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", restorePayload.AccessToken);
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
@@ -227,7 +227,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.OK, confirmResponse.StatusCode);
         Assert.NotNull(confirmPayload);
         Assert.False(string.IsNullOrWhiteSpace(confirmPayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(confirmPayload.RefreshToken));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(confirmResponse)));
         Assert.Equal(email, confirmPayload.User.Email);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", confirmPayload.AccessToken);

@@ -26,6 +26,10 @@ public sealed class AuthenticationCookieResultFilterTests {
             new ResultExecutedContext(actionContext, [], result, controller)));
 
         string setCookie = Assert.Single(httpContext.Response.Headers.SetCookie)!;
+        string json = System.Text.Json.JsonSerializer.Serialize(response, System.Text.Json.JsonSerializerOptions.Web);
+        Assert.DoesNotContain("refreshToken", json, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("refresh-token", json, StringComparison.Ordinal);
+        Assert.Contains("access-token", json, StringComparison.Ordinal);
         Assert.Multiple(
             () => Assert.Contains($"{RefreshTokenCookieService.CookieName}=refresh-token", setCookie, StringComparison.Ordinal),
             () => Assert.Contains("path=/api/v1/auth", setCookie, StringComparison.OrdinalIgnoreCase),

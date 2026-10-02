@@ -32,7 +32,6 @@ const loginFakeToken = createFakeJwt({ nameid: 'user-123', role: 'User' });
 
 const loginAuthResponse = {
     accessToken: loginFakeToken,
-    refreshToken: 'refresh-token-abc',
     user: {
         id: 'user-123',
         email: 'test@example.com',
@@ -326,7 +325,6 @@ describe('register', () => {
 
     const authResponse = {
         accessToken: fakeToken,
-        refreshToken: 'refresh-new',
         user: {
             id: 'new-user-456',
             email: 'new@example.com',
@@ -406,7 +404,6 @@ describe('refreshToken', () => {
         expect(req.request.body).toEqual({ refreshToken: 'existing-refresh-token' });
         req.flush({
             accessToken: createFakeJwt({ sub: 'user-1' }),
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
     });
@@ -422,7 +419,6 @@ describe('refreshToken', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: newToken,
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
@@ -442,7 +438,6 @@ describe('refreshToken', () => {
 
         requests[0].flush({
             accessToken: newToken,
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
@@ -459,7 +454,6 @@ describe('refreshToken', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: createFakeJwt({ sub: 'user-1' }),
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
@@ -523,7 +517,6 @@ describe('session restore', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: restoredToken,
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-restore-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
@@ -556,7 +549,6 @@ describe('session restore', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: restoredToken,
-            refreshToken: 'rotated-refresh-token',
             user: { id: 'user-expired', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 

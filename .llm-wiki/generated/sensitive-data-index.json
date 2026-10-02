@@ -540,14 +540,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 7
+      "line": 8
     },
     {
       "category": "credential",

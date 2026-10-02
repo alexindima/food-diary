@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 66,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithoutTestReferences": 42,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5270,16 +5270,6 @@
       "name": "CompleteTelegramAuthenticationCommandValidator",
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "EnqueueMailRelayEmailCommandValidator",
-      "role": "Validator",
-      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

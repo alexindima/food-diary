@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4317,
-    "symbols": 4248,
+    "sourceFiles": 4320,
+    "symbols": 4251,
     "interfaceImplementationLinks": 192,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2219,
+      "class": 2221,
       "enum": 65,
-      "interface": 403,
+      "interface": 404,
       "record": 1440,
       "record struct": 121
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1743,
+      "Other": 1746,
       "Query": 297,
       "QueryHandler": 213,
       "ReadModelRepository": 33,
@@ -1942,7 +1942,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ApiApplicationBuilderExtensions",
@@ -1956,7 +1956,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -10258,7 +10258,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Application/Services/DietologistEmailSender.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "DietologistInvitationReadService",
@@ -15420,6 +15420,13 @@
       "line": 2
     },
     {
+      "name": "IUserAccessTokenSessionReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs",
+      "line": 2
+    },
+    {
       "name": "PasswordResetMessage",
       "kind": "record",
       "role": "Other",
@@ -15649,6 +15656,13 @@
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
       "line": 9
+    },
+    {
+      "name": "AccessTokenSessionReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
+      "line": 6
     },
     {
       "name": "RefreshTokenSessionRepository",
@@ -16103,7 +16117,7 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ExchangeImpersonationHttpResponse",
@@ -27992,6 +28006,13 @@
       "line": 2
     },
     {
+      "name": "RelayEmailMessageLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageLimits.cs",
+      "line": 4
+    },
+    {
       "name": "RelayEmailMessageRequest",
       "kind": "record",
       "role": "Request",
@@ -31227,7 +31248,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 39
+      "line": 40
     },
     {
       "service": "IIdempotencyStore",

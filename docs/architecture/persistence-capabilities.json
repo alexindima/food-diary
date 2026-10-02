@@ -816,7 +816,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "bdf044c0440057a36176932893cf932175f2443e2d9cf45b810a7e6c2b4d242a"
+      "technicalSourceSha256": "29eadca8c91f87549d00a0905b25cdd4f3f8611707d2e432b43a602f8f823f98"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",

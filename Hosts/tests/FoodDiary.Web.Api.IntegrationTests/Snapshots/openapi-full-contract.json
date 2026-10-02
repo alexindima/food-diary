@@ -23416,12 +23416,6 @@
           "Nullable": true
         },
         {
-          "Name": "refreshToken",
-          "Required": false,
-          "Type": "string",
-          "Nullable": true
-        },
-        {
           "Name": "user",
           "Required": false,
           "Reference": "#/components/schemas/UserHttpResponse",

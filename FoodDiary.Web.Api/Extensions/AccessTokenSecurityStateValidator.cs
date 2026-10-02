@@ -1,7 +1,9 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Globalization;
 using System.Security.Claims;
 using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -9,6 +11,7 @@ internal static class AccessTokenSecurityStateValidator {
     public static async Task<bool> IsCurrentAsync(
         ClaimsPrincipal? principal,
         IUserAccessTokenSecurityReader securityReader,
+        IUserAccessTokenSessionReader sessionReader,
         CancellationToken cancellationToken) {
         string? userIdClaim = principal?.FindFirstValue(ClaimTypes.NameIdentifier);
         string? securityVersionClaim = principal?.FindFirstValue(JwtSecurityClaimNames.SecurityVersion);
@@ -26,8 +29,17 @@ internal static class AccessTokenSecurityStateValidator {
             return false;
         }
 
-        return await securityReader
-            .IsCurrentAsync(userId, securityVersion, cancellationToken)
-            .ConfigureAwait(false);
+        if (!await securityReader.IsCurrentAsync(userId, securityVersion, cancellationToken).ConfigureAwait(false)) {
+            return false;
+        }
+
+        if (string.Equals(principal?.FindFirstValue(JwtImpersonationClaimNames.IsImpersonation), "true", StringComparison.Ordinal)) {
+            return Guid.TryParse(principal?.FindFirstValue(JwtImpersonationClaimNames.ActorUserId), out Guid actorId) &&
+                   actorId != Guid.Empty;
+        }
+
+        return Guid.TryParse(principal?.FindFirstValue(JwtSecurityClaimNames.RefreshSessionId), out Guid sessionId) &&
+               sessionId != Guid.Empty &&
+               await sessionReader.IsActiveAsync(userId, sessionId, cancellationToken).ConfigureAwait(false);
     }
 }

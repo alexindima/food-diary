@@ -4,11 +4,32 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserAuthenticationRegistrationServiceTests {
+    [Fact]
+    public async Task RegisterAsync_ActiveAndDeletedAccounts_ReturnIdenticalErrorsWithoutIssuingIdentity() {
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        IUserRoleCatalogService roles = Substitute.For<IUserRoleCatalogService>();
+        var active = User.Create("existing@example.com", "hash");
+        var deleted = User.Create("existing@example.com", "hash");
+        deleted.DeleteAccount(DateTime.UtcNow);
+        lookup.GetByEmailIncludingDeletedAsync("existing@example.com", Arg.Any<CancellationToken>()).Returns(active, deleted);
+        UserAuthenticationRegistrationService service = CreateService(lookup, writer, roles);
+        var registration = new UserRegistrationModel("existing@example.com", "password", "en", "token", DateTime.UtcNow.AddHours(24), DateTime.UtcNow);
+
+        Result<UserAuthenticationPrincipalModel> activeResult = await service.RegisterAsync(registration, CancellationToken.None);
+        Result<UserAuthenticationPrincipalModel> deletedResult = await service.RegisterAsync(registration, CancellationToken.None);
+
+        Assert.True(activeResult.IsFailure);
+        Assert.True(deletedResult.IsFailure);
+        Assert.Equal(System.Text.Json.JsonSerializer.Serialize(activeResult.Error), System.Text.Json.JsonSerializer.Serialize(deletedResult.Error));
+        await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
+    }
     [Fact]
     public async Task BootstrapInitialAdminAsync_WhenUserExists_DoesNotCreateAnotherUser() {
         IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();

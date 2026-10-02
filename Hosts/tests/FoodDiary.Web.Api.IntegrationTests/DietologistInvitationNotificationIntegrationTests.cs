@@ -203,7 +203,11 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
             new UserId(user.UserId),
             user.Email,
             [RoleNames.Dietologist],
-            securityVersion);
+            expiresAtUtc: null,
+            securityVersion,
+            Guid.Parse(new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler()
+                .ReadJwtToken(user.Client.DefaultRequestHeaders.Authorization!.Parameter!)
+                .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value));
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
