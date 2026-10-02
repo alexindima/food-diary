@@ -16622,7 +16622,7 @@
       "responseType": "FastingOverview",
       "urlExpression": "'overview'",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
-      "line": 119,
+      "line": 109,
       "publicMethod": "requestOverview",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.fasting",

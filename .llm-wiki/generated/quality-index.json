@@ -512,11 +512,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "nonBlankLines": 621,
+      "nonBlankLines": 622,
       "decisionPoints": 62,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.42
+      "structuralRiskScore": 105.44
     },
     {
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -9282,11 +9282,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
-      "nonBlankLines": 107,
-      "decisionPoints": 4,
+      "nonBlankLines": 97,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.14
+      "structuralRiskScore": 4.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.ts",
@@ -9410,11 +9410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
-      "nonBlankLines": 62,
+      "nonBlankLines": 63,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
+      "structuralRiskScore": 2.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-item/fasting-history-item.ts",
@@ -9570,11 +9570,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "nonBlankLines": 561,
+      "nonBlankLines": 567,
       "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.22
+      "structuralRiskScore": 77.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/models/fasting.data.ts",
@@ -9618,11 +9618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "nonBlankLines": 621,
+      "nonBlankLines": 622,
       "decisionPoints": 62,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.42
+      "structuralRiskScore": 105.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/gamification/api/gamification.service.ts",

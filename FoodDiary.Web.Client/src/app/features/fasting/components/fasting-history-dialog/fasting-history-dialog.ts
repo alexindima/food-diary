@@ -17,6 +17,7 @@ export type FastingHistoryDialogData = {
     historyItems: Signal<readonly FastingHistorySessionViewModel[]>;
     canLoadMoreHistory: Signal<boolean>;
     isLoadingMoreHistory: Signal<boolean>;
+    historyError: Signal<string | null>;
     onSessionOpen: (session: FastingSession) => void;
     onHistoryLoadMore: () => void;
 };

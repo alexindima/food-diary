@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import { FastingService } from '../api/fasting.service';
 import type { FastingMessage, FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
@@ -147,6 +148,47 @@ describe('FastingFacade overview history', () => {
         );
         expect(facade.history()).toEqual([activeSession, olderSession]);
         expect(facade.historyPage()).toBe(HISTORY_PAGE);
+    });
+});
+
+describe('FastingFacade history recovery', () => {
+    beforeEach(setupFacade);
+    afterEach(teardownFacade);
+
+    it('preserves loaded rows and paging on failure, then retries the same page without duplicate requests', () => {
+        facade.history.set([activeSession]);
+        facade.historyTotalPages.set(HISTORY_PAGE);
+        const pending = new Subject<PageOf<FastingSession>>();
+        fastingService.getHistory.mockReturnValueOnce(pending);
+        facade.loadMoreHistory();
+        facade.loadMoreHistory();
+        expect(fastingService.getHistory).toHaveBeenCalledOnce();
+        expect(facade.isLoadingMoreHistory()).toBe(true);
+
+        pending.error(new Error('Unavailable'));
+        expect(facade.historyError()).toBe('FASTING.REQUEST_ERROR');
+        expect(facade.isLoadingMoreHistory()).toBe(false);
+        expect(facade.history()).toEqual([activeSession]);
+        expect(facade.historyPage()).toBe(1);
+        expect(facade.historyTotalPages()).toBe(HISTORY_PAGE);
+
+        const older = { ...activeSession, id: 'older-session' };
+        fastingService.getHistory.mockReturnValueOnce(
+            of({
+                data: [older],
+                page: HISTORY_PAGE,
+                limit: 10,
+                totalPages: HISTORY_PAGE,
+                totalItems: HISTORY_TOTAL_ITEMS,
+            }),
+        );
+        facade.loadMoreHistory();
+        expect(fastingService.getHistory).toHaveBeenLastCalledWith(expect.objectContaining({ page: HISTORY_PAGE }));
+        expect(facade.history()).toEqual([activeSession, older]);
+        expect(facade.historyPage()).toBe(HISTORY_PAGE);
+        expect(facade.historyError()).toBeNull();
+        facade.loadMoreHistory();
+        expect(fastingService.getHistory).toHaveBeenCalledTimes(HISTORY_PAGE);
     });
 });
 

@@ -75,6 +75,7 @@ export class FastingFacade {
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
     public readonly historyPage = signal(1);
+    public readonly historyError = signal<string | null>(null);
     public readonly historyTotalPages = signal(0);
     public readonly isLoadingMoreHistory = signal(false);
     public readonly insightsData = signal<FastingInsights>({ alerts: [], insights: [] });
@@ -158,6 +159,7 @@ export class FastingFacade {
             return;
         }
 
+        this.historyError.set(null);
         const range = this.getHistoryRange();
         this.trackRequest(
             this.isLoadingMoreHistory,
@@ -171,6 +173,9 @@ export class FastingFacade {
                 this.history.update(current => [...current, ...history.data]);
                 this.historyPage.set(history.page);
                 this.historyTotalPages.set(history.totalPages);
+            },
+            () => {
+                this.historyError.set('FASTING.REQUEST_ERROR');
             },
         );
     }
@@ -461,6 +466,7 @@ export class FastingFacade {
     }
 
     private applyOverview(overview: FastingOverview): void {
+        this.historyError.set(null);
         this.currentSession.set(overview.currentSession);
         this.stats.set(overview.stats);
         this.history.set(overview.history.data);

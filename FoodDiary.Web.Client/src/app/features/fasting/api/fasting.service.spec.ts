@@ -107,6 +107,16 @@ describe('FastingService overview', () => {
 });
 
 describe('FastingService history', () => {
+    it('propagates history failures instead of reporting an empty final page', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getHistory({ from: '2026-04-01', to: '2026-04-30', page: 2 }).subscribe({ next, error });
+        const request = httpMock.expectOne(candidate => candidate.url === `${BASE_URL}/history`);
+        request.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledOnce();
+    });
+
     it('should request paged fasting history with query params', () => {
         const payload = {
             data: [],

@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6b482aae092817b5b39d305855be9e953d81751ea63f4b1a4d195fd3d1b2a107"
+          "sha256": "e62868b5cf2a3fa9e26a16cb881861316d1ddd4d9e931ceecc53e9d70f49859a"
         }
       ],
-      "reason": "Reviewed refreshed test-reference inventory including current recommendation paging tests and earlier committed catalog export boundary tests. Frontend4974/backendfocused512/architecture2116 passed, solution build passed; Docker75 API tests explicitly skipped. Generated navigation remains discovery evidence.",
+      "reason": "Reviewed bounded history error state, preserving loaded rows and pagination, pending request guard and same-page recovery. New service/facade regressions and186executed tests provide behavior evidence; quality index remains static navigation.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:26:14.9670046Z"
+      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
+      "reviewedAtUtc": "2026-10-02T20:11:09.3285763Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,17 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6b482aae092817b5b39d305855be9e953d81751ea63f4b1a4d195fd3d1b2a107"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "63decfc14a48c38844610db518075d85859908a900a029520cb6bd255011a76f"
+          "sha256": "e62868b5cf2a3fa9e26a16cb881861316d1ddd4d9e931ceecc53e9d70f49859a"
         }
       ],
-      "reason": "Reviewed regenerated quality/source navigation alongside actual owner-filtered recommendation SQL, bounds and cancellation. Real client and specialist pages50+1 preserve ownership; anonymous401/wrong-role403 passed. Navigation remains accurate and is not claimed as security coverage.",
+      "reason": "Reviewed history failure handling: UI stores an existing translation key and preserves owner-scoped records; API error propagation adds no credentials, logs, provider sharing or persistence. Browser-only failure fixtures and read-only real paging checks verify recovery.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:26:15.5526763Z"
+      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
+      "reviewedAtUtc": "2026-10-02T20:11:10.8347085Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1049,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "37fcf0ae129e9f1cb219eb34d5bf7629c459575e597b9cfdbfdbb776db038517"
+          "sha256": "435719a317c27ebe264d3528dc3f9c6cfa6c43cf147d5296d1e0e9c4ab27a74f"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "853fdfb8d0fbcc7740badf173a03e8295e99fdd1602d5e9d7a26f5b088587a1c"
+          "sha256": "32c2f838c8c2f618a7792e5017ec042d88aff0ef10c5f3380707038faf22083f"
         }
       ],
-      "reason": "Reviewed client and specialist recommendation service consumers using existing complete-collection helper; native51cards each and old card keyboard access verified, frontend4974 tests passed. Runtime change is recommendation read-only Skip/Take with stable date/Id order; no job/DI/provider changes, JobManager178 and architecture2116 passed; workflow navigation remains accurate.",
+      "reason": "Verified fasting page to facade to getHistory caller and dialog data flow in current sources. Frontend indexes only shift overview method and dialog declaration line positions; selectors, HTTP endpoint and response shape retain their existing navigation boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:34.0636065Z"
+      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
+      "reviewedAtUtc": "2026-10-02T20:11:12.3217920Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1147,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "37fcf0ae129e9f1cb219eb34d5bf7629c459575e597b9cfdbfdbb776db038517"
+          "sha256": "435719a317c27ebe264d3528dc3f9c6cfa6c43cf147d5296d1e0e9c4ab27a74f"
         }
       ],
-      "reason": "Reviewed optional Page/Limit defaults1/50, unchanged array response and auth predicates; exact snapshot diff contains only two GET query additions; api-compat passed; backend solution build and application271/presentation42/infrastructure21 tests passed. Docker75 host tests explicitly skipped; live PostgreSQL client and specialist pages50+1 verified.",
+      "reason": "Reviewed fasting history dialog data signal supplied by its page, localized alert and retained retry action; service propagates transport errors to the facade. Native keyboard503/retry and186focused tests cover the changed path; generated contract diff only shifts overview source line.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:32.6486480Z"
+      "gitHead": "9ff4ddcb90b7856a78e8df16d359df9565177c23",
+      "reviewedAtUtc": "2026-10-02T20:11:07.6607135Z"
     },
     {
       "pageId": "workflow.query-context",

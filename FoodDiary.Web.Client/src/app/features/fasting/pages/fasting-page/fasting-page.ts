@@ -245,6 +245,7 @@ export class FastingPageComponent {
                 historyItems: this.historyItems,
                 canLoadMoreHistory: this.canLoadMoreHistory,
                 isLoadingMoreHistory: this.isLoadingMoreHistory,
+                historyError: this.facade.historyError,
                 onSessionOpen: session => {
                     this.openSessionDetails(session);
                 },

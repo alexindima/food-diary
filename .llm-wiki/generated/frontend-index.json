@@ -3911,7 +3911,7 @@
       "role": "Component",
       "selector": "fd-fasting-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
-      "line": 39
+      "line": 40
     },
     {
       "name": "FastingHistoryItemComponent",

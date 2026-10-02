@@ -102,17 +102,7 @@ export class FastingService extends ApiService {
             to: query.to,
             page: query.page ?? 1,
             limit: query.limit ?? this.defaultLimits.historyPageSize,
-        }).pipe(
-            catchError((error: unknown) =>
-                fallbackApiError('Get fasting history error', error, {
-                    data: [],
-                    page: query.page ?? 1,
-                    limit: query.limit ?? this.defaultLimits.historyPageSize,
-                    totalPages: 0,
-                    totalItems: 0,
-                }),
-            ),
-        );
+        }).pipe(catchError((error: unknown) => rethrowApiError('Get fasting history error', error)));
     }
 
     private requestOverview(): Observable<FastingOverview> {

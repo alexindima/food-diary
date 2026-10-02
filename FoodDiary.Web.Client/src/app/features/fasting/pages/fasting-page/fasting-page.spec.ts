@@ -369,6 +369,7 @@ type FastingFacadeMock = {
     historyPage: ReturnType<typeof signal<number>>;
     historyTotalPages: ReturnType<typeof signal<number>>;
     isLoadingMoreHistory: ReturnType<typeof signal<boolean>>;
+    historyError: ReturnType<typeof signal<string | null>>;
     insightsData: WritableSignal<FastingInsights>;
     checkInSavedVersion: ReturnType<typeof signal<number>>;
     selectedMode: ReturnType<typeof signal<'intermittent' | 'extended' | 'cyclic'>>;
@@ -484,6 +485,7 @@ function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof cr
         historyPage: signal(1),
         historyTotalPages: signal(1),
         isLoadingMoreHistory: signal(false),
+        historyError: signal<string | null>(null),
         insightsData: signal<FastingInsights>({ alerts: [], insights: [] }),
         checkInSavedVersion: signal(0),
         selectedMode: signal<'intermittent' | 'extended' | 'cyclic'>('intermittent'),

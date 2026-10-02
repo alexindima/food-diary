@@ -1,5 +1,8 @@
 <fd-ui-dialog-shell size="lg" [title]="'FASTING.TOUR.HISTORY_TITLE' | translate">
     <div class="fasting-history-dialog__body">
+        @if (data.historyError(); as errorKey) {
+            <p role="alert" class="fd-ui-body-sm">{{ errorKey | translate }}</p>
+        }
         @if (data.historyItems().length === 0) {
             <p class="fasting-history-dialog__empty fd-ui-body-sm">{{ 'FASTING.NO_HISTORY' | translate }}</p>
         } @else {
