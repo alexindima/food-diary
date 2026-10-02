@@ -524,6 +524,41 @@ describe('CycleTrackingFacade settings saving', () => {
     });
 });
 
+describe('CycleTrackingFacade day clear recovery', () => {
+    it('retains all records on failed clear and removes them only after a successful retry', () => {
+        cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), dayNotes: [{ date: '2026-04-02', notes: 'saved note' }] }));
+        facade.initialize();
+        const original = facade.cycle();
+        cyclesService.clearDay.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        facade.clearDay('2026-04-02');
+        expect(facade.dayClearError()).toBe('CYCLE_TRACKING.CLEAR_DAY_FAILED');
+        expect(facade.cycle()).toEqual(original);
+        expect(facade.clearingDayDate()).toBeNull();
+        facade.clearDay('2026-04-02');
+        expect(cyclesService.clearDay).toHaveBeenCalledTimes(2);
+        expect(facade.dayClearError()).toBeNull();
+        expect(facade.cycle()?.dayNotes).toEqual([]);
+    });
+
+    it('prevents duplicate clear, save and edit operations while clearing', () => {
+        facade.initialize();
+        setValidDayForm();
+        const draft = facade.dayModel();
+        const pending = new Subject<void>();
+        cyclesService.clearDay.mockReturnValue(pending);
+        facade.clearDay('2026-04-02');
+        facade.clearDay('2026-04-02');
+        facade.saveDay();
+        facade.editDay('2026-04-01');
+        expect(cyclesService.clearDay).toHaveBeenCalledOnce();
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        expect(facade.dayModel()).toEqual(draft);
+        pending.next();
+        pending.complete();
+        expect(facade.clearingDayDate()).toBeNull();
+    });
+});
+
 describe('CycleTrackingFacade day editing', () => {
     it('discards unsaved day changes when editing is cancelled', () => {
         facade.dayModel.update(value => ({ ...value, nausea: SEVERE_SYMPTOM_INTENSITY, notes: 'unsaved' }));

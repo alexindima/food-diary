@@ -3293,7 +3293,7 @@
       "role": "Component",
       "selector": "fd-cycle-days-card",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "CycleFactorItemComponent",
@@ -6987,8 +6987,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4020,
-      "russianProperties": 4020,
+      "englishProperties": 4021,
+      "russianProperties": 4021,
       "countsMatch": true
     },
     {

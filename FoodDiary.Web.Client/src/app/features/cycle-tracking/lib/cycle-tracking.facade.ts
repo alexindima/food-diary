@@ -82,6 +82,8 @@ export class CycleTrackingFacade {
     public readonly settingsError = signal<string | null>(null);
     public readonly factorError = signal<string | null>(null);
     public readonly clearingDayDate = signal<string | null>(null);
+    public readonly dayClearError = signal<string | null>(null);
+    private readonly isDayMutationPending = computed(() => this.isSavingDay() || this.clearingDayDate() !== null);
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
     public readonly editingEpisodeId = signal<string | null>(null);
@@ -457,7 +459,7 @@ export class CycleTrackingFacade {
 
     private async saveDayAsync(): Promise<void> {
         const currentCycle = this.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.isSavingDay()) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.isDayMutationPending()) {
             return;
         }
 
@@ -599,7 +601,7 @@ export class CycleTrackingFacade {
 
     public editDay(date: string): void {
         const currentCycle = this.cycle();
-        if (currentCycle === null || this.isSavingDay()) {
+        if (currentCycle === null || this.isDayMutationPending()) {
             return;
         }
 
@@ -755,7 +757,7 @@ export class CycleTrackingFacade {
 
     public clearDay(date: string): void {
         const currentCycle = this.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.clearingDayDate() !== null) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.isDayMutationPending()) {
             return;
         }
 
@@ -764,6 +766,7 @@ export class CycleTrackingFacade {
             return;
         }
 
+        this.dayClearError.set(null);
         this.clearingDayDate.set(date);
         this.cyclesService
             .clearDay(currentCycle.id, toCycleDateKey(date))
@@ -773,21 +776,28 @@ export class CycleTrackingFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(() => {
-                const current = this.cycle();
-                if (current === null) {
-                    return;
-                }
+            .subscribe({
+                next: () => {
+                    const current = this.cycle();
+                    if (current === null) {
+                        return;
+                    }
 
-                const updatedCycle = {
-                    ...current,
-                    dayNotes: (current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dateKey),
-                    bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
-                    symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
-                    fertilitySignals: current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dateKey),
-                };
-                this.cycle.set(updatedCycle);
-                this.loadNutritionSummary(updatedCycle);
+                    const updatedCycle = {
+                        ...current,
+                        dayNotes: (current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dateKey),
+                        bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
+                        symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
+                        fertilitySignals: current.fertilitySignals.filter(
+                            fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dateKey,
+                        ),
+                    };
+                    this.cycle.set(updatedCycle);
+                    this.loadNutritionSummary(updatedCycle);
+                },
+                error: () => {
+                    this.dayClearError.set('CYCLE_TRACKING.CLEAR_DAY_FAILED');
+                },
             });
     }
 

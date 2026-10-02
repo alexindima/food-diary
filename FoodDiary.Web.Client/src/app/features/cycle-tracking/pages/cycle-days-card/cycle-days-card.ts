@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import type { CycleDayViewModel } from '../cycle-tracking-page-lib/cycle-tracking-page.types';
 import { CycleDayItemComponent } from './cycle-day-item';
 
 @Component({
     selector: 'fd-cycle-days-card',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, CycleDayItemComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, CycleDayItemComponent, FdUiFormErrorComponent],
     templateUrl: './cycle-days-card.html',
     styleUrl: '../cycle-tracking-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class CycleDaysCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly items = input.required<CycleDayViewModel[]>();
     public readonly clearingDate = input<string | null>(null);
+    public readonly clearError = input<string | null>(null);
     public readonly hasMore = input(false);
     public readonly isExpanded = input(false);
     public readonly editDay = output<string>();

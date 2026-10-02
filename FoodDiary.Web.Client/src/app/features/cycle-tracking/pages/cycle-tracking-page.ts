@@ -132,6 +132,7 @@ export class CycleTrackingPageComponent {
     protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly exportError = this.facade.exportError;
+    protected readonly dayClearError = this.facade.dayClearError;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly editingDayDate = this.facade.editingDayDate;
     protected readonly editingFactorId = this.facade.editingFactorId;
@@ -284,7 +285,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected editDay(date: string): void {
-        if (this.isSavingDay()) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null) {
             return;
         }
         this.facade.editDay(date);
@@ -293,7 +294,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected cancelDayEdit(): void {
-        if (this.isSavingDay()) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null) {
             return;
         }
         this.facade.cancelDayEdit();
@@ -301,7 +302,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected openDayEditor(): void {
-        if (this.isSavingDay()) {
+        if (this.isSavingDay() || this.clearingDayDate() !== null) {
             return;
         }
         const today = new Date();
@@ -319,7 +320,13 @@ export class CycleTrackingPageComponent {
     }
 
     protected openSettings(): void {
-        if (this.isSavingSettings() || this.isDeletingCycle() || this.isSavingDay() || this.cycle() === null) {
+        if (
+            this.isSavingSettings() ||
+            this.isDeletingCycle() ||
+            this.isSavingDay() ||
+            this.clearingDayDate() !== null ||
+            this.cycle() === null
+        ) {
             return;
         }
         this.facade.cancelSettingsEdit();
