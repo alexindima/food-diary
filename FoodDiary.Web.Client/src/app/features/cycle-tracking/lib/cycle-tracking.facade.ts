@@ -1,6 +1,7 @@
 import { buildDayEditModel, buildFertilitySignalPayload, buildSymptomClearCategories, buildSymptomPayload } from './cycle-day.mapper';
 import { runCycleExport } from './cycle-export.workflow';
 import type { CycleExportRange } from './cycle-export-range';
+import { cycleNutritionRange } from './cycle-nutrition-range';
 import {
     createDefaultCycleDayFormModel,
     type CycleDayFormModel,
@@ -474,8 +475,9 @@ export class CycleTrackingFacade {
         }
 
         this.isLoadingNutritionSummary.set(true);
+        const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()));
         this.cyclesService
-            .getNutritionSummary(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()))
+            .getNutritionSummary(range.dateFrom, range.dateTo)
             .pipe(
                 finalize(() => {
                     this.isLoadingNutritionSummary.set(false);

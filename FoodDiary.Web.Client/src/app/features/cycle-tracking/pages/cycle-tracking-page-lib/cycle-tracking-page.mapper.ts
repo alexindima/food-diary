@@ -205,6 +205,8 @@ export function buildCycleNutritionSummaryView(
 
     return {
         summary,
+        dateFromLabel: formatCycleDate(summary.dateFrom, locale, FULL_DATE_OPTIONS, UTC_TIME_ZONE),
+        dateToLabel: formatCycleDate(summary.dateTo, locale, FULL_DATE_OPTIONS, UTC_TIME_ZONE),
         hasEnoughData: summary.hasEnoughNutritionData,
         consentRequired: summary.consentRequired ?? false,
         completedCyclesAnalyzed: summary.completedCyclesAnalyzed ?? 0,

@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f257b996937c4fa620583e5f83a5177285fd9450227ac6c463ec80f9be6e1e73"
+          "sha256": "6875c6157ada1ae103e49804d0194bc253e28c2d878a5d69f899b6966761b3f5"
         }
       ],
-      "reason": "Riskdelta reflects newshared dialog anddatehelper plus10range/regressioncases and4componentcases. Full4882tests pass and4componenttests independently; finalcomponentlintpass.",
+      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
       "baseRef": "HEAD",
-      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
-      "reviewedAtUtc": "2026-10-02T06:23:19.0898581Z"
+      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
+      "reviewedAtUtc": "2026-10-02T06:48:21.9909703Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f257b996937c4fa620583e5f83a5177285fd9450227ac6c463ec80f9be6e1e73"
+          "sha256": "6875c6157ada1ae103e49804d0194bc253e28c2d878a5d69f899b6966761b3f5"
         }
       ],
-      "reason": "Password remains transient dialogresult, sensitive endpointPOST unchanged; standardGETCSV excludes privateandfertilitymarkers onrealstoredfixture. No retention/auth/log/providerchange; exactownfixturescleaned204.",
+      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
       "baseRef": "HEAD",
-      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
-      "reviewedAtUtc": "2026-10-02T06:23:20.1702070Z"
+      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
+      "reviewedAtUtc": "2026-10-02T06:48:22.7642672Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fd8c8a124d4b6f719b9e992969c921fe2810554dd21082260d6a91275e30bcbd"
+          "sha256": "a984a8e549a55101248b747f431819731d088e0402235eff93ecb5eaf406295c"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4eeb2d9dcbd29361fc0fe13387454a55b3861b453bf949e7928f661a843b4c36"
+          "sha256": "340bc520dbb76cdd61c2d5364e3c568f33e125ba5deb71ce62da45cedaeb88a3"
         }
       ],
-      "reason": "Traced header actions -> common dialog -> selectedrange facade -> runCycleExport -> existing ExportService GETstandard/POSTsensitive. Selected dates survive nativequery; backendlimit366 preserved.",
+      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
       "baseRef": "HEAD",
-      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
-      "reviewedAtUtc": "2026-10-02T06:23:21.2696005Z"
+      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
+      "reviewedAtUtc": "2026-10-02T06:48:23.4949633Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fd8c8a124d4b6f719b9e992969c921fe2810554dd21082260d6a91275e30bcbd"
+          "sha256": "a984a8e549a55101248b747f431819731d088e0402235eff93ecb5eaf406295c"
         }
       ],
-      "reason": "Reviewed dialogdata/result/rangeinput,passwordconditional, pageconsumers and facade/workflowmapping. Existing endpoints unchanged. Real longhistory zeroGETinvalid, selected366daysGET200CSV; RUorder/future/password validation andCancel0requests.",
+      "reason": "Reviewed the cycle facade/service/card/mapper consumer chain and nutrition validator plus Meals temporal policy. Automatic summary now requests at most 366 inclusive calendar days and exposes server-returned analyzed dates in EN/RU without changing API, storage, consent, authentication, or data sharing. UTC date arithmetic avoids DST; focused helper/facade/mapper tests cover boundaries and rendered EN long-profile GET200 and RU390 no overflow validate the result. Index deltas reflect these existing consumers and tests; no shared UI or module graph change.",
       "baseRef": "HEAD",
-      "gitHead": "7d35cd518ad4f011aeeb58de4965107d9b3e6de1",
-      "reviewedAtUtc": "2026-10-02T06:23:17.9915801Z"
+      "gitHead": "8186758a60ed0821786da8d0a10a4ca4f5c3bf9e",
+      "reviewedAtUtc": "2026-10-02T06:48:24.0241719Z"
     },
     {
       "pageId": "workflow.query-context",

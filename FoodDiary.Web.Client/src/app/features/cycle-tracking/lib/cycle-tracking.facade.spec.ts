@@ -190,6 +190,21 @@ describe('CycleTrackingFacade loading recovery', () => {
     });
 });
 
+describe('CycleTrackingFacade nutrition range', () => {
+    it('requests a supported recent nutrition period for an older profile', () => {
+        vi.useFakeTimers();
+        try {
+            vi.setSystemTime(new Date('2026-10-02T12:00:00'));
+            cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), trackingStartDate: '2025-09-30' }));
+            facade.initialize();
+            expect(cyclesService.getNutritionSummary).toHaveBeenCalledWith('2025-10-02', '2026-10-02');
+            expect(facade.nutritionSummary()).not.toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
 describe('CycleTrackingFacade current cycle', () => {
     it('loads current cycle on initialize', () => {
         facade.initialize();

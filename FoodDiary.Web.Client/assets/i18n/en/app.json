@@ -2358,6 +2358,7 @@
         "CREATE_CYCLE_TITLE": "Start a new cycle",
         "EXPORT_CYCLE": "Export cycle CSV",
         "NUTRITION_SUMMARY_TITLE": "Cycle nutrition overlap",
+        "NUTRITION_SUMMARY_PERIOD": "Analyzed period: {{from}} – {{to}}; for longer histories, this summary uses the most recent 366 days, including both dates.",
         "NUTRITION_SUMMARY_EMPTY": "Log cycle days and meals in the same period to see nutrition overlap.",
         "NUTRITION_SUMMARY_LIMITED": "More paired cycle and meal days are needed before comparing bleeding and non-bleeding nutrition.",
         "NUTRITION_CONSENT_REQUIRED": "Turn on cycle nutrition insights in settings to calculate this private comparison.",

@@ -7,7 +7,7 @@
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2063,
+    "translationKeys": 2064,
     "consumerEdges": 1216,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -19384,6 +19384,7 @@
         "CYCLE_TRACKING.NUTRITION_PAIN_WITH_MEALS",
         "CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY",
         "CYCLE_TRACKING.NUTRITION_SUMMARY_LIMITED",
+        "CYCLE_TRACKING.NUTRITION_SUMMARY_PERIOD",
         "CYCLE_TRACKING.NUTRITION_SUMMARY_TITLE"
       ]
     },

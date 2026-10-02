@@ -331,6 +331,8 @@ describe('cycle tracking nutrition summary mapper', () => {
 
         expect(view?.summary.loggedCycleDays).toBe(NUTRITION_LOGGED_CYCLE_DAYS);
         expect(view?.hasEnoughData).toBe(true);
+        expect(view?.dateFromLabel).toBe('Apr 1, 2026');
+        expect(view?.dateToLabel).toBe('Apr 30, 2026');
         expect(view?.bleedingCaloriesLabel).toBe('2,100.3');
         expect(view?.nonBleedingCaloriesLabel).toBe('1,800');
         expect(view?.bleedingFiberLabel).toBe('18.5');

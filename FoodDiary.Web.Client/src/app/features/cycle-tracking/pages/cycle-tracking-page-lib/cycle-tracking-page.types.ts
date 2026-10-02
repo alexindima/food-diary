@@ -77,6 +77,8 @@ export type CyclePredictionViewModel = {
 
 export type CycleNutritionSummaryViewModel = {
     summary: CycleNutritionSummary;
+    dateFromLabel: string;
+    dateToLabel: string;
     hasEnoughData: boolean;
     consentRequired: boolean;
     completedCyclesAnalyzed: number;
