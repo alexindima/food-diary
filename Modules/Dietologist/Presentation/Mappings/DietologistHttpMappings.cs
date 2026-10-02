@@ -106,7 +106,7 @@ public static class DietologistHttpMappings {
                 int limit = 50) =>
                 new(userId, search, includeArchived, page, limit);
 
-        public GetMyRecommendationsQuery ToMyRecommendationsQuery() => new(userId);
+        public GetMyRecommendationsQuery ToMyRecommendationsQuery(int page = 1, int limit = 50) => new(userId, page, limit);
     }
 
     extension(DisconnectClientHttpRequest request) {
@@ -132,8 +132,8 @@ public static class DietologistHttpMappings {
                 new(userId, clientUserId, page, limit);
 
         public GetRecommendationsForClientQuery ToRecommendationsForClientQuery(
-        Guid userId) =>
-                new(userId, clientUserId);
+        Guid userId, int page = 1, int limit = 50) =>
+                new(userId, clientUserId, page, limit);
     }
 
     extension(CreateRecommendationHttpRequest request) {

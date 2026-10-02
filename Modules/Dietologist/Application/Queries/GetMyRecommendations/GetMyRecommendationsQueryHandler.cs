@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
@@ -25,7 +26,9 @@ public sealed class GetMyRecommendationsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, limit: PaginationPolicy.NormalizePageSize(query.Limit, 50),
+            page: PaginationPolicy.NormalizePage(query.Page),
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         var models = recommendations.Select(recommendation => recommendation.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
 

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Application.Queries.GetMyRecommendations;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Presentation.Api.Requests;
 using FoodDiary.Application.Contracts.Common.Models;
@@ -355,6 +356,23 @@ public sealed class DietologistNewEndpointsCoverageTests {
         IActionResult result = await controller.GetMyRecommendations(userId);
 
         Assert.IsType<List<RecommendationHttpResponse>>(Assert.IsType<OkObjectResult>(result).Value);
+    }
+
+    [Theory]
+    [InlineData(1, 50)]
+    [InlineData(2, 10)]
+    public async Task RecommendationsController_GetMyRecommendations_ForwardsPageAndLimit(int page, int limit) {
+        IRequest<Result<IReadOnlyList<RecommendationModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<RecommendationModel>>([]), request => sentRequest = request);
+        RecommendationsController controller = CreateController(new RecommendationsController(sender));
+        var userId = Guid.NewGuid();
+
+        await controller.GetMyRecommendations(userId, new GetRecommendationsHttpQuery(page, limit));
+
+        GetMyRecommendationsQuery query = Assert.IsType<GetMyRecommendationsQuery>(sentRequest);
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(page, query.Page);
+        Assert.Equal(limit, query.Limit);
     }
 
     private static T CreateController<T>(T controller) where T : ControllerBase {

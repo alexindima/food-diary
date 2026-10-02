@@ -3,6 +3,7 @@ import { EMPTY, expand, type Observable, reduce } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import type {
     CreateRecommendationCommentRequest,
     DietologistRecommendation,
@@ -15,7 +16,7 @@ export class RecommendationsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recommendations;
 
     public getMyRecommendations(): Observable<DietologistRecommendation[]> {
-        return this.get<DietologistRecommendation[]>('');
+        return loadPagedCollection((page, limit) => this.get<DietologistRecommendation[]>('', { page, limit }));
     }
 
     public markAsRead(recommendationId: string): Observable<void> {

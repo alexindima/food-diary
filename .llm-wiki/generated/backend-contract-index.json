@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1314,
+    "contracts": 1315,
     "ambiguousContracts": 2,
-    "consumerEdges": 10217,
-    "productionConsumerEdges": 5856,
-    "testConsumerEdges": 4361,
-    "consumedContracts": 1314,
+    "consumerEdges": 10226,
+    "productionConsumerEdges": 5858,
+    "testConsumerEdges": 4368,
+    "consumedContracts": 1315,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -8116,6 +8116,23 @@
       ],
       "definitionPaths": [
         "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetRecommendationsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -39463,6 +39480,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ExportCatalogProductsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ExportCatalogProductsQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ExportCatalogRecipesQuery",
       "roles": [
         "Query"
@@ -39487,6 +39517,19 @@
       "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ExportCatalogRecipesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExportCatalogRecipesQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ExportCycleQuery",
@@ -50068,7 +50111,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "GetMyRecommendationsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Queries/GetMyRecommendations/GetMyRecommendationsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetNotificationPreferencesQuery",
@@ -51693,7 +51749,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "GetRecommendationsForClientQuery",
@@ -51706,7 +51762,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "GetRecommendationsForClientQuery",
@@ -51718,6 +51774,58 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetRecommendationsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetRecommendationsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetRecommendationsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetRecommendationsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -96865,6 +96973,19 @@
         "Modules/Products/Contracts/Common/IProductOverviewReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ExportCatalogProductsQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IProductOverviewReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Common/IProductOverviewReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -103716,6 +103837,19 @@
         "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExportCatalogRecipesQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IRecipeOverviewReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/PublicRecipeQueryTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -107878,7 +108012,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "IRequest",
@@ -107917,7 +108051,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 16
     },
     {
       "contract": "IRequest",
@@ -113793,7 +113927,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "ISender",
@@ -113832,7 +113966,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ISender",

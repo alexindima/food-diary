@@ -92,7 +92,7 @@ describe('DietologistService client workspace', () => {
         goalsReq.flush({});
 
         service.getRecommendationsForClient('client-1').subscribe();
-        const recommendationsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations`);
+        const recommendationsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations?page=1&limit=100`);
         expect(recommendationsReq.request.method).toBe('GET');
         recommendationsReq.flush([]);
     });

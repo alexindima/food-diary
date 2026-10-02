@@ -9,8 +9,8 @@ namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendatio
 
 public sealed class RecommendationRepository(DbSet<Recommendation> records, IRecommendationReadModelRepository readModels) : IRecommendationRepository {
     public Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
-        UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) =>
-        readModels.GetByClientReadModelsAsync(clientUserId, limit, cancellationToken);
+        UserId clientUserId, int limit = 50, int page = 1, CancellationToken cancellationToken = default) =>
+        readModels.GetByClientReadModelsAsync(clientUserId, limit, page, cancellationToken);
 
     public async Task<IReadOnlyList<Recommendation>> GetByClientAsync(
         UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
@@ -23,8 +23,8 @@ public sealed class RecommendationRepository(DbSet<Recommendation> records, IRec
     }
 
     public Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
-        UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) =>
-        readModels.GetByDietologistAndClientReadModelsAsync(dietologistUserId, clientUserId, limit, cancellationToken);
+        UserId dietologistUserId, UserId clientUserId, int limit = 50, int page = 1, CancellationToken cancellationToken = default) =>
+        readModels.GetByDietologistAndClientReadModelsAsync(dietologistUserId, clientUserId, limit, page, cancellationToken);
 
     public async Task<IReadOnlyList<Recommendation>> GetByDietologistAndClientAsync(
         UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4338,
-    "symbols": 4269,
+    "sourceFiles": 4339,
+    "symbols": 4270,
     "interfaceImplementationLinks": 194,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2229,
       "enum": 65,
       "interface": 406,
-      "record": 1448,
+      "record": 1449,
       "record struct": 121
     },
     "roles": {
@@ -33,7 +33,7 @@
       "Mapping": 4,
       "Options": 70,
       "Other": 1750,
-      "Query": 299,
+      "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
@@ -10188,7 +10188,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetRecommendationCommentsQuery",
@@ -10223,7 +10223,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "SearchRecommendationTemplatesQuery",
@@ -10721,6 +10721,13 @@
       "role": "Query",
       "path": "Modules/Dietologist/Presentation/Requests/GetClientDashboardHttpQuery.cs",
       "line": 5
+    },
+    {
+      "name": "GetRecommendationsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Dietologist/Presentation/Requests/GetRecommendationsHttpQuery.cs",
+      "line": 4
     },
     {
       "name": "InviteDietologistHttpRequest",

@@ -6,4 +6,6 @@ namespace FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsFo
 
 public record GetRecommendationsForClientQuery(
     Guid? UserId,
-    Guid ClientUserId) : IQuery<Result<IReadOnlyList<RecommendationModel>>>, IUserRequest;
+    Guid ClientUserId,
+    int Page = 1,
+    int Limit = 50) : IQuery<Result<IReadOnlyList<RecommendationModel>>>, IUserRequest;

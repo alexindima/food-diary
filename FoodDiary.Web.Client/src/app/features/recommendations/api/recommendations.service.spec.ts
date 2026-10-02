@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { COLLECTION_PAGE_SIZE } from '../../../shared/api/load-paged-collection';
 import type { DietologistRecommendation } from '../../../shared/models/dietologist.data';
 import { RecommendationsService } from './recommendations.service';
 
@@ -33,9 +34,41 @@ describe('RecommendationsService', () => {
             expect(result).toEqual(recommendations);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`);
         expect(req.request.method).toBe('GET');
         req.flush(recommendations);
+    });
+
+    it('loads later recommendation pages before publishing the full history', () => {
+        const firstPage = Array.from({ length: COLLECTION_PAGE_SIZE }, (_, index) => ({ ...createRecommendation(), id: `rec-${index}` }));
+        const last = { ...createRecommendation(), id: 'oldest-recommendation' };
+        let result: DietologistRecommendation[] | undefined;
+
+        service.getMyRecommendations().subscribe(items => {
+            result = items;
+        });
+        httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`).flush(firstPage);
+        expect(result).toBeUndefined();
+        httpMock.expectOne(`${BASE_URL}/?page=2&limit=100`).flush([last]);
+
+        expect(result).toEqual([...firstPage, last]);
+    });
+
+    it('reports a later page failure instead of publishing incomplete history', () => {
+        const firstPage = Array.from({ length: COLLECTION_PAGE_SIZE }, () => createRecommendation());
+        const received: DietologistRecommendation[][] = [];
+        let failed = false;
+        service.getMyRecommendations().subscribe({
+            next: items => received.push(items),
+            error: () => {
+                failed = true;
+            },
+        });
+        httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`).flush(firstPage);
+        httpMock.expectOne(`${BASE_URL}/?page=2&limit=100`).flush({}, { status: 503, statusText: 'Unavailable' });
+
+        expect(failed).toBe(true);
+        expect(received).toEqual([]);
     });
 
     it('marks recommendation as read', () => {

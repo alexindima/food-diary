@@ -738,9 +738,10 @@ public partial class DietologistFeatureTests {
         public void Seed(Recommendation recommendation) => _recommendations.Add(recommendation);
 
         public Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
-            UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
+            UserId clientUserId, int limit = 50, int page = 1, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<RecommendationReadModel>>(
                 _recommendations.Where(r => r.ClientUserId == clientUserId)
+                    .Skip((page - 1) * limit)
                     .Take(limit)
                     .Select(ToReadModel)
                     .ToList());
@@ -751,9 +752,10 @@ public partial class DietologistFeatureTests {
                 _recommendations.Where(r => r.ClientUserId == clientUserId).Take(limit).ToList());
 
         public Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
-            UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
+            UserId dietologistUserId, UserId clientUserId, int limit = 50, int page = 1, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<RecommendationReadModel>>(
                 _recommendations.Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
+                    .Skip((page - 1) * limit)
                     .Take(limit)
                     .Select(ToReadModel)
                     .ToList());

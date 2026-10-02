@@ -67,7 +67,10 @@ public sealed class DietologistClientsController(ISender mediator, TimeProvider 
 
     [HttpGet("{clientUserId:guid}/recommendations")]
     [ProducesResponseType<List<RecommendationHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetRecommendationsForClient(Guid clientUserId, [FromCurrentUser] Guid userId) =>
-        HandleOk(clientUserId.ToRecommendationsForClientQuery(userId), static value => value.Select(x => x.ToHttpResponse()).ToList());
+    public Task<IActionResult> GetRecommendationsForClient(
+        Guid clientUserId,
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetRecommendationsHttpQuery? query = null) =>
+        HandleOk(clientUserId.ToRecommendationsForClientQuery(userId, query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
 }

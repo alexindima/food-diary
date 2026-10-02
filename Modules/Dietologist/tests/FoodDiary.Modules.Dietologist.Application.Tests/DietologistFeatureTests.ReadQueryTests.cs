@@ -1077,4 +1077,66 @@ public partial class DietologistFeatureTests {
         public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
+    [Fact]
+    public async Task GetMyRecommendations_WithSecondPage_ReturnsOnlyRequestedClientPage() {
+        var clientId = UserId.New();
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(clientId));
+        var recommendations = new InMemoryRecommendationRepository();
+        recommendations.Seed(Recommendation.Create(UserId.New(), UserId.New(), "Other client"));
+        recommendations.Seed(Recommendation.Create(UserId.New(), clientId, "First page"));
+        var second = Recommendation.Create(UserId.New(), clientId, "Second page");
+        recommendations.Seed(second);
+        GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler(recommendations, users);
+
+        Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
+            new GetMyRecommendationsQuery(clientId.Value, Page: 2, Limit: 1), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(second.Id.Value, Assert.Single(result.Value).Id);
+    }
+
+    [Fact]
+    public async Task GetRecommendationsForClient_WithSecondPage_PreservesRelationshipScope() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invitations = new InMemoryInvitationRepository();
+        invitations.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var recommendations = new InMemoryRecommendationRepository();
+        recommendations.Seed(Recommendation.Create(UserId.New(), clientId, "Other specialist"));
+        recommendations.Seed(Recommendation.Create(dietologistId, UserId.New(), "Other client"));
+        recommendations.Seed(Recommendation.Create(dietologistId, clientId, "First page"));
+        var second = Recommendation.Create(dietologistId, clientId, "Second page");
+        recommendations.Seed(second);
+        GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler(invitations, recommendations, users);
+
+        Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
+            new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value, Page: 2, Limit: 1), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(second.Id.Value, Assert.Single(result.Value).Id);
+    }
+
+    [Theory]
+    [InlineData(0, 0, 50)]
+    [InlineData(-1, 1000, 100)]
+    public async Task GetMyRecommendations_WithInvalidPaging_NormalizesAndBoundsPageSize(int page, int limit, int expectedCount) {
+        var clientId = UserId.New();
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(clientId));
+        var recommendations = new InMemoryRecommendationRepository();
+        for (int index = 0; index < 101; index++) {
+            recommendations.Seed(Recommendation.Create(UserId.New(), clientId, "Pagination recommendation"));
+        }
+        GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler(recommendations, users);
+
+        Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
+            new GetMyRecommendationsQuery(clientId.Value, page, limit), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(expectedCount, result.Value.Count);
+    }
+
 }

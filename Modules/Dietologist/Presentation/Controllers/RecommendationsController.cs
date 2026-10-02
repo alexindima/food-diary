@@ -16,8 +16,10 @@ namespace FoodDiary.Modules.Dietologist.Presentation.Controllers;
 public sealed class RecommendationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<RecommendationHttpResponse>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetMyRecommendations([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToMyRecommendationsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
+    public Task<IActionResult> GetMyRecommendations(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetRecommendationsHttpQuery? query = null) =>
+        HandleOk(userId.ToMyRecommendationsQuery(query?.Page ?? 1, query?.Limit ?? 50), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpPut("{recommendationId:guid}/read")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

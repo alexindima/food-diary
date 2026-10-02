@@ -117,6 +117,25 @@ public sealed class DietologistClientsControllerTests {
         GetRecommendationsForClientQuery query = Assert.IsType<GetRecommendationsForClientQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
+        Assert.Equal(1, query.Page);
+        Assert.Equal(50, query.Limit);
+    }
+
+    [Fact]
+    public async Task GetRecommendationsForClient_WithPaging_ForwardsPageAndLimit() {
+        IRequest<Result<IReadOnlyList<RecommendationModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<RecommendationModel>>([]), request => sentRequest = request);
+        DietologistClientsController controller = CreateController(sender);
+        var userId = Guid.NewGuid();
+        var clientUserId = Guid.NewGuid();
+
+        await controller.GetRecommendationsForClient(clientUserId, userId, new GetRecommendationsHttpQuery(Page: 2, Limit: 10));
+
+        GetRecommendationsForClientQuery query = Assert.IsType<GetRecommendationsForClientQuery>(sentRequest);
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(clientUserId, query.ClientUserId);
+        Assert.Equal(2, query.Page);
+        Assert.Equal(10, query.Limit);
     }
 
     [Fact]

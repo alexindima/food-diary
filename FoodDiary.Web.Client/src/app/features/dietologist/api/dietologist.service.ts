@@ -97,7 +97,9 @@ export class DietologistService extends ApiService {
     }
 
     public getRecommendationsForClient(clientUserId: string): Observable<DietologistRecommendation[]> {
-        return this.get<DietologistRecommendation[]>(`clients/${clientUserId}/recommendations`);
+        return loadPagedCollection((page, limit) =>
+            this.get<DietologistRecommendation[]>(`clients/${clientUserId}/recommendations`, { page, limit }),
+        );
     }
 
     public disconnectClient(clientUserId: string): Observable<void> {

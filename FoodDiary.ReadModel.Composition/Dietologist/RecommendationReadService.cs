@@ -8,11 +8,13 @@ namespace FoodDiary.ReadModel.Composition.Dietologist;
 
 internal sealed class RecommendationReadService(ICompositionReadContext context) : IRecommendationReadModelRepository {
     public async Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
-        UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
+        UserId clientUserId, int limit = 50, int page = 1, CancellationToken cancellationToken = default) {
         return await context.Recommendations
             .AsNoTracking()
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
+            .ThenByDescending(r => r.Id)
+            .Skip((page - 1) * limit)
             .Take(limit)
             .Join(context.Users.AsNoTracking(), r => r.DietologistUserId, user => user.Id, (r, user) => new RecommendationReadModel(
                 r.Id.Value,
@@ -27,11 +29,13 @@ internal sealed class RecommendationReadService(ICompositionReadContext context)
     }
 
     public async Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
-        UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
+        UserId dietologistUserId, UserId clientUserId, int limit = 50, int page = 1, CancellationToken cancellationToken = default) {
         return await context.Recommendations
             .AsNoTracking()
             .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
+            .ThenByDescending(r => r.Id)
+            .Skip((page - 1) * limit)
             .Take(limit)
             .Join(context.Users.AsNoTracking(), r => r.DietologistUserId, user => user.Id, (r, user) => new RecommendationReadModel(
                 r.Id.Value,

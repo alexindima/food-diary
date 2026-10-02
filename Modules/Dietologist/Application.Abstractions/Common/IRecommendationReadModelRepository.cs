@@ -7,11 +7,13 @@ public interface IRecommendationReadModelRepository {
     Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
         UserId clientUserId,
         int limit = 50,
+        int page = 1,
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
         UserId dietologistUserId,
         UserId clientUserId,
         int limit = 50,
+        int page = 1,
         CancellationToken cancellationToken = default);
 }
