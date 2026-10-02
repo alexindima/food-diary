@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2f4426ef3c0ead802da9cfd707612b4f14e945b93d71174ef0bfd29e259f251f"
+          "sha256": "a6643093718402afe29d80eaea60e0c286409edce8c0e93bace0f5006fbd9c45"
         }
       ],
-      "reason": "RecipeListFacade request-page tracking and RecipeListComponent retry have regression coverage for failed later pages and filtered or unfiltered first-page resets; 60 focused tests pass and native 503 retry restores page 2. The quality index remains navigation evidence, not execution coverage.",
+      "reason": "Reviewed recipe pending-save form lock and cancellation guard. Regression tests fail on old code and31 focused component/add/edit tests pass, covering saving, publication and language checks, disabled edits and draft recovery after failure. Native delayed PATCH confirms one request and no lost edit. Quality index changes remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "2dfe9348c0321e9a79694c6441df8681f4268bfe",
-      "reviewedAtUtc": "2026-10-02T20:32:31.0895625Z"
+      "gitHead": "0c2550b732f5d6edfc7373eb2c3adfe9f014819a",
+      "reviewedAtUtc": "2026-10-02T21:07:22.4355407Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2f4426ef3c0ead802da9cfd707612b4f14e945b93d71174ef0bfd29e259f251f"
+          "sha256": "a6643093718402afe29d80eaea60e0c286409edce8c0e93bace0f5006fbd9c45"
         }
       ],
-      "reason": "Reviewed recipe retry diff: transient requested-page signals and existing reload delegation preserve search filters and includePublic ownership choice. No authentication, authorization, credentials, provider, logging or private-data lifecycle changes. Native fixtures inject 503 without catalog data mutations.",
+      "reason": "Recipe form locking changes only transient UI availability while an existing owner-scoped save is pending. No API payload, authorization, provider sharing, credentials, logging or persistence changes. Native QA uses owned private recipe and image fixtures; mock503 and response delays do not change foreign records.",
       "baseRef": "HEAD",
-      "gitHead": "2dfe9348c0321e9a79694c6441df8681f4268bfe",
-      "reviewedAtUtc": "2026-10-02T20:32:34.1379505Z"
+      "gitHead": "0c2550b732f5d6edfc7373eb2c3adfe9f014819a",
+      "reviewedAtUtc": "2026-10-02T21:07:25.5317171Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

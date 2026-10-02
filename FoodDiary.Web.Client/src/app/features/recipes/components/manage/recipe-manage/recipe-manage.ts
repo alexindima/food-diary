@@ -91,6 +91,7 @@ export class RecipeManageComponent {
     protected readonly photosUploading = signal(false);
     protected readonly anyPhotosUploading = computed(() => this.photosUploading() || this.stepPhotosUploading());
     protected readonly isSubmitting = computed(() => this.recipeManageFacade.isSubmitting() || this.checkingPublication());
+    protected readonly isFormLocked = computed(() => this.isSubmitting() || this.checkingLanguage());
     protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
     protected readonly importText = signal('');
@@ -427,6 +428,9 @@ export class RecipeManageComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
+        if (this.isFormLocked()) {
+            return;
+        }
         if (this.recipeSignalForm().dirty()) {
             const shouldLeave = await this.recipeManageFacade.confirmDiscardChangesAsync({
                 title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),

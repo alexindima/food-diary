@@ -267,6 +267,46 @@ describe('RecipeManageComponent duplicate submit guard', () => {
     });
 });
 
+describe('RecipeManageComponent pending save', () => {
+    it.each(['saving', 'publication', 'language'] as const)('locks edits during %s and restores the draft after failure', async phase => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        component['recipeSignalForm'].name().value.set(UPDATED_RECIPE_NAME);
+        const busy =
+            phase === 'saving' ? facade.isSubmitting : component[phase === 'publication' ? 'checkingPublication' : 'checkingLanguage'];
+        busy.set(true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const name = host.querySelector<HTMLInputElement>('input[aria-label="RECIPE_MANAGE.NAME"]');
+        const description = host.querySelector<HTMLTextAreaElement>('fd-recipe-step-card textarea');
+
+        expect(name?.matches(':disabled')).toBe(true);
+        expect(description?.matches(':disabled')).toBe(true);
+        expect(host.querySelector('fieldset')?.hasAttribute('inert')).toBe(true);
+
+        busy.set(false);
+        facade.globalError.set('Save failed');
+        fixture.detectChanges();
+
+        expect(name?.matches(':disabled')).toBe(false);
+        expect(description?.matches(':disabled')).toBe(false);
+        expect(name?.value).toBe(UPDATED_RECIPE_NAME);
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('Save failed');
+    });
+
+    it.each(['saving', 'publication', 'language'] as const)('keeps the form open when cancel is requested during %s', async phase => {
+        const { component, facade } = await setupComponentAsync();
+        component['recipeSignalForm'].name().markAsDirty();
+        const busy =
+            phase === 'saving' ? facade.isSubmitting : component[phase === 'publication' ? 'checkingPublication' : 'checkingLanguage'];
+        busy.set(true);
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('RecipeManageComponent import draft shell', () => {
     it('applies pasted recipe text to draft fields', async () => {
         const { component } = await setupComponentAsync();

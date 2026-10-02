@@ -30,6 +30,10 @@
     }
 
     &__grid {
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
         gap: var(--fd-space-page-card-gap);
         align-items: stretch;

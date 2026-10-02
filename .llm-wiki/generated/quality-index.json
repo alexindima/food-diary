@@ -391,6 +391,14 @@
       "structuralRiskScore": 114.1
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
+      "nonBlankLines": 672,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 113.94
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
       "nonBlankLines": 333,
       "decisionPoints": 70,
@@ -461,14 +469,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 111.16
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 668,
-      "decisionPoints": 65,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.86
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
@@ -11882,11 +11882,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 668,
-      "decisionPoints": 65,
+      "nonBlankLines": 672,
+      "decisionPoints": 67,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.86
+      "structuralRiskScore": 113.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts",
