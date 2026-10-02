@@ -80,11 +80,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 902,
-      "decisionPoints": 122,
+      "nonBlankLines": 923,
+      "decisionPoints": 124,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 201.04
+      "structuralRiskScore": 204.46
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -8274,11 +8274,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 902,
-      "decisionPoints": 122,
+      "nonBlankLines": 923,
+      "decisionPoints": 124,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 201.04
+      "structuralRiskScore": 204.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.form-models.ts",

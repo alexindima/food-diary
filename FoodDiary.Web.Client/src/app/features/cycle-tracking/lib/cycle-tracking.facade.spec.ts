@@ -600,6 +600,54 @@ describe('CycleTrackingFacade settings saving', () => {
 });
 
 describe('CycleTrackingFacade day clear recovery', () => {
+    it('refreshes episode history and predictions after clearing a day', () => {
+        facade.initialize();
+        cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [], predictions: null }));
+
+        facade.clearDay('2026-04-02');
+
+        expect(cyclesService.getCurrent).toHaveBeenCalledTimes(2);
+        expect(facade.cycle()?.menstrualEpisodes).toEqual([]);
+        expect(facade.cycle()?.predictions).toBeNull();
+    });
+
+    it('keeps mutation guards active until the cleared profile has refreshed', () => {
+        facade.initialize();
+        setValidDayForm();
+        const refreshed = new Subject<CycleResponse | null>();
+        cyclesService.getCurrent.mockReturnValue(refreshed);
+
+        facade.clearDay('2026-04-02');
+        facade.clearDay('2026-04-02');
+        facade.saveDay();
+
+        expect(facade.clearingDayDate()).toBe('2026-04-02');
+        expect(cyclesService.clearDay).toHaveBeenCalledOnce();
+        expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+        refreshed.next({ ...createCycleResponse(), menstrualEpisodes: [], predictions: null });
+        refreshed.complete();
+        expect(facade.clearingDayDate()).toBeNull();
+    });
+
+    it('offers a read retry when the day was cleared but refreshing failed', () => {
+        facade.initialize();
+        cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+
+        facade.clearDay('2026-04-02');
+
+        expect(facade.bleedingEntries()).toEqual([]);
+        expect(facade.dayClearError()).toBeNull();
+        expect(facade.loadError()).toBe('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+        expect(facade.clearingDayDate()).toBeNull();
+        cyclesService.getCurrent.mockReturnValue(
+            of({ ...createCycleResponse(), bleedingEntries: [], menstrualEpisodes: [], predictions: null }),
+        );
+        facade.initialize();
+        expect(facade.loadError()).toBeNull();
+        expect(facade.cycle()?.menstrualEpisodes).toEqual([]);
+        expect(cyclesService.clearDay).toHaveBeenCalledOnce();
+    });
+
     it('retains all records on failed clear and removes them only after a successful retry', () => {
         cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), dayNotes: [{ date: '2026-04-02', notes: 'saved note' }] }));
         facade.initialize();

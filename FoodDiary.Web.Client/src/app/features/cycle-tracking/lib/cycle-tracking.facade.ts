@@ -12,7 +12,7 @@ export type { CycleDayFormModel, CycleSettingsFormModel } from './cycle-tracking
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
-import { finalize, firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, switchMap, tap } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
@@ -780,16 +780,37 @@ export class CycleTrackingFacade {
 
         this.dayClearError.set(null);
         this.clearingDayDate.set(date);
+        let clearedOnServer = false;
         this.cyclesService
             .clearDay(currentCycle.id, toCycleDateKey(date))
             .pipe(
+                tap(() => {
+                    clearedOnServer = true;
+                    this.cycle.update(current =>
+                        current === null
+                            ? null
+                            : {
+                                  ...current,
+                                  dayNotes: (current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dateKey),
+                                  bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
+                                  symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
+                                  fertilitySignals: current.fertilitySignals.filter(entry => toCycleDateKey(entry.date) !== dateKey),
+                              },
+                    );
+                    this.loadNutritionSummary(this.cycle());
+                }),
+                switchMap(() => this.cyclesService.getCurrent()),
                 finalize(() => {
                     this.clearingDayDate.set(null);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
-                next: () => {
+                next: refreshedCycle => {
+                    if (refreshedCycle === null) {
+                        this.loadError.set('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+                        return;
+                    }
                     const current = this.cycle();
                     if (current === null) {
                         return;
@@ -797,18 +818,18 @@ export class CycleTrackingFacade {
 
                     const updatedCycle = {
                         ...current,
-                        dayNotes: (current.dayNotes ?? []).filter(note => toCycleDateKey(note.date) !== dateKey),
-                        bleedingEntries: current.bleedingEntries.filter(entry => toCycleDateKey(entry.date) !== dateKey),
-                        symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
-                        fertilitySignals: current.fertilitySignals.filter(
-                            fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dateKey,
-                        ),
+                        menstrualEpisodes: refreshedCycle.menstrualEpisodes,
+                        predictions: refreshedCycle.predictions,
                     };
                     this.cycle.set(updatedCycle);
-                    this.loadNutritionSummary(updatedCycle);
+                    this.loadError.set(null);
                 },
                 error: () => {
-                    this.dayClearError.set('CYCLE_TRACKING.CLEAR_DAY_FAILED');
+                    if (clearedOnServer) {
+                        this.loadError.set('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+                    } else {
+                        this.dayClearError.set('CYCLE_TRACKING.CLEAR_DAY_FAILED');
+                    }
                 },
             });
     }
