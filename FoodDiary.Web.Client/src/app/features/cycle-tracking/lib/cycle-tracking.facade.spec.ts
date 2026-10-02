@@ -1264,6 +1264,82 @@ describe('CycleTrackingFacade ending factors', () => {
 });
 
 describe('CycleTrackingFacade menstrual episodes', () => {
+    it('handles a failed date save without discarding the draft or persisted episode', async () => {
+        facade.initialize();
+        facade.editMenstrualEpisode('episode-1');
+        facade.episodeModel.update(value => ({ ...value, startDate: '2026-03-31' }));
+        const draft = facade.episodeModel();
+        const original = facade.cycle();
+        cyclesService.updateMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+
+        await expect(submit(facade.episodeForm)).resolves.toBeDefined();
+
+        expect(facade.episodeModel()).toEqual(draft);
+        expect(facade.editingEpisodeId()).toBe('episode-1');
+        expect(facade.cycle()).toEqual(original);
+        expect(facade.isSavingEpisode()).toBe(false);
+        expect(facade.episodeError()).toBe('CYCLE_TRACKING.EPISODE_SAVE_FAILED');
+        await submit(facade.episodeForm);
+        expect(facade.episodeError()).toBeNull();
+        expect(facade.editingEpisodeId()).toBeNull();
+    });
+
+    it('handles a failed prediction toggle without changing the episode', async () => {
+        facade.initialize();
+        const original = facade.cycle();
+        cyclesService.updateMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+
+        await expect(facade.toggleMenstrualEpisodePredictionAsync('episode-1')).resolves.toBeUndefined();
+
+        expect(facade.cycle()).toEqual(original);
+        expect(facade.excludingEpisodeId()).toBeNull();
+        expect(facade.episodeError()).toBe('CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
+        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
+        expect(facade.episodeError()).toBeNull();
+        expect(facade.menstrualEpisodes()[0]?.excludedFromPredictions).toBe(true);
+    });
+
+    it('handles a failed deletion without removing the episode', async () => {
+        facade.initialize();
+        const original = facade.cycle();
+        cyclesService.deleteMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+
+        await expect(facade.deleteMenstrualEpisodeAsync('episode-1')).resolves.toBeUndefined();
+
+        expect(facade.cycle()).toEqual(original);
+        expect(facade.deletingEpisodeId()).toBeNull();
+        expect(facade.episodeError()).toBe('CYCLE_TRACKING.EPISODE_DELETE_FAILED');
+        await facade.deleteMenstrualEpisodeAsync('episode-1');
+        expect(facade.episodeError()).toBeNull();
+        expect(facade.menstrualEpisodes()).toEqual([]);
+    });
+
+    it('preserves a pending date save and prevents overlapping episode actions', async () => {
+        facade.initialize();
+        facade.editMenstrualEpisode('episode-1');
+        const draft = facade.episodeModel();
+        const pending = new Subject<CycleResponse>();
+        cyclesService.updateMenstrualEpisode.mockReturnValue(pending);
+        const saved = submit(facade.episodeForm);
+        expect(facade.isEpisodeBusy()).toBe(true);
+        expect(facade.episodeForm.startDate().disabled()).toBe(true);
+        facade.cancelMenstrualEpisodeEdit();
+        facade.editMenstrualEpisode('episode-1');
+        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
+        await facade.deleteMenstrualEpisodeAsync('episode-1');
+        expect(facade.episodeModel()).toEqual(draft);
+        expect(facade.editingEpisodeId()).toBe('episode-1');
+        expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledOnce();
+        expect(cyclesService.deleteMenstrualEpisode).not.toHaveBeenCalled();
+        pending.next(createCycleResponse());
+        pending.complete();
+        await saved;
+        expect(facade.isEpisodeBusy()).toBe(false);
+        expect(facade.editingEpisodeId()).toBeNull();
+    });
+});
+
+describe('CycleTrackingFacade menstrual episode success', () => {
     it('toggles prediction exclusion and applies the returned cycle', async () => {
         facade.initialize();
 

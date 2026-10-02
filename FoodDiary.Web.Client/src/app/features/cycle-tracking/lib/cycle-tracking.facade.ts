@@ -78,6 +78,10 @@ export class CycleTrackingFacade {
     public readonly isSavingEpisode = signal(false);
     public readonly excludingEpisodeId = signal<string | null>(null);
     public readonly deletingEpisodeId = signal<string | null>(null);
+    public readonly episodeError = signal<string | null>(null);
+    public readonly isEpisodeBusy = computed(
+        () => this.isSavingEpisode() || this.excludingEpisodeId() !== null || this.deletingEpisodeId() !== null,
+    );
     public readonly isExportingCycle = signal(false);
     public readonly exportError = signal<string | null>(null);
     public readonly daySaveRevision = signal(0);
@@ -262,6 +266,7 @@ export class CycleTrackingFacade {
         this.episodeModel,
         path => {
             required(path.startDate);
+            disabled(path, { when: () => this.isEpisodeBusy() });
         },
         {
             submission: {
@@ -849,11 +854,15 @@ export class CycleTrackingFacade {
     }
 
     public editMenstrualEpisode(episodeId: string): void {
+        if (this.isEpisodeBusy()) {
+            return;
+        }
         const episode = this.menstrualEpisodes().find(item => item.id === episodeId);
         if (episode === undefined) {
             return;
         }
 
+        this.episodeError.set(null);
         this.episodeModel.set({
             startDate: toCycleDateKey(episode.startDate),
             endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
@@ -862,6 +871,14 @@ export class CycleTrackingFacade {
     }
 
     public cancelMenstrualEpisodeEdit(): void {
+        if (this.isEpisodeBusy()) {
+            return;
+        }
+        this.episodeError.set(null);
+        this.resetMenstrualEpisodeEdit();
+    }
+
+    private resetMenstrualEpisodeEdit(): void {
         this.editingEpisodeId.set(null);
         this.episodeModel.set({ startDate: null, endDate: null });
     }
@@ -876,12 +893,13 @@ export class CycleTrackingFacade {
             formValue.startDate === null ||
             formValue.startDate.length === 0 ||
             this.episodeForm().invalid() ||
-            this.isSavingEpisode()
+            this.isEpisodeBusy()
         ) {
             this.episodeForm().markAsTouched();
             return;
         }
 
+        this.episodeError.set(null);
         this.isSavingEpisode.set(true);
         try {
             const cycle = await firstValueFrom(
@@ -891,7 +909,9 @@ export class CycleTrackingFacade {
                 }),
             );
             this.cycle.set(cycle);
-            this.cancelMenstrualEpisodeEdit();
+            this.resetMenstrualEpisodeEdit();
+        } catch {
+            this.episodeError.set('CYCLE_TRACKING.EPISODE_SAVE_FAILED');
         } finally {
             this.isSavingEpisode.set(false);
         }
@@ -904,6 +924,7 @@ export class CycleTrackingFacade {
             return;
         }
 
+        this.episodeError.set(null);
         this.excludingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
@@ -914,6 +935,8 @@ export class CycleTrackingFacade {
                 }),
             );
             this.cycle.set(cycle);
+        } catch {
+            this.episodeError.set('CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
         } finally {
             this.excludingEpisodeId.set(null);
         }
@@ -925,20 +948,23 @@ export class CycleTrackingFacade {
             return;
         }
 
+        this.episodeError.set(null);
         this.deletingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(this.cyclesService.deleteMenstrualEpisode(currentCycle.id, episodeId));
             this.cycle.set(cycle);
             if (this.editingEpisodeId() === episodeId) {
-                this.cancelMenstrualEpisodeEdit();
+                this.resetMenstrualEpisodeEdit();
             }
+        } catch {
+            this.episodeError.set('CYCLE_TRACKING.EPISODE_DELETE_FAILED');
         } finally {
             this.deletingEpisodeId.set(null);
         }
     }
 
     private hasPendingEpisodeAction(): boolean {
-        return this.excludingEpisodeId() !== null || this.deletingEpisodeId() !== null;
+        return this.isEpisodeBusy();
     }
 
     public exportCycle(): void {

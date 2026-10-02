@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ff044ef03f111d8e74768b75ae313d3b84c7484b6dc2e2e2c75f68247a1e4cd6"
+          "sha256": "de48432cd1d5bf694f7931970c79e087e2c5f588f8d21e8e61e7acb3e4568f9d"
         }
       ],
-      "reason": "Final day lifecycle implementation: error host hidden when empty to preserve footer layout and template complexity; distinct save/refresh error, intact draft and retry, disabled form/close/escape guards, duplicate-request guards and revision effect reset. Native RU pending503retry200 clear204 verified; final fullfrontend before commit; no HTTP or data sharing changes.",
+      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
       "baseRef": "HEAD",
-      "gitHead": "3b48360c2c4f8faabc34acccf44a2182751deb7e",
-      "reviewedAtUtc": "2026-10-02T02:15:15.4601205Z"
+      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
+      "reviewedAtUtc": "2026-10-02T04:18:58.3601691Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ff044ef03f111d8e74768b75ae313d3b84c7484b6dc2e2e2c75f68247a1e4cd6"
+          "sha256": "de48432cd1d5bf694f7931970c79e087e2c5f588f8d21e8e61e7acb3e4568f9d"
         }
       ],
-      "reason": "Final day lifecycle implementation: error host hidden when empty to preserve footer layout and template complexity; distinct save/refresh error, intact draft and retry, disabled form/close/escape guards, duplicate-request guards and revision effect reset. Native RU pending503retry200 clear204 verified; final fullfrontend before commit; no HTTP or data sharing changes.",
+      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
       "baseRef": "HEAD",
-      "gitHead": "3b48360c2c4f8faabc34acccf44a2182751deb7e",
-      "reviewedAtUtc": "2026-10-02T02:15:16.0465663Z"
+      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
+      "reviewedAtUtc": "2026-10-02T04:18:58.7533459Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cde86c895a2fbcf7b782eaa31035504c3c8341aabf9c1cc399e8f72a82814786"
+          "sha256": "b0eaa3f3c1cc00158346bc74e8f3c30a04c422df4a4d8cd9404254353d8c860b"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "7ec5e5f81ea11d4b21b5b3a13dd5cdb31099b25ec72f8437429c98365f2f6db9"
+          "sha256": "0ea95297aade5d77647111b81816de8c3c0edc84e3de74b035729fec49b02b3e"
         }
       ],
-      "reason": "Final day lifecycle implementation: error host hidden when empty to preserve footer layout and template complexity; distinct save/refresh error, intact draft and retry, disabled form/close/escape guards, duplicate-request guards and revision effect reset. Native RU pending503retry200 clear204 verified; final fullfrontend before commit; no HTTP or data sharing changes.",
+      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
       "baseRef": "HEAD",
-      "gitHead": "3b48360c2c4f8faabc34acccf44a2182751deb7e",
-      "reviewedAtUtc": "2026-10-02T02:15:16.5698426Z"
+      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
+      "reviewedAtUtc": "2026-10-02T04:18:59.2150445Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cde86c895a2fbcf7b782eaa31035504c3c8341aabf9c1cc399e8f72a82814786"
+          "sha256": "b0eaa3f3c1cc00158346bc74e8f3c30a04c422df4a4d8cd9404254353d8c860b"
         }
       ],
-      "reason": "Final day lifecycle implementation: error host hidden when empty to preserve footer layout and template complexity; distinct save/refresh error, intact draft and retry, disabled form/close/escape guards, duplicate-request guards and revision effect reset. Native RU pending503retry200 clear204 verified; final fullfrontend before commit; no HTTP or data sharing changes.",
+      "reason": "Verified recovery and pending protection for episode date edits, prediction participation and deletion. UI kit disabledReason explains pending actions; draft and saved data retained on failure. Both locales updated; no backend or API changes.",
       "baseRef": "HEAD",
-      "gitHead": "3b48360c2c4f8faabc34acccf44a2182751deb7e",
-      "reviewedAtUtc": "2026-10-02T02:15:14.8786993Z"
+      "gitHead": "0d967ee5e9e4c8029a9efad48a866cf15df5c728",
+      "reviewedAtUtc": "2026-10-02T04:18:57.9422566Z"
     },
     {
       "pageId": "workflow.query-context",

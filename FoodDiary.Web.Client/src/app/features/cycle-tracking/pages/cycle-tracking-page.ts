@@ -130,6 +130,8 @@ export class CycleTrackingPageComponent {
     protected readonly dayError = this.facade.dayError;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
+    protected readonly isEpisodeBusy = this.facade.isEpisodeBusy;
+    protected readonly episodeError = this.facade.episodeError;
     protected readonly excludingEpisodeId = this.facade.excludingEpisodeId;
     protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
     protected readonly isExportingCycle = this.facade.isExportingCycle;

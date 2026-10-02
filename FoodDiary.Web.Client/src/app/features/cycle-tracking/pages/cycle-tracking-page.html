@@ -355,6 +355,7 @@
                             data-tour-id="cycle-tracking-episode-history"
                             [title]="'CYCLE_TRACKING.EPISODE_HISTORY_TITLE' | translate"
                         >
+                            <fd-ui-form-error [hidden]="episodeError() === null" [error]="episodeError()" />
                             @if (menstrualEpisodes().length === 0) {
                                 <p class="cycle-tracking__empty fd-ui-body-sm">
                                     {{ 'CYCLE_TRACKING.EPISODE_HISTORY_EMPTY' | translate }}
@@ -376,13 +377,20 @@
                                                         />
                                                     </div>
                                                     <div class="cycle-tracking__actions fd-ui-actions">
-                                                        <fd-ui-button type="submit" [loading]="isSavingEpisode()">
+                                                        <fd-ui-button
+                                                            type="submit"
+                                                            [loading]="isSavingEpisode()"
+                                                            [disabled]="isEpisodeBusy()"
+                                                            [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
+                                                        >
                                                             {{ 'CYCLE_TRACKING.SAVE_EPISODE' | translate }}
                                                         </fd-ui-button>
                                                         <fd-ui-button
                                                             type="button"
                                                             variant="secondary"
                                                             fill="text"
+                                                            [disabled]="isEpisodeBusy()"
+                                                            [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                             (click)="cancelMenstrualEpisodeEdit()"
                                                         >
                                                             {{ 'COMMON.CANCEL' | translate }}
@@ -425,6 +433,8 @@
                                                                 size="sm"
                                                                 variant="secondary"
                                                                 fill="text"
+                                                                [disabled]="isEpisodeBusy()"
+                                                                [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                                 (click)="editMenstrualEpisode(episode.id)"
                                                             >
                                                                 {{ 'CYCLE_TRACKING.EDIT_EPISODE' | translate }}
@@ -435,6 +445,8 @@
                                                                 variant="secondary"
                                                                 fill="text"
                                                                 [loading]="excludingEpisodeId() === episode.id"
+                                                                [disabled]="isEpisodeBusy()"
+                                                                [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                                 (click)="toggleMenstrualEpisodePrediction(episode.id)"
                                                             >
                                                                 {{
@@ -450,6 +462,8 @@
                                                                 variant="danger"
                                                                 fill="text"
                                                                 [loading]="deletingEpisodeId() === episode.id"
+                                                                [disabled]="isEpisodeBusy()"
+                                                                [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                                 (click)="deleteMenstrualEpisode(episode.id)"
                                                             >
                                                                 {{ 'CYCLE_TRACKING.DELETE_EPISODE' | translate }}
