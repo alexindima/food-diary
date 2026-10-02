@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1315,
     "ambiguousContracts": 2,
-    "consumerEdges": 10226,
+    "consumerEdges": 10227,
     "productionConsumerEdges": 5858,
-    "testConsumerEdges": 4368,
+    "testConsumerEdges": 4369,
     "consumedContracts": 1315,
     "unconsumedContracts": 0
   },
@@ -46602,6 +46602,19 @@
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "GetFastingStatsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Stats.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetFastingStatsQuery",

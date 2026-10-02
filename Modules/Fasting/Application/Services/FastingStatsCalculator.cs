@@ -47,9 +47,13 @@ internal static class FastingStatsCalculator {
         int streak = 0;
         DateTime expectedDate = todayUtcDate;
 
-        foreach (FastingOccurrenceReadModel occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
-            DateTime occurrenceDate = occurrence.StartedAtUtc.Date;
-            if (occurrenceDate == expectedDate || occurrenceDate == expectedDate.AddDays(-1)) {
+        IEnumerable<DateTime> completedDates = completedOccurrences
+            .Select(static occurrence => occurrence.StartedAtUtc.Date)
+            .Distinct()
+            .OrderDescending();
+
+        foreach (DateTime occurrenceDate in completedDates) {
+            if (occurrenceDate == expectedDate || (streak == 0 && occurrenceDate == expectedDate.AddDays(-1))) {
                 streak++;
                 expectedDate = occurrenceDate.AddDays(-1);
             } else {

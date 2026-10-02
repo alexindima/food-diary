@@ -25778,11 +25778,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Services/FastingStatsCalculator.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 7,
+      "nonBlankLines": 66,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.76
+      "structuralRiskScore": 13.32
     },
     {
       "path": "Modules/Fasting/Application/Services/FastingSymptomCatalog.cs",
@@ -51872,9 +51872,10 @@
       "role": "QueryHandler",
       "path": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Queries.cs",
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Stats.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

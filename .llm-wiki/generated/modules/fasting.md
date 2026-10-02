@@ -102,6 +102,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Notifications.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Queries.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Start.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Stats.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingInsightBuilderTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingNotificationPlannerTests.cs`
@@ -118,7 +119,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingSessionPersistenceShapeTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryDurationTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryEventTests.cs`
-- [integration] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FastingTelemetryEventRepositoryIntegrationTests.cs`
 
 ## Working Rule
 
