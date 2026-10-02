@@ -1045,17 +1045,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7f065820dcaca9637bebae4a80cb6cf0d26854dfcc1fb07ea4f4cea4d7b3e757"
+          "sha256": "ef116edcf63207cc50fc0b7cd3aaa6f9c43eb938a44406a46cc28cbc4583c132"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "a950870e7a905dae7ba0419802430bd26bc4cab9dafd8866545b229940f2c9f6"
+          "sha256": "dc1a1b41827730848e0878ec8b1d7ee02264e1ddb3b6e56488f85c6151cf2acb"
         }
       ],
-      "reason": "Confirmed page to facade to CyclesService period-start PUT and card/item input bindings in current source; API payload unchanged; real5303 retry200verified.",
+      "reason": "Current settings checkbox binds fertilitySignalsConsentGranted through facade to purpose1 UpdateCycleConsent; backend RevokeConsent clears signals. New disclosure uses existing hint beforeSave; unchanged mutation flow.",
       "baseRef": "HEAD",
-      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
-      "reviewedAtUtc": "2026-10-02T05:42:46.6585164Z"
+      "gitHead": "37db6d6245d1c0def46a9c6d51ca7778aae68569",
+      "reviewedAtUtc": "2026-10-02T05:54:46.6324582Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7f065820dcaca9637bebae4a80cb6cf0d26854dfcc1fb07ea4f4cea4d7b3e757"
+          "sha256": "ef116edcf63207cc50fc0b7cd3aaa6f9c43eb938a44406a46cc28cbc4583c132"
         }
       ],
-      "reason": "Reviewed card/item inputs and page consumers, EN/RU translations and unchanged period-start API. Native503,200 retry,RU390 and pending duplicate suppression verified;4872frontendtests pass.",
+      "reason": "Reviewed existing checkbox hint input and settings template consumption, EN/RU copy; no API or component contract change. EN1280 andRU390 screenshots inspected; Cancel with stored fertilityrecord preserves data; backend existing revocation clears records verified natively.",
       "baseRef": "HEAD",
-      "gitHead": "1ca500abd360526f464b31fe3eb4741c7d348f27",
-      "reviewedAtUtc": "2026-10-02T05:42:43.6389777Z"
+      "gitHead": "37db6d6245d1c0def46a9c6d51ca7778aae68569",
+      "reviewedAtUtc": "2026-10-02T05:54:45.2992511Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -7,7 +7,7 @@
     "outputs": 530,
     "apiCalls": 272,
     "templatesWithTranslations": 343,
-    "translationKeys": 2060,
+    "translationKeys": 2061,
     "consumerEdges": 1214,
     "consumedComponents": 306,
     "unconsumedComponents": 175
@@ -19418,6 +19418,7 @@
         "COMMON.CLOSE",
         "CYCLE_TRACKING.AVG_LENGTH",
         "CYCLE_TRACKING.CONSENT_FERTILITY",
+        "CYCLE_TRACKING.CONSENT_FERTILITY_REMOVAL_HINT",
         "CYCLE_TRACKING.CONSENT_NUTRITION",
         "CYCLE_TRACKING.DANGER_ZONE",
         "CYCLE_TRACKING.DELETE_CYCLE",
@@ -30520,7 +30521,9 @@
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
       "occurrences": 5,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "hint"
+      ],
       "outputsHandled": []
     },
     {

@@ -76,7 +76,10 @@
                     <fd-ui-checkbox [formField]="settingsForm().nutritionInsightsConsentGranted">
                         {{ 'CYCLE_TRACKING.CONSENT_NUTRITION' | translate }}
                     </fd-ui-checkbox>
-                    <fd-ui-checkbox [formField]="settingsForm().fertilitySignalsConsentGranted">
+                    <fd-ui-checkbox
+                        [formField]="settingsForm().fertilitySignalsConsentGranted"
+                        [hint]="'CYCLE_TRACKING.CONSENT_FERTILITY_REMOVAL_HINT' | translate"
+                    >
                         {{ 'CYCLE_TRACKING.CONSENT_FERTILITY' | translate }}
                     </fd-ui-checkbox>
                 </div>
