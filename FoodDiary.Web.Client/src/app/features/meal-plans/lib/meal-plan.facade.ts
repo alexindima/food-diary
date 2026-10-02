@@ -1,7 +1,8 @@
-import { computed, DestroyRef, inject, Injectable, resource, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, resource, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, firstValueFrom } from 'rxjs';
 
+import type { PageOf } from '../../../shared/models/page-of.data';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
@@ -12,14 +13,14 @@ export class MealPlanFacade {
     private readonly selectedPlanId = signal<string | null>(null);
 
     public readonly dietTypeFilter = signal<DietType | null>(null);
+    public readonly pageIndex = signal(0);
+    public readonly pageSize = 50;
+    private readonly lastLoadedPage = signal<PageOf<MealPlanSummary> | null>(null);
     public readonly pendingAction = signal<'adopt' | 'shopping' | null>(null);
     public readonly actionErrorKey = signal<string | null>(null);
     private readonly plansResource = resource({
-        params: () => this.dietTypeFilter(),
-        loader: async ({ params }): Promise<MealPlanSummary[]> => {
-            const page = await firstValueFrom(this.service.getPage(params ?? undefined));
-            return page.data;
-        },
+        params: () => ({ dietType: this.dietTypeFilter(), page: this.pageIndex() + 1 }),
+        loader: async ({ params }) => firstValueFrom(this.service.getPage(params.dietType ?? undefined, params.page, this.pageSize)),
     });
     private readonly selectedPlanResource = resource({
         params: () => this.selectedPlanId(),
@@ -32,7 +33,10 @@ export class MealPlanFacade {
         },
     });
 
-    public readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value() : []));
+    public readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value().data : []));
+    public readonly totalItems = computed(() =>
+        this.plansResource.hasValue() ? this.plansResource.value().totalItems : (this.lastLoadedPage()?.totalItems ?? 0),
+    );
     public readonly isLoading = computed(() => this.plansResource.isLoading());
     public readonly hasLoadError = computed(() => this.plansResource.error() !== undefined);
     public readonly selectedPlan = computed(() =>
@@ -40,8 +44,25 @@ export class MealPlanFacade {
     );
     public readonly isDetailLoading = computed(() => this.selectedPlanResource.isLoading());
 
-    public loadPlans(dietType?: DietType | null): void {
-        this.dietTypeFilter.set(dietType ?? null);
+    public constructor() {
+        effect(() => {
+            if (this.plansResource.hasValue()) {
+                this.lastLoadedPage.set(this.plansResource.value());
+            }
+        });
+    }
+
+    public loadPlans(filter: DietType | null = null): void {
+        if (filter !== this.dietTypeFilter()) {
+            this.pageIndex.set(0);
+            this.lastLoadedPage.set(null);
+        }
+        this.dietTypeFilter.set(filter);
+    }
+
+    public changePage(index: number): void {
+        const lastIndex = Math.max(0, Math.ceil(this.totalItems() / this.pageSize) - 1);
+        this.pageIndex.set(Math.max(0, Math.min(index, lastIndex)));
     }
 
     public retryPlans(): void {

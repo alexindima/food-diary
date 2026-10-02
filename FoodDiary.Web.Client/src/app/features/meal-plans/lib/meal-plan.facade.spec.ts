@@ -3,11 +3,15 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { MealPlanFacade } from './meal-plan.facade';
 
+const PAGE_SIZE = 50;
+const MULTI_PAGE_TOTAL = PAGE_SIZE + 1;
+const OUT_OF_RANGE_PAGE = 99;
 const WAIT_ATTEMPTS = 20;
 const PLAN_DAYS = 7;
 const TARGET_CALORIES = 1800;
@@ -23,29 +27,29 @@ type MealPlanServiceMock = {
 let facade: MealPlanFacade;
 let mealPlanService: MealPlanServiceMock;
 
-describe('MealPlanFacade', () => {
-    beforeEach(() => {
-        TestBed.resetTestingModule();
-        mealPlanService = {
-            getPage: vi.fn(() => of({ data: [createSummary()], page: 1, limit: 50, totalPages: 1, totalItems: 1 })),
-            getById: vi.fn(() => of(createMealPlan())),
-            adopt: vi.fn(() => of(createMealPlan())),
-            generateShoppingList: vi.fn(() => of(createShoppingList())),
-        };
+beforeEach(() => {
+    TestBed.resetTestingModule();
+    mealPlanService = {
+        getPage: vi.fn(() => of({ data: [createSummary()], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 1 })),
+        getById: vi.fn(() => of(createMealPlan())),
+        adopt: vi.fn(() => of(createMealPlan())),
+        generateShoppingList: vi.fn(() => of(createShoppingList())),
+    };
 
-        TestBed.configureTestingModule({
-            providers: [MealPlanFacade, { provide: MealPlanService, useValue: mealPlanService }],
-        });
-
-        facade = TestBed.inject(MealPlanFacade);
+    TestBed.configureTestingModule({
+        providers: [MealPlanFacade, { provide: MealPlanService, useValue: mealPlanService }],
     });
 
+    facade = TestBed.inject(MealPlanFacade);
+});
+
+describe('MealPlanFacade', () => {
     it('loads meal plans with selected diet type filter', async () => {
         facade.loadPlans('Keto');
 
         await waitForAsync(() => facade.plans().length > 0);
 
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto');
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
         expect(facade.plans()).toEqual([createSummary()]);
     });
 
@@ -82,7 +86,7 @@ describe('MealPlanFacade', () => {
         facade.retryPlans();
         await waitForAsync(() => facade.plans().length > 0);
         expect(facade.hasLoadError()).toBe(false);
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto');
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
         expect(facade.plans()).toEqual([createSummary()]);
     });
 
@@ -118,6 +122,64 @@ describe('MealPlanFacade', () => {
     });
 });
 
+describe('MealPlanFacade pagination', () => {
+    beforeEach(() => {
+        mealPlanService.getPage.mockReset();
+        mealPlanService.getPage.mockReturnValue(of(createPage(1, MULTI_PAGE_TOTAL)));
+    });
+    it('keeps pagination while loading and retries the requested page after failure', async () => {
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
+        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        const pending = new Subject<PageOf<MealPlanSummary>>();
+        mealPlanService.getPage.mockReturnValueOnce(pending);
+        facade.changePage(1);
+        await waitForAsync(() => facade.isLoading());
+        expect(facade.totalItems()).toBe(MULTI_PAGE_TOTAL);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+        pending.error(new Error('Unavailable'));
+        await waitForAsync(() => facade.hasLoadError());
+        expect(facade.pageIndex()).toBe(1);
+        expect(facade.totalItems()).toBe(MULTI_PAGE_TOTAL);
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
+        facade.retryPlans();
+        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+        expect(facade.hasLoadError()).toBe(false);
+    });
+
+    it('resets pagination on filtering and ignores a late response from the previous filter', async () => {
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
+        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        const stalePage = new Subject<PageOf<MealPlanSummary>>();
+        mealPlanService.getPage.mockReturnValueOnce(stalePage);
+        facade.changePage(1);
+        await waitForAsync(() => facade.isLoading());
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, 1)));
+        facade.loadPlans('Keto');
+        await waitForAsync(() => facade.plans()[0]?.id === 'page-1');
+        stalePage.next(createPage(2, MULTI_PAGE_TOTAL));
+        await waitForAsyncTasksAsync();
+        TestBed.tick();
+        expect(facade.pageIndex()).toBe(0);
+        expect(facade.totalItems()).toBe(1);
+        expect(facade.plans()[0]?.id).toBe('page-1');
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
+    });
+
+    it('bounds page requests and avoids reloading the current page', async () => {
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
+        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        facade.changePage(-1);
+        TestBed.tick();
+        expect(mealPlanService.getPage).toHaveBeenCalledOnce();
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
+        facade.changePage(OUT_OF_RANGE_PAGE);
+        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
+        expect(facade.pageIndex()).toBe(1);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+    });
+});
+
 async function waitForAsync(predicate: () => boolean): Promise<void> {
     for (let attempt = 0; attempt < WAIT_ATTEMPTS; attempt++) {
         TestBed.tick();
@@ -140,6 +202,16 @@ function createSummary(): MealPlanSummary {
         targetCaloriesPerDay: TARGET_CALORIES,
         isCurated: true,
         totalRecipes: TOTAL_RECIPES,
+    };
+}
+
+function createPage(page: number, totalItems: number): PageOf<MealPlanSummary> {
+    return {
+        data: [{ ...createSummary(), id: `page-${page}` }],
+        page,
+        limit: PAGE_SIZE,
+        totalPages: Math.ceil(totalItems / PAGE_SIZE),
+        totalItems,
     };
 }
 

@@ -8,7 +8,7 @@
     "apiCalls": 276,
     "templatesWithTranslations": 344,
     "translationKeys": 2077,
-    "consumerEdges": 1218,
+    "consumerEdges": 1219,
     "consumedComponents": 306,
     "unconsumedComponents": 176
   },
@@ -35538,6 +35538,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
       "occurrences": 1,
       "inputsUsed": [
         "length",

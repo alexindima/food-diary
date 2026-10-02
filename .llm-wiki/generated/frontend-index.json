@@ -4198,7 +4198,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan.facade.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealPlanDetailPageComponent",
@@ -4240,7 +4240,7 @@
       "role": "Component",
       "selector": "fd-meal-plans-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.ts",
-      "line": 36
+      "line": 38
     },
     {
       "name": "FavoriteMealService",

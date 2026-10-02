@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -22,6 +23,7 @@ import { MEAL_PLANS_LIST_TOUR } from './meal-plans-list-tour';
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
+        FdUiPaginationComponent,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,

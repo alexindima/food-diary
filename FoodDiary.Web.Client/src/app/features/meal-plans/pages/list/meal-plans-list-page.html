@@ -35,5 +35,11 @@
                 (planOpen)="openPlan($event)"
             />
         }
+        <fd-ui-pagination
+            [length]="facade.totalItems()"
+            [pageSize]="facade.pageSize"
+            [pageIndex]="facade.pageIndex()"
+            (pageIndexChange)="facade.changePage($event)"
+        />
     </fd-page-body>
 </div>

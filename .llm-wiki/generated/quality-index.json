@@ -9986,11 +9986,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan.facade.ts",
-      "nonBlankLines": 92,
-      "decisionPoints": 7,
+      "nonBlankLines": 111,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.34
+      "structuralRiskScore": 15.72
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/meal-plan.routes.ts",
@@ -10058,11 +10058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.ts",
-      "nonBlankLines": 52,
+      "nonBlankLines": 54,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 1.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-tour.ts",

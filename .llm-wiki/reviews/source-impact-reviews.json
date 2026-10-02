@@ -808,7 +808,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9fa7fd347387d8202ad776c8855f6e7e8ee303cc6f7e23f76fed196eff280ebf"
+          "sha256": "6b482aae092817b5b39d305855be9e953d81751ea63f4b1a4d195fd3d1b2a107"
         }
       ],
       "reason": "Reviewed refreshed test-reference inventory including current recommendation paging tests and earlier committed catalog export boundary tests. Frontend4974/backendfocused512/architecture2116 passed, solution build passed; Docker75 API tests explicitly skipped. Generated navigation remains discovery evidence.",
@@ -898,7 +898,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9fa7fd347387d8202ad776c8855f6e7e8ee303cc6f7e23f76fed196eff280ebf"
+          "sha256": "6b482aae092817b5b39d305855be9e953d81751ea63f4b1a4d195fd3d1b2a107"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
