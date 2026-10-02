@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import type { BleedingEntry, CycleNutritionSummary, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -333,6 +334,27 @@ describe('cycle tracking nutrition summary mapper', () => {
 });
 
 describe('cycle tracking factor mapper', () => {
+    it('shows a future start as planned', () => {
+        const now = new Date();
+        const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], startDate: tomorrow, endDate: null }], 'en-US');
+        expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_PLANNED');
+        expect(view[0].isActive).toBe(false);
+    });
+
+    it('keeps a factor active until its future end date', () => {
+        const now = new Date();
+        const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: tomorrow }], 'en-US');
+        expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_ACTIVE');
+        expect(view[0].isActive).toBe(true);
+    });
+
+    it('shows that a factor ends today', () => {
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: formatDateInputValue(new Date()) }], 'en-US');
+        expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_ENDS_TODAY');
+    });
+
     it('builds factor list items with date ranges and status labels', () => {
         const view = buildCycleFactorItems(CYCLE.factors, 'en-US');
 
@@ -343,6 +365,7 @@ describe('cycle tracking factor mapper', () => {
                 dateRangeLabel: 'Apr 2',
                 statusLabelKey: 'CYCLE_TRACKING.FACTOR_ACTIVE',
                 isActive: true,
+                canEndToday: true,
             },
             {
                 id: 'factor-2',
@@ -350,6 +373,7 @@ describe('cycle tracking factor mapper', () => {
                 dateRangeLabel: 'Mar 2 - Mar 10',
                 statusLabelKey: 'CYCLE_TRACKING.FACTOR_ENDED',
                 isActive: false,
+                canEndToday: false,
             },
         ]);
     });

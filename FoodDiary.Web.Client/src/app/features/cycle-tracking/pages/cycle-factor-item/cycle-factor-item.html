@@ -21,7 +21,7 @@
             [ariaLabel]="'CYCLE_TRACKING.EDIT_FACTOR' | translate"
             (click)="editFactor.emit(factor().id)"
         />
-        @if (factor().isActive) {
+        @if (factor().canEndToday) {
             <fd-ui-button
                 type="button"
                 size="sm"

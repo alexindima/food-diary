@@ -4,6 +4,7 @@ import { finalize, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ExportService } from '../../../shared/api/export.service';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -887,6 +888,27 @@ describe('CycleTrackingFacade factor save lifecycle', () => {
 });
 
 describe('CycleTrackingFacade ending factors', () => {
+    it('does not send an invalid end date for a factor starting tomorrow', async () => {
+        const now = new Date();
+        const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
+        const cycle = createCycleResponse();
+        cyclesService.getCurrent.mockReturnValue(of({ ...cycle, factors: [{ ...cycle.factors[0], startDate: tomorrow }] }));
+        facade.initialize();
+        await facade.endFactorTodayAsync('factor-1');
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+        expect(facade.factorError()).toBeNull();
+    });
+
+    it('does not repeat ending a factor that already ends today', async () => {
+        const cycle = createCycleResponse();
+        cyclesService.getCurrent.mockReturnValue(
+            of({ ...cycle, factors: [{ ...cycle.factors[0], endDate: formatDateInputValue(new Date()) }] }),
+        );
+        facade.initialize();
+        await facade.endFactorTodayAsync('factor-1');
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
+    });
+
     it('shows a recoverable error and leaves the factor unchanged when ending fails', async () => {
         facade.initialize();
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));

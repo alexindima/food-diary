@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1825,
+    "typescriptFiles": 1827,
     "symbols": 708,
     "routes": 104,
     "features": 45,
-    "specs": 658,
+    "specs": 659,
     "localeFiles": 5,
     "roles": {
       "Component": 477,
@@ -475,6 +475,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-factor-status.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.spec.ts",
@@ -3250,7 +3251,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 59
+      "line": 60
     },
     {
       "name": "CycleCalendarCardComponent",
@@ -6986,8 +6987,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4014,
-      "russianProperties": 4014,
+      "englishProperties": 4016,
+      "russianProperties": 4016,
       "countsMatch": true
     },
     {

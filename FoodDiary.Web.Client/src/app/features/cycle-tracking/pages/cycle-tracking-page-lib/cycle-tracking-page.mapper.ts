@@ -1,4 +1,5 @@
-import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { formatDateInputValue, formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { getCycleFactorStatus } from '../../lib/cycle-factor-status.utils';
 import { CYCLE_SYMPTOM_FIELDS } from '../../lib/cycle-tracking.config';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -439,17 +440,19 @@ function buildBleedingStreakByDate(bleedingEntries: BleedingEntry[]): Map<string
     return streakByDate;
 }
 
-export function buildCycleFactorItems(factors: CycleFactor[], locale: string): CycleFactorListItemViewModel[] {
+export function buildCycleFactorItems(
+    factors: CycleFactor[],
+    locale: string,
+    today = formatDateInputValue(new Date()),
+): CycleFactorListItemViewModel[] {
     return [...factors]
         .sort((a, b) => b.startDate.localeCompare(a.startDate))
         .map(factor => {
-            const isActive = factor.endDate === null || factor.endDate === undefined;
             return {
                 id: factor.id,
                 labelKey: getFactorLabelKey(factor.type),
                 dateRangeLabel: formatFactorDateRange(factor, locale),
-                statusLabelKey: isActive ? 'CYCLE_TRACKING.FACTOR_ACTIVE' : 'CYCLE_TRACKING.FACTOR_ENDED',
-                isActive,
+                ...getCycleFactorStatus(factor, today),
             };
         });
 }

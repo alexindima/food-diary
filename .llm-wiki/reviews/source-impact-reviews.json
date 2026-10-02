@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f660e34c1e6286cd70be5f5304cccd70101fe381b2e756bc868d3da9dc444cd5"
+          "sha256": "0dc477559b3be42f866acfa91ec5a2e9f5a050eb6d99388d8bd40d4aaa2470c4"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed shared calendar-date factor status and guarded end-today mutation against inclusive domain ranges. Native API/browser prove active future-end, planned future-start without End button, keyboard end200 with same id and Ends today without repeat action. RU390 fixtures show all four localized states with one applicable End action; no horizontal overflow. Regression cases include future starts, today/past/future ends and timezone-offset date preservation. No HTTP, persistence, ownership, exports or provider changes; final full frontend verification runs before commit.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:03.2845502Z"
+      "gitHead": "55729d9133e00821c36982a0c6d73a823bd9d784",
+      "reviewedAtUtc": "2026-10-02T00:59:26.5915046Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,17 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f660e34c1e6286cd70be5f5304cccd70101fe381b2e756bc868d3da9dc444cd5"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "59a6b587e402036699eb2b0158374fd61e2c595e9f43db88dfe91197c7eb95e5"
+          "sha256": "0dc477559b3be42f866acfa91ec5a2e9f5a050eb6d99388d8bd40d4aaa2470c4"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed shared calendar-date factor status and guarded end-today mutation against inclusive domain ranges. Native API/browser prove active future-end, planned future-start without End button, keyboard end200 with same id and Ends today without repeat action. RU390 fixtures show all four localized states with one applicable End action; no horizontal overflow. Regression cases include future starts, today/past/future ends and timezone-offset date preservation. No HTTP, persistence, ownership, exports or provider changes; final full frontend verification runs before commit.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:03.9437530Z"
+      "gitHead": "55729d9133e00821c36982a0c6d73a823bd9d784",
+      "reviewedAtUtc": "2026-10-02T00:59:27.0401889Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1049,13 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4b4f60ed8568e9de9a823a4a6fdc864c5bd18653f056104a4fcecebc1fb7aefb"
+          "sha256": "eeab50fcee50c05b92e4fea5ef4236aa147534e60cb519ca733e53607c644902"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Reviewed shared calendar-date factor status and guarded end-today mutation against inclusive domain ranges. Native API/browser prove active future-end, planned future-start without End button, keyboard end200 with same id and Ends today without repeat action. RU390 fixtures show all four localized states with one applicable End action; no horizontal overflow. Regression cases include future starts, today/past/future ends and timezone-offset date preservation. No HTTP, persistence, ownership, exports or provider changes; final full frontend verification runs before commit.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:04.2326675Z"
+      "gitHead": "55729d9133e00821c36982a0c6d73a823bd9d784",
+      "reviewedAtUtc": "2026-10-02T00:59:27.3317268Z"
     },
     {
       "pageId": "workflow-verification-planner",

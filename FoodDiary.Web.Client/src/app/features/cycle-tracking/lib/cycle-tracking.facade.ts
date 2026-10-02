@@ -42,6 +42,7 @@ import {
     type UpdateCycleSettingsPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
+import { getCycleFactorStatus } from './cycle-factor-status.utils';
 import {
     DEFAULT_AVERAGE_CYCLE_LENGTH,
     DEFAULT_AVERAGE_PERIOD_LENGTH,
@@ -697,7 +698,8 @@ export class CycleTrackingFacade {
     public async endFactorTodayAsync(factorId: string): Promise<void> {
         const currentCycle = this.cycle();
         const factor = this.factors().find(item => item.id === factorId);
-        if (currentCycle === null || factor === undefined || this.isSavingFactor()) {
+        const today = formatDateInputValue(new Date());
+        if (currentCycle === null || factor === undefined || this.isSavingFactor() || !getCycleFactorStatus(factor, today).canEndToday) {
             return;
         }
 
@@ -709,7 +711,7 @@ export class CycleTrackingFacade {
                     factorId: factor.id,
                     type: factor.type,
                     startDate: toCycleDateKey(factor.startDate),
-                    endDate: formatDateInputValue(new Date()),
+                    endDate: today,
                     notes: factor.notes ?? undefined,
                     clearNotes: false,
                 }),

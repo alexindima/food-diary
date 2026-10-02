@@ -2526,6 +2526,8 @@
         "FACTOR_NO_PERIOD": "No period",
         "FACTOR_SINCE": "since {{date}}",
         "FACTOR_ACTIVE": "Active",
+        "FACTOR_PLANNED": "Planned",
+        "FACTOR_ENDS_TODAY": "Ends today",
         "FACTOR_ENDED": "Ended",
         "SAVE_FACTOR": "Save factor",
         "UPDATE_FACTOR": "Update factor",

@@ -54,6 +54,7 @@ export type CycleFactorListItemViewModel = {
     dateRangeLabel: string;
     statusLabelKey: string;
     isActive: boolean;
+    canEndToday: boolean;
 };
 
 export type CyclePredictionViewModel = {
