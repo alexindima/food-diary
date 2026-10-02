@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 
 import { ActiveSessionsService } from '../api/active-sessions.service';
@@ -10,11 +10,15 @@ export class ActiveSessionsFacade {
     public readonly sessions = signal<ActiveSession[]>([]);
     public readonly isLoading = signal(false);
     public readonly revokingId = signal<string | null>(null);
-    public readonly error = signal(false);
+    public readonly error = signal<'load' | 'revoke' | null>(null);
+    public readonly isBusy = computed(() => this.isLoading() || this.revokingId() !== null);
 
     public load(): void {
+        if (this.isBusy()) {
+            return;
+        }
         this.isLoading.set(true);
-        this.error.set(false);
+        this.error.set(null);
         this.api
             .getAll()
             .pipe(
@@ -27,15 +31,16 @@ export class ActiveSessionsFacade {
                     this.sessions.set(sessions);
                 },
                 error: () => {
-                    this.error.set(true);
+                    this.error.set('load');
                 },
             });
     }
 
     public revoke(sessionId: string): void {
-        if (this.revokingId() !== null) {
+        if (this.isBusy()) {
             return;
         }
+        this.error.set(null);
         this.revokingId.set(sessionId);
         this.api
             .revoke(sessionId)
@@ -49,15 +54,16 @@ export class ActiveSessionsFacade {
                     this.sessions.update(items => items.filter(item => item.id !== sessionId));
                 },
                 error: () => {
-                    this.error.set(true);
+                    this.error.set('revoke');
                 },
             });
     }
 
     public revokeOthers(): void {
-        if (this.revokingId() !== null) {
+        if (this.isBusy()) {
             return;
         }
+        this.error.set(null);
         this.revokingId.set('all');
         this.api
             .revokeOthers()
@@ -71,7 +77,7 @@ export class ActiveSessionsFacade {
                     this.sessions.update(items => items.filter(item => item.isCurrent));
                 },
                 error: () => {
-                    this.error.set(true);
+                    this.error.set('revoke');
                 },
             });
     }

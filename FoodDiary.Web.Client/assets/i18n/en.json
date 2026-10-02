@@ -4891,6 +4891,8 @@
         "ACTIVE_SESSIONS_DESCRIPTION": "Devices currently signed in to your account. Detailed IP addresses are not shown.",
         "ACTIVE_SESSIONS_LOADING": "Loading active sessions…",
         "ACTIVE_SESSIONS_ERROR": "Active sessions could not be loaded. Please try again.",
+        "ACTIVE_SESSIONS_REVOKE_ERROR": "Sessions could not be ended. Please try again.",
+        "ACTIVE_SESSIONS_RELOAD": "Reload sessions",
         "CURRENT_SESSION": "Current session",
         "REVOKE_SESSION": "Sign out device",
         "REVOKE_OTHER_SESSIONS": "Sign out all other devices",

@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a6c60a6ce1f00c3f6147f5b027ea570455263e592319ed1881b08600d1da7233"
+          "sha256": "4660694b62d4d224454d788bd3391cc302eb967e9d3b47f2dc633b496abeca1e"
         }
       ],
-      "reason": "Reviewed generated quality changes against current security card source: only two lines add the existing selected-language signal; structural score80to82 lines10.60to10.64. Regression failed old DatePipe English output and focused21 tests pass ru-en-ru date rendering and auth interceptor. Foreign admin node remains separately owned.",
+      "reason": "Reviewed scoped transient facade guards and security card error recovery. Four old-code failures reproduce hidden rows, stale revoke errors and duplicate reloads. Focused28 pass, final targeted ESLint0; native RU390/1280 retains28 rows on503, disables actions while pending, reload200 clears alert, simulated204 preservescurrent, real28 restored. No backend contracts or persistence changed.",
       "baseRef": "HEAD",
-      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
-      "reviewedAtUtc": "2026-10-02T22:40:53.4753174Z"
+      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
+      "reviewedAtUtc": "2026-10-02T23:10:39.1833658Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a6c60a6ce1f00c3f6147f5b027ea570455263e592319ed1881b08600d1da7233"
+          "sha256": "4660694b62d4d224454d788bd3391cc302eb967e9d3b47f2dc633b496abeca1e"
         }
       ],
-      "reason": "Reviewed locale-only DatePipe argument and existing injectCurrentLanguage signal in current profile security card. API session DTO, tokens, authenticated ownership, session revoke commands and persistence are unchanged. Native RU390/1280 dates match selected language without new data exposure;21 focused tests pass. Separate revoke503 UI recovery defect is recorded for next change.",
+      "reason": "Reviewed session recovery presentation and scoped facade only: identity, owner filtering, API payloads, tokens and server revoke behavior unchanged. All native DELETE responses mocked503/204, no real session revoked; current kept in simulated revoke-others success and real28 restored viaGET. Private session fields not expanded. Consumer auth interceptor tests included in28 focused pass.",
       "baseRef": "HEAD",
-      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
-      "reviewedAtUtc": "2026-10-02T22:41:18.0921089Z"
+      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
+      "reviewedAtUtc": "2026-10-02T23:10:41.6787573Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,14 +1044,18 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "3e9c949f4817806dff6768e1c0c3d75eccff197aa79f00c3608bd5d44423257d"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "561b95bd5f2b72e1b2253196aaca88edc3493901fa9f83f37d1e163123f2f53a"
+          "sha256": "34a4038352547318d69e044a6ad1b60cc534fe173e67fbe29c6480830d176085"
         }
       ],
-      "reason": "Reviewed frontend index diff against component declaration: security-card source location moves line30to31 due locale helper import. Selector, route, providers and feature ownership remain unchanged. Current source and21focused tests confirm DatePipe locale signal updates ru-en-ru; nativeRU390/1280 dates are localized.",
+      "reason": "Reviewed updated security card and facade locations in frontend index against final sources; selectors, scoped provider and routes retained. Nine owned frontend paths include5TS/HTML/spec and4source/generatedENRU locale files. Added reload consumes existing session GET through facade and existing button disabledReason. Current auth API and DTO unchanged;28focused pass and native recovery checked.",
       "baseRef": "HEAD",
-      "gitHead": "9609672c6387cf8b171ecbce119ac98553756866",
-      "reviewedAtUtc": "2026-10-02T22:41:26.5564797Z"
+      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
+      "reviewedAtUtc": "2026-10-02T23:11:50.2415575Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1139,13 +1143,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6eab7b0dccb93a5c040ed07bfa0b2022f26226d3ee3ce59052409286e56c122c"
+          "sha256": "3e9c949f4817806dff6768e1c0c3d75eccff197aa79f00c3608bd5d44423257d"
         }
       ],
-      "reason": "Reviewed both measurement form-card selectors and consumers: existing isSaving input drives existing button disabled/disabledReason and aria-busy, public inputs/output payloads unchanged. Signal fields disable during pending mutations; dialog ref blocks backdrop/Escape. Existing EN/RU busy key reused.412 focused tests and native390/1280 create/error/edit/retry/delete persistence prove loading,disabled,error,recovery and keyboard states.",
+      "reason": "Reviewed generated frontend contract diff: button occurrences2to3 for new reload, same declared button inputs/outputs. Literal key inventory moves error and busy labels to computed TS properties, which explains omitted literal template keys; EN/RUsource andgenerated locales include two new session recovery keys, i18n0 and nativeRUalerts/reload correct. Existing API calls and contracts unchanged; finaltargetedESLint0.",
       "baseRef": "HEAD",
-      "gitHead": "0fe97880592dac96db22f70d334c4005e6288447",
-      "reviewedAtUtc": "2026-10-02T21:46:36.6340681Z"
+      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
+      "reviewedAtUtc": "2026-10-02T23:11:53.1971116Z"
     },
     {
       "pageId": "workflow.query-context",

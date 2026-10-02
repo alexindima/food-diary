@@ -6131,6 +6131,8 @@
         "ACTIVE_SESSIONS_DESCRIPTION": "Устройства, на которых выполнен вход в ваш аккаунт. Подробные IP-адреса не показываются.",
         "ACTIVE_SESSIONS_LOADING": "Загружаем активные сессии…",
         "ACTIVE_SESSIONS_ERROR": "Не удалось загрузить активные сессии. Попробуйте ещё раз.",
+        "ACTIVE_SESSIONS_REVOKE_ERROR": "Не удалось завершить сессии. Попробуйте ещё раз.",
+        "ACTIVE_SESSIONS_RELOAD": "Обновить список",
         "CURRENT_SESSION": "Текущая сессия",
         "REVOKE_SESSION": "Завершить сессию",
         "REVOKE_OTHER_SESSIONS": "Завершить все остальные",

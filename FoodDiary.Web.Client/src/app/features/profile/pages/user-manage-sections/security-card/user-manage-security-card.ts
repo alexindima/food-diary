@@ -1,5 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, type ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    type ElementRef,
+    inject,
+    input,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -35,6 +46,13 @@ export class UserManageSecurityCardComponent {
     private initializationStarted = false;
     protected readonly activeSessions = inject(ActiveSessionsFacade);
     protected readonly locale = injectCurrentLanguage();
+    protected readonly sessionErrorKey = computed(() =>
+        this.activeSessions.error() === 'revoke' ? 'USER_MANAGE.ACTIVE_SESSIONS_REVOKE_ERROR' : 'USER_MANAGE.ACTIVE_SESSIONS_ERROR',
+    );
+    protected readonly sessionBusyReason = computed(() => {
+        this.locale();
+        return this.activeSessions.isBusy() ? String(this.translateService.instant('DISABLED_HINTS.OPERATION_BUSY')) : null;
+    });
 
     public readonly email = input.required<string>();
     public readonly hasGoogleIdentity = input.required<boolean>();

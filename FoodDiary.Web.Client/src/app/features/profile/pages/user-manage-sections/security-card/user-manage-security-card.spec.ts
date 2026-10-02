@@ -74,6 +74,10 @@ describe('UserManageSecurityCardComponent', () => {
         await verifySessionDateLocalesAsync(await createFixtureAsync(true));
     });
 
+    it('keeps known sessions visible after an error and offers a guarded reload', async () => {
+        verifySessionRecoveryUi(await createFixtureAsync(true));
+    });
+
     async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
         await TestBed.configureTestingModule({
             imports: [UserManageSecurityCardComponent],
@@ -100,7 +104,7 @@ async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManag
     const translate = TestBed.inject(TranslateService);
     const timestamp = '2026-10-02T19:37:23Z';
     fixture.componentInstance['activeSessions'].isLoading.set(false);
-    fixture.componentInstance['activeSessions'].error.set(false);
+    fixture.componentInstance['activeSessions'].error.set(null);
     fixture.componentInstance['activeSessions'].sessions.set([
         {
             id: 'current-session',
@@ -122,4 +126,39 @@ async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManag
         );
         expect(description?.textContent).toContain(formatDate(timestamp, 'medium', language));
     }
+}
+
+function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCardComponent>): void {
+    const activeSessions = fixture.componentInstance['activeSessions'];
+    const timestamp = '2026-10-02T19:37:23Z';
+    const currentSession = {
+        id: 'current',
+        isCurrent: true,
+        authProvider: 'password',
+        browser: 'Edge',
+        operatingSystem: 'Windows',
+        deviceType: 'Desktop',
+        createdAtUtc: timestamp,
+        lastActiveAtUtc: timestamp,
+    };
+    activeSessions.isLoading.set(false);
+    activeSessions.sessions.set([currentSession, { ...currentSession, id: 'other', isCurrent: false }]);
+    activeSessions.error.set('revoke');
+    fixture.detectChanges();
+
+    const section = (fixture.nativeElement as HTMLElement).querySelector('.user-manage__sessions');
+    expect(section?.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
+    expect(section?.querySelector('[role="alert"]')).not.toBeNull();
+    const reload = Array.from(section?.querySelectorAll('button') ?? []).find(button =>
+        button.textContent.includes('USER_MANAGE.ACTIVE_SESSIONS_RELOAD'),
+    );
+    expect(reload).toBeDefined();
+    const load = vi.spyOn(activeSessions, 'load').mockImplementation(() => {});
+    reload?.click();
+    expect(load).toHaveBeenCalledOnce();
+
+    activeSessions.isLoading.set(true);
+    fixture.detectChanges();
+    expect(section?.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
+    expect(Array.from(section?.querySelectorAll('button') ?? []).every(button => button.disabled)).toBe(true);
 }

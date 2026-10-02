@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ActiveSessionsService } from '../api/active-sessions.service';
@@ -31,7 +31,7 @@ describe('ActiveSessionsFacade', () => {
 
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
         expect(facade.isLoading()).toBe(false);
-        expect(facade.error()).toBe(false);
+        expect(facade.error()).toBeNull();
     });
 
     it('removes a revoked session and preserves the current session when revoking others', () => {
@@ -56,9 +56,62 @@ describe('ActiveSessionsFacade', () => {
 
         facade.revoke(otherSession.id);
 
-        expect(facade.error()).toBe(true);
+        expect(facade.error()).toBe('revoke');
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
         expect(facade.revokingId()).toBeNull();
+    });
+});
+
+describe('ActiveSessionsFacade recovery', () => {
+    const currentSession = createSession('current', true);
+    const otherSession = createSession('other', false);
+    const api = { getAll: vi.fn(), revoke: vi.fn(), revokeOthers: vi.fn() };
+    let facade: ActiveSessionsFacade;
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        api.getAll.mockReturnValue(of([currentSession, otherSession]));
+        TestBed.configureTestingModule({ providers: [ActiveSessionsFacade, { provide: ActiveSessionsService, useValue: api }] });
+        facade = TestBed.inject(ActiveSessionsFacade);
+        facade.load();
+    });
+
+    it('clears a failed revocation when retry succeeds', () => {
+        api.revoke.mockReturnValueOnce(throwError(() => new Error('unavailable'))).mockReturnValueOnce(of(undefined));
+        facade.revoke(otherSession.id);
+        expect(facade.error()).toBeTruthy();
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
+
+        facade.revoke(otherSession.id);
+
+        expect(facade.error()).toBeFalsy();
+        expect(facade.sessions()).toEqual([currentSession]);
+    });
+
+    it('clears a failed revoke-others operation when retry succeeds', () => {
+        api.revokeOthers.mockReturnValueOnce(throwError(() => new Error('unavailable'))).mockReturnValueOnce(of(undefined));
+        facade.revokeOthers();
+        expect(facade.error()).toBeTruthy();
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
+
+        facade.revokeOthers();
+
+        expect(facade.error()).toBeFalsy();
+        expect(facade.sessions()).toEqual([currentSession]);
+    });
+
+    it('prevents duplicate list requests while a reload is pending', () => {
+        const pending = new Subject<ActiveSession[]>();
+        api.getAll.mockClear().mockReturnValue(pending);
+        facade.load();
+        facade.load();
+
+        expect(api.getAll).toHaveBeenCalledOnce();
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
+        pending.next([currentSession]);
+        pending.complete();
+        expect(facade.sessions()).toEqual([currentSession]);
+        expect(facade.isLoading()).toBe(false);
     });
 });
 

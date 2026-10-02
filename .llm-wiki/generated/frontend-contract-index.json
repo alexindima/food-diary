@@ -21407,10 +21407,9 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
       "keys": [
-        "DISABLED_HINTS.OPERATION_BUSY",
         "USER_MANAGE.ACTIVE_SESSIONS_DESCRIPTION",
-        "USER_MANAGE.ACTIVE_SESSIONS_ERROR",
         "USER_MANAGE.ACTIVE_SESSIONS_LOADING",
+        "USER_MANAGE.ACTIVE_SESSIONS_RELOAD",
         "USER_MANAGE.ACTIVE_SESSIONS_TITLE",
         "USER_MANAGE.CURRENT_SESSION",
         "USER_MANAGE.GOOGLE_CONNECTED",
@@ -28596,7 +28595,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "disabled",
         "disabledReason",

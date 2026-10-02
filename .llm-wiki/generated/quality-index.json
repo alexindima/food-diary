@@ -11266,11 +11266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.ts",
-      "nonBlankLines": 73,
-      "decisionPoints": 2,
+      "nonBlankLines": 79,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.46
+      "structuralRiskScore": 7.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
@@ -11378,11 +11378,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "nonBlankLines": 82,
+      "nonBlankLines": 100,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.64
+      "structuralRiskScore": 11
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
