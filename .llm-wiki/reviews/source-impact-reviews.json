@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c5494ffebad78616582484ff5d28aee2b21b18c75e3be4e5677c7cd3b84ef62"
+          "sha256": "5d263c96797ccc9b11b80acf42b69282c902fa98e6435ee631ed879471aaf865"
         }
       ],
-      "reason": "Reviewed date-only task deadline conversion to local end of day, existing UTC API compatibility, focused regression cases and native creation/completion. Auth test fixtures aligned with current cookie-only refresh contract; no runtime auth change.",
+      "reason": "Reviewed attention date locale rendering and language switch test; unrelated admin dialog edits excluded from commit.",
       "baseRef": "HEAD",
-      "gitHead": "580514d44c5eed41c9023d29bb42dabb3dc93caf",
-      "reviewedAtUtc": "2026-10-02T13:12:12.2129195Z"
+      "gitHead": "f3e294ba78874a5b9c0fff892be63e96a944922a",
+      "reviewedAtUtc": "2026-10-02T13:33:56.7176377Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c5494ffebad78616582484ff5d28aee2b21b18c75e3be4e5677c7cd3b84ef62"
+          "sha256": "5d263c96797ccc9b11b80acf42b69282c902fa98e6435ee631ed879471aaf865"
         }
       ],
-      "reason": "Reviewed date-only task deadline conversion to local end of day, existing UTC API compatibility, focused regression cases and native creation/completion. Auth test fixtures aligned with current cookie-only refresh contract; no runtime auth change.",
+      "reason": "Reviewed attention date locale rendering and language switch test; unrelated admin dialog edits excluded from commit.",
       "baseRef": "HEAD",
-      "gitHead": "580514d44c5eed41c9023d29bb42dabb3dc93caf",
-      "reviewedAtUtc": "2026-10-02T13:12:13.5339431Z"
+      "gitHead": "f3e294ba78874a5b9c0fff892be63e96a944922a",
+      "reviewedAtUtc": "2026-10-02T13:33:57.6536577Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1044,18 +1044,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "eab94707aba219b7c2bc59af163cabac9abe31d6920cfe5cb2731d0eb50db76e"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "e97ad33eb6c9b83e3a7fe22c611bb046ce8dae1556e84e2d318414dab3b27fc3"
+          "sha256": "58172f579e15cbc043fb9f829ba6f24056eb0b6d09f68ef85965e3febdf4ae16"
         }
       ],
-      "reason": "Reviewed catalog integration with current master: both meal-plan and catalog routes/menu links retained, merged route tests pass. New module-owned read ports preserve transaction ownership; import reuses existing create validation and persistence. Public catalog only, private ID collisions rejected, no credentials or private content exported, media URLs only. Existing API records remain unchanged; six routes and six schemas added. Backend build, admin build, 183 admin tests, ESLint and locale checks passed after merge. Prior feature checks passed 365 owner tests and 2111 architecture tests plus mocked browser retry/dependency/mobile scenarios. No worker/provider/deployment changes; PostgreSQL integration remains unverified without Docker.",
+      "reason": "Reviewed attention date locale rendering and language switch test; unrelated admin dialog edits excluded from commit.",
       "baseRef": "HEAD",
-      "gitHead": "be35805fce675c4e1f03837ed5ca67ee82bcebb2",
-      "reviewedAtUtc": "2026-10-02T12:05:53.1474801Z"
+      "gitHead": "f3e294ba78874a5b9c0fff892be63e96a944922a",
+      "reviewedAtUtc": "2026-10-02T13:33:58.3925063Z"
     },
     {
       "pageId": "workflow-verification-planner",

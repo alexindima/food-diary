@@ -84,14 +84,14 @@
                 <p class="fd-ui-body-sm">{{ 'ATTENTION.EMPTY' | translate }}</p>
             } @else {
                 <div class="fd-stack fd-gap-sm">
-                    @for (signal of attentionSignals(); track signal.id) {
+                    @for (signal of attentionItems(); track signal.id) {
                         <article class="fd-stack fd-gap-xs">
                             <div class="fd-row fd-justify-between fd-gap-sm">
                                 <strong>{{ signal.clientDisplayName ?? ('ATTENTION.UNNAMED_CLIENT' | translate) }}</strong>
                                 <span>{{ `ATTENTION.SEVERITY.${signal.severity}` | translate }}</span>
                             </div>
                             <p class="fd-ui-body-sm">{{ `ATTENTION.REASON.${signal.reason}` | translate }}</p>
-                            <time [attr.datetime]="signal.detectedAtUtc">{{ signal.detectedAtUtc | date: 'mediumDate' }}</time>
+                            <time [attr.datetime]="signal.detectedAtUtc">{{ signal.detectedDateLabel }}</time>
                             <div class="fd-row fd-gap-sm">
                                 <fd-ui-button type="button" variant="secondary" fill="outline" (click)="acknowledgeSignal(signal)">
                                     {{ 'ATTENTION.ACKNOWLEDGE' | translate }}

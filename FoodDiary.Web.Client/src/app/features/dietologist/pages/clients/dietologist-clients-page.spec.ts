@@ -1,10 +1,11 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -35,6 +36,32 @@ beforeEach(() => {
 });
 
 describe('DietologistClientsPageComponent', () => {
+    it('updates the rendered attention date when the application language changes', async () => {
+        createComponent();
+        component['attentionSignals'].set([
+            {
+                id: 'signal-1',
+                clientUserId: 'client-1',
+                clientDisplayName: 'QA client',
+                type: 'MaterialWeightChange',
+                severity: 'High',
+                reason: 'MaterialWeightChange',
+                detectedAtUtc: '2026-10-02T12:00:00Z',
+                snoozedUntilUtc: null,
+            },
+        ]);
+        const translate = TestBed.inject(TranslateService);
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('time')?.textContent).toContain('окт.');
+
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('time')?.textContent).toContain('Oct');
+        expect((fixture.nativeElement as HTMLElement).querySelector('time')?.getAttribute('datetime')).toBe('2026-10-02T12:00:00Z');
+    });
+
     it('loads client cards on creation', () => {
         createComponent();
 

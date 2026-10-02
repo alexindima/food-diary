@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
@@ -17,7 +16,7 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '../../../../shared/models/dietologist.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { DietologistFacade } from '../../lib/dietologist.facade';
-import { buildClientCardViewModels } from './dietologist-clients-lib/dietologist-clients.mapper';
+import { buildClientCardViewModels, formatClientConnectedDate } from './dietologist-clients-lib/dietologist-clients.mapper';
 import type { ClientCardViewModel } from './dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list/dietologist-clients-list';
 import { DIETOLOGIST_CLIENTS_TOUR } from './dietologist-clients-tour';
@@ -43,7 +42,6 @@ const MILLISECONDS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINU
     imports: [
         FormField,
         FormRoot,
-        DatePipe,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -69,6 +67,14 @@ export class DietologistClientsPageComponent {
     protected readonly loading = signal(true);
     protected readonly loadError = signal(false);
     protected readonly attentionSignals = signal<AttentionSignal[]>([]);
+    protected readonly attentionItems = computed(() => {
+        this.languageVersion();
+        const language = resolveTranslateLanguage(this.translateService);
+        return this.attentionSignals().map(attentionSignal => ({
+            ...attentionSignal,
+            detectedDateLabel: formatClientConnectedDate(attentionSignal.detectedAtUtc, language),
+        }));
+    });
     protected readonly attentionLoading = signal(true);
     protected readonly attentionError = signal(false);
     protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
