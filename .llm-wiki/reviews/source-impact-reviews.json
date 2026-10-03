@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "faf216db6616279b469e54a48763fccabc47393daeca11add45663ef96413944"
+          "sha256": "323f2d0395ea523c560f92c4e9fa8bd270d2a772b772b1030f0d4b0584a10699"
         }
       ],
-      "reason": "Avatar PATCH semantics were traced through JSON deserialization, request mapping, command, domain and post-save cleanup. Omitting both properties preserves the avatar; explicit null clears it. The internal specified flag is JsonIgnore, covered by negative serialization assertions and 23 HTTP/Swagger integration tests. Optional parameters retain existing callers; no routes, migrations or status-code changes.",
+      "reason": "Only two existing Admin group DTO test reference counts changed from new PostgreSQL pagination coverage; no request/response shape, route, authorization or snapshot changes. All 267 host integration tests including OpenAPI pass.",
       "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:20:43.6504596Z"
+      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
+      "reviewedAtUtc": "2026-10-03T08:43:41.8312014Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8743fd4e4f1d1c066d840490821f3174dad3027c7f81dd28553aa64887744cbb"
+          "sha256": "630375106ca89deda4f2c234ebc0ffbd9016849c048aa1570cea131591ba401d"
         }
       ],
-      "reason": "The existing image cleanup is evaluated against the resulting saved profile asset ID, so omitted image fields do not trigger cleanup and explicit removal only cleans the old asset after persistence. No new provider, worker, retry, deployment or database configuration. Preserve/clear and cleanup ordering were covered by Users tests; native cancellation made no deletion request and confirmed saved removal survived reload.",
+      "reason": "Topology changed only source fingerprint. DailyAdvice read-only repository preserves module-owned DbSet, AsNoTracking, cancellation, database group pagination and two-query shape. No external clients, jobs, DI, writes or deployment bindings changed; live loopback runtime CRUD and real PostgreSQL tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:21:08.139069Z"
+      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
+      "reviewedAtUtc": "2026-10-03T08:43:42.4933571Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -909,22 +909,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
-        },
-        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8743fd4e4f1d1c066d840490821f3174dad3027c7f81dd28553aa64887744cbb"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
+          "sha256": "630375106ca89deda4f2c234ebc0ffbd9016849c048aa1570cea131591ba401d"
         }
       ],
-      "reason": "Verified bounded avatar clearing: explicit null photo fields reach the Users domain; omitted fields retain the avatar; JSON presence flags are ignored on input; selected assets retain ownership checks; cleanup runs only for an actually changed reference and the UI does not delete before saving. Solution build passed, 589 Users tests, 23 PostgreSQL HTTP/Swagger tests, 2116 architecture tests, 5052 frontend tests and all verification gates passed. Native 390px Russian crop/upload/save/reload, discard without deletion, explicit removal and final retained goals were checked; no migration or provider/deployment change.",
+      "reason": "Reviewed exact two-source patch: no changes to credentials, authorization, privacy, HTTP exposure or outbound integrations. Admin guards unchanged; new test uses existing test-auth factory against PostgreSQL. Live verification confined to own loopback database, local temporary test claims and synthetic advice fixtures, which were removed.",
       "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:13:55.4154625Z"
+      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
+      "reviewedAtUtc": "2026-10-03T08:43:43.1135660Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1071,7 +1063,7 @@
       "reason": "Verified current sources for the profile image selector, UpdateUserDto, PATCH request presence tracking, HTTP mapping, UpdateUserCommand/handler, UserProfileMediaUpdate and User.Profile domain application. The reproduced defect was omission of cleared fields plus premature selector deletion. The focused fix is supported by 589 Users tests, 23 HTTP/Swagger tests, 2116 architecture tests and native profile evidence.",
       "baseRef": "HEAD",
       "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:21:09.0564850Z"
+      "reviewedAtUtc": "2026-10-03T07:21:09.056485Z"
     },
     {
       "pageId": "workflow-verification-planner",

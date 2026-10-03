@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
@@ -106,6 +107,40 @@ public sealed partial class PresentationBoundaryIntegrationTests {
         rows = await client.GetFromJsonAsync<List<AdminDailyAdviceHttpResponse>>("/api/v1/admin/daily-advices");
         Assert.NotNull(rows);
         Assert.DoesNotContain(rows, item => item.Value.Contains(groupId.ToString("N"), StringComparison.Ordinal));
+    }
+
+    [RequiresDockerFact]
+    public async Task AdminDailyAdviceGroups_PaginatesCompleteTranslationPairs() {
+        using HttpClient client = CreateAdviceAdminClient();
+        Guid[] groupIds = [
+            Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            Guid.Parse("00000000-0000-0000-0000-000000000002"),
+            Guid.Parse("00000000-0000-0000-0000-000000000003"),
+        ];
+        var payload = new AdminDailyAdvicePairsImportHttpRequest(2, [
+            new(groupIds[0], "Pagination Russian 1", "Pagination English 1"),
+            new(groupIds[1], "Pagination Russian 2", "Pagination English 2"),
+            new(groupIds[2], "Pagination Russian 3", "Pagination English 3"),
+        ]);
+        using HttpResponseMessage imported = await PostWithIdempotencyAsync(client, "/api/v1/admin/daily-advices/groups/import", payload);
+        Assert.Equal(HttpStatusCode.OK, imported.StatusCode);
+
+        for (int page = 1; page <= groupIds.Length; page++) {
+            string pageText = page.ToString(CultureInfo.InvariantCulture);
+            List<AdminDailyAdviceGroupHttpResponse>? groups = await client.GetFromJsonAsync<List<AdminDailyAdviceGroupHttpResponse>>(
+                $"/api/v1/admin/daily-advices/groups?page={pageText}&limit=1");
+            Assert.NotNull(groups);
+            AdminDailyAdviceGroupHttpResponse group = Assert.Single(groups);
+            Assert.Multiple(
+                () => Assert.Equal(groupIds[page - 1], group.Id),
+                () => Assert.Equal($"Pagination Russian {pageText}", group.Ru),
+                () => Assert.Equal($"Pagination English {pageText}", group.En));
+        }
+
+        foreach (Guid groupId in groupIds) {
+            using HttpResponseMessage deleted = await client.DeleteAsync($"/api/v1/admin/daily-advices/groups/{groupId}");
+            Assert.Equal(HttpStatusCode.NoContent, deleted.StatusCode);
+        }
     }
 
     private HttpClient CreateAdviceAdminClient() {

@@ -26,7 +26,7 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
         int limit,
         CancellationToken cancellationToken = default) {
         Guid[] groupIds = await advices.AsNoTracking()
-            .Select(advice => advice.GroupId == Guid.Empty ? advice.Id.Value : advice.GroupId)
+            .Select(advice => advice.GroupId)
             .Distinct()
             .OrderBy(groupId => groupId)
             .Skip((page - 1) * limit)
@@ -34,8 +34,8 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
             .ToArrayAsync(cancellationToken).ConfigureAwait(false);
 
         return await advices.AsNoTracking()
-            .Where(advice => Enumerable.Contains(groupIds, advice.GroupId == Guid.Empty ? advice.Id.Value : advice.GroupId))
-            .OrderBy(advice => advice.GroupId == Guid.Empty ? advice.Id.Value : advice.GroupId)
+            .Where(advice => Enumerable.Contains(groupIds, advice.GroupId))
+            .OrderBy(advice => advice.GroupId)
             .ThenBy(advice => advice.Locale)
             .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight, advice.GroupId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);

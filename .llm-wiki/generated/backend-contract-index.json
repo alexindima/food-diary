@@ -24191,7 +24191,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "AdminDailyAdviceGroupUpdateHttpRequest",
@@ -24334,7 +24334,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.DailyAdvices.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "AdminDailyAdvicesImportHttpRequest",
