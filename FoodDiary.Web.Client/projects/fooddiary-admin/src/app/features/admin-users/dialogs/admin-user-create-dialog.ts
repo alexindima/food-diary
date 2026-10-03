@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { email, form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { applyWhen, email, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
 import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -67,6 +67,14 @@ export class AdminUserCreateDialogComponent {
     protected readonly form = form(this.formModel, path => {
         required(path.email);
         email(path.email);
+        applyWhen(
+            path,
+            ({ value }) => !value().generatePassword,
+            manualPasswordPath => {
+                required(manualPasswordPath.temporaryPassword);
+                minLength(manualPasswordPath.temporaryPassword, MIN_PASSWORD_LENGTH);
+            },
+        );
     });
     protected readonly submitLabel = computed(() => (this.isSubmitting() ? 'Creating...' : 'Create user'));
 
@@ -99,11 +107,7 @@ export class AdminUserCreateDialogComponent {
     private async submitAsync(): Promise<void> {
         this.form().markAsTouched();
         const value = this.formModel();
-        if (
-            this.form().invalid() ||
-            this.isSubmitting() ||
-            (!value.generatePassword && value.temporaryPassword.length < MIN_PASSWORD_LENGTH)
-        ) {
+        if (this.form().invalid() || this.isSubmitting()) {
             return;
         }
 

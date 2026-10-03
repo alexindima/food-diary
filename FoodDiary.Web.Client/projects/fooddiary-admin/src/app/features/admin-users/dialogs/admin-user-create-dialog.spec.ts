@@ -41,4 +41,34 @@ describe('AdminUserCreateDialogComponent credential options', () => {
         expect(send.checked).toBe(true);
         expect(requireChange.checked).toBe(true);
     });
+
+    it('disables creation for empty or short manual passwords and recovers when valid', () => {
+        const form = fixture.componentInstance['form'];
+        form.email().value.set('admin-qa@example.com');
+        checkbox('admin-user-create-generate-password').click();
+        fixture.detectChanges();
+
+        const createButton = (): HTMLButtonElement => {
+            const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button');
+            const button = [...buttons].find(element => element.textContent.includes('Create user'));
+            if (button === undefined) {
+                throw new Error('Missing create user button');
+            }
+            return button;
+        };
+
+        expect(createButton().disabled).toBe(true);
+        form.temporaryPassword().value.set('12345');
+        fixture.detectChanges();
+        expect(createButton().disabled).toBe(true);
+
+        form.temporaryPassword().value.set('QaPassword123!');
+        fixture.detectChanges();
+        expect(createButton().disabled).toBe(false);
+
+        form.temporaryPassword().value.set('');
+        checkbox('admin-user-create-generate-password').click();
+        fixture.detectChanges();
+        expect(createButton().disabled).toBe(false);
+    });
 });

@@ -848,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a7c9029f3c9632cbbb4d1b4d40f4f6c6e210e9065e5511e6ed9cab5a027dfb3d"
+          "sha256": "326006a71e29aa027945ef6462ac01951e0cb1bf45a96ccdc4307bb784c85f2d"
         }
       ],
-      "reason": "The final repair passed a zero-warning solution build, 2832 focused unit and architecture tests plus 16 PostgreSQL Swagger checks and a second 16-test snapshot verification. Exact interceptor order and the shared atomic receipt entity are asserted. Scoped formatting passed, and source indexes were regenerated after the final transport type rename. Existing hook and retrieval policies remain enabled.",
+      "reason": "Reviewed the existing admin creation form fix: manual temporary passwords are required and at least six characters through Signal Forms only when generation is disabled. The regression test checks empty, short, valid and generated-password states using the rendered button. All 187 admin tests, the production admin build, focused ESLint and Prettier checks passed. Generated quality metrics were refreshed against final code; existing full-origin review context is retained.",
       "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:02.2208301Z"
+      "gitHead": "737db0d98b49afe7dca9c545392757b2dd1de4a9",
+      "reviewedAtUtc": "2026-10-03T15:35:30.3638732Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -938,7 +938,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a7c9029f3c9632cbbb4d1b4d40f4f6c6e210e9065e5511e6ed9cab5a027dfb3d"
+          "sha256": "326006a71e29aa027945ef6462ac01951e0cb1bf45a96ccdc4307bb784c85f2d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
@@ -949,10 +949,10 @@
           "sha256": "bfa8d2ec4ae50dd97a288cf818580749b8a5105d525d401f0effa9e2457376cd"
         }
       ],
-      "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
+      "reason": "This bounded UI change validates the existing credential field and retains the existing backend six-character policy, payload, admin authorization, email options and password-change requirement. It adds no credential storage, logging, sharing or provider call. The regression uses disposable fixture data only.",
       "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:04.0447097Z"
+      "gitHead": "737db0d98b49afe7dca9c545392757b2dd1de4a9",
+      "reviewedAtUtc": "2026-10-03T15:35:31.4867380Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
