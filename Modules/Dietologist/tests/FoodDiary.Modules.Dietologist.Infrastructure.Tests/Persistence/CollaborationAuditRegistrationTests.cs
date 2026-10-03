@@ -1,6 +1,7 @@
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Persistence.Runtime.Persistence;
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
@@ -46,6 +47,7 @@ public sealed class CollaborationAuditRegistrationTests {
         CoreOptionsExtension core = Assert.IsType<CoreOptionsExtension>(options.FindExtension<CoreOptionsExtension>());
         Assert.Collection(core.Interceptors ?? [],
             interceptor => Assert.IsType<DatabaseCommandTelemetryInterceptor>(interceptor),
+            interceptor => Assert.IsType<ReadSnapshotBudgetInterceptor>(interceptor),
             interceptor => Assert.IsType<DomainEventDispatchInterceptor>(interceptor),
             interceptor => Assert.Same(audit, interceptor));
         Assert.NotNull(first.ServiceProvider.GetRequiredService<FoodDiaryDbContext>());
@@ -63,6 +65,7 @@ public sealed class CollaborationAuditRegistrationTests {
         CoreOptionsExtension core = Assert.IsType<CoreOptionsExtension>(options.FindExtension<CoreOptionsExtension>());
         Assert.Collection(core.Interceptors ?? [],
             interceptor => Assert.IsType<DatabaseCommandTelemetryInterceptor>(interceptor),
+            interceptor => Assert.IsType<ReadSnapshotBudgetInterceptor>(interceptor),
             interceptor => Assert.IsType<DomainEventDispatchInterceptor>(interceptor));
     }
 

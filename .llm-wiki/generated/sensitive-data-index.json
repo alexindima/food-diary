@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1598,
+    "candidateFields": 1614,
     "credential": 156,
     "identity": 175,
-    "health": 741,
+    "health": 747,
     "financial": 132,
-    "privateContent": 394,
-    "boundaryFiles": 205,
+    "privateContent": 404,
+    "boundaryFiles": 211,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -4907,6 +4907,13 @@
       "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
+      "path": "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
       "path": "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs",
       "line": 16
     },
@@ -4916,6 +4923,13 @@
       "type": "double?",
       "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
       "line": 23
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
+      "path": "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs",
+      "line": 15
     },
     {
       "category": "health",
@@ -5152,6 +5166,20 @@
       "category": "health",
       "name": "CalculateNutritionAutomatically",
       "type": "bool",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "CalculateNutritionAutomatically",
+      "type": "bool",
       "path": "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs",
       "line": 14
     },
@@ -5175,6 +5203,20 @@
       "type": "double?",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
       "line": 20
+    },
+    {
+      "category": "health",
+      "name": "CalculateNutritionAutomatically",
+      "type": "bool",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "line": 15
     },
     {
       "category": "health",
@@ -10435,6 +10477,13 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs",
@@ -10509,6 +10558,13 @@
       "type": "IReadOnlyList<Guid>?",
       "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
       "line": 30
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs",
+      "line": 11
     },
     {
       "category": "privateContent",
@@ -10967,6 +11023,34 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs",
@@ -11062,6 +11146,34 @@
       "type": "IReadOnlyList<Guid>?",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
       "line": 29
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetIds",
+      "type": "IReadOnlyList<Guid>?",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "line": 10
     },
     {
       "category": "privateContent",
@@ -12195,6 +12307,14 @@
       "fieldCount": 2
     },
     {
+      "path": "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
       "path": "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs",
       "categories": [
         "health",
@@ -12209,6 +12329,14 @@
         "privateContent"
       ],
       "fieldCount": 8
+    },
+    {
+      "path": "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
@@ -12242,6 +12370,21 @@
       "fieldCount": 2
     },
     {
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 3
+    },
+    {
       "path": "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs",
       "categories": [
         "health",
@@ -12263,6 +12406,21 @@
         "privateContent"
       ],
       "fieldCount": 9
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 3
     },
     {
       "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",

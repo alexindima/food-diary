@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Recipes.Application.Commands.ImportCatalogRecipe;
-using FoodDiary.Modules.Recipes.Application.Models;
-using FoodDiary.Modules.Recipes.Application.Queries.ExportCatalogRecipes;
+using FoodDiary.Modules.Recipes.Presentation.Mappings;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Responses;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -18,27 +18,28 @@ namespace FoodDiary.Modules.Recipes.Presentation.Controllers;
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminCatalogRecipesController(ISender sender) : BaseApiController(sender) {
     [HttpGet("export")]
-    [ProducesResponseType<List<CatalogRecipeModel>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<CatalogRecipeExportHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> Export() => HandleOk(new ExportCatalogRecipesQuery(), static value => value);
+    public Task<IActionResult> Export() =>
+        HandleOk(CatalogRecipeHttpMappings.ToExportQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpPost("preview")]
     [RequestSizeLimit(PresentationRequestLimits.AdminImportPayloadBytes)]
     [RejectOversizedRequest(PresentationRequestLimits.AdminImportPayloadBytes)]
-    [ProducesResponseType<CatalogRecipeImportResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<CatalogRecipeImportHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
-    public Task<IActionResult> Preview([FromCurrentUser] Guid userId, [FromBody] CatalogRecipeModel recipe) =>
-        HandleOk(new ImportCatalogRecipeCommand(userId, recipe, Preview: true), static value => value);
+    public Task<IActionResult> Preview([FromCurrentUser] Guid userId, [FromBody] CatalogRecipeHttpRequest recipe) =>
+        HandleOk(recipe.ToImportCommand(userId, preview: true), static value => value.ToHttpResponse());
 
     [HttpPost("import")]
     [EnableIdempotency(requireKey: true)]
     [RequestSizeLimit(PresentationRequestLimits.AdminImportPayloadBytes)]
     [RejectOversizedRequest(PresentationRequestLimits.AdminImportPayloadBytes)]
-    [ProducesResponseType<CatalogRecipeImportResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<CatalogRecipeImportHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
-    public Task<IActionResult> Import([FromCurrentUser] Guid userId, [FromBody] CatalogRecipeModel recipe) =>
-        HandleOk(new ImportCatalogRecipeCommand(userId, recipe, Preview: false), static value => value);
+    public Task<IActionResult> Import([FromCurrentUser] Guid userId, [FromBody] CatalogRecipeHttpRequest recipe) =>
+        HandleOk(recipe.ToImportCommand(userId, preview: false), static value => value.ToHttpResponse());
 }

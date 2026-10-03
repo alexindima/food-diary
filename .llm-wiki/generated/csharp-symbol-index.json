@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4362,
-    "symbols": 4294,
+    "sourceFiles": 4374,
+    "symbols": 4306,
     "interfaceImplementationLinks": 195,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2247,
+      "class": 2249,
       "enum": 65,
       "interface": 409,
-      "record": 1452,
+      "record": 1462,
       "record struct": 121
     },
     "roles": {
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1768,
+      "Other": 1770,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 160,
-      "Response": 234,
+      "Request": 164,
+      "Response": 240,
       "Service": 166,
       "Validator": 233,
       "ValueObject": 115,
@@ -21412,6 +21412,13 @@
       "line": 5
     },
     {
+      "name": "CatalogProductHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
+      "line": 8
+    },
+    {
       "name": "ProductHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -21438,6 +21445,13 @@
       "role": "Other",
       "path": "Modules/Products/Presentation/ProductSuggestionRequestLimits.cs",
       "line": 4
+    },
+    {
+      "name": "CatalogProductHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "CreateProductHttpRequest",
@@ -21472,6 +21486,20 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Products/Presentation/Requests/UpdateProductHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogProductHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogProductImportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Products/Presentation/Responses/CatalogProductImportHttpResponse.cs",
       "line": 2
     },
     {
@@ -22882,6 +22910,13 @@
       "line": 5
     },
     {
+      "name": "CatalogRecipeHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "line": 9
+    },
+    {
       "name": "PublicRecipeHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -22915,6 +22950,27 @@
       "role": "Other",
       "path": "Modules/Recipes/Presentation/Mappings/RecipeHttpResponseMappings.cs",
       "line": 8
+    },
+    {
+      "name": "CatalogRecipeHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeIngredientHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeIngredientHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeStepHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "CreateRecipeHttpRequest",
@@ -22977,6 +23033,34 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Recipes/Presentation/Requests/UpdateRecipeHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeExportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeImportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeImportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeIngredientHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeIngredientHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CatalogRecipeStepHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
       "line": 2
     },
     {

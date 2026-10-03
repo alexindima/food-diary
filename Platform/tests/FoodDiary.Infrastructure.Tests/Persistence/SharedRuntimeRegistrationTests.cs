@@ -3,6 +3,7 @@ using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Audit.PersistenceModel;
@@ -39,7 +40,7 @@ public sealed class SharedRuntimeRegistrationTests {
         using IServiceScope scope = provider.CreateScope();
         SharedPersistenceDbContext runtime = scope.ServiceProvider.GetRequiredService<SharedPersistenceDbContext>();
         Assert.IsType<SharedRuntimeDbContext>(runtime);
-        Assert.Equal(new[] { typeof(AuditEntry), typeof(EmailOutboxMessage), typeof(OutboxReplayAudit) },
+        Assert.Equal(new[] { typeof(AtomicCommandReceipt), typeof(AuditEntry), typeof(EmailOutboxMessage), typeof(OutboxReplayAudit) },
             runtime.Model.GetEntityTypes().Select(entity => entity.ClrType).OrderBy(type => type.Name, StringComparer.Ordinal));
         Assert.Empty(runtime.ModuleContexts);
         Assert.Same(runtime.Session, scope.ServiceProvider.GetRequiredService<IModuleContextFactory>());

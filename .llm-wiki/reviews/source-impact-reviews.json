@@ -212,13 +212,13 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "9fcf185a42b2f7ccd4b3463dc7d225a63e71017f3fa5145a7c345225f6b348c4"
+          "sha256": "3a8d8e71926fc6adc993298e76a0f3e2d6d75c5e73ad5a491d122a3fd009011e"
         }
       ],
-      "reason": "Verified the workflow remains accurate after the coordinated deployment edit: CI still checks zero-breaking compatibility against the latest successful ancestral push, and deploy still follows successful CI with digest-pinned images. Stopping writers and verifying a host-only backup before migrations implements ADR 0052 without changing HTTP payloads.",
+      "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
       "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:25.8119238Z"
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:09:58.8255295Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -246,17 +246,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6f7e748fc26a8376120b10e94fe99316c7ea88e8ee55caebc5fa3458bd5a6061"
+          "sha256": "0fe16c566ce4e9bdc785cd066b976ff79e680e69b88cf96f82649b242757e5c6"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
           "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         }
       ],
-      "reason": "The MCP response fields, query expansion, score policy, fingerprints and HTTP contracts are unchanged. All 198 SqliteWikiContextSearch tests passed, including duplicate-path crowding and preservation of original record representations.",
+      "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
       "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:43.0015680Z"
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:10:00.3920280Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -795,7 +795,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "19ca58047c98ac1d6c3305dfce40aa6f2a569c9411aa24d5d24a86d630f49b5e"
+          "sha256": "bfa8d2ec4ae50dd97a288cf818580749b8a5105d525d401f0effa9e2457376cd"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -806,10 +806,10 @@
           "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
         }
       ],
-      "reason": "Reaffirmed the previous review of unchanged personal-data lifecycle documentation and the read-only search implementation: parameterized MATCH, cancellation, the two-second command timeout and no added query telemetry remain intact. The current UpdateUserHttpRequest formatter conversion preserves BirthDate/avatar presence flags and JsonIgnore attributes; all 36 presentation tests passed. Sensitive-data metadata changes only the three declaration anchors.",
+      "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
       "baseRef": "origin/master",
-      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
-      "reviewedAtUtc": "2026-10-03T13:40:13.2538470Z"
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:10:01.2332360Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -848,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f6994fbd31df1e8d229fb4d176386bca683c52f118675fad2115a96a1c4ae923"
+          "sha256": "a7c9029f3c9632cbbb4d1b4d40f4f6c6e210e9065e5511e6ed9cab5a027dfb3d"
         }
       ],
-      "reason": "The formatter applied the required IDE0032 field-backed-property conversion without changing the JSON contract. All 36 focused tests passed with zero skips, and full solution dotnet format --verify-no-changes completed successfully. Normal pre-push checks remain enabled.",
-      "baseRef": "HEAD",
-      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
-      "reviewedAtUtc": "2026-10-03T13:36:46.0148079Z"
+      "reason": "The final repair passed a zero-warning solution build, 2832 focused unit and architecture tests plus 16 PostgreSQL Swagger checks and a second 16-test snapshot verification. Exact interceptor order and the shared atomic receipt entity are asserted. Scoped formatting passed, and source indexes were regenerated after the final transport type rename. Existing hook and retrieval policies remain enabled.",
+      "baseRef": "origin/master",
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:10:02.2208301Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -923,13 +923,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "55c9ce43b6e00d55f2e0b3e96df5076cd9618aa5afc26b9c126733b8cc1db6fb"
+          "sha256": "5f26558fa7e520a23cc34952f0581a1b069ee80cb1ced8edf92c29797c6fb473"
         }
       ],
-      "reason": "Reviewed the mechanical IDE0032 conversion in UpdateUserHttpRequest. Field-backed auto-properties retain the same primary-constructor initializers and init accessors. Source-index changes are line anchors only; routes, response models and runtime composition are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
-      "reviewedAtUtc": "2026-10-03T13:36:47.1165370Z"
+      "reason": "Existing presentation guidance already requires owner HTTP requests, responses and mappings. The two catalog controllers now follow it without changing application ownership or command behavior; exact shared runtime assertions include the previously added read-budget interceptor and durable receipt table. Reviewed current owning guides and retained existing full-origin review context.",
+      "baseRef": "origin/master",
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:10:03.0267844Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -938,21 +938,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f6994fbd31df1e8d229fb4d176386bca683c52f118675fad2115a96a1c4ae923"
+          "sha256": "a7c9029f3c9632cbbb4d1b4d40f4f6c6e210e9065e5511e6ed9cab5a027dfb3d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "55c9ce43b6e00d55f2e0b3e96df5076cd9618aa5afc26b9c126733b8cc1db6fb"
+          "sha256": "5f26558fa7e520a23cc34952f0581a1b069ee80cb1ced8edf92c29797c6fb473"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "19ca58047c98ac1d6c3305dfce40aa6f2a569c9411aa24d5d24a86d630f49b5e"
+          "sha256": "bfa8d2ec4ae50dd97a288cf818580749b8a5105d525d401f0effa9e2457376cd"
         }
       ],
-      "reason": "BirthDate and avatar handling retain their existing presence flags, omission semantics and JsonIgnore attributes. No health data, credentials, logs, caches, providers or exports are added or changed. The sensitive-data index updates only the three moved declaration anchors.",
-      "baseRef": "HEAD",
-      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
-      "reviewedAtUtc": "2026-10-03T13:36:47.8920588Z"
+      "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
+      "baseRef": "origin/master",
+      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
+      "reviewedAtUtc": "2026-10-03T15:10:04.0447097Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5783,
+    "productionFiles": 5795,
     "wikiToolFiles": 206,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 983,
@@ -36882,11 +36882,11 @@
     },
     {
       "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.8
+      "structuralRiskScore": 2.82
     },
     {
       "path": "Modules/Products/Presentation/Controllers/ProductSuggestionsController.cs",
@@ -36921,6 +36921,14 @@
       "structuralRiskScore": 0.16
     },
     {
+      "path": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
       "path": "Modules/Products/Presentation/Mappings/ProductHttpMappings.cs",
       "nonBlankLines": 95,
       "decisionPoints": 0,
@@ -36951,6 +36959,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs",
@@ -36991,6 +37007,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Products/Presentation/Responses/CatalogProductImportHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Products/Presentation/Responses/ProductHttpResponse.cs",
@@ -38626,11 +38658,11 @@
     },
     {
       "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.8
+      "structuralRiskScore": 2.82
     },
     {
       "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
@@ -38663,6 +38695,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "nonBlankLines": 65,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.3
     },
     {
       "path": "Modules/Recipes/Presentation/Mappings/PublicRecipeHttpMappings.cs",
@@ -38703,6 +38743,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.02
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeIngredientHttpRequest.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs",
@@ -38775,6 +38839,38 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.58
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeImportHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeIngredientHttpResponse.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Recipes/Presentation/Responses/PublicRecipeHttpResponse.cs",

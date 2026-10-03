@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1318,
+    "contracts": 1328,
     "ambiguousContracts": 2,
-    "consumerEdges": 10261,
-    "productionConsumerEdges": 5870,
-    "testConsumerEdges": 4391,
-    "consumedContracts": 1318,
+    "consumerEdges": 10285,
+    "productionConsumerEdges": 5890,
+    "testConsumerEdges": 4395,
+    "consumedContracts": 1328,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1966,6 +1966,91 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "CatalogProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogProductHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogProductImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductImportHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeExportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "CatalogRecipeHttpResponse",
       "roles": [
         "Response"
@@ -1978,6 +2063,91 @@
       ],
       "definitionPaths": [
         "Modules/MealPlanning/Presentation/MealPlans/Responses/CatalogRecipeHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeImportHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeIngredientHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeIngredientHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeIngredientHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeStepHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CatalogRecipeStepHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -28809,6 +28979,162 @@
       "referenceCount": 1
     },
     {
+      "contract": "CatalogProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CatalogProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CatalogProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/CatalogProductHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "CatalogProductHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogProductHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogProductImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CatalogProductImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Responses/CatalogProductImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeExportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeExportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CatalogRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/CatalogRecipeHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
       "contract": "CatalogRecipeHttpResponse",
       "roles": [
         "Response"
@@ -28820,6 +29146,136 @@
       "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "CatalogRecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CatalogRecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeIngredientHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeIngredientHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeIngredientHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeIngredientHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeIngredientHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeIngredientHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeStepHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeStepHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CatalogRecipeStepHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeStepHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CatalogRecipeStepHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Responses/CatalogRecipeStepHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Responses/CatalogRecipeExportHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ChangeClientTaskStatusCommand",
@@ -39552,7 +40008,7 @@
         "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "consumerPath": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -39591,7 +40047,7 @@
         "Modules/Recipes/Application/Queries/ExportCatalogRecipes/ExportCatalogRecipesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90265,9 +90721,9 @@
         "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+      "consumerPath": "Modules/Products/Presentation/Mappings/CatalogProductHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ImportCatalogProductCommand",
@@ -90281,6 +90737,19 @@
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CatalogProductImportTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ImportCatalogProductCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/CatalogProductHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ImportCatalogRecipeCommand",
@@ -90304,9 +90773,9 @@
         "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+      "consumerPath": "Modules/Recipes/Presentation/Mappings/CatalogRecipeHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ImportCatalogRecipeCommand",
@@ -90320,6 +90789,19 @@
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ImportCatalogRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/CatalogRecipeHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ImportDailyAdvicePairsCommand",
