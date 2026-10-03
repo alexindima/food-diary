@@ -116,6 +116,35 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_PreservesOriginalRecordRepresentationsWhenExpandingThePathPoolAsync() {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["candidatePoolLimit"] = 2;
+        policy["identityCandidatePoolLimit"] = 1;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code', 'implementation', '.llm-wiki/tools/GetStock.ps1', 'implementation', 'powershell',
+                    'Stock source context', $body),
+                ('wiki-page', 'projection', '.llm-wiki/tools/GetStock.ps1', 'projection', 'markdown',
+                    'Stock', 'stock');
+            INSERT INTO context_search_identity(rowid, path, title) SELECT rowid, path, title FROM context_search;
+            """;
+        command.Parameters.AddWithValue("$body", "stock " + string.Concat(Enumerable.Repeat("unrelated detail ", 100)));
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "stock", 10, "Backend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.True(result.Ready);
+        Assert.Equal("code", Assert.Single(result.Candidates).RecordType);
+    }
+
+    [Fact]
     public async Task SearchAsync_DuplicateRowsCannotCrowdOtherFilesOutOfTheCandidatePoolAsync() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
         System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;

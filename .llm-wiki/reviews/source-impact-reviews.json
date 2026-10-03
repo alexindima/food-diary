@@ -250,13 +250,13 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         }
       ],
-      "reason": "The Node search change and matching read-only SqliteWikiContextSearch SQL preserve MCP response fields, query expansion, ranking rules and source fingerprints. Compilation and all 197 SQLite search tests passed, including a new real-database crowding regression that failed before the repair. Backend/frontend contract projection queries are outside the changed lexical search block, and application HTTP contracts are untouched.",
+      "reason": "The MCP response fields, query expansion, score policy, fingerprints and HTTP contracts are unchanged. All 198 SqliteWikiContextSearch tests passed, including duplicate-path crowding and preservation of original record representations.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:18.0813842Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:43.0015680Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -299,17 +299,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "23c0c8f54dd9bbe386b2e879b71437869bd2f0378645bb3cf54bdb8b8d4fec91"
+          "sha256": "4905d8cadf0f21cd84f22422a6eb8f6baddb3653c3cce0fb375cc4b3f143e06b"
         }
       ],
-      "reason": "Reviewed regenerated quality and runtime metadata against the new SQLite-search crowding test and the equivalent Node/.NET SQL. The failing test demonstrates duplicate projection rows exhausting a row budget; after repair all 197 focused tests pass, with frozen corpora, scoring policies and thresholds unchanged. Compiled query shapes and architecture dependency direction are unchanged; context regression validation remains required before push.",
+      "reason": "Verified 198 focused tests and the independent 100-case holdout with 100 of 100 top-ten hits and liveRegressionPassed=true. Both new regression tests protect candidate completeness and original record representations; frozen corpora, ranking scores and thresholds are unchanged. Full required hook evaluation will run before push.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:18.9152913Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:44.0951124Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -611,13 +611,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         }
       ],
-      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:19.8208380Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:45.1042593Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -799,17 +799,17 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
           "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
         }
       ],
-      "reason": "The repair changes only bounded, read-only lexical candidate selection. It adds no external provider calls or persisted query/private-path telemetry, retains prepared MATCH parameters, cancellation and reader command timeouts, and leaves sensitive-data and runtime query categories unchanged. Updated quality/runtime indexes reflect source positions rather than new security controls or exposure; navigation pages continue to distinguish candidates from verified runtime facts.",
+      "reason": "Search remains read-only with parameterized MATCH input, cancellation and the existing two-second command timeout. This change adds no query telemetry, private-data projection, provider access or credential handling. Updated metadata anchors do not alter security controls.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:20.5634356Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:45.9057357Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -848,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8fb2f08f87a45df472750c6ad119438b98901e69b113c5f71643f66bd3cf462d"
+          "sha256": "38b7a02c1c1559e9440548532b6de3c2e99a5bfb9a4632e5408e33194cce1644"
         }
       ],
-      "reason": "Reviewed regenerated quality and runtime metadata against the new SQLite-search crowding test and the equivalent Node/.NET SQL. The failing test demonstrates duplicate projection rows exhausting a row budget; after repair all 197 focused tests pass, with frozen corpora, scoring policies and thresholds unchanged. Compiled query shapes and architecture dependency direction are unchanged; context regression validation remains required before push.",
+      "reason": "Verified 198 focused tests and the independent 100-case holdout with 100 of 100 top-ten hits and liveRegressionPassed=true. Both new regression tests protect candidate completeness and original record representations; frozen corpora, ranking scores and thresholds are unchanged. Full required hook evaluation will run before push.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:21.3729860Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:46.9588427Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -923,13 +923,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2f165f9e2577631031c044005ab2cfc961c95fb3f0d14f641ce2e043f2f5082b"
+          "sha256": "402c863c721c793cff8bc274372d394a5e008252d3230c1d238cc7946e58ac3e"
         }
       ],
-      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:22.0771915Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:47.7069474Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -938,21 +938,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8fb2f08f87a45df472750c6ad119438b98901e69b113c5f71643f66bd3cf462d"
+          "sha256": "38b7a02c1c1559e9440548532b6de3c2e99a5bfb9a4632e5408e33194cce1644"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2f165f9e2577631031c044005ab2cfc961c95fb3f0d14f641ce2e043f2f5082b"
+          "sha256": "402c863c721c793cff8bc274372d394a5e008252d3230c1d238cc7946e58ac3e"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         }
       ],
-      "reason": "The repair changes only bounded, read-only lexical candidate selection. It adds no external provider calls or persisted query/private-path telemetry, retains prepared MATCH parameters, cancellation and reader command timeouts, and leaves sensitive-data and runtime query categories unchanged. Updated quality/runtime indexes reflect source positions rather than new security controls or exposure; navigation pages continue to distinguish candidates from verified runtime facts.",
+      "reason": "Search remains read-only with parameterized MATCH input, cancellation and the existing two-second command timeout. This change adds no query telemetry, private-data projection, provider access or credential handling. Updated metadata anchors do not alter security controls.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:22.8716024Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:48.8607673Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1240,13 +1240,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
         }
       ],
-      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
       "baseRef": "origin/master",
-      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
-      "reviewedAtUtc": "2026-10-03T11:27:23.4260108Z"
+      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
+      "reviewedAtUtc": "2026-10-03T12:11:49.6269867Z"
     }
   ]
 }

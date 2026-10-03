@@ -257,20 +257,30 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             command.CommandTimeout = 2;
             command.CommandText = """
                 WITH lexical_matches AS MATERIALIZED (
-                    SELECT record_type, record_key, path, source_path,
-                        COALESCE(category, '') category, COALESCE(title, '') title, rowid source_ordinal,
+                    SELECT path, rowid source_ordinal,
                         bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
                     FROM context_search
                     WHERE context_search MATCH $match
+                ), initial_candidates AS MATERIALIZED (
+                    SELECT * FROM lexical_matches ORDER BY lexical_rank, path, source_ordinal LIMIT $limit
                 ), distinct_paths AS (
-                    SELECT *, ROW_NUMBER() OVER (PARTITION BY path ORDER BY lexical_rank, source_ordinal) path_ordinal
+                    SELECT source_ordinal, path, lexical_rank,
+                        ROW_NUMBER() OVER (PARTITION BY path ORDER BY lexical_rank, source_ordinal) path_ordinal
                     FROM lexical_matches
+                ), distinct_candidates AS (
+                    SELECT source_ordinal FROM distinct_paths WHERE path_ordinal = 1 ORDER BY lexical_rank, path LIMIT $limit
+                ), pooled_candidates AS (
+                    SELECT 0 pool_ordinal, * FROM initial_candidates
+                    UNION ALL
+                    SELECT 1 pool_ordinal, lexical_matches.* FROM lexical_matches
+                    JOIN distinct_candidates USING (source_ordinal)
+                    WHERE lexical_matches.path NOT IN (SELECT path FROM initial_candidates)
                 )
-                SELECT record_type, record_key, path, source_path, category, title, lexical_rank
-                FROM distinct_paths
-                WHERE path_ordinal = 1
-                ORDER BY lexical_rank, path
-                LIMIT $limit;
+                SELECT record_type, record_key, context_search.path, source_path,
+                    COALESCE(category, ''), COALESCE(title, ''), pooled_candidates.lexical_rank
+                FROM pooled_candidates
+                JOIN context_search ON context_search.rowid = source_ordinal
+                ORDER BY pool_ordinal, lexical_rank, pooled_candidates.path, source_ordinal;
                 """;
             command.Parameters.AddWithValue("$match", match);
             command.Parameters.AddWithValue("$limit", candidateLimit);

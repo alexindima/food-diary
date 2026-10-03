@@ -39,11 +39,12 @@ answers intact. A generic renderer name is insufficient evidence of localized
 resource ownership, and a query naming a projection must not receive a generic
 reader-service bonus. Both search runtimes must apply the same rules.
 
-The lexical candidate budget counts distinct source paths. Each path contributes
-its best FTS match, with source-row order breaking ties, before the budget is
-applied. Duplicate code, contract and quality projection records cannot crowd
-another file out of the pool. Node and the read-only .NET reader use the same
-selection; the configured pool limits and ranking scores are unchanged.
+The lexical candidate budget is filled to distinct source paths while retaining
+all rows and ordering from the original lexical window. Additional paths contribute
+their best FTS match, with source-row order breaking ties. Duplicate code, contract
+and quality projection records cannot crowd another file out of the pool, and
+existing representations remain available for ranking. Node and the read-only
+.NET reader use the same selection; pool limits and ranking scores are unchanged.
 
 Keep the working tree stable during evaluation. A runtime `snapshot-mismatch`
 means source/index state changed, not that every query ranked incorrectly.
