@@ -783,6 +783,14 @@
       "structuralRiskScore": 83.38
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+      "nonBlankLines": 313,
+      "decisionPoints": 50,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 83.26
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.ts",
       "nonBlankLines": 146,
       "decisionPoints": 53,
@@ -805,14 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 81.68
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-      "nonBlankLines": 282,
-      "decisionPoints": 49,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 81.14
     }
   ],
   "files": [
@@ -1578,11 +1578,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 293,
-      "decisionPoints": 47,
+      "nonBlankLines": 313,
+      "decisionPoints": 50,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 78.36
+      "structuralRiskScore": 83.26
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",

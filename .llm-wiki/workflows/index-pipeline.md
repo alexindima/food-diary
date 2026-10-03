@@ -104,6 +104,8 @@ input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
 
+Smoke logs and explicit fixture sandboxes stay under the run's repository artifacts. Native temporary files use a separate short run/group directory in the system temporary parent, preventing Windows SQLite journal paths from exceeding native limits. `TEMP`, `TMP`, and `TMPDIR` share that group scope. Cleanup verifies the owned parent and exact run name before removing the temporary directory.
+
 Test plans expose `required`, `recommended`, `fullRegression`, and `satisfied`
 command groups. Direct owners remain required. A broad production consumer set
 is represented by one recommended composition build instead of many project

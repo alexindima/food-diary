@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "432cfc27e42f949da0dfee11f96f7d1ffc2fc0c2c51efe2646f09eb9d8d327d4"
+          "sha256": "2a79f36329584b1936c48914ae022a2a28b75e8396b4f498a96f0b0b0e7cecd6"
         }
       ],
-      "reason": "Reviewed generated quality delta: reader structural counts reflect compound recall while static critical-symbol coverage and the distinction between test references and executed coverage remain unchanged.",
+      "reason": "Reviewed quality projection delta: only the parallel smoke runner line/decision counts and its entrypoint line moved after adding bounded temporary scopes. Static test-reference semantics and coverage caveats are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "29ff49b3176d789bf3243aaf13e2eea59594efaf",
-      "reviewedAtUtc": "2026-10-03T07:23:56.7145889Z"
+      "gitHead": "e288408d930c8e0e7e0dc19b537ebceb4ec9fbac",
+      "reviewedAtUtc": "2026-10-03T08:02:11.2986821Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,17 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "432cfc27e42f949da0dfee11f96f7d1ffc2fc0c2c51efe2646f09eb9d8d327d4"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "563ce0d0908939e48517b99734ee990e24e0cfedca75747ef69d5e882aabf742"
+          "sha256": "2a79f36329584b1936c48914ae022a2a28b75e8396b4f498a96f0b0b0e7cecd6"
         }
       ],
-      "reason": "Reviewed quality/runtime diffs: reader structural counts and the topology input fingerprint changed; runtime records and exposure boundaries are byte-identical. Static test references remain navigation evidence.",
-      "baseRef": "HEAD^",
-      "gitHead": "61f6c2a93174ba3c2fe501c9e872c43b67118aba",
-      "reviewedAtUtc": "2026-10-03T07:26:05.9970777Z"
+      "reason": "Reviewed quality delta: local test-runner structure and entrypoint location changed, with no new exposed service boundary, application security control or test-coverage verdict.",
+      "baseRef": "HEAD",
+      "gitHead": "e288408d930c8e0e7e0dc19b537ebceb4ec9fbac",
+      "reviewedAtUtc": "2026-10-03T08:02:12.2033292Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
