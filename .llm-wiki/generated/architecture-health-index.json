@@ -4808,6 +4808,16 @@
           "name": "saving",
           "type": "",
           "required": false
+        },
+        {
+          "name": "saveDisabled",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "saveDisabledReason",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [

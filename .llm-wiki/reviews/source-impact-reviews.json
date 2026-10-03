@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "db2d361ffd2874e17997889c49dbd706a9068f358160842419693e50b42a8c86"
+          "sha256": "e6be71afb642212d6ee2c1bf8772488938657181f4a1ec748c14a6cf117a6f04"
         }
       ],
-      "reason": "Reviewed date-picker button focus and mobile bounds: overlay focuses active day, Escape/selection restore actual visible opener including overflow-menu launcher, outside focus is preserved, aria-expanded follows open state, CDK push keeps full calendar visible. Five focused tests and all487 UI-kit tests passed, lint/guards plus app/admin builds passed. Native RU desktop and 320/360/390px mobile entry/Escape/selection focus checks passed; screenshot inspected with all seven columns visible. Inputs/outputs and localized copy unchanged.",
+      "reason": "Reviewed generated shared component contract change: saveDisabled and saveDisabledReason are optional inputs with false/null defaults. Existing selectors, outputs, feature dependencies and ownership remain unchanged. Height validation stays in the existing profile page; localized feedback uses public fd-ui-input and fd-ui-button APIs. Focused component tests and native mobile/desktop checks cover disabled and valid transitions.",
       "baseRef": "HEAD",
-      "gitHead": "e628d0bd6a4334d927480523225d9f1cfe4d1a80",
-      "reviewedAtUtc": "2026-10-02T16:02:34.1154413Z"
+      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
+      "reviewedAtUtc": "2026-10-02T23:49:30.5227510Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -808,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4660694b62d4d224454d788bd3391cc302eb967e9d3b47f2dc633b496abeca1e"
+          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
         }
       ],
-      "reason": "Reviewed scoped transient facade guards and security card error recovery. Four old-code failures reproduce hidden rows, stale revoke errors and duplicate reloads. Focused28 pass, final targeted ESLint0; native RU390/1280 retains28 rows on503, disables actions while pending, reload200 clears alert, simulated204 preservescurrent, real28 restored. No backend contracts or persistence changed.",
+      "reason": "Reviewed profile height paths after the imperial regression fix: finite feet/inches now update canonical centimeters instead of silently retaining an old draft. Validation enforces optional height in (0,300] before button or Enter submission. All 27 profile component tests pass, including four regression cases that failed before their fixes. Native RU390 and EN1280 confirm 10 feet updates to 332.7cm with localized errors and disabled save; 0 feet plus 11 inches is valid 27.9cm. No API mutations during invalid-input checks.",
       "baseRef": "HEAD",
-      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
-      "reviewedAtUtc": "2026-10-02T23:10:39.1833658Z"
+      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
+      "reviewedAtUtc": "2026-10-03T00:02:00.5987358Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,13 +898,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4660694b62d4d224454d788bd3391cc302eb967e9d3b47f2dc633b496abeca1e"
+          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "adbbe2c947b37f1ada44e129a64d528ec8ee8126e2cd8263e365617d0ab17b6b"
         }
       ],
-      "reason": "Reviewed session recovery presentation and scoped facade only: identity, owner filtering, API payloads, tokens and server revoke behavior unchanged. All native DELETE responses mocked503/204, no real session revoked; current kept in simulated revoke-others success and real28 restored viaGET. Private session fields not expanded. Consumer auth interceptor tests included in28 focused pass.",
+      "reason": "Reviewed the frontend height-validation patch only: optional numeric height checks mirror the existing API boundary, and both metric and converted imperial values are blocked before submission when invalid. Native invalid-input checks issued no API mutations; no authentication, transport, persistence or disclosure behavior changes in this patch. Concurrent MailRelay source changes remain outside this audit patch and are excluded from the staged indexes.",
       "baseRef": "HEAD",
-      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
-      "reviewedAtUtc": "2026-10-02T23:10:41.6787573Z"
+      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
+      "reviewedAtUtc": "2026-10-03T00:03:30.5165969Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1045,17 +1049,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3e9c949f4817806dff6768e1c0c3d75eccff197aa79f00c3608bd5d44423257d"
+          "sha256": "c92fc4e3e57d77a2ee1efc878db6dc1ad3baa129d48f8c34efbd271b4cbade68"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "34a4038352547318d69e044a6ad1b60cc534fe173e67fbe29c6480830d176085"
+          "sha256": "f7ee95ce612e5fdb4c43a5daece46934801f189fc3b120276ce4a9f53f2ec516"
         }
       ],
-      "reason": "Reviewed updated security card and facade locations in frontend index against final sources; selectors, scoped provider and routes retained. Nine owned frontend paths include5TS/HTML/spec and4source/generatedENRU locale files. Added reload consumes existing session GET through facade and existing button disabledReason. Current auth API and DTO unchanged;28focused pass and native recovery checked.",
+      "reason": "Reviewed profile page -> comparison widgets -> canonical height patch -> explicit save guard. Imperial values now update the same canonical field, eliminating the displayed 10ft versus stale180cm discrepancy. Metric and imperial invalid states use localized public UI-kit error/disabled contracts; optional save-bar inputs preserve existing consumers. Native RU390/EN1280 and 27 focused component tests passed. Concurrent backend changes are outside this frontend patch.",
       "baseRef": "HEAD",
-      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
-      "reviewedAtUtc": "2026-10-02T23:11:50.2415575Z"
+      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
+      "reviewedAtUtc": "2026-10-03T00:03:35.4309693Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1143,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3e9c949f4817806dff6768e1c0c3d75eccff197aa79f00c3608bd5d44423257d"
+          "sha256": "c92fc4e3e57d77a2ee1efc878db6dc1ad3baa129d48f8c34efbd271b4cbade68"
         }
       ],
-      "reason": "Reviewed generated frontend contract diff: button occurrences2to3 for new reload, same declared button inputs/outputs. Literal key inventory moves error and busy labels to computed TS properties, which explains omitted literal template keys; EN/RUsource andgenerated locales include two new session recovery keys, i18n0 and nativeRUalerts/reload correct. Existing API calls and contracts unchanged; finaltargetedESLint0.",
+      "reason": "Reviewed profile height validation against Users API range (0,300], optional null and finite values. Shared save-bar additions are optional with compatible defaults; localized field errors, disabled explanation and submit guard preserve consumers. Three old-code regressions failed and all 26 focused tests pass; native RU390 and EN1280 cover invalid and valid boundaries, keyboard Enter issues zero API mutations, error aria-describedby and no overflow. No API, persistence or authentication changes.",
       "baseRef": "HEAD",
-      "gitHead": "db8dcbc227eaca13de8f83f70af3a35e2bf09bdd",
-      "reviewedAtUtc": "2026-10-02T23:11:53.1971116Z"
+      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
+      "reviewedAtUtc": "2026-10-02T23:48:21.2443963Z"
     },
     {
       "pageId": "workflow.query-context",

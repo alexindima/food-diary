@@ -14,7 +14,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, email, form, FormRoot, required } from '@angular/forms/signals';
+import { disabled, email, form, FormRoot, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -79,6 +79,7 @@ import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-not
 import { USER_MANAGE_TOUR } from './user-manage-tour';
 
 type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
+const MAX_PROFILE_HEIGHT_CM = 300;
 
 @Component({
     selector: 'fd-user-manage',
@@ -140,7 +141,14 @@ export class UserManageComponent {
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
     private readonly lastSyncedUserFormData = signal<UserFormValues>(createUserManageFormModel());
     private readonly userFormInputVersion = signal(0);
-    protected readonly userForm = form(this.userFormModel);
+    protected readonly userForm = form(this.userFormModel, path => {
+        validate(path.heightCm, ({ value }) => {
+            const height = value();
+            return height !== null && (!Number.isFinite(height) || height <= 0 || height > MAX_PROFILE_HEIGHT_CM)
+                ? { kind: 'heightRange' }
+                : undefined;
+        });
+    });
     protected readonly dietologistFormModel = signal<DietologistFormValues>(createDietologistFormModel());
     protected readonly dietologistForm = form(this.dietologistFormModel, path => {
         required(path.email);
@@ -382,6 +390,9 @@ export class UserManageComponent {
     }
 
     protected onSubmit(): void {
+        if (this.userForm().invalid()) {
+            return;
+        }
         this.facade.saveProfileNow(buildUserUpdateDto(this.readUserFormValues()));
     }
 

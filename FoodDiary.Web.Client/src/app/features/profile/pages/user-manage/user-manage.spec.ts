@@ -1,5 +1,6 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -19,6 +20,7 @@ import { PushNotificationService } from '../../../../shared/notifications/push-n
 import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
 import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageComponent } from './user-manage';
 import {
     DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
@@ -35,6 +37,12 @@ let router: { navigate: ReturnType<typeof vi.fn> };
 let notificationService: NotificationServiceMock;
 let notificationsFacade: UserManageNotificationsFacadeMock;
 let toastService: ReturnType<typeof createToastServiceMock>;
+const ABOVE_MAX_PROFILE_HEIGHT = 301;
+const FRACTIONAL_PROFILE_HEIGHT = 0.5;
+const MAX_PROFILE_HEIGHT = 300;
+const INITIAL_PROFILE_HEIGHT = 180;
+const INVALID_HEIGHT_FEET = 10;
+const CONVERTED_INVALID_HEIGHT = 332.7;
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
@@ -314,6 +322,50 @@ describe('UserManageComponent browser unload protection', () => {
         const discardedUnload = new Event('beforeunload', { cancelable: true });
         window.dispatchEvent(discardedUnload);
         expect(discardedUnload.defaultPrevented).toBe(false);
+    });
+});
+
+describe('UserManageComponent profile height validation', () => {
+    it.each([0, -1, ABOVE_MAX_PROFILE_HEIGHT])('blocks saving height %s outside the API range', async heightCm => {
+        await createComponentAsync(null);
+        component['userForm'].heightCm().value.set(heightCm);
+        fixture.detectChanges();
+
+        component['onSubmit']();
+
+        expect(component['userForm']().invalid()).toBe(true);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        const button = (fixture.nativeElement as HTMLElement).querySelector('fd-unsaved-changes-bar fd-ui-button:last-child button');
+        expect(button?.hasAttribute('disabled')).toBe(true);
+    });
+
+    it.each([null, FRACTIONAL_PROFILE_HEIGHT, MAX_PROFILE_HEIGHT])('allows saving optional or valid height %s', async heightCm => {
+        await createComponentAsync(null);
+        component['userForm'].heightCm().value.set(heightCm);
+        fixture.detectChanges();
+
+        component['onSubmit']();
+
+        expect(component['userForm']().invalid()).toBe(false);
+        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('UserManageComponent imperial height validation', () => {
+    it('validates the entered imperial height instead of retaining the previous value', async () => {
+        await createComponentAsync(null);
+        component['userForm'].heightCm().value.set(INITIAL_PROFILE_HEIGHT);
+        fixture.detectChanges();
+        const widgets = fixture.debugElement.query(By.directive(UserManageComparisonWidgetsComponent))
+            .componentInstance as UserManageComparisonWidgetsComponent;
+
+        widgets['onImperialHeightChange']('feet', INVALID_HEIGHT_FEET);
+        fixture.detectChanges();
+        component['onSubmit']();
+
+        expect(component['userForm'].heightCm().value()).toBe(CONVERTED_INVALID_HEIGHT);
+        expect(component['userForm']().invalid()).toBe(true);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
     });
 });
 

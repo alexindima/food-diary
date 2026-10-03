@@ -319,6 +319,14 @@
       "structuralRiskScore": 123.76
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
+      "nonBlankLines": 797,
+      "decisionPoints": 70,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 120.94
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
       "nonBlankLines": 354,
       "decisionPoints": 74,
@@ -373,14 +381,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 115.34
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 786,
-      "decisionPoints": 66,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 114.72
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
@@ -7922,11 +7922,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
-      "nonBlankLines": 17,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.ts",
@@ -11306,11 +11306,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "nonBlankLines": 148,
-      "decisionPoints": 14,
+      "nonBlankLines": 139,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.96
+      "structuralRiskScore": 20.78
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.ts",
@@ -11474,11 +11474,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 786,
-      "decisionPoints": 66,
+      "nonBlankLines": 797,
+      "decisionPoints": 70,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 114.72
+      "structuralRiskScore": 120.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/profile.routes.ts",

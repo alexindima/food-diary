@@ -4954,7 +4954,7 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 57
+      "line": 49
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -5038,7 +5038,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 109
+      "line": 110
     },
     {
       "name": "DietologistPromoComponent",
@@ -7048,8 +7048,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4049,
-      "russianProperties": 4049,
+      "englishProperties": 4050,
+      "russianProperties": 4050,
       "countsMatch": true
     },
     {

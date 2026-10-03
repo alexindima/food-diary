@@ -13,6 +13,8 @@ export class UnsavedChangesBarComponent {
     public readonly discardLabel = input.required<string>();
     public readonly saveLabel = input.required<string>();
     public readonly saving = input(false);
+    public readonly saveDisabled = input(false);
+    public readonly saveDisabledReason = input<string | null>(null);
     public readonly save = output();
     public readonly discard = output();
 }

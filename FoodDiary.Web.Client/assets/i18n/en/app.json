@@ -1432,6 +1432,7 @@
         },
         "PERSONAL_SECTION": "Personal Information",
         "BODY_SECTION": "Body Metrics",
+        "HEIGHT_INVALID": "Enter a height greater than 0 and no more than 300 cm.",
         "HEIGHT": "Height",
         "ACTIVITY_LEVEL": "Activity level",
         "SELECT_ACTIVITY_LEVEL": "Select activity level",

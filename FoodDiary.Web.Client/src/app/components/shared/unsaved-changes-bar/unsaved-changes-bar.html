@@ -4,7 +4,7 @@
         <fd-ui-button variant="secondary" fill="outline" (click)="discard.emit()">
             {{ discardLabel() }}
         </fd-ui-button>
-        <fd-ui-button [loading]="saving()" (click)="save.emit()">
+        <fd-ui-button [loading]="saving()" [disabled]="saveDisabled()" [disabledReason]="saveDisabledReason()" (click)="save.emit()">
             {{ saveLabel() }}
         </fd-ui-button>
     </div>

@@ -2988,6 +2988,7 @@
         "DIETOLOGIST_DISCONNECT_ERROR": "Не удалось отключить диетолога.",
         "PERSONAL_SECTION": "Личная информация",
         "BODY_SECTION": "Параметры тела",
+        "HEIGHT_INVALID": "Укажите рост больше 0 и не более 300 см.",
         "HEIGHT": "Рост",
         "ACTIVITY_LEVEL": "Уровень активности",
         "SELECT_ACTIVITY_LEVEL": "Выберите уровень активности",

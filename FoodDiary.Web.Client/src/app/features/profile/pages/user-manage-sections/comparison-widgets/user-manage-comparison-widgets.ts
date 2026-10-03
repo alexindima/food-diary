@@ -24,14 +24,6 @@ import type {
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
 
 const ISO_DATE_LENGTH = 10;
-const MIN_HEIGHT_FEET = 1;
-const MAX_HEIGHT_FEET = 8;
-const MIN_HEIGHT_INCHES = 0;
-const MAX_HEIGHT_INCHES = 11;
-const IMPERIAL_HEIGHT_RANGES = {
-    feet: { min: MIN_HEIGHT_FEET, max: MAX_HEIGHT_FEET },
-    inches: { min: MIN_HEIGHT_INCHES, max: MAX_HEIGHT_INCHES },
-} as const;
 
 @Component({
     selector: 'fd-user-manage-comparison-widgets',
@@ -138,7 +130,7 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onImperialHeightChange(part: 'feet' | 'inches', value: string | number | null): void {
-        const parsed = this.parseImperialHeightPart(part, value);
+        const parsed = this.parseImperialHeightPart(value);
         if (parsed === null) {
             this.userFormPatch.emit({ heightCm: null });
             return;
@@ -153,13 +145,12 @@ export class UserManageComparisonWidgetsComponent {
         this.userFormPatch.emit({ heightCm: this.measurements.canonicalHeight(feet, inches) });
     }
 
-    private parseImperialHeightPart(part: 'feet' | 'inches', value: string | number | null): number | null | undefined {
+    private parseImperialHeightPart(value: string | number | null): number | null | undefined {
         if (value === null || String(value).trim().length === 0) {
             return null;
         }
 
         const parsed = Number(value);
-        const range = IMPERIAL_HEIGHT_RANGES[part];
-        return Number.isFinite(parsed) && parsed >= range.min && parsed <= range.max ? parsed : undefined;
+        return Number.isFinite(parsed) ? parsed : undefined;
     }
 }
