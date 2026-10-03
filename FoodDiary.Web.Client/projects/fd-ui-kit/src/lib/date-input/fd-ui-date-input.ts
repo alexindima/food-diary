@@ -77,7 +77,9 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
         return error !== null && error !== undefined && error.trim().length > 0;
     });
-    protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.isOpen() || this.internalValue() !== null);
+    protected readonly shouldFloatLabel = computed(
+        () => this.allowManualInput() || this.isFocused() || this.isOpen() || this.internalValue() !== null,
+    );
     protected readonly hostClass = computed(
         () =>
             `fd-ui-date-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-date-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-date-input--floating' : ''}`,

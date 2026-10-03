@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "71553f467885279e9bb74b53242241a3712a80bb390d22e3a6f5612d1d4ee487"
+          "sha256": "f881e777bcef83edc4f9cecdeb425baac362ad2a60d7aa1864f7a313cfa89d04"
         }
       ],
-      "reason": "Reviewed bounded profile save-and-leave change: handler returns the real save result, waits for HTTP completion, and preserves draft/global error on failure. Final focused lint passes and native RU390/1280 proof covers pending, simulated503 failure, retry200 persistence and navigation; synthetic QA profile restored. Added deferred success/failure/null/busy regressions; final full frontend verification is still running before commit.",
+      "reason": "Reviewed UI-kit empty native date label fix and all selector consumers: only profile opts into manual mode; default picker mode and public inputs/outputs remain unchanged. Native RU390 and EN1280 evidence verifies label above entry, keyboard birthday input and clearing, with fixture restored; 490 UI-kit tests and targeted lint/format passed. Final full frontend verification is running before commit.",
       "baseRef": "HEAD",
-      "gitHead": "e49825688518d698ffd784829b3d4b7f6d4677ff",
-      "reviewedAtUtc": "2026-10-03T05:10:47.2329815Z"
+      "gitHead": "7db90bcba6576e8c1cfae705d6934ee64f621c7b",
+      "reviewedAtUtc": "2026-10-03T05:56:50.5229339Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "71553f467885279e9bb74b53242241a3712a80bb390d22e3a6f5612d1d4ee487"
+          "sha256": "f881e777bcef83edc4f9cecdeb425baac362ad2a60d7aa1864f7a313cfa89d04"
         }
       ],
-      "reason": "Reviewed the narrow generated quality delta: async completion and profile regressions change local navigation only, with no API payload, authentication, ownership, storage or provider changes. Native mutations were limited to verified synthetic QA owner and restored; credentials and auth values stayed outside repository/log output. No security finding or repository-wide security assessment is claimed.",
+      "reason": "Reviewed narrow generated quality delta for manual date label positioning and component documentation. No API payload, validation, model value, authentication, ownership, storage or provider behavior changed. Existing manual date bounds and reset remain covered; native checks use a synthetic QA owner and restore its preferences. No new security finding or broad security audit is claimed.",
       "baseRef": "HEAD",
-      "gitHead": "e49825688518d698ffd784829b3d4b7f6d4677ff",
-      "reviewedAtUtc": "2026-10-03T05:10:48.4801226Z"
+      "gitHead": "7db90bcba6576e8c1cfae705d6934ee64f621c7b",
+      "reviewedAtUtc": "2026-10-03T05:56:51.4445415Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
