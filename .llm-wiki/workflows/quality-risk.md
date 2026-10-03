@@ -17,6 +17,8 @@ sources:
 
 # Review structural hotspots and test gaps
 
+The refreshed quality projection follows the ranking-core extraction and new guard, scheduler, confidence, and cancellation regressions. Its direct-reference signals remain static navigation evidence; use executed test results to assess actual coverage.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 hotspots -Limit 20
 ./.llm-wiki/wiki.ps1 test-gaps -Query Billing

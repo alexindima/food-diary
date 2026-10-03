@@ -26,6 +26,17 @@ if ($Detailed) {
     }
     exit 0
 }
+if ($Tier -eq 'core') {
+    Write-Host 'Daily actions:'
+    Write-Host '  Find code:          context -Query <question> -ChangeType Backend'
+    Write-Host '  Investigate:        research -Intent <change> -PlannedPath <path>'
+    Write-Host '  Choose next step:   next'
+    Write-Host '  Plan checks:        test-plan -Intent <change> -PlannedPath <path>'
+    Write-Host '  Refresh indexes:    update -AffectedOnly'
+    Write-Host '  Verify and hand off: verify; task-handoff -Compact'
+    Write-Host '  Backend bootstrap:  graph-build -BackendOnlyRefresh'
+    Write-Host ''
+}
 Write-Host "Core workflow ($($selectedTier[0].description))"
 foreach ($entry in @($selectedTier[0].helpEntries)) {
     Write-Host "  ./.llm-wiki/wiki.ps1 $entry"

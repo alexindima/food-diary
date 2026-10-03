@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4374,
-    "symbols": 4306,
+    "sourceFiles": 4375,
+    "symbols": 4307,
     "interfaceImplementationLinks": 195,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2249,
+      "class": 2250,
       "enum": 65,
       "interface": 409,
       "record": 1462,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1770,
+      "Other": 1771,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -349,11 +349,18 @@
       "line": 9
     },
     {
+      "name": "SqliteContextSearchReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+      "line": 9
+    },
+    {
       "name": "SqliteWikiContextSearch",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 10
+      "line": 6
     },
     {
       "name": "WikiCommandRequest",

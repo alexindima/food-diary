@@ -179,6 +179,8 @@ if ($CompiledIndexSource -eq 'Sqlite') {
             '.llm-wiki/policies/context-search-ranking.json',
             '.llm-wiki/tools/code-graph.mjs', '.llm-wiki/tools/code-graph-path-layout.mjs',
             '.llm-wiki/tools/Find-LlmWikiContext.ps1'
+            'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
+            '.llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs'
         )
         $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
         if ($null -ne $cachedContext) {
@@ -189,15 +191,12 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         }
     }
     $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
-    $sqlResult = & $graphManager `
-        -Action search `
-        -Query $searchText `
-        -Module $Module `
-        -ChangedPath $scopePaths `
-        -ChangeType $ChangeType `
-        -Limit $searchLimit `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
+    . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
+    $null = Initialize-LlmWikiInProcessSqlite
+    $sqlResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $searchText, $searchLimit, $ChangeType, $Module,
+        [string[]]$scopePaths, [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
     if (-not [bool]$sqlResult.ready) {
         throw 'SQLite search index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
     }
@@ -221,15 +220,10 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     # API/production ranking can fill the bounded candidate window before any
     # tests appear. Retrieve test context independently without reranking code.
     if ($testRecords.Count -eq 0 -and $records.Count -gt 0 -and $ChangeType -ne 'Tests') {
-        $testSearch = & $graphManager `
-            -Action search `
-            -Query $searchText `
-            -Module $Module `
-            -ChangedPath $scopePaths `
-            -ChangeType Tests `
-            -Limit $searchLimit `
-            -SkipRefresh `
-            -Format Json | ConvertFrom-Json
+        $testSearch = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+            $repositoryRoot, $searchText, $searchLimit, 'Tests', $Module,
+            [string[]]$scopePaths, [string]$graphStatus.currentChangeSetFingerprint
+        ) | ConvertFrom-Json
         if (-not [bool]$testSearch.ready) {
             throw 'SQLite test context index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
         }

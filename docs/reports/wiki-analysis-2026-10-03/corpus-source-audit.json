@@ -1,0 +1,112 @@
+[
+  {
+    "file": "context-search-business-wiki-regression.json",
+    "cases": 22,
+    "missing": []
+  },
+  {
+    "file": "context-search-conversational-paraphrases.json",
+    "cases": 20,
+    "missing": []
+  },
+  {
+    "file": "context-search-conversational.json",
+    "cases": 89,
+    "missing": []
+  },
+  {
+    "file": "context-search-generalization.json",
+    "cases": 70,
+    "missing": []
+  },
+  {
+    "file": "context-search-holdout-100.json",
+    "cases": 100,
+    "missing": []
+  },
+  {
+    "file": "context-search-holdout.json",
+    "cases": 40,
+    "missing": []
+  },
+  {
+    "file": "context-search-image-wiki-regression.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-mail-regression.json",
+    "cases": 4,
+    "missing": []
+  },
+  {
+    "file": "context-search-maintenance-regression.json",
+    "cases": 13,
+    "missing": []
+  },
+  {
+    "file": "context-search-postfix-control-30.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-posttune-control-30.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-2.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-3.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-4.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-5.json",
+    "cases": 40,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-6.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe-7.json",
+    "cases": 40,
+    "missing": []
+  },
+  {
+    "file": "context-search-probe.json",
+    "cases": 30,
+    "missing": []
+  },
+  {
+    "file": "context-search-security-regression.json",
+    "cases": 10,
+    "missing": []
+  },
+  {
+    "file": "context-search-unseen-20260826.json",
+    "cases": 100,
+    "missing": []
+  },
+  {
+    "file": "context-search-validation.json",
+    "cases": 50,
+    "missing": []
+  },
+  {
+    "file": "context-search.json",
+    "cases": 60,
+    "missing": []
+  }
+]

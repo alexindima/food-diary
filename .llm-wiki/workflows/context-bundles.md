@@ -25,6 +25,8 @@ sources:
 
 # Build bounded task context bundles
 
+Context discovery uses the same in-process C# ranking reader as MCP. Multi-layer questions remain ambiguous even with a separated first score; inspect each requested part before committing bundle scope. Cache dependencies include the shared reader source as well as the policy and graph fingerprint.
+
 Every bundle is protected by the [context security](context-security.md) trust and
 prompt-injection assessment before excerpts are persisted.
 

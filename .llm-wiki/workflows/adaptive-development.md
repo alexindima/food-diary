@@ -44,6 +44,8 @@ sources:
 
 # Adaptive FoodDiary Development
 
+Research exposes canonical `nextActionState` values: `discover`, `assessment-complete`, `resolve-question`, `design`, or `implement`. Readiness and effective design flags follow that state. A completed Assessment does not require an implementation design checkpoint. Snapshot guards hash dirty file contents, including repeated edits whose Git status does not change.
+
 For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. Comma- or semicolon-delimited input is normalized into distinct planned paths and the same list is persisted in the manifest, rather than being used only as an allow-list. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
 
 When `start` is called with `-CompiledIndexSource Json`, the selection is

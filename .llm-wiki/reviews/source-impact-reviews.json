@@ -260,7 +260,7 @@
       "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
       "baseRef": "origin/master",
       "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:00.3920280Z"
+      "reviewedAtUtc": "2026-10-03T15:10:00.392028Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -502,17 +502,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "6ce828816cde0b981b3efd7f436989473d6aa51c138829a521116fc5e5ff8020",
+      "pageSha256": "f46020d590c232ec013fcb3528b076e33d6f8b001faf48fcbdb60b77155aa409",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed verify-full routing against the documented daily commands. Canonical research states, SQLite bootstrap, context caching and task routing remain consistent; publication details are maintained in index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:31.9245862Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:21.6288984Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -809,7 +809,7 @@
       "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
       "baseRef": "origin/master",
       "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:01.2332360Z"
+      "reviewedAtUtc": "2026-10-03T15:10:01.233236Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1013,21 +1013,17 @@
     {
       "pageId": "workflow-task-dispatch-receipts",
       "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
-      "pageSha256": "70d6be88b293deccf4d573fc9bede72453bc9e17b6a0215335058e6e7746afc3",
+      "pageSha256": "e796ff74731a2dda404ebab68170be7eaccc7c57268fc23f141a91c228e1a49f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
+      "reason": "Reviewed facade verification controls: the complete gate alone publishes full verification and concurrency forwarding does not alter dispatch payloads, lease fingerprints or lifecycle receipt hashes.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:54.9929254Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:23.9737566Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1213,17 +1209,17 @@
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
+      "pageSha256": "7a7a54c7bf5c73c0b94be81d974d8734405b72a7e2468ec3001ba05c475133db",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed final receipt ordering: the documented matching generation and complete verify-full requirement still holds, now including the existing source-impact and change-policy gates before publication.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:32.1703529Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:22.3898133Z"
     },
     {
       "pageId": "workflow.self-maintenance",

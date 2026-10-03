@@ -64,6 +64,8 @@ param(
     [string]$ChangeType = 'Any',
     [ValidateSet('Sqlite', 'Json')]
     [string]$CompiledIndexSource = 'Sqlite',
+    [switch]$CheckFreshness,
+    [switch]$BackendOnlyRefresh,
     [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
     [string]$PrivacyCategory = 'all',
     [ValidateSet('all', 'components', 'consumers', 'api', 'translations', 'spec-gaps')]
@@ -393,6 +395,7 @@ if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT) -an
 if (-not $compiledIndexSourceWasExplicit -and
     $CompiledIndexSource -eq 'Sqlite' -and
     $Command -in $automaticJsonFallbackCommands -and
+    -not $BackendOnlyRefresh -and $ChangeType -notin @('Api', 'Backend', 'Database', 'Tests') -and
     -not (Test-Path -LiteralPath (Join-Path $compilerDependencyRoot 'FoodDiary.Web.Client/node_modules/typescript/package.json') -PathType Leaf)) {
     $CompiledIndexSource = 'Json'
     Write-Warning "TypeScript prerequisites are unavailable; '$Command' is using the read-only JSON baseline. Pass explicit -CompiledIndexSource Sqlite to require the full compiled graph."
@@ -457,7 +460,8 @@ function Invoke-WikiTool {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $toolPath `
             -ToolArguments $ToolArguments `
-            -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands -and $CompiledIndexSource -eq 'Sqlite')
+            -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands -and $CompiledIndexSource -eq 'Sqlite') `
+            -BackendOnlyRefresh:($BackendOnlyRefresh -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests'))
     } else {
         & $toolPath @ToolArguments
     }
@@ -969,6 +973,7 @@ switch ($Command) {
             Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
             Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
             $fullVerificationArguments = @{ ResumePassedStages = $ResumePassedStages }
+            if ($null -ne $MaxConcurrency) { $fullVerificationArguments.IndexConcurrency = [int]$MaxConcurrency }
             if ($VerificationProfile -eq 'Full') { $fullVerificationArguments.FullTools = $true }
             elseif ($VerificationProfile -eq 'Core') { $fullVerificationArguments.CoreTools = $true }
             Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1' $fullVerificationArguments
@@ -981,6 +986,7 @@ switch ($Command) {
             }
             Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
             Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+            Invoke-WikiTool 'Write-LlmWikiIndexVerificationReceipt.ps1' @{ CompletedFullVerification = $true }
             $metricOutcome = 'passed'
         } catch {
             if ($_.Exception.Message -match '(?i)timed out') { $metricOutcome = 'timed-out' }
@@ -1203,6 +1209,7 @@ switch ($Command) {
             Format = $Format
         }
         if ($Check) { $graphArguments.Force = $true }
+        $graphArguments.BackendOnlyRefresh = $BackendOnlyRefresh -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests')
         Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' $graphArguments
     }
     'start' {
@@ -2895,7 +2902,7 @@ switch ($Command) {
         if ($Check) {
             Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $true }
         } else {
-            Invoke-WikiTool 'Read-LlmWikiCompiledIndex.ps1' @{ Index = $Command; Query = $Query; Format = $Format; Limit = $Limit }
+            Invoke-WikiTool 'Read-LlmWikiCompiledIndex.ps1' @{ Index = $Command; Query = $Query; Format = $Format; Limit = $Limit; CheckFreshness = [bool]$CheckFreshness }
         }
     }
     'delivery-finalize' {

@@ -1,0 +1,191 @@
+[
+  {
+    "corpus": "context-search.json",
+    "cases": 60,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": false,
+    "metrics": {
+      "top1Count": 57,
+      "top1Rate": 0.95,
+      "top10Count": 59,
+      "top10Rate": 0.9833,
+      "meanReciprocalRank": 0.9667,
+      "averageSqlDurationMs": 270.5,
+      "p95SqlDurationMs": 433.49
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 53,
+      "acceptedCoverage": 0.8833,
+      "acceptedPrecision": 0.9623,
+      "abstainedCount": 7,
+      "abstentionRate": 0.1167,
+      "capturedErrorCount": 1,
+      "errorCaptureRate": 0.3333
+    },
+    "seconds": 19.15
+  },
+  {
+    "corpus": "context-search-holdout-100.json",
+    "cases": 100,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 95,
+      "top1Rate": 0.95,
+      "top10Count": 100,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 0.972,
+      "averageSqlDurationMs": 277.11,
+      "p95SqlDurationMs": 466.29
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 77,
+      "acceptedCoverage": 0.77,
+      "acceptedPrecision": 1.0,
+      "abstainedCount": 23,
+      "abstentionRate": 0.23,
+      "capturedErrorCount": 5,
+      "errorCaptureRate": 1.0
+    },
+    "seconds": 30.57
+  },
+  {
+    "corpus": "context-search-unseen-20260826.json",
+    "cases": 100,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 73,
+      "top1Rate": 0.73,
+      "top10Count": 94,
+      "top10Rate": 0.94,
+      "meanReciprocalRank": 0.8049,
+      "averageSqlDurationMs": 285.21,
+      "p95SqlDurationMs": 458.78
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 65,
+      "acceptedCoverage": 0.65,
+      "acceptedPrecision": 0.8923,
+      "abstainedCount": 35,
+      "abstentionRate": 0.35,
+      "capturedErrorCount": 20,
+      "errorCaptureRate": 0.7407
+    },
+    "seconds": 30.4
+  },
+  {
+    "corpus": "context-search-business-wiki-regression.json",
+    "cases": 22,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 22,
+      "top1Rate": 1.0,
+      "top10Count": 22,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 1.0,
+      "averageSqlDurationMs": 239.11,
+      "p95SqlDurationMs": 411.88
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 21,
+      "acceptedCoverage": 0.9545,
+      "acceptedPrecision": 1.0,
+      "abstainedCount": 1,
+      "abstentionRate": 0.0455,
+      "capturedErrorCount": 0,
+      "errorCaptureRate": 1.0
+    },
+    "seconds": 5.61
+  },
+  {
+    "corpus": "context-search-image-wiki-regression.json",
+    "cases": 30,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 30,
+      "top1Rate": 1.0,
+      "top10Count": 30,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 1.0,
+      "averageSqlDurationMs": 206.74,
+      "p95SqlDurationMs": 322.22
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 28,
+      "acceptedCoverage": 0.9333,
+      "acceptedPrecision": 1.0,
+      "abstainedCount": 2,
+      "abstentionRate": 0.0667,
+      "capturedErrorCount": 0,
+      "errorCaptureRate": 1.0
+    },
+    "seconds": 6.67
+  },
+  {
+    "corpus": "context-search-conversational.json",
+    "cases": 89,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 64,
+      "top1Rate": 0.7191,
+      "top10Count": 89,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 0.8217,
+      "averageSqlDurationMs": 236.97,
+      "p95SqlDurationMs": 367.53
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 70,
+      "acceptedCoverage": 0.7865,
+      "acceptedPrecision": 0.7571,
+      "abstainedCount": 19,
+      "abstentionRate": 0.2135,
+      "capturedErrorCount": 8,
+      "errorCaptureRate": 0.32
+    },
+    "seconds": 22.19
+  },
+  {
+    "corpus": "context-search-posttune-control-30.json",
+    "cases": 30,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 28,
+      "top1Rate": 0.9333,
+      "top10Count": 30,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 0.9611,
+      "averageSqlDurationMs": 215.87,
+      "p95SqlDurationMs": 372.89
+    },
+    "liveGaps": [],
+    "abstention": {
+      "acceptedCount": 25,
+      "acceptedCoverage": 0.8333,
+      "acceptedPrecision": 0.96,
+      "abstainedCount": 5,
+      "abstentionRate": 0.1667,
+      "capturedErrorCount": 1,
+      "errorCaptureRate": 0.5
+    },
+    "seconds": 7.13
+  }
+]

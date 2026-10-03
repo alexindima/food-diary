@@ -1,0 +1,218 @@
+[
+  {
+    "name": "process-empty",
+    "iteration": 1,
+    "milliseconds": 1412.13,
+    "exitCode": 0,
+    "outputCharacters": 0,
+    "log": "process-empty-1.log"
+  },
+  {
+    "name": "process-empty",
+    "iteration": 2,
+    "milliseconds": 594.03,
+    "exitCode": 0,
+    "outputCharacters": 0,
+    "log": "process-empty-2.log"
+  },
+  {
+    "name": "process-empty",
+    "iteration": 3,
+    "milliseconds": 697.99,
+    "exitCode": 0,
+    "outputCharacters": 0,
+    "log": "process-empty-3.log"
+  },
+  {
+    "name": "facade-help",
+    "iteration": 1,
+    "milliseconds": 2450.33,
+    "exitCode": 0,
+    "outputCharacters": 1230,
+    "log": "facade-help-1.log"
+  },
+  {
+    "name": "facade-help",
+    "iteration": 2,
+    "milliseconds": 2210.78,
+    "exitCode": 0,
+    "outputCharacters": 1230,
+    "log": "facade-help-2.log"
+  },
+  {
+    "name": "facade-help",
+    "iteration": 3,
+    "milliseconds": 2924.38,
+    "exitCode": 0,
+    "outputCharacters": 1230,
+    "log": "facade-help-3.log"
+  },
+  {
+    "name": "context-json-direct",
+    "iteration": 1,
+    "milliseconds": 78016.55,
+    "exitCode": 0,
+    "outputCharacters": 22446,
+    "log": "context-json-direct-1.log"
+  },
+  {
+    "name": "context-json-direct",
+    "iteration": 2,
+    "milliseconds": 2840.68,
+    "exitCode": 0,
+    "outputCharacters": 22446,
+    "log": "context-json-direct-2.log"
+  },
+  {
+    "name": "context-json-direct",
+    "iteration": 3,
+    "milliseconds": 2432.92,
+    "exitCode": 0,
+    "outputCharacters": 22446,
+    "log": "context-json-direct-3.log"
+  },
+  {
+    "name": "context-json-facade",
+    "iteration": 1,
+    "milliseconds": 68616.68,
+    "exitCode": 0,
+    "outputCharacters": 23162,
+    "log": "context-json-facade-1.log"
+  },
+  {
+    "name": "context-json-facade",
+    "iteration": 2,
+    "milliseconds": 8931.13,
+    "exitCode": 0,
+    "outputCharacters": 23155,
+    "log": "context-json-facade-2.log"
+  },
+  {
+    "name": "context-json-facade",
+    "iteration": 3,
+    "milliseconds": 8257.05,
+    "exitCode": 0,
+    "outputCharacters": 23157,
+    "log": "context-json-facade-3.log"
+  },
+  {
+    "name": "context-sqlite-direct",
+    "iteration": 1,
+    "milliseconds": 77928.74,
+    "exitCode": 0,
+    "outputCharacters": 33129,
+    "log": "context-sqlite-direct-1.log"
+  },
+  {
+    "name": "context-sqlite-direct",
+    "iteration": 2,
+    "milliseconds": 8628.51,
+    "exitCode": 0,
+    "outputCharacters": 33194,
+    "log": "context-sqlite-direct-2.log"
+  },
+  {
+    "name": "context-sqlite-direct",
+    "iteration": 3,
+    "milliseconds": 5030.96,
+    "exitCode": 0,
+    "outputCharacters": 33194,
+    "log": "context-sqlite-direct-3.log"
+  },
+  {
+    "name": "context-sqlite-facade",
+    "iteration": 1,
+    "milliseconds": 84950.7,
+    "exitCode": 0,
+    "outputCharacters": 33848,
+    "log": "context-sqlite-facade-1.log"
+  },
+  {
+    "name": "context-sqlite-facade",
+    "iteration": 2,
+    "milliseconds": 7015.02,
+    "exitCode": 0,
+    "outputCharacters": 33901,
+    "log": "context-sqlite-facade-2.log"
+  },
+  {
+    "name": "context-sqlite-facade",
+    "iteration": 3,
+    "milliseconds": 11786.06,
+    "exitCode": 0,
+    "outputCharacters": 33906,
+    "log": "context-sqlite-facade-3.log"
+  },
+  {
+    "name": "graph-no-change",
+    "iteration": 1,
+    "milliseconds": 47012.32,
+    "exitCode": 0,
+    "outputCharacters": 3451,
+    "log": "graph-no-change-1.log"
+  },
+  {
+    "name": "graph-no-change",
+    "iteration": 2,
+    "milliseconds": 8167.32,
+    "exitCode": 0,
+    "outputCharacters": 3450,
+    "log": "graph-no-change-2.log"
+  },
+  {
+    "name": "graph-no-change",
+    "iteration": 3,
+    "milliseconds": 6450.23,
+    "exitCode": 0,
+    "outputCharacters": 3451,
+    "log": "graph-no-change-3.log"
+  },
+  {
+    "name": "brief-json-facade",
+    "iteration": 1,
+    "milliseconds": 15716.62,
+    "exitCode": 0,
+    "outputCharacters": 3059,
+    "log": "brief-json-facade-1.log"
+  },
+  {
+    "name": "brief-json-facade",
+    "iteration": 2,
+    "milliseconds": 5560.19,
+    "exitCode": 0,
+    "outputCharacters": 2993,
+    "log": "brief-json-facade-2.log"
+  },
+  {
+    "name": "brief-json-facade",
+    "iteration": 3,
+    "milliseconds": 5362.03,
+    "exitCode": 0,
+    "outputCharacters": 2992,
+    "log": "brief-json-facade-3.log"
+  },
+  {
+    "name": "research-json-facade",
+    "iteration": 1,
+    "milliseconds": 28825.66,
+    "exitCode": 0,
+    "outputCharacters": 7918,
+    "log": "research-json-facade-1.log"
+  },
+  {
+    "name": "research-json-facade",
+    "iteration": 2,
+    "milliseconds": 5660.47,
+    "exitCode": 0,
+    "outputCharacters": 7643,
+    "log": "research-json-facade-2.log"
+  },
+  {
+    "name": "research-json-facade",
+    "iteration": 3,
+    "milliseconds": 6436.8,
+    "exitCode": 0,
+    "outputCharacters": 7643,
+    "log": "research-json-facade-3.log"
+  }
+]

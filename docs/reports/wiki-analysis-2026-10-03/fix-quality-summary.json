@@ -1,0 +1,131 @@
+[
+  {
+    "corpus": "C:/Users/alexi/.codex/worktrees/wiki-analysis/FD/.llm-wiki/evals/context-search.json",
+    "caseCount": 60,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 58,
+      "top1Rate": 0.9667,
+      "top10Count": 60,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 0.9833,
+      "averageSqlDurationMs": 506.54,
+      "p95SqlDurationMs": 1024.81
+    },
+    "confidenceMetrics": [
+      {
+        "confidence": "high",
+        "caseCount": 24,
+        "top1Count": 22,
+        "precision": 0.9167,
+        "coverage": 0.4,
+        "ambiguousCount": 0
+      },
+      {
+        "confidence": "low",
+        "caseCount": 6,
+        "top1Count": 6,
+        "precision": 1.0,
+        "coverage": 0.1,
+        "ambiguousCount": 5
+      },
+      {
+        "confidence": "medium",
+        "caseCount": 30,
+        "top1Count": 30,
+        "precision": 1.0,
+        "coverage": 0.5,
+        "ambiguousCount": 0
+      }
+    ],
+    "targetAwareMetrics": null
+  },
+  {
+    "corpus": "C:/Users/alexi/.codex/worktrees/wiki-analysis/FD/.llm-wiki/evals/context-search-unseen-20260826.json",
+    "caseCount": 100,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 73,
+      "top1Rate": 0.73,
+      "top10Count": 94,
+      "top10Rate": 0.94,
+      "meanReciprocalRank": 0.8049,
+      "averageSqlDurationMs": 897.81,
+      "p95SqlDurationMs": 1390.55
+    },
+    "confidenceMetrics": [
+      {
+        "confidence": "high",
+        "caseCount": 26,
+        "top1Count": 24,
+        "precision": 0.9231,
+        "coverage": 0.26,
+        "ambiguousCount": 0
+      },
+      {
+        "confidence": "low",
+        "caseCount": 35,
+        "top1Count": 15,
+        "precision": 0.4286,
+        "coverage": 0.35,
+        "ambiguousCount": 26
+      },
+      {
+        "confidence": "medium",
+        "caseCount": 39,
+        "top1Count": 34,
+        "precision": 0.8718,
+        "coverage": 0.39,
+        "ambiguousCount": 0
+      }
+    ],
+    "targetAwareMetrics": null
+  },
+  {
+    "corpus": "C:/Users/alexi/.codex/worktrees/wiki-analysis/FD/.llm-wiki/evals/context-search-conversational.json",
+    "caseCount": 89,
+    "passed": true,
+    "liveRegressionPassed": true,
+    "switchReady": true,
+    "metrics": {
+      "top1Count": 64,
+      "top1Rate": 0.7191,
+      "top10Count": 89,
+      "top10Rate": 1.0,
+      "meanReciprocalRank": 0.8217,
+      "averageSqlDurationMs": 868.27,
+      "p95SqlDurationMs": 1600.77
+    },
+    "confidenceMetrics": [
+      {
+        "confidence": "high",
+        "caseCount": 45,
+        "top1Count": 39,
+        "precision": 0.8667,
+        "coverage": 0.5056,
+        "ambiguousCount": 0
+      },
+      {
+        "confidence": "low",
+        "caseCount": 23,
+        "top1Count": 11,
+        "precision": 0.4783,
+        "coverage": 0.2584,
+        "ambiguousCount": 17
+      },
+      {
+        "confidence": "medium",
+        "caseCount": 21,
+        "top1Count": 14,
+        "precision": 0.6667,
+        "coverage": 0.236,
+        "ambiguousCount": 0
+      }
+    ],
+    "targetAwareMetrics": null
+  }
+]

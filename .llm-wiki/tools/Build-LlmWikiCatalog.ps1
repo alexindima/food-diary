@@ -5,11 +5,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
+$sourceInventory = @(Get-LlmWikiSourceInventory -RepositoryRoot $repositoryRoot)
 [xml]$rootBuildProps = Get-Content -LiteralPath (Join-Path $repositoryRoot 'Directory.Build.props') -Raw
-$rootPropertyGroups = @($rootBuildProps.Project.PropertyGroup)
+$rootPropertyGroups = @($rootBuildProps.SelectNodes('/Project/PropertyGroup'))
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -43,10 +45,10 @@ function Join-RouteTemplate {
         [string]$ActionRoute
     )
 
-    $parts = @(
+    $parts = @(@(
         $ControllerRoute.Trim('/')
         $ActionRoute.Trim('/')
-    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 
     if ($parts.Count -eq 0) {
         return '/'
@@ -55,7 +57,8 @@ function Join-RouteTemplate {
 }
 
 $projectFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.csproj' |
+    $sourceInventory | Where-Object { $_ -like '*.csproj' } |
+        ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) } |
         Where-Object {
             $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults)[\\/]' -and
             $_.FullName -notmatch '[\\/]\.llm-wiki[\\/]tools[\\/]'
@@ -66,7 +69,7 @@ $projectFiles = @(
 $dotnetProjects = [System.Collections.Generic.List[object]]::new()
 foreach ($projectFile in $projectFiles) {
     [xml]$projectXml = Get-Content -LiteralPath $projectFile.FullName -Raw
-    $propertyGroups = @($projectXml.Project.PropertyGroup)
+    $propertyGroups = @($projectXml.SelectNodes('/Project/PropertyGroup'))
     $projectPath = ConvertTo-RepositoryPath $projectFile.FullName
     $projectDirectory = $projectFile.DirectoryName
     $projectName = [System.IO.Path]::GetFileNameWithoutExtension($projectFile.Name)
@@ -89,7 +92,7 @@ foreach ($projectFile in $projectFiles) {
     }
 
     $projectReferences = @(
-        @($projectXml.Project.ItemGroup.ProjectReference) |
+        @($projectXml.SelectNodes('/Project/ItemGroup/ProjectReference')) |
             Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Include) } |
             ForEach-Object {
                 ConvertTo-RepositoryPath (Join-Path $projectDirectory ([string]$_.Include))
@@ -98,10 +101,13 @@ foreach ($projectFile in $projectFiles) {
     )
 
     $packageReferences = @(
-        @($projectXml.Project.ItemGroup.PackageReference) |
+        @($projectXml.SelectNodes('/Project/ItemGroup/PackageReference')) |
             Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Include) } |
             ForEach-Object {
-                $version = if ($null -ne $_.Version) { [string]$_.Version } else { $null }
+                $versionElement = $_.SelectSingleNode('Version')
+                $version = if ($_.HasAttribute('Version')) { $_.GetAttribute('Version') }
+                    elseif ($null -ne $versionElement) { $versionElement.InnerText }
+                    else { $null }
                 [ordered]@{
                     name = [string]$_.Include
                     version = $version
@@ -119,14 +125,14 @@ foreach ($projectFile in $projectFiles) {
     }
     $outputType = Get-FirstXmlValue $propertyGroups 'OutputType'
     if ([string]::IsNullOrWhiteSpace($outputType)) {
-        $outputType = if ([string]$projectXml.Project.Sdk -match '\.(Web|Worker)$') { 'Exe' } else { 'Library' }
+        $outputType = if ($projectXml.DocumentElement.GetAttribute('Sdk') -match '\.(Web|Worker)$') { 'Exe' } else { 'Library' }
     }
 
     $dotnetProjects.Add([ordered]@{
         name = $projectName
         assemblyName = $assemblyName
         path = $projectPath
-        sdk = [string]$projectXml.Project.Sdk
+        sdk = $projectXml.DocumentElement.GetAttribute('Sdk')
         outputType = $outputType
         targetFrameworks = $frameworks
         isTestProject = $isTestProject
@@ -141,7 +147,7 @@ $frontendProjects = [System.Collections.Generic.List[object]]::new()
 foreach ($projectProperty in @($angularWorkspace.projects.PSObject.Properties | Sort-Object { Get-LlmWikiOrdinalSortKey $_.Name })) {
     $project = $projectProperty.Value
     $targets = @()
-    if ($null -ne $project.architect) {
+    if ($null -ne $project.PSObject.Properties['architect']) {
         $targets = @($project.architect.PSObject.Properties.Name | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
     }
     $frontendProjects.Add([ordered]@{
@@ -169,12 +175,10 @@ $presentationRoots = @(
     'Services/MailInbox/FoodDiary.MailInbox.Presentation'
 )
 $controllerFiles = @(
-    foreach ($presentationRoot in $presentationRoots) {
-        $absoluteRoot = Join-Path $repositoryRoot $presentationRoot
-        if (Test-Path -LiteralPath $absoluteRoot) {
-            Get-ChildItem -LiteralPath $absoluteRoot -Recurse -File -Filter '*Controller.cs'
-        }
-    }
+    $sourceInventory | Where-Object {
+        $path = $_
+        $path -like '*Controller.cs' -and @($presentationRoots | Where-Object { $path.StartsWith("$_/") }).Count -gt 0
+    } | ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) }
 ) | Sort-Object FullName
 
 $controllers = [System.Collections.Generic.List[object]]::new()
@@ -215,14 +219,14 @@ foreach ($controllerFile in $controllerFiles) {
 }
 
 $agentGuides = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter 'AGENTS.md' |
+    $sourceInventory | Where-Object { $_ -match '(^|/)AGENTS\.md$' } |
+        ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) } |
         Where-Object { $_.FullName -notmatch '[\\/](node_modules|obj|bin|\.artifacts)[\\/]' } |
         ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_ }
 )
 $documentation = @(
-    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'docs') -Recurse -File -Filter '*.md' |
-        ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
+    $sourceInventory | Where-Object { $_ -match '^docs/.+\.md$' } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_ }
 )
 $testProjects = @(

@@ -1,5 +1,15 @@
 Set-StrictMode -Version Latest
 
+function Get-LlmWikiSourceInventory {
+    param([Parameter(Mandatory)][string]$RepositoryRoot)
+
+    # Include new source files, exclude ignored build/dependency trees before
+    # visiting the filesystem, and omit tracked paths deleted in this checkout.
+    @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @(
+        'ls-files', '--cached', '--others', '--exclude-standard'
+    ) | Where-Object { [IO.File]::Exists((Join-Path $RepositoryRoot $_)) })
+}
+
 function Split-LlmWikiPositiveGitPathspecBatch {
     [CmdletBinding()]
     param([AllowEmptyCollection()][string[]]$Pathspec = @())

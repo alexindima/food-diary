@@ -81,6 +81,10 @@ sources:
 
 # Run the Staged Index Pipeline
 
+Generators refill free worker slots within each dependency stage rather than waiting for a fixed batch. Catalog and symbol generators enumerate Git-visible inputs before accessing the filesystem. Stage barriers, timeouts, transaction rollback, and every required generator remain in force.
+
+A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds both generator and regression workers. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
+
 Module source areas come from the Git-visible file inventory. Empty legacy
 directories and ignored build outputs must not change generated pages between
 a developer checkout and CI. Module abstraction roots resolve to the sibling
@@ -99,6 +103,8 @@ not require hashing source inputs. Existing receipts still receive full current
 input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
+
+Smoke logs and explicit fixture sandboxes stay under the run's repository artifacts. Native temporary files use a separate short run/group directory in the system temporary parent, preventing Windows SQLite journal paths from exceeding native limits. `TEMP`, `TMP`, and `TMPDIR` share that group scope. Cleanup verifies the owned parent and exact run name before removing the temporary directory.
 
 Test plans expose `required`, `recommended`, `fullRegression`, and `satisfied`
 command groups. Direct owners remain required. A broad production consumer set
@@ -367,10 +373,10 @@ marker before copying the rollback tree, prefer the last completed-stage
 checkpoint for recoverable interruptions, and prune stale markerless or partial
 transactions that cannot be restored safely.
 
-The pre-commit hook runs the affected compiled-index freshness check when staged
-source or Wiki generator inputs change. This catches a final TS/test edit made
-after index generation before the stale artifacts can reach CI. CSS/SCSS-only
-commits skip the compiled-index check because no compiled index reads stylesheets.
+The pre-commit hook runs `git diff --cached --check`. The pre-push hook runs the
+affected compiled-index freshness check for the pushed change set, followed by
+the applicable frontend and backend checks. Full Wiki regression remains a
+separate local/CI gate. Stylesheets do not select compiled-index generators.
 
 Adaptive routing regression, adaptive experience/lifecycle regression, the
 integration-scan contract, and three deterministic eval shards are independent
@@ -437,11 +443,11 @@ architecture-health analytics during feature iteration; the ordinary affected
 update/verify refreshes them once at publication finalization.
 After a cache miss that proves an output current, check mode refreshes the
 receipt as well. Consequently a manual verify pays the cold computation once
-and the pre-commit freshness check can reuse that exact content-addressed proof;
+and the pre-push freshness check can reuse that exact content-addressed proof;
 a later source edit still invalidates it.
 The affected pipeline also records a tool-set-specific aggregate receipt over
 all relevant repository inputs and compiled outputs. This lets an immediately
-following pre-commit freshness check return after one native hash pass instead
+following pre-push freshness check return after one native hash pass instead
 of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
 generators. Strict affected verification and CI do not request this reuse.
 
@@ -453,8 +459,8 @@ not rerun the generators. If the worktree changed while it waited, it performs
 its own atomic update normally. The focused concurrency regression launches two
 real domain-index updates and requires the second process to take the reuse path.
 
-Git hooks isolate .NET outputs under PID-specific
-`.artifacts/pre-commit/<pid>` and `.artifacts/pre-push/<pid>` directories. Their
+The pre-push hook isolates .NET outputs under the PID-specific
+`.artifacts/pre-push/<pid>` directory. Its
 cleanup removes only the current hook's directory plus invalid nested
 `.artifacts` folders; it does not delete `.artifacts/llm-wiki`, another hook's
 build outputs, or another development session's task-scoped artifacts. This

@@ -20,6 +20,9 @@ $selectorFunction = $guardAst.Find({
 . ([scriptblock]::Create($selectorFunction.Extent.Text))
 $scopeAlias = @(Select-RelevantOverlayPath -WorkspacePath @('alpha/file.cs', 'other/file.cs', '.llm-wiki/note.md') -Arguments @{ ScopePath = @('alpha') })
 if (($scopeAlias -join ',') -ne 'alpha/file.cs,.llm-wiki/note.md') { throw 'Context ScopePath did not constrain the snapshot overlay.' }
+$readerPath = 'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
+$readerOverlay = @(Select-RelevantOverlayPath -WorkspacePath @($readerPath, 'other/file.cs') -Arguments @{ ScopePath = @('alpha') })
+if ($readerOverlay.Count -ne 1 -or $readerOverlay[0] -ne $readerPath) { throw 'Scoped snapshots omitted shared CLI reader inputs.' }
 $fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'read-only-overlay-paths'
 try {
     $unicodeName = -join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)

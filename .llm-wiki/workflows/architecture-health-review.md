@@ -20,6 +20,8 @@ sources:
 
 # Review Architecture Drift and Removal Candidates
 
+Published index presence, complete generation, and full verification have separate evidence. Use `catalog -CheckFreshness -Format Json` for publication receipts; a graph's current snapshot fingerprint alone does not certify this architecture projection.
+
 Dependency violations, ungoverned production projects, and module cycles are enforced failures. Update the matrix only when the dependency is intentional and architecturally justified.
 
 Module fan-in/fan-out hotspots are classified separately. `review-candidate`

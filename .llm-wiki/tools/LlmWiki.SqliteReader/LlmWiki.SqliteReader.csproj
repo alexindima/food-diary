@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" />
+    <Compile Include="../../../FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs" Link="SqliteContextSearchReader.cs" />
+    <Compile Include="../../../FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs" Link="WikiContextSearchResult.cs" />
+    <Compile Include="../../../FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs" Link="WikiContextSearchCandidate.cs" />
   </ItemGroup>
 
 </Project>

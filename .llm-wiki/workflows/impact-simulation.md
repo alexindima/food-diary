@@ -25,6 +25,8 @@ sources:
 
 # Simulate change impact before implementation
 
+Dirty source contents participate in graph refresh even when filesystem metadata is preserved. Impact simulation therefore consumes refreshed declarations for repeated edits to one dirty path. Proposed-path forecasts remain advisory and retain their existing projection lineage checks.
+
 Impact simulation may use inferred paths for discovery, but comparison and
 scope commitments require current Git paths or explicit planned paths.
 

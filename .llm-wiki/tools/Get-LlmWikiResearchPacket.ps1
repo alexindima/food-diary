@@ -502,6 +502,16 @@ $researchLanes = @(
 ) | Where-Object { [int]$_.evidenceCount -gt 0 -or @($_.sources).Count -gt 0 }
 $researchPlan = New-ResearchPlan $researchLanes
 
+$assessmentComplete = $repositoryAssessmentResearch -or $groundedPaths.Count -gt 0
+$blockingQuestions = @($openQuestions | Where-Object blocking)
+$requiresDesign = $effectivePurpose -ne 'Assessment' -and [bool]$workflow.requiresDesign
+$requiresDecisionCheckpoint = $effectivePurpose -ne 'Assessment' -and [bool]$workflow.requiresDecisionCheckpoint
+$nextActionState = if (-not $assessmentComplete) { 'discover' }
+    elseif ($effectivePurpose -eq 'Assessment') { 'assessment-complete' }
+    elseif ($blockingQuestions.Count -gt 0) { 'resolve-question' }
+    elseif ($requiresDesign -or $requiresDecisionCheckpoint) { 'design' }
+    else { 'implement' }
+
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
@@ -517,8 +527,8 @@ $result = [pscustomobject][ordered]@{
             implementationScope = $researchImplementationScopeConfidence
         }
         confidenceReasons = @($researchConfidenceReasons)
-        requiresDecisionCheckpoint = $workflow.requiresDecisionCheckpoint
-        requiresDesign = $workflow.requiresDesign
+        requiresDecisionCheckpoint = $requiresDecisionCheckpoint
+        requiresDesign = $requiresDesign
         requiresWorkspace = $workflow.requiresWorkspace
     }
     discovery = [pscustomobject][ordered]@{
@@ -550,11 +560,11 @@ $result = [pscustomobject][ordered]@{
     nextQuestion = $(if ($nextQuestion.Count -gt 0) { $nextQuestion[0] } else { $null })
     readiness = [pscustomobject][ordered]@{
         assessmentStatus = $(if ($repositoryAssessmentResearch -or $groundedPaths.Count -gt 0) { 'complete' } else { 'incomplete' })
-        designCheckpoint = $(if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.requiresDecisionCheckpoint) { 'required' } else { 'not-required' })
-        implementationStatus = $(if ($effectivePurpose -eq 'Assessment') { 'not-applicable' } elseif ($groundedPaths.Count -gt 0 -and -not $workflow.requiresDecisionCheckpoint) { 'ready' } else { 'blocked' })
-        assessmentComplete = $repositoryAssessmentResearch -or $groundedPaths.Count -gt 0
-        readyToDesign = $effectivePurpose -eq 'Assessment' -or ($groundedPaths.Count -gt 0 -and @($openQuestions | Where-Object blocking).Count -eq 0)
-        readyToImplement = $effectivePurpose -ne 'Assessment' -and $groundedPaths.Count -gt 0 -and -not $workflow.requiresDecisionCheckpoint
+        designCheckpoint = $(if ($requiresDesign -or $requiresDecisionCheckpoint) { 'required' } else { 'not-required' })
+        implementationStatus = $(if ($effectivePurpose -eq 'Assessment') { 'not-applicable' } elseif ($nextActionState -eq 'implement') { 'ready' } else { 'blocked' })
+        assessmentComplete = $assessmentComplete
+        readyToDesign = $assessmentComplete -and $blockingQuestions.Count -eq 0
+        readyToImplement = $nextActionState -eq 'implement'
         blockers = @($openQuestions | Where-Object blocking | Select-Object -ExpandProperty id)
     }
     authority = @(
@@ -570,13 +580,16 @@ $result = [pscustomobject][ordered]@{
         runtimeGraphDeferred = $runtimeFlowEvidence.status -like 'deferred-*'
         progressContract = 'Text progress milestones are emitted after classification/context and before optional Git history; JSON is emitted atomically when the packet is complete.'
     }
+    nextActionState = $nextActionState
     nextAction = if ($repositoryAssessmentResearch) {
         'Continue the repository assessment with topology, privacy, security, health, quality, dependency, journey, and test-plan readers; validate every reportable lead in current source and tests.'
     } elseif ($groundedPaths.Count -eq 0) {
         "Run ./.llm-wiki/wiki.ps1 trace -Query '<exact command, handler, route, or component symbol>', then rerun research with -PlannedPath."
     } elseif ($effectivePurpose -eq 'Assessment') {
         'Assessment is complete. Use the blocker and boundary summary to choose the next package; no design checkpoint is required until implementation planning starts.'
-    } elseif ($workflow.requiresDecisionCheckpoint) {
+    } elseif ($nextActionState -eq 'resolve-question') {
+        [string]$nextQuestion[0].resolutionCommand
+    } elseif ($nextActionState -eq 'design') {
         "Run ./.llm-wiki/wiki.ps1 design -Intent '$($Objective.Replace("'", "''"))' -PlannedPath '$(($groundedPaths | Select-Object -First $Limit) -join ';')'."
     } else {
         "Read the ranked current-source files, confirm the edit boundary, and follow the adaptive workflow."

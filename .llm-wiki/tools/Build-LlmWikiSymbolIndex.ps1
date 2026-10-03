@@ -5,6 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
@@ -70,7 +71,9 @@ function Get-SymbolRole {
 }
 
 $sourceFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
+    Get-LlmWikiSourceInventory -RepositoryRoot $repositoryRoot |
+        Where-Object { $_ -like '*.cs' } |
+        ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) } |
         Where-Object {
             $_.FullName -notmatch '[\\/](tests|node_modules|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
             $_.FullName -notmatch '[\\/]\.llm-wiki[\\/]tools[\\/]' -and

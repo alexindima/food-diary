@@ -18,6 +18,8 @@ sources:
 
 # Review dependencies and rollout
 
+The CLI SQLite helper links the shared ranking source and result contracts without adding a project reference or a package. Rebuild its fingerprinted local artifact after those sources change; compiled helper publication remains separate from application rollout.
+
 Rollout analysis reuses the compiled diff and policy result when called from a
 task brief or change packet, so deployment flags and obligations stay aligned.
 
