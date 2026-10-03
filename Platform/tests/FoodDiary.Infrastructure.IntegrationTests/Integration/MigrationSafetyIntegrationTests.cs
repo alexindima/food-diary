@@ -19,13 +19,17 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     public async Task PublicProductDescriptions_BackfillOnlyMissingPublicRecipeSnapshots() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        await context.GetService<IMigrator>().MigrateAsync("20260928205829_AddRecipePublicIngredientDescriptions");
+        await context.Database.MigrateAsync();
         var user = User.Create($"public-snapshots-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        // Seed the current user model before restoring the recipe backfill's starting schema.
+        await context.GetService<IMigrator>().MigrateAsync("20260928205829_AddRecipePublicIngredientDescriptions");
         var recipe = Recipe.Create(user.Id, "Public recipe", 1, visibility: FoodDiary.Domain.Primitives.Visibility.Public);
         var privateRecipe = Recipe.Create(user.Id, "Private recipe", 1, visibility: FoodDiary.Domain.Primitives.Visibility.Private);
         RecipeStep step = recipe.AddStep(1, "Mix");
         RecipeStep privateStep = privateRecipe.AddStep(1, "Mix privately");
-        context.Users.Add(user);
         context.Recipes.AddRange(recipe, privateRecipe);
         foreach (FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit unit in Enum.GetValues<FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit>()) {
             var product = FoodDiary.Modules.Products.Domain.Entities.Product.Create(user.Id, $"Ingredient {unit}", unit,

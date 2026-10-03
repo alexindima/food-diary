@@ -20,6 +20,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
@@ -205,7 +206,10 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         services.AddImagesInfrastructure();
         services.AddGamificationModule();
         services.AddReadModelComposition();
-        services.AddSingleton(Substitute.For<IWebPushNotificationSender>());
+        IWebPushNotificationSender webPush = Substitute.For<IWebPushNotificationSender>();
+        webPush.SendBatchAsync(Arg.Any<Notification>(), Arg.Any<IReadOnlySet<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(WebPushDeliveryOutcome.Skipped);
+        services.AddSingleton(webPush);
         services.AddSingleton(Substitute.For<IImageStorageService>());
         services.AddSingleton(reconciliation ?? Substitute.For<ISender>());
         return services.BuildServiceProvider();

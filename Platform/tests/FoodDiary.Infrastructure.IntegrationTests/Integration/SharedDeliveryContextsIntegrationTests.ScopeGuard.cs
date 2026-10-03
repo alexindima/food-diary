@@ -8,6 +8,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -42,7 +43,15 @@ public sealed partial class SharedDeliveryContextsIntegrationTests {
 
         InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(process);
         Assert.Contains("pending changes", error.Message, StringComparison.Ordinal);
-        Assert.Equal(EntityState.Added, Assert.Single(dirtyContext.ChangeTracker.Entries()).State);
+        EntityEntry[] pendingEntries = [.. dirtyContext.ChangeTracker.Entries()];
+        if (!foreignModule) {
+            Assert.Equal(new[] { typeof(User), typeof(UserNutritionProfile), typeof(UserPreferences) }.OrderBy(type => type.Name, StringComparer.Ordinal),
+                pendingEntries.Select(entry => entry.Entity.GetType()).OrderBy(type => type.Name, StringComparer.Ordinal));
+            Assert.Same(user, Assert.Single(dirtyContext.ChangeTracker.Entries<User>()).Entity);
+        } else {
+            Assert.Single(pendingEntries);
+        }
+        Assert.All(pendingEntries, entry => Assert.Equal(EntityState.Added, entry.State));
 
         dirtyContext.ChangeTracker.Clear();
         Assert.Equal(0, await process());

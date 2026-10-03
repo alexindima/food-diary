@@ -251,7 +251,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     private static IUserDataPurgeParticipant[] Participants(ServiceProvider provider) {
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>().OrderBy(item => item.Order)];
-        Assert.Equal([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 130, 135], participants.Select(item => item.Order));
+        Assert.Equal([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 130, 135, 140], participants.Select(item => item.Order));
         return participants;
     }
 
@@ -275,7 +275,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(UserId target) : IUserDataPurgeParticipant {
-        public int Order => 140;
+        public int Order => 150;
 
         public Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) =>
             userId == target ? throw new InvalidOperationException("Injected failure after the owner deletions.") : Task.CompletedTask;

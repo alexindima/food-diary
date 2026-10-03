@@ -56,7 +56,7 @@ public sealed class SharedLessonsContextCompositionIntegrationTests(PostgresData
         await unitOfWork.SaveChangesAsync();
         lessons.ChangeTracker.Clear();
         Assert.Empty(await repository.GetByLocaleAsync("en"));
-        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync()).CompletedCount);
+        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync(page: 1, limit: 10)).CompletedCount);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(lesson.Id);
         Assert.NotNull(tracked);
         tracked.SetPublication(isPublished: true);

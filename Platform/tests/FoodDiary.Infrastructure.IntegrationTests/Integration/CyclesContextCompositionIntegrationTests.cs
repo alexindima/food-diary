@@ -24,15 +24,15 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class CyclesContextCompositionIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [Fact]
-    public void ModelContainsOnlyTheEightOwnedEntitiesWithExistingTables() {
+    public void ModelContainsOnlyTheNineOwnedEntitiesWithExistingTables() {
         using var context = new CyclesDbContext(new DbContextOptionsBuilder<CyclesDbContext>()
             .UseNpgsql("Host=localhost;Database=model_only").Options);
         Type[] expected = [typeof(CycleProfile), typeof(BleedingEntry), typeof(CycleSymptomEntry), typeof(CycleFactor),
-            typeof(FertilitySignal), typeof(MenstrualEpisode), typeof(CycleConsent), typeof(CyclePredictionRevision)];
+            typeof(FertilitySignal), typeof(MenstrualEpisode), typeof(CycleConsent), typeof(CyclePredictionRevision), typeof(CycleDayNote)];
         Assert.Equal(expected.OrderBy(type => type.Name, StringComparer.Ordinal),
             context.Model.GetEntityTypes().Select(entity => entity.ClrType).OrderBy(type => type.Name, StringComparer.Ordinal));
         string[] tables = ["CycleProfiles", "CycleBleedingEntries", "CycleSymptomEntries", "CycleFactors",
-            "FertilitySignals", "CycleMenstrualEpisodes", "CycleConsents", "CyclePredictionRevisions"];
+            "FertilitySignals", "CycleMenstrualEpisodes", "CycleConsents", "CyclePredictionRevisions", "CycleDayNotes"];
         Assert.Equal(tables.Order(StringComparer.Ordinal),
             context.Model.GetEntityTypes().Select(entity => entity.GetTableName()).Order(StringComparer.Ordinal));
     }

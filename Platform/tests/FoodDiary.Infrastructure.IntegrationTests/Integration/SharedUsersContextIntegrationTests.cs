@@ -44,7 +44,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
         shared.WeightEntries.Add(WeightEntry.Create(user.Id, DateTime.UtcNow, 70));
-        Assert.Equal(6, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(8, owned.Model.GetEntityTypes().Count());
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<User>());
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());

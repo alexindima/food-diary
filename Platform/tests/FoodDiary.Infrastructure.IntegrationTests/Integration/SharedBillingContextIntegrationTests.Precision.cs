@@ -18,10 +18,14 @@ public sealed partial class SharedBillingContextIntegrationTests {
         IMigrator migrator = context.GetService<IMigrator>();
         const string previousMigration = "20260914032832_ProtectAiPromptConcurrentUpdates";
         const string precisionMigration = "20260914190216_PreserveBillingPaymentPrecision";
-        // Exercise this migration's rollback without reverting unrelated later data migrations.
+        // Exercise only the billing migration; later data migrations can deliberately refuse rollback.
         await migrator.MigrateAsync(upgrade ? previousMigration : precisionMigration);
         var user = User.Create("billing-precision@example.com", "hash");
-        context.Users.Add(user);
+        // The historical schema keeps nutrition fields on Users instead of the current owned profiles.
+        await context.Database.ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO "Users" ("Id", "Email", "Password", "ActivityLevel", "CalorieCyclingEnabled", "CreatedOnUtc")
+            VALUES ({user.Id.Value}, {user.Email}, {"hash"}, {user.ActivityLevel.ToString()}, {false}, {user.CreatedOnUtc})
+            """);
         const decimal previousMaximum = 9_999_999_999_999_999.99m;
         var payment = BillingPayment.Create(user.Id, billingSubscriptionId: null, BillingProviderNames.Stripe, "in_precision",
             externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null,

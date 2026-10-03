@@ -12,6 +12,7 @@ using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
+using FoodDiary.Persistence.Runtime;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
@@ -29,6 +30,7 @@ using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.Users.Contracts.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
@@ -310,7 +312,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
-        public int Order => 140;
+        public int Order => 150;
         public Task PurgeAsync(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId, FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId? reassignTarget, CancellationToken cancellationToken) {
             context.Users.Add(User.Create("uncommitted-purge-work@example.com", "hash"));
             throw new InvalidOperationException("Injected owner cleanup failure.");
@@ -319,6 +321,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
         var services = new ServiceCollection();
+        services.AddPersistenceRuntime(new ConfigurationBuilder().Build());
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
@@ -343,7 +346,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         if (extra is not null) { services.AddSingleton(extra); }
         ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
-        Assert.Equal(extra is null ? 13 : 14, participants.Length);
+        Assert.Equal(extra is null ? 14 : 15, participants.Length);
         service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
             new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context));
