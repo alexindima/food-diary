@@ -2256,6 +2256,24 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       candidates.push(identityCandidate);
     }
   }
+  // Require adjacent subject words together so common action words cannot
+  // crowd a compound identity out of both broad OR candidate pools.
+  const compoundPairs = directTerms.slice(0, -1).flatMap((term, index) => {
+    const next = directTerms[index + 1];
+    return term.length >= 3 && next.length >= 3
+      ? [`("${term.replaceAll('"', '""')}"* AND "${next.replaceAll('"', '""')}"*)`] : [];
+  }).slice(0, 8);
+  if (compoundPairs.length > 0) {
+    const compounds = findIdentityCandidates(database, compoundPairs.join(' OR '), identityLimit, true);
+    const recalledPaths = new Set(candidates.map(item => String(item.path).replaceAll('\\', '/').toLowerCase()));
+    for (const compound of compounds) {
+      const path = String(compound.path).replaceAll('\\', '/').toLowerCase();
+      if (!recalledPaths.has(path)) {
+        recalledPaths.add(path);
+        candidates.push(compound);
+      }
+    }
+  }
   // Recall long guides by the literal subject, independently of the broad OR pool.
   const guidanceSubjects = requestsGuidance ? [...new Set([...String(query).matchAll(/\b[A-Z][A-Za-z0-9]{3,}\b/g)]
     .map(match => match[0].toLowerCase()).filter(term => terms.includes(term)))].slice(0, 8) : [];

@@ -5,6 +5,36 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
     [Fact]
+    public async Task SearchAsync_RecallsCompoundSubjectsWithDistinctPathsDespiteDuplicateRows() {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["candidatePoolLimit"] = 1;
+        policy["identityCandidatePoolLimit"] = 2;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using var connection = new SqliteConnection($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','subject','Modules/Astral/Application/Queries/GetAstralOrchard/GetAstralOrchardQueryHandler.cs',
+                    'subject','csharp','Get Astral Orchard Query Handler',$body);
+            WITH RECURSIVE rows(value) AS (SELECT 1 UNION ALL SELECT value + 1 FROM rows WHERE value < 20)
+            INSERT INTO context_search SELECT 'query-document', 'noise-' || value, 'Area/SavedDetails.cs',
+                'noise','csharp','read saved details','read saved details astral' FROM rows;
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """;
+        command.Parameters.AddWithValue("$body", string.Concat(Enumerable.Repeat("unrelated navigation ", 1000)));
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "read saved astral orchard details", 10, "Backend", module: null, scopePaths: null,
+            CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.True(result.Ready);
+        Assert.Contains(result.Candidates, candidate => candidate.Path.EndsWith("GetAstralOrchardQueryHandler.cs", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task SearchAsync_RecallsLongGuidanceForNamedSubjectOutsideBroadPool() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
         JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;

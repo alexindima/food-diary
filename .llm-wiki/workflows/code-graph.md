@@ -71,6 +71,8 @@ Every incremental build hashes dirty source paths even when size and modificatio
 
 CLI context ranking and MCP use the same `SqliteContextSearchReader.cs`, linked into the existing CLI reader project. Node remains the sole writer and the comparison reader for frozen evaluation/parity. Explicit guidance intent recalls long guides by named subjects in their body through a bounded pool. A query requesting both client and server parts reports `multi-layer-request` with low confidence.
 
+Adjacent subject words also receive bounded conjunctive identity recall. That pool keeps one representative per path before applying its limit, so duplicate projections cannot crowd out another file. Newly recalled paths are appended without changing existing candidate order or scores.
+
 Trace layer, module, and path filters apply to exact results before an early
 return, as well as to ranked candidates. Fast test plans include the explicit
 CI workflow guardrail alongside graph-discovered tests.

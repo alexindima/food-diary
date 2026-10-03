@@ -173,6 +173,27 @@ test('bounded identity recall is independent of body length and uses stable ties
   } finally { db.close(); }
 });
 
+test('compound identity recall reserves distinct paths before applying the candidate limit', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`CREATE TABLE context_search(record_type, record_key, path, source_path, category, title, body);
+      CREATE VIRTUAL TABLE context_search_identity USING fts5(path, title);
+      CREATE TABLE context_search_features(context_rowid, layer, module, role, is_test, extension);`);
+    const insert = db.prepare('INSERT INTO context_search VALUES (?, ?, ?, ?, ?, ?, ?)');
+    for (let index = 0; index < 21; index++) {
+      const path = index < 20 ? 'Area/Noise.cs' : 'Area/GetStarOrchard.cs';
+      const title = index < 20 ? 'star orchard' : 'read star orchard details handler';
+      const row = insert.run('code', String(index), path, path, 'csharp', title, 'irrelevant');
+      db.prepare('INSERT INTO context_search_identity(rowid,path,title) VALUES (?,?,?)').run(row.lastInsertRowid, path, title);
+      db.prepare('INSERT INTO context_search_features VALUES (?, ?, ?, ?, ?, ?)').run(row.lastInsertRowid, '', '', 'handler', 0, '.cs');
+    }
+    const result = findIdentityCandidates(db, '"star"* AND "orchard"*', 2, true);
+    assert.equal(result.length, 2);
+    assert.equal(new Set(result.map(item => item.path)).size, 2);
+    assert.ok(result.some(item => item.path === 'Area/GetStarOrchard.cs'));
+  } finally { db.close(); }
+});
+
 test('batch metadata and rows share one snapshot; next batch sees committed changes', () => {
   const root = mkdtempSync(join(tmpdir(), 'wiki-batch-'));
   const reader = new DatabaseSync(join(root, 'graph.sqlite'));

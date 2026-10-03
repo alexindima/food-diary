@@ -348,6 +348,45 @@ public sealed class SqliteContextSearchReader {
                 }
             }
         }
+        string[] compoundPairs = [.. directQueryTerms.Take(Math.Max(0, directQueryTerms.Count - 1))
+            .Select((term, index) => (Term: term, Next: directQueryTerms[index + 1]))
+            .Where(pair => pair.Term.Length >= 3 && pair.Next.Length >= 3)
+            .Select(pair => $"(\"{pair.Term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"* AND \"{pair.Next.Replace("\"", "\"\"", StringComparison.Ordinal)}\"*)")
+            .Take(8)];
+        if (compoundPairs.Length > 0) {
+            SqliteCommand command = connection.CreateCommand();
+            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            command.CommandTimeout = 2;
+            command.CommandText = """
+                WITH matches AS MATERIALIZED (
+                    SELECT search.rowid row_id, search.record_type, search.record_key, search.path, search.source_path,
+                        COALESCE(search.category, '') category, COALESCE(search.title, '') title,
+                        bm25(context_search_identity, 6.0, 4.0) lexical_rank
+                    FROM context_search_identity
+                    JOIN context_search search ON search.rowid = context_search_identity.rowid
+                    WHERE context_search_identity MATCH $match
+                ), representatives AS (
+                    SELECT *, row_number() OVER (PARTITION BY path ORDER BY lexical_rank, row_id) path_rank FROM matches
+                )
+                SELECT record_type, record_key, path, source_path, category, title, lexical_rank
+                FROM representatives WHERE path_rank = 1 ORDER BY lexical_rank, path, row_id LIMIT $limit;
+                """;
+            command.Parameters.AddWithValue("$match", string.Join(" OR ", compoundPairs));
+            command.Parameters.AddWithValue("$limit", identityCandidateLimit);
+            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            List<RawCandidate> compounds = [];
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                compounds.Add(new RawCandidate(reader.GetString(0), reader.GetString(1), reader.GetString(2),
+                    reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetDouble(6)));
+            }
+            var recalledPaths = candidates.Select(candidate => NormalizePath(candidate.Path).ToLowerInvariant()).ToHashSet(StringComparer.Ordinal);
+            foreach (RawCandidate compound in compounds) {
+                if (recalledPaths.Add(NormalizePath(compound.Path).ToLowerInvariant())) {
+                    candidates.Add(compound);
+                }
+            }
+        }
         // Long instruction files can disappear from the broad OR pool. Recall
         // guides that contain every explicitly named subject before ranking.
         string[] guidanceSubjects = RequestsGuidance(rankingTerms)
