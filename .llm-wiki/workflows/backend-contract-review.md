@@ -23,6 +23,8 @@ sources:
 
 # Review Backend Contract Consumers
 
+The backend contract projection includes the shared context reader's public source surface as local tooling evidence. Its extraction does not add HTTP routes. Keep contract-index lineage checks and Node/.NET parity separate from a successful graph snapshot refresh.
+
 Query the changed type and inspect production consumers separately from test coverage. For in-process contracts, review constructors, properties, generic constraints, nullability, implementers, and DI registration.
 Consumer edges distinguish `compile`, `mapping`, `serializer`, `http`, and
 `test-fixture` usage. Prefer mapping/serializer/HTTP evidence for an additive

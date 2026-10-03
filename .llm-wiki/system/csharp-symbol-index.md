@@ -4,10 +4,13 @@ kind: system
 status: current
 sources:
   - .llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1
+  - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - Directory.Build.props
 ---
 
 # C# Symbol Index
+
+Source discovery uses one Git-visible inventory of tracked and non-ignored untracked files. Deleted tracked paths and ignored build trees are excluded before filesystem traversal; declaration and DI extraction retain their existing filters.
 
 [`csharp-symbol-index.json`](../generated/csharp-symbol-index.json) is a
 deterministic navigation index for production C# code.

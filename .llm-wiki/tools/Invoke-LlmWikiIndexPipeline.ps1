@@ -273,6 +273,9 @@ if ($AffectedOnly) {
         }
 
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
+        if (@($normalizedChangedPaths | Where-Object { $_ -match '^docs/.+\.md$|(^|/)AGENTS\.md$' }).Count -gt 0) {
+            Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'
+        }
         $csharpPaths = @($normalizedChangedPaths | Where-Object { $_ -match '\.cs$' -and $_ -notmatch '^\.llm-wiki/tools/' })
         $csharpTestPaths = @($csharpPaths | Where-Object {
             $_ -match '(?i)(^|/)(tests?|__tests__)/' -or $_ -match '(?i)\.Tests?/' -or $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$'
@@ -396,16 +399,19 @@ $forecastStageSeconds = [Collections.Generic.List[double]]::new()
 $forecastSamples = [Collections.Generic.List[int]]::new()
 foreach ($stage in $stages) {
     $stageTools = @($stage.tools | Where-Object { $_ -in $selectedToolNames })
-    for ($offset = 0; $offset -lt $stageTools.Count; $offset += $MaxConcurrency) {
-        $last = [Math]::Min($offset + $MaxConcurrency - 1, $stageTools.Count - 1)
-        $batch = @($stageTools[$offset..$last] | ForEach-Object {
-            if ($timingByTool.ContainsKey($_)) {
-                $forecastSamples.Add([int]$timingByTool[$_].sampleCount)
-                [double]$timingByTool[$_].medianSeconds
-            } elseif ($coldCostSeconds.ContainsKey($_)) { [double]$coldCostSeconds[$_] } else { 5.0 }
-        })
-        if ($batch.Count -gt 0) { $forecastStageSeconds.Add([double](($batch | Measure-Object -Maximum).Maximum)) }
+    $workerLoads = [double[]]::new($MaxConcurrency)
+    foreach ($tool in $stageTools) {
+        $duration = if ($timingByTool.ContainsKey($tool)) {
+            $forecastSamples.Add([int]$timingByTool[$tool].sampleCount)
+            [double]$timingByTool[$tool].medianSeconds
+        } elseif ($coldCostSeconds.ContainsKey($tool)) { [double]$coldCostSeconds[$tool] } else { 5.0 }
+        $workerIndex = 0
+        for ($index = 1; $index -lt $workerLoads.Count; $index++) {
+            if ($workerLoads[$index] -lt $workerLoads[$workerIndex]) { $workerIndex = $index }
+        }
+        $workerLoads[$workerIndex] += $duration
     }
+    if ($stageTools.Count -gt 0) { $forecastStageSeconds.Add([double](($workerLoads | Measure-Object -Maximum).Maximum)) }
 }
 $estimatedColdSeconds = [Math]::Round([double](($forecastStageSeconds | Measure-Object -Sum).Sum))
 $sampledToolCount = @($selectedToolNames | Where-Object { $timingByTool.ContainsKey($_) }).Count
@@ -430,7 +436,7 @@ if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
 
 function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$CheckMode) {
     $workers = [System.Collections.Generic.List[object]]::new()
-    foreach ($toolName in $ToolNames) {
+    function Start-PipelineWorker([string]$toolName) {
         $scriptPath = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot $toolName))
         $startInfo = New-Object System.Diagnostics.ProcessStartInfo
         $startInfo.FileName = $shellPath
@@ -448,7 +454,13 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         $workers.Add([pscustomobject]@{ tool = $toolName; process = $process; stopwatch = [System.Diagnostics.Stopwatch]::StartNew(); observed = $false; nextHeartbeat = 30 })
     }
     $failed = [System.Collections.Generic.List[string]]::new()
-    while (@($workers | Where-Object { -not $_.observed }).Count -gt 0) {
+    $nextTool = 0
+    while ($nextTool -lt $ToolNames.Count -or @($workers | Where-Object { -not $_.observed }).Count -gt 0) {
+        # Refill each free slot immediately, retaining stage dependency barriers.
+        while ($nextTool -lt $ToolNames.Count -and @($workers | Where-Object { -not $_.observed }).Count -lt $MaxConcurrency) {
+            Start-PipelineWorker $ToolNames[$nextTool]
+            $nextTool++
+        }
         foreach ($worker in @($workers | Where-Object { -not $_.observed })) {
             if (-not $worker.process.HasExited) {
                 if ($worker.stopwatch.Elapsed.TotalSeconds -ge $worker.nextHeartbeat) {
@@ -552,10 +564,7 @@ try {
         $tools = @($stage.tools | Where-Object { $_ -in $selectedToolNames })
         if ($tools.Count -eq 0) { continue }
         Write-Host "LLM Wiki index stage: $($stage.name) ($($tools.Count) tool(s))"
-        for ($offset = 0; $offset -lt $tools.Count; $offset += $MaxConcurrency) {
-            $last = [Math]::Min($offset + $MaxConcurrency - 1, $tools.Count - 1)
-            Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
-        }
+        Invoke-PipelineBatch -StageName $stage.name -ToolNames $tools -CheckMode ([bool]$Check)
         if (-not $Check -and $transactionRoot) {
             $checkpointRoot = Join-Path $transactionRoot 'checkpoint'
             if (Test-Path -LiteralPath $checkpointRoot) { Remove-Item -LiteralPath $checkpointRoot -Recurse -Force }
@@ -608,6 +617,9 @@ if (-not $pipelineReceiptRecorded -and $ReuseUnchangedChecks -and @($selectedToo
     Write-PipelineCacheReceipt $finalPipelineCacheState
 }
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
+if ($Check -and -not $AffectedOnly -and -not $RequiredOnly -and $Area -eq 'All') {
+    & (Join-Path $toolsRoot 'Write-LlmWikiIndexVerificationReceipt.ps1') -ReceiptKind Generation
+}
 if ($AffectedOnly) {
     $summaryTools = @($selectedToolNames | Sort-Object)
     $summaryPaths = @($normalizedChangedPaths)

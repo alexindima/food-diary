@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1566,
+    "candidateFields": 1595,
     "credential": 156,
-    "identity": 174,
-    "health": 714,
-    "financial": 129,
+    "identity": 175,
+    "health": 739,
+    "financial": 132,
     "privateContent": 393,
     "boundaryFiles": 205,
     "potentialLoggingLeads": 1,
@@ -729,21 +729,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 378
+      "line": 384
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 384
+      "line": 390
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 386
+      "line": 392
     },
     {
       "category": "credential",
@@ -1132,10 +1132,10 @@
     },
     {
       "category": "financial",
-      "name": "BillingRenewal",
-      "type": "UsersCleanup,",
+      "name": "BillingWebhookInbox",
+      "type": "BillingRenewal,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 24
+      "line": 27
     },
     {
       "category": "financial",
@@ -1965,10 +1965,31 @@
     },
     {
       "category": "financial",
+      "name": "CompletedSubscriptionIds",
+      "type": "IReadOnlyCollection<Guid>",
+      "path": "Modules/Notifications/Application.Abstractions/Models/WebPushDeliveryOutcome.cs",
+      "line": 3
+    },
+    {
+      "category": "financial",
+      "name": "DeliveredSubscriptions",
+      "type": "List<Guid>",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
+      "line": 84
+    },
+    {
+      "category": "financial",
       "name": "InvalidSubscriptions",
       "type": "List<WebPushDeliverySubscription>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 71
+      "line": 84
+    },
+    {
+      "category": "financial",
+      "name": "CompletedSubscriptionIdsJson",
+      "type": "string",
+      "path": "Modules/Notifications/PersistenceModel/NotificationWebPushOutboxMessage.cs",
+      "line": 20
     },
     {
       "category": "financial",
@@ -2035,10 +2056,10 @@
     },
     {
       "category": "health",
-      "name": "FastingTelemetryCleanup",
-      "type": "MarketingAttributionCleanup,",
+      "name": "FastingNotifications",
+      "type": "PaddleNotificationRecovery,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 34
+      "line": 29
     },
     {
       "category": "health",
@@ -6277,101 +6298,143 @@
     },
     {
       "category": "health",
+      "name": "NutritionProfile",
+      "type": "UserNutritionProfile",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 94
+    },
+    {
+      "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 243
+      "line": 249
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 245
+      "line": 251
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 247
+      "line": 253
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 260
+      "line": 266
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 262
+      "line": 268
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 264
+      "line": 270
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 266
+      "line": 272
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 268
+      "line": 274
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 303
+      "line": 309
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 315
+      "line": 321
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 317
+      "line": 323
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 319
+      "line": 325
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 327
+      "line": 333
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 329
+      "line": 335
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "BirthDate,",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 134
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "WeightKg,",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 134
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "gender,",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 143
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "height,",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 144
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "weight,",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 144
     },
     {
       "category": "health",
@@ -6386,6 +6449,132 @@
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Tdee.cs",
       "line": 13
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "ActivityLevel",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 22
+    },
+    {
+      "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 24
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 28
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 17
     },
     {
       "category": "health",
@@ -6554,6 +6743,13 @@
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
       "line": 69
+    },
+    {
+      "category": "health",
+      "name": "UserNutritionProfile",
+      "type": "or",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",
+      "line": 17
     },
     {
       "category": "health",
@@ -7016,6 +7212,13 @@
       "type": "string",
       "path": "FoodDiary.Initializer/InitialAdminBootstrapOptions.cs",
       "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "EmailOutbox",
+      "type": "ImageObjectDeletionOutbox,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 31
     },
     {
       "category": "identity",
@@ -8058,14 +8261,14 @@
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 380
+      "line": 386
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 382
+      "line": 388
     },
     {
       "category": "identity",
@@ -10942,7 +11145,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 321
+      "line": 327
     },
     {
       "category": "privateContent",
@@ -12464,8 +12667,9 @@
   "potentialLogging": [
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 51,
+      "line": 62,
       "fieldNames": [
+        "DeliveredSubscriptions",
         "InvalidSubscriptions"
       ]
     }

@@ -13,11 +13,13 @@ internal sealed record WikiVerificationReceipt(
 
     public static async Task<WikiVerificationReceipt?> ReadAsync(
         string repositoryRoot,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        bool generation = false) {
         string gitDirectory = await ServerStatusService
             .ResolveGitDirectoryForStatusAsync(repositoryRoot, cancellationToken)
             .ConfigureAwait(false);
-        string path = Path.Combine(gitDirectory, "llm-wiki", "index-verification.json");
+        string path = Path.Combine(gitDirectory, "llm-wiki",
+            generation ? "index-generation.json" : "index-verification.json");
         if (!File.Exists(path)) {
             return null;
         }

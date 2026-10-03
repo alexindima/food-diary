@@ -19,6 +19,8 @@ sources:
 
 # Compile security-review evidence
 
+Named-subject instruction recall can surface long scoped guides, but a retrieval result remains navigation evidence. Multi-layer queries explicitly abstain from a one-file conclusion. Dirty snapshot mutation checks use content hashes and discard a poisoned clone without overwriting the caller's files.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 security
 ./.llm-wiki/wiki.ps1 security -Query 'Mailgun webhook replay idempotency'

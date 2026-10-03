@@ -4,6 +4,7 @@ kind: system
 status: current
 sources:
   - .llm-wiki/tools/Build-LlmWikiCatalog.ps1
+  - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - Directory.Build.props
   - Directory.Packages.props
   - FoodDiary.Web.Client/angular.json
@@ -12,6 +13,8 @@ sources:
 ---
 
 # Repository Catalog
+
+Catalog generation uses one Git-visible inventory for projects, controllers, guides, and documentation. New non-ignored files are included, deleted files are omitted, and ignored build or dependency trees are not traversed. Changes under `docs/` or to `AGENTS.md` select the catalog in the affected pipeline.
 
 [`repository-catalog.json`](../generated/repository-catalog.json) is the
 deterministic machine-readable inventory used by agents for repository

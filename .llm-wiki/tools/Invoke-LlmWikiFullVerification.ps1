@@ -139,4 +139,5 @@ foreach ($check in $checks) {
     Write-Host "LLM Wiki full verification group passed: $($check.name) ($([Math]::Round($groupStopwatch.Elapsed.TotalSeconds, 2))s)"
 }
 
+& (Join-Path $toolsRoot 'Write-LlmWikiIndexVerificationReceipt.ps1') -CompletedFullVerification
 Write-Host 'LLM Wiki full verification passed.'

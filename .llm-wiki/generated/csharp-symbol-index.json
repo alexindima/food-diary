@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4339,
-    "symbols": 4270,
-    "interfaceImplementationLinks": 194,
+    "sourceFiles": 4363,
+    "symbols": 4295,
+    "interfaceImplementationLinks": 195,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2229,
+      "class": 2248,
       "enum": 65,
-      "interface": 406,
-      "record": 1449,
+      "interface": 409,
+      "record": 1452,
       "record struct": 121
     },
     "roles": {
-      "Command": 226,
+      "Command": 227,
       "CommandHandler": 221,
-      "Configuration": 97,
+      "Configuration": 100,
       "Controller": 110,
-      "Entity": 100,
+      "Entity": 102,
       "Event": 19,
       "Factory": 14,
       "Handler": 7,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1750,
+      "Other": 1769,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -349,11 +349,18 @@
       "line": 9
     },
     {
+      "name": "SqliteContextSearchReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+      "line": 9
+    },
+    {
       "name": "SqliteWikiContextSearch",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 10
+      "line": 6
     },
     {
       "name": "WikiCommandRequest",
@@ -809,6 +816,13 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxOptions.cs",
       "line": 2
+    },
+    {
+      "name": "AtomicCommandReceiptCleanupJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/AtomicCommandReceiptCleanupJob.cs",
+      "line": 6
     },
     {
       "name": "BillingRenewalJob",
@@ -1530,13 +1544,6 @@
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs",
       "line": 8
-    },
-    {
-      "name": "DashboardMealFavoritesLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs",
-      "line": 7
     },
     {
       "name": "DashboardMealItemsLoader",
@@ -8956,7 +8963,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GetDashboardSnapshotQueryValidator",
@@ -9019,7 +9026,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
-      "line": 20
+      "line": 21
     },
     {
       "name": "DashboardSnapshotRequest",
@@ -19624,7 +19631,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Notifications/Application.Abstractions/Common/IWebPushNotificationSender.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IWebPushSubscriptionReadModelRepository",
@@ -19708,6 +19715,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Notifications/Application.Abstractions/Models/NotificationReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushDeliveryOutcome",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application.Abstractions/Models/WebPushDeliveryOutcome.cs",
       "line": 2
     },
     {
@@ -20254,7 +20268,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "WebPushOutboxReplayStream",
@@ -25178,6 +25192,20 @@
       "line": 5
     },
     {
+      "name": "UserNutritionProfile",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPreferences",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 6
+    },
+    {
       "name": "UserRole",
       "kind": "class",
       "role": "Entity",
@@ -25423,6 +25451,13 @@
       "line": 2
     },
     {
+      "name": "AtomicCommandReceiptsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/AtomicCommandReceiptsUserDataPurgeParticipant.cs",
+      "line": 6
+    },
+    {
       "name": "TelegramIdentityConflictInterceptor",
       "kind": "class",
       "role": "Other",
@@ -25463,6 +25498,13 @@
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
       "line": 14
+    },
+    {
+      "name": "UserProfileWriteGuardInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",
+      "line": 9
     },
     {
       "name": "UserRelatedDataReadService",
@@ -25533,6 +25575,20 @@
       "role": "Configuration",
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserConfiguration.cs",
       "line": 8
+    },
+    {
+      "name": "UserNutritionProfileConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserNutritionProfileConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserPreferencesConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPreferencesConfiguration.cs",
+      "line": 7
     },
     {
       "name": "UserRoleAuditEventConfiguration",
@@ -27901,6 +27957,13 @@
       "line": 4
     },
     {
+      "name": "MailRelayClaimLostException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayClaimLostException.cs",
+      "line": 2
+    },
+    {
       "name": "MailRelayEmailUseCases",
       "kind": "class",
       "role": "Other",
@@ -28867,6 +28930,13 @@
       "line": 4
     },
     {
+      "name": "IIdempotentAtomicCommand",
+      "kind": "interface",
+      "role": "Command",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IIdempotentAtomicCommand.cs",
+      "line": 4
+    },
+    {
       "name": "IQuery",
       "kind": "interface",
       "role": "Query",
@@ -28895,11 +28965,25 @@
       "line": 2
     },
     {
+      "name": "AtomicOperation",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/AtomicOperation.cs",
+      "line": 4
+    },
+    {
       "name": "IAtomicCommandExecutor",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandExecutor.cs",
       "line": 4
+    },
+    {
+      "name": "IAtomicCommandReceiptMaintenance",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandReceiptMaintenance.cs",
+      "line": 2
     },
     {
       "name": "IPostCommitActionQueue",
@@ -28909,10 +28993,24 @@
       "line": 11
     },
     {
+      "name": "IReadSnapshotExecutor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IReadSnapshotExecutor.cs",
+      "line": 2
+    },
+    {
       "name": "IUnitOfWork",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs",
+      "line": 2
+    },
+    {
+      "name": "ReadSnapshotBudget",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/ReadSnapshotBudget.cs",
       "line": 2
     },
     {
@@ -28983,7 +29081,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "LoggingBehavior",
@@ -29012,6 +29110,20 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Application.Runtime/Common/Services/ApplicationRuntimeTelemetry.cs",
       "line": 4
+    },
+    {
+      "name": "CommandExecutionScope",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Runtime/Common/Services/CommandExecutionScope.cs",
+      "line": 4
+    },
+    {
+      "name": "Lease",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Runtime/Common/Services/CommandExecutionScope.cs",
+      "line": 17
     },
     {
       "name": "ModuleOperationTelemetry",
@@ -29686,6 +29798,13 @@
       "line": 6
     },
     {
+      "name": "PersistenceSaveOrder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/PersistenceSaveOrder.cs",
+      "line": 4
+    },
+    {
       "name": "DomainEventNotification",
       "kind": "record",
       "role": "Other",
@@ -29742,11 +29861,46 @@
       "line": 12
     },
     {
+      "name": "AtomicCommandReceipt",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceipt.cs",
+      "line": 2
+    },
+    {
+      "name": "AtomicCommandReceiptConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceiptConfiguration.cs",
+      "line": 5
+    },
+    {
+      "name": "AtomicCommandReceiptMaintenance",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceiptMaintenance.cs",
+      "line": 5
+    },
+    {
+      "name": "AtomicResultJsonConverter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicResultJsonConverter.cs",
+      "line": 6
+    },
+    {
+      "name": "CommitOutcomeUnknownException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/CommitOutcomeUnknownException.cs",
+      "line": 2
+    },
+    {
       "name": "EfAtomicCommandExecutor",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfAtomicCommandExecutor.cs",
-      "line": 5
+      "line": 11
     },
     {
       "name": "EfIndependentModuleContextOptionsFactory",
@@ -29784,6 +29938,13 @@
       "line": 9
     },
     {
+      "name": "EfReadSnapshotExecutor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfReadSnapshotExecutor.cs",
+      "line": 8
+    },
+    {
       "name": "ModuleContextSaveCoordinator",
       "kind": "class",
       "role": "Other",
@@ -29798,10 +29959,24 @@
       "line": 11
     },
     {
+      "name": "ReadSnapshotBudgetInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/ReadSnapshotBudgetInterceptor.cs",
+      "line": 5
+    },
+    {
       "name": "SharedTransactionBoundary",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
+      "line": 8
+    },
+    {
+      "name": "VerifiedTransactionCommit",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/VerifiedTransactionCommit.cs",
       "line": 8
     },
     {
@@ -30063,6 +30238,13 @@
       "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiUsageQuery.cs",
       "implementation": "AiUsageQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAtomicCommandReceiptMaintenance",
+      "interfacePath": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandReceiptMaintenance.cs",
+      "implementation": "AtomicCommandReceiptMaintenance",
+      "implementationPath": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceiptMaintenance.cs",
       "confidence": "naming-convention"
     },
     {
@@ -31374,7 +31556,7 @@
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 121
+      "line": 122
     },
     {
       "service": "IIdempotencyStore",

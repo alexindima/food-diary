@@ -1,0 +1,9 @@
+{
+  "fixture": "C:\\Users\\alexi\\.codex\\worktrees\\wiki-analysis\\FD\\.artifacts\\wiki-analysis\\guard-fixture-fe083b91d47c4c5c8be8d75dd079386d",
+  "guardSha256": "ABFCC040124FEA145F6BF98A8FF9F2537039CF87FCD31DC9DDB3CAB81BFB961A",
+  "rejected": false,
+  "failure": null,
+  "mutationOutput": "mutation-tool-returned-success",
+  "subsequentSnapshotRead": "overlay-mutated",
+  "originalSource": "overlay-original"
+}

@@ -25,6 +25,10 @@ foreach ($path in @(
 }
 
 $frontendPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'
+foreach ($documentationPath in @('docs/reports/wiki-analysis.md', 'Modules/Hydration/AGENTS.md')) {
+    $documentationPlan = Get-IndexPlan $documentationPath
+    Assert-Plan ($documentationPlan -match 'Build-LlmWikiCatalog.ps1') "Documentation inventory change omitted catalog: $documentationPath"
+}
 Assert-Plan ($frontendPlan -match 'Build-LlmWikiFrontendIndex.ps1' -and $frontendPlan -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend builder dependency closure is incorrect.'
 
 foreach ($testPath in @('FoodDiary.Web.Client/src/app/example/example.spec.ts', 'FoodDiary.Web.Client/src/app/example/example.test.ts')) {
@@ -117,4 +121,35 @@ foreach ($expectedTool in @(
 $sharedJsonPlan = Get-IndexPlan '.llm-wiki/tools/LlmWikiJson.ps1'
 Assert-Plan ([regex]::Matches($sharedJsonPlan, 'Build-LlmWiki').Count -eq 12) 'Shared JSON helper did not select all indexes.'
 
-Write-Host 'LLM Wiki index-selection regression passed.'
+# A slow first task waits for the third task to release it. With a two-slot
+# batch barrier the third task cannot start; a refilling pool completes safely.
+$pipelineAst = [Management.Automation.Language.Parser]::ParseFile($pipelinePath, [ref]$null, [ref]$null)
+$poolFunction = $pipelineAst.Find({
+    param($node)
+    $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Invoke-PipelineBatch'
+}, $false)
+. ([scriptblock]::Create($poolFunction.Extent.Text))
+$poolRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-worker-pool'
+try {
+    [IO.File]::WriteAllText((Join-Path $poolRoot 'first.ps1'), @'
+$deadline = [DateTime]::UtcNow.AddSeconds(15)
+while (-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'released'))) {
+    if ([DateTime]::UtcNow -gt $deadline) { exit 2 }
+    Start-Sleep -Milliseconds 25
+}
+'@)
+    [IO.File]::WriteAllText((Join-Path $poolRoot 'second.ps1'), 'exit 0')
+    [IO.File]::WriteAllText((Join-Path $poolRoot 'third.ps1'), "[IO.File]::WriteAllText((Join-Path `$PSScriptRoot 'released'), 'ready')")
+    $toolsRoot = $poolRoot
+    $shellPath = (Get-Process -Id $PID).Path
+    $MaxConcurrency = 2
+    $ToolTimeoutSeconds = 30
+    $ReuseUnchangedChecks = $false
+    $DeferPossiblyConcurrentStale = $false
+    $script:completedToolTimings = [Collections.Generic.List[object]]::new()
+    Invoke-PipelineBatch -StageName 'fixture' -ToolNames @('first.ps1', 'second.ps1', 'third.ps1') -CheckMode $false
+    Assert-Plan ($script:completedToolTimings.Count -eq 3) 'The index worker pool did not refill a free slot.'
+} finally {
+    Remove-Item -LiteralPath $poolRoot -Recurse -Force -ErrorAction SilentlyContinue
+}
+Write-Host 'LLM Wiki index-selection and worker-pool regressions passed.'

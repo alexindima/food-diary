@@ -24,6 +24,8 @@ sources:
 
 # Review Domain Invariants and Persistence Contracts
 
+The fingerprinted CLI helper also contains the shared context-ranking reader. A change to that linked source invalidates the helper build; domain projection selection still uses `DomainDataReader` and its source-lineage checks. Full generation and verification receipts remain separate from query freshness.
+
 For domain changes, inspect all constructors, factories, mutation methods, deserialization/persistence paths, and tests. Test valid boundaries and adjacent invalid values. Preserve aggregate ownership and legal state transitions.
 
 For mapping changes, compare the domain property with EF nullability, key, conversion, uniqueness, relationship, delete behavior, and concurrency configuration. Confirm a migration is present when the physical schema changes, then exercise it against the real provider.

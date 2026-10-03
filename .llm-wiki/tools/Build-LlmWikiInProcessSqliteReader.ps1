@@ -74,6 +74,10 @@ $inputPaths = @(
     $projectPath
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/DomainDataReader.cs')
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/CompiledIndexReader.cs')
+    (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/ContextSearchReader.cs')
+    (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs')
+    (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs')
+    (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs')
     (Join-Path $repositoryRoot 'Directory.Build.props')
     (Join-Path $repositoryRoot 'Directory.Packages.props')
 )

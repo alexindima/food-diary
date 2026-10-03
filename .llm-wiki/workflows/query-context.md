@@ -18,10 +18,16 @@ sources:
   - .llm-wiki/evals/context-search-unseen-20260826.json
   - .llm-wiki/generated/repository-catalog.json
   - FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs
+  - FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs
+  - .llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs
   - AGENTS.md
 ---
 
 # Query Repository Context
+
+CLI and MCP context ranking share `FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs`. The CLI adapter restores indexed layer, module, role, and test features while preserving its response shape. Identical concurrent MCP command-cache misses share a bounded gate; cancelling a waiter leaves the running command intact.
+
+For explicit instruction questions, a bounded subject-specific pool recalls long agent guides whose bodies contain the named subject. Queries requesting both frontend and backend remain low-confidence and ambiguous. Frozen corpus targets and thresholds are unchanged.
 
 ## Retrieval regression checks
 

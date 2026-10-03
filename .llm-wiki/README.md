@@ -3,6 +3,30 @@
 This directory is a compiled navigation and knowledge layer for coding agents.
 It summarizes repository knowledge, but it is not a source of truth.
 
+For a backend checkout without frontend dependencies, use
+`./.llm-wiki/wiki.ps1 graph-build -BackendOnlyRefresh`, then
+`context -Query <question> -ChangeType Backend`. Explicit backend scopes avoid
+the automatic JSON baseline fallback; a broad or frontend request still needs
+the TypeScript projection. Existing explicit JSON readers remain available.
+
+Research exposes a canonical `nextActionState`: `discover`,
+`assessment-complete`, `resolve-question`, `design`, or `implement`.
+Assessment packets do not require implementation design checkpoints.
+Readiness flags and next-action text follow the same state.
+
+Graph snapshot freshness, published generation, and verification are separate
+claims. Use `catalog -CheckFreshness -Format Json` to hash the current source
+and query-index inputs and compare both publication receipts. A full
+`Invoke-LlmWikiIndexPipeline.ps1 -Check` records the generation receipt.
+`verify-full` records the full verification receipt only when that complete
+generation still matches the current inputs. Affected verification never
+promotes a scoped result to the full verification state.
+
+Catalog and C# generators enumerate tracked and non-ignored untracked files
+through Git, including Unicode paths and omitting deleted files. Generator
+workers refill free slots within each dependency stage; concurrency bounds,
+timeouts, stage barriers, and transactional rollback remain in force.
+
 ## Authority Model
 
 When sources disagree, use this precedence:

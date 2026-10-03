@@ -1,7 +1,39 @@
 [CmdletBinding()]
-param()
+param([switch]$PreservedTimestampOnly)
 
 $ErrorActionPreference = 'Stop'
+if ($PreservedTimestampOnly -and [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
+    & (Join-Path $PSScriptRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $PSCommandPath -ToolArguments @{ PreservedTimestampOnly = $true } -PrepareCodeGraph
+    return
+}
+if ($PreservedTimestampOnly) {
+    $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+    $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
+    $preservedTimeFixture = Join-Path $repositoryRoot 'wiki-graph-preserved-time-smoke.cs'
+    if (Test-Path -LiteralPath $preservedTimeFixture) { throw 'Preserved timestamp fixture already exists.' }
+    try {
+        [IO.File]::WriteAllText($preservedTimeFixture, 'public sealed class InventoryAuditAlpha {}', [Text.UTF8Encoding]::new($false))
+        $null = & $manager build -Format Json
+        $timestamp = [IO.File]::GetLastWriteTimeUtc($preservedTimeFixture)
+        foreach ($name in @('InventoryAuditBravo', 'InventoryAuditDelta')) {
+            # Alpha, Bravo and Delta have equal length. The second change is still
+            # the same dirty path, not an addition to the porcelain path inventory.
+            [IO.File]::WriteAllText($preservedTimeFixture, "public sealed class $name {}", [Text.UTF8Encoding]::new($false))
+            [IO.File]::SetLastWriteTimeUtc($preservedTimeFixture, $timestamp)
+            $refresh = & $manager build -Format Json | ConvertFrom-Json
+            $found = & $manager symbol -Query $name -SkipRefresh -Format Json | ConvertFrom-Json
+            $status = & $manager status -SkipRefresh -Format Json | ConvertFrom-Json
+            if (-not $status.changeSetFresh -or @($found.symbols | Where-Object name -eq $name).Count -ne 1) {
+                throw 'Graph claimed freshness without extracting a repeated same-size/same-time dirty edit.'
+            }
+        }
+    } finally {
+        Remove-Item -LiteralPath $preservedTimeFixture -Force -ErrorAction SilentlyContinue
+        $null = & $manager build -Format Json
+    }
+    return
+}
+
 $phaseTimer = [Diagnostics.Stopwatch]::StartNew()
 function Write-CodeGraphRegressionTiming([string]$Phase) {
     Write-Host "Code graph regression '$Phase': $([Math]::Round($phaseTimer.Elapsed.TotalSeconds, 2))s."
@@ -134,6 +166,7 @@ if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged co
 if ([int]$warm.compiledIndexes.refreshed -ne 0) { throw 'Unchanged compiled-index projection was not incremental.' }
 if ([int]$warm.contextSearch.documents -lt 1000) { throw 'Code graph FTS projection contains too few repository documents.' }
 Write-CodeGraphRegressionTiming 'build, projections and incremental no-op'
+& (Join-Path $PSScriptRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $PSCommandPath -ToolArguments @{ PreservedTimestampOnly = $true } -PrepareCodeGraph
 $fts = & $manager search -Query 'Recipe nutrition updater' -Limit 20 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $fts.ready -or
     @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1 -or

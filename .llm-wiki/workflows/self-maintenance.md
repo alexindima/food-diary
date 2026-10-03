@@ -15,6 +15,8 @@ sources:
 
 # Wiki self-maintenance
 
+An unchanged size or timestamp no longer bypasses hashing for dirty source files. The writer refreshes repeated edits to the same dirty path, while read-only guards reject changed dirty snapshot contents. Complete generation and full verification receipts are checked independently of a healthy graph snapshot.
+
 Use `wiki.ps1 health -QualityArea Wiki -Format Json` for read-only diagnosis.
 Use `wiki.ps1 repair-verify` to repair and recheck through the existing writer
 and verification path. A clean task delta does not skip this diagnosis/repair.

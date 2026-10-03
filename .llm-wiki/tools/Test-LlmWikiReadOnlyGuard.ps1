@@ -3,6 +3,38 @@ param([switch]$Isolated)
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+# Exercise the exact guard helpers without paying for a whole repository clone.
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$guardAst = [Management.Automation.Language.Parser]::ParseFile((Join-Path $PSScriptRoot 'Invoke-LlmWikiReadOnlyTool.ps1'), [ref]$null, [ref]$null)
+foreach ($name in @('Get-FileHashOrMissing', 'Get-GuardState', 'Compare-GuardState')) {
+    $definition = $guardAst.FindAll({ param($node) $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name }, $true) | Select-Object -First 1
+    if ($null -eq $definition) { throw "Missing guard helper: $name" }
+    Invoke-Expression $definition.Extent.Text
+}
+$statusFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'guard-status-paths'
+try {
+    & git -C $statusFixture init --quiet
+    $oldName = Join-Path $statusFixture 'старое имя.txt'
+    $newName = Join-Path $statusFixture 'новое имя.txt'
+    [IO.File]::WriteAllText($oldName, 'baseline')
+    & git -C $statusFixture add .
+    & git -C $statusFixture -c user.name='Wiki Tests' -c user.email='wiki@example.invalid' commit --quiet -m baseline
+    Move-Item -LiteralPath $oldName -Destination $newName
+    & git -C $statusFixture add -A
+    $before = Get-GuardState -RepositoryRoot $statusFixture
+    if (-not $before.hashes.Contains('старое имя.txt') -or -not $before.hashes.Contains('новое имя.txt')) { throw 'Guard lost a Unicode rename path.' }
+    [IO.File]::WriteAllText($newName, 'modified')
+    $dirtyBefore = Get-GuardState -RepositoryRoot $statusFixture
+    [IO.File]::WriteAllText($newName, 'mutated!')
+    $dirtyAfter = Get-GuardState -RepositoryRoot $statusFixture
+    if (($dirtyBefore.status -join [char]0) -cne ($dirtyAfter.status -join [char]0)) { throw 'Guard regression did not preserve dirty status.' }
+    if ('новое имя.txt' -notin @(Compare-GuardState -RepositoryRoot $statusFixture -Before $dirtyBefore -After $dirtyAfter)) { throw 'Guard missed dirty content behind stable Unicode status.' }
+} finally {
+    $statusFixturePrefix = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    if (-not [IO.Path]::GetFullPath($statusFixture).StartsWith($statusFixturePrefix, [StringComparison]::Ordinal)) { throw 'Unsafe guard status fixture cleanup path.' }
+    Remove-Item -LiteralPath $statusFixture -Recurse -Force
+}
 if (-not $Isolated) {
     $cloneParent = Join-Path $repositoryRoot '.artifacts/llm-wiki/read-only-guard-fixtures'
     $cloneRoot = Join-Path $cloneParent ([guid]::NewGuid().ToString('N'))
@@ -105,6 +137,22 @@ Start-Sleep -Milliseconds 750
     if ('read-only-safe-control' -notin $safeOutput) {
         throw 'Read-only guard did not preserve output from a legitimate read-only tool.'
     }
+
+    # Changing an existing overlay leaves its porcelain status unchanged.
+    $dirtyOnlyTool = Join-Path $fixtureRoot 'read-only-dirty-overlay-mutation.ps1'
+    [IO.File]::WriteAllText($dirtyOnlyTool, @'
+[IO.File]::WriteAllText((Join-Path (Get-Location) 'read-only-guard-worktree-smoke.tmp'), 'corrupted-overlay')
+'@, [Text.UTF8Encoding]::new($false))
+    $dirtyOnlyRejected = $false
+    try { & $guardPath -ToolPath $dirtyOnlyTool | Out-Null }
+    catch { $dirtyOnlyRejected = $_.Exception.Message -like '*modified its isolated snapshot*' }
+    if (-not $dirtyOnlyRejected) { throw 'Read-only guard accepted a mutation with unchanged Git status.' }
+    [IO.File]::WriteAllText($safeTool, @'
+Get-Content (Join-Path (Get-Location) 'read-only-guard-worktree-smoke.tmp') -Raw
+'@, [Text.UTF8Encoding]::new($false))
+    $recoveredOverlay = & $guardPath -ToolPath $safeTool
+    if ($recoveredOverlay -cne 'concurrent-writer-content') { throw 'A rejected dirty mutation poisoned the next snapshot reader.' }
+    if ([IO.File]::ReadAllText($dirtySentinel) -cne 'concurrent-writer-content') { throw 'Dirty overlay validation changed the source worktree.' }
 
     $cleanToolsRoot = Join-Path $cleanRepositoryRoot '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $cleanToolsRoot -Force

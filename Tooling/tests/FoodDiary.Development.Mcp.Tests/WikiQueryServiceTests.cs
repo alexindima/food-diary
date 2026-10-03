@@ -54,6 +54,32 @@ public sealed class WikiQueryServiceTests {
     }
 
     [Fact]
+    public async Task TraceBackendFlowAsync_CoalescesConcurrentMissesAndAllowsWaiterCancellation() {
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(
+            new ChangeSetSnapshot("abc123", "snapshot-hash", [], DateTimeOffset.UtcNow));
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var completion = new TaskCompletionSource<WikiCommandResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(_ => {
+                started.TrySetResult();
+                return completion.Task;
+            });
+        WikiQueryService service = new(_executor, _snapshots);
+        Task<WikiCommandResult> first = service.TraceBackendFlowAsync("GetUser", CancellationToken.None);
+        await started.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        using var cancellation = new CancellationTokenSource();
+        Task<WikiCommandResult> cancelled = service.TraceBackendFlowAsync("GetUser", cancellation.Token);
+        Task<WikiCommandResult> second = service.TraceBackendFlowAsync("GetUser", CancellationToken.None);
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => cancelled);
+        WikiCommandResult expected = CreateResult("trace", []);
+        completion.SetResult(expected);
+        Assert.Same(expected, await first);
+        Assert.Same(expected, await second);
+        await _executor.Received(1).ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task GetTestPlanAsync_UsesCurrentChangeSetWhenQueryIsMissing() {
         WikiQueryService service = new(_executor, _snapshots);
 

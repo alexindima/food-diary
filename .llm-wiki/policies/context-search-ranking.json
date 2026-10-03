@@ -40,6 +40,7 @@
   "applicationAbstractionPenalty": 100,
   "interfacePathPenalty": 35,
   "agentGuideBoost": 120,
+  "guidanceSubjectBoost": 200,
   "companionFilePenalty": 100,
   "crossLayerPenalty": 250,
   "documentationImplementationPenalty": {
@@ -55,6 +56,7 @@
   "unrequestedAdminPenalty": 180,
   "unrequestedAdminPenaltyExemptionMatches": 5,
   "confidenceCalibration": {
+    "multiLayerQueryPattern": "^(?=[\\s\\S]*(?:frontend|front-end|клиент))(?=[\\s\\S]*(?:backend|back-end|сервер))",
     "ambiguityMaximumMargin": 15,
     "highMinimumMargin": 100,
     "mediumMinimumMargin": 30,

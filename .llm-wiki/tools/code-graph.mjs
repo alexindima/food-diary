@@ -1077,24 +1077,31 @@ function build(database, force = false, skipTypeScript = false) {
   let compiledIndexes;
   let contextSearch;
   const candidates = [];
+  const dirtyPaths = new Set(startingChangeSet.changedPaths);
+  let verifiedDirtyFiles = 0;
 
   for (const path of knownPaths) {
     if (skipTypeScript && languageOf(path) === 'typescript') continue;
     const absolutePath = resolve(repositoryRoot, path);
     const stat = statSync(absolutePath);
     const prior = existing.get(path);
-    if (!force && prior && prior.size === stat.size && Math.abs(prior.mtime_ms - stat.mtimeMs) < 0.001) {
+    const metadataMatches = prior && prior.size === stat.size && Math.abs(prior.mtime_ms - stat.mtimeMs) < 0.001;
+    if (!force && metadataMatches && !dirtyPaths.has(path)) {
       unchanged += 1;
       continue;
     }
     const text = readFileSync(absolutePath, 'utf8');
     const contentHash = sha256(text);
-    scanned += 1;
+    if (dirtyPaths.has(path)) verifiedDirtyFiles += 1;
     if (!force && prior && prior.content_hash === contentHash) {
-      candidates.push({ path, stat, prior, text: null, contentHash, metadataOnly: true });
+      if (!metadataMatches) {
+        scanned += 1;
+        candidates.push({ path, stat, prior, text: null, contentHash, metadataOnly: true });
+      }
       unchanged += 1;
       continue;
     }
+    scanned += 1;
     candidates.push({ path, stat, prior, text, contentHash, metadataOnly: false });
   }
   const typescriptCandidates = candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript');
@@ -1153,6 +1160,7 @@ function build(database, force = false, skipTypeScript = false) {
     databasePath: database.filename ?? defaultDatabasePath,
     files: knownPaths.size,
     scanned,
+    verifiedDirtyFiles,
     updated,
     unchanged,
     removed,
@@ -2189,6 +2197,10 @@ function searchContext(database, query, limit, filters = {}, batchState) {
   ])].slice(0, maximumQueryTerms);
   const explicitlyRequestsTest = boostTerms.includes('test');
   const explicitlyRequestsMcp = /(^|\W)mcp(\W|$)/iu.test(String(query));
+  const requestsGuidance = boostTerms.some((term) =>
+    ['agent', 'agents', 'guide', 'guidance', 'instruction', 'instructions'].includes(term)) ||
+    (boostTerms.some((term) => ['policy', 'rule', 'rules'].includes(term)) &&
+      boostTerms.some((term) => ['repository', 'project', 'module', 'convention', 'access', 'readonly'].includes(term)));
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
   const indexedDocuments = batchState?.indexedDocuments ?? database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
@@ -2243,6 +2255,28 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       candidateIndexes.set(key, candidates.length);
       candidates.push(identityCandidate);
     }
+  }
+  // Recall long guides by the literal subject, independently of the broad OR pool.
+  const guidanceSubjects = requestsGuidance ? [...new Set([...String(query).matchAll(/\b[A-Z][A-Za-z0-9]{3,}\b/g)]
+    .map(match => match[0].toLowerCase()).filter(term => terms.includes(term)))].slice(0, 8) : [];
+  if (guidanceSubjects.length > 0) {
+    const guidanceMatch = guidanceSubjects.map(term => `body : "${term}"*`).join(' AND ');
+    const guides = database.prepare(`
+      SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
+        category, title, features.layer, features.module, features.role, features.is_test isTest,
+        features.extension, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+      FROM context_search
+      JOIN context_search_features features ON features.context_rowid = context_search.rowid
+      WHERE context_search MATCH ? AND context_search.record_type = 'agent-guide'
+      ORDER BY lexicalRank, context_search.path
+      LIMIT ?
+    `).all(guidanceMatch, identityLimit).map(item => ({ ...item, guidanceSubjectMatch: true }));
+    const guideKeys = new Set(guides.map(item => `${item.recordType}\0${item.recordKey}\0${item.path}`));
+    for (let index = candidates.length - 1; index >= 0; index -= 1) {
+      const item = candidates[index];
+      if (guideKeys.has(`${item.recordType}\0${item.recordKey}\0${item.path}`)) candidates.splice(index, 1);
+    }
+    candidates.unshift(...guides);
   }
   const normalizedQueryForRuntime = expandSearchText(query).toLowerCase();
   const runtimeSuffixes = /(^|\s)(?:node|javascript|mjs)(\s|$)/.test(normalizedQueryForRuntime)
@@ -2633,12 +2667,12 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     }
     if (isCode) score += 20;
     if (item.recordType === 'agent-guide') {
-      const requestsGuidance = boostTerms.some((term) =>
-        ['agent', 'agents', 'guide', 'guidance', 'instruction', 'instructions'].includes(term)) ||
-        (boostTerms.some((term) => ['policy', 'rule', 'rules'].includes(term)) &&
-          boostTerms.some((term) => ['repository', 'project', 'module', 'convention', 'access', 'readonly'].includes(term)));
       score += requestsGuidance ? Number(contextSearchRanking.agentGuideBoost ?? 15) : -Number(contextSearchRanking.agentGuideBoost ?? 15);
       reasons.push(requestsGuidance ? 'agent guide affinity' : 'agent guide penalty for code intent');
+      if (item.guidanceSubjectMatch) {
+        score += Number(contextSearchRanking.guidanceSubjectBoost ?? 0);
+        reasons.push('requested guidance with literal subject');
+      }
     }
     if (item.recordType === 'code' && /^[A-Za-z_$][\w$]*$/.test(query.trim()) && /[a-z][A-Z]/.test(query.trim()) &&
         String(item.title).split('\n')[0].split(/\s+/).some(symbol => symbol.toLowerCase() === query.trim().toLowerCase())) {
@@ -2714,7 +2748,9 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       && documentationRecordTypes.includes(String(item.recordType ?? '').toLowerCase());
     const exact = exactFileIdentity(item.path, query);
     const exactCount = records.filter(candidate => exactFileIdentity(candidate.path, query)).length;
-    const ambiguous = unmatchedIdentifier || (exact && exactCount > 1) || (!exact && ((scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch));
+    const multiLayerRequest = !exact && Boolean(confidenceCalibration.multiLayerQueryPattern)
+      && new RegExp(confidenceCalibration.multiLayerQueryPattern, 'iu').test(query);
+    const ambiguous = multiLayerRequest || unmatchedIdentifier || (exact && exactCount > 1) || (!exact && ((scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch));
     const confidence = ambiguous
       ? 'low'
       : exact ? 'high' : scoreMargin === null
@@ -2728,7 +2764,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       scoreMargin,
       confidence,
       ambiguous,
-      ambiguityReason: unmatchedIdentifier ? 'unmatched-query-identifier' : exact && exactCount > 1 ? 'multiple-exact-identities' : !exact && recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
+      ambiguityReason: multiLayerRequest ? 'multi-layer-request' : unmatchedIdentifier ? 'unmatched-query-identifier' : exact && exactCount > 1 ? 'multiple-exact-identities' : !exact && recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
       sameNameCandidateCount,
     };
   });

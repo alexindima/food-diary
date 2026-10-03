@@ -12,6 +12,10 @@ public sealed class WikiQueryService(
     private readonly WikiQueryCache _queryCache = queryCache ??
         new WikiQueryCache(TimeProvider.System, new WikiRuntimeTelemetry());
     private readonly WikiRuntimeTelemetry _telemetry = telemetry ?? new WikiRuntimeTelemetry();
+    // A bounded set of gates coalesces identical cache misses without retaining
+    // user queries or coupling a waiter's cancellation to the running command.
+    private readonly SemaphoreSlim[] _queryGates =
+        [.. Enumerable.Range(0, 64).Select(_ => new SemaphoreSlim(1, 1))];
 
     public Task<WikiCommandResult> GetTestPlanAsync(
         string? intent,
@@ -331,12 +335,23 @@ public sealed class WikiQueryService(
             return cached!;
         }
 
-        WikiCommandResult? result = await executor.ExecuteAsync(command, arguments, cancellationToken)
-            .ConfigureAwait(false);
-        if (result is not null) {
-            _queryCache.Set(snapshot.Fingerprint, command, arguments, result);
+        string key = WikiQueryCache.CreateKey(snapshot.Fingerprint, command, arguments);
+        int gateIndex = Convert.ToByte(key[..2], 16) % _queryGates.Length;
+        SemaphoreSlim gate = _queryGates[gateIndex];
+        await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try {
+            if (_queryCache.TryGet(snapshot.Fingerprint, command, arguments, out cached, recordMetrics: false)) {
+                return cached!;
+            }
+            WikiCommandResult? result = await executor.ExecuteAsync(command, arguments, cancellationToken)
+                .ConfigureAwait(false);
+            if (result is not null) {
+                _queryCache.Set(snapshot.Fingerprint, command, arguments, result);
+            }
+            return result!;
+        } finally {
+            gate.Release();
         }
-        return result!;
     }
 
     private static bool AddChangeSet(

@@ -26,6 +26,8 @@ sources:
 
 # Compact LLM Wiki developer experience
 
+Core help groups daily code discovery, research, next action, test planning, refresh, verification, and backend bootstrap while retaining the complete catalog. Machine clients should use research `nextActionState` together with its grounded evidence. `catalog -CheckFreshness` distinguishes complete generation and full verification from graph freshness.
+
 Normal development has five user-facing steps:
 
 ```text

@@ -29,4 +29,6 @@ public sealed record ServerStatus(
     IReadOnlyList<WikiIndexStatus> Indexes,
     WikiRuntimeMetrics RuntimeMetrics,
     DateTimeOffset CheckedAtUtc,
-    bool ReadOnly = true);
+    bool ReadOnly = true,
+    string GenerationFreshness = "unverified",
+    DateTimeOffset? LastGenerationCheckAtUtc = null);

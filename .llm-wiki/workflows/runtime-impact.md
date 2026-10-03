@@ -19,6 +19,8 @@ sources:
 
 # Review runtime and integration impact
 
+The refreshed topology includes the shared local ranking reader without introducing a host, worker, provider, or recurring job. Graph snapshot freshness, projection generation, and full verification remain independent evidence when interpreting this runtime inventory.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 topology
 ./.llm-wiki/wiki.ps1 topology -Query MailRelay

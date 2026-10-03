@@ -1,0 +1,56 @@
+[
+  {
+    "name": "brief-json-facade",
+    "firstSeconds": 15.717,
+    "warmMeanSeconds": 5.461,
+    "lastSeconds": 5.362
+  },
+  {
+    "name": "context-json-direct",
+    "firstSeconds": 78.017,
+    "warmMeanSeconds": 2.637,
+    "lastSeconds": 2.433
+  },
+  {
+    "name": "context-json-facade",
+    "firstSeconds": 68.617,
+    "warmMeanSeconds": 8.594,
+    "lastSeconds": 8.257
+  },
+  {
+    "name": "context-sqlite-direct",
+    "firstSeconds": 77.929,
+    "warmMeanSeconds": 6.83,
+    "lastSeconds": 5.031
+  },
+  {
+    "name": "context-sqlite-facade",
+    "firstSeconds": 84.951,
+    "warmMeanSeconds": 9.401,
+    "lastSeconds": 11.786
+  },
+  {
+    "name": "facade-help",
+    "firstSeconds": 2.45,
+    "warmMeanSeconds": 2.568,
+    "lastSeconds": 2.924
+  },
+  {
+    "name": "graph-no-change",
+    "firstSeconds": 47.012,
+    "warmMeanSeconds": 7.309,
+    "lastSeconds": 6.45
+  },
+  {
+    "name": "process-empty",
+    "firstSeconds": 1.412,
+    "warmMeanSeconds": 0.646,
+    "lastSeconds": 0.698
+  },
+  {
+    "name": "research-json-facade",
+    "firstSeconds": 28.826,
+    "warmMeanSeconds": 6.049,
+    "lastSeconds": 6.437
+  }
+]
