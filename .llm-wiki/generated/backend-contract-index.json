@@ -82350,7 +82350,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "IImageAssetCleanupService",
@@ -142214,7 +142214,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/UserProfilePatchIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RegisterHttpRequest",
@@ -152143,7 +152143,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "UpdateUserCommand",
@@ -152169,7 +152169,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UpdateUserHttpRequestJsonTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "UpdateUserCommand",
@@ -152234,7 +152234,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UpdateUserHttpRequestJsonTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 13
     },
     {
       "contract": "UpdateUserHttpRequest",

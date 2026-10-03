@@ -37753,7 +37753,6 @@
         "cropAspectRatio",
         "cropEnabled",
         "cropSize",
-        "deleteOnClear",
         "label",
         "maxSizeMb",
         "recommendedSize",

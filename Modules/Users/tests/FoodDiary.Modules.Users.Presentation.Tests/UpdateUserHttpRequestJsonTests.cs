@@ -12,6 +12,36 @@ public sealed class UpdateUserHttpRequestJsonTests {
     [Theory]
     [InlineData("{}", false)]
     [InlineData("{\"language\":\"ru\"}", false)]
+    [InlineData("{\"profileImage\":null}", true)]
+    [InlineData("{\"profileImageAssetId\":null}", true)]
+    [InlineData("{\"profileImage\":null,\"profileImageAssetId\":null}", true)]
+    [InlineData("{\"profileImageSpecified\":true}", false)]
+    public void Deserialize_DistinguishesClearedAvatarFromOmittedImage(string json, bool specified) {
+        UpdateUserHttpRequest request = Assert.IsType<UpdateUserHttpRequest>(JsonSerializer.Deserialize<UpdateUserHttpRequest>(json, Options));
+        UpdateUserCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Multiple(
+            () => Assert.Null(command.ProfileImage),
+            () => Assert.Null(command.ProfileImageAssetId),
+            () => Assert.Equal(specified, request.ProfileImageSpecified),
+            () => Assert.Equal(specified, command.ProfileImageSpecified));
+    }
+
+    [Fact]
+    public void Deserialize_SelectedAvatarRetainsValueAndPresence() {
+        var assetId = Guid.NewGuid();
+        UpdateUserHttpRequest request = Assert.IsType<UpdateUserHttpRequest>(JsonSerializer.Deserialize<UpdateUserHttpRequest>(
+            $"{{\"profileImageAssetId\":\"{assetId}\"}}", Options));
+        UpdateUserCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Multiple(
+            () => Assert.Equal(assetId, command.ProfileImageAssetId),
+            () => Assert.True(command.ProfileImageSpecified));
+    }
+
+    [Theory]
+    [InlineData("{}", false)]
+    [InlineData("{\"language\":\"ru\"}", false)]
     [InlineData("{\"birthDate\":null}", true)]
     [InlineData("{\"birthDateSpecified\":true}", false)]
     public void Deserialize_DistinguishesClearFromOmittedDate(string json, bool specified) {
@@ -38,11 +68,12 @@ public sealed class UpdateUserHttpRequestJsonTests {
 
     [Fact]
     public void Serialize_DoesNotExposePresenceMetadata() {
-        var request = new UpdateUserHttpRequest { BirthDate = null };
+        var request = new UpdateUserHttpRequest { BirthDate = null, ProfileImage = null };
         using var json = JsonDocument.Parse(JsonSerializer.Serialize(request, Options));
 
         Assert.Multiple(
             () => Assert.Equal(JsonValueKind.Null, json.RootElement.GetProperty("birthDate").ValueKind),
-            () => Assert.False(json.RootElement.TryGetProperty("birthDateSpecified", out _)));
+            () => Assert.False(json.RootElement.TryGetProperty("birthDateSpecified", out _)),
+            () => Assert.False(json.RootElement.TryGetProperty("profileImageSpecified", out _)));
     }
 }

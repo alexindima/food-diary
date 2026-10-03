@@ -91,8 +91,8 @@ export class UpdateUserDto {
     public pushNotificationsEnabled?: boolean;
     public fastingPushNotificationsEnabled?: boolean;
     public socialPushNotificationsEnabled?: boolean;
-    public profileImage?: string;
-    public profileImageAssetId?: string;
+    public profileImage?: string | null;
+    public profileImageAssetId?: string | null;
     public dashboardLayout?: DashboardLayoutSettings | null;
     public isActive?: boolean;
 
@@ -120,8 +120,8 @@ export class UpdateUserDto {
             (formValues as { socialPushNotificationsEnabled?: boolean | null }).socialPushNotificationsEnabled,
         );
         const normalizedImage = normalizeProfileImage(formValues.profileImage);
-        this.profileImage = normalizedImage?.url;
-        this.profileImageAssetId = normalizedImage?.assetId;
+        this.profileImage = normalizedImage === null ? null : normalizedImage?.url;
+        this.profileImageAssetId = normalizedImage === null ? null : normalizedImage?.assetId;
     }
 }
 
@@ -185,19 +185,23 @@ const normalizeUiStyle = normalizeLowercaseString;
 
 const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined => value ?? undefined;
 
-const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | undefined => {
-    if (value === null || value === undefined || value === '') {
+const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | null | undefined => {
+    if (value === undefined) {
         return undefined;
+    }
+
+    if (value === null || value === '') {
+        return null;
     }
 
     if (typeof value === 'string') {
         const normalized = normalizeString(value);
-        return normalized !== undefined ? { url: normalized } : undefined;
+        return normalized !== undefined ? { url: normalized } : null;
     }
 
     const url = normalizeString(value.url ?? undefined);
     if (url === undefined) {
-        return undefined;
+        return null;
     }
 
     const assetId = value.assetId ?? undefined;

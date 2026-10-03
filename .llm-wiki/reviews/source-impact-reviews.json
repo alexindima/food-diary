@@ -52,7 +52,7 @@
       "reason": "Reviewed frontend ownership against AGENTS and FRONTEND_ARCHITECTURE: pure shared models, capability contracts, composition providers and independent scoped import rules match final code. Combined npm verify passed 5042 tests; no backend ownership moved by the refactor.",
       "baseRef": "HEAD",
       "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:21.5077100Z"
+      "reviewedAtUtc": "2026-10-03T04:42:21.50771Z"
     },
     {
       "pageId": "module.mail-services",
@@ -131,7 +131,7 @@
       "reason": "Verified current source folders and renamed shared models/helpers against the regenerated frontend index. Old feature-private imports were replaced with explicit contracts and composition; strict dependency and import-boundary checks passed.",
       "baseRef": "HEAD",
       "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:22.4609950Z"
+      "reviewedAtUtc": "2026-10-03T04:42:22.460995Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "4f978399341a7a22d87b3fd2a8d5e7c33aa564fe8398652290374cf00cd447ee"
+          "sha256": "faf216db6616279b469e54a48763fccabc47393daeca11add45663ef96413944"
         }
       ],
-      "reason": "Reviewed explicit nullable birthDate PATCH semantics: omitted preserves, explicit null clears, internal presence flag cannot be bound or serialized. 29 presentation tests and 6 real PostgreSQL HTTP/Swagger contract tests passed; birthdate snapshot included.",
+      "reason": "Avatar PATCH semantics were traced through JSON deserialization, request mapping, command, domain and post-save cleanup. Omitting both properties preserves the avatar; explicit null clears it. The internal specified flag is JsonIgnore, covered by negative serialization assertions and 23 HTTP/Swagger integration tests. Optional parameters retain existing callers; no routes, migrations or status-code changes.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:25.2872542Z"
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:20:43.6504596Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -503,7 +503,7 @@
       "reason": "Verified clearing DOB touches owning NutritionProfile and omission preserves existing data; 323 Users domain and 225 application tests passed. Combined backend provider fixtures pass against fresh schema. Existing local database remains on old schema; no reset or reseeding occurred.",
       "baseRef": "HEAD",
       "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:27.3454010Z"
+      "reviewedAtUtc": "2026-10-03T04:42:27.345401Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -775,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b0ce49fabe564be0ffb9b83eb4e1631f9c89107f42d4150dcc1aee7f41010722"
+          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         }
       ],
-      "reason": "DOB field-presence tracking changes only authenticated owner profile update and remains hidden JSON metadata. Omitted fields preserve data, spoofed presence flag is ignored, credentials stay outside repo and auth values are never logged. Tests use synthetic QA fixtures; local QA DOB/name/language restored.",
+      "reason": "This bounded change clears the authenticated user profile image through the existing authorized PATCH and post-save asset cleanup. No new health fields, credential handling, provider sharing, logs, caches or export surfaces. Native evidence used a dedicated loopback database and a synthetic account; its own unlinked test asset was deleted successfully. Credentials and confirmation tokens stayed outside the repository and output.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:32.1803732Z"
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:21:07.4340517Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f881e777bcef83edc4f9cecdeb425baac362ad2a60d7aa1864f7a313cfa89d04"
+          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
         }
       ],
-      "reason": "Reviewed UI-kit empty native date label fix and all selector consumers: only profile opts into manual mode; default picker mode and public inputs/outputs remain unchanged. Native RU390 and EN1280 evidence verifies label above entry, keyboard birthday input and clearing, with fixture restored; 490 UI-kit tests and targeted lint/format passed. Final full frontend verification is running before commit.",
+      "reason": "Verified bounded avatar clearing: explicit null photo fields reach the Users domain; omitted fields retain the avatar; JSON presence flags are ignored on input; selected assets retain ownership checks; cleanup runs only for an actually changed reference and the UI does not delete before saving. Solution build passed, 589 Users tests, 23 PostgreSQL HTTP/Swagger tests, 2116 architecture tests, 5052 frontend tests and all verification gates passed. Native 390px Russian crop/upload/save/reload, discard without deletion, explicit removal and final retained goals were checked; no migration or provider/deployment change.",
       "baseRef": "HEAD",
-      "gitHead": "7db90bcba6576e8c1cfae705d6934ee64f621c7b",
-      "reviewedAtUtc": "2026-10-03T05:56:50.5229339Z"
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:13:54.4555561Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "17da5a05ffaec7b15accf5fd68e7cfccf548de0a97e899ce51b4334aabfbda0d"
+          "sha256": "8743fd4e4f1d1c066d840490821f3174dad3027c7f81dd28553aa64887744cbb"
         }
       ],
-      "reason": "Reviewed current topology after committed backend hardening and pure frontend integration. API5309 compiles and fresh PostgreSQL HTTP fixtures pass; existing local DB lacks UserNutritionProfiles migration. API5308 supplies the browser compatibility checks; no deployment or provider configuration changed by this commit.",
+      "reason": "The existing image cleanup is evaluated against the resulting saved profile asset ID, so omitted image fields do not trigger cleanup and explicit removal only cleans the old asset after persistence. No new provider, worker, retry, deployment or database configuration. Preserve/clear and cleanup ordering were covered by Users tests; native cancellation made no deletion request and confirmed saved removal survived reload.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:36.7378709Z"
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:21:08.139069Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,13 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f881e777bcef83edc4f9cecdeb425baac362ad2a60d7aa1864f7a313cfa89d04"
+          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "8743fd4e4f1d1c066d840490821f3174dad3027c7f81dd28553aa64887744cbb"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         }
       ],
-      "reason": "Reviewed narrow generated quality delta for manual date label positioning and component documentation. No API payload, validation, model value, authentication, ownership, storage or provider behavior changed. Existing manual date bounds and reset remain covered; native checks use a synthetic QA owner and restore its preferences. No new security finding or broad security audit is claimed.",
+      "reason": "Verified bounded avatar clearing: explicit null photo fields reach the Users domain; omitted fields retain the avatar; JSON presence flags are ignored on input; selected assets retain ownership checks; cleanup runs only for an actually changed reference and the UI does not delete before saving. Solution build passed, 589 Users tests, 23 PostgreSQL HTTP/Swagger tests, 2116 architecture tests, 5052 frontend tests and all verification gates passed. Native 390px Russian crop/upload/save/reload, discard without deletion, explicit removal and final retained goals were checked; no migration or provider/deployment change.",
       "baseRef": "HEAD",
-      "gitHead": "7db90bcba6576e8c1cfae705d6934ee64f621c7b",
-      "reviewedAtUtc": "2026-10-03T05:56:51.4445415Z"
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:13:55.4154625Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1065,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "060662c36c41e853ecc12864c36cc7a02e3e78abf6c3107982b0d8ab19394dbb"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "74d4482668b69123f9a98a1302a94c37ef9214718038bf4d695e9a5df316e240"
+          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
         }
       ],
-      "reason": "Checked combined profile trace from date control through nullable DTO and normalizeDate to JSON field-presence binding, command, handler and NutritionProfile update. Both regenerated frontend and frontend-contract indexes match final source; tests and native proof preserve omission and clear explicit null correctly.",
-      "baseRef": "c1e5a7716",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:46:08.4895776Z"
+      "reason": "Verified current sources for the profile image selector, UpdateUserDto, PATCH request presence tracking, HTTP mapping, UpdateUserCommand/handler, UserProfileMediaUpdate and User.Profile domain application. The reproduced defect was omission of cleared fields plus premature selector deletion. The focused fix is supported by 589 Users tests, 23 HTTP/Swagger tests, 2116 architecture tests and native profile evidence.",
+      "baseRef": "HEAD",
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:21:09.0564850Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,17 +1159,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "060662c36c41e853ecc12864c36cc7a02e3e78abf6c3107982b0d8ab19394dbb"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
         }
       ],
-      "reason": "Reviewed combined changes relative to committed master: nullable UpdateUserDto and normalizeDate distinguish omission from explicit null; internal JSON presence flag is unbindable/hidden and owning NutritionProfile clears only explicitly. Pure shared model moves and generated frontend-contract index match current source. 5042 frontend, 577 Users, 6 PostgreSQL HTTP/Swagger and 2116 architecture checks pass; RU/EN native compatible API persistence verified.",
-      "baseRef": "c1e5a7716",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:46:07.0235558Z"
+      "reason": "The existing profile image selector now stages removal until profile Save. Discard sends no DELETE and restores the saved image; Save serializes both image fields as null. Existing selected-image and omitted-field payloads have regression tests. Native mobile Russian flows verified upload/crop/save, removal/discard and removal/save/reload; 5052 frontend tests and all verification gates passed.",
+      "baseRef": "HEAD",
+      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
+      "reviewedAtUtc": "2026-10-03T07:21:06.6730817Z"
     },
     {
       "pageId": "workflow.query-context",

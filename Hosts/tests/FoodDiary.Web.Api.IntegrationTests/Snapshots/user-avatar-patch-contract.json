@@ -1,0 +1,14 @@
+{
+  "omitted": {
+    "request": { "firstName": "Updated" },
+    "response": { "profileImage": "https://example.test/avatar.png", "profileImageAssetId": null }
+  },
+  "clearedUrl": {
+    "request": { "profileImage": null },
+    "response": { "profileImage": null, "profileImageAssetId": null }
+  },
+  "clearedAsset": {
+    "request": { "profileImageAssetId": null },
+    "response": { "profileImage": null, "profileImageAssetId": null }
+  }
+}

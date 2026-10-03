@@ -191,7 +191,7 @@ public sealed partial class User {
 
     public void UpdateProfileMedia(UserProfileMediaUpdate update) {
         EnsureNotDeleted();
-        if (ApplyProfileMediaChanges(update.ProfileImage, update.ProfileImageAssetId)) {
+        if (ApplyProfileMediaChanges(update.ProfileImage, update.ProfileImageAssetId, update.ProfileImageSpecified)) {
             SetModified();
         }
     }
@@ -292,17 +292,17 @@ public sealed partial class User {
         return changed;
     }
 
-    private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId) {
+    private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId, bool profileImageSpecified = false) {
         string? normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
         UserProfileMediaState state = GetProfileMediaState();
         bool changed = false;
 
-        if (profileImage is not null && !string.Equals(state.ProfileImage, normalizedProfileImage, StringComparison.Ordinal)) {
+        if ((profileImage is not null || profileImageSpecified) && !string.Equals(state.ProfileImage, normalizedProfileImage, StringComparison.Ordinal)) {
             state = state with { ProfileImage = normalizedProfileImage };
             changed = true;
         }
 
-        if (profileImageAssetId.HasValue && state.ProfileImageAssetId != profileImageAssetId) {
+        if ((profileImageAssetId.HasValue || profileImageSpecified) && state.ProfileImageAssetId != profileImageAssetId) {
             state = state with { ProfileImageAssetId = profileImageAssetId };
             changed = true;
         }

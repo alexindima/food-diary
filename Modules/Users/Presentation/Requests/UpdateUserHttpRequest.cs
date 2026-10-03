@@ -26,6 +26,8 @@ public sealed record UpdateUserHttpRequest(
     bool? IsActive,
     string? TimeZoneId = null) {
     private DateTime? _birthDate = BirthDate;
+    private string? _profileImage = ProfileImage;
+    private Guid? _profileImageAssetId = ProfileImageAssetId;
 
     [JsonConstructor]
     public UpdateUserHttpRequest() : this(
@@ -62,4 +64,24 @@ public sealed record UpdateUserHttpRequest(
 
     [JsonIgnore]
     public bool BirthDateSpecified { get; private init; } = BirthDate.HasValue;
+
+    /// <summary>Omit both image fields to preserve the avatar, or send null to clear it.</summary>
+    public string? ProfileImage {
+        get => _profileImage;
+        init {
+            _profileImage = value;
+            ProfileImageSpecified = true;
+        }
+    }
+
+    public Guid? ProfileImageAssetId {
+        get => _profileImageAssetId;
+        init {
+            _profileImageAssetId = value;
+            ProfileImageSpecified = true;
+        }
+    }
+
+    [JsonIgnore]
+    public bool ProfileImageSpecified { get; private init; } = ProfileImage is not null || ProfileImageAssetId.HasValue;
 }

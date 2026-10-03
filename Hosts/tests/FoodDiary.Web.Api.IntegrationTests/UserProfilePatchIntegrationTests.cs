@@ -12,6 +12,37 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
     : IClassFixture<PostgresApiWebApplicationFactory> {
     [RequiresDockerTheory]
     [InlineData("omitted")]
+    [InlineData("clearedUrl")]
+    [InlineData("clearedAsset")]
+    public async Task UpdateAvatar_PersistsPatchContractAgainstPostgres(string scenario) {
+        using var snapshot = JsonDocument.Parse(await File.ReadAllTextAsync(
+            SnapshotPathResolver.GetPath("user-avatar-patch-contract.json")));
+        JsonElement contract = snapshot.RootElement.GetProperty(scenario);
+        using HttpClient client = factory.CreateClient();
+        using HttpResponseMessage registered = await client.PostAsJsonAsync("/api/v1/auth/register",
+            new RegisterHttpRequest($"avatar-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
+        Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
+        using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+
+        using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
+            new { profileImage = "https://example.test/avatar.png", firstName = "QA" });
+        Assert.Equal(HttpStatusCode.OK, initialized.StatusCode);
+        using HttpResponseMessage updated = await client.PatchAsJsonAsync("/api/v1/users/info", contract.GetProperty("request"));
+        Assert.Equal(HttpStatusCode.OK, updated.StatusCode);
+        using HttpResponseMessage reloaded = await client.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.OK, reloaded.StatusCode);
+        using var profile = JsonDocument.Parse(await reloaded.Content.ReadAsStringAsync());
+        JsonElement expected = contract.GetProperty("response");
+
+        Assert.Multiple(
+            () => Assert.Equal(expected.GetProperty("profileImage").GetString(), profile.RootElement.GetProperty("profileImage").GetString()),
+            () => Assert.Equal(JsonValueKind.Null, profile.RootElement.GetProperty("profileImageAssetId").ValueKind));
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("omitted")]
     [InlineData("cleared")]
     [InlineData("replaced")]
     public async Task UpdateBirthDate_PersistsPatchContractAgainstPostgres(string scenario) {

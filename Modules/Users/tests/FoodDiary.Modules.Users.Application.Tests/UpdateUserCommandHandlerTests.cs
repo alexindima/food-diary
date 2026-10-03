@@ -18,6 +18,30 @@ public sealed class UpdateUserCommandHandlerTests {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
+    public async Task Handle_NullAvatarClearsAndCleansUpOnlyWhenSpecified(bool specified) {
+        var user = User.Create("avatar@example.com", "hash");
+        var assetId = ImageAssetId.New();
+        const string originalImage = "https://example.test/avatar.png";
+        user.UpdateProfileMedia(new FoodDiary.Modules.Users.Domain.ValueObjects.UserProfileMediaUpdate(originalImage, assetId));
+        IImageAssetCleanupService cleanup = CreateImageAssetCleanupService(errorCode: null, requestedAssetIds: out List<ImageAssetId> requestedAssetIds);
+        UpdateUserCommandHandler handler = new(CreateUserRepository(user),
+            CreateProfileImageService(cleanup, FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", ProfileImageSpecified = specified };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        ImageAssetId[] expectedCleanup = specified ? [assetId] : [];
+        Assert.Multiple(
+            () => Assert.Equal(specified ? null : originalImage, user.ProfileImage),
+            () => Assert.Equal(specified ? null : (ImageAssetId?)assetId, user.ProfileImageAssetId),
+            () => Assert.Equal("Updated", user.FirstName),
+            () => Assert.Equal(expectedCleanup, requestedAssetIds));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
     public async Task Handle_NullBirthDateClearsOnlyWhenSpecified(bool specified) {
         var user = User.Create("birthdate@example.com", "hash");
         var originalDate = new DateTime(2000, 10, 2, 0, 0, 0, DateTimeKind.Utc);

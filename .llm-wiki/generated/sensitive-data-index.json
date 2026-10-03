@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1597,
+    "candidateFields": 1598,
     "credential": 156,
     "identity": 175,
     "health": 741,
     "financial": 132,
-    "privateContent": 393,
+    "privateContent": 394,
     "boundaryFiles": 205,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -7036,14 +7036,14 @@
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 55
+      "line": 57
     },
     {
       "category": "health",
       "name": "BirthDateSpecified",
       "type": "bool",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 64
+      "line": 66
     },
     {
       "category": "health",
@@ -11195,6 +11195,13 @@
       "type": "Guid?",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
       "line": 24
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
+      "line": 77
     }
   ],
   "boundaryFiles": [
@@ -12429,7 +12436,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 10
+      "fieldCount": 11
     },
     {
       "path": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",

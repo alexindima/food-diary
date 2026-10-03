@@ -46,7 +46,6 @@
                         [cropEnabled]="true"
                         [cropSize]="512"
                         [cropAspectRatio]="1"
-                        [deleteOnClear]="true"
                         [clearRequest]="avatarClearRequest()"
                         (valueChange)="userFormPatch.emit({ profileImage: $event })"
                     />

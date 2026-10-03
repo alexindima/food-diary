@@ -199,6 +199,33 @@ describe('UserService optional birth date', () => {
     });
 });
 
+describe('UserService optional avatar', () => {
+    it.each([null, '', { url: null, assetId: null }])('transmits a cleared selection as explicit null fields: %j', profileImage => {
+        service.update(new UpdateUserDto({ profileImage })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ profileImage: null, profileImageAssetId: null });
+        req.flush(MOCK_USER);
+    });
+
+    it('omits avatar fields from an unrelated update', () => {
+        service.update(new UpdateUserDto({ language: 'ru' })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ language: 'ru' });
+        req.flush(MOCK_USER);
+    });
+
+    it('transmits the selected image URL and asset together', () => {
+        const image = { url: 'https://example.test/avatar.png', assetId: 'a596aacf-054e-4c1b-82f9-cd0e464a3e71' };
+        service.update(new UpdateUserDto({ profileImage: image })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ profileImage: image.url, profileImageAssetId: image.assetId });
+        req.flush(MOCK_USER);
+    });
+});
+
 describe('UserService password', () => {
     it('should change password', () => {
         const request: ChangePasswordRequest = { currentPassword: 'old', newPassword: 'new' };

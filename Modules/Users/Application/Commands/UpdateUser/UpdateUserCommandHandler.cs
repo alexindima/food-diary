@@ -53,7 +53,7 @@ public sealed class UpdateUserCommandHandler(
         ApplyUpdates(values.User, command, values);
 
         await userContextService.UpdateUserAsync(values.User, cancellationToken).ConfigureAwait(false);
-        await CleanupOldProfileImageAssetAsync(oldAssetId, values.ProfileImageAssetId, cancellationToken).ConfigureAwait(false);
+        await CleanupOldProfileImageAssetAsync(oldAssetId, values.User.ProfileImageAssetId, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(values.User.ToModel());
     }
@@ -197,7 +197,8 @@ public sealed class UpdateUserCommandHandler(
             SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));
         user.UpdateProfileMedia(new UserProfileMediaUpdate(
             ProfileImage: values.ProfileImage,
-            ProfileImageAssetId: values.ProfileImageAssetId));
+            ProfileImageAssetId: values.ProfileImageAssetId,
+            ProfileImageSpecified: command.ProfileImageSpecified));
 
         if (command.IsActive.HasValue) {
             if (command.IsActive.Value) {
