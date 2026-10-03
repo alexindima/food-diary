@@ -19,7 +19,9 @@ claims. Use `catalog -CheckFreshness -Format Json` to hash the current source
 and query-index inputs and compare both publication receipts. A full
 `Invoke-LlmWikiIndexPipeline.ps1 -Check` records the generation receipt.
 `verify-full` records the full verification receipt only when that complete
-generation still matches the current inputs. Affected verification never
+generation still matches the current inputs and the failure registry, change
+policy, and source-impact gates have all passed. `verify-full -MaxConcurrency 2`
+bounds both generator and regression workers. Affected verification never
 promotes a scoped result to the full verification state.
 
 Catalog and C# generators enumerate tracked and non-ignored untracked files

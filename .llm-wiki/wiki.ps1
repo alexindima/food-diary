@@ -973,6 +973,7 @@ switch ($Command) {
             Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
             Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
             $fullVerificationArguments = @{ ResumePassedStages = $ResumePassedStages }
+            if ($null -ne $MaxConcurrency) { $fullVerificationArguments.IndexConcurrency = [int]$MaxConcurrency }
             if ($VerificationProfile -eq 'Full') { $fullVerificationArguments.FullTools = $true }
             elseif ($VerificationProfile -eq 'Core') { $fullVerificationArguments.CoreTools = $true }
             Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1' $fullVerificationArguments
@@ -985,6 +986,7 @@ switch ($Command) {
             }
             Invoke-WikiTool 'Test-LlmWikiChangePolicy.ps1' $policyArguments
             Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
+            Invoke-WikiTool 'Write-LlmWikiIndexVerificationReceipt.ps1' @{ CompletedFullVerification = $true }
             $metricOutcome = 'passed'
         } catch {
             if ($_.Exception.Message -match '(?i)timed out') { $metricOutcome = 'timed-out' }

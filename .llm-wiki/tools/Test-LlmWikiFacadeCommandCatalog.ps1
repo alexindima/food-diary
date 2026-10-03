@@ -129,6 +129,66 @@ Unknown registry commands: $($unknownRegistryCommands -join ', ')
 }
 
 $healthClause = $commandSwitches[0].Clauses | Where-Object { $_.Item1.Extent.Text -eq "'health'" } | Select-Object -First 1
+$fullVerificationClause = $commandSwitches[0].Clauses | Where-Object { $_.Item1.Extent.Text -eq "'verify-full'" } | Select-Object -First 1
+$fullVerificationTry = $fullVerificationClause.Item2.FindAll({
+    param($node)
+    $node -is [Management.Automation.Language.TryStatementAst]
+}, $true) | Select-Object -First 1
+if ($null -eq $fullVerificationTry) { throw 'Full verification must preserve its guarded failure contract.' }
+$verificationBodyText = $fullVerificationTry.Body.Extent.Text
+$verificationBody = [scriptblock]::Create($verificationBodyText.Substring(1, $verificationBodyText.Length - 2))
+foreach ($scenario in @('Focused', 'Core', 'Full', 'default-concurrency', 'policy-failed', 'impact-failed')) {
+    & {
+        $calls = [Collections.Generic.List[object]]::new()
+        function Invoke-WikiTool([string]$Name, [hashtable]$Arguments) {
+            $calls.Add([pscustomobject]@{ Name = $Name; Arguments = $Arguments })
+            if (($scenario -eq 'policy-failed' -and $Name -eq 'Test-LlmWikiChangePolicy.ps1') -or
+                ($scenario -eq 'impact-failed' -and $Name -eq 'Get-LlmWikiImpact.ps1')) {
+                throw 'Expected verification gate failure.'
+            }
+        }
+        $MaxConcurrency = if ($scenario -eq 'default-concurrency') { $null } else { 2 }
+        $ResumePassedStages = $true
+        $VerificationProfile = if ($scenario -in @('Core', 'Full')) { $scenario } else { 'Focused' }
+        $PSBoundParameters = @{}
+        $metricOutcome = 'failed'
+        $failure = $null
+        try { . $verificationBody } catch { $failure = $_ }
+        $runnerCall = $calls | Where-Object Name -eq 'Invoke-LlmWikiFullVerification.ps1' | Select-Object -First 1
+        if ($null -eq $runnerCall -or -not $runnerCall.Arguments.ResumePassedStages) {
+            throw 'Full verification lost its runner or stage-resume argument.'
+        }
+        if ($null -eq $MaxConcurrency) {
+            if ($runnerCall.Arguments.ContainsKey('IndexConcurrency')) { throw 'Full verification overrode default concurrency without a request.' }
+        } elseif ($runnerCall.Arguments.IndexConcurrency -ne $MaxConcurrency) {
+            throw 'Full verification lost the requested concurrency bound.'
+        }
+        if (($VerificationProfile -eq 'Full' -and -not $runnerCall.Arguments.FullTools) -or
+            ($VerificationProfile -eq 'Core' -and -not $runnerCall.Arguments.CoreTools)) {
+            throw 'Full verification lost the requested tool profile.'
+        }
+        $publicationCalls = @($calls | Where-Object Name -eq 'Write-LlmWikiIndexVerificationReceipt.ps1')
+        if ($scenario -in @('policy-failed', 'impact-failed')) {
+            if ($null -eq $failure -or $publicationCalls.Count -ne 0 -or $metricOutcome -ne 'failed') {
+                throw 'A failed verification gate published a successful full verification receipt.'
+            }
+        } elseif ($null -ne $failure -or $publicationCalls.Count -ne 1 -or
+            -not $publicationCalls[0].Arguments.CompletedFullVerification -or
+            $calls[$calls.Count - 1].Name -ne 'Write-LlmWikiIndexVerificationReceipt.ps1' -or
+            $metricOutcome -ne 'passed') {
+            throw "Full verification did not publish exactly once after every gate: $scenario. $failure"
+        }
+    }
+}
+$runnerAst = [Management.Automation.Language.Parser]::ParseFile(
+    (Join-Path $PSScriptRoot 'Invoke-LlmWikiFullVerification.ps1'), [ref]$tokens, [ref]$parseErrors)
+if (@($parseErrors).Count -gt 0 -or @($runnerAst.FindAll({
+    param($node)
+    $node -is [Management.Automation.Language.CommandAst] -and
+        $node.Extent.Text -match 'Write-LlmWikiIndexVerificationReceipt'
+}, $true)).Count -gt 0) {
+    throw 'The inner regression runner must not publish before the facade finishes its policy and source-impact gates.'
+}
 & {
     function Invoke-WikiTool([string]$Name, [hashtable]$Arguments) {
         if ($Name -ne 'Invoke-LlmWikiSelfMaintenance.ps1') { throw 'Wiki health routed to the wrong checker.' }

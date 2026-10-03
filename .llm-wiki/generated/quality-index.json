@@ -24,11 +24,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2912,
-      "decisionPoints": 380,
+      "nonBlankLines": 2914,
+      "decisionPoints": 381,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 630.24
+      "structuralRiskScore": 631.78
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
@@ -1546,11 +1546,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-      "nonBlankLines": 134,
+      "nonBlankLines": 133,
       "decisionPoints": 23,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.18
+      "structuralRiskScore": 39.16
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
@@ -2458,11 +2458,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2912,
-      "decisionPoints": 380,
+      "nonBlankLines": 2914,
+      "decisionPoints": 381,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 630.24
+      "structuralRiskScore": 631.78
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -57522,8 +57522,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiFacadeCommandCatalog.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57959,8 +57960,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiFacadeCommandCatalog.ps1",
         ".llm-wiki/tools/Test-LlmWikiFullResume.ps1",
         ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1"
       ],
@@ -59421,8 +59423,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiFacadeCommandCatalog.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexManifest.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

@@ -202,7 +202,7 @@
       "reason": "Reviewed optional Page/Limit defaults1/50, unchanged array response and auth predicates; exact snapshot diff contains only two GET query additions; api-compat passed; backend solution build and application271/presentation42/infrastructure21 tests passed. Docker75 host tests explicitly skipped; live PostgreSQL client and specialist pages50+1 verified.",
       "baseRef": "HEAD",
       "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:31.3215660Z"
+      "reviewedAtUtc": "2026-10-02T18:24:31.321566Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -217,7 +217,7 @@
       "reason": "Reviewed generated shared component contract change: saveDisabled and saveDisabledReason are optional inputs with false/null defaults. Existing selectors, outputs, feature dependencies and ownership remain unchanged. Height validation stays in the existing profile page; localized feedback uses public fd-ui-input and fd-ui-button APIs. Focused component tests and native mobile/desktop checks cover disabled and valid transitions.",
       "baseRef": "HEAD",
       "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-02T23:49:30.5227510Z"
+      "reviewedAtUtc": "2026-10-02T23:49:30.522751Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -271,17 +271,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
+      "pageSha256": "7264a02e0395dbb25020055abbdf8e3db187fb776964288cfe4e763b279cbe64",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed existing recipe access identity rule using translated query terms. Shared Node and .NET policy semantics remain aligned; source navigation, security-evidence limits, corpus thresholds and ranking rule counts are unchanged.",
+      "reason": "Reviewed facade-only verify-full changes: forwarding worker concurrency and publishing after final gates do not change graph writers, queries, freshness or extraction contracts.",
       "baseRef": "HEAD",
-      "gitHead": "ef1d724d6ed831a224c96ba6ce24e061af2f5161",
-      "reviewedAtUtc": "2026-09-28T00:17:25.5501672Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:20.9080965Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -470,17 +470,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "6ce828816cde0b981b3efd7f436989473d6aa51c138829a521116fc5e5ff8020",
+      "pageSha256": "f46020d590c232ec013fcb3528b076e33d6f8b001faf48fcbdb60b77155aa409",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed verify-full routing against the documented daily commands. Canonical research states, SQLite bootstrap, context caching and task routing remain consistent; publication details are maintained in index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:31.9245862Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:21.6288984Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -804,17 +804,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "8b137046034f8df511332cf41dfd2b96a888804b14e546cee7cc5f9213ab68d0",
+      "pageSha256": "dbd36d63ae9d1040c3109338697cf6d695253c471be5e57a8d2820b71007d10c",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
+          "sha256": "8416c7e4a6cac352c5864a09ad31a96630cf7d9691a1a958ef6183b57eb97393"
         }
       ],
-      "reason": "Reviewed profile height paths after the imperial regression fix: finite feet/inches now update canonical centimeters instead of silently retaining an old draft. Validation enforces optional height in (0,300] before button or Enter submission. All 27 profile component tests pass, including four regression cases that failed before their fixes. Native RU390 and EN1280 confirm 10 feet updates to 332.7cm with localized errors and disabled save; 0 feet plus 11 inches is valid 27.9cm. No API mutations during invalid-input checks.",
-      "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-03T00:02:00.5987358Z"
+      "reason": "Reviewed refreshed quality diff: only facade/runner structural counts and new direct test references for full verification gates changed. No coverage claim or hotspot policy changed; direct references remain navigation evidence.",
+      "baseRef": "c00b59156",
+      "gitHead": "ba7f4e6badedf6ad284921a36fc250ddaf6bdf9d",
+      "reviewedAtUtc": "2026-10-03T06:44:35.2480833Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -894,21 +894,17 @@
     {
       "pageId": "workflow-security-review",
       "pagePath": ".llm-wiki/workflows/security-review.md",
-      "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
+      "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "adbbe2c947b37f1ada44e129a64d528ec8ee8126e2cd8263e365617d0ab17b6b"
+          "sha256": "8416c7e4a6cac352c5864a09ad31a96630cf7d9691a1a958ef6183b57eb97393"
         }
       ],
-      "reason": "Reviewed the frontend height-validation patch only: optional numeric height checks mirror the existing API boundary, and both metric and converted imperial values are blocked before submission when invalid. Native invalid-input checks issued no API mutations; no authentication, transport, persistence or disclosure behavior changes in this patch. Concurrent MailRelay source changes remain outside this audit patch and are excluded from the staged indexes.",
-      "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-03T00:03:30.5165969Z"
+      "reason": "Reviewed quality projection delta: added facade gate test references and line/decision counts do not change security control classifications, ranking or the requirement to validate navigation evidence in source and runtime.",
+      "baseRef": "c00b59156",
+      "gitHead": "ba7f4e6badedf6ad284921a36fc250ddaf6bdf9d",
+      "reviewedAtUtc": "2026-10-03T06:44:36.1575101Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -977,21 +973,17 @@
     {
       "pageId": "workflow-task-dispatch-receipts",
       "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
-      "pageSha256": "70d6be88b293deccf4d573fc9bede72453bc9e17b6a0215335058e6e7746afc3",
+      "pageSha256": "e796ff74731a2dda404ebab68170be7eaccc7c57268fc23f141a91c228e1a49f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
+      "reason": "Reviewed facade verification controls: the complete gate alone publishes full verification and concurrency forwarding does not alter dispatch payloads, lease fingerprints or lifecycle receipt hashes.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:54.9929254Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:23.9737566Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1173,17 +1165,32 @@
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
+      "pageSha256": "7a7a54c7bf5c73c0b94be81d974d8734405b72a7e2468ec3001ba05c475133db",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed final receipt ordering: the documented matching generation and complete verify-full requirement still holds, now including the existing source-impact and change-policy gates before publication.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:32.1703529Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:22.3898133Z"
+    },
+    {
+      "pageId": "workflow.self-maintenance",
+      "pagePath": ".llm-wiki/workflows/self-maintenance.md",
+      "pageSha256": "3374888dc37a3b5d032bdece140d17182fb8fe516c9a90b8286338585858a5b7",
+      "sources": [
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+        }
+      ],
+      "reason": "Reviewed generation and verification separation after moving publication into the complete facade gate. Graph repair, dirty-file hashing and self-maintenance recovery contracts are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:23.1735286Z"
     }
   ]
 }

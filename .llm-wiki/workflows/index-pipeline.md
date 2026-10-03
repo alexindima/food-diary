@@ -83,7 +83,7 @@ sources:
 
 Generators refill free worker slots within each dependency stage rather than waiting for a fixed batch. Catalog and symbol generators enumerate Git-visible inputs before accessing the filesystem. Stage barriers, timeouts, transaction rollback, and every required generator remain in force.
 
-A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
+A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds both generator and regression workers. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
 
 Module source areas come from the Git-visible file inventory. Empty legacy
 directories and ignored build outputs must not change generated pages between
