@@ -7036,14 +7036,14 @@
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 57
+      "line": 53
     },
     {
       "category": "health",
       "name": "BirthDateSpecified",
       "type": "bool",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 66
+      "line": 62
     },
     {
       "category": "health",
@@ -11201,7 +11201,7 @@
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 77
+      "line": 73
     }
   ],
   "boundaryFiles": [

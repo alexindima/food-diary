@@ -42058,11 +42058,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 76,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.08
+      "structuralRiskScore": 3.02
     },
     {
       "path": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",

@@ -25,10 +25,6 @@ public sealed record UpdateUserHttpRequest(
     DashboardLayoutHttpModel? DashboardLayout,
     bool? IsActive,
     string? TimeZoneId = null) {
-    private DateTime? _birthDate = BirthDate;
-    private string? _profileImage = ProfileImage;
-    private Guid? _profileImageAssetId = ProfileImageAssetId;
-
     [JsonConstructor]
     public UpdateUserHttpRequest() : this(
         Username: null,
@@ -55,32 +51,32 @@ public sealed record UpdateUserHttpRequest(
 
     /// <summary>Omit to preserve the current date, or send null to clear it.</summary>
     public DateTime? BirthDate {
-        get => _birthDate;
+        get;
         init {
-            _birthDate = value;
+            field = value;
             BirthDateSpecified = true;
         }
-    }
+    } = BirthDate;
 
     [JsonIgnore]
     public bool BirthDateSpecified { get; private init; } = BirthDate.HasValue;
 
     /// <summary>Omit both image fields to preserve the avatar, or send null to clear it.</summary>
     public string? ProfileImage {
-        get => _profileImage;
+        get;
         init {
-            _profileImage = value;
+            field = value;
             ProfileImageSpecified = true;
         }
-    }
+    } = ProfileImage;
 
     public Guid? ProfileImageAssetId {
-        get => _profileImageAssetId;
+        get;
         init {
-            _profileImageAssetId = value;
+            field = value;
             ProfileImageSpecified = true;
         }
-    }
+    } = ProfileImageAssetId;
 
     [JsonIgnore]
     public bool ProfileImageSpecified { get; private init; } = ProfileImage is not null || ProfileImageAssetId.HasValue;

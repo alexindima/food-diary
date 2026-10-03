@@ -795,7 +795,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
+          "sha256": "19ca58047c98ac1d6c3305dfce40aa6f2a569c9411aa24d5d24a86d630f49b5e"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -806,10 +806,10 @@
           "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
         }
       ],
-      "reason": "Search remains read-only with parameterized MATCH input, cancellation and the existing two-second command timeout. This change adds no query telemetry, private-data projection, provider access or credential handling. Updated metadata anchors do not alter security controls.",
+      "reason": "Reaffirmed the previous review of unchanged personal-data lifecycle documentation and the read-only search implementation: parameterized MATCH, cancellation, the two-second command timeout and no added query telemetry remain intact. The current UpdateUserHttpRequest formatter conversion preserves BirthDate/avatar presence flags and JsonIgnore attributes; all 36 presentation tests passed. Sensitive-data metadata changes only the three declaration anchors.",
       "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:45.9057357Z"
+      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
+      "reviewedAtUtc": "2026-10-03T13:40:13.2538470Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -848,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "38b7a02c1c1559e9440548532b6de3c2e99a5bfb9a4632e5408e33194cce1644"
+          "sha256": "f6994fbd31df1e8d229fb4d176386bca683c52f118675fad2115a96a1c4ae923"
         }
       ],
-      "reason": "Verified 198 focused tests and the independent 100-case holdout with 100 of 100 top-ten hits and liveRegressionPassed=true. Both new regression tests protect candidate completeness and original record representations; frozen corpora, ranking scores and thresholds are unchanged. Full required hook evaluation will run before push.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:46.9588427Z"
+      "reason": "The formatter applied the required IDE0032 field-backed-property conversion without changing the JSON contract. All 36 focused tests passed with zero skips, and full solution dotnet format --verify-no-changes completed successfully. Normal pre-push checks remain enabled.",
+      "baseRef": "HEAD",
+      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
+      "reviewedAtUtc": "2026-10-03T13:36:46.0148079Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -923,13 +923,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "402c863c721c793cff8bc274372d394a5e008252d3230c1d238cc7946e58ac3e"
+          "sha256": "55c9ce43b6e00d55f2e0b3e96df5076cd9618aa5afc26b9c126733b8cc1db6fb"
         }
       ],
-      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:47.7069474Z"
+      "reason": "Reviewed the mechanical IDE0032 conversion in UpdateUserHttpRequest. Field-backed auto-properties retain the same primary-constructor initializers and init accessors. Source-index changes are line anchors only; routes, response models and runtime composition are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
+      "reviewedAtUtc": "2026-10-03T13:36:47.1165370Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -938,21 +938,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "38b7a02c1c1559e9440548532b6de3c2e99a5bfb9a4632e5408e33194cce1644"
+          "sha256": "f6994fbd31df1e8d229fb4d176386bca683c52f118675fad2115a96a1c4ae923"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "402c863c721c793cff8bc274372d394a5e008252d3230c1d238cc7946e58ac3e"
+          "sha256": "55c9ce43b6e00d55f2e0b3e96df5076cd9618aa5afc26b9c126733b8cc1db6fb"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
+          "sha256": "19ca58047c98ac1d6c3305dfce40aa6f2a569c9411aa24d5d24a86d630f49b5e"
         }
       ],
-      "reason": "Search remains read-only with parameterized MATCH input, cancellation and the existing two-second command timeout. This change adds no query telemetry, private-data projection, provider access or credential handling. Updated metadata anchors do not alter security controls.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:48.8607673Z"
+      "reason": "BirthDate and avatar handling retain their existing presence flags, omission semantics and JsonIgnore attributes. No health data, credentials, logs, caches, providers or exports are added or changed. The sensitive-data index updates only the three moved declaration anchors.",
+      "baseRef": "HEAD",
+      "gitHead": "a8a7dd24367b77db471a144cc79c60e1d5e5fd8d",
+      "reviewedAtUtc": "2026-10-03T13:36:47.8920588Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
