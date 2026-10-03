@@ -11,9 +11,9 @@ import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { RECENT_MEASUREMENT_LIMIT } from '../../../../shared/measurements/measurement-history.constants';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import { getWeightChangeTone } from '../../lib/weight-history-progress.utils';
-import type { WeightEntry } from '../../models/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-history-entries-card',

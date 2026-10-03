@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../../shared/auth/auth.constants';
 import { AuthFormManager } from './auth-form.manager';
 
 describe('AuthFormManager', () => {

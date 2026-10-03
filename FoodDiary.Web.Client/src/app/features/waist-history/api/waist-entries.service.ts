@@ -17,7 +17,7 @@ import type {
     WaistEntrySummaryPoint,
     WaistHistoryPageSummary,
     WaistHistoryPageSummaryFilters,
-} from '../models/waist-entry.data';
+} from '../../../shared/models/waist-entry.data';
 
 @Service()
 export class WaistEntriesService extends ApiService {

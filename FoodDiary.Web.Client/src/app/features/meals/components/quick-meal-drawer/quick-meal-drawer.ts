@@ -8,13 +8,13 @@ import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
-import { resolveProductImageUrl } from '../../../products/lib/product-image.util';
-import { normalizeProductType } from '../../../products/lib/product-type.utils';
-import { ProductType } from '../../../products/models/product.data';
-import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
+import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
+import { normalizeProductType } from '../../../../shared/lib/product-type.utils';
+import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
+import { MealSourceType } from '../../../../shared/models/meal.data';
+import { ProductType } from '../../../../shared/models/product.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
-import { MealSourceType } from '../../models/meal.data';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 

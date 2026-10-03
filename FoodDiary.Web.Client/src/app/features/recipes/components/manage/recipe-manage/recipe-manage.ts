@@ -14,11 +14,11 @@ import { PageHeaderComponent } from '../../../../../components/shared/page-heade
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
+import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { detectRecipeLanguage, hasSubstantiallyChangedRecipeText, recipeLanguageText } from '../../../lib/recipe-language.utils';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
-import type { Recipe, RecipeDto } from '../../../models/recipe.data';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
 import { parseRecipeImportDraft } from '../recipe-manage-lib/recipe-import-draft.mapper';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';

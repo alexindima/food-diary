@@ -17,6 +17,7 @@ import type {
 import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constants';
 import { scaleNutrientInput } from '../../../shared/lib/nutrition-form.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
+import type { Recipe, RecipeDto } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues, NutritionScaleMode, StepFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import {
@@ -24,7 +25,6 @@ import {
     RecipeLanguageDialogComponent,
     type RecipeLanguageDialogData,
 } from '../dialogs/recipe-language-dialog/recipe-language-dialog';
-import type { Recipe, RecipeDto } from '../models/recipe.data';
 import { normalizeRecipeLanguage } from './recipe-language.utils';
 import { RecipePublicationService } from './recipe-publication.service';
 

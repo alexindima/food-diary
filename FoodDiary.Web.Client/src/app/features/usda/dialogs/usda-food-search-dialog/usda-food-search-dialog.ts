@@ -6,8 +6,8 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
+import type { UsdaFood } from '../../../../shared/models/usda.data';
 import { UsdaFoodSearchFacade } from '../../lib/usda-food-search.facade';
-import type { UsdaFood } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-usda-food-search-dialog',

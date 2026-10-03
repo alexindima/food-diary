@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BillingOverview } from '../../../models/billing.models';
+import type { BillingOverview } from '../../../../../shared/models/billing.models';
 import {
     buildPremiumOverviewBadges,
     buildPremiumOverviewCardViewModel,

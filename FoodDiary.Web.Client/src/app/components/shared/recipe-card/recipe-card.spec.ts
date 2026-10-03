@@ -4,7 +4,7 @@ import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
-// eslint-disable-next-line no-restricted-imports -- shared card spec needs the concrete feature favorite service token
+// eslint-disable-next-line scope-imports/shared-ui -- shared card spec needs the concrete feature favorite service token
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
 import { RecipeCardComponent, type RecipeCardItem } from './recipe-card';

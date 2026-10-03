@@ -1,6 +1,6 @@
 import type { FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete';
 
-import type { ProductSearchSuggestion } from '../../../models/product.data';
+import type { ProductSearchSuggestion } from '../../../../../shared/models/product.data';
 
 export type ProductNameSuggestion = ProductSearchSuggestion;
 

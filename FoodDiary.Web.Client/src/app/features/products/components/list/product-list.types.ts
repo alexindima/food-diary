@@ -1,4 +1,4 @@
-import type { Product } from '../../models/product.data';
+import type { Product } from '../../../../shared/models/product.data';
 
 export type ProductCardViewModel = {
     product: Product;

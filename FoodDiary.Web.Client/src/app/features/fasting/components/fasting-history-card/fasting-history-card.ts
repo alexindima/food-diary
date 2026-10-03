@@ -3,8 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
-import type { FastingSession } from '../../models/fasting.data';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
+import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
 import { FastingHistoryItemComponent } from '../fasting-history-item/fasting-history-item';
 
 @Component({

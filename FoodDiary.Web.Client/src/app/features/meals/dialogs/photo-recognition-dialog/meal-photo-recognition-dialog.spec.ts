@@ -8,7 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
-import type { MealAiSessionManageDto } from '../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
 import { MealPhotoRecognitionDialogComponent } from './meal-photo-recognition-dialog';
 
 const SOURCE_AMOUNT = 100;

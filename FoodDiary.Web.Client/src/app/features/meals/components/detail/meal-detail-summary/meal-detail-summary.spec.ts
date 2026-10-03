@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import type { Meal } from '../../../models/meal.data';
+import type { Meal } from '../../../../../shared/models/meal.data';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview';
 import { MEAL_DETAIL_DEFAULT_QUALITY_GRADE } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';

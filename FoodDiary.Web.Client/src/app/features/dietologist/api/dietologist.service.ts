@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type {
     AttentionSignal,
     AttentionSignalSettings,
@@ -22,7 +23,6 @@ import type {
     RecommendationTemplate,
     RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
-import type { DashboardSnapshot } from '../../dashboard/models/dashboard.data';
 
 const DEFAULT_CLIENT_DASHBOARD_PAGE_SIZE = 5;
 const DEFAULT_CLIENT_DASHBOARD_TREND_DAYS = 14;

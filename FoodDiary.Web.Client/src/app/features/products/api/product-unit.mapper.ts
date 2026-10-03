@@ -1,4 +1,4 @@
-import { MeasurementUnit } from '../models/product.data';
+import { MeasurementUnit } from '../../../shared/models/product.data';
 
 const UNITS: Readonly<Partial<Record<string, MeasurementUnit>>> = {
     G: MeasurementUnit.G,

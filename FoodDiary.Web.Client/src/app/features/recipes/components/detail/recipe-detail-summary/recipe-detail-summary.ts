@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { resolveServingsUnitKey } from '../../../lib/recipe-servings.utils';
-import type { Recipe } from '../../../models/recipe.data';
 import { RecipeDetailIngredientPreviewComponent } from '../recipe-detail-ingredient-preview/recipe-detail-ingredient-preview';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 

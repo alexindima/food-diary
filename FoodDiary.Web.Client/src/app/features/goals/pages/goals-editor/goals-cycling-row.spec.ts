@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { DayCalorieKey } from '../../models/goals.data';
+import type { DayCalorieKey } from '../../../../shared/models/goals.data';
 import { GoalsCyclingDayComponent } from './goals-cycling-day';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
 

@@ -11,8 +11,15 @@ import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../../shared/models/product.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
-import { QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
+import { QuickMealService } from '../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { ProductService } from '../../api/product.service';
@@ -24,7 +31,6 @@ import {
     PRODUCT_LIST_RECENT_LIMIT,
 } from '../../components/list/product-list.config';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductListFacade } from './product-list.facade';
 
 const ZERO_DEBOUNCE_MS = 0;

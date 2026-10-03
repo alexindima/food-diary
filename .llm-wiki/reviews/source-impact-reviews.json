@@ -38,13 +38,21 @@
       "sources": [
         {
           "path": "docs/frontend/FRONTEND_ARCHITECTURE.md",
-          "sha256": "7befc8d9305cb1268f5b0a2b740f43beffdd21ba3c92fb373976b13cb5c80966"
+          "sha256": "c7c51d4fe029c71ad148b47c4ada0bb309bf3f2ac58118eec19e114bbaefe282"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "sha256": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
         }
       ],
-      "reason": "Module and frontend documentation was checked against the platform-service refactor, fd-tour architecture entry, generated frontend/runtime indexes, and current source layout; existing navigation and ownership guidance remains accurate.",
+      "reason": "Reviewed frontend ownership against AGENTS and FRONTEND_ARCHITECTURE: pure shared models, capability contracts, composition providers and independent scoped import rules match final code. Combined npm verify passed 5042 tests; no backend ownership moved by the refactor.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:05.2361918Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:21.5077100Z"
     },
     {
       "pageId": "module.mail-services",
@@ -116,14 +124,14 @@
       "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
         }
       ],
-      "reason": "Reviewed source-linked navigation pages: public recipe routes and server build are represented in regenerated indexes; ADR 0050 and public recipe runbook added to existing documentation indexes. These pages describe discovery and governance rather than enumerate features, so their text remains accurate.",
+      "reason": "Verified current source folders and renamed shared models/helpers against the regenerated frontend index. Old feature-private imports were replaced with explicit contracts and composition; strict dependency and import-boundary checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "25701b0a357992a05606aa59268c115509f91535",
-      "reviewedAtUtc": "2026-09-26T21:52:49.3188505Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:22.4609950Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -196,13 +204,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d9249ac73b69719f732c4f653579aaaa13a97960cd7077bf3c1e0a0456f4c188"
+          "sha256": "9fcf185a42b2f7ccd4b3463dc7d225a63e71017f3fa5145a7c345225f6b348c4"
         }
       ],
-      "reason": "Reviewed optional Page/Limit defaults1/50, unchanged array response and auth predicates; exact snapshot diff contains only two GET query additions; api-compat passed; backend solution build and application271/presentation42/infrastructure21 tests passed. Docker75 host tests explicitly skipped; live PostgreSQL client and specialist pages50+1 verified.",
+      "reason": "Reviewed actual Swagger schemas and PostgreSQL snapshots: no Users wire shape changes, BirthDateSpecified is JsonIgnore and cannot be bound or exposed. Explicit null now clears, omission preserves. Full snapshot adds only existing RecipeIngredientInput publicName/publicUnit from commit58c0b769b6; no recipe runtime edits. All six HTTP and Swagger tests passed without skips.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:31.3215660Z"
+      "gitHead": "214c9dd9bdfcdbda9638bd1b6c37856aebf08e7e",
+      "reviewedAtUtc": "2026-10-03T03:25:16.9658597Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -211,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e6be71afb642212d6ee2c1bf8772488938657181f4a1ec748c14a6cf117a6f04"
+          "sha256": "9f0e4d0c072f9bbf9fea4b5f4669a081feb97b39c12c4d1e016999e8a4c5b1ae"
         }
       ],
-      "reason": "Reviewed generated shared component contract change: saveDisabled and saveDisabledReason are optional inputs with false/null defaults. Existing selectors, outputs, feature dependencies and ownership remain unchanged. Height validation stays in the existing profile page; localized feedback uses public fd-ui-input and fd-ui-button APIs. Focused component tests and native mobile/desktop checks cover disabled and valid transitions.",
+      "reason": "Reviewed generated architecture deltas from committed c1e5a7716 plus authorized frontend/profile changes. Complete solution build and 2116 architecture tests passed; scoped import restriction fixtures and strict dependency graph checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-02T23:49:30.5227510Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:23.7803815Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a5b7a076942d12e343dc6263e0a74f14632350d7f27afad5a5fb2cea0229ad53"
+          "sha256": "4f978399341a7a22d87b3fd2a8d5e7c33aa564fe8398652290374cf00cd447ee"
         }
       ],
-      "reason": "Reviewed optional Page/Limit defaults1/50, unchanged array response and auth predicates; exact snapshot diff contains only two GET query additions; api-compat passed; backend solution build and application271/presentation42/infrastructure21 tests passed. Docker75 host tests explicitly skipped; live PostgreSQL client and specialist pages50+1 verified.",
+      "reason": "Reviewed explicit nullable birthDate PATCH semantics: omitted preserves, explicit null clears, internal presence flag cannot be bound or serialized. 29 presentation tests and 6 real PostgreSQL HTTP/Swagger contract tests passed; birthdate snapshot included.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:32.0835494Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:25.2872542Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -459,13 +467,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "16b60d8b098cbe31fa0d2708d6edaa18a287481255534630157285d0f5512e8b"
+          "sha256": "c66ab27c26e72493a9307e73cf8b4e1a6dbc3359384e51f5211465d7099919c8"
         }
       ],
-      "reason": "Reviewed configuration index delta: it adds the existing Images rate-limit option and PermitLimit/QueueLimit/WindowSeconds keys introduced by the committed image upload policy. No package, migration, deployment ordering or provider change is introduced by this index refresh; dependency and rollout guidance remains applicable.",
+      "reason": "Reviewed manifest addition eslint-import-resolver-typescript as a development-only dependency and check:import-boundaries in verify; lockfile committed and combined npm verify passes. Local API c1e5 requires pending UserNutritionProfiles migration; current browser compatibility proof used API5308 and no local migration was executed.",
       "baseRef": "HEAD",
-      "gitHead": "327e3abd52ac7d08166c975e6d32d3ba20f09a60",
-      "reviewedAtUtc": "2026-09-25T21:11:14.9408029Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:26.3856524Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -489,13 +497,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "673ea2e49bbeb0ebccc4d91cfb5f83d5e8a2a3ce5e4914d5b9112b9fc6aa8aae"
+          "sha256": "5c254aa2904205ee915c3ee1595b0decd621878a4ab55f7fc7b18cac92a235d6"
         }
       ],
-      "reason": "Reviewed optional factorId through request mapping, owned-profile handler and domain update; old JSON and native no-ID upsert remain valid. Actual Swagger snapshot adds only optional nullable UUID and409. API compatibility reports zero breaking changes. Native local PostgreSQL/API verified same-ID date/type edits,409 without data loss,400 unknown child and404 foreign profile; module and presentation tests pass. API must precede frontend rollout; Docker-only integration scenarios were skipped and remain covered for CI.",
+      "reason": "Verified clearing DOB touches owning NutritionProfile and omission preserves existing data; 323 Users domain and 225 application tests passed. Combined backend provider fixtures pass against fresh schema. Existing local database remains on old schema; no reset or reseeding occurred.",
       "baseRef": "HEAD",
-      "gitHead": "ccad89782b3f0a63c4156bae3d506cd28e214c9c",
-      "reviewedAtUtc": "2026-10-02T00:42:02.9328953Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:27.3454010Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -548,14 +556,18 @@
       "pageSha256": "2b42317f0646f66ef48a014336e0cd5c11895a45ad80f867af0b849c6192652e",
       "sources": [
         {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+        },
+        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ae32ab18da9b1d0b7bf38891f8456562af74891f3ae9f21581f07c30239ff15d"
+          "sha256": "10d41e8d04448147b9736bee6c4fffc08abc2648ff500680f901984190d8a5f9"
         }
       ],
-      "reason": "Regenerated catalog and runtime topology and added a focused architecture guardrail for the reverted Job Manager configuration.",
-      "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:56.2749191Z"
+      "reason": "Native final combined frontend4202 was exercised with updated compatible API5308 in RU390x844 and EN1280x900; screenshot evidence frontend-master-combined-ru.png/en.png confirms readable locale rendering. Clear persists, omission preserves, invalid draft blocks saving and leaving; no framework overlay. SignalR proxy transport mismatch remains a known test-environment limitation; new API5309 requires local migration.",
+      "baseRef": "HEAD",
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:30.9353715Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -763,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e771ce55b13fedfea07c7caf5437471d2e1d80a253bac9f591d117786e4b2c84"
+          "sha256": "b0ce49fabe564be0ffb9b83eb4e1631f9c89107f42d4150dcc1aee7f41010722"
         }
       ],
-      "reason": "Reviewed security patch on current merged master: all catalog routes/schemas and UI fixes retained; only AuthenticationHttpResponse.refreshToken removed from API snapshot. Narrow owned-session capability, encoded invitation HTML, registration lifecycle parity and MailRelay bounds preserve existing flows. Generated indexes rebuilt for both branches; existing catalog/UX reviews retained. Provider-backed security checks remain blocked by Docker.",
+      "reason": "DOB field-presence tracking changes only authenticated owner profile update and remains hidden JSON metadata. Omitted fields preserve data, spoofed presence flag is ignored, credentials stay outside repo and auth values are never logged. Tests use synthetic QA fixtures; local QA DOB/name/language restored.",
       "baseRef": "HEAD",
-      "gitHead": "39e49bbbcfeb338f29112794de39279fcfcbfb03",
-      "reviewedAtUtc": "2026-10-02T12:12:07.7685056Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:32.1803732Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -808,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
+          "sha256": "afd267969ce492f5556b7f642d637ca93caf79a0b58bc9a4f9c51a8829a19a72"
         }
       ],
-      "reason": "Reviewed profile height paths after the imperial regression fix: finite feet/inches now update canonical centimeters instead of silently retaining an old draft. Validation enforces optional height in (0,300] before button or Enter submission. All 27 profile component tests pass, including four regression cases that failed before their fixes. Native RU390 and EN1280 confirm 10 feet updates to 332.7cm with localized errors and disabled save; 0 feet plus 11 inches is valid 27.9cm. No API mutations during invalid-input checks.",
+      "reason": "Reviewed 5042 combined frontend tests, 577 Users tests, 6 HTTP/Swagger checks and 2116 architecture tests with real terminal success/TRX. Native profile compatibility flow verifies persistence and invalid draft blocking. Pending new-API local migration and separately reproduced save-and-leave failure are retained as next audit work.",
       "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-03T00:02:00.5987358Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:33.6607884Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "63decfc14a48c38844610db518075d85859908a900a029520cb6bd255011a76f"
+          "sha256": "17da5a05ffaec7b15accf5fd68e7cfccf548de0a97e899ce51b4334aabfbda0d"
         }
       ],
-      "reason": "Reviewed client and specialist recommendation service consumers using existing complete-collection helper; native51cards each and old card keyboard access verified, frontend4974 tests passed. Runtime change is recommendation read-only Skip/Take with stable date/Id order; no job/DI/provider changes, JobManager178 and architecture2116 passed; workflow navigation remains accurate.",
+      "reason": "Reviewed current topology after committed backend hardening and pure frontend integration. API5309 compiles and fresh PostgreSQL HTTP fixtures pass; existing local DB lacks UserNutritionProfiles migration. API5308 supplies the browser compatibility checks; no deployment or provider configuration changed by this commit.",
       "baseRef": "HEAD",
-      "gitHead": "31c05e1ca207883a4eeed98d7455dcf2c4c8ebb0",
-      "reviewedAtUtc": "2026-10-02T18:24:33.1077685Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:36.7378709Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,17 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cae2c41f2feebe2f4b09a30c620ed2b524183cc2390d5d1e7a992ea03e1489e3"
+          "sha256": "afd267969ce492f5556b7f642d637ca93caf79a0b58bc9a4f9c51a8829a19a72"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "adbbe2c947b37f1ada44e129a64d528ec8ee8126e2cd8263e365617d0ab17b6b"
+          "sha256": "17da5a05ffaec7b15accf5fd68e7cfccf548de0a97e899ce51b4334aabfbda0d"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "b0ce49fabe564be0ffb9b83eb4e1631f9c89107f42d4150dcc1aee7f41010722"
         }
       ],
-      "reason": "Reviewed the frontend height-validation patch only: optional numeric height checks mirror the existing API boundary, and both metric and converted imperial values are blocked before submission when invalid. Native invalid-input checks issued no API mutations; no authentication, transport, persistence or disclosure behavior changes in this patch. Concurrent MailRelay source changes remain outside this audit patch and are excluded from the staged indexes.",
+      "reason": "Reviewed narrow changes to authenticated DOB PATCH and frontend import boundaries: presence flag hidden and unbindable, omitted fields preserve owner data; JSON regressions cover spoofed flag. No new credential transport in committed source; strict dependencies and all architecture tests passed. This is scoped correctness review, not a repository security audit.",
       "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-03T00:03:30.5165969Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:37.9653809Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1049,17 +1065,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c92fc4e3e57d77a2ee1efc878db6dc1ad3baa129d48f8c34efbd271b4cbade68"
+          "sha256": "060662c36c41e853ecc12864c36cc7a02e3e78abf6c3107982b0d8ab19394dbb"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f7ee95ce612e5fdb4c43a5daece46934801f189fc3b120276ce4a9f53f2ec516"
+          "sha256": "74d4482668b69123f9a98a1302a94c37ef9214718038bf4d695e9a5df316e240"
         }
       ],
-      "reason": "Reviewed profile page -> comparison widgets -> canonical height patch -> explicit save guard. Imperial values now update the same canonical field, eliminating the displayed 10ft versus stale180cm discrepancy. Metric and imperial invalid states use localized public UI-kit error/disabled contracts; optional save-bar inputs preserve existing consumers. Native RU390/EN1280 and 27 focused component tests passed. Concurrent backend changes are outside this frontend patch.",
-      "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-03T00:03:35.4309693Z"
+      "reason": "Checked combined profile trace from date control through nullable DTO and normalizeDate to JSON field-presence binding, command, handler and NutritionProfile update. Both regenerated frontend and frontend-contract indexes match final source; tests and native proof preserve omission and clear explicit null correctly.",
+      "baseRef": "c1e5a7716",
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:46:08.4895776Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1147,13 +1163,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c92fc4e3e57d77a2ee1efc878db6dc1ad3baa129d48f8c34efbd271b4cbade68"
+          "sha256": "060662c36c41e853ecc12864c36cc7a02e3e78abf6c3107982b0d8ab19394dbb"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
         }
       ],
-      "reason": "Reviewed profile height validation against Users API range (0,300], optional null and finite values. Shared save-bar additions are optional with compatible defaults; localized field errors, disabled explanation and submit guard preserve consumers. Three old-code regressions failed and all 26 focused tests pass; native RU390 and EN1280 cover invalid and valid boundaries, keyboard Enter issues zero API mutations, error aria-describedby and no overflow. No API, persistence or authentication changes.",
-      "baseRef": "HEAD",
-      "gitHead": "bbf570c38da7ca0b34e546d77fc5d2e3422c3b22",
-      "reviewedAtUtc": "2026-10-02T23:48:21.2443963Z"
+      "reason": "Reviewed combined changes relative to committed master: nullable UpdateUserDto and normalizeDate distinguish omission from explicit null; internal JSON presence flag is unbindable/hidden and owning NutritionProfile clears only explicitly. Pure shared model moves and generated frontend-contract index match current source. 5042 frontend, 577 Users, 6 PostgreSQL HTTP/Swagger and 2116 architecture checks pass; RU/EN native compatible API persistence verified.",
+      "baseRef": "c1e5a7716",
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:46:07.0235558Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1162,13 +1182,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "63998e1bb96e643ee374dce62d4d07c3c9c8bfd25c7662c271b95ff364a633b7"
+          "sha256": "25f1dab8cd716a2f40200f0ed4ebe81fdddbd2bf8753d53d8f39089b09b18d78"
         }
       ],
-      "reason": "Reviewed current repository catalog and newly declared Identity capability/adapter; navigation documentation remains accurate.",
+      "reason": "Checked regenerated repository catalog against final pure combined tree and renamed feature/shared ownership. Global generated indexes are taken from isolated combined source, excluding unrelated shared-workspace WIP.",
       "baseRef": "HEAD",
-      "gitHead": "f32ac3b851495d76e5392e97e2fa8286434b8f0c",
-      "reviewedAtUtc": "2026-10-02T11:35:24.3328081Z"
+      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
+      "reviewedAtUtc": "2026-10-03T04:42:35.0100976Z"
     },
     {
       "pageId": "workflow.review-diff",

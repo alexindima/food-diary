@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit, ProductType } from '../../models/product.data';
+import { MeasurementUnit, ProductType } from '../../../../shared/models/product.data';
 import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
 
 const CALORIES_FROM = 100;

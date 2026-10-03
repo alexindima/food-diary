@@ -8,8 +8,8 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { RecipeService } from '../../../api/recipe.service';
-import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeDetailComponent } from './recipe-detail';
 
 const PREP_TIME_MINUTES = 10;

@@ -9,7 +9,7 @@ import { provideTranslateTesting } from '../../../../../../../testing/translate-
 import { ErrorStateComponent } from '../../../../../../components/shared/error-state/error-state';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import { AuthService } from '../../../../../../services/auth.service';
-import type { Meal } from '../../../../models/meal.data';
+import type { Meal } from '../../../../../../shared/models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 import { MealListContentComponent } from './meal-list-content';
 

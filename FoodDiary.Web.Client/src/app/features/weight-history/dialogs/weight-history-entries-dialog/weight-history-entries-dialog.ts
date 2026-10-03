@@ -13,10 +13,10 @@ import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementHistoryPager } from '../../../../shared/measurements/measurement-history-pager';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import { getWeightChangeTone } from '../../lib/weight-history-progress.utils';
-import type { WeightEntry } from '../../models/weight-entry.data';
 
 export type WeightHistoryEntriesDialogResult = {
     action: 'edit' | 'remove';

@@ -3,8 +3,8 @@ import type { ResolveFn } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
+import type { Product } from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import type { Product } from '../models/product.data';
 
 export const productResolver: ResolveFn<Product | null> = route => {
     const productService = inject(ProductService);

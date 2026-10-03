@@ -6,7 +6,7 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { map } from 'rxjs';
 
-import type { FastingStats } from '../../../models/fasting.data';
+import type { FastingStats } from '../../../../../shared/models/fasting.data';
 
 @Component({
     selector: 'fd-fasting-stats-card',

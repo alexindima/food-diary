@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
-import type { TdeeInsight } from '../../../models/tdee-insight.data';
+import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data';
 
 @Component({
     selector: 'fd-tdee-insight-dialog-metrics',

@@ -8,7 +8,7 @@ import {
     normalizeEndOfHistoryDay,
     normalizeStartOfHistoryDay,
 } from '../../../shared/lib/history-range.utils';
-import type { WaistEntryFilters, WaistEntrySummaryFilters } from '../models/waist-entry.data';
+import type { WaistEntryFilters, WaistEntrySummaryFilters } from '../../../shared/models/waist-entry.data';
 import { WAIST_HISTORY_ENTRIES_LIMIT_MAX } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
 

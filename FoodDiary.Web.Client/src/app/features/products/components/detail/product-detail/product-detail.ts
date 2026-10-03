@@ -8,12 +8,12 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { buildProductTypeTranslationKey } from '../../../../../shared/lib/product-type.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import type { Product } from '../../../../../shared/models/product.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
-import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
+import { QuickMealService } from '../../../../meals/contracts/quick-meal';
 import { ProductDetailFacade } from '../../../lib/detail/product-detail.facade';
-import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
-import type { Product } from '../../../models/product.data';
 import { ProductDetailActionsComponent } from '../product-detail-actions/product-detail-actions';
 import { buildProductDetailNutritionViewModel, type ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 import { ProductDetailSummaryComponent } from '../product-detail-summary/product-detail-summary';

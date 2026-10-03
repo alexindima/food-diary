@@ -25,7 +25,7 @@ import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import type { MealAiSessionManageDto } from '../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary/meal-photo-nutrition-summary';
 import type {

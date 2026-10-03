@@ -3,8 +3,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import type { ProductSearchSuggestion } from '../../../../shared/models/product.data';
 import { ProductService } from '../../api/product.service';
-import type { ProductSearchSuggestion } from '../../models/product.data';
 import { PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../product-manage.constants';
 import { ProductNameSearchFacade } from './product-name-search.facade';
 

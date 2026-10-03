@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 
-import type { FastingCheckIn } from '../../models/fasting.data';
+import type { FastingCheckIn } from '../../../../shared/models/fasting.data';
 import { FastingCheckInChartComponent } from '../fasting-check-in-chart/fasting-check-in-chart';
 
 export type FastingCheckInChartDialogData = {

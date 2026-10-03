@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import type { AdminBillingPaymentViewModel } from './admin-billing.types';
+import type { AdminBillingPaymentViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table';
 
 const METADATA_JSON = '{"source":"stripe"}';

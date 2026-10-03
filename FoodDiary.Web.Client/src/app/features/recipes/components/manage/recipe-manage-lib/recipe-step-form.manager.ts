@@ -1,4 +1,4 @@
-import type { Recipe } from '../../../models/recipe.data';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import type { IngredientFormValues, StepFormValues } from './recipe-manage.types';
 import {
     createRecipeIngredientValue,

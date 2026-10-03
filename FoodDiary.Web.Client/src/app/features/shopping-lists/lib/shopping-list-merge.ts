@@ -1,4 +1,4 @@
-import type { ShoppingListItemDto } from '../models/shopping-list.data';
+import type { ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
 
 const MAX_AMOUNT = 1_000_000;
 

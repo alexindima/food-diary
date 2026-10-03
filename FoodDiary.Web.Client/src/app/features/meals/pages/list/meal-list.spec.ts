@@ -12,11 +12,11 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { NavigationService } from '../../../../services/navigation.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
+import type { MealOverview } from '../../../../shared/models/meal.data';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
-import type { FavoriteMeal, Meal } from '../../models/meal.data';
-import type { MealOverview } from '../../models/meal.data';
 import { MealListComponent } from './meal-list';
 
 const PAGE_LIMIT = 10;

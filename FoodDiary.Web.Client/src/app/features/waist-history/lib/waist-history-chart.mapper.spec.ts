@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WaistEntrySummaryPoint } from '../models/waist-entry.data';
+import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import { buildWaistEntryViewModels, buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 
 const CURRENT_YEAR = 2026;

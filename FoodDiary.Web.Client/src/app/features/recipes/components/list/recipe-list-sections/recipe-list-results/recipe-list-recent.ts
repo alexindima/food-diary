@@ -4,8 +4,8 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 import { injectCurrentLanguage } from '../../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
-import type { Recipe } from '../../../../models/recipe.data';
-import type { RecipeCardViewModel } from '../../../../pages/list/recipe-list.types';
+import type { Recipe } from '../../../../../../shared/models/recipe.data';
+import type { RecipeCardViewModel } from '../../../../lib/recipe-list.types';
 
 @Component({
     selector: 'fd-recipe-list-recent',

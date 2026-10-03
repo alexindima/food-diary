@@ -13,9 +13,9 @@ import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 
+import type { ShoppingListItem } from '../../../../shared/models/shopping-list.data';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { buildShoppingListItemViewModels, buildShoppingListUnitOptions } from '../../lib/shopping-list-item.mapper';
-import type { ShoppingListItem } from '../../models/shopping-list.data';
 
 const CHECKED_SETTLE_MS = 300;
 

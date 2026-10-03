@@ -17,7 +17,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid';

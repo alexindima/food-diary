@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { Meal } from '../../../../shared/models/meal.data';
 import { MealService } from '../../api/meal.service';
-import type { Meal } from '../../models/meal.data';
 import { AiMealCreateService } from './ai-meal-create.service';
 
 const RECOGNIZED_AT_UTC = '2026-05-02T19:00:00.000Z';

@@ -6,8 +6,8 @@ import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
-import { type Meal, MealSourceType } from '../../../models/meal.data';
+import { type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
 import { MealDetailComponent } from './meal-detail';
 
 const BASE_AMOUNT = 100;

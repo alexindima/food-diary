@@ -2,8 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { USDA_NUTRIENT_IDS } from '../../lib/usda-nutrient.constants';
-import type { DailyMicronutrient } from '../../models/usda.data';
+import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
+import type { DailyMicronutrient } from '../../../../shared/models/usda.data';
 import { DailyMicronutrientCardComponent } from './daily-micronutrient-card';
 
 const LINKED_COUNT = 1;

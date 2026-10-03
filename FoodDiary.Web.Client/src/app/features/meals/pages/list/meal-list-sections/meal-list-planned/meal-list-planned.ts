@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
-import type { Meal } from '../../../../models/meal.data';
+import type { Meal } from '../../../../../../shared/models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 
 @Component({

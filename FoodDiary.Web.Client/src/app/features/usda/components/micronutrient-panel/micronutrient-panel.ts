@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import type { Micronutrient } from '../../../../shared/models/usda.data';
 import { buildMineralMicronutrientViews, buildVitaminMicronutrientViews } from '../../lib/usda-micronutrient.mapper';
-import type { Micronutrient } from '../../models/usda.data';
 import { MicronutrientSectionComponent } from './micronutrient-section/micronutrient-section';
 
 @Component({

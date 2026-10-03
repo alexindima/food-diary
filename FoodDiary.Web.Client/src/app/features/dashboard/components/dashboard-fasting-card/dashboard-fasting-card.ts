@@ -17,10 +17,10 @@ import { FdUiIconComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
-import { buildFastingTimerCardComputedState } from '../../../fasting/lib/fasting-timer-card-state';
-import type { FastingSession } from '../../../fasting/models/fasting.data';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { buildDashboardFastingCycle, buildDashboardFastingDayTicks, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
 
 const EMPTY_DURATION_MS = 0;

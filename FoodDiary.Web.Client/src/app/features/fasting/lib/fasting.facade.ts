@@ -6,21 +6,6 @@ import type { Observable } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
-import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
-import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
-import { FastingService } from '../api/fasting.service';
-import {
-    FASTING_PROTOCOLS,
-    type FastingInsights,
-    type FastingMessage,
-    type FastingMode,
-    type FastingOverview,
-    type FastingPlanType,
-    type FastingProtocol,
-    type FastingSession,
-    type FastingStats,
-} from '../models/fasting.data';
 import {
     DEFAULT_CHECK_IN_LEVEL,
     DEFAULT_EXTEND_HOURS,
@@ -32,7 +17,23 @@ import {
     FASTING_PROMPT_SNOOZE_HOURS,
     MAX_CHECK_IN_LEVEL,
     MIN_FASTING_HOURS,
-} from './fasting.constants';
+} from '../../../shared/lib/fasting.constants';
+import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
+import { formatFastingDuration } from '../../../shared/lib/fasting-timer-card-state';
+import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
+import {
+    FASTING_PROTOCOLS,
+    type FastingInsights,
+    type FastingMessage,
+    type FastingMode,
+    type FastingOverview,
+    type FastingPlanType,
+    type FastingProtocol,
+    type FastingSession,
+    type FastingStats,
+} from '../../../shared/models/fasting.data';
+import { FastingService } from '../api/fasting.service';
 import { normalizeCyclicDays, normalizeFastingHours, normalizeIntermittentFastHours } from './fasting-input-normalization';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 import {
@@ -41,7 +42,6 @@ import {
     calculateMaxReducibleFastingHours,
     getFastingSessionDurationHours,
 } from './fasting-session-state';
-import { formatFastingDuration } from './fasting-timer-card-state';
 
 const HISTORY_FROM_MONTH_OFFSET = 1;
 const HISTORY_TO_MONTH_OFFSET = 2;

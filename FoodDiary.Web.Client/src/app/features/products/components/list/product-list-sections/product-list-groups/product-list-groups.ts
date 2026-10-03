@@ -5,7 +5,7 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { ProductCardComponent } from '../../../../../../components/shared/product-card/product-card';
 import { injectCurrentLanguage } from '../../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
-import type { Product } from '../../../../models/product.data';
+import type { Product } from '../../../../../../shared/models/product.data';
 import type { ProductCardViewModel } from '../../product-list.types';
 
 @Component({

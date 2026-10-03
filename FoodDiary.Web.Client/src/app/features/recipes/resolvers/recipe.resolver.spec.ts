@@ -4,8 +4,8 @@ import { type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
+import type { Recipe } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
-import type { Recipe } from '../models/recipe.data';
 import { recipeResolver } from './recipe.resolver';
 
 describe('recipeResolver', () => {

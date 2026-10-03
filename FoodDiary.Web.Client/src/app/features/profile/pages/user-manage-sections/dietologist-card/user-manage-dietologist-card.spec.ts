@@ -5,8 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
-import type { DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
-import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import type { DietologistPermissionChange } from '../../../lib/user-manage.types';
+import { createDietologistFormModel } from '../../../lib/user-manage-form.mapper';
 import { UserManageDietologistCardComponent } from './user-manage-dietologist-card';
 
 describe('UserManageDietologistCardComponent', () => {

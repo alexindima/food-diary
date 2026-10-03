@@ -6,10 +6,10 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiProgressRingComponent } from 'fd-ui-kit/progress-ring/fd-ui-progress-ring';
 
+import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
-import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
-import type { FastingSession, FastingStats } from '../../models/fasting.data';
-import type { FastingMessageViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
+import type { FastingMessageViewModel } from '../../lib/fasting-page.types';
 
 type RhythmDay = {
     dayKey: string;

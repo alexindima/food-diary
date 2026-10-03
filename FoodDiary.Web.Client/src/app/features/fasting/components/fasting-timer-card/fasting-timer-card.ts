@@ -6,11 +6,11 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { FastingFacade } from '../../lib/fasting.facade';
-import { buildFastingTimerCardComputedState } from '../../lib/fasting-timer-card-state';
-import type { FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from '../fasting-controls/fasting-controls';
 import { FastingTimerCardGroupsComponent } from './fasting-timer-card-groups/fasting-timer-card-groups';
 import { FastingTimerCardItemsComponent } from './fasting-timer-card-items/fasting-timer-card-items';

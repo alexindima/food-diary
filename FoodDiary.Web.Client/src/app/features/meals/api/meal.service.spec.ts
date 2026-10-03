@@ -5,8 +5,14 @@ import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
+import {
+    type MealFilters,
+    type MealItemResponseDto,
+    type MealManageDto,
+    type MealResponseDto,
+    MealSourceType,
+} from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import { type MealFilters, type MealItemResponseDto, type MealManageDto, type MealResponseDto, MealSourceType } from '../models/meal.data';
 import { MealService } from './meal.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/meals';

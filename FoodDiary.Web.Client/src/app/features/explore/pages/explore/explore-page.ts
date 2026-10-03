@@ -17,11 +17,11 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
+import type { Recipe } from '../../../../shared/models/recipe.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail/recipe-detail';
-import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
-import type { Recipe } from '../../../recipes/models/recipe.data';
+import { RecipeDetailComponent } from '../../../recipes/contracts/recipe-detail';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 import { EXPLORE_PAGE_SIZE, type ExploreSort, type ExploreSortAction } from './explore-page-lib/explore-page.constants';

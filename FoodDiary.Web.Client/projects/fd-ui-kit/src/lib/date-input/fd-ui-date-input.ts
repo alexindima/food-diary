@@ -63,6 +63,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
     public readonly touch = output();
+    public readonly manualInputInvalidChange = output<boolean>();
     public readonly disabled = input(false);
 
     protected readonly internalValue = signal<Date | null>(null);
@@ -113,6 +114,18 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         });
     }
 
+    public reset(): void {
+        this.setManualInputInvalid(false);
+        this.applyValue(this.value());
+        this.isOpen.set(false);
+        this.isFocused.set(false);
+        this.touched.set(false);
+        const control = this.host.nativeElement.querySelector<HTMLInputElement>('input');
+        if (control !== null) {
+            control.value = this.manualValue();
+        }
+    }
+
     protected readonly manualValue = computed(() => {
         const value = this.internalValue();
         return value === null ? '' : fdUiFormatDateInputValue(value);
@@ -126,12 +139,14 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         const min = this.minDate();
         const max = this.maxDate();
         if (parsed !== null && target.validity.valid && (min === null || parsed >= min) && (max === null || parsed <= max)) {
-            this.invalidManualDate.set(false);
             this.onDateSelect(parsed);
         } else {
-            this.invalidManualDate.set(target.value !== '' || target.validity.badInput);
-            this.value.set(null);
-            this.internalValue.set(null);
+            const invalid = target.value !== '' || target.validity.badInput;
+            this.setManualInputInvalid(invalid);
+            if (!invalid) {
+                this.value.set(null);
+                this.internalValue.set(null);
+            }
         }
         this.touched.set(true);
         this.touch.emit();
@@ -141,7 +156,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         if (this.disabled()) {
             return;
         }
-        this.invalidManualDate.set(false);
+        this.setManualInputInvalid(false);
         this.internalValue.set(null);
         this.value.set(null);
         this.touched.set(true);
@@ -180,7 +195,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         }
 
         const normalized = this.stripTime(value);
-        this.invalidManualDate.set(false);
+        this.setManualInputInvalid(false);
         this.internalValue.set(normalized);
         this.displayMonth.set(normalized);
         const isoDate = this.formatIsoDate(normalized);
@@ -262,5 +277,10 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         const parsed = fdUiParseLocalDate(value);
         this.internalValue.set(parsed);
         this.displayMonth.set(parsed ?? new Date());
+    }
+
+    private setManualInputInvalid(invalid: boolean): void {
+        this.invalidManualDate.set(invalid);
+        this.manualInputInvalidChange.emit(invalid);
     }
 }

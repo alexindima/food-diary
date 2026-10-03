@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WeightEntrySummaryPoint } from '../models/weight-entry.data';
+import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import { buildWeightEntryViewModels, buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
 
 const AVERAGE_WEIGHT = 72;

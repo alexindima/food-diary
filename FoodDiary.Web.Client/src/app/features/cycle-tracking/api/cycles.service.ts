@@ -14,7 +14,7 @@ import type {
     UpdateMenstrualEpisodePayload,
     UpsertCycleDayPayload,
     UpsertCycleFactorPayload,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
 
 @Service()
 export class CyclesService extends ApiService {

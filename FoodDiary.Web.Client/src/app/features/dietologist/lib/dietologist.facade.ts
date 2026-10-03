@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type {
     AttentionSignal,
     AttentionSignalSettings,
@@ -18,7 +19,6 @@ import type {
     RecommendationTemplate,
     RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
-import type { DashboardSnapshot } from '../../dashboard/models/dashboard.data';
 import { type DietologistClientDashboardQuery, DietologistService } from '../api/dietologist.service';
 
 @Service()

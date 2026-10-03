@@ -6,10 +6,10 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
-import { PublicAuthDialogService } from '../../public/lib/public-auth-dialog.service';
+import type { ShoppingList } from '../../../shared/models/shopping-list.data';
+import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
-import type { ShoppingList } from '../models/shopping-list.data';
 import { ShoppingListAddFacade } from './shopping-list-add.facade';
 
 const authenticated = signal(true);

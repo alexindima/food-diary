@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import type { MealCardItem } from '../../../../../../components/shared/meal-card/meal-card';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
-import type { FavoriteMeal } from '../../../../models/meal.data';
+import type { FavoriteMeal } from '../../../../../../shared/models/meal.data';
 import type { FavoriteMealView } from '../../meal-list-lib/meal-list.types';
 
 @Component({

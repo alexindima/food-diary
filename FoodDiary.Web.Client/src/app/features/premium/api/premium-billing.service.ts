@@ -11,7 +11,7 @@ import type {
     BillingProvider,
     CheckoutSessionResponse,
     PortalSessionResponse,
-} from '../models/billing.models';
+} from '../../../shared/models/billing.models';
 
 @Service()
 export class PremiumBillingService extends ApiService {

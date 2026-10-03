@@ -16,6 +16,27 @@ namespace FoodDiary.Modules.Users.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class UpdateUserCommandHandlerTests {
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Handle_NullBirthDateClearsOnlyWhenSpecified(bool specified) {
+        var user = User.Create("birthdate@example.com", "hash");
+        var originalDate = new DateTime(2000, 10, 2, 0, 0, 0, DateTimeKind.Utc);
+        user.UpdatePersonalInfo(birthDate: originalDate);
+        UpdateUserCommandHandler handler = new(CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", BirthDateSpecified = specified };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        DateTime? expectedDate = specified ? null : originalDate;
+        Assert.Multiple(
+            () => Assert.Equal(expectedDate, user.BirthDate),
+            () => Assert.Equal(expectedDate, result.Value.BirthDate),
+            () => Assert.Equal("Updated", result.Value.FirstName));
+    }
+
+    [Theory]
     [InlineData(null, "Existing")]
     [InlineData("", "")]
     [InlineData(" \t ", "")]

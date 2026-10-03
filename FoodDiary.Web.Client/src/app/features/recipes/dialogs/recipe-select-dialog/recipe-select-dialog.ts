@@ -22,9 +22,9 @@ import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, sk
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
+import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
+import type { Recipe, RecipeFilters } from '../../../../shared/models/recipe.data';
 import { RecipeSelectFacade, type RecipeSelectFilterValues } from '../../lib/recipe-select.facade';
-import type { Recipe, RecipeFilters } from '../../models/recipe.data';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content/recipe-select-dialog-content';
 import {
     RECIPE_SELECT_DIALOG_FIRST_PAGE,

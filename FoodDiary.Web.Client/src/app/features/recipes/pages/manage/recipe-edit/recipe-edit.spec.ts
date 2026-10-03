@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
-import { RecipeVisibility } from '../../../models/recipe.data';
+import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { RecipeEditComponent } from './recipe-edit';
 
 describe('RecipeEditComponent', () => {

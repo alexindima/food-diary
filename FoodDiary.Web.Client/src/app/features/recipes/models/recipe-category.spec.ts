@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isRecipeCategory, RECIPE_CATEGORIES, recipeCategoryKey } from './recipe-category';
+import { isRecipeCategory, RECIPE_CATEGORIES, recipeCategoryKey } from '../../../shared/models/recipe-category';
 
 describe('recipe category codes', () => {
     it('accepts all stable codes and derives localized labels', () => {

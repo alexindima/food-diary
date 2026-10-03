@@ -17,9 +17,10 @@ import { PageHeaderComponent } from '../../../../../components/shared/page-heade
 import { NavigationService } from '../../../../../services/navigation.service';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
+import type { Product } from '../../../../../shared/models/product.data';
+import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
-import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
 import { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog';
 import type {
     ProductAiDialogData,
@@ -48,7 +49,6 @@ import {
 } from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
-import type { Product } from '../../../models/product.data';
 import { ProductBasicInfoComponent } from '../product-basic-info/product-basic-info';
 import {
     buildAiResultPatch,

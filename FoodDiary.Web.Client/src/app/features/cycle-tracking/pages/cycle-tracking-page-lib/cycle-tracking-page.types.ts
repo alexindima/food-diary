@@ -5,7 +5,7 @@ import type {
     CycleResponse,
     CycleSymptomEntry,
     FertilitySignal,
-} from '../../models/cycle.data';
+} from '../../../../shared/models/cycle.data';
 
 export type CycleViewModel = {
     cycle: CycleResponse;

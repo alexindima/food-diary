@@ -13,14 +13,14 @@ import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknow
 import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';
-import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
-import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
     CreateWeightEntryPayload,
     WeightEntry,
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
-} from '../models/weight-entry.data';
+} from '../../../shared/models/weight-entry.data';
+import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
+import { WeightEntriesService } from '../api/weight-entries.service';
 import { MAX_WEIGHT_KG, MIN_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 import { buildBmiViewModel } from './weight-history-bmi.mapper';

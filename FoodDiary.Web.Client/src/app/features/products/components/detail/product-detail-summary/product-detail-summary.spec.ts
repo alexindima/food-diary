@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import type { ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 import { ProductDetailSummaryComponent } from './product-detail-summary';
 

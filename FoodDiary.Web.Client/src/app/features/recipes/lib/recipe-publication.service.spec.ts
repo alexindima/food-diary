@@ -4,9 +4,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ProductPublicationService } from '../../products/lib/product-publication.service';
-import { ProductVisibility } from '../../products/models/product.data';
-import { type RecipeDto, RecipeVisibility } from '../models/recipe.data';
+import { ProductVisibility } from '../../../shared/models/product.data';
+import { type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { ProductPublicationService } from '../../products/contracts/product-publication';
 import { RecipePublicationService } from './recipe-publication.service';
 
 describe('RecipePublicationService', () => {

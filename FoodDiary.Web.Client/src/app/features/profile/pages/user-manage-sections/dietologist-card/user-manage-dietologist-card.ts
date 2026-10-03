@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import type { DietologistPermissions, DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import type { DietologistFormValues, DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { DietologistFormValues, DietologistPermissionChange } from '../../../lib/user-manage.types';
 import { UserManageDietologistPermissionsComponent } from '../dietologist-permissions/user-manage-dietologist-permissions';
 import { UserManageDietologistSummaryComponent } from '../dietologist-summary/user-manage-dietologist-summary';
 

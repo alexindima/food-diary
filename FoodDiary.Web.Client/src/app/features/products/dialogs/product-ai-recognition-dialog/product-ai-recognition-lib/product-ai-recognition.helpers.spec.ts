@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { describe, expect, it } from 'vitest';
 
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
-import { MeasurementUnit } from '../../../models/product.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import {
     buildProductAiRecognitionModelFromNutrition,
     buildProductAiRecognitionResult,

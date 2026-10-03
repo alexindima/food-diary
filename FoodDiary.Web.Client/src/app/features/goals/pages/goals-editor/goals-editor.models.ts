@@ -4,8 +4,8 @@ import {
     PERCENT_MULTIPLIER,
     PROTEIN_CALORIES_PER_GRAM,
 } from '../../../../shared/lib/nutrition.constants';
+import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
-import type { DayCalorieKey, UpdateGoalsRequest } from '../../models/goals.data';
 
 export type GoalsDraft = {
     calories: number;

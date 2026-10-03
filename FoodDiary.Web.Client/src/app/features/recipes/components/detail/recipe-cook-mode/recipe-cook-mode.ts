@@ -4,8 +4,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
+import type { Recipe, RecipeIngredient, RecipeStep } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
-import type { Recipe, RecipeIngredient, RecipeStep } from '../../../models/recipe.data';
 
 const PERCENT_SCALE = 100;
 

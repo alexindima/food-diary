@@ -1,6 +1,6 @@
 import { compareDatesAsc, parseCalendarDateUtc } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import type { WeightEntry, WeightEntrySummaryPoint } from '../models/weight-entry.data';
+import type { WeightEntry, WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import type { WeightEntryViewModel } from './weight-history.types';
 
 const CALENDAR_DATE_LENGTH = 10;

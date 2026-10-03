@@ -2,8 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { USDA_NUTRIENT_IDS } from '../../lib/usda-nutrient.constants';
-import type { Micronutrient } from '../../models/usda.data';
+import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
+import type { Micronutrient } from '../../../../shared/models/usda.data';
 import { MicronutrientPanelComponent } from './micronutrient-panel';
 
 const VITAMIN_C_AMOUNT = 24;

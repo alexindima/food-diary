@@ -7,7 +7,7 @@ import {
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CyclePredictions,
     type CycleResponse,
-} from '../../../cycle-tracking/models/cycle.data';
+} from '../../../../shared/models/cycle.data';
 import { CycleSummaryCardComponent } from './cycle-summary-card';
 
 const CYCLE_DAY = 5;

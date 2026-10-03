@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, type Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
-import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { PublicRecipeService } from '../api/public-recipe.service';
 import { RecipeService } from '../api/recipe.service';

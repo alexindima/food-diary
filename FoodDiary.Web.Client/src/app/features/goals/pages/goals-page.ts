@@ -11,10 +11,10 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
+import type { UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
-import type { UpdateGoalsRequest } from '../models/goals.data';
 import { GoalsEditorComponent } from './goals-editor/goals-editor';
 import { GOALS_TOUR } from './goals-page-lib/goals-tour';
 

@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { DashboardSnapshot } from '../models/dashboard.data';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import { DASHBOARD_SNAPSHOT_QUERY_DEFAULTS } from './dashboard-api.tokens';
 
 export type DashboardSnapshotQuery = {

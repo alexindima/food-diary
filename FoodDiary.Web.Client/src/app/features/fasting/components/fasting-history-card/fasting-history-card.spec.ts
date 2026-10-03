@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
 import { FastingHistoryCardComponent } from './fasting-history-card';
 
 describe('FastingHistoryCardComponent', () => {

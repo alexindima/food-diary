@@ -9,8 +9,10 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { FEATURE_ACTION_PROVIDERS } from '../../../../composition/feature-action.providers';
 import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
+import { UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FASTING_REMINDER_PRESETS } from '../../../../shared/lib/fasting-reminder-presets';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
@@ -20,12 +22,9 @@ import { PushNotificationService } from '../../../../shared/notifications/push-n
 import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
 import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS, DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS } from '../../lib/user-manage.config';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageComponent } from './user-manage';
-import {
-    DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
-    DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
-} from './user-manage-lib/user-manage.config';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 
 let fixture: ComponentFixture<UserManageComponent>;
@@ -43,6 +42,8 @@ const MAX_PROFILE_HEIGHT = 300;
 const INITIAL_PROFILE_HEIGHT = 180;
 const INVALID_HEIGHT_FEET = 10;
 const CONVERTED_INVALID_HEIGHT = 332.7;
+const FUTURE_PROFILE_BIRTH_DATE = '2999-01-01';
+const VALID_PROFILE_BIRTH_DATE = '2000-10-02';
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
@@ -369,6 +370,98 @@ describe('UserManageComponent imperial height validation', () => {
     });
 });
 
+describe('UserManageComponent invalid birthday drafts', () => {
+    it('retains the last valid birthday when manual input becomes invalid', async () => {
+        await createComponentAsync(null);
+        editProfileBirthDate(VALID_PROFILE_BIRTH_DATE);
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+
+        component['onSubmit']();
+
+        expect(component['userForm'].birthDate().value()).toBe(VALID_PROFILE_BIRTH_DATE);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+    });
+
+    it('blocks saving another edited field while the birthday input is invalid', async () => {
+        await createComponentAsync(null);
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+        component['userForm'].firstName().value.set('Edited name');
+        fixture.detectChanges();
+
+        component['onSubmit']();
+
+        expect(component['userForm']().invalid()).toBe(true);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(profileSaveButton()?.disabled).toBe(true);
+    });
+
+    it('guards an invalid birthday draft even when no other field changes', async () => {
+        await createComponentAsync(null);
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+        expect(profileSaveButton()?.disabled).toBe(true);
+    });
+
+    it('discards the invalid manual draft and its error', async () => {
+        await createComponentAsync(null);
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+
+        component['discardUserFormChanges']();
+        fixture.detectChanges();
+
+        expect(profileBirthDateInput().value).toBe('');
+        expect(profileBirthDateInput().getAttribute('aria-invalid')).toBeNull();
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
+    });
+
+    it('allows saving after the invalid birthday is corrected', async () => {
+        await createComponentAsync(null);
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+        editProfileBirthDate(VALID_PROFILE_BIRTH_DATE);
+
+        component['onSubmit']();
+
+        expect(component['userForm']().invalid()).toBe(false);
+        expect(component['userForm'].birthDate().value()).toBe(VALID_PROFILE_BIRTH_DATE);
+        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('UserManageComponent invalid navigation saves', () => {
+    it.each(['height', 'birthDate'])('refuses save-and-leave with invalid %s', async field => {
+        await createComponentAsync(null);
+        if (field === 'height') {
+            component['userForm'].heightCm().value.set(0);
+            fixture.detectChanges();
+        } else {
+            editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+        }
+
+        expect(TestBed.inject(UnsavedChangesService).getHandler()?.save()).toBe(false);
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+    });
+});
+
+function profileBirthDateInput(): HTMLInputElement {
+    const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('fd-ui-date-input input');
+    if (input === null) {
+        throw new Error('Expected profile birthday input');
+    }
+    return input;
+}
+
+function editProfileBirthDate(value: string): void {
+    const input = profileBirthDateInput();
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+}
+
+function profileSaveButton(): HTMLButtonElement | null {
+    return (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('fd-unsaved-changes-bar fd-ui-button:last-child button');
+}
+
 describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {
         await createComponentAsync(null);
@@ -639,7 +732,7 @@ async function createComponentAsync(
 
     await TestBed.configureTestingModule({
         imports: [UserManageComponent],
-        providers: [...createTestingProviders(queryParams), provideTranslateTesting()],
+        providers: [...FEATURE_ACTION_PROVIDERS, ...createTestingProviders(queryParams), provideTranslateTesting()],
     })
         .overrideComponent(UserManageComponent, {
             remove: { providers: [ProfileManageFacade, UserManageNotificationsFacade] },

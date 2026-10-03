@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
+import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { MealPlanFacade } from './meal-plan.facade';

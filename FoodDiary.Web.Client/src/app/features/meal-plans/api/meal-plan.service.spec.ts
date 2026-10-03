@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
+import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { MealPlanService } from './meal-plan.service';
 

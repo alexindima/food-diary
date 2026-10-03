@@ -3,14 +3,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
-import { ProductPublicationService } from '../../products/lib/product-publication.service';
-import { ProductVisibility } from '../../products/models/product.data';
+import { ProductVisibility } from '../../../shared/models/product.data';
+import { type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { ProductPublicationService } from '../../products/contracts/product-publication';
 import {
     type RecipePublicationChoice,
     RecipePublicationDialogComponent,
     type RecipePublicationDialogData,
 } from '../dialogs/recipe-publication-dialog/recipe-publication-dialog';
-import { type RecipeDto, RecipeVisibility } from '../models/recipe.data';
 
 @Service()
 export class RecipePublicationService {

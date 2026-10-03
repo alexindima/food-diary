@@ -5,10 +5,10 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { type FavoriteRecipe, type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
-import { type FavoriteRecipe, type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeDetailFacade } from './recipe-detail.facade';
 
 const RECIPE_ID = 'recipe-1';

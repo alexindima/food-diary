@@ -1,4 +1,4 @@
-import { MAX_CYCLIC_DAYS, MAX_FASTING_HOURS, MAX_INTERMITTENT_FAST_HOURS, MIN_FASTING_HOURS } from './fasting.constants';
+import { MAX_CYCLIC_DAYS, MAX_FASTING_HOURS, MAX_INTERMITTENT_FAST_HOURS, MIN_FASTING_HOURS } from '../../../shared/lib/fasting.constants';
 
 function normalizeWholeNumber(value: number | null, maximum: number): number {
     const finiteValue = value !== null && Number.isFinite(value) ? value : MIN_FASTING_HOURS;

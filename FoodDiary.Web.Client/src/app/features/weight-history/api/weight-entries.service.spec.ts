@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import type { WeightEntry, WeightEntryFilters } from '../models/weight-entry.data';
+import type { WeightEntry, WeightEntryFilters } from '../../../shared/models/weight-entry.data';
 import { WeightEntriesService } from './weight-entries.service';
 
 const BASE_URL = environment.apiUrls.weights;

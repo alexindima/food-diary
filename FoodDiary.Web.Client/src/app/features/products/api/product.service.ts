@@ -12,7 +12,7 @@ import type {
     ProductOverview,
     ProductSearchSuggestion,
     UpdateProductRequest,
-} from '../models/product.data';
+} from '../../../shared/models/product.data';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
 import { normalizeProductUnit } from './product-unit.mapper';
 

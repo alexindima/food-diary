@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import type { HealthAreaScores } from '../../../../shared/models/usda.data';
 import { buildHealthAreaDisplays } from '../../lib/usda-health-score.mapper';
-import type { HealthAreaScores } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-health-area-scores',

@@ -10,6 +10,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { ProductRecognitionPhotosComponent } from '../../../dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos';
 import {
     getProductMaxAmountForUnit,
@@ -19,7 +20,6 @@ import {
     PRODUCT_DESCRIPTION_MAX_LENGTH,
     PRODUCT_NAME_MAX_LENGTH,
 } from '../../../lib/product-manage.constants';
-import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 

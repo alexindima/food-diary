@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { TdeeInsight } from '../../models/tdee-insight.data';
+import type { TdeeInsight } from '../../../../shared/models/tdee-insight.data';
 import { TdeeInsightCardComponent } from './tdee-insight-card';
 
 const ESTIMATED_TDEE = 2300;

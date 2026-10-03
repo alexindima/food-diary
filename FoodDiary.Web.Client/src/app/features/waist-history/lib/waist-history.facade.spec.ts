@@ -6,8 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import type { WaistHistoryPageSummary } from '../../../shared/models/waist-entry.data';
 import { WaistEntriesService } from '../api/waist-entries.service';
-import type { WaistHistoryPageSummary } from '../models/waist-entry.data';
 import { WaistHistoryFacade } from './waist-history.facade';
 
 const FIXTURE_LOCALIZED_DECIMAL = 75.5;

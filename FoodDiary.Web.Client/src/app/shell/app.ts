@@ -7,7 +7,7 @@ import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, mergeMap } from 'rxjs';
 
-import { QuickMealDrawerComponent } from '../features/meals/components/quick-meal-drawer/quick-meal-drawer';
+import { QuickMealDrawerComponent } from '../features/meals/contracts/quick-meal-drawer';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';

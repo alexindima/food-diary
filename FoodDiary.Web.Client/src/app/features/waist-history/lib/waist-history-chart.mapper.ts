@@ -1,6 +1,6 @@
 import { compareDatesAsc, parseCalendarDateUtc } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import type { WaistEntry, WaistEntrySummaryPoint } from '../models/waist-entry.data';
+import type { WaistEntry, WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import type { WaistEntryViewModel } from './waist-history.types';
 
 const CALENDAR_DATE_LENGTH = 10;

@@ -6,7 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { ShoppingList } from '../../shopping-lists/models/shopping-list.data';
+import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 
 const DEFAULT_PAGE_SIZE = 50;

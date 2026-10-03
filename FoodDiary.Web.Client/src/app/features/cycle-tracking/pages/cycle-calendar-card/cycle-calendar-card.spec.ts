@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { CycleResponse } from '../../models/cycle.data';
+import type { CycleResponse } from '../../../../shared/models/cycle.data';
 import { CycleCalendarCardComponent } from './cycle-calendar-card';
 
 const SELECTED_YEAR = 2025;

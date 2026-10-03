@@ -1,4 +1,4 @@
-import type { TdeeInsight } from '../../../models/tdee-insight.data';
+import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data';
 
 export type TdeeInsightDialogData = {
     insight: TdeeInsight | null;

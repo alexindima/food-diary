@@ -4,8 +4,8 @@ import { FdUiDialogComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
+import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
-import type { ShoppingListPage, ShoppingListSummary } from '../../models/shopping-list.data';
 export type ShoppingListBrowserResult = { id: string } | { create: true; name?: string | void };
 export type ShoppingListBrowserData = {
     lists: Signal<readonly ShoppingListSummary[]>;

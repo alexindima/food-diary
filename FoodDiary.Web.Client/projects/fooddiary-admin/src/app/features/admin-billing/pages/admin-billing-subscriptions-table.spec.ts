@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import type { AdminBillingSubscriptionViewModel } from './admin-billing.types';
+import type { AdminBillingSubscriptionViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table';
 
 const subscription: AdminBillingSubscriptionViewModel = {

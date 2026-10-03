@@ -1,4 +1,4 @@
-import type { BillingPlan, BillingProvider } from '../../../models/billing.models';
+import type { BillingPlan, BillingProvider } from '../../../../../shared/models/billing.models';
 
 export type PremiumOverviewBadgesViewModel = {
     planLabelKey: string | null;

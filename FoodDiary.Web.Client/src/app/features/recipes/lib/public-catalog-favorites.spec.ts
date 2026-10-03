@@ -5,9 +5,9 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
-import { PublicAuthDialogService } from '../../public/lib/public-auth-dialog.service';
+import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
+import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
-import type { FavoriteRecipe } from '../models/recipe.data';
 import { PublicCatalogFavorites } from './public-catalog-favorites.facade';
 import { publicRecipeFixture } from './public-recipe.test-helper';
 

@@ -1,5 +1,5 @@
-import type { MeasurementUnit } from '../../products/models/product.data';
-import type { ShoppingListItem } from '../models/shopping-list.data';
+import type { MeasurementUnit } from '../../../shared/models/product.data';
+import type { ShoppingListItem } from '../../../shared/models/shopping-list.data';
 
 export type ShoppingListItemFormModel = {
     name: string;

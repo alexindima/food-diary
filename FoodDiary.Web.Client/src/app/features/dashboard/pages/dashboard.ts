@@ -33,7 +33,7 @@ import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
-import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
+import { AiMealCreateFacade } from '../../meals/contracts/ai-meal-create';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { parseDashboardDate } from '../lib/dashboard-date.utils';
 import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-priority';

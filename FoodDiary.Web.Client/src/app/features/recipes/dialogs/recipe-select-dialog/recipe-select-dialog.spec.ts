@@ -5,8 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
-import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recipe-select-dialog.types';
 

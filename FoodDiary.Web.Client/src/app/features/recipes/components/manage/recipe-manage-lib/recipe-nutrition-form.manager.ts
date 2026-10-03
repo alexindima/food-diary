@@ -2,8 +2,8 @@ import { signal } from '@angular/core';
 
 import { checkMacrosError, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../../shared/models/charts.data';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import type { RecipeNutritionSummary, RecipeStepsNutritionState } from '../../../lib/recipe-manage.facade';
-import type { Recipe } from '../../../models/recipe.data';
 import type { NutritionMode, NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
 
 type RecipeNutritionControl<T> = {

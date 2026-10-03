@@ -3,8 +3,8 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, type Observable, of, switchMap } from 'rxjs';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
+import type { UsdaFood } from '../../../shared/models/usda.data';
 import { UsdaService } from '../api/usda.service';
-import type { UsdaFood } from '../models/usda.data';
 
 const USDA_SEARCH_MIN_LENGTH = 2;
 

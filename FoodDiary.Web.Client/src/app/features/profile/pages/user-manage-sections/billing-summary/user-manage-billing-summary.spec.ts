@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
-import type { BillingOverview } from '../../../../premium/models/billing.models';
-import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { BillingOverview } from '../../../../../shared/models/billing.models';
+import type { BillingViewModel } from '../../../lib/user-manage.types';
 import { UserManageBillingSummaryComponent } from './user-manage-billing-summary';
 
 const BILLING_OVERVIEW: BillingOverview = {

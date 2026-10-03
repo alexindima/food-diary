@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 213
+    "documentationPages": 214
   },
   "dotnet": {
     "projects": [
@@ -14220,7 +14220,8 @@
           "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
-          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
+          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
@@ -15737,6 +15738,7 @@
       "docs/adr/0049-owner-nutrition-reads-and-dashboard-composition.md",
       "docs/adr/0050-public-recipe-read-boundary-and-ssr.md",
       "docs/adr/0051-canonical-project-namespaces.md",
+      "docs/adr/0052-backend-transaction-and-delivery-reliability.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

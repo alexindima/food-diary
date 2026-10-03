@@ -5,8 +5,8 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { ShoppingListItem } from '../../../../shared/models/shopping-list.data';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
-import type { ShoppingListItem } from '../../models/shopping-list.data';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel';
 
 const CHECKED_ITEM: ShoppingListItem = {

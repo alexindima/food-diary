@@ -1,0 +1,14 @@
+{
+  "omitted": {
+    "request": { "firstName": "Updated" },
+    "response": { "firstName": "Updated", "birthDate": "2000-10-02T00:00:00Z" }
+  },
+  "cleared": {
+    "request": { "birthDate": null },
+    "response": { "firstName": "QA", "birthDate": null }
+  },
+  "replaced": {
+    "request": { "birthDate": "1990-01-15T00:00:00Z" },
+    "response": { "firstName": "QA", "birthDate": "1990-01-15T00:00:00Z" }
+  }
+}

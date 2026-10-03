@@ -3,8 +3,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import type { FavoriteProduct } from '../../../../shared/models/product.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
-import type { FavoriteProduct } from '../../models/product.data';
 import { ProductFavoritesPickerFacade } from './product-favorites-picker.facade';
 
 const PAGE_SIZE = 10;

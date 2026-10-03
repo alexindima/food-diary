@@ -10,8 +10,8 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
-import type { FastingSession } from '../../models/fasting.data';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
+import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
 
 export type FastingHistoryDialogData = {
     historyItems: Signal<readonly FastingHistorySessionViewModel[]>;

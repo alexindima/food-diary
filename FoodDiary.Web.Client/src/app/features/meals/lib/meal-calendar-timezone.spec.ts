@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../shared/lib/local-date.utils';
+import type { Meal } from '../../../shared/models/meal.data';
 import {
     buildMealDateTime,
     buildMealManageDto,
     buildMealManageFormPatchValue,
     createMealManageFormValue,
 } from '../components/manage/meal-manage-lib/meal-manage-form.mapper';
-import type { Meal } from '../models/meal.data';
 
 const NO_NUTRIENTS = { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
 const DAYS = ['2026-01-01', '2026-03-08', '2026-03-29', '2026-04-05', '2026-10-04', '2026-10-25', '2026-11-01', '2026-12-31'];

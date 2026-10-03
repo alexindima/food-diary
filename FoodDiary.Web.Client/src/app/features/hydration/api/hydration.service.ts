@@ -5,7 +5,7 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../models/hydration.data';
+import type { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../../../shared/models/hydration.data';
 
 @Service()
 export class HydrationService extends ApiService {

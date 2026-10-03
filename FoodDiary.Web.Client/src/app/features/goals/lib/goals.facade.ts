@@ -10,9 +10,9 @@ import {
     PERCENT_MULTIPLIER,
     PROTEIN_CALORIES_PER_GRAM,
 } from '../../../shared/lib/nutrition.constants';
+import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../api/goals.service';
-import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 import {
     GOALS_AUTOSAVE_DEBOUNCE_MS,
     GOALS_DEFAULT_ZONE_ALPHA,

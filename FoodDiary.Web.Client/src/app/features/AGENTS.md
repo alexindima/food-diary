@@ -9,6 +9,7 @@ Rules for `FoodDiary.Web.Client/src/app/features/`.
 - Prefer these layer folders when applicable:
     - `api/`
     - `models/`
+    - `contracts/` for deliberately published integration surfaces
     - `components/`
     - `dialogs/`
     - `lib/`
@@ -24,6 +25,9 @@ Rules for `FoodDiary.Web.Client/src/app/features/`.
 - Do not import another feature's route file.
 - Do not import a feature root path directly; import a concrete layer.
 - If multiple features need the same model/API helper, promote it to `src/app/shared`.
+- For intentional cross-feature actions, publish a narrow typed capability in the owning feature's `contracts/` and bind its implementation at app composition. Do not expose the raw API client.
+- Reusable UI and use-case facades may have explicit public contracts. Consumers must provide stateful facades at their own page/dialog scope. Contracts must not export route pages or foreign implementation files.
+- Keep page-specific view types and pure mappers in `lib/` or `models/` when lower layers consume them; lower layers must not import `pages/`.
 
 ## UI
 

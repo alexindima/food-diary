@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import type { FastingStats } from '../../../models/fasting.data';
+import type { FastingStats } from '../../../../../shared/models/fasting.data';
 import { FastingStatsCardComponent } from './fasting-stats-card';
 
 const TOTAL_COMPLETED = 8;

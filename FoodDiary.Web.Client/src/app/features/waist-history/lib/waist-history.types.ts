@@ -1,4 +1,4 @@
-import type { WaistEntry } from '../models/waist-entry.data';
+import type { WaistEntry } from '../../../shared/models/waist-entry.data';
 
 export type WaistHistoryRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 

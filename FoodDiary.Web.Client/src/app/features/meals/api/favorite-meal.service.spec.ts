@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
-import type { FavoriteMeal } from '../models/meal.data';
+import type { FavoriteMeal } from '../../../shared/models/meal.data';
 import { FavoriteMealService } from './favorite-meal.service';
 
 const PAGE_SIZE = 10;

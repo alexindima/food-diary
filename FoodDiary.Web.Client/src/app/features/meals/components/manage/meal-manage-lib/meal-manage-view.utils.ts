@@ -2,7 +2,7 @@ import type { TranslateService } from '@ngx-translate/core';
 
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
-import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import type { NutritionTotals } from './meal-manage.types';
 
 const FRACTION_EPSILON = 0.01;

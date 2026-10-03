@@ -4,8 +4,8 @@ import { type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
+import type { Product } from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import type { Product } from '../models/product.data';
 import { productResolver } from './product.resolver';
 
 let productServiceSpy: { getById: ReturnType<typeof vi.fn> };

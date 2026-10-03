@@ -13,7 +13,7 @@ import {
     ProductType,
     ProductVisibility,
     type UpdateProductRequest,
-} from '../models/product.data';
+} from '../../../shared/models/product.data';
 import { ProductService } from './product.service';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
 

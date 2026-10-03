@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { FastingMessageViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingMessageViewModel } from '../../lib/fasting-page.types';
 import { FastingInsightsSectionComponent } from './fasting-insights-section';
 
 describe('FastingInsightsSectionComponent', () => {

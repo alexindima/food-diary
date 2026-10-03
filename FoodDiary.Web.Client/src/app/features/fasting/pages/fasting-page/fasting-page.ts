@@ -13,8 +13,22 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import {
+    CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
+    DEFAULT_CYCLIC_EAT_DAYS,
+    DEFAULT_CYCLIC_EAT_FAST_HOURS,
+    DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
+    DEFAULT_CYCLIC_FAST_DAYS,
+} from '../../../../shared/lib/fasting.constants';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../../shared/lib/time.constants';
+import {
+    FASTING_PROTOCOLS,
+    type FastingCheckIn,
+    type FastingMessage,
+    type FastingSession,
+    type FastingSessionStatus,
+} from '../../../../shared/models/fasting.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import {
@@ -40,13 +54,6 @@ import {
     FastingSessionDetailsDialogComponent,
     type FastingSessionDetailsDialogData,
 } from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
-import {
-    CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
-    DEFAULT_CYCLIC_EAT_DAYS,
-    DEFAULT_CYCLIC_EAT_FAST_HOURS,
-    DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
-    DEFAULT_CYCLIC_FAST_DAYS,
-} from '../../lib/fasting.constants';
 import { FastingFacade } from '../../lib/fasting.facade';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
@@ -54,18 +61,7 @@ import {
     FASTING_MOOD_EMOJI_SCALE,
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
 } from '../../lib/fasting-page.constants';
-import {
-    FASTING_PROTOCOLS,
-    type FastingCheckIn,
-    type FastingMessage,
-    type FastingSession,
-    type FastingSessionStatus,
-} from '../../models/fasting.data';
-import type {
-    FastingCheckInViewModel,
-    FastingHistorySessionViewModel,
-    FastingMessageViewModel,
-} from '../fasting-page-lib/fasting-page.types';
+import type { FastingCheckInViewModel, FastingHistorySessionViewModel, FastingMessageViewModel } from '../../lib/fasting-page.types';
 import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
 
 @Component({

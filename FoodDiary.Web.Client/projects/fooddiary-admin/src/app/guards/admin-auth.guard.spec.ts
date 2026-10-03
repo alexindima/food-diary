@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminAuthService } from '../features/admin-auth/lib/admin-auth.service';
+import { AdminAuthService } from '../features/admin-auth/contracts/admin-session';
 import { adminAuthGuard } from './admin-auth.guard';
 
 describe('adminAuthGuard', () => {

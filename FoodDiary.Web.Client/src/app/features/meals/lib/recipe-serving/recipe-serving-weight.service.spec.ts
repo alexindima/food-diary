@@ -3,9 +3,9 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
+import { MeasurementUnit } from '../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
-import { MeasurementUnit } from '../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
 const SERVINGS = 2;

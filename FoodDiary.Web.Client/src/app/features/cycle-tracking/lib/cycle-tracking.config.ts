@@ -1,4 +1,4 @@
-import type { CycleSymptomCategory } from '../models/cycle.data';
+import type { CycleSymptomCategory } from '../../../shared/models/cycle.data';
 
 export type CycleSymptomField = {
     key:

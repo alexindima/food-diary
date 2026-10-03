@@ -6,8 +6,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealDetailFacade } from './meal-detail.facade';
 
 const favoriteMeal: FavoriteMeal = {

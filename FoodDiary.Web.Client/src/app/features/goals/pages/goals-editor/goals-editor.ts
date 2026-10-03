@@ -4,8 +4,8 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
+import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
-import type { DayCalorieKey, UpdateGoalsRequest } from '../../models/goals.data';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
 import {
     applyMacroPreset,

@@ -2,7 +2,7 @@ import type { NutritionFormModel, NutritionMacroState } from '../../../../../com
 import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/chart-colors';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
-import type { Product } from '../../../models/product.data';
+import type { Product } from '../../../../../shared/models/product.data';
 
 const MACRO_SUMMARY_LIMIT = 3;
 const MIN_MACRO_BAR_PERCENT = 4;

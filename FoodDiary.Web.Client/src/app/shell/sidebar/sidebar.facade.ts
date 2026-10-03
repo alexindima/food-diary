@@ -1,7 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
-import { getDashboardDateUtc } from '../../features/dashboard/lib/dashboard-date.utils';
+import { getDashboardDateUtc } from '../../features/dashboard/contracts/dashboard-date';
 import { UserService } from '../../shared/api/user.service';
 import { NutritionDataInvalidationService } from '../../shared/state/nutrition-data-invalidation.service';
 

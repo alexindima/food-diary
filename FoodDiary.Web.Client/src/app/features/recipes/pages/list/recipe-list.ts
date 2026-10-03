@@ -25,6 +25,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
+import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../../shared/models/recipe.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -35,10 +37,8 @@ import {
     RecipeListResultsComponent,
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
 import { RecipeFavoritesPickerComponent } from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
-import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../models/recipe.data';
-import type { RecipeCardViewModel } from './recipe-list.types';
+import type { RecipeCardViewModel } from '../../lib/recipe-list.types';
 import { RECIPE_LIST_TOUR } from './recipe-list-tour';
 
 @Component({

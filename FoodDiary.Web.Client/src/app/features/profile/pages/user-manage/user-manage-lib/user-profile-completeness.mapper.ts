@@ -1,4 +1,4 @@
-import type { UserFormValues } from './user-manage.types';
+import type { UserFormValues } from '../../../lib/user-manage.types';
 
 const PROFILE_CALCULATION_FIELDS = 4;
 const COMPLETE_PROFILE_PERCENTAGE = 100;

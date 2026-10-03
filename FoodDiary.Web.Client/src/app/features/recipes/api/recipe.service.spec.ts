@@ -5,7 +5,7 @@ import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
-import { type Recipe, type RecipeDto, RecipeVisibility } from '../models/recipe.data';
+import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { RecipeService } from './recipe.service';
 import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 

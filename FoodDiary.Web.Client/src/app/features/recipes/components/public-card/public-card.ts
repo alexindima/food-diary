@@ -4,8 +4,8 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
+import { recipeCategoryKey } from '../../../../shared/models/recipe-category';
 import type { PublicRecipe } from '../../models/public-recipe.data';
-import { recipeCategoryKey } from '../../models/recipe-category';
 
 @Component({
     selector: 'fd-public-recipe-card',

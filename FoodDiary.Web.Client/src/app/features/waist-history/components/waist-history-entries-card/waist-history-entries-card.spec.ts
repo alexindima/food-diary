@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import type { WaistEntry } from '../../models/waist-entry.data';
+import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryEntriesCardComponent } from './waist-history-entries-card';
 
 const ENTRY_CIRCUMFERENCE = 81.5;

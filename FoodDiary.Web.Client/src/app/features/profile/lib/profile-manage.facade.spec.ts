@@ -187,6 +187,32 @@ afterEach(() => {
 });
 
 describe('ProfileManageFacade loading and submit', () => {
+    it('keeps a saved profile when an older overview completes afterward', () => {
+        const pending = new Subject<UserProfileOverview>();
+        userService.getOverview.mockReturnValueOnce(pending);
+        facade.initialize();
+        userService.update.mockReturnValueOnce(of({ ...user, username: 'saved' }));
+
+        facade.submitUpdate(new UpdateUserDto({ username: 'saved' }));
+        pending.next({ ...overview, user: { ...user, username: 'stale' } });
+
+        expect(facade.user()?.username).toBe('saved');
+        expect(pending.observed).toBe(false);
+    });
+
+    it('cancels an overview read when the profile owner is destroyed', () => {
+        const pending = new Subject<UserProfileOverview>();
+        userService.getOverview.mockReturnValueOnce(pending);
+        facade.initialize();
+        expect(pending.observed).toBe(true);
+
+        TestBed.resetTestingModule();
+        pending.next(overview);
+
+        expect(pending.observed).toBe(false);
+        expect(facade.user()).toBeNull();
+    });
+
     it('loads user and applies language on initialize', () => {
         facade.initialize();
 

@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
-import type { WaistEntry } from '../../models/waist-entry.data';
 import { WaistHistoryEntriesDialogComponent } from './waist-history-entries-dialog';
 
 const PAGE_SIZE = 20;

@@ -4,7 +4,6 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { PageOf } from '../../../shared/models/page-of.data';
 import type {
     ExtendFastingPayload,
     FastingHistoryQuery,
@@ -13,7 +12,8 @@ import type {
     ReduceFastingTargetPayload,
     StartFastingPayload,
     UpdateFastingCheckInPayload,
-} from '../models/fasting.data';
+} from '../../../shared/models/fasting.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
 @Service()

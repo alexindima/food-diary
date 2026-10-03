@@ -8,9 +8,9 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
-import type { Recipe } from '../../../models/recipe.data';
 import { RecipeCookModeComponent } from '../recipe-cook-mode/recipe-cook-mode';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 import { buildRecipeDetailViewModel } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';

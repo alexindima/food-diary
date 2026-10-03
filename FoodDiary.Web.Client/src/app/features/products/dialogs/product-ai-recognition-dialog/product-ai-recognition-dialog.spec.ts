@@ -8,8 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { MeasurementUnit } from '../../../../shared/models/product.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
-import { MeasurementUnit } from '../../models/product.data';
 import { ProductAiRecognitionDialogComponent } from './product-ai-recognition-dialog';
 
 const PRODUCT_CALORIES = 150;

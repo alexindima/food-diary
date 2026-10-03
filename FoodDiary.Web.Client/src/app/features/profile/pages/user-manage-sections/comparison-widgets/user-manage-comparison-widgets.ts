@@ -16,11 +16,7 @@ import { ImageUploadFieldComponent } from '../../../../../components/shared/imag
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { ActivityLevelOption, Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
-import type {
-    UserFormValues,
-    UserManageAccountFormPatch,
-    UserManageBodyFormPatch,
-} from '../../user-manage/user-manage-lib/user-manage.types';
+import type { UserFormValues, UserManageAccountFormPatch, UserManageBodyFormPatch } from '../../../lib/user-manage.types';
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
 
 const ISO_DATE_LENGTH = 10;
@@ -60,6 +56,7 @@ export class UserManageComparisonWidgetsComponent {
     public readonly currentWaist = input.required<number | null>();
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
+    public readonly birthDateInputInvalidChange = output<boolean>();
     protected readonly timeZoneOptions = computed<Array<FdUiSelectOption<string | null>>>(() => {
         const selected = this.userForm().timeZoneId().value();
         const available = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : [];

@@ -1,7 +1,5 @@
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
-import type { Recipe } from '../../../../recipes/models/recipe.data';
-import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 import {
     type Meal,
     type MealAiSessionManageDto,
@@ -9,7 +7,9 @@ import {
     type MealItemManageDto,
     type MealManageDto,
     MealSourceType,
-} from '../../../models/meal.data';
+} from '../../../../../shared/models/meal.data';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
+import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 
 export type MealManageDtoCallbacks = {

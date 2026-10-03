@@ -6,9 +6,9 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
 
+import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 import { FavoriteRecipeRowComponent } from '../../components/favorite-recipe-row/favorite-recipe-row';
 import { RecipeFavoritesPickerFacade } from '../../lib/favorites/recipe-favorites-picker.facade';
-import type { FavoriteRecipe } from '../../models/recipe.data';
 
 const SEARCH_DEBOUNCE_MS = 300;
 

@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FoodNutritionResponse } from '../../../../../shared/models/ai.data';
-import { MeasurementUnit } from '../../../models/product.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { createProductAiRecognitionFormModel } from '../product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result';
 

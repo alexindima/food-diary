@@ -5,9 +5,9 @@ import { NEVER, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
-import { MeasurementUnit } from '../../products/models/product.data';
+import { MeasurementUnit } from '../../../shared/models/product.data';
+import type { ShoppingList, ShoppingListOverview, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingList, ShoppingListOverview, ShoppingListSummary } from '../models/shopping-list.data';
 import { ShoppingListFacade } from './shopping-list.facade';
 
 const AUTOSAVE_DEBOUNCE_MS = 500;

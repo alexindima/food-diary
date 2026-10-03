@@ -1,4 +1,4 @@
-import type { ProductType } from '../../../models/product.data';
+import type { ProductType } from '../../../../../shared/models/product.data';
 
 export type ProductListVisibilityFilter = 'all' | 'mine';
 

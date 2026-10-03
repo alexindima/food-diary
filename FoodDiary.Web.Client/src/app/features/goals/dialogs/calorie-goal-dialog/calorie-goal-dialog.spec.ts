@@ -5,8 +5,8 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { GoalsResponse } from '../../../../shared/models/goals.data';
 import { CalorieGoalFacade } from '../../lib/calorie-goal.facade';
-import type { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog';
 
 const DEFAULT_CALORIE_TARGET = 2000;

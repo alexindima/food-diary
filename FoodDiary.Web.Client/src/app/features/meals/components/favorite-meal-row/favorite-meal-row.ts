@@ -6,7 +6,7 @@ import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveMealImageUrl } from '../../../../shared/lib/meal-image.util';
-import type { FavoriteMeal } from '../../models/meal.data';
+import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 
 const MAX_IMAGES = 4;
 

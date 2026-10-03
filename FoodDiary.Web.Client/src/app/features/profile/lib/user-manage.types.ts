@@ -1,0 +1,75 @@
+import type { BillingOverview } from '../../../shared/models/billing.models';
+import type { DietologistPermissions } from '../../../shared/models/dietologist.data';
+import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import type { ActivityLevelOption, Gender, UiStyleOption } from '../../../shared/models/user.data';
+import type { WebPushSubscriptionItem } from '../../../shared/notifications/notification.service';
+import type { AppThemeName } from '../../../theme/app-theme.config';
+
+export type UserFormValues = {
+    timeZoneId: string | null;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    birthDate: string | null;
+    gender: Gender | null;
+    language: string | null;
+    theme: AppThemeName | null;
+    uiStyle: UiStyleOption | null;
+    heightCm: number | null;
+    activityLevel: ActivityLevelOption | null;
+    stepGoal: number | null;
+    profileImage: ImageSelection | null;
+};
+
+export type UserManageAccountFormPatch = Partial<
+    Pick<
+        UserFormValues,
+        'username' | 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'language' | 'theme' | 'uiStyle' | 'profileImage' | 'timeZoneId'
+    >
+>;
+
+export type UserManageBodyFormPatch = Partial<Pick<UserFormValues, 'heightCm' | 'activityLevel'>>;
+
+export type DietologistFormValues = {
+    email: string;
+    shareProfile: boolean;
+    shareMeals: boolean;
+    shareStatistics: boolean;
+    shareWeight: boolean;
+    shareWaist: boolean;
+    shareGoals: boolean;
+    shareHydration: boolean;
+    shareFasting: boolean;
+};
+
+export type DietologistPermissionControlName = Exclude<keyof DietologistFormValues, 'email'>;
+
+export type DietologistPermissionChange = {
+    controlName: keyof DietologistPermissions;
+    value: boolean;
+};
+
+export type ConnectedDeviceViewModel = {
+    subscription: WebPushSubscriptionItem;
+    label: string;
+    meta: string;
+    isCurrent: boolean;
+};
+
+export type ConnectedDevicesSectionState = 'loading' | 'content' | 'empty';
+
+export type BillingViewModel = {
+    overview: BillingOverview;
+    statusTone: 'success' | 'muted';
+    endLabelKey: string;
+    showNextAttempt: boolean;
+    premiumActionVariant: 'secondary' | 'primary';
+    premiumActionLabelKey: string;
+    showManagedSupportNote: boolean;
+};
+
+export type PasswordActionState = {
+    buttonLabelKey: string;
+    descriptionKey: string;
+};

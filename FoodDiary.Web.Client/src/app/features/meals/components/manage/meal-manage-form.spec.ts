@@ -8,7 +8,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../services/navigation.service';
-import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -16,7 +15,8 @@ import {
     type MealAiSessionManageDto,
     type MealManageDto,
     MealSourceType,
-} from '../../models/meal.data';
+} from '../../../../shared/models/meal.data';
+import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from './meal-manage-lib/meal-manage-form.mapper';

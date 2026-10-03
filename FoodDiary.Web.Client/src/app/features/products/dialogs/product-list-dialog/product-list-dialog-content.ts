@@ -5,7 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
-import type { Product } from '../../models/product.data';
+import type { Product } from '../../../../shared/models/product.data';
 import type { ProductSelectItemViewModel } from './product-list-dialog.types';
 
 @Component({

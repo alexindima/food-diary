@@ -1,8 +1,8 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import type { Subscription } from 'rxjs';
 
+import type { ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingListPage, ShoppingListSummary } from '../models/shopping-list.data';
 
 const PAGE_SIZE = 20;
 @Injectable()

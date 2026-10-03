@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import {
     PRODUCT_MAX_PIECE_CALORIES_PER_BASE,
     PRODUCT_MAX_PIECE_NUTRIENT_PER_BASE,
@@ -13,7 +14,6 @@ import {
     PRODUCT_MAX_WEIGHT_OR_VOLUME_CALORIES_PER_BASE,
     PRODUCT_MAX_WEIGHT_OR_VOLUME_NUTRIENT_PER_BASE,
 } from '../../../lib/product-manage.constants';
-import { MeasurementUnit } from '../../../models/product.data';
 import { createProductForm } from '../product-manage-lib/product-manage-form.mapper';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor';

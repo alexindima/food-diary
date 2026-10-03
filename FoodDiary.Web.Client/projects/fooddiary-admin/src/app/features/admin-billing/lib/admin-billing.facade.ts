@@ -20,7 +20,7 @@ import type {
     AdminBillingPaymentViewModel,
     AdminBillingSubscriptionViewModel,
     AdminBillingWebhookEventViewModel,
-} from '../pages/admin-billing.types';
+} from '../models/admin-billing-view.models';
 
 const DEFAULT_PAGE_SIZE = 20;
 const SHORT_ID_MIN_LENGTH = 18;

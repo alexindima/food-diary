@@ -13,6 +13,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { measurementMonthRange } from '../../../../shared/lib/measurement-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -28,7 +29,6 @@ import { WaistHistoryEntryDialogComponent } from '../../dialogs/waist-history-en
 import { WaistHistoryGoalDialogComponent } from '../../dialogs/waist-history-goal-dialog/waist-history-goal-dialog';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WAIST_HISTORY_RANGE_TABS } from '../../lib/waist-history-page.config';
-import type { WaistEntry } from '../../models/waist-entry.data';
 import { WAIST_HISTORY_TOUR } from './waist-history-tour';
 
 @Component({

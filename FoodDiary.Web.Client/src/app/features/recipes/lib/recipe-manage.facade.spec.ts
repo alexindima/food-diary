@@ -12,10 +12,10 @@ import { NavigationService } from '../../../services/navigation.service';
 import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { UserFacade } from '../../../shared/lib/user.facade';
-import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
+import { MeasurementUnit, ProductType, ProductVisibility } from '../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
-import { type Recipe, RecipeVisibility } from '../models/recipe.data';
 import { type RecipeIngredientSelectionTarget, RecipeManageFacade, type RecipeStepsNutritionState } from './recipe-manage.facade';
 import { RecipePublicationService } from './recipe-publication.service';
 

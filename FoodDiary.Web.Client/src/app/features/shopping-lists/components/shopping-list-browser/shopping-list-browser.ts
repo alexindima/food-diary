@@ -13,8 +13,8 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
 
+import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserFacade } from '../../lib/shopping-list-browser.facade';
-import type { ShoppingListPage, ShoppingListSummary } from '../../models/shopping-list.data';
 
 @Component({
     selector: 'fd-shopping-list-browser',

@@ -3,10 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
+import { MealSourceType } from '../../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { MealSourceType } from '../../../models/meal.data';
 import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
 const PRODUCT_AMOUNT = 150;

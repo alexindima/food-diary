@@ -50,6 +50,10 @@ export class RequestStateController<T, TError = string> {
         this.stateValue.set({ status: 'idle', data: null, error: null });
     }
 
+    public updateData(update: (data: T) => T): void {
+        this.stateValue.update(state => (state.data === null ? state : { ...state, data: update(state.data) }));
+    }
+
     public isCurrent(requestId: number): boolean {
         return requestId === this.requestVersion;
     }

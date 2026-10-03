@@ -1,6 +1,6 @@
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import type { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
-import type { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 
 export type ProductFormValues = {
     name: string;

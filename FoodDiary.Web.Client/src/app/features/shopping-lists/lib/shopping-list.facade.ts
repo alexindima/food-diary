@@ -6,9 +6,9 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { createClientId } from '../../../shared/lib/client-id.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import type { MeasurementUnit } from '../../products/models/product.data';
+import type { MeasurementUnit } from '../../../shared/models/product.data';
+import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../models/shopping-list.data';
 import { mapShoppingListItemToDto, normalizeShoppingListAmount, rebuildShoppingListSortOrder } from './shopping-list-item.mapper';
 
 export type ShoppingListDraftItem = {

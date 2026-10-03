@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit } from '../../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { StepFormValues } from './recipe-manage.types';
 import { RecipeStepFormManager } from './recipe-step-form.manager';
 

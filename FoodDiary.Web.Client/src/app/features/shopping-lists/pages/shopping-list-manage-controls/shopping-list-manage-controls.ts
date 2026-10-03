@@ -22,13 +22,13 @@ import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
 import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 
+import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
 import {
     type ShoppingListBrowserData,
     ShoppingListBrowserDialogComponent,
     type ShoppingListBrowserResult,
 } from '../../dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog';
-import type { ShoppingListPage, ShoppingListSummary } from '../../models/shopping-list.data';
 
 const RENAME_FOCUS_DELAY_MS = 0;
 const QUICK_LIST_LIMIT = 3;

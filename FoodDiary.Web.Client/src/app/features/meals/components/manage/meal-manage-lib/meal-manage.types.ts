@@ -1,7 +1,7 @@
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
-import type { Product } from '../../../../products/models/product.data';
-import type { Recipe } from '../../../../recipes/models/recipe.data';
-import type { MealSourceType } from '../../../models/meal.data';
+import type { MealSourceType } from '../../../../../shared/models/meal.data';
+import type { Product } from '../../../../../shared/models/product.data';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 
 export type MealFormValues = {
     date: string;

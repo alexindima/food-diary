@@ -18,12 +18,12 @@ import {
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD, DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { calculateCalorieMismatchWarning, calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import {
     getProductMaxCaloriesPerBaseForUnit,
     getProductMaxNutrientPerBaseForUnit,
     getProductMaxNutritionDisplayForUnit,
 } from '../../../lib/product-manage.constants';
-import { MeasurementUnit } from '../../../models/product.data';
 import type { NutritionMode, ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 
 @Component({

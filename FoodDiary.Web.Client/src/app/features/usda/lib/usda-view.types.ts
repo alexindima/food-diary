@@ -1,4 +1,4 @@
-import type { DailyMicronutrient, HealthAreaGrade, Micronutrient } from '../models/usda.data';
+import type { DailyMicronutrient, HealthAreaGrade, Micronutrient } from '../../../shared/models/usda.data';
 
 export type MicronutrientView = Micronutrient & {
     percentDailyValueWidth: number | null;

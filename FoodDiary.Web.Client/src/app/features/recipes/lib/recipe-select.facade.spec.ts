@@ -3,8 +3,8 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { RecipeFilters } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
-import type { RecipeFilters } from '../models/recipe.data';
 import { RecipeSelectFacade } from './recipe-select.facade';
 
 const FIRST_PAGE = 1;

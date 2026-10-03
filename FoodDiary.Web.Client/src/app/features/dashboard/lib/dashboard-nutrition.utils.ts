@@ -3,8 +3,8 @@ import { computed, type Signal } from '@angular/core';
 import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
 import type { NutrientBar } from '../../../components/shared/nutrition-summary/nutrition-summary.types';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
-import type { Meal } from '../../meals/models/meal.data';
-import type { DashboardSnapshot } from '../models/dashboard.data';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
+import type { Meal } from '../../../shared/models/meal.data';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 

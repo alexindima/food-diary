@@ -6,9 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
+import type { FastingMessage, FastingOverview, FastingSession } from '../../../shared/models/fasting.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { FastingService } from '../api/fasting.service';
-import type { FastingMessage, FastingOverview, FastingSession } from '../models/fasting.data';
 import { FastingFacade } from './fasting.facade';
 
 const FRACTIONAL_DRAFT_DURATION = 1.5;

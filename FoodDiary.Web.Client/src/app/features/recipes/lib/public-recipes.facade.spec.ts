@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, expect, it, vi } from 'vitest';
 
-import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
+import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { PublicRecipeService } from '../api/public-recipe.service';
 import { RecipeService } from '../api/recipe.service';
-import { type Recipe, RecipeVisibility } from '../models/recipe.data';
 import { publicRecipeFixture } from './public-recipe.test-helper';
 import { PublicRecipesFacade } from './public-recipes.facade';
 

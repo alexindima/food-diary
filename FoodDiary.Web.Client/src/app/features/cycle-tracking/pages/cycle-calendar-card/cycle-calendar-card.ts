@@ -3,8 +3,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCalendarComponent, type FdUiCalendarMarker } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import type { CycleResponse } from '../../../../shared/models/cycle.data';
 import { toCycleDateKey } from '../../lib/cycle-tracking.mapper';
-import type { CycleResponse } from '../../models/cycle.data';
 
 const DAY_MILLISECONDS = 86_400_000;
 const DATE_PART_LENGTH = 2;

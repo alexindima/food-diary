@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { ProductType } from '../models/product.data';
-import { buildProductTypeTranslationKey, normalizeProductType } from './product-type.utils';
+import { buildProductTypeTranslationKey, normalizeProductType } from '../../../shared/lib/product-type.utils';
+import { ProductType } from '../../../shared/models/product.data';
 
 describe('normalizeProductType', () => {
     it('should normalize enum values and case-insensitive strings', () => {

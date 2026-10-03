@@ -16,6 +16,7 @@ import storybook from 'eslint-plugin-storybook';
 import unicornPlugin from 'eslint-plugin-unicorn';
 
 import templateComplexityBaseline from './eslint.template-complexity-baseline.json' with { type: 'json' };
+import { restrictImports, scopedImportRestrictions } from './scripts/scoped-import-restrictions.mjs';
 
 const securityRecommendedRules = Object.fromEntries(
     Object.keys(securityPlugin.configs.recommended.rules).map(ruleName => [ruleName, 'error']),
@@ -551,6 +552,8 @@ const appBoundaryElements = [
     { type: 'app-shared-theme', pattern: 'src/app/shared/theme' },
     { type: 'app-shared-ui-code', pattern: 'src/app/shared/ui' },
     { type: 'app-shared-ui', pattern: 'src/app/components/shared' },
+    { type: 'app-services', pattern: 'src/app/services' },
+    { type: 'app-feature-contracts', pattern: 'src/app/features/(*)/contracts', capture: ['feature'] },
     { type: 'app-feature-api', pattern: 'src/app/features/(*)/api', capture: ['feature'] },
     { type: 'app-feature-models', pattern: 'src/app/features/(*)/models', capture: ['feature'] },
     { type: 'app-feature-components', pattern: 'src/app/features/(*)/components', capture: ['feature'] },
@@ -558,7 +561,9 @@ const appBoundaryElements = [
     { type: 'app-feature-lib', pattern: 'src/app/features/(*)/lib', capture: ['feature'] },
     { type: 'app-feature-resolvers', pattern: 'src/app/features/(*)/resolvers', capture: ['feature'] },
     { type: 'app-feature-pages', pattern: 'src/app/features/(*)/pages', capture: ['feature'] },
+    { type: 'app-feature-other', pattern: 'src/app/features/(*)', capture: ['feature'] },
     { type: 'admin-feature-api', pattern: 'projects/fooddiary-admin/src/app/features/(*)/api', capture: ['feature'] },
+    { type: 'admin-feature-contracts', pattern: 'projects/fooddiary-admin/src/app/features/(*)/contracts', capture: ['feature'] },
     {
         type: 'admin-feature-components',
         pattern: 'projects/fooddiary-admin/src/app/features/(*)/components',
@@ -570,6 +575,14 @@ const appBoundaryElements = [
         capture: ['feature'],
     },
     { type: 'admin-feature-pages', pattern: 'projects/fooddiary-admin/src/app/features/(*)/pages', capture: ['feature'] },
+    { type: 'admin-feature-models', pattern: 'projects/fooddiary-admin/src/app/features/(*)/models', capture: ['feature'] },
+    { type: 'admin-feature-lib', pattern: 'projects/fooddiary-admin/src/app/features/(*)/lib', capture: ['feature'] },
+    { type: 'admin-feature-other', pattern: 'projects/fooddiary-admin/src/app/features/(*)', capture: ['feature'] },
+    { type: 'ui-kit', pattern: 'projects/fd-ui-kit/src' },
+    { type: 'tour', pattern: 'projects/fd-tour/src' },
+    { type: 'app-shared', pattern: 'src/app/shared' },
+    { type: 'app-core', pattern: 'src/app' },
+    { type: 'admin-core', pattern: 'projects/fooddiary-admin/src/app' },
 ];
 
 const isAriaHidden = node =>
@@ -1064,13 +1077,21 @@ const hasAngularPublicApiInitializer = node => {
     return baseName !== null && angularPublicApiInitializerNames.has(baseName);
 };
 
-const shouldAllowPublicAngularMember = node => {
+const isSignalFormControlReset = (node, classNode) =>
+    node.type === 'MethodDefinition' &&
+    getPropertyName(node.key) === 'reset' &&
+    (classNode.implements ?? []).some(
+        contract =>
+            contract.expression.type === 'Identifier' && ['FormValueControl', 'FormCheckboxControl'].includes(contract.expression.name),
+    );
+
+const shouldAllowPublicAngularMember = (node, classNode) => {
     if (node.kind === 'constructor') {
         return true;
     }
 
     const memberName = getPropertyName(node.key);
-    return hasAngularPublicApiInitializer(node) || frameworkPublicMemberNames.has(memberName);
+    return hasAngularPublicApiInitializer(node) || frameworkPublicMemberNames.has(memberName) || isSignalFormControlReset(node, classNode);
 };
 
 const createPreferProtectedTemplateMembersRule = context => {
@@ -1083,7 +1104,7 @@ const createPreferProtectedTemplateMembersRule = context => {
             }
 
             for (const member of node.body.body) {
-                if (member.accessibility !== 'public' || shouldAllowPublicAngularMember(member)) {
+                if (member.accessibility !== 'public' || shouldAllowPublicAngularMember(member, node)) {
                     continue;
                 }
 
@@ -1537,8 +1558,10 @@ export default [
             'rxjs-x': rxjsXPlugin,
             unicorn: unicornPlugin,
             local: localTsPlugin,
+            'scope-imports': scopedImportRestrictions,
         },
         settings: {
+            'import/resolver': { typescript: { project: ['tsconfig.json', 'projects/fooddiary-admin/tsconfig.app.json'] } },
             'boundaries/include': ['src/app/**/*.ts', 'projects/fooddiary-admin/src/app/**/*.ts'],
             'boundaries/ignore': ['**/*.spec.ts'],
             'boundaries/elements': appBoundaryElements,
@@ -1607,13 +1630,13 @@ export default [
                             message: 'shared/models must stay pure and must not depend on API, UI, or feature code.',
                         },
                         {
-                            from: { element: { type: 'app-shared-api' } },
+                            from: { element: { type: ['app-shared-api', 'app-shared-lib'] } },
                             disallow: {
                                 to: {
                                     element: { type: ['app-shared-dialogs', 'app-shared-ui', 'app-feature-*'] },
                                 },
                             },
-                            message: 'shared/api must not depend on UI or feature code.',
+                            message: 'Shared API and helpers must not depend on UI or feature code.',
                         },
                         {
                             from: { element: { type: 'app-shared-ui' } },
@@ -1629,7 +1652,16 @@ export default [
                             disallow: {
                                 to: {
                                     element: {
-                                        type: 'app-feature-*',
+                                        type: [
+                                            'app-feature-api',
+                                            'app-feature-models',
+                                            'app-feature-components',
+                                            'app-feature-dialogs',
+                                            'app-feature-lib',
+                                            'app-feature-pages',
+                                            'app-feature-resolvers',
+                                            'app-feature-other',
+                                        ],
                                         captured: {
                                             feature: '!({{ from.element.captured.feature }})',
                                         },
@@ -1637,7 +1669,18 @@ export default [
                                 },
                             },
                             message:
-                                'Feature code must not import another feature directly. Move the contract to shared or compose the features at the routing boundary.',
+                                'Use a pure shared model or an explicit feature contract instead of importing another feature implementation.',
+                        },
+                        {
+                            from: { element: { type: 'app-feature-contracts' } },
+                            disallow: { to: { element: { type: ['app-feature-api', 'app-feature-pages'] } } },
+                            message:
+                                'Public contracts must not expose API clients or route pages. Publish a narrow capability or a reusable UI surface.',
+                        },
+                        {
+                            from: { element: { type: 'admin-feature-contracts' } },
+                            disallow: { to: { element: { type: ['admin-feature-api', 'admin-feature-pages'] } } },
+                            message: 'Admin public contracts must not expose API clients or route pages.',
                         },
                         {
                             from: { element: { type: 'app-feature-models' } },
@@ -1739,7 +1782,15 @@ export default [
                             disallow: {
                                 to: {
                                     element: {
-                                        type: 'admin-feature-*',
+                                        type: [
+                                            'admin-feature-api',
+                                            'admin-feature-models',
+                                            'admin-feature-components',
+                                            'admin-feature-dialogs',
+                                            'admin-feature-lib',
+                                            'admin-feature-pages',
+                                            'admin-feature-other',
+                                        ],
                                         captured: {
                                             feature: '!({{ from.element.captured.feature }})',
                                         },
@@ -1997,6 +2048,13 @@ export default [
         },
     },
     {
+        files: ['src/app/**/*.ts', 'projects/fooddiary-admin/src/app/**/*.ts'],
+        rules: {
+            'boundaries/no-unknown-dependencies': 'error',
+            'boundaries/no-unknown-files': 'error',
+        },
+    },
+    {
         files: ['**/*.d.ts'],
         rules: {
             '@typescript-eslint/consistent-type-definitions': 'off',
@@ -2221,7 +2279,7 @@ export default [
                     message: 'Use styleUrls with dedicated .scss files instead of inline component styles. Specs may keep inline styles.',
                 },
             ],
-            'no-restricted-imports': [
+            ...restrictImports('angular-lifecycle', [
                 'error',
                 {
                     paths: [
@@ -2267,14 +2325,14 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/services/**/*.ts'],
         ignores: ['src/app/services/**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('core-services', [
                 'error',
                 {
                     patterns: [
@@ -2285,13 +2343,13 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/shared/models/**/*.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('shared-models', [
                 'error',
                 {
                     patterns: [
@@ -2307,13 +2365,13 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/shared/api/**/*.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('shared-api', [
                 'error',
                 {
                     patterns: [
@@ -2328,14 +2386,14 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/shared/{auth,bootstrap,forms,i18n,notifications,platform,theme,ui}/**/*.ts'],
         ignores: ['src/app/shared/**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('shared-themes', [
                 'error',
                 {
                     patterns: [
@@ -2345,13 +2403,13 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/components/shared/**/*.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('shared-ui', [
                 'error',
                 {
                     patterns: [
@@ -2361,14 +2419,14 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/features/**/*.ts'],
         ignores: ['src/app/features/**/*.routes.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('feature-routes', [
                 'error',
                 {
                     patterns: [
@@ -2389,14 +2447,14 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/features/**/*.ts'],
         ignores: ['src/app/features/**/*.routes.ts', 'src/app/features/public/**/*.ts', 'src/app/features/**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('feature-pages', [
                 'error',
                 {
                     patterns: [
@@ -2406,57 +2464,60 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/features/**/dialogs/**/*.ts'],
+        ignores: ['**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('feature-dialog-api', [
                 'error',
                 {
                     patterns: [
                         {
-                            group: ['../../../!(shared)/api/**', '../../../../!(shared)/api/**', '../../../../../!(shared)/api/**'],
+                            regex: '^\\.\\./(?:\\.\\./){1,4}(?!shared/)[^/]+/api/',
                             message:
                                 'Feature dialogs should use shared APIs or same-feature APIs, not reach into another feature API directly.',
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/features/**/components/**/*.ts'],
+        ignores: ['**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('feature-component-api', [
                 'error',
                 {
                     patterns: [
                         {
-                            group: ['../../../!(shared)/api/**', '../../../../!(shared)/api/**', '../../../../../!(shared)/api/**'],
+                            regex: '^\\.\\./(?:\\.\\./){1,4}(?!shared/)[^/]+/api/',
                             message:
                                 'Feature components should use shared APIs or same-feature APIs, not reach into another feature API directly.',
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['src/app/features/**/lib/**/*.ts', 'src/app/features/**/resolvers/**/*.ts'],
+        ignores: ['**/*.spec.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('feature-lib-api', [
                 'error',
                 {
                     patterns: [
                         {
-                            group: ['../../!(shared)/api/**', '../../../!(shared)/api/**', '../../../../!(shared)/api/**'],
+                            regex: '^\\.\\./(?:\\.\\./){1,4}(?!shared/)[^/]+/api/',
                             message: 'Feature lib and resolver code should stay within shared APIs or same-feature APIs.',
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
@@ -2468,7 +2529,7 @@ export default [
             'src/app/**/*.spec.ts',
         ],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('app-ui-and-guards', [
                 'error',
                 {
                     paths: [
@@ -2501,14 +2562,14 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
         files: ['projects/fooddiary-admin/src/app/features/**/*.ts'],
         ignores: ['projects/fooddiary-admin/src/app/features/**/*.routes.ts'],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('admin-feature-routes', [
                 'error',
                 {
                     patterns: [
@@ -2529,7 +2590,7 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
@@ -2540,7 +2601,7 @@ export default [
             'projects/fooddiary-admin/src/app/**/*.spec.ts',
         ],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('admin-feature-pages', [
                 'error',
                 {
                     patterns: [
@@ -2550,7 +2611,7 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
@@ -2561,7 +2622,7 @@ export default [
             'projects/fooddiary-admin/src/app/**/*.spec.ts',
         ],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('admin-ui', [
                 'error',
                 {
                     paths: [
@@ -2598,7 +2659,7 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     },
     {
@@ -2609,7 +2670,7 @@ export default [
             'projects/fooddiary-admin/src/app/**/*.spec.ts',
         ],
         rules: {
-            'no-restricted-imports': [
+            ...restrictImports('admin-guards', [
                 'error',
                 {
                     patterns: [
@@ -2620,7 +2681,7 @@ export default [
                         },
                     ],
                 },
-            ],
+            ]),
         },
     }, // Angular template accessibility rules
     {

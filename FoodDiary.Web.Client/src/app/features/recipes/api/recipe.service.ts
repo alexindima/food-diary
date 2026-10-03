@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../models/recipe.data';
+import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../../../shared/models/recipe.data';
 import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
 export type RecipeOverviewQuery = {

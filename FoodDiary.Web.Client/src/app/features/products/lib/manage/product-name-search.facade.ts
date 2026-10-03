@@ -3,9 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, map, of, Subject, switchMap } from 'rxjs';
 
 import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
+import type { ProductSearchSuggestion } from '../../../../shared/models/product.data';
 import { ProductService } from '../../api/product.service';
 import type { ProductNameAutocompleteOption } from '../../components/manage/product-manage-lib/product-name-search.types';
-import type { ProductSearchSuggestion } from '../../models/product.data';
 import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../product-manage.constants';
 
 @Injectable()

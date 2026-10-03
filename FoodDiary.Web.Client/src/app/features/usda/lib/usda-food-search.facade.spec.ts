@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
+import type { UsdaFood } from '../../../shared/models/usda.data';
 import { UsdaService } from '../api/usda.service';
-import type { UsdaFood } from '../models/usda.data';
 import { UsdaFoodSearchFacade } from './usda-food-search.facade';
 
 const FDC_ID = 17_000;

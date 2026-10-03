@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
+import type { Product } from '../../../../shared/models/product.data';
 import { ProductManageFormComponent } from '../../components/manage/product-manage-form/product-manage-form';
-import type { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-add-dialog',

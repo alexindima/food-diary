@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
+import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
 import type { ExploreRecipe } from '../models/explore.data';
 import { ExploreService } from './explore.service';
 

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import type { AdminBillingWebhookEventViewModel } from './admin-billing.types';
+import type { AdminBillingWebhookEventViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table';
 
 const PAYLOAD_JSON = '{"event":"invoice.paid"}';

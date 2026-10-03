@@ -20,14 +20,14 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import { FASTING_SYMPTOM_OPTIONS } from '../../../../shared/models/fasting.data';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HUNGER_EMOJI_SCALE,
     FASTING_MOOD_EMOJI_SCALE,
     type FastingEmojiScaleOption,
 } from '../../lib/fasting-page.constants';
-import { FASTING_SYMPTOM_OPTIONS } from '../../models/fasting.data';
-import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
 import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fasting-check-in-summary';
 
 @Component({

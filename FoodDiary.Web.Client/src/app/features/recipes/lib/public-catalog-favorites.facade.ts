@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
-import { PublicAuthDialogService } from '../../public/lib/public-auth-dialog.service';
+import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import type { PublicRecipe } from '../models/public-recipe.data';
 

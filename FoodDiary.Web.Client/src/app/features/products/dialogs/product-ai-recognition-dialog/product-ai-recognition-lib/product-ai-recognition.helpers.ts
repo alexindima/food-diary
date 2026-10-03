@@ -4,7 +4,7 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutriti
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, ProductLabel } from '../../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
-import { MeasurementUnit } from '../../../models/product.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import type { ProductAiRecognitionFormModel, ProductAiRecognitionResult } from '../product-ai-recognition-dialog.types';
 
 const MILLILITERS_PER_LITER = 1000;

@@ -6,11 +6,11 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
+import type { MealItemManageDto, MealManageDto } from '../../../../shared/models/meal.data';
+import type { Product } from '../../../../shared/models/product.data';
+import type { Recipe } from '../../../../shared/models/recipe.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import type { Product } from '../../../products/models/product.data';
-import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
-import type { MealItemManageDto, MealManageDto } from '../../models/meal.data';
 import { getDateInputValue, getTimeInputValue } from '../meal-date-input.utils';
 import { QUICK_MEAL_DEFAULT_ITEM_AMOUNT } from './quick-meal.config';
 

@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import type { FavoriteRecipe } from '../models/recipe.data';
+import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
 import { FavoriteRecipeService } from './favorite-recipe.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-recipes';

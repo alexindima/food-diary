@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../../../services/auth.service';
-import type { FavoriteProduct } from '../../../../models/product.data';
+import type { FavoriteProduct } from '../../../../../../shared/models/product.data';
 import { ProductListFavoritesComponent } from './product-list-favorites';
 
 const DEFAULT_PORTION_AMOUNT = 100;

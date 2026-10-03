@@ -6,6 +6,7 @@ const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
 const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
+const API_RETRY_EXHAUSTION_TIMEOUT_MS = 15_000;
 const NETWORK_AUDIT_TEST_TIMEOUT_MS = 180_000;
 const API_ERROR_STATUS_MIN = 400;
 const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
@@ -1357,10 +1358,7 @@ function createProductsPage(): Record<string, unknown> {
     return {
         data: [
             {
-                id: 'p1',
-                name: 'Greek yogurt',
-                brand: 'Food Diary',
-                caloriesPerBase: 95,
+                ...createOwnedProduct(),
                 imageUrl: null,
                 imageAssetId: null,
             },
@@ -2409,6 +2407,104 @@ async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string)
 
 const RECENT_SHORTCUT_COUNT = 5;
 const RECENT_STRIP_MAX_HEIGHT = 120;
+test.describe('scoped frontend owners', () => {
+    test('profile billing retries and cycle setup keeps working after navigation', async ({ page }, testInfo) => {
+        test.setTimeout(ACCESSIBILITY_TEST_TIMEOUT_MS);
+        const runtimeErrors: string[] = [];
+        page.on('pageerror', error => runtimeErrors.push(error.message));
+        page.on('console', message => {
+            if (message.type() === 'error' && /^(?:ERROR|Query .* error)/u.test(message.text())) {
+                runtimeErrors.push(message.text());
+            }
+        });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        let billingAttempts = 0;
+        let billingCanSucceed = false;
+        await page.route(/\/api\/v1\/billing\/overview\/?(?:\?|$)/u, async route => {
+            billingAttempts += 1;
+            await route.fulfill(billingCanSucceed ? jsonResponse(createBillingOverview()) : { status: 500, json: {} });
+        });
+        await page.goto('/profile');
+        await expect(page.getByRole('heading', { name: 'Profile', exact: true, level: 1 })).toBeVisible();
+        await page.locator('summary').filter({ hasText: 'Subscription' }).click();
+        const billingCard = page.locator('fd-user-manage-billing-card');
+        const retry = billingCard.getByRole('button', { name: 'Retry', exact: true });
+        await expect(retry).toBeVisible({ timeout: API_RETRY_EXHAUSTION_TIMEOUT_MS });
+        const failedAttempts = billingAttempts;
+        billingCanSucceed = true;
+        await retry.click();
+        await expect(billingCard.locator('fd-user-manage-billing-summary')).toBeVisible();
+        expect(billingAttempts).toBe(failedAttempts + 1);
+        await stabilizeAccessibilityPageAsync(page, '/profile');
+        const profileAccessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+        expect(profileAccessibility.violations).toEqual([]);
+        await page.screenshot({ path: testInfo.outputPath('profile-billing.png') });
+
+        await page.goto('/cycle-tracking');
+        await expect(page.getByRole('heading', { name: 'Cycle tracking', exact: true, level: 1 })).toBeVisible();
+        const cycleSetup = page.locator('[data-tour-id="cycle-tracking-setup"]');
+        await expect(cycleSetup).toBeVisible();
+        await expect(cycleSetup).toContainText('Start a new cycle');
+        const consent = page.locator('fd-cycle-tracking-page').getByRole('checkbox').first();
+        await consent.focus();
+        await consent.press('Space');
+        await expect(consent).toBeChecked();
+        await expect(page.getByRole('button', { name: 'Save cycle', exact: true })).toBeEnabled();
+        await stabilizeAccessibilityPageAsync(page, '/cycle-tracking');
+        const cycleAccessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+        expect(cycleAccessibility.violations).toEqual([]);
+        expect(runtimeErrors).toEqual([]);
+        await page.screenshot({ path: testInfo.outputPath('cycle-setup.png') });
+    });
+});
+
+test.describe('product URL state', () => {
+    test('restores filters, pagination and search across reload and browser history', async ({ page }, testInfo) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        const requests: URL[] = [];
+        await page.route(/\/api\/v1\/products(?:\/(?:overview|search))?\/?(?:\?|$)/u, async route => {
+            const url = new URL(route.request().url());
+            requests.push(url);
+            const product = { ...createOwnedProduct(), name: `${url.searchParams.get('search') ?? 'All'} product` };
+            const products = {
+                data: [product],
+                page: Number(url.searchParams.get('page') ?? '1'),
+                limit: 10,
+                totalPages: 3,
+                totalItems: 21,
+            };
+            await route.fulfill({
+                json: url.pathname.endsWith('overview')
+                    ? { allProducts: products, recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }
+                    : products,
+            });
+        });
+        await page.goto('/products?search=tea&onlyMine=true&types=Fruit&hasImage=true&page=2');
+        await expect(page.locator('fd-product-card')).toHaveCount(1);
+        expect(requests[0].searchParams.get('page')).toBe('2');
+        expect(requests[0].searchParams.get('includePublic')).toBe('false');
+        expect(requests[0].searchParams.get('productTypes')).toBe('Fruit');
+        await page.locator('fd-ui-pagination').getByRole('button', { name: '3', exact: true }).click();
+        await expect(page).toHaveURL(/page=3/u);
+        await page.goBack();
+        await expect(page).toHaveURL(/page=2/u);
+        await page.goForward();
+        await expect(page).toHaveURL(/page=3/u);
+        await page.reload();
+        await expect(page.locator('fd-product-card')).toHaveCount(1);
+        expect(requests.at(-1)?.searchParams.get('page')).toBe('3');
+        const search = page.locator('fd-product-list-page input').first();
+        await expect(search).toHaveValue('tea');
+        await search.fill('coffee');
+        await expect(page).toHaveURL(/search=coffee/u);
+        await expect(page).not.toHaveURL(/[?&]page=/u);
+        await expect(page.locator('fd-product-card')).toContainText('coffee product');
+        await page.screenshot({ path: testInfo.outputPath('products-url-state.png') });
+    });
+});
+
 test.describe('compact recent products', () => {
     for (const width of MEAL_DIALOG_VIEWPORTS) {
         test(`keeps the catalog complete and limits recent shortcuts to page one at ${width}px`, async ({ page }, testInfo) => {

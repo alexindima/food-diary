@@ -139,7 +139,8 @@ public sealed partial class User {
             update.BirthDate,
             update.Gender,
             update.WeightKg,
-            update.HeightCm)) {
+            update.HeightCm,
+            update.BirthDateSpecified)) {
             if (birthDate != BirthDate || !string.Equals(gender, Gender, StringComparison.Ordinal)
                 || !NullableAreClose(weight, WeightKg) || !NullableAreClose(height, HeightCm)) {
                 NutritionProfile.Touch();
@@ -202,7 +203,8 @@ public sealed partial class User {
         DateTime? birthDate,
         string? gender,
         double? weight,
-        double? height) {
+        double? height,
+        bool birthDateSpecified = false) {
         string? normalizedUsername = NormalizeOptionalProfileText(username);
         string? normalizedFirstName = NormalizeOptionalProfileText(firstName);
         string? normalizedLastName = NormalizeOptionalProfileText(lastName);
@@ -230,7 +232,7 @@ public sealed partial class User {
             changed = true;
         }
 
-        if (normalizedBirthDate.HasValue && state.BirthDate != normalizedBirthDate) {
+        if ((birthDateSpecified || normalizedBirthDate.HasValue) && state.BirthDate != normalizedBirthDate) {
             state = state with { BirthDate = normalizedBirthDate };
             changed = true;
         }

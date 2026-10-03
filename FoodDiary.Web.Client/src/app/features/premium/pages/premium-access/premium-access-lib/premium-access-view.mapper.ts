@@ -1,4 +1,4 @@
-import type { BillingOverview, BillingPlan, BillingProvider } from '../../../models/billing.models';
+import type { BillingOverview, BillingPlan, BillingProvider } from '../../../../../shared/models/billing.models';
 import type {
     PremiumOverviewBadgesViewModel,
     PremiumOverviewCardViewModel,

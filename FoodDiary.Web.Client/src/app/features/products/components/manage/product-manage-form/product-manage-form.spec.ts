@@ -8,7 +8,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../../services/navigation.service';
-import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
+import {
+    MeasurementUnit,
+    type Product,
+    type ProductSearchSuggestion,
+    ProductType,
+    ProductVisibility,
+} from '../../../../../shared/models/product.data';
+import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import {
@@ -21,7 +28,6 @@ import {
     PRODUCT_NAME_MAX_LENGTH,
 } from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
-import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductManageFormComponent } from './product-manage-form';
 

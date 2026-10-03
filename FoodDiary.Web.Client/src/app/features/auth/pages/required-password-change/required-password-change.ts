@@ -9,8 +9,8 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
 import { UserFacade } from '../../../../shared/lib/user.facade';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../lib/auth.constants';
 
 type RequiredPasswordChangeFormModel = {
     currentPassword: string;

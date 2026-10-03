@@ -477,6 +477,7 @@
         "BatchSize",
         "LockTimeoutSeconds",
         "MaxAttempts",
+        "MaxConcurrentDeliveries",
         "MaxRetryDelaySeconds",
         "PollIntervalSeconds"
       ],

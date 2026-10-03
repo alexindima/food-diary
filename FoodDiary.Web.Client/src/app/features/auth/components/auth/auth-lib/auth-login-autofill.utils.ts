@@ -1,4 +1,4 @@
-import { AUTH_LOGIN_AUTOFILL_FIELD_COUNT } from '../../../lib/auth.constants';
+import { AUTH_LOGIN_AUTOFILL_FIELD_COUNT } from '../../../../../shared/auth/auth.constants';
 
 type LoginAutofillFields = {
     email: string;

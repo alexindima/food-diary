@@ -1,4 +1,4 @@
-import type { FastingSession } from '../../fasting/models/fasting.data';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 import { buildDashboardFastingTimeline } from '../components/dashboard-fasting-card/dashboard-fasting-timeline';
 
 export function shouldPrioritizeDashboardFasting(session: FastingSession | null, now: number): boolean {

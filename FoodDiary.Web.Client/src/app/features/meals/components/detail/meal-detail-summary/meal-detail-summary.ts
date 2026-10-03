@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
-import type { Meal } from '../../../models/meal.data';
+import type { Meal } from '../../../../../shared/models/meal.data';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview';
 import { MEAL_DETAIL_DEFAULT_QUALITY_GRADE } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';

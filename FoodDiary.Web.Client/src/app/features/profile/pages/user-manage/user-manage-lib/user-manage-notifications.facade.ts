@@ -20,8 +20,8 @@ import {
     DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
     MAX_FASTING_REMINDER_HOURS,
     TEST_NOTIFICATION_DELAY_SECONDS,
-} from './user-manage.config';
-import type { ConnectedDeviceViewModel } from './user-manage.types';
+} from '../../../lib/user-manage.config';
+import type { ConnectedDeviceViewModel } from '../../../lib/user-manage.types';
 import { formatUserManageDateTime } from './user-manage-date.mapper';
 import { buildConnectedDeviceItems, isCurrentConnectedDevice } from './user-manage-notifications.mapper';
 

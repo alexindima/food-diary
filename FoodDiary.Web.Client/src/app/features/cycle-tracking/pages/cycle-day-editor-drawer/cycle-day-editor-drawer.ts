@@ -10,8 +10,6 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from '../../lib/cycle-tracking.config';
-import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 import {
     BLEEDING_TYPE_BLEEDING,
     BLEEDING_TYPE_SPOTTING,
@@ -21,7 +19,9 @@ import {
     CYCLE_FLOW_MEDIUM,
     type CycleFlowLevel,
     type OvulationTestResult,
-} from '../../models/cycle.data';
+} from '../../../../shared/models/cycle.data';
+import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from '../../lib/cycle-tracking.config';
+import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 
 const SYMPTOM_SEVERITY_MILD = 3;
 const SYMPTOM_SEVERITY_MODERATE = 6;

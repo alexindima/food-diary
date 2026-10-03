@@ -6,8 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import type { DayCalorieKey } from '../../../shared/models/goals.data';
 import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
-import type { DayCalorieKey } from '../models/goals.data';
 import { GoalsEditorComponent } from './goals-editor/goals-editor';
 import { GoalsPageComponent } from './goals-page';
 

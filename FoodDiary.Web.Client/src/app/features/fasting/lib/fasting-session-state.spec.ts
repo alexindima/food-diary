@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { MS_PER_HOUR } from '../../../shared/lib/time.constants';
-import type { FastingSession } from '../models/fasting.data';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 import {
     calculateFastingElapsedMs,
     calculateFastingProgressPercent,

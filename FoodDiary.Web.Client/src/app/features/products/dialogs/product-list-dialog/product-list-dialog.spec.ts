@@ -6,9 +6,15 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../../shared/models/product.data';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductAddDialogComponent } from '../product-add-dialog/product-add-dialog';
 import { ProductListDialogComponent } from './product-list-dialog';
 import type { ProductSelectItemViewModel } from './product-list-dialog.types';
@@ -24,7 +30,7 @@ describe('ProductListDialogComponent', () => {
     it('maps products to selectable dialog items with resolved images', () => {
         const product = createProduct();
         const { component, facade } = setupComponent();
-        facade.productData.items.set([product]);
+        facade.productData.setData({ data: [product], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 1 });
         facade.resolveImage.mockReturnValue('https://example.test/apple.jpg');
 
         expect(readProductItems(component)).toEqual([

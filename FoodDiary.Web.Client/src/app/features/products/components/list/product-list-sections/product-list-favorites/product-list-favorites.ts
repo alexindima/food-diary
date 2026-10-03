@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import { ProductCardComponent, type ProductCardItem } from '../../../../../../components/shared/product-card/product-card';
-import type { FavoriteProduct } from '../../../../models/product.data';
+import type { FavoriteProduct } from '../../../../../../shared/models/product.data';
 
 @Component({
     selector: 'fd-product-list-favorites',

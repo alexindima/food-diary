@@ -14,6 +14,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { measurementMonthRange } from '../../../../shared/lib/measurement-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -31,7 +32,6 @@ import { WeightHistoryGoalDialogComponent } from '../../dialogs/weight-history-g
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WEIGHT_HISTORY_RANGE_TABS } from '../../lib/weight-history-page.config';
 import { getWeightChangeTone, getWeightRemainingToGoal } from '../../lib/weight-history-progress.utils';
-import type { WeightEntry } from '../../models/weight-entry.data';
 import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
 
 @Component({

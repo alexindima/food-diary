@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../../../services/auth.service';
-import type { FavoriteRecipe } from '../../../../models/recipe.data';
+import type { FavoriteRecipe } from '../../../../../../shared/models/recipe.data';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites';
 
 describe('RecipeListFavoritesComponent', () => {

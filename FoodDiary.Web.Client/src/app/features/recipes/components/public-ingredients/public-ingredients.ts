@@ -5,8 +5,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-import { PublicProductPreviewService } from '../../../products/lib/public-product-preview.service';
-import type { ShoppingListItemDto } from '../../../shopping-lists/models/shopping-list.data';
+import type { ShoppingListItemDto } from '../../../../shared/models/shopping-list.data';
+import { PublicProductPreviewService } from '../../../products/contracts/public-product-preview';
 import { scaleIngredient } from '../../lib/public-recipe.utils';
 import type { PublicRecipe, PublicRecipeIngredient } from '../../models/public-recipe.data';
 

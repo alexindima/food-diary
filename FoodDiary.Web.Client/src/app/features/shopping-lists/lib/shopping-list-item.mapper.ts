@@ -1,7 +1,7 @@
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
-import { MeasurementUnit } from '../../products/models/product.data';
-import type { ShoppingListItem, ShoppingListItemDto } from '../models/shopping-list.data';
+import { MeasurementUnit } from '../../../shared/models/product.data';
+import type { ShoppingListItem, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
 import type { ShoppingListItemViewModel } from './shopping-list-form.types';
 import { isTextQuantity } from './shopping-list-merge';
 

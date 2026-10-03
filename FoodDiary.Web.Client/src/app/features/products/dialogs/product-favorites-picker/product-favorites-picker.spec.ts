@@ -5,8 +5,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { FavoriteProduct } from '../../../../shared/models/product.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
-import type { FavoriteProduct } from '../../models/product.data';
 import { ProductFavoritesPickerComponent } from './product-favorites-picker';
 
 const SEARCH_DELAY_MS = 300;

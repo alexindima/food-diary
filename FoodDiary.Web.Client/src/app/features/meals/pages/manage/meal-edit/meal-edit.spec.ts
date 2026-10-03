@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
-import type { Meal } from '../../../models/meal.data';
+import type { Meal } from '../../../../../shared/models/meal.data';
 import { MealEditComponent } from './meal-edit';
 
 describe('MealEditComponent', () => {

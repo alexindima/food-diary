@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { AdminBillingSubscriptionViewModel } from './admin-billing.types';
+import type { AdminBillingSubscriptionViewModel } from '../models/admin-billing-view.models';
 
 @Component({
     selector: 'fd-admin-billing-subscriptions-table',

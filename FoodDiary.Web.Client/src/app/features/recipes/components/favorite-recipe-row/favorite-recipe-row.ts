@@ -5,7 +5,7 @@ import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import type { FavoriteRecipe } from '../../models/recipe.data';
+import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 
 @Component({
     selector: 'fd-favorite-recipe-row',

@@ -17,7 +17,7 @@ import type {
     WeightEntrySummaryPoint,
     WeightHistoryPageSummary,
     WeightHistoryPageSummaryFilters,
-} from '../models/weight-entry.data';
+} from '../../../shared/models/weight-entry.data';
 
 @Service()
 export class WeightEntriesService extends ApiService {

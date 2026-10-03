@@ -6,8 +6,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { map } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
+import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data';
 import { buildTdeeHintKey, formatTdeeWeightTrend, hasMeaningfulTdeeSuggestion } from '../../../lib/tdee-insight-view.mapper';
-import type { TdeeInsight } from '../../../models/tdee-insight.data';
 import { TdeeInsightCardDetailsComponent } from '../tdee-insight-card-details/tdee-insight-card-details';
 
 @Component({

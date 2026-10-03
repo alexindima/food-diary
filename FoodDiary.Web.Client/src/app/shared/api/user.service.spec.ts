@@ -173,6 +173,32 @@ describe('UserService optional profile names', () => {
     });
 });
 
+describe('UserService optional birth date', () => {
+    it('transmits an explicit clear as null', () => {
+        service.update(new UpdateUserDto({ birthDate: null })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ birthDate: null });
+        req.flush(MOCK_USER);
+    });
+
+    it('omits birth date from an unrelated update', () => {
+        service.update(new UpdateUserDto({ language: 'ru' })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ language: 'ru' });
+        req.flush(MOCK_USER);
+    });
+
+    it('serializes a selected birth date as the UTC calendar day', () => {
+        service.update(new UpdateUserDto({ birthDate: '2000-10-02' })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ birthDate: '2000-10-02T00:00:00.000Z' });
+        req.flush(MOCK_USER);
+    });
+});
+
 describe('UserService password', () => {
     it('should change password', () => {
         const request: ChangePasswordRequest = { currentPassword: 'old', newPassword: 'new' };

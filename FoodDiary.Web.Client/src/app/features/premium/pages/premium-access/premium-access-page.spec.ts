@@ -9,15 +9,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { AuthService } from '../../../../services/auth.service';
-import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
-import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
 import type {
     BillingOverview,
     BillingPlan,
     BillingProvider,
     CheckoutSessionResponse,
     PortalSessionResponse,
-} from '../../models/billing.models';
+} from '../../../../shared/models/billing.models';
+import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
+import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
 import { PremiumAccessPageComponent } from './premium-access-page';
 
 const CHECKOUT_URL = 'https://checkout.example/session';

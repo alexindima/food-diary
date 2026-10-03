@@ -1,4 +1,4 @@
-import type { HealthAreaScores } from '../models/usda.data';
+import type { HealthAreaScores } from '../../../shared/models/usda.data';
 import type { HealthAreaDisplay } from './usda-view.types';
 
 const MAX_HEALTH_AREA_SCORE = 100;

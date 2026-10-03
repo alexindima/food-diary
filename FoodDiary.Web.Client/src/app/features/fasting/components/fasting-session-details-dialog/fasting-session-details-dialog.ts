@@ -8,8 +8,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 
 import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
-import type { FastingCheckIn, FastingSession } from '../../models/fasting.data';
-import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingCheckIn, FastingSession } from '../../../../shared/models/fasting.data';
+import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
 import { FastingCheckInChartComponent } from '../fasting-check-in-chart/fasting-check-in-chart';
 import { FastingHistoryCheckInEntryComponent } from '../fasting-history-check-in-entry/fasting-history-check-in-entry';
 

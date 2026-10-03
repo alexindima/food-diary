@@ -13,8 +13,8 @@ import { PremiumRequiredDialogComponent } from '../../../components/shared/premi
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknown-value.utils';
+import type { CreateProductRequest, Product, UpdateProductRequest } from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
 import type { ProductDeleteResult } from './product-manage.types';
 
 @Service()

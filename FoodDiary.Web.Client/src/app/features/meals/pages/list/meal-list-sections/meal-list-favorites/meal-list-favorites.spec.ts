@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
-import type { FavoriteMeal } from '../../../../models/meal.data';
+import type { FavoriteMeal } from '../../../../../../shared/models/meal.data';
 import type { FavoriteMealView } from '../../meal-list-lib/meal-list.types';
 import { MealListFavoritesComponent } from './meal-list-favorites';
 

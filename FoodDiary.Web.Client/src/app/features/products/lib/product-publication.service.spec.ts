@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { type Product, ProductVisibility } from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import { type Product, ProductVisibility } from '../models/product.data';
 import { ProductPublicationService } from './product-publication.service';
 
 describe('ProductPublicationService', () => {

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../products/models/product.data';
+import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepCardComponent, type RecipeStepCardState } from './recipe-step-card';

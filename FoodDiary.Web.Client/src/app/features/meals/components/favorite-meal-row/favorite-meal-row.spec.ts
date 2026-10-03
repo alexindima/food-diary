@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
-import type { FavoriteMeal } from '../../models/meal.data';
+import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import { FavoriteMealRowComponent } from './favorite-meal-row';
 
 const meal: FavoriteMeal = {

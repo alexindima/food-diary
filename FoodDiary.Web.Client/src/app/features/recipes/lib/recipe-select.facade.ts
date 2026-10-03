@@ -3,10 +3,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { Recipe, RecipeFilters } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
 import { RecipeListFiltersDialogComponent } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogResult } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
-import type { Recipe, RecipeFilters } from '../models/recipe.data';
 
 @Service()
 export class RecipeSelectFacade {

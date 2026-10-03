@@ -12,9 +12,9 @@ import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementHistoryPager } from '../../../../shared/measurements/measurement-history-pager';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper';
-import type { WaistEntry } from '../../models/waist-entry.data';
 
 export type WaistHistoryEntriesDialogResult = { action: 'edit' | 'remove'; entry: WaistEntry };
 

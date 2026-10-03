@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import type { AdminBillingWebhookEventViewModel } from './admin-billing.types';
+import type { AdminBillingWebhookEventViewModel } from '../models/admin-billing-view.models';
 
 @Component({
     selector: 'fd-admin-billing-webhooks-table',

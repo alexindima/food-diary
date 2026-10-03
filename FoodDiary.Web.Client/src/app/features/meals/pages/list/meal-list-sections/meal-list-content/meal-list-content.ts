@@ -7,7 +7,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { ErrorStateComponent } from '../../../../../../components/shared/error-state/error-state';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import { SkeletonCardComponent } from '../../../../../../components/shared/skeleton-card/skeleton-card';
-import type { Meal } from '../../../../models/meal.data';
+import type { Meal } from '../../../../../../shared/models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 import { MealListPlannedComponent } from '../meal-list-planned/meal-list-planned';
 

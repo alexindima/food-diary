@@ -1,6 +1,6 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import type { DailyMicronutrient, Micronutrient } from '../models/usda.data';
-import { DAILY_MICRONUTRIENT_IDS, MINERAL_NUTRIENT_IDS, VITAMIN_NUTRIENT_IDS } from './usda-nutrient.constants';
+import { DAILY_MICRONUTRIENT_IDS, MINERAL_NUTRIENT_IDS, VITAMIN_NUTRIENT_IDS } from '../../../shared/lib/usda-nutrient.constants';
+import type { DailyMicronutrient, Micronutrient } from '../../../shared/models/usda.data';
 import type { DailyMicronutrientView, MicronutrientView } from './usda-view.types';
 
 const MIN_PERCENT_DAILY_VALUE = 0;

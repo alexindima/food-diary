@@ -5,7 +5,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
-import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({

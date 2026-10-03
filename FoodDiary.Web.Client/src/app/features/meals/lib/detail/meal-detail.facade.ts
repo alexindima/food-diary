@@ -10,9 +10,9 @@ import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
+import type { Meal } from '../../../../shared/models/meal.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
-import type { Meal } from '../../models/meal.data';
 
 @Injectable()
 export class MealDetailFacade {

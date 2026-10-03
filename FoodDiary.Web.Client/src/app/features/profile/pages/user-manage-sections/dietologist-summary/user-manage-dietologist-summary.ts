@@ -6,7 +6,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import type { DietologistFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { DietologistFormValues } from '../../../lib/user-manage.types';
 import { formatUserManageDate } from '../../user-manage/user-manage-lib/user-manage-date.mapper';
 
 type DietologistSummaryAction = {

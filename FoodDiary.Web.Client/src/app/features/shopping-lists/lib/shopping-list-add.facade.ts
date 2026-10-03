@@ -4,10 +4,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
-import { PublicAuthDialogService } from '../../public/lib/public-auth-dialog.service';
+import type { ShoppingList, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
+import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListPickerData, ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
-import type { ShoppingList, ShoppingListItemDto } from '../models/shopping-list.data';
 import { mapShoppingListItemToDto } from './shopping-list-item.mapper';
 import { appendShoppingItems } from './shopping-list-merge';
 

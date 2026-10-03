@@ -5,8 +5,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingListSummary } from '../models/shopping-list.data';
 import { ShoppingListBrowserFacade } from './shopping-list-browser.facade';
 
 function setup(): { service: { getPage: ReturnType<typeof vi.fn> }; facade: ShoppingListBrowserFacade } {

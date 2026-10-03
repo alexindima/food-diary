@@ -1,5 +1,5 @@
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
-import type { CycleFactor } from '../models/cycle.data';
+import type { CycleFactor } from '../../../shared/models/cycle.data';
 import { toCycleDateKey } from './cycle-tracking.mapper';
 
 export type CycleFactorStatus = {

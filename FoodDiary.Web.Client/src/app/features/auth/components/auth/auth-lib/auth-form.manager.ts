@@ -9,7 +9,7 @@ import {
     resolveSignalFormFieldError,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../lib/auth.constants';
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../../shared/auth/auth.constants';
 import type { LoginFieldErrors, PasswordResetFieldErrors, RegisterFieldErrors } from './auth.types';
 import { LOGIN_ERROR_FIELDS, PASSWORD_RESET_ERROR_FIELDS, REGISTER_ERROR_FIELDS } from './auth-form.config';
 import {

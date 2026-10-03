@@ -67,7 +67,9 @@ export class BarcodeScannerComponent {
                 video: { facingMode: 'environment' },
             });
             if (this.isClosed || this.destroyRef.destroyed) {
-                stream.getTracks().forEach(track => { track.stop(); });
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
                 return;
             }
             this.stream = stream;

@@ -4,8 +4,8 @@ import { catchError, EMPTY, expand, type Observable, reduce } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { FavoriteMeal } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { FavoriteMeal } from '../models/meal.data';
 
 const FAVORITE_PAGE_SIZE = 10;
 

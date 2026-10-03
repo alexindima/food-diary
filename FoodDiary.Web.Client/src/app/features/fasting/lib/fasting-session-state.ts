@@ -1,7 +1,7 @@
+import { EMPTY_FASTING_DURATION_HOURS, MIN_FASTING_HOURS } from '../../../shared/lib/fasting.constants';
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { MS_PER_HOUR } from '../../../shared/lib/time.constants';
-import type { FastingSession } from '../models/fasting.data';
-import { EMPTY_FASTING_DURATION_HOURS, MIN_FASTING_HOURS } from './fasting.constants';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 
 const DURATION_ROUNDING_FACTOR = 10;
 

@@ -3,8 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
+import type { FastingProtocol } from '../../../../../shared/models/fasting.data';
 import { normalizeCyclicDays, normalizeIntermittentFastHours } from '../../../lib/fasting-input-normalization';
-import type { FastingProtocol } from '../../../models/fasting.data';
 
 @Component({
     selector: 'fd-fasting-cyclic-setup-controls',

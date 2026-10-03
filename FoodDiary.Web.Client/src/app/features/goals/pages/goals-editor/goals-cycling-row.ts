@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { type DayCalorieKey, DAYS_OF_WEEK } from '../../models/goals.data';
+import { type DayCalorieKey, DAYS_OF_WEEK } from '../../../../shared/models/goals.data';
 import { GoalsCyclingDayComponent } from './goals-cycling-day';
 
 const DAYS_PER_WEEK = 7;

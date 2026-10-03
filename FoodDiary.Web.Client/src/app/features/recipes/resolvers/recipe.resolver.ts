@@ -3,8 +3,8 @@ import type { ResolveFn } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
+import type { Recipe } from '../../../shared/models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
-import type { Recipe } from '../models/recipe.data';
 
 export const recipeResolver: ResolveFn<Recipe | null> = route => {
     const recipeService = inject(RecipeService);

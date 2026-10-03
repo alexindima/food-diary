@@ -4,7 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { ProductType } from '../../../models/product.data';
+import { ProductType } from '../../../../../shared/models/product.data';
 import { ProductListFiltersDialogComponent } from './product-list-filters-dialog';
 import type { ProductListFiltersDialogData } from './product-list-filters-dialog.types';
 

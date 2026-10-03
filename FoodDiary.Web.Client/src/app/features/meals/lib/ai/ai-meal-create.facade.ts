@@ -4,8 +4,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, finalize, type Observable, of, tap } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import type { Meal } from '../../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import type { Meal } from '../../models/meal.data';
 import { AiMealCreateService } from './ai-meal-create.service';
 
 @Injectable()

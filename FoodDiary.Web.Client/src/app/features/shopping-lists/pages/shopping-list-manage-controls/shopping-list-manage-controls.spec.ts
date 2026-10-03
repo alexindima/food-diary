@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { ShoppingListSummary } from '../../models/shopping-list.data';
+import type { ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls';
 
 const LISTS: ShoppingListSummary[] = [

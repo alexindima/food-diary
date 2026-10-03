@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit } from '../../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 const RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT = 5;
 const RECIPE_DETAIL_MACRO_SUMMARY_LIMIT = 4;
 import { buildRecipeDetailViewModel } from './recipe-detail-nutrition.mapper';

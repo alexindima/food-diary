@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../../shared/models/product.data';
 import type { ProductCardViewModel } from '../../product-list.types';
 import { ProductListGroupsComponent } from './product-list-groups';
 

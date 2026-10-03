@@ -79,7 +79,7 @@ export class UpdateUserDto {
     public username?: string;
     public firstName?: string;
     public lastName?: string;
-    public birthDate?: Date;
+    public birthDate?: Date | null;
     public gender?: string;
     public heightCm?: number;
     public activityLevel?: string;
@@ -145,7 +145,10 @@ const normalizeString = (value: string | null | undefined): string | undefined =
     return trimmed !== undefined && trimmed.length > 0 ? trimmed : undefined;
 };
 
-const normalizeDate = (value: Date | string | null | undefined): Date | undefined => {
+const normalizeDate = (value: Date | string | null | undefined): Date | null | undefined => {
+    if (value === null) {
+        return null;
+    }
     const date = parseDateValue(value);
     return date !== null ? normalizeStartOfUtcDay(date) : undefined;
 };

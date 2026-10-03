@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import { MealAiSessionsComponent } from './meal-ai-sessions';
 
 describe('MealAiSessionsComponent rows', () => {

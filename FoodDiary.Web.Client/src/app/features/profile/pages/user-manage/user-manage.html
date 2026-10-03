@@ -35,6 +35,7 @@
                     [currentWeight]="currentWeight()"
                     [currentWaist]="currentWaist()"
                     (userFormPatch)="onUserFormPatch($event)"
+                    (birthDateInputInvalidChange)="birthDateInputInvalid.set($event)"
                 >
                     <fd-user-manage-backup-email profileSecurity />
                     <fd-user-manage-security-card
@@ -133,7 +134,7 @@
                 [saveLabel]="(isSavingProfile() ? 'USER_MANAGE.PROFILE_STATUS_SAVING' : 'UNSAVED_CHANGES.SAVE') | translate"
                 [saving]="isSavingProfile()"
                 [saveDisabled]="userForm().invalid()"
-                [saveDisabledReason]="'USER_MANAGE.HEIGHT_INVALID' | translate"
+                [saveDisabledReason]="profileValidationErrorKey() | translate"
                 (discard)="discardUserFormChanges()"
                 (save)="onSubmit()"
             />

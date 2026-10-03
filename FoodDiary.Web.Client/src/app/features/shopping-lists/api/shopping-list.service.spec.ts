@@ -4,7 +4,12 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
+import type {
+    ShoppingList,
+    ShoppingListCreateDto,
+    ShoppingListSummary,
+    ShoppingListUpdateDto,
+} from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from './shopping-list.service';
 
 const BASE_URL = environment.apiUrls.shoppingLists;

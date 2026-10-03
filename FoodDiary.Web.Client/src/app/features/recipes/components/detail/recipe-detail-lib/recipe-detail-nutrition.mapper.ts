@@ -3,8 +3,8 @@ import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/c
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
-import type { Recipe } from '../../../models/recipe.data';
 import { RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT } from './recipe-detail.config';
 import type { IngredientPreviewItem, MacroBlock } from './recipe-detail.types';
 

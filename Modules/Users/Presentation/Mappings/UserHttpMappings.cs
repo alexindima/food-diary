@@ -69,7 +69,8 @@ public static class UserHttpMappings {
                 ProfileImageAssetId: request.ProfileImageAssetId,
                 DashboardLayout: request.DashboardLayout?.ToModel(),
                 IsActive: request.IsActive,
-                TimeZoneId: request.TimeZoneId
+                TimeZoneId: request.TimeZoneId,
+                BirthDateSpecified: request.BirthDateSpecified
             );
         }
     }

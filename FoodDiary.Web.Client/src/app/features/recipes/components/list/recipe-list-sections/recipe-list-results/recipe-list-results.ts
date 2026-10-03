@@ -4,8 +4,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card';
-import type { Recipe } from '../../../../models/recipe.data';
-import type { RecipeCardViewModel } from '../../../../pages/list/recipe-list.types';
+import type { Recipe } from '../../../../../../shared/models/recipe.data';
+import type { RecipeCardViewModel } from '../../../../lib/recipe-list.types';
 import { RecipeListRecentComponent } from './recipe-list-recent';
 
 @Component({

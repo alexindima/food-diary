@@ -1,4 +1,4 @@
-import type { Recipe } from '../../recipes/models/recipe.data';
+import type { Recipe } from '../../../shared/models/recipe.data';
 
 export type ExploreFilters = {
     search?: string;

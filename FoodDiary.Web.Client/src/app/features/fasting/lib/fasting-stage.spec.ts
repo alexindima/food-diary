@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveFastingStage } from './fasting-stage';
+import { resolveFastingStage } from '../../../shared/lib/fasting-stage';
 
 const MS_PER_HOUR = 3_600_000;
 const MS_PER_SECOND = 1000;

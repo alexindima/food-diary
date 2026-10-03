@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AiInputActionBarComponent } from '../../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import type { MealAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import { MealAiSessionsComponent } from '../meal-ai-sessions/meal-ai-sessions';
 import { MealItemsListComponent, type MealItemsListItemState } from '../meal-items-list/meal-items-list';
 

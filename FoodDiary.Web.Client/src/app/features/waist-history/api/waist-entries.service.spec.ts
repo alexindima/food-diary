@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import type { WaistEntry, WaistEntryFilters } from '../models/waist-entry.data';
+import type { WaistEntry, WaistEntryFilters } from '../../../shared/models/waist-entry.data';
 import { WaistEntriesService } from './waist-entries.service';
 
 const BASE_URL = environment.apiUrls.waists;

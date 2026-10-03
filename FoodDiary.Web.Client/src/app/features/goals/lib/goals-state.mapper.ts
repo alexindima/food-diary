@@ -1,5 +1,5 @@
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
-import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
+import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 export type BodyTargetKey = 'weight' | 'waist';

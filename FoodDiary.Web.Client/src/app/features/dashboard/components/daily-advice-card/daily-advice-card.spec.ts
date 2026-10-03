@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { DailyAdvice } from '../../models/daily-advice.data';
+import type { DailyAdvice } from '../../../../shared/models/daily-advice.data';
 import { DailyAdviceCardComponent } from './daily-advice-card';
 
 describe('DailyAdviceCardComponent', () => {

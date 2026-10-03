@@ -1,14 +1,14 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
-import { PremiumBillingService } from '../api/premium-billing.service';
 import type {
     BillingOverview,
     BillingPlan,
     BillingProvider,
     CheckoutSessionResponse,
     PortalSessionResponse,
-} from '../models/billing.models';
+} from '../../../shared/models/billing.models';
+import { PremiumBillingService } from '../api/premium-billing.service';
 
 @Service()
 export class PremiumBillingFacade {

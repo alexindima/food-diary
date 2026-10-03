@@ -13,8 +13,8 @@ import {
 import { firstValueFrom, map, type Observable, of } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { AdminTemplateHistoryComponent } from '../../admin-template-history/components/admin-template-history';
-import type { AdminTemplateRevision } from '../../admin-template-history/models/admin-template-revision';
+import type { AdminTemplateRevision } from '../../admin-template-history/contracts/history';
+import { AdminTemplateHistoryComponent } from '../../admin-template-history/contracts/history';
 import { AdminAiPromptContextComponent } from '../components/admin-ai-prompt-context';
 import { AdminAiPromptVariablesComponent } from '../components/admin-ai-prompt-variables';
 import { AdminAiPromptWorkbenchComponent } from '../components/admin-ai-prompt-workbench';

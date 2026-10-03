@@ -13,10 +13,10 @@ import type { Subscription } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
-import type { Product } from '../../../../products/models/product.data';
-import type { Recipe } from '../../../../recipes/models/recipe.data';
+import { MealSourceType } from '../../../../../shared/models/meal.data';
+import type { Product } from '../../../../../shared/models/product.data';
+import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { MealSourceType } from '../../../models/meal.data';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
 const MIN_AMOUNT = 0.01;

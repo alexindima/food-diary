@@ -1,6 +1,6 @@
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
-import type { Product } from '../../../../products/models/product.data';
-import type { Recipe, RecipeVisibility } from '../../../models/recipe.data';
+import type { Product } from '../../../../../shared/models/product.data';
+import type { Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 
 export type RecipeFormValues = {
     language: string;

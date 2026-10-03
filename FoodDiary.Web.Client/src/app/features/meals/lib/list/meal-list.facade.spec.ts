@@ -6,11 +6,11 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../services/navigation.service';
+import type { FavoriteMeal, Meal, MealOverview } from '../../../../shared/models/meal.data';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
-import type { FavoriteMeal, Meal, MealOverview } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 import { MealListFacade, type MealListStructuredFilters } from './meal-list.facade';
 

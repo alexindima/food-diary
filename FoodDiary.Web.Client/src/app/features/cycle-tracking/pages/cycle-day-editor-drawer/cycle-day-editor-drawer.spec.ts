@@ -4,8 +4,8 @@ import { form } from '@angular/forms/signals';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../../../shared/models/cycle.data';
 import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
-import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../models/cycle.data';
 import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer';
 
 const MILD_SYMPTOM_INTENSITY = 3;

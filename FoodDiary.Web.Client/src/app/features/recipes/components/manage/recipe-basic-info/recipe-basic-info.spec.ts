@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
-import { RecipeVisibility } from '../../../models/recipe.data';
+import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeBasicInfoComponent } from './recipe-basic-info';

@@ -181,7 +181,8 @@ public sealed class UpdateUserCommandHandler(
             BirthDate: command.BirthDate,
             Gender: values.Gender,
             WeightKg: command.WeightKg,
-            HeightCm: command.HeightCm));
+            HeightCm: command.HeightCm,
+            BirthDateSpecified: command.BirthDateSpecified));
         user.UpdateActivity(new UserActivityUpdate(
             ActivityLevel: values.ActivityLevel,
             StepGoal: command.StepGoal,

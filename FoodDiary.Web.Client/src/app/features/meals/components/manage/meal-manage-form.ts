@@ -40,11 +40,17 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import { patchSignalFormModel } from '../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
+import {
+    type Meal,
+    type MealAiSessionManageDto,
+    type MealItem,
+    type MealManageDto,
+    MealSourceType,
+} from '../../../../shared/models/meal.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
-import { type Meal, type MealAiSessionManageDto, type MealItem, type MealManageDto, MealSourceType } from '../../models/meal.data';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';

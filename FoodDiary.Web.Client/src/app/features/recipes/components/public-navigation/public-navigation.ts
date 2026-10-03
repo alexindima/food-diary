@@ -15,7 +15,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { ThemeService } from '../../../../shared/theme/theme.service';
-import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
+import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
 
 @Component({
     selector: 'fd-public-recipe-navigation',

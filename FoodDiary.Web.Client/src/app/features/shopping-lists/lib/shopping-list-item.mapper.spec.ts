@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MeasurementUnit } from '../../products/models/product.data';
-import type { ShoppingListItem } from '../models/shopping-list.data';
+import { MeasurementUnit } from '../../../shared/models/product.data';
+import type { ShoppingListItem } from '../../../shared/models/shopping-list.data';
 import {
     buildShoppingListItemViewModels,
     buildShoppingListUnitOptions,

@@ -4,8 +4,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { UsdaFood } from '../../../../shared/models/usda.data';
 import { UsdaFoodSearchFacade } from '../../lib/usda-food-search.facade';
-import type { UsdaFood } from '../../models/usda.data';
 import { UsdaFoodSearchDialogComponent } from './usda-food-search-dialog';
 
 const FDC_ID = 17_000;

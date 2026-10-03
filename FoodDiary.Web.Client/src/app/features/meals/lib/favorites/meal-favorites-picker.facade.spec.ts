@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import type { FavoriteMeal } from '../../models/meal.data';
 import { MealFavoritesPickerFacade } from './meal-favorites-picker.facade';
 
 const PAGE_SIZE = 10;

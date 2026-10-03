@@ -10,7 +10,7 @@ import type {
     ShoppingListOverview,
     ShoppingListSummary,
     ShoppingListUpdateDto,
-} from '../models/shopping-list.data';
+} from '../../../shared/models/shopping-list.data';
 
 const SELECTION_PAGE_SIZE = 50;
 

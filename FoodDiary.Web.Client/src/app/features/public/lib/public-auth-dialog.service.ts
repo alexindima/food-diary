@@ -27,7 +27,7 @@ export class PublicAuthDialogService {
         destroyRef,
         messageKey,
     }: PublicAuthDialogOptions): Promise<PublicAuthDialogRef | null> {
-        const { AuthDialogComponent } = await import('../../auth/dialogs/auth-dialog/auth-dialog');
+        const { AuthDialogComponent } = await import('../../auth/contracts/auth-dialog');
         if (destroyRef?.destroyed === true) {
             return null;
         }

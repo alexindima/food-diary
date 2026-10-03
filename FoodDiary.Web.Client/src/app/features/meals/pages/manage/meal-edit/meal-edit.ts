@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+import type { Meal } from '../../../../../shared/models/meal.data';
 import { MealManageFormComponent } from '../../../components/manage/meal-manage-form';
-import type { Meal } from '../../../models/meal.data';
 
 @Component({
     selector: 'fd-meal-edit',

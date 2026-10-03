@@ -7,8 +7,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
+import { MealSourceType } from '../../../../../shared/models/meal.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { MealSourceType } from '../../../models/meal.data';
 import type { MealItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
 import { formatMealManageAmount, formatMealManageMacro, getEmptyNutritionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 

@@ -11,7 +11,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { ThemeService } from '../../../../shared/theme/theme.service';
-import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
+import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
 import { PublicRecipeNavigationComponent } from './public-navigation';
 
 const authenticated = signal(false);

@@ -4,7 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ExportService } from '../../../../shared/api/export.service';
 import { CyclesService } from '../../api/cycles.service';
+import { CycleDayFacade } from '../../lib/cycle-day.facade';
+import { CycleEpisodeFacade } from '../../lib/cycle-episode.facade';
+import { CycleExportFacade } from '../../lib/cycle-export.facade';
+import { CycleFactorFacade } from '../../lib/cycle-factor.facade';
+import { CycleSettingsFacade } from '../../lib/cycle-settings.facade';
 import { CycleTrackingFacade } from '../../lib/cycle-tracking.facade';
+import { CycleTrackingStateFacade } from '../../lib/cycle-tracking-state.facade';
 import { CycleSettingsDrawerComponent } from './cycle-settings-drawer';
 
 const DURATION_FIELD_COUNT = 3;
@@ -18,6 +24,12 @@ beforeEach(() => {
         providers: [
             provideTranslateTesting(),
             CycleTrackingFacade,
+            CycleTrackingStateFacade,
+            CycleSettingsFacade,
+            CycleDayFacade,
+            CycleFactorFacade,
+            CycleEpisodeFacade,
+            CycleExportFacade,
             { provide: CyclesService, useValue: {} },
             { provide: ExportService, useValue: {} },
         ],

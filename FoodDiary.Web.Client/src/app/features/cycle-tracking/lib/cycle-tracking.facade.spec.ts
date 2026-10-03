@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
-import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -15,8 +14,15 @@ import {
     type CycleNutritionSummary,
     type CycleResponse,
     OVULATION_TEST_RESULT_POSITIVE,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
+import { CyclesService } from '../api/cycles.service';
+import { CycleDayFacade } from './cycle-day.facade';
+import { CycleEpisodeFacade } from './cycle-episode.facade';
+import { CycleExportFacade } from './cycle-export.facade';
+import { CycleFactorFacade } from './cycle-factor.facade';
+import { CycleSettingsFacade } from './cycle-settings.facade';
 import { CycleTrackingFacade } from './cycle-tracking.facade';
+import { CycleTrackingStateFacade } from './cycle-tracking-state.facade';
 
 const NOTE_LIMIT = 1024;
 const CERVICAL_LIMIT = 128;
@@ -110,12 +116,58 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         providers: [
             CycleTrackingFacade,
+            CycleTrackingStateFacade,
+            CycleSettingsFacade,
+            CycleDayFacade,
+            CycleFactorFacade,
+            CycleEpisodeFacade,
+            CycleExportFacade,
             { provide: CyclesService, useValue: cyclesService },
             { provide: ExportService, useValue: exportService },
         ],
     });
 
     facade = TestBed.inject(CycleTrackingFacade);
+});
+
+describe('CycleTrackingFacade read lifetime', () => {
+    it('cancels a nutrition read on deletion and ignores its late response', async () => {
+        const pending = new Subject<CycleNutritionSummary | null>();
+        cyclesService.getNutritionSummary.mockReturnValue(pending);
+        facade.initialize();
+        expect(pending.observed).toBe(true);
+        await facade.deleteCycleAsync();
+        expect(pending.observed).toBe(false);
+        pending.next(createNutritionSummary());
+        expect(facade.cycle()).toBeNull();
+        expect(facade.nutritionSummary()).toBeNull();
+        expect(facade.isLoadingNutritionSummary()).toBe(false);
+    });
+
+    it('cancels superseded nutrition reads and keeps the latest summary', () => {
+        const first = new Subject<CycleNutritionSummary | null>();
+        const second = new Subject<CycleNutritionSummary | null>();
+        cyclesService.getNutritionSummary.mockReturnValueOnce(first).mockReturnValueOnce(second);
+        facade.initialize();
+        TestBed.inject(CycleTrackingStateFacade).loadNutritionSummary(facade.cycle());
+        expect(first.observed).toBe(false);
+        const latest = createNutritionSummary();
+        second.next(latest);
+        first.next(null);
+        expect(facade.nutritionSummary()).toEqual(latest);
+        expect(facade.isLoadingNutritionSummary()).toBe(false);
+    });
+
+    it('recovers a failed nutrition read without an unhandled error', () => {
+        cyclesService.getNutritionSummary.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        facade.initialize();
+        const state = TestBed.inject(CycleTrackingStateFacade);
+        expect(state.nutritionError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
+        expect(facade.isLoadingNutritionSummary()).toBe(false);
+        state.loadNutritionSummary(facade.cycle());
+        expect(state.nutritionError()).toBeNull();
+        expect(facade.nutritionSummary()).toEqual(createNutritionSummary());
+    });
 });
 
 describe('CycleTrackingFacade fertility validation', () => {

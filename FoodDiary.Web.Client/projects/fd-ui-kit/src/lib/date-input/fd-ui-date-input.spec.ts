@@ -78,7 +78,7 @@ describe('FdUiDateInputComponent', () => {
         input.value = '2027-01-01';
         input.dispatchEvent(new Event('input'));
         fixture.detectChanges();
-        expect(component.value()).toBeNull();
+        expect(component.value()).toBe('1995-06-15');
         expect(component.touched()).toBe(true);
     });
 
@@ -102,11 +102,78 @@ describe('FdUiDateInputComponent', () => {
     });
 
     registerLabelTests();
+    registerManualInputValidationTests();
     registerValueAccessorTests();
     registerStateTests();
     registerCalendarFocusTests();
     registerInteractionTests();
 });
+
+function registerManualInputValidationTests(): void {
+    describe('manual input validation state', () => {
+        it('reports invalid input without emitting a replacement value, then recovers', () => {
+            const input = prepareManualDateInput();
+            const invalid = vi.fn();
+            const changed = vi.fn();
+            component.manualInputInvalidChange.subscribe(invalid);
+            component.value.subscribe(changed);
+
+            input.value = '2027-01-01';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            expect(invalid).toHaveBeenLastCalledWith(true);
+            expect(changed).not.toHaveBeenCalled();
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+            expect(input.value).toBe('2027-01-01');
+
+            input.value = MARCH_DATE_STRING;
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(invalid).toHaveBeenLastCalledWith(false);
+        });
+
+        it('resets an invalid DOM draft when the model value has not changed', () => {
+            const input = prepareManualDateInput();
+            input.value = '2027-01-01';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            const invalid = vi.fn();
+            component.manualInputInvalidChange.subscribe(invalid);
+
+            component.reset();
+            fixture.detectChanges();
+
+            expect(input.value).toBe(MARCH_DATE_STRING);
+            expect(input.getAttribute('aria-invalid')).toBeNull();
+            expect(invalid).toHaveBeenLastCalledWith(false);
+            expect(component.touched()).toBe(false);
+        });
+
+        it('clears an invalid optional draft intentionally', () => {
+            const input = prepareManualDateInput();
+            input.value = '2027-01-01';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            expect(component.value()).toBeNull();
+            expect(input.getAttribute('aria-invalid')).toBeNull();
+        });
+    });
+}
+
+function prepareManualDateInput(): HTMLInputElement {
+    fixture.componentRef.setInput('allowManualInput', true);
+    fixture.componentRef.setInput('max', '2026-09-30');
+    fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+    fixture.componentRef.setInput('invalidDateLabel', 'Invalid date');
+    fixture.detectChanges();
+    return requireInputElement('input');
+}
 
 function registerLabelTests(): void {
     describe('label', () => {

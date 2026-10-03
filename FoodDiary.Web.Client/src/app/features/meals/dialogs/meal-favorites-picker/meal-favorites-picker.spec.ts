@@ -5,8 +5,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
-import type { FavoriteMeal } from '../../models/meal.data';
 import { MealFavoritesPickerComponent } from './meal-favorites-picker';
 
 const SEARCH_DELAY_MS = 300;

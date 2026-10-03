@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { HealthAreaScores } from '../../models/usda.data';
+import type { HealthAreaScores } from '../../../../shared/models/usda.data';
 import { HealthAreaScoresComponent } from './health-area-scores';
 
 const HEART_SCORE = 82;

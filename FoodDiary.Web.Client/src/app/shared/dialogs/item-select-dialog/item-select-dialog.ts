@@ -8,11 +8,11 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
-import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog/product-add-dialog';
-import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog/product-list-dialog';
-import type { Product } from '../../../features/products/models/product.data';
-import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog';
-import type { Recipe } from '../../../features/recipes/models/recipe.data';
+import { ProductAddDialogComponent } from '../../../features/products/contracts/product-add-dialog';
+import { ProductListDialogComponent } from '../../../features/products/contracts/product-list-dialog';
+import { RecipeSelectDialogComponent } from '../../../features/recipes/contracts/recipe-select-dialog';
+import type { Product } from '../../models/product.data';
+import type { Recipe } from '../../models/recipe.data';
 import type { ItemSelectDialogData, ItemSelection } from './item-select-dialog-lib/item-select-dialog.types';
 
 const MAX_TEXT_NAME_LENGTH = 256;

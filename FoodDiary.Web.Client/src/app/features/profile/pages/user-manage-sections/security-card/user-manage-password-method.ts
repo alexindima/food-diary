@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
-import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { PasswordActionState } from '../../../lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-password-method',

@@ -16,7 +16,7 @@ import {
     type UpdateCycleSettingsPayload,
     type UpsertCycleDayPayload,
     type UpsertCycleFactorPayload,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
 import { CyclesService } from './cycles.service';
 
 const BASE_URL = environment.apiUrls.cycles;

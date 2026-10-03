@@ -25,7 +25,7 @@ import {
     type CyclePredictions,
     type CycleResponse,
     type CycleTrackingMode,
-} from '../../../cycle-tracking/models/cycle.data';
+} from '../../../../shared/models/cycle.data';
 
 type CycleSummaryPill = {
     id: string;

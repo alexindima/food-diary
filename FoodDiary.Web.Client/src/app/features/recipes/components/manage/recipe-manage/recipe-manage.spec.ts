@@ -6,9 +6,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
-import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../models/recipe.data';
 import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { RecipeManageComponent } from './recipe-manage';
 

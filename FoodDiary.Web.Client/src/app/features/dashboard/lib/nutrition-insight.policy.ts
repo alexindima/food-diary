@@ -131,4 +131,4 @@ function metricInsight(
 function ratio(current: number, goal: number | null | undefined): number {
     return goal !== null && goal !== undefined && goal > 0 ? current / goal : 0;
 }
-import type { DashboardSnapshot } from '../models/dashboard.data';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';

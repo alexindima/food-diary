@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { TdeeInsight } from '../models/tdee-insight.data';
+import type { TdeeInsight } from '../../../shared/models/tdee-insight.data';
 import {
     buildTdeeConfidenceKey,
     buildTdeeHintKey,

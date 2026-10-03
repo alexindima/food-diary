@@ -4,7 +4,7 @@
     "components": 483,
     "componentsWithoutDirectSpecs": 129,
     "inputs": 1553,
-    "outputs": 531,
+    "outputs": 533,
     "apiCalls": 276,
     "templatesWithTranslations": 344,
     "translationKeys": 2078,
@@ -4705,6 +4705,10 @@
         {
           "name": "touch",
           "type": ""
+        },
+        {
+          "name": "manualInputInvalidChange",
+          "type": "boolean"
         },
         {
           "name": "valueChange",
@@ -9774,6 +9778,10 @@
         {
           "name": "userFormPatch",
           "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
+        },
+        {
+          "name": "birthDateInputInvalidChange",
+          "type": "boolean"
         }
       ],
       "specPath": null
@@ -21451,7 +21459,6 @@
         "UNSAVED_CHANGES.TITLE",
         "USER_MANAGE.EDIT_SUBTITLE",
         "USER_MANAGE.EDIT_TITLE",
-        "USER_MANAGE.HEIGHT_INVALID",
         "USER_MANAGE.TOUR.START_TOUR"
       ]
     },
@@ -30878,6 +30885,7 @@
         "latestDate"
       ],
       "outputsHandled": [
+        "manualInputInvalidChange",
         "valueChange"
       ]
     },
@@ -40905,6 +40913,7 @@
         "userForm"
       ],
       "outputsHandled": [
+        "birthDateInputInvalidChange",
         "userFormPatch"
       ]
     },

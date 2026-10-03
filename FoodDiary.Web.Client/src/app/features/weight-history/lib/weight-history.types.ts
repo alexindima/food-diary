@@ -1,4 +1,4 @@
-import type { WeightEntry } from '../models/weight-entry.data';
+import type { WeightEntry } from '../../../shared/models/weight-entry.data';
 
 export type WeightHistoryRange = 'week' | 'month' | 'quarter' | 'halfYear' | 'year' | 'custom';
 

@@ -1,8 +1,8 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { GoalsService } from '../api/goals.service';
-import type { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 
 @Service()
 export class CalorieGoalFacade {

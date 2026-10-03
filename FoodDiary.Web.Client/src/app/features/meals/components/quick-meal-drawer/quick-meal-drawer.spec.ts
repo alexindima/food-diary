@@ -6,11 +6,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
+import { MealSourceType } from '../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
-import { MealSourceType } from '../../models/meal.data';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import { QuickMealDrawerComponent } from './quick-meal-drawer';
 

@@ -5,8 +5,8 @@ import { of } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
-import type { WeightEntry } from '../../models/weight-entry.data';
 import { WeightHistoryEntriesDialogComponent } from './weight-history-entries-dialog';
 
 const FIXTURE_YEAR = 2026;

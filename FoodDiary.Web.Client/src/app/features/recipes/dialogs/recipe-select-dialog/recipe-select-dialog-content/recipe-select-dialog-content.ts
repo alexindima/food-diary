@@ -5,9 +5,9 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
+import type { Recipe } from '../../../../../shared/models/recipe.data';
+import { recipeCategoryKey } from '../../../../../shared/models/recipe-category';
 import { resolveServingsUnitKey } from '../../../lib/recipe-servings.utils';
-import type { Recipe } from '../../../models/recipe.data';
-import { recipeCategoryKey } from '../../../models/recipe-category';
 import type { RecipeSelectItemViewModel } from '../recipe-select-dialog-lib/recipe-select-dialog.types';
 
 @Component({

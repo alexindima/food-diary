@@ -1,4 +1,4 @@
-import { MeasurementUnit } from '../models/product.data';
+import { MeasurementUnit } from '../../../shared/models/product.data';
 
 export const PRODUCT_NAME_SEARCH_MIN_LENGTH = 3;
 export const PRODUCT_MAX_PHOTOS = 5;

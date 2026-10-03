@@ -7,7 +7,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import type { ShoppingListItemDto, ShoppingListSummary } from '../../models/shopping-list.data';
+import type { ShoppingListItemDto, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 
 export type ShoppingListTarget = { id: string | null; name: string };
 export type ShoppingListPickerData = {

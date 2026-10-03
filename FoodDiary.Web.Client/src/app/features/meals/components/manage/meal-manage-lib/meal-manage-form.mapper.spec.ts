@@ -7,7 +7,7 @@ import {
     type Meal,
     type MealAiSessionManageDto,
     MealSourceType,
-} from '../../../models/meal.data';
+} from '../../../../../shared/models/meal.data';
 import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
     buildMealDateTime,

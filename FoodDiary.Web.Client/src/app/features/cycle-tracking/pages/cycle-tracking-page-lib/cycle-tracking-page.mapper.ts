@@ -1,6 +1,4 @@
 import { formatDateInputValue, formatDateValue } from '../../../../shared/lib/local-date.utils';
-import { getCycleFactorStatus } from '../../lib/cycle-factor-status.utils';
-import { CYCLE_SYMPTOM_FIELDS } from '../../lib/cycle-tracking.config';
 import {
     BLEEDING_TYPE_BLEEDING,
     BLEEDING_TYPE_SPOTTING,
@@ -34,7 +32,9 @@ import {
     type MenstrualEpisode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
-} from '../../models/cycle.data';
+} from '../../../../shared/models/cycle.data';
+import { getCycleFactorStatus } from '../../lib/cycle-factor-status.utils';
+import { CYCLE_SYMPTOM_FIELDS } from '../../lib/cycle-tracking.config';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import type {
     CycleActiveFactorViewModel,

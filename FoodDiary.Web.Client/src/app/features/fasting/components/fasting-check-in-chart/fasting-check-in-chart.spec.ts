@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import type { FastingCheckIn } from '../../models/fasting.data';
+import type { FastingCheckIn } from '../../../../shared/models/fasting.data';
 import { FastingCheckInChartComponent } from './fasting-check-in-chart';
 
 const EARLIER_HUNGER_LEVEL = 2;

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DailyMicronutrient, Micronutrient } from '../models/usda.data';
+import { USDA_NUTRIENT_IDS } from '../../../shared/lib/usda-nutrient.constants';
+import type { DailyMicronutrient, Micronutrient } from '../../../shared/models/usda.data';
 import { buildDailyMicronutrientViews, buildMineralMicronutrientViews, buildVitaminMicronutrientViews } from './usda-micronutrient.mapper';
-import { USDA_NUTRIENT_IDS } from './usda-nutrient.constants';
 
 const CLAMPED_PERCENT_WIDTH = 100;
 const NEGATIVE_PERCENT = -10;

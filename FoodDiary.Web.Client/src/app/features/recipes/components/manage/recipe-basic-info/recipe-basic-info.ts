@@ -10,8 +10,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
-import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
 const ERROR_FIELDS = ['name', 'cookTime', 'prepTime', 'servings', 'description', 'visibility', 'comment'] as const;

@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
 import { FastingCheckInCardComponent } from './fasting-check-in-card';
 
 const INITIAL_HUNGER_LEVEL = 1;

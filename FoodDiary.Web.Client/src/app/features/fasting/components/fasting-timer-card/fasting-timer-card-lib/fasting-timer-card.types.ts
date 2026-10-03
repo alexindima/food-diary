@@ -1,4 +1,4 @@
-import type { FastingOccurrenceKind } from '../../../models/fasting.data';
+import type { FastingOccurrenceKind } from '../../../../../shared/models/fasting.data';
 
 export type FastingTimerCardLayout = 'dashboard' | 'page';
 

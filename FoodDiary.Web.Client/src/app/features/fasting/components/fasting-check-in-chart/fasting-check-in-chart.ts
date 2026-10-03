@@ -4,7 +4,7 @@ import { FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartSeri
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
-import type { FastingCheckIn } from '../../models/fasting.data';
+import type { FastingCheckIn } from '../../../../shared/models/fasting.data';
 
 const FASTING_CHECK_IN_MIN_LEVEL = 1;
 const FASTING_CHECK_IN_MAX_LEVEL = 5;

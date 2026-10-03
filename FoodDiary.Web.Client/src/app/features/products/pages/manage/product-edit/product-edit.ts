@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+import type { Product } from '../../../../../shared/models/product.data';
 import { ProductManageFormComponent } from '../../../components/manage/product-manage-form/product-manage-form';
-import type { Product } from '../../../models/product.data';
 
 @Component({
     selector: 'fd-product-edit',

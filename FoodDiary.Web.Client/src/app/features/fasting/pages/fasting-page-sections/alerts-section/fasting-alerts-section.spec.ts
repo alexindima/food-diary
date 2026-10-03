@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import type { FastingMessageViewModel } from '../../fasting-page-lib/fasting-page.types';
+import type { FastingMessageViewModel } from '../../../lib/fasting-page.types';
 import { FastingAlertsSectionComponent } from './fasting-alerts-section';
 
 describe('FastingAlertsSectionComponent', () => {

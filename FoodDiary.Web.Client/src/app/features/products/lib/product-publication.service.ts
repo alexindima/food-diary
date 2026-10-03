@@ -1,8 +1,8 @@
 import { inject, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { type Product, ProductVisibility } from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import { type Product, ProductVisibility } from '../models/product.data';
 
 @Service()
 export class ProductPublicationService {

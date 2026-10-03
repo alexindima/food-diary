@@ -6,8 +6,6 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import { parseIntegerInput } from '../../../../shared/lib/number.utils';
-import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {
     EMPTY_FASTING_DURATION_HOURS,
     EXTEND_DAY_AND_HALF_HOURS,
@@ -15,10 +13,18 @@ import {
     MIN_FASTING_HOURS,
     REDUCE_LONG_HOURS,
     REDUCE_SHORT_HOURS,
-} from '../../lib/fasting.constants';
+} from '../../../../shared/lib/fasting.constants';
+import { parseIntegerInput } from '../../../../shared/lib/number.utils';
+import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
+import {
+    CYCLIC_PRESETS,
+    FASTING_PROTOCOLS,
+    type FastingMode,
+    type FastingProtocol,
+    type FastingSession,
+} from '../../../../shared/models/fasting.data';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FASTING_HARD_STOP_THRESHOLD_HOURS, FASTING_WARNING_THRESHOLD_HOURS } from '../../lib/fasting-page.constants';
-import { CYCLIC_PRESETS, FASTING_PROTOCOLS, type FastingMode, type FastingProtocol, type FastingSession } from '../../models/fasting.data';
 import {
     FastingEndConfirmDialogComponent,
     type FastingEndConfirmDialogData,

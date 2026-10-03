@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { ProductType } from '../models/product.data';
-import { resolveProductImageUrl } from './product-image.util';
+import { resolveProductImageUrl } from '../../../shared/lib/product-image.util';
+import { ProductType } from '../../../shared/models/product.data';
 
 describe('resolveProductImageUrl', () => {
     it('should prefer a non-empty product image url', () => {

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
-import type { ConnectedDeviceViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { ConnectedDeviceViewModel } from '../../../lib/user-manage.types';
 import { UserManageConnectedDevicesComponent } from './user-manage-connected-devices';
 
 let fixture: ComponentFixture<UserManageConnectedDevicesComponent>;

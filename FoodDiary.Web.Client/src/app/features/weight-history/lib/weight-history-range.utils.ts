@@ -8,7 +8,7 @@ import {
     normalizeEndOfHistoryDay,
     normalizeStartOfHistoryDay,
 } from '../../../shared/lib/history-range.utils';
-import type { WeightEntryFilters, WeightEntrySummaryFilters } from '../models/weight-entry.data';
+import type { WeightEntryFilters, WeightEntrySummaryFilters } from '../../../shared/models/weight-entry.data';
 import { WEIGHT_HISTORY_ENTRIES_LIMIT_MAX } from './weight-history.constants';
 import type { WeightHistoryCustomRange, WeightHistoryDateRange, WeightHistoryRange } from './weight-history.types';
 

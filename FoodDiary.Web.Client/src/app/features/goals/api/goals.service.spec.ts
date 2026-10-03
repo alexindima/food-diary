@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
+import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { GoalsService } from './goals.service';
 
 describe('GoalsService', () => {

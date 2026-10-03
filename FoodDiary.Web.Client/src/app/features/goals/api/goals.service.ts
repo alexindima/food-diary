@@ -4,7 +4,7 @@ import { catchError, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
+import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 
 @Service()
 export class GoalsService extends ApiService {

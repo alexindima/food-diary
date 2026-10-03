@@ -13,6 +13,7 @@ Major parts:
 
 Important folders in `src/app`:
 - `features/` - feature-owned pages/components/API/model/lib code.
+- `composition/` - application bindings between feature capabilities and their owning implementations.
 - `shared/api/` - shared API clients and API-facing helpers.
 - `shared/models/` - pure shared models.
 - `components/shared/` - feature-agnostic shared UI.
@@ -23,6 +24,7 @@ Important folders in `src/app`:
 Feature folders should prefer concrete layers:
 - `api/`
 - `models/`
+- `contracts/` - deliberately published capabilities and reusable UI surfaces.
 - `components/`
 - `dialogs/`
 - `lib/`
@@ -92,6 +94,12 @@ Rules:
 - A facade may combine state, commands, and API orchestration. Reserve the `Store` suffix for a class whose primary responsibility is state transitions rather than use-case orchestration.
 - Direct `localStorage`, `sessionStorage`, browser globals, and cross-feature API access remain prohibited at the component boundary.
 
+Cycle tracking separates its page coordinator from settings, day editing, factors,
+menstrual episodes, exports, and the shared page read model. All seven facades
+are explicitly provided by the cycle tracking page. Profile billing and
+dietologist actions likewise have their own page-scoped facades; the profile
+component owns DOM/form interaction and delegates these actions.
+
 ### Server State and Invalidation
 
 - Model non-trivial asynchronous reads with `RequestStateController<T, TError>` instead of independent `isLoading`, `error`, data, and request-version signals. The controller owns stale-response rejection and preserves existing data during refresh.
@@ -99,6 +107,16 @@ Rules:
 - Choose cache behavior explicitly in the owning facade: network-only on entry, owner-lifetime cache, stale-while-revalidate, or session cache. Session caching requires an explicit logout/reset path.
 - Report mutations through a narrow semantic invalidation service only when another mounted read model can become stale. Do not introduce a generic string-based event bus.
 - Invalidation versions are refresh hints, not authoritative data. Consumers must reload from the owning API and remain correct if they mount after an event occurred.
+- Cancel superseded HTTP reads and reject old results with the controller's request version. Destroying the owner must unsubscribe; resetting/deleting an aggregate must invalidate its pending reads too.
+- When a response is decomposed into editable signals, the read controller may track completion while the owning facade retains the editable model. Do not expose a second writable copy of that model.
+- `RequestPagedData` derives rows, counts, loading and errors from one request controller. Confirmed row mutations use `updateData`; they do not end an active refresh.
+
+The product page provides `PRODUCT_LIST_QUERY_STATE` through its route adapter.
+`search`, `onlyMine`, `types`, `caloriesFrom`, `caloriesTo`, `hasImage` and `page`
+are restored from the URL. User changes commit through the router; query changes
+trigger reads, including browser back/forward. Selection dialogs omit this
+provider and keep their filters local. Empty/default parameters are removed and
+invalid values are normalized before API calls.
 
 Automated enforcement is intentionally limited to statically provable rules. `npm run check:state-ownership` verifies stateful facade scope and provider ownership; ESLint verifies their decorator choice. Architectural review remains responsible for semantic decisions such as whether a value truly needs global lifetime.
 
@@ -114,6 +132,34 @@ Key rules:
 - Feature components/dialogs/lib/resolvers should use same-feature or shared APIs instead of reaching into another feature API.
 - Guards belong in app routes or feature route files.
 - Avoid direct browser globals; preserve SSR compatibility.
+
+Cross-feature models used by several owners live in `shared/models`; pure image,
+date and nutrition transformations live in `shared/lib`. A feature may publish a
+small file under `contracts/` for an intentional integration. Prefer an
+`InjectionToken` with a narrow typed capability for actions, and bind it in
+`composition/feature-action.providers.ts`. Contracts may also publish a reusable
+dialog/component or a deliberately shared use-case facade. Consumers provide
+stateful facades in their own scope. Contracts must not export raw API clients or
+route pages, and must not reach into foreign implementation files.
+
+```mermaid
+flowchart LR
+    UI[Feature UI] --> Facade[Scoped feature facade]
+    Facade --> API[Own API]
+    Facade --> Contract[Foreign capability contract]
+    Composition[App composition] --> Contract
+    Composition --> OwnerAPI[Owning feature API]
+    Facade --> Models[Pure shared models]
+    UI --> PublicUI[Published reusable UI surface]
+```
+
+ESLint resolves extensionless TypeScript imports and rejects unresolved internal
+imports in app sources. Import restrictions use independent rule IDs for each
+scope so flat-config overrides cannot erase another scope. Run
+`npm run check:import-boundaries` for negative regression fixtures covering
+overlapping rules, foreign implementations, unresolved imports and public
+capabilities. Dependency Cruiser independently checks file cycles and transport
+layer rules; neither check replaces review of semantic feature ownership.
 
 ## Styling
 Styling should use design tokens and existing UI primitives.

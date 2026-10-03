@@ -4,7 +4,7 @@ import {
     AUTH_EMAIL_RESEND_COOLDOWN_SECONDS_DEFAULT,
     AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS_DEFAULT,
     AUTH_PASSWORD_RESET_COOLDOWN_SECONDS_DEFAULT,
-} from '../features/auth/lib/auth.constants';
+} from '../shared/auth/auth.constants';
 
 export type LoadingTimingConfig = {
     showDelayMs: number;

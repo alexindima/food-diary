@@ -4,7 +4,7 @@ import { FdUiSelectComponent } from 'fd-ui-kit';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { RECIPE_CATEGORIES } from '../../models/recipe-category';
+import { RECIPE_CATEGORIES } from '../../../../shared/models/recipe-category';
 import { PublicCategoryFilterComponent } from './public-category-filter';
 
 describe('PublicCategoryFilterComponent', () => {

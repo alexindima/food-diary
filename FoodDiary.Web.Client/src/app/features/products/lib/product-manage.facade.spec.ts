@@ -8,8 +8,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
+import {
+    type CreateProductRequest,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../shared/models/product.data';
 import { ProductService } from '../api/product.service';
-import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../models/product.data';
 import { ProductManageFacade } from './product-manage.facade';
 
 const product: Product = {

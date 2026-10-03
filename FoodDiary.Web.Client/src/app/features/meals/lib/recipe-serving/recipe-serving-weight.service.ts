@@ -2,8 +2,8 @@ import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable, of } from 'rxjs';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
+import type { Recipe, RecipeIngredient } from '../../../../shared/models/recipe.data';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
-import type { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
 
 @Service()
 export class RecipeServingWeightService {

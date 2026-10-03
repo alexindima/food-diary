@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { FastingSession } from '../../models/fasting.data';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { FastingRedesignPreviewComponent } from './fasting-redesign-preview';
 
 const INTERMITTENT_HOURS = 16;

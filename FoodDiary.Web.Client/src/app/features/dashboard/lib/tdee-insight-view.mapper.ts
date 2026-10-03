@@ -1,4 +1,4 @@
-import type { TdeeInsight } from '../models/tdee-insight.data';
+import type { TdeeInsight } from '../../../shared/models/tdee-insight.data';
 
 export const TDEE_SUGGESTION_DIFF_THRESHOLD = 50;
 export const TDEE_WEIGHT_TREND_FRACTION_DIGITS = 2;

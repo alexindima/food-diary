@@ -11,22 +11,21 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
+import type { CycleResponse } from '../../../shared/models/cycle.data';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
+import type { FastingSession } from '../../../shared/models/fasting.data';
+import type { Meal } from '../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
-import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import type { FastingSession } from '../../fasting/models/fasting.data';
-import { GoalsService } from '../../goals/api/goals.service';
-import { HydrationService } from '../../hydration/api/hydration.service';
-import { FavoriteMealService } from '../../meals/api/favorite-meal.service';
-import { MealService } from '../../meals/api/meal.service';
-import type { MealDetailActionResult } from '../../meals/components/detail/meal-detail-lib/meal-detail.types';
-import type { Meal } from '../../meals/models/meal.data';
+import { CALORIE_GOAL_ACTIONS } from '../../goals/contracts/calorie-goal-actions';
+import { HYDRATION_ACTIONS } from '../../hydration/contracts/hydration-actions';
+import { FAVORITE_MEAL_ACTIONS, MEAL_ACTIONS } from '../../meals/contracts/meal-actions';
+import type { MealDetailActionResult } from '../../meals/contracts/meal-detail-actions';
 import { DashboardService } from '../api/dashboard.service';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
 import type {
     TdeeInsightDialogAction,
     TdeeInsightDialogData,
 } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
-import type { DashboardSnapshot } from '../models/dashboard.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
@@ -46,16 +45,16 @@ export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly localDay = inject(DashboardLocalDayFacade);
     private followsToday = true;
-    private readonly mealService = inject(MealService);
+    private readonly mealService = inject(MEAL_ACTIONS);
     private readonly navigationService = inject(NavigationService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
-    private readonly favoriteMealService = inject(FavoriteMealService);
+    private readonly favoriteMealService = inject(FAVORITE_MEAL_ACTIONS);
     private readonly toastService = inject(FdUiToastService);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set());
     private readonly favoriteStates = signal<Record<string, { isFavorite: boolean; favoriteMealId: string | null }>>({});
     private readonly dashboardService = inject(DashboardService);
-    private readonly hydrationService = inject(HydrationService);
-    private readonly goalsService = inject(GoalsService);
+    private readonly hydrationService = inject(HYDRATION_ACTIONS);
+    private readonly goalsService = inject(CALORIE_GOAL_ACTIONS);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private tdeeGoalRequest: Promise<boolean> | null = null;
@@ -66,7 +65,7 @@ export class DashboardFacade {
         if (meal === undefined) {
             return;
         }
-        const { MealDetailComponent } = await import('../../meals/components/detail/meal-detail/meal-detail');
+        const { MealDetailComponent } = await import('../../meals/contracts/meal-detail');
         const result = await firstValueFrom(
             this.dialogService
                 .open<InstanceType<typeof MealDetailComponent>, Meal, MealDetailActionResult>(MealDetailComponent, {

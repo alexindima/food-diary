@@ -5,8 +5,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
+import type { GoalsResponse } from '../../../shared/models/goals.data';
 import { GoalsService } from '../api/goals.service';
-import type { GoalsResponse } from '../models/goals.data';
 import { GoalsFacade } from './goals.facade';
 
 const SAVED_CALORIES = 2100;

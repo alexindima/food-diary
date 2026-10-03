@@ -11,9 +11,9 @@ import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldEr
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { firstValueFrom } from 'rxjs';
 
+import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../auth/lib/auth.constants';
 
 export type ChangePasswordDialogData = {
     hasPassword?: boolean;

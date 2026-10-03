@@ -11,8 +11,8 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { firstValueFrom } from 'rxjs';
 
-import { AdminTemplateHistoryComponent } from '../../admin-template-history/components/admin-template-history';
-import type { AdminTemplateRevision } from '../../admin-template-history/models/admin-template-revision';
+import type { AdminTemplateRevision } from '../../admin-template-history/contracts/history';
+import { AdminTemplateHistoryComponent } from '../../admin-template-history/contracts/history';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import { emailTemplateVariables } from '../lib/email-template-variables';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';

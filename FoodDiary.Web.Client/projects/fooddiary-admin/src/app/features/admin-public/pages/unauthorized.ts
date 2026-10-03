@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { environment } from '../../../../environments/environment';
-import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
+import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 
 @Component({
     selector: 'fd-admin-unauthorized',

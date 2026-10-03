@@ -3,8 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
+import type { TdeeInsight } from '../../../../shared/models/tdee-insight.data';
 import { getEffectiveTdee } from '../../lib/tdee-insight-view.mapper';
-import type { TdeeInsight } from '../../models/tdee-insight.data';
 import { TdeeInsightCardContentComponent } from './tdee-insight-card-content/tdee-insight-card-content';
 
 @Component({

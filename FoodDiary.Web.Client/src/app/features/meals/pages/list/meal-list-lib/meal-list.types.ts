@@ -1,4 +1,4 @@
-import type { FavoriteMeal, Meal } from '../../../models/meal.data';
+import type { FavoriteMeal, Meal } from '../../../../../shared/models/meal.data';
 
 export type FavoriteMealView = {
     favorite: FavoriteMeal;

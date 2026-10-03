@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BillingOverview } from '../../../../premium/models/billing.models';
+import type { BillingOverview } from '../../../../../shared/models/billing.models';
 import {
     buildBillingView,
     getBillingPlanLabelKey,
     getBillingProviderLabel,
     getBillingRenewalLabelKey,
     getBillingStatusLabelKey,
-} from './user-manage-billing.mapper';
+} from '../../../lib/user-manage-billing.mapper';
 
 const BILLING_OVERVIEW: BillingOverview = {
     isPremium: true,

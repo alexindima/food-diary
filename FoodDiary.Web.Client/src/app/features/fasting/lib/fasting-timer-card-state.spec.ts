@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import type { FastingSession } from '../models/fasting.data';
 import {
     buildFastingTimerCardComputedState,
     formatFastingDuration,
     getCyclicPhaseProgressLabel,
     getFastingOccurrenceLabel,
     getFastingProtocolBaseLabel,
-} from './fasting-timer-card-state';
+} from '../../../shared/lib/fasting-timer-card-state';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 
 const MS_PER_HOUR = 3_600_000;
 const MS_PER_MINUTE = 60_000;

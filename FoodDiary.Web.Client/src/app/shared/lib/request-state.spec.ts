@@ -3,6 +3,16 @@ import { describe, expect, it } from 'vitest';
 import { RequestStateController } from './request-state';
 
 describe('RequestStateController', () => {
+    it('applies a confirmed mutation without finishing or replacing an active refresh', () => {
+        const request = new RequestStateController<number[]>();
+        request.succeed(request.begin(), [1]);
+        const refresh = request.begin();
+        request.updateData(items => [...items, 2]);
+        expect(request.data()).toEqual([1, 2]);
+        expect(request.isLoading()).toBe(true);
+        expect(request.succeed(refresh, [1])).toBe(true);
+        expect(request.data()).toEqual([1]);
+    });
     it('models idle, loading, and success states', () => {
         const request = new RequestStateController<{ value: number }>();
 

@@ -7,9 +7,9 @@ import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
 import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
-import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../models/fasting.data';
 import { FastingPageComponent } from './fasting-page';
 
 const SESSION_CHECK_INS_BEYOND_PAGE_SIZE = 6;

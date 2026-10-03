@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { CycleResponse } from '../../models/cycle.data';
+import type { CycleResponse } from '../../../../shared/models/cycle.data';
 import { CycleCurrentCardComponent } from './cycle-current-card';
 
 const CYCLE: CycleResponse = {

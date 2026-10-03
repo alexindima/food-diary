@@ -1,7 +1,7 @@
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
-import type { MealManageDto } from '../../models/meal.data';
+import type { MealManageDto } from '../../../../shared/models/meal.data';
 
 export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDate?: Date): MealManageDto {
     const resultDate = result.date ?? '';

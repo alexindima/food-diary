@@ -4,7 +4,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
-import type { Product } from '../../../models/product.data';
+import type { Product } from '../../../../../shared/models/product.data';
 import type { ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 
 @Component({

@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { FavoriteProduct } from '../models/product.data';
+import type { FavoriteProduct } from '../../../shared/models/product.data';
 import { normalizeProductUnit } from './product-unit.mapper';
 
 const FAVORITE_PAGE_SIZE = 10;

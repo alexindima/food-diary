@@ -5,8 +5,8 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import type { Meal } from '../../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import type { Meal } from '../../models/meal.data';
 import { AiMealCreateFacade } from './ai-meal-create.facade';
 import { AiMealCreateService } from './ai-meal-create.service';
 

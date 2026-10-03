@@ -20,7 +20,7 @@ import { GoogleIdentityService } from '../../../../../shared/auth/google-identit
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { ActiveSessionsFacade } from '../../../lib/active-sessions.facade';
-import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { PasswordActionState } from '../../../lib/user-manage.types';
 import { UserManagePasswordMethodComponent } from './user-manage-password-method';
 import { UserManageTelegramConnectionComponent } from './user-manage-telegram-connection';
 

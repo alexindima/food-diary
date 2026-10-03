@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { DayCalorieKey } from '../../models/goals.data';
+import type { DayCalorieKey } from '../../../../shared/models/goals.data';
 
 @Component({
     selector: 'fd-goals-cycling-day',

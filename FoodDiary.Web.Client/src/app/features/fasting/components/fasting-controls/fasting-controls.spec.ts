@@ -8,8 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import type { FastingProtocol, FastingSession } from '../../../../shared/models/fasting.data';
 import { FastingFacade } from '../../lib/fasting.facade';
-import type { FastingProtocol, FastingSession } from '../../models/fasting.data';
 import { FastingControlsComponent } from './fasting-controls';
 
 const CUSTOM_EXTEND_HOURS = 12;

@@ -6,7 +6,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { EMPTY, type Observable } from 'rxjs';
 
 import type { FoodNutritionResponse } from '../../../../../shared/models/ai.data';
-import { MeasurementUnit } from '../../../models/product.data';
+import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import type { ProductAiRecognitionFormModel } from '../product-ai-recognition-dialog.types';
 
 @Component({

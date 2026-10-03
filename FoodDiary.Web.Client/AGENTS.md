@@ -73,6 +73,8 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Shared API code must not depend on UI or feature-local code.
 - Shared UI under `src/app/components/shared` must remain feature-agnostic.
 - Feature components/dialogs/lib/resolvers should not reach directly into another feature API unless the boundary is explicitly shared.
+- Cross-feature integration must use a deliberately published `contracts/` surface. Action contracts expose narrow typed capabilities, with implementations bound under `src/app/composition/`; raw API clients and route pages are not public contracts.
+- Run `npm run check:import-boundaries` when changing frontend dependency boundaries or ESLint scope configuration.
 - Import UI primitives from `fd-ui-kit`; do not deep-link into `projects/fd-ui-kit/src/lib/**`.
 - Avoid direct Angular Material/CDK overlay/layout imports in app/admin feature code when a UI kit or `ViewportService` abstraction exists.
 - Guards belong to app route files or feature route files.

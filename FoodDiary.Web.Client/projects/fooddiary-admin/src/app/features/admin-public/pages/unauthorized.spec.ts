@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
+import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { UnauthorizedComponent } from './unauthorized';
 
 describe('UnauthorizedComponent', () => {

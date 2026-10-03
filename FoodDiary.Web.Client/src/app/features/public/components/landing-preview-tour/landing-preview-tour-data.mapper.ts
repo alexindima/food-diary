@@ -5,10 +5,10 @@ import type {
     NutritionTrendInsight,
     NutritionTrendPoint,
 } from '../../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
-import type { QuickMealItem } from '../../../meals/lib/quick/quick-meal.service';
-import type { Meal } from '../../../meals/models/meal.data';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
+import type { Meal } from '../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import type { QuickMealItem } from '../../../meals/contracts/quick-meal';
 
 export type LandingPreviewContent = {
     heroSummaryCard: {

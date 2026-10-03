@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { WeightEntry } from '../../models/weight-entry.data';
+import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryEntriesCardComponent } from './weight-history-entries-card';
 
 const ENTRY_WEIGHT = 71.5;

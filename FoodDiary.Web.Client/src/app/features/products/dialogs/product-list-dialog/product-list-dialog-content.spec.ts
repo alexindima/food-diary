@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import { ProductListDialogContentComponent } from './product-list-dialog-content';
 
 const PRODUCT_CALORIES = 120;

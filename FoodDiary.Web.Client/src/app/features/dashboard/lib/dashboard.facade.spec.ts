@@ -5,15 +5,16 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { FEATURE_ACTION_PROVIDERS } from '../../../composition/feature-action.providers';
 import { NavigationService } from '../../../services/navigation.service';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
+import type { FavoriteMeal, Meal } from '../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../../goals/api/goals.service';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { FavoriteMealService } from '../../meals/api/favorite-meal.service';
 import { MealService } from '../../meals/api/meal.service';
-import type { FavoriteMeal, Meal } from '../../meals/models/meal.data';
 import { DashboardService } from '../api/dashboard.service';
-import type { DashboardSnapshot } from '../models/dashboard.data';
 import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import { DashboardLocalDayFacade } from './dashboard-local-day.facade';
@@ -779,6 +780,7 @@ function setupFacade(): {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
         providers: [
+            ...FEATURE_ACTION_PROVIDERS,
             DashboardFacade,
             DashboardLocalDayFacade,
             { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },

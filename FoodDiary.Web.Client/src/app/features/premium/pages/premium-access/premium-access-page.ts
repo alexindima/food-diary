@@ -15,11 +15,11 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { AuthService } from '../../../../services/auth.service';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import type { BillingOverview, BillingPlan, BillingProvider } from '../../../../shared/models/billing.models';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
-import type { BillingOverview, BillingPlan, BillingProvider } from '../../models/billing.models';
 import { PremiumAccessBannersComponent } from '../premium-access-sections/access-banners/premium-access-banners';
 import { PremiumBenefitsCardComponent } from '../premium-access-sections/benefits-card/premium-benefits-card';
 import { PremiumOverviewCardComponent } from '../premium-access-sections/overview-card/premium-overview-card';

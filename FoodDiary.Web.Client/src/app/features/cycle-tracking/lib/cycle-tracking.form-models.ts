@@ -9,7 +9,7 @@ import {
     type CycleTrackingGoal,
     type CycleTrackingMode,
     type OvulationTestResult,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
 
 export type StartCycleFormModel = {
     trackingStartDate: string | null;

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
-import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from './recipe-manage.types';
 import { createRecipeFormValue } from './recipe-manage-form.mapper';
 import { RecipeNutritionFormManager, type RecipeNutritionFormOperations } from './recipe-nutrition-form.manager';

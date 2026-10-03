@@ -18,9 +18,10 @@ import type {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../../../shared/models/meal.data';
+import type { Product } from '../../../../shared/models/product.data';
+import type { Recipe } from '../../../../shared/models/recipe.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import type { Product } from '../../../products/models/product.data';
-import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
 import type {
     CalorieMismatchWarning,
@@ -31,7 +32,6 @@ import type {
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
-import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../models/meal.data';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
 

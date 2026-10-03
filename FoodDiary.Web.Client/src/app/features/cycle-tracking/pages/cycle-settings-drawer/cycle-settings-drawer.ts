@@ -8,8 +8,8 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
+import type { CycleReproductiveState, CycleTrackingGoal, CycleTrackingMode } from '../../../../shared/models/cycle.data';
 import type { CycleSettingsFormModel } from '../../lib/cycle-tracking.facade';
-import type { CycleReproductiveState, CycleTrackingGoal, CycleTrackingMode } from '../../models/cycle.data';
 
 @Component({
     selector: 'fd-cycle-settings-drawer',

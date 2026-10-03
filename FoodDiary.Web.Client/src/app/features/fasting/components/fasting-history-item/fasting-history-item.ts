@@ -4,8 +4,8 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { resolveRussianPluralCategory } from '../../../../shared/i18n/russian-plural.utils';
-import type { FastingSession } from '../../models/fasting.data';
-import type { FastingHistorySessionViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
+import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
 import { FastingHistoryCheckInListComponent } from '../fasting-history-check-in-list/fasting-history-check-in-list';
 
 @Component({

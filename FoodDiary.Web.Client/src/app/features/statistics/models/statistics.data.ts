@@ -67,5 +67,5 @@ export type AggregatedNutrients = {
     carbs: number;
     fiber: number;
 };
-import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
+import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';

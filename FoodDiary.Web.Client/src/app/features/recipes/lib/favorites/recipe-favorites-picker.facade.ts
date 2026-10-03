@@ -2,8 +2,8 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
 
+import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
-import type { FavoriteRecipe } from '../../models/recipe.data';
 
 @Injectable()
 export class RecipeFavoritesPickerFacade {

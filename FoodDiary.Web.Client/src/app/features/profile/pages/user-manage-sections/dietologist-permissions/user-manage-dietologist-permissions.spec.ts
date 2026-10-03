@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
-import { DIETOLOGIST_PERMISSION_OPTIONS } from '../../user-manage/user-manage-lib/user-manage.config';
+import { DIETOLOGIST_PERMISSION_OPTIONS } from '../../../lib/user-manage.config';
 import { UserManageDietologistPermissionsComponent } from './user-manage-dietologist-permissions';
 
 describe('UserManageDietologistPermissionsComponent', () => {

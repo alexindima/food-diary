@@ -14,11 +14,11 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { UserFacade } from '../../../shared/lib/user.facade';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
-import type { FastingSession } from '../../fasting/models/fasting.data';
-import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
+import { AiMealCreateFacade } from '../../meals/contracts/ai-meal-create';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardComponent } from './dashboard';

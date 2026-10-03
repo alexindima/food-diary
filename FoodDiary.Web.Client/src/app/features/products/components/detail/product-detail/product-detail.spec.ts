@@ -6,10 +6,10 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { QuickMealService } from '../../../../meals/lib/quick/quick-meal.service';
+import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
+import { QuickMealService } from '../../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { ProductService } from '../../../api/product.service';
-import { MeasurementUnit, type Product, ProductVisibility } from '../../../models/product.data';
 import { ProductDetailComponent } from './product-detail';
 
 const PRODUCT_CALORIES = 165;

@@ -3,7 +3,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import { ProductAddDialogComponent } from './product-add-dialog';
 
 const PRODUCT_CALORIES = 120;

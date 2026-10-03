@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { DEFAULT_NUTRITION_BASE_AMOUNT, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { buildProductDetailNutritionViewModel } from './product-detail-nutrition.mapper';
 
 const PRODUCT_CALORIES = 250;

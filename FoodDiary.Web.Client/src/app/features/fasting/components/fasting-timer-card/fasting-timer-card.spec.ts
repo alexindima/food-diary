@@ -8,8 +8,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { FastingFacade } from '../../lib/fasting.facade';
-import type { FastingSession } from '../../models/fasting.data';
 import { FastingTimerCardComponent } from './fasting-timer-card';
 
 const MS_PER_HOUR = 3_600_000;

@@ -6,9 +6,6 @@ import { ApiService } from '../../../services/api.service';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
-import type { PageOf } from '../../../shared/models/page-of.data';
-import { MeasurementUnit, type Product } from '../../products/models/product.data';
-import type { Recipe } from '../../recipes/models/recipe.data';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -22,7 +19,10 @@ import {
     type MealOverview,
     type MealResponseDto,
     MealSourceType,
-} from '../models/meal.data';
+} from '../../../shared/models/meal.data';
+import type { PageOf } from '../../../shared/models/page-of.data';
+import { MeasurementUnit, type Product } from '../../../shared/models/product.data';
+import type { Recipe } from '../../../shared/models/recipe.data';
 import {
     MEAL_API_DEFAULT_FAVORITE_LIMIT,
     MEAL_API_DEFAULT_ITEM_AMOUNT,

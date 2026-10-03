@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom, from, mergeMap, type Observable,toArray } from 'rxjs';
+import { firstValueFrom, from, mergeMap, type Observable, toArray } from 'rxjs';
 
 import { AdminCatalogService } from '../api/admin-catalog.service';
 import type { CatalogFile, CatalogKind, CatalogProduct, CatalogRecipe, CatalogReportRow, CatalogResult } from '../models/catalog-transfer';

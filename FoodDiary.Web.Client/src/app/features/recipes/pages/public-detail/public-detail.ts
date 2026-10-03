@@ -7,9 +7,10 @@ import { firstValueFrom, map } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { AuthService } from '../../../../services/auth.service';
+import { recipeCategoryKey } from '../../../../shared/models/recipe-category';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
-import { PublicAuthDialogService } from '../../../public/lib/public-auth-dialog.service';
-import { ShoppingListAddFacade } from '../../../shopping-lists/lib/shopping-list-add.facade';
+import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
+import { ShoppingListAddFacade } from '../../../shopping-lists/contracts/shopping-list-add';
 import { PublicRecipeGalleryComponent } from '../../components/public-gallery/public-gallery';
 import { PublicIngredientsComponent } from '../../components/public-ingredients/public-ingredients';
 import { PublicRecipeNavigationComponent } from '../../components/public-navigation/public-navigation';
@@ -17,7 +18,6 @@ import { PublicNutritionComponent } from '../../components/public-nutrition/publ
 import { PublicStepsComponent } from '../../components/public-steps/public-steps';
 import { recipeImages } from '../../lib/public-recipe.utils';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
-import { recipeCategoryKey } from '../../models/recipe-category';
 import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolver';
 
 @Component({

@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import type { RecipeCardItem } from '../../../../../../components/shared/recipe-card/recipe-card';
 import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card';
-import type { FavoriteRecipe } from '../../../../models/recipe.data';
+import type { FavoriteRecipe } from '../../../../../../shared/models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-list-favorites',

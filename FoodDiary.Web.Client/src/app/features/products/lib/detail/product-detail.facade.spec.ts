@@ -5,10 +5,16 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../../shared/models/product.data';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
-import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductDetailFacade } from './product-detail.facade';
 
 const PRODUCT_CALORIES = 120;

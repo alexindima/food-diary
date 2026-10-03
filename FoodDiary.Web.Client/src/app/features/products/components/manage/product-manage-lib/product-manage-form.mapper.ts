@@ -1,10 +1,16 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { getControlNumericValue, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
+import { normalizeProductType as normalizeProductTypeValue } from '../../../../../shared/lib/product-type.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import {
+    type CreateProductRequest,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../../../shared/models/product.data';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { PRODUCT_MAX_PHOTOS, PRODUCT_NUTRIENT_ROUNDING_FACTOR } from '../../../lib/product-manage.constants';
-import { normalizeProductType as normalizeProductTypeValue } from '../../../lib/product-type.utils';
-import { type CreateProductRequest, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { NutritionMode, ProductFormValues } from './product-manage-form.types';
 
 export type NutritionValues = {

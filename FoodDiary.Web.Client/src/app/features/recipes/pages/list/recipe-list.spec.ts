@@ -7,10 +7,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeListComponent } from './recipe-list';
 
 const PAGE_SIZE = 10;

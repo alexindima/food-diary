@@ -10,11 +10,11 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/local-date.utils';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import type { FavoriteMeal, Meal, MealDaySummary, MealFilters } from '../../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
-import type { FavoriteMeal, Meal, MealDaySummary, MealFilters } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 
 export type MealListStructuredFilters = {

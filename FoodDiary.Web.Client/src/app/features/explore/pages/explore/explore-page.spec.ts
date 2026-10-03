@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
-import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreRecipe } from '../../models/explore.data';
 import { ExplorePageComponent } from './explore-page';

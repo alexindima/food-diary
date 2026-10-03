@@ -6,10 +6,10 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { MeasurementUnit } from '../../../../shared/models/product.data';
+import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
-import { MeasurementUnit } from '../../../products/models/product.data';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
-import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../../models/shopping-list.data';
 import { ShoppingListPageComponent } from './shopping-list-page';
 
 const FIRST_LIST_ID = 'list-1';

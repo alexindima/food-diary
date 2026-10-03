@@ -4,7 +4,7 @@ import { finalize } from 'rxjs';
 
 import type { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
-import type { CycleResponse } from '../models/cycle.data';
+import type { CycleResponse } from '../../../shared/models/cycle.data';
 import type { CycleExportRange } from './cycle-export-range';
 import { toCycleDateKey } from './cycle-tracking.mapper';
 

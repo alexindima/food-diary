@@ -4,7 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state';
 
 import type { WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
-import type { ConnectedDevicesSectionState, ConnectedDeviceViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
+import type { ConnectedDevicesSectionState, ConnectedDeviceViewModel } from '../../../lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-connected-devices',

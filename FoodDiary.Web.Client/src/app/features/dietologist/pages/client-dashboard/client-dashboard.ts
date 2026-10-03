@@ -20,6 +20,7 @@ import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, normalizeEndOfLocalDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { DashboardSnapshot } from '../../../../shared/models/dashboard.data';
 import type {
     ClientSummary,
     ClientTask,
@@ -28,8 +29,7 @@ import type {
     RecommendationTemplate,
 } from '../../../../shared/models/dietologist.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
-import type { DashboardSnapshot } from '../../../dashboard/models/dashboard.data';
-import { RecommendationThreadComponent } from '../../../recommendations/components/recommendation-thread/recommendation-thread';
+import { RecommendationThreadComponent } from '../../../recommendations/contracts/recommendation-thread';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import {
     buildBodyTiles,

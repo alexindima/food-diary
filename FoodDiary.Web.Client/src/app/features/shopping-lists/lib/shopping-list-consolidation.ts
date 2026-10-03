@@ -1,4 +1,4 @@
-import type { ShoppingListItem } from '../models/shopping-list.data';
+import type { ShoppingListItem } from '../../../shared/models/shopping-list.data';
 import { isTextQuantity } from './shopping-list-merge';
 
 const MAX_AMOUNT = 1_000_000;

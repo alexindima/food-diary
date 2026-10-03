@@ -9,6 +9,7 @@ import { ErrorStateComponent } from '../../../../components/shared/error-state/e
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
+import type { Product } from '../../../../shared/models/product.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
 import { ProductListActiveFiltersComponent } from '../../components/list/product-list-sections/product-list-active-filters/product-list-active-filters';
@@ -17,14 +18,19 @@ import { ProductListGroupsComponent } from '../../components/list/product-list-s
 import { ProductListOffSectionComponent } from '../../components/list/product-list-sections/product-list-off-section/product-list-off-section';
 import { ProductListPaginationComponent } from '../../components/list/product-list-sections/product-list-pagination/product-list-pagination';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
-import type { Product } from '../../models/product.data';
+import { PRODUCT_LIST_QUERY_STATE } from '../../lib/list/product-list-query-state';
+import { ProductListRouteStateFacade } from '../../lib/list/product-list-route-state.facade';
 
 @Component({
     selector: 'fd-product-list-page',
     templateUrl: '../../components/list/product-list-base/product-list-base.html',
     styleUrls: ['./product-list-page.scss', '../../components/list/product-list-base/product-list-base.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ProductListFacade],
+    providers: [
+        ProductListFacade,
+        ProductListRouteStateFacade,
+        { provide: PRODUCT_LIST_QUERY_STATE, useExisting: ProductListRouteStateFacade },
+    ],
     imports: [
         FormField,
         FormRoot,

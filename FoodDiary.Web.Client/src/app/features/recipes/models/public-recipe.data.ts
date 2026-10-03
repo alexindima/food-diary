@@ -1,4 +1,4 @@
-import type { RecipeCategory } from './recipe-category';
+import type { RecipeCategory } from '../../../shared/models/recipe-category';
 export type PublicRecipeIngredient = {
     productId?: string | null;
     name: string | null;

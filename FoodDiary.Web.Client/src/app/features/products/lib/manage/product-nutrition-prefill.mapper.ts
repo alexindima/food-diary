@@ -1,10 +1,10 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT, KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
-import { USDA_NUTRIENT_IDS } from '../../../usda/lib/usda-nutrient.constants';
-import type { Micronutrient, UsdaFoodDetail } from '../../../usda/models/usda.data';
+import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
+import { MeasurementUnit, type ProductSearchSuggestion } from '../../../../shared/models/product.data';
+import type { Micronutrient, UsdaFoodDetail } from '../../../../shared/models/usda.data';
 import { buildResetNutritionPatch, roundProductNutrientValue } from '../../components/manage/product-manage-lib/product-manage-form.mapper';
 import type { ProductFormValues } from '../../components/manage/product-manage-lib/product-manage-form.types';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import { MeasurementUnit, type ProductSearchSuggestion } from '../../models/product.data';
 
 type NutritionSourceProduct = OpenFoodFactsProduct | ProductSearchSuggestion;
 type ProductNutritionPatchField = keyof Pick<

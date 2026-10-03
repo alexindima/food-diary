@@ -9,11 +9,11 @@ import { NutritionWeeklyTrendCardComponent } from '../../../../components/shared
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../services/auth.service';
+import type { Product } from '../../../../shared/models/product.data';
+import type { Recipe } from '../../../../shared/models/recipe.data';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
-import { QuickMealDrawerComponent } from '../../../meals/components/quick-meal-drawer/quick-meal-drawer';
-import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
-import type { Product } from '../../../products/models/product.data';
-import type { Recipe } from '../../../recipes/models/recipe.data';
+import { type QuickMealItem, QuickMealService } from '../../../meals/contracts/quick-meal';
+import { QuickMealDrawerComponent } from '../../../meals/contracts/quick-meal-drawer';
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
 import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 import { buildLandingPreviewContent, type LandingPreviewContent } from './landing-preview-tour-data.mapper';

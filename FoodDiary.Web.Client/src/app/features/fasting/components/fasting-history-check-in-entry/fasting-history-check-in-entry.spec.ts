@@ -2,7 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
+import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
 import { FastingHistoryCheckInEntryComponent } from './fasting-history-check-in-entry';
 
 describe('FastingHistoryCheckInEntryComponent', () => {

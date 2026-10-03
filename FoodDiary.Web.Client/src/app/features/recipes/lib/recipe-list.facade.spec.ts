@@ -7,11 +7,11 @@ import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
-import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
+import { type FavoriteRecipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
 import { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';
-import { type FavoriteRecipe, RecipeVisibility } from '../models/recipe.data';
 import { RecipeListFacade } from './recipe-list.facade';
 
 const PAGE_LIMIT = 10;

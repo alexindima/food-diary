@@ -7,7 +7,7 @@ import {
     type FertilitySignalPayload,
     OVULATION_TEST_RESULT_UNKNOWN,
     type SymptomLogPayload,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
 import { CYCLE_SYMPTOM_FIELDS, MIN_SYMPTOM_VALUE } from './cycle-tracking.config';
 import type { CycleDayFormModel } from './cycle-tracking.form-models';
 import { clampCycleSymptom, toCycleDateKey, toNullableCycleNumber, toOptionalCycleText } from './cycle-tracking.mapper';

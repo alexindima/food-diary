@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "8d0ed3b167f6b9a21248bb537732d8dd7718d2fe32bddbce997c1783c20fafa7",
-    "sourceFileCount": 4340
+    "sourceFingerprint": "b3d0cf9efe821ef151758b6281a1a667bbd2f0df3020994e9af86ec6c6c7a4d2",
+    "sourceFileCount": 4363
   },
   "summary": {
     "composeServices": 18,
     "hostedServices": 15,
     "httpClients": 18,
     "webhooks": 22,
-    "recurringJobRegistrations": 16,
-    "networkPolicies": 33
+    "recurringJobRegistrations": 17,
+    "networkPolicies": 34
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -567,6 +567,7 @@
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
+        "concurrency-control",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "class-window"
@@ -1034,6 +1035,14 @@
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
+      "detail": "RecurringJobIds.AtomicCommandReceiptsCleanup",
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [],
+      "behaviorSignalScope": "registration-expression",
+      "targetBehaviorEvidence": "not-expanded; inspect the registered job implementation before making retry, cancellation, or idempotency claims"
+    },
+    {
+      "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.BillingRenewal",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
       "behaviorSignals": [],
@@ -1382,6 +1391,25 @@
       ]
     },
     {
+      "name": "MailRelayMessageProcessor",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
       "name": "ModuleRegistration",
       "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
       "securitySignals": [
@@ -1715,6 +1743,7 @@
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "concurrency-control",
+        "retry-or-resilience",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "policy-file",

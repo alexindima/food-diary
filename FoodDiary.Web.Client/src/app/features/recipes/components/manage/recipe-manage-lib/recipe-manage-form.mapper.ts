@@ -1,7 +1,7 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
-import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../models/recipe.data';
-import { isRecipeCategory } from '../../../models/recipe-category';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { isRecipeCategory } from '../../../../../shared/models/recipe-category';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
 export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;

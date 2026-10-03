@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { FavoriteRecipe } from '../../models/recipe.data';
+import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 import { FavoriteRecipeRowComponent } from './favorite-recipe-row';
 
 const recipe: FavoriteRecipe = {

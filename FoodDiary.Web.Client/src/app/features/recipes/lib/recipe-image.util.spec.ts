@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveRecipeImageUrl } from './recipe-image.util';
+import { resolveRecipeImageUrl } from '../../../shared/lib/recipe-image.util';
 
 describe('resolveRecipeImageUrl', () => {
     it('returns provided image URL when it has visible characters', () => {

@@ -6,8 +6,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../features/products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../features/recipes/models/recipe.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
+import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { ItemSelectDialogComponent } from './item-select-dialog';
 
 const BASE_AMOUNT = 100;

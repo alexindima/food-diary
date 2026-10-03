@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ShoppingListItem } from '../models/shopping-list.data';
+import type { ShoppingListItem } from '../../../shared/models/shopping-list.data';
 import { planShoppingConsolidation } from './shopping-list-consolidation';
 
 const ORIGINAL_AMOUNT = 200;

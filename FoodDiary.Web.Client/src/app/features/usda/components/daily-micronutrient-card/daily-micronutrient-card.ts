@@ -2,8 +2,8 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import type { DailyMicronutrient } from '../../../../shared/models/usda.data';
 import { buildDailyMicronutrientViews } from '../../lib/usda-micronutrient.mapper';
-import type { DailyMicronutrient } from '../../models/usda.data';
 
 @Component({
     selector: 'fd-daily-micronutrient-card',

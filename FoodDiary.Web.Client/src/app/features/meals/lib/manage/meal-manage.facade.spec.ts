@@ -7,9 +7,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import { MealService } from '../../api/meal.service';
-import type { MealFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -17,7 +14,10 @@ import {
     type MealAiSessionManageDto,
     type MealManageDto,
     MealSourceType,
-} from '../../models/meal.data';
+} from '../../../../shared/models/meal.data';
+import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
+import { MealService } from '../../api/meal.service';
+import type { MealFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
 

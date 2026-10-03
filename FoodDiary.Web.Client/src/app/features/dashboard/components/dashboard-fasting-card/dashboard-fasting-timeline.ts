@@ -1,6 +1,6 @@
+import { MAX_CYCLIC_DAYS, MAX_INTERMITTENT_FAST_HOURS } from '../../../../shared/lib/fasting.constants';
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
-import { MAX_CYCLIC_DAYS, MAX_INTERMITTENT_FAST_HOURS } from '../../../fasting/lib/fasting.constants';
-import type { FastingSession } from '../../../fasting/models/fasting.data';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 
 const FULL_PERCENT = 100;
 const DAY_TICK_GAP_PERCENT = 20;

@@ -1,5 +1,11 @@
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    ProductType,
+    ProductVisibility,
+} from '../../../../shared/models/product.data';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
-import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 
 const FAVORITE_GRAM_BASE_AMOUNT = 100;
 

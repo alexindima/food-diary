@@ -6,8 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import type { WeightHistoryPageSummary } from '../../../shared/models/weight-entry.data';
 import { WeightEntriesService } from '../api/weight-entries.service';
-import type { WeightHistoryPageSummary } from '../models/weight-entry.data';
 import { WeightHistoryFacade } from './weight-history.facade';
 
 const FIXTURE_LOCALIZED_DECIMAL = 75.5;

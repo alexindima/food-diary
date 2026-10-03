@@ -115,6 +115,7 @@
                     [invalidDateLabel]="'USER_MANAGE.BIRTH_DATE_INVALID' | translate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     (valueChange)="onBirthDateChange($event)"
+                    (manualInputInvalidChange)="birthDateInputInvalidChange.emit($event)"
                 />
                 <fd-ui-select
                     size="sm"

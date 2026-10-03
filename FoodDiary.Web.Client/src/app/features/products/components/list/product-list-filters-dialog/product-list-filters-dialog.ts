@@ -9,7 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
-import { ProductType } from '../../../models/product.data';
+import { ProductType } from '../../../../../shared/models/product.data';
 import type {
     ProductListFiltersDialogData,
     ProductListFiltersDialogResult,

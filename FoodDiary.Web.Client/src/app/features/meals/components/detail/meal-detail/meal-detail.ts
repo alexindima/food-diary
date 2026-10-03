@@ -8,9 +8,9 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 
+import type { Meal } from '../../../../../shared/models/meal.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
-import type { Meal } from '../../../models/meal.data';
 import { buildMealDetailViewModel } from '../meal-detail-lib/meal-detail.mapper';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
 import { MealDetailSummaryComponent } from '../meal-detail-summary/meal-detail-summary';

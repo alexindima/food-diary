@@ -5,11 +5,11 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
+import type { Meal } from '../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
-import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
-import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
-import type { Meal } from '../../models/meal.data';
 import { QuickMealService } from './quick-meal.service';
 
 const DEFAULT_PORTION_AMOUNT = 180;

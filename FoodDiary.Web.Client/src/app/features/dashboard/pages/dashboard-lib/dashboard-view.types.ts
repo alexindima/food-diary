@@ -1,10 +1,10 @@
 import type { MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
 import type { NutrientBar } from '../../../../components/shared/nutrition-summary/nutrition-summary.types';
-import type { CyclePredictions, CycleResponse } from '../../../cycle-tracking/models/cycle.data';
-import type { FastingSession } from '../../../fasting/models/fasting.data';
+import type { CyclePredictions, CycleResponse } from '../../../../shared/models/cycle.data';
+import type { DailyAdvice } from '../../../../shared/models/daily-advice.data';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
+import type { TdeeInsight } from '../../../../shared/models/tdee-insight.data';
 import type { WeightTrendPoint } from '../../components/weight-trend-card/weight-trend-card';
-import type { DailyAdvice } from '../../models/daily-advice.data';
-import type { TdeeInsight } from '../../models/tdee-insight.data';
 
 export type DashboardHeaderState = {
     fullTitleKey: string;

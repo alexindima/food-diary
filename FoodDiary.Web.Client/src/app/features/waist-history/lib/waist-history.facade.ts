@@ -13,9 +13,14 @@ import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknow
 import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';
+import type {
+    CreateWaistEntryPayload,
+    WaistEntry,
+    WaistEntrySummaryFilters,
+    WaistEntrySummaryPoint,
+} from '../../../shared/models/waist-entry.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
-import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS } from './waist-history.constants';
 import type { WaistHistoryCustomRange, WaistHistoryDateRange, WaistHistoryRange } from './waist-history.types';
 import { buildWaistHistoryChartPoints } from './waist-history-chart.mapper';

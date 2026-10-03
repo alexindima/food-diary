@@ -7,7 +7,8 @@ import { catchError, finalize, firstValueFrom, map, type Observable, of, Subject
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
-import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
+import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../shared/models/recipe.data';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
 import type { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';
@@ -18,7 +19,6 @@ import {
 } from '../components/list/recipe-list.config';
 import { RecipeListFiltersDialogComponent } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogResult } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
-import type { FavoriteRecipe, Recipe, RecipeFilters } from '../models/recipe.data';
 
 @Injectable()
 export class RecipeListFacade {

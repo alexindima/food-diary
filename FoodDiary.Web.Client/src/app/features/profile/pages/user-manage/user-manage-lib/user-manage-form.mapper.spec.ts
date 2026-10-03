@@ -9,7 +9,7 @@ import {
     mapUserToForm,
     normalizeOptionalTextInput,
     parseOptionalNumberInput,
-} from './user-manage-form.mapper';
+} from '../../../lib/user-manage-form.mapper';
 
 const USER: User = {
     id: 'user-1',

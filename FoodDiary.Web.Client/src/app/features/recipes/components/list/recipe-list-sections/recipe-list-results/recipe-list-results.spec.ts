@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
-import { type Recipe, RecipeVisibility } from '../../../../models/recipe.data';
+import { type Recipe, RecipeVisibility } from '../../../../../../shared/models/recipe.data';
 import { RecipeListResultsComponent } from './recipe-list-results';
 
 describe('RecipeListResultsComponent', () => {

@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import { AuthService } from '../../../../../../services/auth.service';
-import type { Meal } from '../../../../models/meal.data';
+import type { Meal } from '../../../../../../shared/models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 import { MealListPlannedComponent } from './meal-list-planned';
 

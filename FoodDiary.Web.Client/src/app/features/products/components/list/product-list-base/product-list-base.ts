@@ -10,12 +10,12 @@ import { ErrorStateComponent } from '../../../../../components/shared/error-stat
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../../components/shared/skeleton-card/skeleton-card';
+import { buildProductTypeTranslationKey } from '../../../../../shared/lib/product-type.utils';
+import type { FavoriteProduct, Product } from '../../../../../shared/models/product.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
-import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
-import type { FavoriteProduct, Product } from '../../../models/product.data';
 import { ProductListActiveFiltersComponent } from '../product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';

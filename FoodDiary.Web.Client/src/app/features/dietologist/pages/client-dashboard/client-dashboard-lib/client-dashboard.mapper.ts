@@ -4,11 +4,11 @@ import {
     kilogramsToPounds,
     type MeasurementSystem,
 } from '../../../../../shared/measurements/measurement-system.service';
+import type { DashboardSnapshot } from '../../../../../shared/models/dashboard.data';
 import type { ClientSummary, DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { DietologistClientGoals, DietologistRecommendation } from '../../../../../shared/models/dietologist.data';
-import type { DashboardSnapshot } from '../../../../dashboard/models/dashboard.data';
-import type { FastingSession } from '../../../../fasting/models/fasting.data';
-import type { Meal } from '../../../../meals/models/meal.data';
+import type { FastingSession } from '../../../../../shared/models/fasting.data';
+import type { Meal } from '../../../../../shared/models/meal.data';
 
 const PERCENT_MAX = 100;
 const DATE_ONLY_LENGTH = 10;

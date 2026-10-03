@@ -20,11 +20,6 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
-import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
-import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
-import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
-import { toCycleDateKey } from '../lib/cycle-tracking.mapper';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FACTOR_TYPE_LACTATION,
@@ -56,7 +51,18 @@ import {
     OVULATION_TEST_RESULT_POSITIVE,
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
-} from '../models/cycle.data';
+} from '../../../shared/models/cycle.data';
+import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
+import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
+import { CycleDayFacade } from '../lib/cycle-day.facade';
+import { CycleEpisodeFacade } from '../lib/cycle-episode.facade';
+import { CycleExportFacade } from '../lib/cycle-export.facade';
+import { CycleFactorFacade } from '../lib/cycle-factor.facade';
+import { CycleSettingsFacade } from '../lib/cycle-settings.facade';
+import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
+import { toCycleDateKey } from '../lib/cycle-tracking.mapper';
+import { CycleTrackingStateFacade } from '../lib/cycle-tracking-state.facade';
 import { CycleCalendarCardComponent } from './cycle-calendar-card/cycle-calendar-card';
 import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer/cycle-day-editor-drawer';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
@@ -106,7 +112,15 @@ const RECENT_DAY_LIMIT = 5;
     templateUrl: './cycle-tracking-page.html',
     styleUrl: './cycle-tracking-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [CycleTrackingFacade],
+    providers: [
+        CycleTrackingFacade,
+        CycleTrackingStateFacade,
+        CycleSettingsFacade,
+        CycleDayFacade,
+        CycleFactorFacade,
+        CycleEpisodeFacade,
+        CycleExportFacade,
+    ],
 })
 export class CycleTrackingPageComponent {
     private readonly facade = inject(CycleTrackingFacade);

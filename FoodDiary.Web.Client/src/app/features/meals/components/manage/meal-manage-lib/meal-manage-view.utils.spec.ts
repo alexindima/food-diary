@@ -1,7 +1,7 @@
 import type { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { MealAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import {
     formatMealAiAmount,
     formatMealAiName,

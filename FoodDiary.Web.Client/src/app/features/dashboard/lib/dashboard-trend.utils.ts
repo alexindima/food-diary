@@ -1,7 +1,7 @@
 import { computed, type Signal } from '@angular/core';
 
-import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
-import type { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
+import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import type { WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card';
 
 type WeightTrendValuePoint = WeightTrendPoint & { value: number };

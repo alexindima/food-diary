@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../../shared/lib/time.constants';
-import type { FastingSession } from '../../../fasting/models/fasting.data';
+import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { shouldPrioritizeDashboardFasting } from '../../lib/dashboard-fasting-priority';
 import { DashboardFastingCardComponent } from './dashboard-fasting-card';
 import { buildDashboardFastingCycle, buildDashboardFastingDayTicks, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';

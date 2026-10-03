@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
-import type { BleedingEntry, CycleNutritionSummary, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
+import type {
+    BleedingEntry,
+    CycleNutritionSummary,
+    CycleResponse,
+    CycleSymptomEntry,
+    FertilitySignal,
+} from '../../../../shared/models/cycle.data';
 import {
     BLEEDING_TYPE_BLEEDING,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -9,7 +15,7 @@ import {
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     OVULATION_TEST_RESULT_POSITIVE,
-} from '../../models/cycle.data';
+} from '../../../../shared/models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import {
     buildCycleCurrentView,

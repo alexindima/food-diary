@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import { getDietologistPermissions, mapDietologistRelationshipToForm } from './user-manage-dietologist-form.mapper';
+import { getDietologistPermissions, mapDietologistRelationshipToForm } from '../../../lib/user-manage-dietologist-form.mapper';
 
 const RELATIONSHIP: DietologistRelationship = {
     invitationId: 'invitation-1',

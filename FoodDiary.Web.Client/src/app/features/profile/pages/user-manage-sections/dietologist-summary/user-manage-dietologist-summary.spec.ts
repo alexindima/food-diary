@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
-import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
+import { createDietologistFormModel } from '../../../lib/user-manage-form.mapper';
 import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary';
 
 describe('UserManageDietologistSummaryComponent', () => {
