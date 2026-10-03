@@ -316,7 +316,7 @@ describe('UserManageComponent browser unload protection', () => {
         const dirtyUnload = new Event('beforeunload', { cancelable: true });
         window.dispatchEvent(dirtyUnload);
         expect(dirtyUnload.defaultPrevented).toBe(true);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
 
         component['discardUserFormChanges']();
         fixture.detectChanges();
@@ -332,10 +332,10 @@ describe('UserManageComponent profile height validation', () => {
         component['userForm'].heightCm().value.set(heightCm);
         fixture.detectChanges();
 
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm']().invalid()).toBe(true);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
         const button = (fixture.nativeElement as HTMLElement).querySelector('fd-unsaved-changes-bar fd-ui-button:last-child button');
         expect(button?.hasAttribute('disabled')).toBe(true);
     });
@@ -345,10 +345,10 @@ describe('UserManageComponent profile height validation', () => {
         component['userForm'].heightCm().value.set(heightCm);
         fixture.detectChanges();
 
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm']().invalid()).toBe(false);
-        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+        expect(facade.saveProfileAsync).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -362,11 +362,11 @@ describe('UserManageComponent imperial height validation', () => {
 
         widgets['onImperialHeightChange']('feet', INVALID_HEIGHT_FEET);
         fixture.detectChanges();
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm'].heightCm().value()).toBe(CONVERTED_INVALID_HEIGHT);
         expect(component['userForm']().invalid()).toBe(true);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
     });
 });
 
@@ -376,10 +376,10 @@ describe('UserManageComponent invalid birthday drafts', () => {
         editProfileBirthDate(VALID_PROFILE_BIRTH_DATE);
         editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
 
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm'].birthDate().value()).toBe(VALID_PROFILE_BIRTH_DATE);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
     });
 
     it('blocks saving another edited field while the birthday input is invalid', async () => {
@@ -388,10 +388,10 @@ describe('UserManageComponent invalid birthday drafts', () => {
         component['userForm'].firstName().value.set('Edited name');
         fixture.detectChanges();
 
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm']().invalid()).toBe(true);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
         expect(profileSaveButton()?.disabled).toBe(true);
     });
 
@@ -420,11 +420,11 @@ describe('UserManageComponent invalid birthday drafts', () => {
         editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
         editProfileBirthDate(VALID_PROFILE_BIRTH_DATE);
 
-        component['onSubmit']();
+        await component['onSubmit']();
 
         expect(component['userForm']().invalid()).toBe(false);
         expect(component['userForm'].birthDate().value()).toBe(VALID_PROFILE_BIRTH_DATE);
-        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+        expect(facade.saveProfileAsync).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -439,7 +439,7 @@ describe('UserManageComponent invalid navigation saves', () => {
         }
 
         expect(TestBed.inject(UnsavedChangesService).getHandler()?.save()).toBe(false);
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
     });
 });
 
@@ -462,6 +462,41 @@ function profileSaveButton(): HTMLButtonElement | null {
     return (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('fd-unsaved-changes-bar fd-ui-button:last-child button');
 }
 
+describe('UserManageComponent save-and-leave completion', () => {
+    it.each([false, true])('waits for save-and-leave completion and returns the save result %s', async saved => {
+        await createComponentAsync(null);
+        component['userForm'].firstName().value.set('QA navigation draft');
+        fixture.detectChanges();
+        let finishSave: ((value: boolean) => void) | undefined;
+        const pendingSave = new Promise<boolean>(resolve => {
+            finishSave = resolve;
+        });
+        facade.saveProfileAsync.mockReturnValueOnce(pendingSave);
+        let settled = false;
+
+        const saving = TestBed.inject(UnsavedChangesService).getHandler()?.save();
+        if (!(saving instanceof Promise)) {
+            throw new Error('Expected asynchronous profile save');
+        }
+        void saving.then(() => {
+            settled = true;
+        });
+        await fixture.whenStable();
+
+        expect(settled).toBe(false);
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+        expect(component['userForm'].firstName().value()).toBe('QA navigation draft');
+        expect(facade.saveProfileAsync).toHaveBeenCalledOnce();
+
+        finishSave?.(saved);
+        expect(await saving).toBe(saved);
+        if (!saved) {
+            expect(component['hasUnsavedProfileChanges']()).toBe(true);
+            expect(component['userForm'].firstName().value()).toBe('QA navigation draft');
+        }
+    });
+});
+
 describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {
         await createComponentAsync(null);
@@ -475,7 +510,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
 
         expect(wasNotCancelled).toBe(false);
         expect(submitEvent.defaultPrevented).toBe(true);
-        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+        expect(facade.saveProfileAsync).toHaveBeenCalledTimes(1);
     });
 
     it('does not save when editable user fields change', async () => {
@@ -485,7 +520,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
         component['userForm'].firstName().value.set('Alex');
         fixture.detectChanges();
 
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
         expect(component['hasUnsavedProfileChanges']()).toBe(true);
     });
 
@@ -528,7 +563,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
 
         component['onUserFormInput'](inputEvent);
 
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
     });
 
     it('keeps select changes local until save', async () => {
@@ -550,7 +585,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
 
         component['onUserFormPatch']({ gender: Gender.Female });
 
-        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
         expect(component['userForm'].gender().value()).toBe('F');
         expect(component['hasUnsavedProfileChanges']()).toBe(true);
     });
@@ -700,7 +735,7 @@ type ProfileManageFacadeMock = {
     initialize: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
     submitUpdate: ReturnType<typeof vi.fn>;
-    saveProfileNow: ReturnType<typeof vi.fn>;
+    saveProfileAsync: ReturnType<typeof vi.fn>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
     revokeAiConsent: ReturnType<typeof vi.fn>;
@@ -933,7 +968,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         initialize: vi.fn(),
         clearGlobalError: vi.fn(),
         submitUpdate: vi.fn(),
-        saveProfileNow: vi.fn(),
+        saveProfileAsync: vi.fn().mockResolvedValue(true),
         openChangePasswordDialog: vi.fn(),
         linkGoogle: vi.fn(),
         revokeAiConsent: vi.fn(),

@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "afd267969ce492f5556b7f642d637ca93caf79a0b58bc9a4f9c51a8829a19a72"
+          "sha256": "71553f467885279e9bb74b53242241a3712a80bb390d22e3a6f5612d1d4ee487"
         }
       ],
-      "reason": "Reviewed 5042 combined frontend tests, 577 Users tests, 6 HTTP/Swagger checks and 2116 architecture tests with real terminal success/TRX. Native profile compatibility flow verifies persistence and invalid draft blocking. Pending new-API local migration and separately reproduced save-and-leave failure are retained as next audit work.",
+      "reason": "Reviewed bounded profile save-and-leave change: handler returns the real save result, waits for HTTP completion, and preserves draft/global error on failure. Final focused lint passes and native RU390/1280 proof covers pending, simulated503 failure, retry200 persistence and navigation; synthetic QA profile restored. Added deferred success/failure/null/busy regressions; final full frontend verification is still running before commit.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:33.6607884Z"
+      "gitHead": "e49825688518d698ffd784829b3d4b7f6d4677ff",
+      "reviewedAtUtc": "2026-10-03T05:10:47.2329815Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,21 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "afd267969ce492f5556b7f642d637ca93caf79a0b58bc9a4f9c51a8829a19a72"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "17da5a05ffaec7b15accf5fd68e7cfccf548de0a97e899ce51b4334aabfbda0d"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b0ce49fabe564be0ffb9b83eb4e1631f9c89107f42d4150dcc1aee7f41010722"
+          "sha256": "71553f467885279e9bb74b53242241a3712a80bb390d22e3a6f5612d1d4ee487"
         }
       ],
-      "reason": "Reviewed narrow changes to authenticated DOB PATCH and frontend import boundaries: presence flag hidden and unbindable, omitted fields preserve owner data; JSON regressions cover spoofed flag. No new credential transport in committed source; strict dependencies and all architecture tests passed. This is scoped correctness review, not a repository security audit.",
+      "reason": "Reviewed the narrow generated quality delta: async completion and profile regressions change local navigation only, with no API payload, authentication, ownership, storage or provider changes. Native mutations were limited to verified synthetic QA owner and restored; credentials and auth values stayed outside repository/log output. No security finding or repository-wide security assessment is claimed.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:37.9653809Z"
+      "gitHead": "e49825688518d698ffd784829b3d4b7f6d4677ff",
+      "reviewedAtUtc": "2026-10-03T05:10:48.4801226Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

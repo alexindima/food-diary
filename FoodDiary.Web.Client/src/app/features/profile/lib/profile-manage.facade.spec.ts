@@ -449,27 +449,91 @@ describe('ProfileManageFacade notification preferences', () => {
 });
 
 describe('ProfileManageFacade explicit profile save', () => {
-    it('updates the user immediately without a success dialog', () => {
+    it('reports a successful save after updating the user without a success dialog', async () => {
         facade.initialize();
+        userService.update.mockReturnValueOnce(of({ ...user, firstName: 'Alexa' }));
 
-        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alexa' }));
+        const saved = await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }));
 
+        expect(saved).toBe(true);
         expect(userService.update).toHaveBeenCalledTimes(1);
         expect(userService.update.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
         expect(dialogService.open).not.toHaveBeenCalled();
+        expect(facade.user()?.firstName).toBe('Alexa');
         expect(facade.profileSavedVersion()).toBe(1);
+        expect(facade.isSavingProfile()).toBe(false);
     });
 
-    it('ignores another save while a profile save is in flight', () => {
+    it('waits for the HTTP response before reporting a successful save', async () => {
+        facade.initialize();
+        const response = new Subject<User | null>();
+        userService.update.mockReturnValueOnce(response);
+        let settled = false;
+
+        const saving = facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }));
+        void saving.then(() => {
+            settled = true;
+        });
+        await vi.waitFor(() => {
+            expect(facade.isSavingProfile()).toBe(true);
+        });
+
+        expect(settled).toBe(false);
+        expect(facade.isSavingProfile()).toBe(true);
+        expect(facade.profileSavedVersion()).toBe(0);
+        expect(facade.user()).toEqual(user);
+
+        response.next({ ...user, firstName: 'Alexa' });
+        expect(await saving).toBe(true);
+        expect(facade.user()?.firstName).toBe('Alexa');
+        expect(facade.profileSavedVersion()).toBe(1);
+        expect(facade.isSavingProfile()).toBe(false);
+    });
+
+    it('rejects another save while a profile save is in flight', async () => {
         facade.initialize();
 
         const inFlightUpdate = new Subject<User | null>();
         userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
 
-        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alex' }));
+        const saving = facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alex' }));
         expect(userService.update).toHaveBeenCalledTimes(1);
 
-        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alexa' }));
+        expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }))).toBe(false);
         expect(userService.update).toHaveBeenCalledTimes(1);
+        expect(facade.isSavingProfile()).toBe(true);
+
+        inFlightUpdate.next({ ...user, firstName: 'Alex' });
+        expect(await saving).toBe(true);
+    });
+
+    it('preserves the saved profile on request failure and allows a retry', async () => {
+        facade.initialize();
+        const response = new Subject<User | null>();
+        userService.update.mockReturnValueOnce(response);
+
+        const saving = facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }));
+        response.error(new Error('save unavailable'));
+
+        expect(await saving).toBe(false);
+        expect(facade.user()).toEqual(user);
+        expect(facade.profileSavedVersion()).toBe(0);
+        expect(facade.isSavingProfile()).toBe(false);
+        expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
+
+        expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }))).toBe(true);
+        expect(facade.profileSavedVersion()).toBe(1);
+        expect(facade.globalError()).toBeNull();
+    });
+
+    it('does not report success or discard the saved profile when the response is null', async () => {
+        facade.initialize();
+        userService.update.mockReturnValueOnce(of(null));
+
+        expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }))).toBe(false);
+        expect(facade.user()).toEqual(user);
+        expect(facade.profileSavedVersion()).toBe(0);
+        expect(facade.isSavingProfile()).toBe(false);
+        expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
     });
 });

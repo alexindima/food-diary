@@ -359,12 +359,32 @@ export class ProfileManageFacade {
         this.globalError.set(null);
     }
 
-    public saveProfileNow(updateData: UpdateUserDto): void {
+    public async saveProfileAsync(updateData: UpdateUserDto): Promise<boolean> {
         if (this.isSavingProfile()) {
-            return;
+            return false;
         }
 
-        this.persistProfileUpdate(updateData);
+        this.cancelProfileRead();
+        this.isSavingProfile.set(true);
+        try {
+            const user = await firstValueFrom(this.userService.update(updateData));
+            if (user === null) {
+                this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+                return false;
+            }
+
+            this.user.set(user);
+            this.profileSavedVersion.update(version => version + 1);
+            void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
+            this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
+            this.clearGlobalError();
+            return true;
+        } catch {
+            this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+            return false;
+        } finally {
+            this.isSavingProfile.set(false);
+        }
     }
 
     private loadUser(): void {
@@ -422,34 +442,6 @@ export class ProfileManageFacade {
                 if (goToHome === true) {
                     void this.navigationService.navigateToHomeAsync();
                 }
-            });
-    }
-
-    private persistProfileUpdate(updateData: UpdateUserDto): void {
-        this.cancelProfileRead();
-        this.isSavingProfile.set(true);
-        this.userService
-            .update(updateData)
-            .pipe(
-                finalize(() => {
-                    this.isSavingProfile.set(false);
-                }),
-            )
-            .subscribe({
-                next: user => {
-                    if (user === null) {
-                        this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                    } else {
-                        this.user.set(user);
-                        this.profileSavedVersion.update(version => version + 1);
-                        void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
-                        this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
-                        this.clearGlobalError();
-                    }
-                },
-                error: () => {
-                    this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                },
             });
     }
 

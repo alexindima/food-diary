@@ -214,13 +214,7 @@ export class UserManageComponent {
 
         const unsavedChangesHandler: UnsavedChangesHandler = {
             hasChanges: () => this.hasUnsavedProfileChanges(),
-            save: () => {
-                if (this.userForm().invalid()) {
-                    return false;
-                }
-                this.onSubmit();
-                return true;
-            },
+            save: (): boolean | Promise<boolean> => this.onSubmit(),
             discard: () => {
                 this.discardUserFormChanges();
             },
@@ -362,16 +356,16 @@ export class UserManageComponent {
         });
     }
 
-    protected onSubmit(): void {
+    protected onSubmit(): boolean | Promise<boolean> {
         if (this.userForm().invalid()) {
-            return;
+            return false;
         }
-        this.facade.saveProfileNow(buildUserUpdateDto(this.readUserFormValues()));
+        return this.facade.saveProfileAsync(buildUserUpdateDto(this.readUserFormValues()));
     }
 
     protected onUserFormSubmit(event: SubmitEvent): void {
         event.preventDefault();
-        this.onSubmit();
+        void this.onSubmit();
     }
 
     protected startUserManageTour(force = true): void {

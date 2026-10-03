@@ -655,20 +655,20 @@
       "structuralRiskScore": 92.1
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
+      "nonBlankLines": 479,
+      "decisionPoints": 55,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 92.08
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
       "nonBlankLines": 276,
       "decisionPoints": 56,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 91.52
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "nonBlankLines": 487,
-      "decisionPoints": 54,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 90.74
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
@@ -719,14 +719,6 @@
       "structuralRiskScore": 87.7
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 556,
-      "decisionPoints": 51,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.62
-    },
-    {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "nonBlankLines": 251,
       "decisionPoints": 55,
@@ -749,6 +741,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 86.3
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
+      "nonBlankLines": 550,
+      "decisionPoints": 50,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 86
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
@@ -11386,11 +11386,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "nonBlankLines": 487,
-      "decisionPoints": 54,
+      "nonBlankLines": 479,
+      "decisionPoints": 55,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 90.74
+      "structuralRiskScore": 92.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/user-manage-billing.mapper.ts",
@@ -11586,11 +11586,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 556,
-      "decisionPoints": 51,
+      "nonBlankLines": 550,
+      "decisionPoints": 50,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.62
+      "structuralRiskScore": 86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/profile.routes.ts",
