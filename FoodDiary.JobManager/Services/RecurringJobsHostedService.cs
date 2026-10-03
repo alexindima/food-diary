@@ -98,6 +98,10 @@ public sealed class RecurringJobsHostedService(
             ResolveCron(notificationOutboxSettings.Cron, "* * * * *"));
         RegisterAchievementOutboxJob(achievementOutboxSettings);
         recurringJobManager.AddOrUpdate(
+            RecurringJobIds.AtomicCommandReceiptsCleanup,
+            Job.FromExpression<AtomicCommandReceiptCleanupJob>(job => job.Execute(CancellationToken.None)),
+            "*/15 * * * *");
+        recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationsCleanup,
             Job.FromExpression<NotificationCleanupJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(notificationSettings.Cron, "0 4 * * *"));

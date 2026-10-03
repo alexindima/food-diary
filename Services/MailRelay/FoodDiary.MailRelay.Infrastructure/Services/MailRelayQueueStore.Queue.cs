@@ -198,7 +198,7 @@ public sealed partial class MailRelayQueueStore {
         return await _executor.QueryAsync(
             ClaimDueBatchSql,
             command => {
-                command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize);
+                command.Parameters.AddWithValue("batchSize", Math.Min(_queueOptions.BatchSize, _queueOptions.MaxConcurrentDeliveries));
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
             },
             async (reader, token) => {
@@ -255,21 +255,37 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
+    public TimeSpan ClaimRenewalInterval => TimeSpan.FromSeconds(_queueOptions.LockTimeoutSeconds / 3d);
+
+    public async Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
+        const string sql = """
+                           update mailrelay_outbound_emails
+                           set locked_at_utc = now()
+                           where id = @id and status = 'processing' and attempt_count = @attemptCount
+                             and locked_at_utc > now() - make_interval(secs => @lockTimeoutSeconds);
+                           """;
+        return await ExecuteClaimCommandAsync(sql, id, attemptCount, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
                            set status = 'sent',
                                sent_at_utc = now(),
                                locked_at_utc = null,
                                last_error = null
-                           where id = @id;
+                           where id = @id and status = 'processing' and attempt_count = @attemptCount
+                             and locked_at_utc > now() - make_interval(secs => @lockTimeoutSeconds);
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
+        if (!await ExecuteClaimCommandAsync(sql, id, attemptCount, cancellationToken).ConfigureAwait(false)) {
+            throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+        }
     }
 
     public async Task MarkSuppressedAsync(
         Guid id,
+        int attemptCount,
         IReadOnlyCollection<string> recipients,
         CancellationToken cancellationToken) {
         const string sql = """
@@ -277,7 +293,8 @@ public sealed partial class MailRelayQueueStore {
                            set status = 'suppressed',
                                locked_at_utc = null,
                                last_error = @lastError
-                           where id = @id;
+                           where id = @id and status = 'processing' and attempt_count = @attemptCount
+                             and locked_at_utc > now() - make_interval(secs => @lockTimeoutSeconds);
                            """;
 
         NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
@@ -285,8 +302,12 @@ public sealed partial class MailRelayQueueStore {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("attemptCount", attemptCount);
+                command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
                 command.Parameters.AddWithValue("lastError", Truncate($"Suppressed recipient(s): {string.Join(", ", recipients)}", 4000));
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                if (await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) != 1) {
+                    throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+                }
             }
         }
     }
@@ -358,7 +379,8 @@ public sealed partial class MailRelayQueueStore {
                                available_at_utc = coalesce(@availableAtUtc, available_at_utc),
                                locked_at_utc = null,
                                last_error = @lastError
-                           where id = @id;
+                           where id = @id and status = 'processing' and attempt_count = @attemptCount
+                             and locked_at_utc > now() - make_interval(secs => @lockTimeoutSeconds);
                            """;
 
         NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
@@ -368,10 +390,14 @@ public sealed partial class MailRelayQueueStore {
                 var command = new NpgsqlCommand(sql, connection, transaction);
                 await using (command.ConfigureAwait(false)) {
                     command.Parameters.AddWithValue("id", decision.Id.Value);
+                    command.Parameters.AddWithValue("attemptCount", decision.AttemptCount);
+                    command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
                     command.Parameters.AddWithValue("status", decision.Status);
                     command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
                     command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
-                    await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                    if (await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) != 1) {
+                        throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+                    }
                 }
 
                 if (nextAvailableAt is { } retryAt) {
@@ -388,6 +414,19 @@ public sealed partial class MailRelayQueueStore {
             }
 
             return nextAvailableAt;
+        }
+    }
+
+    private async Task<bool> ExecuteClaimCommandAsync(string sql, Guid id, int attemptCount, CancellationToken cancellationToken) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("attemptCount", attemptCount);
+                command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
+                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
+            }
         }
     }
 

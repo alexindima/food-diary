@@ -416,7 +416,7 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     [Fact]
-    public async Task SendAsync_WhenPushClientFailsUnexpectedly_ContinuesWithoutDeletingSubscription() {
+    public async Task SendAsync_WhenPushClientFailsUnexpectedly_RequiresRetryWithoutDeletingSubscription() {
         var user = User.Create("failed-push@example.com", "hash");
         user.UpdatePreferences(new UserPreferenceUpdate(
             PushNotificationsEnabled: true,
@@ -430,9 +430,9 @@ public sealed class WebPushNotificationSenderTests {
             new SingleUserRepository(user),
             webPushClient: webPushClient);
 
-        await sender.SendAsync(
+        await Assert.ThrowsAsync<HttpRequestException>(() => sender.SendAsync(
             Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.Equal(1, webPushClient.SendCalls);
         Assert.Empty(repository.DeletedSubscriptions);
@@ -465,7 +465,7 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     [Fact]
-    public async Task SendAsync_WhenDeliveryDeadlineExpires_ReturnsWithoutDeletingSubscription() {
+    public async Task SendAsync_WhenDeliveryDeadlineExpires_RequiresRetryWithoutDeletingSubscription() {
         var user = User.Create("deadline-push@example.com", "hash");
         user.UpdatePreferences(new UserPreferenceUpdate(
             PushNotificationsEnabled: true,
@@ -498,7 +498,7 @@ public sealed class WebPushNotificationSenderTests {
         Assert.False(sendTask.IsCompleted);
         Assert.NotNull(expireDeadline);
         expireDeadline();
-        await sendTask.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        await Assert.ThrowsAsync<HttpRequestException>(() => sendTask.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System));
 
         timeProvider.Received(1).CreateTimer(
             Arg.Any<TimerCallback>(), Arg.Any<object?>(), TimeSpan.FromSeconds(35), Timeout.InfiniteTimeSpan);

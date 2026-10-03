@@ -1,5 +1,10 @@
 # Shared persistence runtime
 
+ADR 0052 defines verified COMMIT outcomes, atomic operation receipts, bounded
+read-only snapshots, named save priorities and the participant enlistment cutoff.
+Unknown commit outcomes must never replay handlers. Shared receipts contain private
+result data, expire within seven days and are removed through the owner purge port.
+
 Own the module-independent runtime context, scoped persistence session, coordinated
 saves, transactions, shared record mappings, replay coordination and database
 telemetry. Use canonical `FoodDiary.Persistence.Runtime` namespaces.
@@ -27,4 +32,4 @@ Replay remains here to use internal transaction reset mechanics without exposing
 OutboxProcessing option binding/validation belongs to Outbox.Infrastructure and
 must be composed explicitly through AddOutboxProcessing(configuration).
 
-EfAtomicCommandExecutor adapts the existing coordinated transaction runner to the database-free application execution port. Preserve clean entry, whole-attempt retries, rollback/reset and coordinated saving; never expose transaction handles.
+EfAtomicCommandExecutor adapts the existing coordinated transaction runner to the database-free application execution port. Preserve clean entry, retries after verified aborted commits, rollback/reset and coordinated saving; never expose transaction handles.

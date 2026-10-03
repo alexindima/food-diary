@@ -1,5 +1,11 @@
 # Users infrastructure
 
+ADR 0052 splits preferences/nutrition from the account row. Owner SQL projections
+must use mapped Preferences/NutritionProfile navigations. The profile save guard
+locks/checks account lifecycle and original security version inside the coordinated
+transaction; it never saves or commits. Atomic receipt purge uses the narrow shared
+maintenance port and joins the existing per-user transaction.
+
 Own separable Users persistence adapters and complete module DI. Use narrow persistence coordination contracts; do not reference central Infrastructure.
 Do not absorb Identity repositories or provider services. UserCleanupService coordinates ordered owner-side IUserDataPurgeParticipant extensions inside the shared coordinator's per-user transaction and only mutates Users/UserRoles itself; participants never save or commit.
 

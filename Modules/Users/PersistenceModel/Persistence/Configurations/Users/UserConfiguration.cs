@@ -11,7 +11,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         builder.Property<uint>("xmin").IsRowVersion();
 
         ConfigureIdentity(builder);
-        ConfigurePreferences(builder);
+        ConfigureIndependentState(builder);
         ConfigureUsageLimits(builder);
         ConfigureRelationships(builder);
         ConfigureNavigationAccess(builder);
@@ -27,7 +27,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
         builder.Property(e => e.Email).IsRequired(false);
-        builder.Property(e => e.TimeZoneId).HasMaxLength(100);
         builder.HasIndex(e => e.Email).IsUnique();
         builder.HasIndex(e => new { e.GoogleIssuer, e.GoogleSubject })
             .IsUnique()
@@ -51,8 +50,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasColumnType("timestamp with time zone");
         builder.Property(e => e.DeletedAt)
             .HasColumnType("timestamp with time zone");
-        builder.Property(e => e.ActivityLevel)
-            .HasConversion<string>();
         builder.Property(e => e.TelegramUserId)
             .HasColumnType("bigint");
         builder.HasIndex(e => e.TelegramUserId)
@@ -64,31 +61,47 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasFilter("\"TelegramOidcIssuer\" IS NOT NULL AND \"TelegramOidcSubject\" IS NOT NULL");
     }
 
-    private static void ConfigurePreferences(EntityTypeBuilder<User> builder) {
-        builder.Property(e => e.Language)
-            .HasDefaultValue("en");
-        builder.Property(e => e.Theme)
-            .HasDefaultValue("ocean");
-        builder.Property(e => e.SurfaceStyle)
-            .HasMaxLength(16)
-            .HasDefaultValue("normal")
-            .IsRequired();
-
-        builder.Property(e => e.UiStyle)
-            .HasDefaultValue("classic");
-        builder.Property(e => e.PushNotificationsEnabled)
-            .HasDefaultValue(value: false);
-        builder.Property(e => e.FastingPushNotificationsEnabled)
-            .HasDefaultValue(value: true);
-        builder.Property(e => e.SocialPushNotificationsEnabled)
-            .HasDefaultValue(value: true);
-        builder.Property(e => e.FastingCheckInReminderHours)
-            .HasDefaultValue(12);
-        builder.Property(e => e.FastingCheckInFollowUpReminderHours)
-            .HasDefaultValue(20);
-        builder.Property(e => e.DashboardLayoutJson)
-            .HasColumnType("jsonb")
-            .HasColumnName("DashboardLayout");
+    private static void ConfigureIndependentState(EntityTypeBuilder<User> builder) {
+        builder.Ignore(user => user.DashboardLayoutJson);
+        builder.Ignore(user => user.Language);
+        builder.Ignore(user => user.Theme);
+        builder.Ignore(user => user.UiStyle);
+        builder.Ignore(user => user.SurfaceStyle);
+        builder.Ignore(user => user.PushNotificationsEnabled);
+        builder.Ignore(user => user.FastingPushNotificationsEnabled);
+        builder.Ignore(user => user.SocialPushNotificationsEnabled);
+        builder.Ignore(user => user.FastingCheckInReminderHours);
+        builder.Ignore(user => user.FastingCheckInFollowUpReminderHours);
+        builder.Ignore(user => user.TimeZoneId);
+        builder.Ignore(user => user.BirthDate);
+        builder.Ignore(user => user.Gender);
+        builder.Ignore(user => user.WeightKg);
+        builder.Ignore(user => user.DesiredWeightKg);
+        builder.Ignore(user => user.DesiredWaistCm);
+        builder.Ignore(user => user.HeightCm);
+        builder.Ignore(user => user.ActivityLevel);
+        builder.Ignore(user => user.DailyCalorieTarget);
+        builder.Ignore(user => user.ProteinTarget);
+        builder.Ignore(user => user.FatTarget);
+        builder.Ignore(user => user.CarbTarget);
+        builder.Ignore(user => user.FiberTarget);
+        builder.Ignore(user => user.StepGoal);
+        builder.Ignore(user => user.WaterGoal);
+        builder.Ignore(user => user.HydrationGoal);
+        builder.Ignore(user => user.CalorieCyclingEnabled);
+        builder.Ignore(user => user.MondayCalories);
+        builder.Ignore(user => user.TuesdayCalories);
+        builder.Ignore(user => user.WednesdayCalories);
+        builder.Ignore(user => user.ThursdayCalories);
+        builder.Ignore(user => user.FridayCalories);
+        builder.Ignore(user => user.SaturdayCalories);
+        builder.Ignore(user => user.SundayCalories);
+        builder.HasOne(user => user.Preferences).WithOne().HasForeignKey<UserPreferences>(state => state.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(user => user.NutritionProfile).WithOne().HasForeignKey<UserNutritionProfile>(state => state.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Navigation(user => user.Preferences).AutoInclude();
+        builder.Navigation(user => user.NutritionProfile).AutoInclude();
     }
 
     private static void ConfigureUsageLimits(EntityTypeBuilder<User> builder) {

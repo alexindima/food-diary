@@ -24,4 +24,5 @@ internal sealed record DashboardMealProjection(
     double? ManualFiber,
     double? ManualAlcohol,
     int PreMealSatietyLevel,
-    int PostMealSatietyLevel);
+    int PostMealSatietyLevel,
+    Guid? FavoriteMealId);

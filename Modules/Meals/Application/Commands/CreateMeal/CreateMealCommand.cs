@@ -22,4 +22,6 @@ public record CreateMealCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     int PreMealSatietyLevel,
-    int PostMealSatietyLevel) : ICommand<Result<MealModel>>, IUserRequest, IAtomicCommand;
+    int PostMealSatietyLevel) : ICommand<Result<MealModel>>, IUserRequest, IIdempotentAtomicCommand {
+    public FoodDiary.Application.Contracts.Common.Abstractions.Persistence.AtomicOperation? Operation { get; init; }
+}

@@ -3,6 +3,7 @@ id: module.mail-services
 kind: module
 status: current
 sources:
+  - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
   - Services/MailRelay/AGENTS.md
@@ -26,6 +27,12 @@ databases, layers, and client packages.
 MailRelay owns outbound mail delivery, including persistence, queueing,
 RabbitMQ, SMTP/direct-to-MX behavior, DNS, DKIM, and workers. Its Web API
 project is a composition root; HTTP contracts live in presentation.
+
+Each delivery attempt renews its lease and fences every terminal/retry update
+with its attempt number and unexpired ownership. Polling claims only the bounded
+parallel delivery capacity. Stable Message-Id supports at-least-once SMTP after
+a crash between provider acceptance and local acknowledgement. See
+[ADR 0052](../../docs/adr/0052-backend-transaction-and-delivery-reliability.md).
 
 ## MailInbox
 

@@ -11,6 +11,30 @@ namespace FoodDiary.MailRelay.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayMessageProcessorTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ActiveSmtpDelivery_RenewsItsClaimAndStopsWhenOwnershipIsLost(bool loseClaim) {
+        var store = new RecordingQueueStore {
+            ClaimRenewalInterval = TimeSpan.FromMilliseconds(20),
+            LoseOnRenewal = loseClaim,
+        };
+        var transport = new RecordingTransport {
+            DuringSendAsync = async token => {
+                await store.RenewalObserved.Task.WaitAsync(TimeSpan.FromSeconds(5), token).ConfigureAwait(false);
+                if (loseClaim) {
+                    await Task.Delay(Timeout.InfiniteTimeSpan, token).ConfigureAwait(false);
+                }
+            },
+        };
+        MailRelayProcessResult result = await CreateProcessor(store, transport).ProcessAsync(CreateMessage(), CancellationToken.None)
+            .WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.Equal(!loseClaim, result.Succeeded);
+        Assert.False(result.IsTerminalFailure);
+        Assert.Null(store.FailureDecision);
+        Assert.Equal(loseClaim ? null : QueuedEmailStatus.Sent, store.Status);
+    }
+
     [Fact]
     public async Task ProcessAsync_WhenRecipientIsSuppressed_MarksMessageSuppressedAndDoesNotSend() {
         var store = new RecordingQueueStore {
@@ -71,7 +95,8 @@ public sealed class MailRelayMessageProcessorTests {
 
         Assert.True(result.Succeeded);
         Assert.Equal(QueuedEmailStatus.Sent, store.Status);
-        Assert.False(store.MarkSentCancellationToken.CanBeCanceled);
+        Assert.True(store.MarkSentCancellationToken.CanBeCanceled);
+        Assert.False(store.MarkSentCancellationToken.IsCancellationRequested);
     }
 
     [Theory]
@@ -160,18 +185,23 @@ public sealed class MailRelayMessageProcessorTests {
         public bool SendCalled { get; private set; }
         public Exception? Exception { get; init; }
         public Action? AfterSend { get; init; }
+        public Func<CancellationToken, Task>? DuringSendAsync { get; init; }
         public List<RelayEmailMessageRequest> Requests { get; } = [];
 
         public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
             SendCalled = true;
             Requests.Add(request);
             AfterSend?.Invoke();
-            return Exception is null ? Task.CompletedTask : Task.FromException(Exception);
+            return Exception is not null ? Task.FromException(Exception) : DuringSendAsync?.Invoke(cancellationToken) ?? Task.CompletedTask;
         }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingQueueStore : IMailRelayQueueStore {
+        private int _renewals;
+        public bool LoseOnRenewal { get; init; }
+        public TimeSpan ClaimRenewalInterval { get; init; } = TimeSpan.FromSeconds(30);
+        public TaskCompletionSource RenewalObserved { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public IReadOnlyList<string> SuppressedRecipients { get; init; } = [];
         public string? Status { get; private set; }
         public QueuedEmailFailureDecision? FailureDecision { get; private set; }
@@ -204,13 +234,21 @@ public sealed class MailRelayMessageProcessorTests {
 
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
+        public Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
+            int count = Interlocked.Increment(ref _renewals);
+            if (count > 1) {
+                RenewalObserved.TrySetResult();
+            }
+            return Task.FromResult(count == 1 || !LoseOnRenewal);
+        }
+
+        public Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
             MarkSentCancellationToken = cancellationToken;
             Status = QueuedEmailStatus.Sent;
             return Task.CompletedTask;
         }
 
-        public Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
+        public Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
             Status = QueuedEmailStatus.Suppressed;
             return Task.CompletedTask;
         }

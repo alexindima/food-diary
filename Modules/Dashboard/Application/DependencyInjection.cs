@@ -23,7 +23,8 @@ public static class DependencyInjection {
         services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>
             new DashboardSnapshotBuilder(
                 serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
-                serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
+                serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>(),
+                serviceProvider.GetRequiredService<FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IReadSnapshotExecutor>()));
         return services;
     }
 }

@@ -2,6 +2,7 @@ using FoodDiary.Modules.Notifications.PersistenceModel;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -24,7 +25,14 @@ internal sealed class NotificationWebPushOutboxProcessor(
             batchSize,
             options.Value,
             timeProvider,
-            (message, token) => webPushNotificationSender.SendAsync(message.Notification, token),
+            async (message, token) => {
+                WebPushDeliveryOutcome outcome = await webPushNotificationSender.SendBatchAsync(message.Notification,
+                    message.GetCompletedSubscriptionIds(), token).ConfigureAwait(false);
+                message.RecordCompletedSubscriptions(outcome.CompletedSubscriptionIds);
+                if (outcome.RequiresRetry) {
+                    throw new HttpRequestException("Web push delivery has unfinished subscriptions.");
+                }
+            },
             static message => message.NotificationId.Value,
             logger,
             messages.Include(message => message.Notification),

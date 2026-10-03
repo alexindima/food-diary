@@ -29,18 +29,29 @@ public sealed class WebPushNotificationSender(
     }
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
+        WebPushDeliveryOutcome outcome = await SendBatchAsync(notification, new HashSet<Guid>(), cancellationToken).ConfigureAwait(false);
+        if (outcome.RequiresRetry) {
+            throw new HttpRequestException("Web push delivery has unfinished subscriptions.");
+        }
+    }
+
+    public async Task<WebPushDeliveryOutcome> SendBatchAsync(Notification notification, IReadOnlySet<Guid> completedSubscriptionIds,
+        CancellationToken cancellationToken = default) {
         if (ShouldSkipForConfiguration(notification)) {
-            return;
+            return WebPushDeliveryOutcome.Skipped;
         }
 
         IReadOnlyList<WebPushDeliverySubscription> subscriptions = await deliveryAudienceService
             .GetActiveAudienceAsync(notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken)
             .ConfigureAwait(false);
+        subscriptions = [.. subscriptions.Take(WebPushDeliveryLimits.MaximumSubscriptionsPerUser)
+            .Where(subscription => !completedSubscriptionIds.Contains(subscription.Id))];
         if (subscriptions.Count == 0) {
-            return;
+            return WebPushDeliveryOutcome.Skipped;
         }
 
-        (int deliveredCount, List<WebPushDeliverySubscription>? invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        (List<Guid> deliveredSubscriptions, List<WebPushDeliverySubscription> invalidSubscriptions) =
+            await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
         if (invalidSubscriptions.Count > 0) {
             await deliveryAudienceService.RemoveInvalidSubscriptionsAsync(
                 notification.UserId,
@@ -52,9 +63,11 @@ public sealed class WebPushNotificationSender(
             "Processed web push notification {NotificationId} for user {UserId}. Delivered={DeliveredCount}, Expired={ExpiredCount}, Attempted={AttemptedCount}.",
             notification.Id.Value,
             notification.UserId.Value,
-            deliveredCount,
+            deliveredSubscriptions.Count,
             invalidSubscriptions.Count,
             subscriptions.Count);
+        Guid[] completed = [.. deliveredSubscriptions.Concat(invalidSubscriptions.Select(subscription => subscription.Id))];
+        return new WebPushDeliveryOutcome(completed, subscriptions.Count - completed.Length);
     }
 
     private bool ShouldSkipForConfiguration(Notification notification) {
@@ -68,13 +81,13 @@ public sealed class WebPushNotificationSender(
         return true;
     }
 
-    private async Task<(int DeliveredCount, List<WebPushDeliverySubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
+    private async Task<(List<Guid> DeliveredSubscriptions, List<WebPushDeliverySubscription> InvalidSubscriptions)> SendToSubscriptionsAsync(
         Notification notification,
         IReadOnlyCollection<WebPushDeliverySubscription> subscriptions,
         CancellationToken cancellationToken) {
         var vapidDetails = new VapidDetails(_options.Subject, _options.PublicKey, _options.PrivateKey);
         var invalidSubscriptions = new ConcurrentBag<WebPushDeliverySubscription>();
-        int deliveredCount = 0;
+        var deliveredSubscriptions = new ConcurrentBag<Guid>();
 
         using var deliveryTimeout = new CancellationTokenSource(DeliveryDeadline, timeProvider);
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, deliveryTimeout.Token);
@@ -99,7 +112,7 @@ public sealed class WebPushNotificationSender(
                             payload,
                             vapidDetails,
                             deliveryCancellationToken).ConfigureAwait(false);
-                        Interlocked.Increment(ref deliveredCount);
+                        deliveredSubscriptions.Add(subscription.Id);
                     } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                         throw;
                     } catch (OperationCanceledException) when (deadline.IsCancellationRequested) {
@@ -111,10 +124,10 @@ public sealed class WebPushNotificationSender(
                             notification.UserId.Value);
                     } catch (Exception ex) {
                         logger.LogWarning(
-                            ex,
-                            "Failed to send web push notification {NotificationId} to subscription {SubscriptionId}.",
+                            "Failed to send web push notification {NotificationId} to subscription {SubscriptionId} ({ErrorType}).",
                             notification.Id.Value,
-                            subscription.Id);
+                            subscription.Id,
+                            ex.GetType().Name);
                     }
                 }).ConfigureAwait(false);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
@@ -124,7 +137,7 @@ public sealed class WebPushNotificationSender(
                 notification.UserId.Value);
         }
 
-        return (deliveredCount, [.. invalidSubscriptions]);
+        return ([.. deliveredSubscriptions], [.. invalidSubscriptions]);
     }
 
     private bool IsConfigured() {

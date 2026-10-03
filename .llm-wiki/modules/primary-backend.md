@@ -3,6 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
+  - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/ai/remaining-consumer-boundaries.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
@@ -141,3 +142,12 @@ Recipes Domain owns the scalar RecipeNutritionPolicy used by application and rea
 composition. FD0018 rejects write/tracking/SQL capabilities in composed readers;
 FD0016 also reviews shared context factories, tracker access and direct ADO methods
 in module adapters. These are engineering guardrails, not a database security sandbox.
+
+Shared persistence verifies uncertain PostgreSQL COMMIT outcomes before replay.
+CreateMeal/RepeatMeal retain successful typed results in the business transaction;
+receipt cleanup and account purge have explicit owners. The outer command clears
+failed scope state and owns nested ordinary command persistence. Users account,
+preferences and nutrition records have independent concurrency versions. Dashboard
+uses a bounded read-only repeatable snapshot. See
+[ADR 0052](../../docs/adr/0052-backend-transaction-and-delivery-reliability.md)
+for save priorities, failure behavior, migrations and coordinated rollout.

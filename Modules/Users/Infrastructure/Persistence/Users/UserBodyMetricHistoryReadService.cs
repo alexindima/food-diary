@@ -27,7 +27,7 @@ public sealed class UserBodyMetricHistoryReadService(
             return Result.Failure<WeightHistoryProfileModel>(AuthenticationErrors.InvalidToken);
         }
         var profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)
-            .Select(user => new { user.HeightCm, user.DesiredWeightKg }).SingleAsync(cancellationToken).ConfigureAwait(false);
+            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWeightKg }).SingleAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<WeightGoal> owned = weights.AsNoTracking().Where(goal => goal.UserId == userId);
         List<WeightGoalHistoryModel> active = await ProjectWeight(owned.Where(goal => goal.Status == WeightGoalStatus.Active).Take(1))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -60,7 +60,7 @@ public sealed class UserBodyMetricHistoryReadService(
             return Result.Failure<WaistHistoryProfileModel>(AuthenticationErrors.InvalidToken);
         }
         var profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)
-            .Select(user => new { user.HeightCm, user.DesiredWaistCm }).SingleAsync(cancellationToken).ConfigureAwait(false);
+            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWaistCm }).SingleAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<WaistGoal> owned = waists.AsNoTracking().Where(goal => goal.UserId == userId);
         List<WaistGoalHistoryModel> active = await ProjectWaist(owned.Where(goal => goal.Status == WaistGoalStatus.Active).Take(1))
             .ToListAsync(cancellationToken).ConfigureAwait(false);

@@ -1,5 +1,9 @@
 # Backend Module Map
 
+Users owns separate account, preferences and nutrition records. The shared runtime
+also owns AtomicCommandReceipts; Dashboard composes a bounded read-only snapshot.
+See [ADR 0052](adr/0052-backend-transaction-and-delivery-reliability.md).
+
 Shared persistence runtime is now physically separate from the full migration
 model. Composed readers consume an IQueryable-only facade on the same scoped
 context. See [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md).

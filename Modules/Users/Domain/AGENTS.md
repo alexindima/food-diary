@@ -1,5 +1,10 @@
 # Users Domain
 
+Account principal, UserPreferences and UserNutritionProfile have independent
+persistence versions and audit timestamps (ADR 0052). User methods remain the
+validation facade. Preference/nutrition-only mutations touch their owner record;
+credential/lifecycle changes touch the account and preserve security invalidation.
+
 Own the complete User aggregate, including every credential/security partial,
 roles, role audit, weight/waist goals, lifecycle events and User-specific state and
 value objects. Use canonical project/folder namespaces and all invariants. Keep authentication

@@ -18,6 +18,15 @@ namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayInfrastructureOptionsTests {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    [InlineData(64, true)]
+    [InlineData(65, false)]
+    public void MailRelayQueueOptions_BoundsConcurrentDeliveries(int maximum, bool valid) {
+        Assert.Equal(valid, MailRelayQueueOptions.HasValidConfiguration(new MailRelayQueueOptions { MaxConcurrentDeliveries = maximum }));
+    }
+
     [Fact]
     public void MailRelayQueueOptions_HasValidConfiguration_ReturnsFalseForInvalidRetryShape() {
         var options = new MailRelayQueueOptions {

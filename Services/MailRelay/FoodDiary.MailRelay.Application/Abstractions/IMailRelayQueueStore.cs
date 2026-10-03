@@ -13,8 +13,11 @@ public interface IMailRelayQueueStore {
         CancellationToken cancellationToken);
     Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken);
     Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken);
-    Task MarkSentAsync(Guid id, CancellationToken cancellationToken);
-    Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken);
+    // AttemptCount is a monotonically increasing fencing token for the claimed message.
+    TimeSpan ClaimRenewalInterval => TimeSpan.FromSeconds(30);
+    Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken);
+    Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken);
+    Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken);
     Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(string? email, CancellationToken cancellationToken);
     async Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(string? email, int page, int limit, CancellationToken cancellationToken) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);

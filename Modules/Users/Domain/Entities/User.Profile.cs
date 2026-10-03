@@ -40,7 +40,7 @@ public sealed partial class User {
             socialPushNotificationsEnabled: null,
             fastingCheckInReminderHours: null,
             fastingCheckInFollowUpReminderHours: null)) {
-            SetModified();
+            Preferences.Touch();
         }
     }
 
@@ -107,7 +107,7 @@ public sealed partial class User {
             return;
         }
         TimeZoneId = zone.Id;
-        SetModified();
+        Preferences.Touch();
     }
 
     public void UpdatePersonalInfo(
@@ -130,6 +130,8 @@ public sealed partial class User {
 
     public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
         EnsureNotDeleted();
+        (string? username, string? firstName, string? lastName) = (Username, FirstName, LastName);
+        (DateTime? birthDate, string? gender, double? weight, double? height) = (BirthDate, Gender, WeightKg, HeightCm);
         if (ApplyPersonalInfoChanges(
             update.Username,
             update.FirstName,
@@ -138,7 +140,14 @@ public sealed partial class User {
             update.Gender,
             update.WeightKg,
             update.HeightCm)) {
-            SetModified();
+            if (birthDate != BirthDate || !string.Equals(gender, Gender, StringComparison.Ordinal)
+                || !NullableAreClose(weight, WeightKg) || !NullableAreClose(height, HeightCm)) {
+                NutritionProfile.Touch();
+            }
+            if (!string.Equals(username, Username, StringComparison.Ordinal) || !string.Equals(firstName, FirstName, StringComparison.Ordinal)
+                || !string.Equals(lastName, LastName, StringComparison.Ordinal)) {
+                SetModified();
+            }
         }
     }
 
@@ -152,7 +161,7 @@ public sealed partial class User {
     public void UpdateActivity(UserActivityUpdate update) {
         EnsureNotDeleted();
         if (ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal)) {
-            SetModified();
+            NutritionProfile.Touch();
         }
     }
 
@@ -169,7 +178,7 @@ public sealed partial class User {
             update.FastingCheckInReminderHours,
             update.FastingCheckInFollowUpReminderHours,
             update.SurfaceStyle)) {
-            SetModified();
+            Preferences.Touch();
         }
     }
 

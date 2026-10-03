@@ -41,11 +41,11 @@ namespace FoodDiary.Modules.Dashboard.Application.Tests;
 [ExcludeFromCodeCoverage]
 public class DashboardFeatureTests {
     [Fact]
-    public async Task GetDashboardSnapshot_WhenProfileLookupFails_DoesNotBuildSnapshot() {
+    public async Task GetDashboardSnapshot_WhenAccessFails_DoesNotBuildSnapshot() {
         var userId = UserId.New();
         IDashboardUserContextService access = Substitute.For<IDashboardUserContextService>();
         Error error = AuthenticationErrors.InvalidToken;
-        access.GetAccessibleDashboardUserAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<DashboardUserContextModel>(error));
+        access.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>()).Returns(error);
         IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
         var handler = new GetDashboardSnapshotQueryHandler(builder, access);
 
@@ -378,9 +378,9 @@ public class DashboardFeatureTests {
         Assert.Equal(14, request.TrendDays);
         Assert.Equal(2, request.Page);
         Assert.Equal(25, request.PageSize);
-        Assert.Equal(userId.Value, Assert.IsType<DashboardUserContextModel>(request.UserContext).Id);
+        Assert.Null(request.UserContext);
         Assert.Equal(cts.Token, getLastCancellationToken());
-        await userContextService.Received(1).GetAccessibleDashboardUserAsync(userId, cts.Token);
+        await userContextService.DidNotReceiveWithAnyArgs().GetAccessibleDashboardUserAsync(default, default);
         await userContextService.Received(1).EnsureCanAccessAsync(userId, cts.Token);
     }
 

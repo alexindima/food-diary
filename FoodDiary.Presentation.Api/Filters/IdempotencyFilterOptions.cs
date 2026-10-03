@@ -11,6 +11,7 @@ public sealed class IdempotencyFilterOptions {
 
     public static bool IsValid(IdempotencyFilterOptions options) =>
         options.ResponseTtl > TimeSpan.Zero &&
+        options.ResponseTtl <= TimeSpan.FromDays(7) &&
         options.ProcessingTtl > TimeSpan.Zero &&
         options.LeaseRenewalInterval > TimeSpan.Zero &&
         options.StoreOperationTimeout > TimeSpan.Zero &&

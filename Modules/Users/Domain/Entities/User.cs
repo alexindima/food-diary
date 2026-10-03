@@ -35,45 +35,45 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string? Username { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
-    public DateTime? BirthDate { get; private set; }
-    public string? Gender { get; private set; }
-    public double? WeightKg { get; private set; }
-    public double? DesiredWeightKg { get; private set; }
-    public double? DesiredWaistCm { get; private set; }
-    public double? HeightCm { get; private set; }
-    public ActivityLevel ActivityLevel { get; private set; } = ActivityLevel.Moderate;
-    public double? DailyCalorieTarget { get; private set; }
-    public double? ProteinTarget { get; private set; }
-    public double? FatTarget { get; private set; }
-    public double? CarbTarget { get; private set; }
-    public double? FiberTarget { get; private set; }
-    public int? StepGoal { get; private set; }
-    public double? WaterGoal { get; private set; }
-    public double? HydrationGoal { get; private set; }
-    public bool CalorieCyclingEnabled { get; private set; }
-    public double? MondayCalories { get; private set; }
-    public double? TuesdayCalories { get; private set; }
-    public double? WednesdayCalories { get; private set; }
-    public double? ThursdayCalories { get; private set; }
-    public double? FridayCalories { get; private set; }
-    public double? SaturdayCalories { get; private set; }
-    public double? SundayCalories { get; private set; }
+    public DateTime? BirthDate { get => NutritionProfile.BirthDate; private set => NutritionProfile.BirthDate = value; }
+    public string? Gender { get => NutritionProfile.Gender; private set => NutritionProfile.Gender = value; }
+    public double? WeightKg { get => NutritionProfile.WeightKg; private set => NutritionProfile.WeightKg = value; }
+    public double? DesiredWeightKg { get => NutritionProfile.DesiredWeightKg; private set => NutritionProfile.DesiredWeightKg = value; }
+    public double? DesiredWaistCm { get => NutritionProfile.DesiredWaistCm; private set => NutritionProfile.DesiredWaistCm = value; }
+    public double? HeightCm { get => NutritionProfile.HeightCm; private set => NutritionProfile.HeightCm = value; }
+    public ActivityLevel ActivityLevel { get => NutritionProfile.ActivityLevel; private set => NutritionProfile.ActivityLevel = value; }
+    public double? DailyCalorieTarget { get => NutritionProfile.DailyCalorieTarget; private set => NutritionProfile.DailyCalorieTarget = value; }
+    public double? ProteinTarget { get => NutritionProfile.ProteinTarget; private set => NutritionProfile.ProteinTarget = value; }
+    public double? FatTarget { get => NutritionProfile.FatTarget; private set => NutritionProfile.FatTarget = value; }
+    public double? CarbTarget { get => NutritionProfile.CarbTarget; private set => NutritionProfile.CarbTarget = value; }
+    public double? FiberTarget { get => NutritionProfile.FiberTarget; private set => NutritionProfile.FiberTarget = value; }
+    public int? StepGoal { get => NutritionProfile.StepGoal; private set => NutritionProfile.StepGoal = value; }
+    public double? WaterGoal { get => NutritionProfile.WaterGoal; private set => NutritionProfile.WaterGoal = value; }
+    public double? HydrationGoal { get => NutritionProfile.HydrationGoal; private set => NutritionProfile.HydrationGoal = value; }
+    public bool CalorieCyclingEnabled { get => NutritionProfile.CalorieCyclingEnabled; private set => NutritionProfile.CalorieCyclingEnabled = value; }
+    public double? MondayCalories { get => NutritionProfile.MondayCalories; private set => NutritionProfile.MondayCalories = value; }
+    public double? TuesdayCalories { get => NutritionProfile.TuesdayCalories; private set => NutritionProfile.TuesdayCalories = value; }
+    public double? WednesdayCalories { get => NutritionProfile.WednesdayCalories; private set => NutritionProfile.WednesdayCalories = value; }
+    public double? ThursdayCalories { get => NutritionProfile.ThursdayCalories; private set => NutritionProfile.ThursdayCalories = value; }
+    public double? FridayCalories { get => NutritionProfile.FridayCalories; private set => NutritionProfile.FridayCalories = value; }
+    public double? SaturdayCalories { get => NutritionProfile.SaturdayCalories; private set => NutritionProfile.SaturdayCalories = value; }
+    public double? SundayCalories { get => NutritionProfile.SundayCalories; private set => NutritionProfile.SundayCalories = value; }
     public string? ProfileImage { get; private set; }
     public ImageAssetId? ProfileImageAssetId { get; private set; }
-    public string? DashboardLayoutJson { get; private set; }
-    public string? Language { get; private set; }
-    public string? Theme { get; private set; }
-    public string? UiStyle { get; private set; }
-    public string SurfaceStyle { get; private set; } = SurfaceStyleCode.Default.Value;
-    public bool PushNotificationsEnabled { get; private set; }
-    public bool FastingPushNotificationsEnabled { get; private set; }
-    public bool SocialPushNotificationsEnabled { get; private set; }
-    public int FastingCheckInReminderHours { get; private set; }
-    public int FastingCheckInFollowUpReminderHours { get; private set; }
+    public string? DashboardLayoutJson { get => Preferences.DashboardLayoutJson; private set => Preferences.DashboardLayoutJson = value; }
+    public string? Language { get => Preferences.Language; private set => Preferences.Language = value; }
+    public string? Theme { get => Preferences.Theme; private set => Preferences.Theme = value; }
+    public string? UiStyle { get => Preferences.UiStyle; private set => Preferences.UiStyle = value; }
+    public string SurfaceStyle { get => Preferences.SurfaceStyle; private set => Preferences.SurfaceStyle = value; }
+    public bool PushNotificationsEnabled { get => Preferences.PushNotificationsEnabled; private set => Preferences.PushNotificationsEnabled = value; }
+    public bool FastingPushNotificationsEnabled { get => Preferences.FastingPushNotificationsEnabled; private set => Preferences.FastingPushNotificationsEnabled = value; }
+    public bool SocialPushNotificationsEnabled { get => Preferences.SocialPushNotificationsEnabled; private set => Preferences.SocialPushNotificationsEnabled = value; }
+    public int FastingCheckInReminderHours { get => Preferences.FastingCheckInReminderHours; private set => Preferences.FastingCheckInReminderHours = value; }
+    public int FastingCheckInFollowUpReminderHours { get => Preferences.FastingCheckInFollowUpReminderHours; private set => Preferences.FastingCheckInFollowUpReminderHours = value; }
     public long? TelegramUserId { get; private set; }
     public string? TelegramOidcIssuer { get; private set; }
     public string? TelegramOidcSubject { get; private set; }
-    public string? TimeZoneId { get; private set; }
+    public string? TimeZoneId { get => Preferences.TimeZoneId; private set => Preferences.TimeZoneId = value; }
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
     public DateTime? AiConsentAcceptedAt { get; private set; }
@@ -89,6 +89,9 @@ public sealed partial class User : AggregateRoot<UserId> {
     public IReadOnlyCollection<WeightGoal> WeightGoals => _weightGoals.AsReadOnly();
     public IReadOnlyCollection<WaistGoal> WaistGoals => _waistGoals.AsReadOnly();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
+
+    public UserPreferences Preferences { get; private set; } = null!;
+    public UserNutritionProfile NutritionProfile { get; private set; } = null!;
 
     private User() {
     }
@@ -111,8 +114,11 @@ public sealed partial class User : AggregateRoot<UserId> {
     private static User CreateCore(string? normalizedEmail, string hashedPassword, bool hasPassword) {
         string normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
 
+        var userId = UserId.New();
         var user = new User {
-            Id = UserId.New(),
+            Id = userId,
+            Preferences = UserPreferences.Create(userId),
+            NutritionProfile = UserNutritionProfile.Create(userId),
             Email = normalizedEmail,
             Password = normalizedPassword,
             HasPassword = hasPassword,

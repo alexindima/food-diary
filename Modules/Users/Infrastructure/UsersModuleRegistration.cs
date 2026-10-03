@@ -19,7 +19,7 @@ public static class UsersModuleRegistration {
         services.AddScoped(provider => {
             IModuleContextFactory factory = provider.GetRequiredService<IModuleContextFactory>();
             return factory.CreateModuleContext<UsersDbContext>(options => new UsersDbContext(
-                new DbContextOptionsBuilder<UsersDbContext>(options).AddInterceptors(new TelegramIdentityConflictInterceptor()).Options), saveOrder: -100);
+                new DbContextOptionsBuilder<UsersDbContext>(options).AddInterceptors(new TelegramIdentityConflictInterceptor(), new UserProfileWriteGuardInterceptor()).Options), saveOrder: PersistenceSaveOrder.AccountPrincipals);
         });
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, TelegramIdentityConflictInterceptor>());
         services.AddScoped<UserProfileProjectionService>(provider => new UserProfileProjectionService(
@@ -57,6 +57,7 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserRoleMembershipService>(provider => new UserRoleMembershipService(
             provider.GetRequiredService<UsersDbContext>().Database, provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().Roles, provider.GetRequiredService<UsersDbContext>().UserRoles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserCleanupService, UserCleanupService>();
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AtomicCommandReceiptsUserDataPurgeParticipant>());
         return services;
     }
 

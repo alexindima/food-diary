@@ -389,9 +389,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         (await client.PutAsJsonAsync("/api/v1/users/desired-weight", new UpdateDesiredWeightHttpRequest(73)))
             .EnsureSuccessStatusCode();
 
-        HttpResponseMessage response = await client.GetAsync("/api/v1/users/weight-goals");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/weight-goals/page?limit=10");
+        response.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        JsonElement[] goals = [.. json.RootElement.EnumerateArray()];
+        JsonElement[] goals = [.. json.RootElement.GetProperty("items").EnumerateArray()];
         string actual = JsonSerializer.Serialize(
             new JsonObject {
                 ["count"] = goals.Length,
@@ -420,9 +421,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(80)))
             .EnsureSuccessStatusCode();
 
-        HttpResponseMessage response = await client.GetAsync("/api/v1/users/waist-goals");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/waist-goals/page?limit=10");
+        response.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        JsonElement[] goals = [.. json.RootElement.EnumerateArray()];
+        JsonElement[] goals = [.. json.RootElement.GetProperty("items").EnumerateArray()];
         string actual = JsonSerializer.Serialize(
             new JsonObject {
                 ["count"] = goals.Length,

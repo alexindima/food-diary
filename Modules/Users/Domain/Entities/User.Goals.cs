@@ -72,7 +72,7 @@ public sealed partial class User {
 
         ApplyGoalState(state);
 
-        SetModified();
+        NutritionProfile.Touch();
     }
 
     public void UpdateAiTokenLimits(long? inputLimit, long? outputLimit) {
@@ -86,7 +86,7 @@ public sealed partial class User {
         EnsureNotDeleted();
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
         ApplyGoalState(GetGoalState() with { DesiredWeightKg = desiredWeight });
-        SetModified();
+        NutritionProfile.Touch();
     }
 
     public WeightGoal StartWeightGoal(double targetWeight, double startWeight, DateTime startedAtUtc) {
@@ -111,7 +111,7 @@ public sealed partial class User {
         EnsureNotDeleted();
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
         ApplyGoalState(GetGoalState() with { DesiredWaistCm = desiredWaist });
-        SetModified();
+        NutritionProfile.Touch();
     }
 
     public WaistGoal StartWaistGoal(double targetWaist, double startWaist, DateTime startedAtUtc) {

@@ -160,6 +160,8 @@ public class BehaviorTests {
             CancellationToken.None));
 
         await postCommitActionQueue.DidNotReceive().FlushAsync(Arg.Any<CancellationToken>());
+        unitOfWork.Received(1).DiscardChanges();
+        postCommitActionQueue.Received(1).Discard();
     }
 
     [Fact]

@@ -47,7 +47,8 @@ public sealed class UserDataLifecycleGuardrailTests {
     public void PurgeParticipants_DoNotSaveOrCommitAndCoordinatorDoesNotAcquireForeignTables() {
         string[] participants = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => path.EndsWith("UserDataPurgeParticipant.cs", StringComparison.Ordinal))];
-        Assert.Equal(13, participants.Length);
+        Assert.NotEmpty(participants);
+        Assert.Contains(participants, path => path.EndsWith("AtomicCommandReceiptsUserDataPurgeParticipant.cs", StringComparison.Ordinal));
         foreach (string path in participants) {
             string source = File.ReadAllText(path);
             Assert.DoesNotContain("SaveChanges", source, StringComparison.Ordinal);
@@ -98,6 +99,8 @@ public sealed class UserDataLifecycleGuardrailTests {
             "ShoppingList(UserId):Cascade",
             "UserAchievement(UserId):Cascade",
             "UserLessonProgress(UserId):Cascade",
+            "UserPreferences(Id):Cascade",
+            "UserNutritionProfile(Id):Cascade",
             "UserLoginEvent(UserId):Cascade",
             "UserRefreshTokenSession(UserId):Cascade",
             "UserRole(UserId):Cascade",

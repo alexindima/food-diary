@@ -8,4 +8,6 @@ public record RepeatMealCommand(
     Guid? UserId,
     Guid MealId,
     DateTime TargetDate,
-    string? MealType) : ICommand<Result<MealModel>>, IUserRequest, IAtomicCommand;
+    string? MealType) : ICommand<Result<MealModel>>, IUserRequest, IIdempotentAtomicCommand {
+    public FoodDiary.Application.Contracts.Common.Abstractions.Persistence.AtomicOperation? Operation { get; init; }
+}

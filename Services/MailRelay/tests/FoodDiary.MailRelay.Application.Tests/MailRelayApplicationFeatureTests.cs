@@ -378,9 +378,11 @@ public sealed class MailRelayApplicationFeatureTests {
 
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) => Task.FromResult(true);
 
-        public Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) =>
+        public Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) => Task.CompletedTask;
+
+        public Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) =>
             Task.CompletedTask;
 
         public Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(

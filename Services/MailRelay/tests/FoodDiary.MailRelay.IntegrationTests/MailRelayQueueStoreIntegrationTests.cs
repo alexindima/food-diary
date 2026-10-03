@@ -14,6 +14,34 @@ namespace FoodDiary.MailRelay.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixture fixture) {
     [RequiresDockerFact]
+    public async Task ReclaimedMessage_RejectsEveryStaleAcknowledgementAndRetry() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        Guid id = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
+        QueuedEmailMessage first = Assert.Single(await store.ClaimDueBatchAsync(CancellationToken.None));
+        Assert.True(await store.RenewClaimAsync(id, first.AttemptCount, CancellationToken.None));
+        await using (NpgsqlCommand expire = dataSource.CreateCommand("update mailrelay_outbound_emails set locked_at_utc = now() - interval '1 hour' where id = @id")) {
+            expire.Parameters.AddWithValue("id", id);
+            await expire.ExecuteNonQueryAsync();
+        }
+        QueuedEmailMessage second = Assert.Single(await store.ClaimDueBatchAsync(CancellationToken.None));
+        Assert.Equal(first.AttemptCount + 1, second.AttemptCount);
+        Assert.False(await store.RenewClaimAsync(id, first.AttemptCount, CancellationToken.None));
+        await store.MarkSentAsync(id, second.AttemptCount, CancellationToken.None);
+        long outboxCount = await CountRowsAsync(dataSource, "mailrelay_outbox_messages");
+        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+            store.MarkSentAsync(id, first.AttemptCount, CancellationToken.None));
+        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+            store.MarkSuppressedAsync(id, first.AttemptCount, ["blocked@example.com"], CancellationToken.None));
+        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+            store.MarkFailedAttemptAsync(new QueuedEmailFailureDecision((QueuedEmailId)id, first.AttemptCount,
+                QueuedEmailStatus.Retry, IsTerminalFailure: false, "stale failure"), CancellationToken.None));
+        Assert.Equal(QueuedEmailStatus.Sent, (await store.GetMessageDetailsAsync(id, CancellationToken.None))!.Status);
+        Assert.Equal(outboxCount, await CountRowsAsync(dataSource, "mailrelay_outbox_messages"));
+    }
+
+    [RequiresDockerFact]
     public async Task EnqueueClaimAndMarkSentAsync_UpdatesMessageLifecycle() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -25,7 +53,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         Assert.Equal(id, claimed[0].Id);
         Assert.Equal(1, claimed[0].AttemptCount);
 
-        await store.MarkSentAsync(id, CancellationToken.None);
+        await store.MarkSentAsync(id, claimed[0].AttemptCount, CancellationToken.None);
 
         MailRelayMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
         Assert.NotNull(details);
@@ -239,10 +267,10 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         Guid suppressedId = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
         Guid retryId = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
 
-        await store.MarkSentAsync(sentId, CancellationToken.None);
-        await store.MarkSuppressedAsync(suppressedId, ["blocked@example.com"], CancellationToken.None);
-        QueuedEmailMessage retryMessage = (await store.ClaimDueBatchAsync(CancellationToken.None))
-            .Single(message => message.Id == retryId);
+        IReadOnlyList<QueuedEmailMessage> claimed = await store.ClaimDueBatchAsync(CancellationToken.None);
+        await store.MarkSentAsync(sentId, claimed.Single(message => message.Id == sentId).AttemptCount, CancellationToken.None);
+        await store.MarkSuppressedAsync(suppressedId, claimed.Single(message => message.Id == suppressedId).AttemptCount, ["blocked@example.com"], CancellationToken.None);
+        QueuedEmailMessage retryMessage = claimed.Single(message => message.Id == retryId);
         await store.MarkFailedAttemptAsync(
             new QueuedEmailFailureDecision((QueuedEmailId)retryId, retryMessage.AttemptCount, QueuedEmailStatus.Retry, IsTerminalFailure: false, "retry"),
             CancellationToken.None);

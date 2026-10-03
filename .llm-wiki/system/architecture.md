@@ -3,6 +3,7 @@ id: system.architecture
 kind: system
 status: current
 sources:
+  - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/adr/0041-owner-requests-for-module-use-cases.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
@@ -123,3 +124,15 @@ Recipes Domain owns the scalar RecipeNutritionPolicy used by application and rea
 composition. FD0018 rejects write/tracking/SQL capabilities in composed readers;
 FD0016 also reviews shared context factories, tracker access and direct ADO methods
 in module adapters. These are engineering guardrails, not a database security sandbox.
+
+## Transaction and delivery reliability
+
+[ADR 0052](../../docs/adr/0052-backend-transaction-and-delivery-reliability.md)
+defines verified COMMIT outcomes, durable CreateMeal/RepeatMeal receipts, outer
+command cleanup, explicit save priorities and rejection of enlistment during save.
+Users owns separate account, preferences and nutrition records with independent
+concurrency versions. Dashboard reads share a read-only repeatable snapshot with
+a deadline, query budget and exported measurements. MailRelay fences and renews
+delivery attempts; WebPush persists completed subscriptions before retries.
+Remote delivery retains crash windows with at-least-once semantics. The two schema
+migrations require a coordinated release with writers stopped.

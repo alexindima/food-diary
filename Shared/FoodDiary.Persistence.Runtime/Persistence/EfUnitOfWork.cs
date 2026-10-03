@@ -14,6 +14,8 @@ internal sealed class EfUnitOfWork(
     public bool HasPendingChanges => context.ChangeTracker.HasChanges()
         || context.ModuleContexts.Any(module => module.ChangeTracker.HasChanges());
 
+    public void DiscardChanges() => SharedTransactionBoundary.Reset(context, postCommitActionQueue: null);
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default) {
         await DomainEventDispatcher.DispatchAsync(
             context,

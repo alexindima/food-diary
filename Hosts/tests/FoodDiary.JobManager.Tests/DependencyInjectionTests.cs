@@ -70,6 +70,7 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<NotificationWebPushOutboxJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<NotificationCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserCleanupJob>()),
+            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<AtomicCommandReceiptCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserLoginEventCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<MarketingAttributionCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<FastingTelemetryCleanupJob>()));

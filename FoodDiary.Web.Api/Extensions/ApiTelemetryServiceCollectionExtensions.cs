@@ -44,6 +44,7 @@ public static class ApiTelemetryServiceCollectionExtensions {
                     .AddMeter("FoodDiary.Application.Ai")
                     .AddMeter("FoodDiary.Application.Email")
                     .AddMeter("FoodDiary.Application.Runtime")
+                    .AddMeter("FoodDiary.Persistence.ReadSnapshots")
                     .AddMeter("FoodDiary.Infrastructure")
                     .AddMeter("FoodDiary.Integrations")
                     .AddRuntimeInstrumentation()

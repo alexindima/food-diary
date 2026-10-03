@@ -15,18 +15,23 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     private readonly IDashboardSectionDataLoader _dataLoader;
     private readonly ILogger<DashboardSnapshotBuilder> _logger;
+    private readonly IReadSnapshotExecutor? _snapshotExecutor;
+    internal static readonly ReadSnapshotBudget SnapshotBudget = new(TimeSpan.FromSeconds(15), MaximumQueries: 32);
 
     internal DashboardSnapshotBuilder(
         IDashboardSectionDataLoader dataLoader,
-        ILogger<DashboardSnapshotBuilder> logger) {
+        ILogger<DashboardSnapshotBuilder> logger,
+        IReadSnapshotExecutor? snapshotExecutor = null) {
         _dataLoader = dataLoader;
         _logger = logger;
+        _snapshotExecutor = snapshotExecutor;
     }
 
     public DashboardSnapshotBuilder(
@@ -39,9 +44,13 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
             sender, dashboardUserContextService, dashboardReadService), logger) {
     }
 
-    public async Task<Result<DashboardSnapshotModel>> BuildAsync(
+    public Task<Result<DashboardSnapshotModel>> BuildAsync(
         DashboardSnapshotRequest request,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default) => _snapshotExecutor is null
+        ? BuildSnapshotAsync(request, cancellationToken)
+        : _snapshotExecutor.ExecuteAsync(SnapshotBudget, token => BuildSnapshotAsync(request, token), cancellationToken);
+
+    private async Task<Result<DashboardSnapshotModel>> BuildSnapshotAsync(DashboardSnapshotRequest request, CancellationToken cancellationToken) {
         Result<DashboardBuildContext> contextResult = await _dataLoader.CreateBuildContextAsync(request, cancellationToken).ConfigureAwait(false);
         if (contextResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(contextResult.Error);

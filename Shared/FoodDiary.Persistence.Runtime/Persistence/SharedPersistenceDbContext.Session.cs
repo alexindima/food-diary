@@ -17,7 +17,7 @@ public abstract partial class SharedPersistenceDbContext : IModuleContextFactory
 
     IReadOnlyList<EntityEntry> IModuleChangeTrackerSource.GetModuleEntries<TContext>() => Session.GetModuleEntries<TContext>();
 
-    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = 100)
+    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = PersistenceSaveOrder.ModuleOwners)
         where TContext : DbContext => Session.CreateModuleContext(factory, saveOrder);
 
     internal int GetSaveOrder(DbContext participant) => Session.GetSaveOrder(participant);

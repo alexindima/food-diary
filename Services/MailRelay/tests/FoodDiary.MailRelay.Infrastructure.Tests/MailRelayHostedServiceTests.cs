@@ -640,12 +640,14 @@ public sealed class MailRelayHostedServiceTests {
 
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
+        public Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) => Task.FromResult(true);
+
+        public Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
             SentMessageId = id;
             return Task.CompletedTask;
         }
 
-        public Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
+        public Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
             SuppressedMessageId = id;
             return Task.CompletedTask;
         }

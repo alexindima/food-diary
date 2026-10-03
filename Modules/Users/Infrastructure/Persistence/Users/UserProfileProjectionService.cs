@@ -44,7 +44,7 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Language,
+        return await ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Preferences.Language,
             user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken).ConfigureAwait(false);
     }
 
@@ -52,12 +52,12 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Language,
-            user.DashboardLayoutJson, user.DesiredWeightKg, user.DesiredWaistCm, user.HydrationGoal, user.WaterGoal,
-            user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
-            new UserCalorieSchedule(user.DailyCalorieTarget, user.CalorieCyclingEnabled,
-                user.MondayCalories, user.TuesdayCalories, user.WednesdayCalories, user.ThursdayCalories,
-                user.FridayCalories, user.SaturdayCalories, user.SundayCalories), user.TimeZoneId), cancellationToken).ConfigureAwait(false);
+        return await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
+            user.Preferences.DashboardLayoutJson, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DesiredWaistCm, user.NutritionProfile.HydrationGoal, user.NutritionProfile.WaterGoal,
+            user.NutritionProfile.ProteinTarget, user.NutritionProfile.FatTarget, user.NutritionProfile.CarbTarget, user.NutritionProfile.FiberTarget,
+            new UserCalorieSchedule(user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled,
+                user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories, user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories,
+                user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -65,9 +65,9 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
-            user.DailyCalorieTarget, user.CalorieCyclingEnabled, user.MondayCalories, user.TuesdayCalories,
-            user.WednesdayCalories, user.ThursdayCalories, user.FridayCalories, user.SaturdayCalories,
-            user.SundayCalories)), cancellationToken).ConfigureAwait(false);
+            user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled, user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories,
+            user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories, user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories,
+            user.NutritionProfile.SundayCalories)), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
@@ -94,13 +94,13 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
 
     private static IQueryable<UserDietologistProfileModel> DietologistProfiles(IQueryable<User> users) =>
         users.AsNoTracking().Select(user => new UserDietologistProfileModel(user.Id.Value, user.Email, user.FirstName,
-            user.LastName, user.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist)));
+            user.LastName, user.Preferences.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist)));
 
     public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserHydrationProfileModel(user.HydrationGoal ?? user.WaterGoal), cancellationToken).ConfigureAwait(false);
+        return await ReadAsync(userId, user => new UserHydrationProfileModel(user.NutritionProfile.HydrationGoal ?? user.NutritionProfile.WaterGoal), cancellationToken).ConfigureAwait(false);
     }
 
     public Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
@@ -112,16 +112,16 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await ReadAsync(userId, user => new UserTdeeProfileModel(
-            User.CalculateBmr(currentWeightKg ?? user.WeightKg, user.HeightCm, user.BirthDate, user.Gender),
-            User.CalculateEstimatedTdee(User.CalculateBmr(currentWeightKg ?? user.WeightKg, user.HeightCm, user.BirthDate, user.Gender), user.ActivityLevel),
-            currentWeightKg ?? user.WeightKg, user.DesiredWeightKg, user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+            User.CalculateBmr(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender),
+            User.CalculateEstimatedTdee(User.CalculateBmr(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender), user.NutritionProfile.ActivityLevel),
+            currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+        return await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result<T>> ReadAsync<T>(UserId userId, Expression<Func<User, T>> projection, CancellationToken cancellationToken) where T : class {

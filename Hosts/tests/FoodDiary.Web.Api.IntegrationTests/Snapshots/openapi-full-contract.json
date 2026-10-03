@@ -32881,6 +32881,18 @@
           "Nullable": true
         },
         {
+          "Name": "publicName",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "publicUnit",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "textName",
           "Required": false,
           "Type": "string",

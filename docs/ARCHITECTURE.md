@@ -8,7 +8,7 @@ The primary product backend is a modular monolith:
 - narrow shared contract projects under `Shared/` (`FoodDiary.Application.Contracts`, Audit, Authentication, Email, Nutrition, and Outbox Management)
 - `Shared/FoodDiary.Application.Runtime`: host-composed execution pipeline with unchanged assembly identity (ADR 0046).
 - `Shared/FoodDiary.Audit.Infrastructure` and `Shared/FoodDiary.Email.Infrastructure`: explicitly composed adapters over the shared persistence session (ADR 0045).
-- independently compiled `FoodDiary.Application.<Feature>` modules
+- independently compiled `FoodDiary.Modules.<Module>.Application` modules
 - `FoodDiary.Infrastructure`
 - `Shared/FoodDiary.Authentication.Infrastructure`: JWT binding and shared SSO storage; hosts register it explicitly (ADR 0044).
 - `Shared/FoodDiary.Persistence.Runtime`: shared context and transaction/save coordination without module implementations; see [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md)
@@ -27,6 +27,9 @@ Other deployable adapters are kept separate:
 - `FoodDiary.Web.Client`
 
 ## Runtime Shape
+
+Transaction outcomes, HTTP operation receipts, delivery ownership, independent
+Users state and bounded Dashboard snapshots follow [ADR 0052](adr/0052-backend-transaction-and-delivery-reliability.md).
 
 Shared persistence separates its three-record runtime model from the complete
 migration and composed-read model. PersistenceSession coordinates owner contexts

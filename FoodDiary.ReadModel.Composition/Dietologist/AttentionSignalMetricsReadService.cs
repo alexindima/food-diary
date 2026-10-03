@@ -21,7 +21,7 @@ internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext 
         List<UserGoalProjection> goals = await context.Users
             .AsNoTracking()
             .Where(user => Enumerable.Contains(ids, user.Id))
-            .Select(user => new UserGoalProjection(user.Id, user.DailyCalorieTarget ?? 0))
+            .Select(user => new UserGoalProjection(user.Id, user.NutritionProfile.DailyCalorieTarget ?? 0))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 

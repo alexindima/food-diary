@@ -29,6 +29,7 @@ public sealed partial class User {
         }
 
         ApplyPreferenceState(preferenceState with { Language = normalizedLanguage });
+        Preferences.Touch();
         SetModified();
     }
 

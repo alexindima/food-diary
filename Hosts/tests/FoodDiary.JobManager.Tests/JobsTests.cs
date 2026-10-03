@@ -1148,6 +1148,7 @@ public sealed class JobsTests {
                 RecurringJobIds.EmailOutbox,
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.AchievementEvaluationOutbox,
+                RecurringJobIds.AtomicCommandReceiptsCleanup,
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
@@ -1161,6 +1162,7 @@ public sealed class JobsTests {
             [
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.NotificationsCleanup,
+                RecurringJobIds.AtomicCommandReceiptsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.BillingRenewal,
                 RecurringJobIds.BillingWebhookInbox,

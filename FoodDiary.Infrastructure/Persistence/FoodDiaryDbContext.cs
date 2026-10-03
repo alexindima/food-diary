@@ -48,6 +48,7 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
     internal DbSet<TelegramOperation> TelegramOperations => Set<TelegramOperation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.HasPostgresExtension("pg_trgm");
         modelBuilder.ApplyAdminPersistenceModel();
         modelBuilder.ApplyAiPersistenceModel();

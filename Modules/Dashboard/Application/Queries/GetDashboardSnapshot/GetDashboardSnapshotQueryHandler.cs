@@ -2,7 +2,6 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Common;
-using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -22,13 +21,6 @@ public sealed class GetDashboardSnapshotQueryHandler(
             return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(userIdResult);
         }
 
-        Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-            .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotModel>(userResult.Error);
-        }
-
         return await snapshotBuilder.BuildAsync(
             new DashboardSnapshotRequest(
                 userIdResult.Value.Value,
@@ -39,7 +31,6 @@ public sealed class GetDashboardSnapshotQueryHandler(
                 query.Page,
                 query.PageSize,
                 TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes,
-                UserContext: userResult.Value,
                 TimeZoneId: query.TimeZoneId),
             cancellationToken).ConfigureAwait(false);
     }

@@ -4,12 +4,16 @@
   "adapters": {
     "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs": {
       "module": "Products",
-      "capabilities": ["entity:Product"],
+      "capabilities": [
+        "entity:Product"
+      ],
       "reason": "Owner-only no-tracking scalar identity/public-status lookup for add-only administrative catalog imports. Joins the existing transaction through the registration synchronizer; returns no aggregate or private content and performs no writes."
     },
     "Modules/Recipes/Infrastructure/Services/RecipeCatalogIdReadService.cs": {
       "module": "Recipes",
-      "capabilities": ["entity:Recipe"],
+      "capabilities": [
+        "entity:Recipe"
+      ],
       "reason": "Owner-only no-tracking scalar identity/public-status lookup for add-only administrative catalog imports. Joins the existing transaction through the registration synchronizer; returns no aggregate or private content and performs no writes."
     },
     "Modules/Hydration/Infrastructure/Persistence/EfHydrationOperationTransactionRunner.cs": {
@@ -1044,11 +1048,13 @@
     "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs": {
       "module": "Notifications",
       "capabilities": [
+        "call:NotificationWebPushOutboxMessage.GetCompletedSubscriptionIds",
+        "call:NotificationWebPushOutboxMessage.RecordCompletedSubscriptions",
         "entity:Notification",
         "entity:NotificationWebPushOutboxMessage",
         "tracked:NotificationWebPushOutboxMessage"
       ],
-      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Owner dispatcher records completed subscriptions on its claimed outbox record and reports retryable provider failures. The shared engine saves progress and retry together under claim fencing; no foreign mutation."
     },
     "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs": {
       "module": "Notifications",
@@ -1214,11 +1220,13 @@
         "call:User.GetRoleNames",
         "entity:Role",
         "entity:User",
+        "entity:UserNutritionProfile",
+        "entity:UserPreferences",
         "entity:UserRole",
         "tracked:User",
         "tracked:UserRole"
       ],
-      "reason": "Users-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Users-owned administrative projections and existing role materialization include separate preferences and nutrition scalar state. Caller retains authorization; no save or foreign write."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs": {
       "module": "Users",
@@ -1242,16 +1250,19 @@
         "call:User.CalculateBmr",
         "call:User.CalculateEstimatedTdee",
         "entity:Role",
-        "entity:User"
+        "entity:User",
+        "entity:UserNutritionProfile",
+        "entity:UserPreferences"
       ],
-      "reason": "Persisted no-tracking projections for consumer profiles and account access, role existence and pure static BMR/TDEE calculation; no aggregate loading or saving."
+      "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs": {
       "module": "Users",
       "capabilities": [
-        "entity:User"
+        "entity:User",
+        "entity:UserPreferences"
       ],
-      "reason": "No-tracking batch projections of requested users' comment author names and fasting reminder hours, preserving all account states. No foreign entity access, aggregate materialization, tracking or saves."
+      "reason": "No-tracking batch author/reminder projections read separate Users-owned preferences. Requested-ID bounds and all account states are retained; no foreign entity access, tracking or saves."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs": {
       "module": "Users",
@@ -1407,16 +1418,10 @@
     "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs": {
       "module": "ReadModelComposition",
       "capabilities": [
+        "entity:FavoriteMeal",
         "entity:Meal"
       ],
-      "reason": "ADR 0038: host-composed no-tracking SQL projection. Dashboard reads Meals for the snapshot; no diary mutation."
-    },
-    "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs": {
-      "module": "ReadModelComposition",
-      "capabilities": [
-        "entity:FavoriteMeal"
-      ],
-      "reason": "ADR 0038: host-composed no-tracking SQL projection. Dashboard reads Favorites flags for visible meals."
+      "reason": "ADR 0052: no-tracking meal page with a correlated scalar favorite identity. User and meal predicates are retained; no aggregate loading or writes. The separate favorite round trip is removed."
     },
     "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs": {
       "module": "ReadModelComposition",
@@ -1558,17 +1563,19 @@
       "capabilities": [
         "entity:Meal",
         "entity:User",
+        "entity:UserNutritionProfile",
         "entity:WeightEntry"
       ],
-      "reason": "Dietologist relationship-authorized attention metrics project Users, Meals and BodyMetrics; no foreign mutation."
+      "reason": "Relationship-authorized attention metrics read calorie targets from the Users-owned nutrition state and join Meals and BodyMetrics. Scalar projections only; no foreign writes."
     },
     "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs": {
       "module": "ReadModelComposition",
       "capabilities": [
         "entity:DietologistInvitation",
-        "entity:User"
+        "entity:User",
+        "entity:UserNutritionProfile"
       ],
-      "reason": "Read-only joined Dietologist DTOs; preserves SQL predicates, joins, ordering and limits. Application owns authorization."
+      "reason": "Read-only joined Dietologist DTOs project Users-owned nutrition state after ADR 0052. Existing predicates, ordering and limits remain; application owns authorization."
     },
     "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs": {
       "module": "ReadModelComposition",
@@ -1734,8 +1741,8 @@
         "tracked:WaistGoal",
         "tracked:WeightGoal"
       ],
-      "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor. Weight/waist goal sets are passed only to the bounded no-tracking owner reader; the registration does not execute queries.",
-      "technicalSourceSha256": "7f709f5ebbee8a3154b27bd5131d1a3ef28b4059d77c30e1ce7ab0090f9a39fe"
+      "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
+      "technicalSourceSha256": "0ae1d898ad04c9722f426724f4e46d69d7ac28b1c87da6d4b5ff0db747f67ffc"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1757,10 +1764,11 @@
       "module": "Users",
       "capabilities": [
         "entity:User",
+        "entity:UserNutritionProfile",
         "entity:WaistGoal",
         "entity:WeightGoal"
       ],
-      "reason": "Owner-only no-tracking scalar profiles and bounded closed goal pages. SQL applies user/status/snapshot filters, stable ordering and limits; provider tests protect no aggregate loading, no tracking and no saves."
+      "reason": "Owner-only no-tracking nutrition profile scalars and bounded goal pages. User/status/snapshot filters and stable limits remain; no aggregate loading or saves."
     },
     "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCatalogRecipeReader.cs": {
       "module": "ReadModelComposition",
@@ -1768,6 +1776,16 @@
         "entity:Recipe"
       ],
       "reason": "Bounded no-tracking public recipe selection and ID validation for owner catalog commands. Immutable scalar results only; MealPlanning owns mutations."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:ChangeTracker",
+        "context:Database",
+        "entity:User"
+      ],
+      "reason": "Owner save interceptor locks only the account principal for pending preferences/nutrition writes, checks persisted lifecycle and original security version, and holds the read lock until the coordinated transaction ends. No save, commit, retry, foreign write or credentials materialization.",
+      "technicalSourceSha256": "b7ce7e60070553a83050895cdb229908c1ee34759c5eb331d262d5e9871f9195"
     }
   }
 }

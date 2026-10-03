@@ -1,5 +1,10 @@
 # Dashboard logical module
 
+Production snapshot composition uses IReadSnapshotExecutor for a shared read-only
+REPEATABLE READ snapshot, including profile reads. The 15-second/32-query budget is
+enforced and measured. Keep sequential EF use; changing the budget requires measured
+query/latency evidence. Favorite state is part of the meal-page projection (ADR 0052).
+
 Dashboard owns snapshots, projection ports and dashboard-specific DTOs. It owns no
 contributing aggregate, Domain, DbSet, EF configuration or PersistenceModel.
 Use canonical project identities and folder namespaces. Projects remain siblings.

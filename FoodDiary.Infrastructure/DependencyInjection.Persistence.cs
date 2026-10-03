@@ -10,7 +10,7 @@ public static partial class DependencyInjection {
     private static void AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         services.AddPersistenceRuntime(configuration);
         services.AddScoped<FoodDiaryDbContext>(static provider => provider.GetRequiredService<IModuleContextFactory>()
-            .CreateModuleContext<FoodDiaryDbContext>(static options => new FoodDiaryDbContext(options), saveOrder: 1));
+            .CreateModuleContext<FoodDiaryDbContext>(static options => new FoodDiaryDbContext(options), saveOrder: PersistenceSaveOrder.FullModelComposition));
         services.AddScoped<ICompositionReadContext>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
     }
 }

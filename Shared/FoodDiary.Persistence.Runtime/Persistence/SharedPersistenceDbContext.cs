@@ -20,5 +20,6 @@ public abstract partial class SharedPersistenceDbContext : DbContext {
         modelBuilder.ApplyAuditPersistenceModel();
         modelBuilder.ApplyEmailPersistenceModel();
         modelBuilder.ApplyOutboxPersistenceModel();
+        modelBuilder.ApplyConfiguration(new AtomicCommandReceiptConfiguration());
     }
 }

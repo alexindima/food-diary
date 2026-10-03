@@ -44,7 +44,7 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateMealHttpRequest request) =>
         HandleCreated(
-            request.ToCommand(userId),
+            request.ToCommand(userId) with { Operation = IdempotencyRequestContext.GetAtomicOperation(HttpContext, userId) },
             nameof(GetById),
             static value => new { id = value.Id },
             static value => value.ToHttpResponse());
@@ -65,7 +65,7 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Repeat(Guid id, [FromCurrentUser] Guid userId, [FromBody] RepeatMealHttpRequest request) =>
         HandleCreated(
-            request.ToRepeatCommand(userId, id),
+            request.ToRepeatCommand(userId, id) with { Operation = IdempotencyRequestContext.GetAtomicOperation(HttpContext, userId) },
             nameof(GetById),
             static value => new { id = value.Id },
             static value => value.ToHttpResponse());

@@ -4,6 +4,13 @@
 
 Personal data is owned by the feature that creates it. User identity and account state belong to Users; diary, body tracking, cycle, collaboration, notification, billing, wearable, and authentication records remain in their feature-owned persistence areas. New user-linked tables must declare a foreign key deletion behavior and be included in the user-cleanup integration tests.
 
+UserPreferences and UserNutritionProfiles cascade on account deletion. The generic
+AtomicCommandReceipts runtime table stores a GUID owner and private response data
+without a dependency on Users scalar types; its explicit owner purge participant
+deletes these rows inside the user-cleanup transaction. Normal expiry defaults to
+24 hours, is bounded by seven days and is cleaned in bounded batches every 15 minutes.
+Raw keys and persisted response bodies must never appear in logs. See ADR 0052.
+
 ## Export
 
 Authenticated users can export diary data through `GET /api/v1/export/diary` and cycle data through `GET /api/v1/export/cycle`. Export handlers resolve the current user, constrain every read by that user id, and generate portable CSV/PDF data without exposing password hashes, refresh tokens, provider secrets, or protected wearable credentials.

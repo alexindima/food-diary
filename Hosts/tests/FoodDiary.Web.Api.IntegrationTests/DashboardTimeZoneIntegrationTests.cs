@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Diagnostics.Metrics;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -11,11 +12,12 @@ using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
-public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationFactory factory) : IClassFixture<PostgresApiWebApplicationFactory> {
+public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationFactory factory, ITestOutputHelper output) : IClassFixture<PostgresApiWebApplicationFactory> {
     [RequiresDockerTheory]
     [InlineData("UTC", "2026-09-20")]
     [InlineData("Asia/Tbilisi", "2026-09-20")]
@@ -72,8 +74,19 @@ public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationF
         await PostAsync("/api/v1/hydrations", new { TimestampUtc = next, AmountMl = 2000 });
 
         string url = $"/api/v1/dashboard?date={dateText}&timeZoneId={Uri.EscapeDataString(zoneId)}&locale=en&trendDays=30";
+        int queryCount = 0;
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (string.Equals(instrument.Name, "fooddiary.read_snapshot.queries", StringComparison.Ordinal)) {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<int>((_, count, _, _) => Volatile.Write(ref queryCount, count));
+        listener.Start();
         using HttpResponseMessage response = await client.GetAsync(url);
         Assert.True(response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+        Assert.InRange(queryCount, 1, 32);
+        output.WriteLine(FormattableString.Invariant($"Dashboard {zoneId}: {queryCount} SQL queries."));
         using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         JsonElement result = payload.RootElement;
         Assert.Equal(JsonValueKind.Object, result.GetProperty("tdeeInsight").ValueKind);

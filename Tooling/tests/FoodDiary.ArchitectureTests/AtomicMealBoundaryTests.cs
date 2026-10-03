@@ -33,7 +33,20 @@ public sealed class AtomicMealBoundaryTests {
 
     [Fact]
     public void AtomicExecutionPort_DoesNotExposeDatabaseCapabilities() {
-        Assert.Single(typeof(IAtomicCommandExecutor).GetMethods());
+        System.Reflection.MethodInfo[] methods = typeof(IAtomicCommandExecutor).GetMethods();
+        Assert.Equal(2, methods.Length);
+        Assert.All(methods, method => {
+            Assert.Equal("ExecuteAsync", method.Name);
+            Assert.True(method.IsGenericMethodDefinition);
+            Type[] parameters = [.. method.GetParameters().Select(parameter => parameter.ParameterType)];
+            Assert.Equal(typeof(CancellationToken), parameters[^1]);
+            Assert.True(parameters.Length is 2 or 3);
+            if (parameters.Length == 3) {
+                Assert.Equal(typeof(AtomicOperation), parameters[0]);
+            }
+            Assert.Equal(typeof(Func<,>), parameters[^2].GetGenericTypeDefinition());
+            Assert.Equal(typeof(CancellationToken), parameters[^2].GetGenericArguments()[0]);
+        });
         Assert.Empty(typeof(IAtomicCommandExecutor).GetProperties());
         Assert.DoesNotContain(typeof(IAtomicCommandExecutor).Assembly.GetReferencedAssemblies(),
             assembly => assembly.Name!.StartsWith("Microsoft.EntityFrameworkCore", StringComparison.Ordinal)

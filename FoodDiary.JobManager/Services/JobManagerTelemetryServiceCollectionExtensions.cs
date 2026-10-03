@@ -36,6 +36,7 @@ public static class JobManagerTelemetryServiceCollectionExtensions {
                 .WithMetrics(metrics => metrics
                     .AddMeter(JobManagerTelemetry.MeterName)
                     .AddMeter("FoodDiary.Application.Runtime")
+                    .AddMeter("FoodDiary.Persistence.ReadSnapshots")
                     .AddMeter("FoodDiary.Infrastructure")
                     .AddMeter("FoodDiary.Integrations")
                     .AddRuntimeInstrumentation()

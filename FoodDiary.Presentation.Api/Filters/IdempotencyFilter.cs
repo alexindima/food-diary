@@ -64,6 +64,7 @@ public sealed class IdempotencyFilter(
         string cacheKey = ComputeCacheKey(context, idempotencyKey);
         string requestHash = ComputeRequestHash(context);
         IdempotencyRequestContext.SetRequest(context.HttpContext, cacheKey, requestHash);
+        IdempotencyRequestContext.SetRetention(context.HttpContext, _options.ResponseTtl);
         IdempotencyReservation reservation = await idempotencyStore
             .ReserveAsync(
                 cacheKey,

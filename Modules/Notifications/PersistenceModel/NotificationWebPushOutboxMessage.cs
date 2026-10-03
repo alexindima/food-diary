@@ -17,6 +17,16 @@ public sealed class NotificationWebPushOutboxMessage : IOutboxMessage {
     public DateTime? LockedUntilUtc { get; private set; }
     public string? LockedBy { get; private set; }
     public string? LastError { get; private set; }
+    public string CompletedSubscriptionIdsJson { get; private set; } = "[]";
+
+    public IReadOnlySet<Guid> GetCompletedSubscriptionIds() =>
+        System.Text.Json.JsonSerializer.Deserialize<HashSet<Guid>>(CompletedSubscriptionIdsJson) ?? [];
+
+    public void RecordCompletedSubscriptions(IEnumerable<Guid> subscriptionIds) {
+        HashSet<Guid> completed = [.. GetCompletedSubscriptionIds()];
+        completed.UnionWith(subscriptionIds);
+        CompletedSubscriptionIdsJson = System.Text.Json.JsonSerializer.Serialize(completed.Order());
+    }
 
     public Notification Notification { get; } = null!;
 

@@ -8,11 +8,53 @@ using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Options;
+using WebPush;
 
 namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationWebPushOutboxTests {
+    [Fact]
+    public async Task ActualSender_PersistsPartialSuccessAndRetriesOnlyTheFailedSubscription() {
+        await using FoodDiaryDbContext context = CreateContext();
+        Notification notification = await SeedNotificationAsync(context, "partial-push@example.com");
+        var time = new MutableTimeProvider();
+        var message = NotificationWebPushOutboxMessage.Create(notification.Id, time.UtcNow.AddMinutes(-1).UtcDateTime);
+        context.NotificationWebPushOutbox.Add(message);
+        await context.SaveChangesAsync();
+        var deliveredId = Guid.NewGuid();
+        var failedId = Guid.NewGuid();
+        IWebPushDeliveryAudienceService audience = Substitute.For<IWebPushDeliveryAudienceService>();
+        audience.GetActiveAudienceAsync(notification.UserId, notification.Type, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WebPushDeliverySubscription>>([
+                new(deliveredId, "https://push.example.com/delivered", "key", "auth", "en"),
+                new(failedId, "https://push.example.com/retry", "key", "auth", "en"),
+            ]));
+        INotificationTextRenderer renderer = Substitute.For<INotificationTextRenderer>();
+        renderer.RenderFromPayload(notification.Type, notification.PayloadJson, "en").Returns(new NotificationText("Test", "Body"));
+        var client = new PartiallyFailingPushClient();
+        var sender = new WebPushNotificationSender(audience, renderer,
+            Microsoft.Extensions.Options.Options.Create(new WebPushOptions { Enabled = true, Subject = "https://example.com", PublicKey = "public", PrivateKey = "private" }),
+            client, time, NullLogger<WebPushNotificationSender>.Instance);
+        var processor = new NotificationWebPushOutboxProcessor(context, context.NotificationWebPushOutbox, sender,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()), time, NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+        Assert.Equal(0, await processor.ProcessDueAsync(10));
+        NotificationWebPushOutboxMessage checkpoint = await context.NotificationWebPushOutbox.AsNoTracking().SingleAsync();
+        Assert.Null(checkpoint.ProcessedOnUtc);
+        Assert.Equal([deliveredId], checkpoint.GetCompletedSubscriptionIds());
+        Assert.Equal(1, checkpoint.AttemptCount);
+        time.UtcNow = new DateTimeOffset(checkpoint.NextAttemptOnUtc.AddSeconds(1));
+        context.ChangeTracker.Clear();
+        Assert.Equal(1, await processor.ProcessDueAsync(10));
+        NotificationWebPushOutboxMessage persisted = await context.NotificationWebPushOutbox.SingleAsync();
+        Assert.NotNull(persisted.ProcessedOnUtc);
+        Assert.Equal(1, client.DeliveredCalls);
+        Assert.Equal(2, client.RetryCalls);
+    }
+
     [Fact]
     public async Task EnqueueAsync_PersistsDueMessage() {
         await using FoodDiaryDbContext context = CreateContext();
@@ -218,5 +260,27 @@ public sealed class NotificationWebPushOutboxTests {
     private sealed class ThrowingWebPushNotificationSender : IWebPushNotificationSender {
         public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) =>
             Task.FromException(new InvalidOperationException("Simulated web-push failure."));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MutableTimeProvider : TimeProvider {
+        public DateTimeOffset UtcNow { get; set; } = DateTimeOffset.UtcNow;
+        public override DateTimeOffset GetUtcNow() => UtcNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class PartiallyFailingPushClient : IWebPushClientAdapter {
+        public int DeliveredCalls;
+        public int RetryCalls;
+        public Task SendNotificationAsync(PushSubscription subscription, string payload, VapidDetails vapidDetails, CancellationToken cancellationToken) {
+            if (subscription.Endpoint.EndsWith("/retry", StringComparison.Ordinal)) {
+                if (Interlocked.Increment(ref RetryCalls) == 1) {
+                    throw new HttpRequestException("Temporary provider failure.");
+                }
+            } else {
+                Interlocked.Increment(ref DeliveredCalls);
+            }
+            return Task.CompletedTask;
+        }
     }
 }

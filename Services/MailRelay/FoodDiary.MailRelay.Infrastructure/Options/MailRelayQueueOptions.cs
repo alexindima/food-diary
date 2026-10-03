@@ -5,13 +5,14 @@ public sealed class MailRelayQueueOptions {
 
     public int PollIntervalSeconds { get; init; } = 5;
     public int BatchSize { get; init; } = 10;
+    public int MaxConcurrentDeliveries { get; init; } = 10;
     public int MaxAttempts { get; init; } = 6;
     public int BaseRetryDelaySeconds { get; init; } = 30;
     public int MaxRetryDelaySeconds { get; init; } = 1800;
     public int LockTimeoutSeconds { get; init; } = 120;
 
     public static bool HasValidConfiguration(MailRelayQueueOptions options) {
-        return options is { PollIntervalSeconds: > 0, BatchSize: > 0, MaxAttempts: > 0, BaseRetryDelaySeconds: > 0 } &&
+        return options is { PollIntervalSeconds: > 0, BatchSize: > 0, MaxConcurrentDeliveries: >= 1 and <= 64, MaxAttempts: > 0, BaseRetryDelaySeconds: > 0 } &&
                options.MaxRetryDelaySeconds >= options.BaseRetryDelaySeconds &&
                options.LockTimeoutSeconds > 0;
     }

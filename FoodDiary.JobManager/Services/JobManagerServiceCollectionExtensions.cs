@@ -108,6 +108,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<NotificationWebPushOutboxJob>();
             services.AddTransient<AchievementEvaluationOutboxJob>();
             services.AddTransient<NotificationCleanupJob>();
+            services.AddTransient<AtomicCommandReceiptCleanupJob>();
             services.AddTransient<UserCleanupJob>();
             services.AddTransient<UserLoginEventCleanupJob>();
             services.AddTransient<MarketingAttributionCleanupJob>();

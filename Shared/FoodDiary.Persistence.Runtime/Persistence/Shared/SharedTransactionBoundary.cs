@@ -25,7 +25,7 @@ internal static class SharedTransactionBoundary {
         }
     }
 
-    private static void Reset(SharedPersistenceDbContext context, IPostCommitActionQueue? postCommitActionQueue) {
+    internal static void Reset(SharedPersistenceDbContext context, IPostCommitActionQueue? postCommitActionQueue) {
         DomainEventDispatcher.ClearDomainEvents(context);
         context.ChangeTracker.Clear();
         foreach (DbContext module in context.ModuleContexts) {

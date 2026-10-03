@@ -16,6 +16,7 @@ public static class DependencyInjection {
         });
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
+        services.AddScoped<CommandExecutionScope>();
         services.AddSingleton(TimeProvider.System);
 
         return services;

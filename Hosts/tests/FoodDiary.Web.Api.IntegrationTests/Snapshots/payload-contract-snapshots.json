@@ -343,9 +343,8 @@
     "hasStartedAtUtc": true
   },
   "weight-goal-history": {
-    "count": 2,
+    "count": 1,
     "statuses": [
-      "Active",
       "Replaced"
     ],
     "allHaveStartDates": true,
@@ -474,9 +473,8 @@
     "dietologistRelationshipIsNull": true
   },
   "waist-goal-history": {
-    "count": 2,
+    "count": 1,
     "statuses": [
-      "Active",
       "Replaced"
     ],
     "allHaveStartDates": true,

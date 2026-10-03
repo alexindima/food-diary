@@ -19,6 +19,8 @@ internal sealed class NotificationWebPushOutboxMessageConfiguration : IEntityTyp
         builder.Property(message => message.LastError)
             .HasMaxLength(2048);
 
+        builder.Property(message => message.CompletedSubscriptionIdsJson).HasColumnType("jsonb").HasDefaultValue("[]");
+
         builder.Property(message => message.LockedBy)
             .IsConcurrencyToken()
             .HasMaxLength(128);

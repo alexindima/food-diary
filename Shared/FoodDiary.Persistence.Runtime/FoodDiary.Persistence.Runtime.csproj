@@ -19,5 +19,6 @@
     <ProjectReference Include="../FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
     <ProjectReference Include="../FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../FoodDiary.Results/FoodDiary.Results.csproj" />
   </ItemGroup>
 </Project>

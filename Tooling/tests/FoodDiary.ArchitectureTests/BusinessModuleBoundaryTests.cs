@@ -48,7 +48,8 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.DoesNotContain("using FoodDiary.Application.Notifications", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddValidatorsFromAssembly", source, StringComparison.Ordinal);
         Assert.DoesNotContain("RegisterServicesFromAssembly", source, StringComparison.Ordinal);
-        Assert.Equal(1, source.Split("services.AddScoped<", StringSplitOptions.None).Length - 1);
+        Assert.Equal(2, source.Split("services.AddScoped<", StringSplitOptions.None).Length - 1);
+        Assert.Contains("services.AddScoped<CommandExecutionScope>()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("services.TryAddScoped<", source, StringComparison.Ordinal);
     }
 

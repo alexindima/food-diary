@@ -33,7 +33,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             () => Assert.Equal(80, profile.WeightKg),
             () => Assert.Equal(bmr, profile.Bmr),
             () => Assert.Equal(User.CalculateEstimatedTdee(bmr, user.ActivityLevel), profile.EstimatedTdee));
-        Assert.Null(await context.Users.Where(candidate => candidate.Id == user.Id).Select(candidate => candidate.WeightKg).SingleAsync());
+        Assert.Null(await context.Users.Where(candidate => candidate.Id == user.Id).Select(candidate => candidate.NutritionProfile.WeightKg).SingleAsync());
         Assert.Empty(context.ChangeTracker.Entries());
     }
 

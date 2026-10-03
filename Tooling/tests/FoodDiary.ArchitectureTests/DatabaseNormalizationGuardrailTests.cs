@@ -23,7 +23,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
         // User-entered symptom tags are small per-entry annotations, not shared facts or reporting dimensions.
         "CycleSymptomEntry.TagsJson",
         "Notification.PayloadJson",
-        "User.DashboardLayoutJson",
+        // User-owned display preferences moved with their existing opaque layout document in ADR 0052.
+        "UserPreferences.DashboardLayoutJson",
     };
 
     private static readonly HashSet<string> AllowedSnapshotColumns = new(StringComparer.Ordinal) {

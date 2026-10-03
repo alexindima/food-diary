@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.ReadModel.Composition.Dashboard;
 
 internal sealed class DashboardMealsReadService(ICompositionReadContext context, IMealItemDisplayReadService mealItems) : IDashboardMealsReadService {
-    private readonly DashboardMealFavoritesLoader _favoriteMealsLoader = new(context);
     private readonly DashboardMealItemsLoader _mealItemsLoader = new(mealItems);
     private readonly DashboardMealAiSessionsLoader _aiSessionsLoader = new(context);
 
@@ -45,13 +44,12 @@ internal sealed class DashboardMealsReadService(ICompositionReadContext context,
         }
 
         MealId[] mealIds = [.. meals.Select(meal => meal.MealId)];
-        IReadOnlyDictionary<MealId, Guid> favoriteIdsByMealId = await _favoriteMealsLoader.LoadAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
         ILookup<MealId, DashboardMealItemReadModel> itemsByMealId = await _mealItemsLoader.LoadAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
         ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId = await _aiSessionsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         return Result.Success(new DashboardMealsReadModel(
-            [.. meals.Select(meal => ToReadModel(meal, favoriteIdsByMealId, itemsByMealId, aiSessionsByMealId))],
+            [.. meals.Select(meal => ToReadModel(meal, itemsByMealId, aiSessionsByMealId))],
             pageNumber,
             pageSize,
             totalPages,
@@ -64,6 +62,7 @@ internal sealed class DashboardMealsReadService(ICompositionReadContext context,
             .Where(meal => meal.UserId == userId && meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
             .OrderByDescending(meal => meal.Date)
             .ThenByDescending(meal => meal.CreatedOnUtc)
+            .ThenByDescending(meal => meal.Id)
             .Select(meal => new DashboardMealProjection(
                 meal.Id,
                 meal.Id.Value,
@@ -86,15 +85,16 @@ internal sealed class DashboardMealsReadService(ICompositionReadContext context,
                 meal.ManualFiber,
                 meal.ManualAlcohol,
                 meal.PreMealSatietyLevel,
-                meal.PostMealSatietyLevel));
+                meal.PostMealSatietyLevel,
+                context.FavoriteMeals.AsNoTracking().Where(favorite => favorite.UserId == userId && favorite.MealId == meal.Id)
+                    .Select(favorite => (Guid?)favorite.Id.Value).FirstOrDefault()));
     }
 
     private static DashboardMealReadModel ToReadModel(
         DashboardMealProjection meal,
-        IReadOnlyDictionary<MealId, Guid> favoriteIdsByMealId,
         ILookup<MealId, DashboardMealItemReadModel> itemsByMealId,
         ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId) {
-        bool isFavorite = favoriteIdsByMealId.TryGetValue(meal.MealId, out Guid favoriteMealId);
+        bool isFavorite = meal.FavoriteMealId.HasValue;
         return new DashboardMealReadModel(
             meal.Id,
             meal.Date,
@@ -118,7 +118,7 @@ internal sealed class DashboardMealsReadService(ICompositionReadContext context,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
             isFavorite,
-            isFavorite ? favoriteMealId : null,
+            meal.FavoriteMealId,
             [.. itemsByMealId[meal.MealId]],
             [.. aiSessionsByMealId[meal.MealId]]);
     }

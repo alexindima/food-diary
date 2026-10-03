@@ -1,115 +1,68 @@
-# Backend Architecture Improvement Roadmap
+# Backend architecture improvement roadmap
 
-This roadmap captures the current backend architecture direction. It is intentionally practical: each item should reduce production risk or make future feature work easier.
+FoodDiary is a modular monolith with independently deployed MailRelay and MailInbox.
+Current ownership is described in [the architecture guide](../ARCHITECTURE.md) and
+[the module map](../BACKEND_MODULE_MAP.md). Projects use FoodDiary.Modules.<Module>.<Layer>;
+shared technical libraries live under Shared. Historical plans remain in Git history.
 
-## Current Baseline
+## Reliability baseline
 
-The primary backend is a modular monolith with strict project boundaries:
+[ADR 0052](../adr/0052-backend-transaction-and-delivery-reliability.md) defines the protocol:
 
-- `FoodDiary.Domain` owns domain model and invariants.
-- independently compiled `FoodDiary.Application.<Feature>` modules own use cases and business workflows.
-- `FoodDiary.Application.Runtime` owns mediator, transaction, and post-commit pipeline behavior.
-- `FoodDiary.Infrastructure` owns EF Core persistence and technical implementations.
-- `FoodDiary.Integrations` owns external provider adapters and service-client bridges.
-- `FoodDiary.Presentation.Api` owns HTTP and SignalR transport.
-- `FoodDiary.Web.Api` is the executable host and composition root.
+- Uncertain COMMIT is verified with PostgreSQL transaction status. Unknown outcomes
+  never replay a handler automatically.
+- CreateMeal and RepeatMeal save durable results with business writes. Redis remains
+  the HTTP lease/cache. Other flows opt in explicitly or use existing owner receipts.
+- The outer command owns saving and cleanup; ignored nested failure cannot commit.
+- MailRelay renews and fences claims by attempt. SMTP remains at least once across crashes.
+- WebPush failures reach outbox retry; completed subscriptions are checkpointed.
+- Users account, preferences and nutrition have separate tables, xmin and audit
+  timestamps. Account revocation remains a write barrier.
+- Save priorities and the cutoff for participant enlistment are explicit.
+- Dashboard uses a common read-only snapshot with time/query limits and metrics.
+  EF reads stay sequential on the shared connection.
 
-MailRelay and MailInbox are separate bounded contexts. The primary core talks to them only through client packages from `FoodDiary.Integrations`.
+## Rules for new work
 
-## Completed Baseline Improvements
+Hosts compose owner modules and narrow shared adapters. HTTP belongs to Presentation,
+use cases to Application, rules to Domain, providers to Infrastructure.
+FoodDiary.Infrastructure owns migrations/full-model composition;
+Shared/FoodDiary.Persistence.Runtime owns session/transaction coordination.
+Cross-module SQL reads belong to FoodDiary.ReadModel.Composition.
 
-The backend now has first-pass guardrails for the reliability split:
+## Durable Side Effects
 
-- post-commit actions are named, documented as best-effort only, bounded by queue depth and a total execution budget, and expose bounded outcome telemetry,
-- mediator notification handlers execute sequentially in registration order so transactional handlers never share one scoped `DbContext` concurrently,
-- infrastructure outbox processors share one processing engine for claim/lease, retry/dead-letter policy, persistence, and telemetry,
-- outbox claiming uses an explicit `IOutboxMessage` contract instead of reflection,
-- event taxonomy is documented with `IIntegrationEvent` for committed cross-process facts,
-- JobManager jobs use `JobExecutionObserver` for execution state, metrics, and duration recording.
+Domain handlers may create transactional state and outbox records. Critical external
+work uses durable delivery. IPostCommitActionQueue provides best-effort refresh hints.
+Retried handlers do not invoke external transports.
 
-The backend also has structural guardrails for the main ownership boundaries:
+### Event Taxonomy
 
-- Module-owned contract projects contain feature contracts; narrow shared contract projects under `Shared/` contain only genuinely cross-cutting technical seams.
-- Each `FoodDiary.Application.<Feature>` project keeps source in use-case purpose folders and owns only its feature registration.
-- `FoodDiary.Application.Runtime` stays limited to cross-cutting mediator execution and does not aggregate feature modules.
-- `FoodDiary.Infrastructure` and `FoodDiary.Integrations` keep root folders limited to technical implementation and provider-adapter areas.
-- `FoodDiary.Presentation.Api` keeps HTTP controllers thin by limiting feature purpose folders and controller constructor dependencies.
-- `FoodDiary.Web.Api` and `FoodDiary.JobManager` keep executable-host code out of project roots except `Program.cs`.
-- Cross-module Application reads use semantic owner APIs or consumer-owned ports; no module acquires another module's repository.
-- The executable module manifest exactly matches source dependencies, rejects undeclared edges, and has no dependency cycles.
-- Direct `FoodDiaryDbContext` acquisition is confined to Infrastructure persistence adapters, migrations/design-time support, and the persistence composition root.
-- Marketing and Billing are physically extracted application modules and are registered explicitly by executable composition roots.
-- Marketing no longer references the core Application assembly; shared transaction semantics flow through abstraction-level command markers.
-- Dietologist attention signals use a dedicated multi-client projection instead of rebuilding dashboard snapshots per client.
-- Dietologist client-task, recommendation-template, comment and bulk-dispatch workflows expose narrow read/write/read-model ports to Application code.
-- Domain event declarations are immutable, transport-agnostic, and verified to be raised by domain code; integration-event naming and placement are guarded separately.
-- Domain events remain attached until persistence succeeds, and post-commit actions have bounded per-action and total flush timeouts.
-- Dead-letter replay is operator-driven, requires actor/reason metadata, and writes a durable audit record.
-- HTTP idempotency uses owner fencing; Redis response completion is an atomic compare-and-set so stale requests cannot overwrite a newer owner.
-- Personal-data export, retention, and purge guarantees are captured in `PERSONAL_DATA_LIFECYCLE.md`.
-- Distributed traces cover HTTP, outbound providers, and PostgreSQL while route cardinality, sensitive attributes, 14-day retention, and operator access are governed by `BACKEND_OBSERVABILITY_BASELINE.md`.
-- MailInbox bounds SMTP connections, sessions, senders, recipients, MIME complexity, parsing concurrency, and daily storage; raw MIME is byte-preserving, SMTP retries are durably deduplicated, and content/metadata retention is enforced by a bounded worker as documented in `MAILINBOX_DATA_LIFECYCLE.md`.
-- NuGet restore clears inherited machine feeds, maps packages to the repository allowlist, and enforces committed dependency graphs in CI and container builds; external container inputs and production application references are immutable digests with automated update coverage.
+Domain events coordinate local transactional changes; delivery records represent
+durable work for external providers. Post-commit callbacks carry refresh hints whose
+loss must not affect business correctness. Keep these guarantees explicit at each owner.
 
-## Priority 1: Durable Side Effects
+### Shared Outbox Policy
 
-Critical side effects must be represented as durable state before a command completes. Use transactional outbox records for work that must eventually happen, including:
+The shared outbox engine owns claim fencing, bounded retries, cancellation and
+dead-letter policy. Owner dispatchers report provider outcomes and retain progress.
+Remote acceptance can precede the local checkpoint; consumers must tolerate delivery
+repeats across this crash window.
 
-- email delivery,
-- object deletion,
-- billing/provider calls that cannot be safely lost,
-- integration events for other processes or services,
-- audit or compliance events.
+## Keep JobManager Thin
 
-`IPostCommitActionQueue` is only for best-effort real-time notifications after a successful commit. It is acceptable for SignalR refreshes or push hints where loss is tolerable because clients can recover by reloading state.
+JobManager invokes owning capabilities, including mediator service commands when
+an owner contract defines them. Jobs do not acquire repositories, foreign aggregate
+writes, HTTP presentation, or unreviewed persistence boundaries. JobExecutionObserver
+records execution outcome and duration.
 
-## Priority 2: Event Taxonomy
+Command/query slices each have a feature folder. Reference the contract owner directly.
+Update the exact dependency graph and reviewed technical persistence inventory for
+new capabilities; an inventory entry never permits foreign aggregate writes.
 
-Keep these concepts separate:
+## Further changes require evidence
 
-- Domain event: a fact raised by the domain model inside the current transaction.
-- Application integration event: a committed fact intended for another process, service, or provider workflow.
-- Outbox message: the durable delivery record used to process an integration event or side effect.
-- Post-commit action: best-effort in-memory callback after commit, not durable delivery.
-
-Domain event handlers may create transactional state and outbox records. They must not call external transports directly.
-
-## Priority 3: Shared Outbox Policy
-
-Existing outbox processors should converge on one shared policy:
-
-- configurable per-message lease/claim and bounded dispatch/finalization deadlines,
-- immediate per-message progress persistence rather than one batch-final commit,
-- retry with explicit backoff,
-- terminal failure state or poison-message handling,
-- structured privacy-safe logs with message ids and provider names,
-- explicit replay/idempotency semantics for every external consumer,
-- metrics for claimed, reclaimed, processed, timed out, retried, and dead-lettered messages.
-
-Avoid adding one-off processor behavior unless the provider truly requires it.
-
-## Priority 4: Keep JobManager Thin
-
-`FoodDiary.JobManager` is a worker host and scheduler. It should register jobs and call owning application-module or infrastructure services, but business decisions should stay in `FoodDiary.Application.<Feature>` modules.
-
-Jobs should be idempotent where possible. Re-running a job after a crash or timeout should not create duplicate user-visible state.
-
-Keep job classes under `FoodDiary.JobManager/Services`. The project root should remain a host entrypoint only, and jobs should not call MediatR, EF `DbContext`, or HTTP presentation code directly.
-
-## Priority 5: Continue Feature-First Migration
-
-Keep reducing global shared areas. `Shared/FoodDiary.Application.Runtime/Common` stays limited to cross-cutting pipeline and post-commit runtime behavior. Feature-specific models, services, mappings, and helper policies live in their owning application module.
-
-Do not add new legacy flat folders. New backend work should follow the feature-first layout immediately.
-
-Within `FoodDiary.Application.<Feature>`, use the established purpose folders: `Commands`, `Queries`, `Services`, `Mappings`, `Models`, `Validators`, `EventHandlers`, `SearchSuggestions`, and feature-local `Common`.
-
-## Guardrail Direction
-
-When making these changes, update architecture tests alongside implementation. The tests should prevent regressions in:
-
-- project references,
-- direct external side effects from domain event handlers,
-- accidental use of post-commit queue for critical delivery,
-- JobManager taking on business orchestration,
-- feature-specific contracts moving back into global common folders.
+Extend receipts when a failure-window test demonstrates the need. Change User ownership
+further when contention measurements justify it. Optimize Dashboard using measured SQL
+counts and latency. Split deployments when independent operation, load or ownership
+requires it. Each change needs owner tests, API compatibility checks and a rollout plan.

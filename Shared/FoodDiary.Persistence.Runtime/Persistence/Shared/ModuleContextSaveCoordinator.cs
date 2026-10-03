@@ -26,7 +26,7 @@ internal static class ModuleContextSaveCoordinator {
                 IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token).ConfigureAwait(false);
                 await using (transaction.ConfigureAwait(false)) {
                     await SaveInTransactionAsync(session, participants, transaction, logger, token).ConfigureAwait(false);
-                    await transaction.CommitAsync(token).ConfigureAwait(false);
+                    await VerifiedTransactionCommit.CommitAsync(transaction, token).ConfigureAwait(false);
                 }
             }, cancellationToken).ConfigureAwait(false);
         }

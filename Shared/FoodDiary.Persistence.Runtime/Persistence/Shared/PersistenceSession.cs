@@ -20,9 +20,12 @@ internal sealed class PersistenceSession(DbContext rootContext) : IModuleContext
     public IReadOnlyList<EntityEntry> GetModuleEntries<TContext>() where TContext : DbContext =>
         [.. _contexts.OfType<TContext>().SelectMany(context => context.ChangeTracker.Entries())];
 
-    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = 100)
+    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = PersistenceSaveOrder.ModuleOwners)
         where TContext : DbContext {
         ArgumentNullException.ThrowIfNull(factory);
+        if (IsSaving) {
+            throw new InvalidOperationException("An owner context must join the unit of work before persistence starts. Register late participants during the operation or domain-event dispatch.");
+        }
         var builder = new DbContextOptionsBuilder<TContext>();
         foreach (IDbContextOptionsExtension extension in RootContext.GetService<IDbContextOptions>().Extensions
                      .Where(extension => extension.Info.IsDatabaseProvider)) {
@@ -48,7 +51,7 @@ internal sealed class PersistenceSession(DbContext rootContext) : IModuleContext
         return context;
     }
 
-    internal int GetSaveOrder(DbContext context) => ReferenceEquals(context, RootContext) ? 0 : _saveOrders[context];
+    internal int GetSaveOrder(DbContext context) => ReferenceEquals(context, RootContext) ? PersistenceSaveOrder.SharedRecords : _saveOrders[context];
 
     internal bool HasOtherChanges(DbContext caller) =>
         (!ReferenceEquals(caller, RootContext) && RootContext.ChangeTracker.HasChanges()) ||

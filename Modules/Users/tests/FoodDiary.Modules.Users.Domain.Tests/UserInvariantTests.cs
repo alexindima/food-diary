@@ -489,7 +489,8 @@ public class UserInvariantTests {
         user.UpdateActivity(activityLevel: ActivityLevel.High);
 
         Assert.Equal(ActivityLevel.High, user.ActivityLevel);
-        Assert.NotNull(user.ModifiedOnUtc);
+        Assert.NotNull(user.NutritionProfile.ModifiedOnUtc);
+        Assert.Null(user.ModifiedOnUtc);
     }
 
     [Fact]
@@ -499,6 +500,7 @@ public class UserInvariantTests {
         user.UpdateActivity(new UserActivityUpdate(ActivityLevel.Moderate));
 
         Assert.Null(user.ModifiedOnUtc);
+        Assert.Null(user.NutritionProfile.ModifiedOnUtc);
     }
 
     [Fact]
@@ -506,12 +508,12 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
         user.UpdateActivity(hydrationGoal: 2.2);
         user.ClearDomainEvents();
-        DateTime? modifiedOnUtc = user.ModifiedOnUtc;
+        DateTime? modifiedOnUtc = user.NutritionProfile.ModifiedOnUtc;
 
         user.UpdateActivity(hydrationGoal: 2.2000005);
 
         Assert.Equal(2.2, user.HydrationGoal);
-        Assert.Equal(modifiedOnUtc, user.ModifiedOnUtc);
+        Assert.Equal(modifiedOnUtc, user.NutritionProfile.ModifiedOnUtc);
     }
 
     [Fact]
@@ -832,7 +834,8 @@ public class UserInvariantTests {
             () => Assert.True(user.SocialPushNotificationsEnabled),
             () => Assert.Equal(12, user.FastingCheckInReminderHours),
             () => Assert.Equal(36, user.FastingCheckInFollowUpReminderHours));
-        Assert.NotNull(user.ModifiedOnUtc);
+        Assert.NotNull(user.Preferences.ModifiedOnUtc);
+        Assert.Null(user.ModifiedOnUtc);
     }
 
     [Theory]
@@ -855,6 +858,7 @@ public class UserInvariantTests {
         user.UpdatePreferences(new UserPreferenceUpdate());
 
         Assert.Null(user.ModifiedOnUtc);
+        Assert.Null(user.Preferences.ModifiedOnUtc);
     }
 
     [Fact]
@@ -865,7 +869,8 @@ public class UserInvariantTests {
         user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "   "));
 
         Assert.Null(user.DashboardLayoutJson);
-        Assert.NotNull(user.ModifiedOnUtc);
+        Assert.NotNull(user.Preferences.ModifiedOnUtc);
+        Assert.Null(user.ModifiedOnUtc);
     }
 
     [Fact]

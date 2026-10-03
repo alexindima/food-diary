@@ -25,6 +25,9 @@ public static partial class PersistenceRuntimeRegistration {
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IModuleTransactionCoordinator, EfModuleTransactionCoordinator>();
         services.AddScoped<IAtomicCommandExecutor, EfAtomicCommandExecutor>();
+        services.AddScoped<IAtomicCommandReceiptMaintenance, AtomicCommandReceiptMaintenance>();
+        services.AddScoped<ReadSnapshotBudgetInterceptor>();
+        services.AddScoped<IReadSnapshotExecutor, EfReadSnapshotExecutor>();
         services.AddScoped<IModuleSessionCoordinator, EfModuleSessionCoordinator>();
         services.AddScoped<IModuleSessionLock, EfModuleSessionLock>();
         services.AddScoped<IModuleScopeGuard, EfModuleScopeGuard>();
@@ -49,6 +52,7 @@ public static partial class PersistenceRuntimeRegistration {
                     })
                 .AddInterceptors(
                     sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>(),
+                    sp.GetRequiredService<ReadSnapshotBudgetInterceptor>(),
                     sp.GetRequiredService<DomainEventDispatchInterceptor>())
                 .AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
         });

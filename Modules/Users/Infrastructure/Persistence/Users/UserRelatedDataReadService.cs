@@ -20,7 +20,7 @@ public sealed class UserRelatedDataReadService(DbSet<User> users, Func<Cancellat
 
         UserId[] ids = [.. userIds.Distinct()];
         return await users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
-            .Select(user => new { user.Id, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours })
+            .Select(user => new { user.Id, user.Preferences.FastingCheckInReminderHours, user.Preferences.FastingCheckInFollowUpReminderHours })
             .ToDictionaryAsync(user => user.Id, user => new UserFastingReminderModel(
                 user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours), cancellationToken)
             .ConfigureAwait(false);

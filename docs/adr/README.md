@@ -82,3 +82,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0049: Owner nutrition reads and dashboard composition](0049-owner-nutrition-reads-and-dashboard-composition.md)
 - [0050: Public recipe read boundary and server rendering](0050-public-recipe-read-boundary-and-ssr.md)
 - [0051: Canonical project namespaces](0051-canonical-project-namespaces.md)
+- [0052: Transaction outcomes, delivery ownership and independent user state](0052-backend-transaction-and-delivery-reliability.md)

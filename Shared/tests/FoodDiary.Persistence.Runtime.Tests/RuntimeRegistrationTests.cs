@@ -27,7 +27,7 @@ public sealed class RuntimeRegistrationTests {
         using IServiceScope scope = provider.CreateScope();
         SharedPersistenceDbContext context = scope.ServiceProvider.GetRequiredService<SharedPersistenceDbContext>();
         Assert.IsType<SharedRuntimeDbContext>(context);
-        Assert.Equal(["AuditEntry", "EmailOutboxMessage", "OutboxReplayAudit"],
+        Assert.Equal(["AtomicCommandReceipt", "AuditEntry", "EmailOutboxMessage", "OutboxReplayAudit"],
             context.Model.GetEntityTypes().Select(entity => entity.ClrType.Name).Order(StringComparer.Ordinal), StringComparer.Ordinal);
         Assert.Empty(context.Database.GetMigrations());
     }

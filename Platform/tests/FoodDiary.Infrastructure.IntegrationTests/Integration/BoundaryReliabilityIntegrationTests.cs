@@ -216,6 +216,8 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
 
     [ExcludeFromCodeCoverage]
     private sealed class TestUnitOfWork(FoodDiaryDbContext context) : IUnitOfWork {
+        public void DiscardChanges() => context.ChangeTracker.Clear();
+
         public bool HasPendingChanges => context.ChangeTracker.HasChanges();
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default) => await context.SaveChangesAsync(cancellationToken);
     }
