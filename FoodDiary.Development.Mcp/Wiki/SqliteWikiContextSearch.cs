@@ -256,11 +256,19 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
-                SELECT record_type, record_key, path, source_path,
-                    COALESCE(category, ''), COALESCE(title, ''),
-                    bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
-                FROM context_search
-                WHERE context_search MATCH $match
+                WITH lexical_matches AS MATERIALIZED (
+                    SELECT record_type, record_key, path, source_path,
+                        COALESCE(category, '') category, COALESCE(title, '') title, rowid source_ordinal,
+                        bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
+                    FROM context_search
+                    WHERE context_search MATCH $match
+                ), distinct_paths AS (
+                    SELECT *, ROW_NUMBER() OVER (PARTITION BY path ORDER BY lexical_rank, source_ordinal) path_ordinal
+                    FROM lexical_matches
+                )
+                SELECT record_type, record_key, path, source_path, category, title, lexical_rank
+                FROM distinct_paths
+                WHERE path_ordinal = 1
                 ORDER BY lexical_rank, path
                 LIMIT $limit;
                 """;

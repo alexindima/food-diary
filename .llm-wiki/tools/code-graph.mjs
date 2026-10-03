@@ -2205,13 +2205,22 @@ function searchContext(database, query, limit, filters = {}, batchState) {
   const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
   const candidateLimit = Number(contextSearchRanking.candidatePoolLimit ?? 500);
   const candidates = database.prepare(`
-    SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
-      category, title, features.layer, features.module, features.role, features.is_test isTest,
-      features.extension, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
-    FROM context_search
-    JOIN context_search_features features ON features.context_rowid = context_search.rowid
-    WHERE context_search MATCH ?
-    ORDER BY lexicalRank, context_search.path
+    WITH lexical_matches AS MATERIALIZED (
+      SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
+        category, title, features.layer, features.module, features.role, features.is_test isTest,
+        features.extension, context_search.rowid sourceOrdinal,
+        bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+      FROM context_search
+      JOIN context_search_features features ON features.context_rowid = context_search.rowid
+      WHERE context_search MATCH ?
+    ), distinct_paths AS (
+      SELECT *, ROW_NUMBER() OVER (PARTITION BY path ORDER BY lexicalRank, sourceOrdinal) pathOrdinal
+      FROM lexical_matches
+    )
+    SELECT recordType, recordKey, path, sourcePath, category, title, layer, module, role, isTest, extension, lexicalRank
+    FROM distinct_paths
+    WHERE pathOrdinal = 1
+    ORDER BY lexicalRank, path
     LIMIT ?
   `).all(match, candidateLimit);
   // Prefix expansion already matches every longer inflection; counting it again

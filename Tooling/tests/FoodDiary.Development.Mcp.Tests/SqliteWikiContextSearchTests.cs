@@ -116,6 +116,38 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_DuplicateRowsCannotCrowdOtherFilesOutOfTheCandidatePoolAsync() {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["candidatePoolLimit"] = 2;
+        policy["identityCandidatePoolLimit"] = 1;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            WITH RECURSIVE copies(n) AS (VALUES(0) UNION ALL SELECT n + 1 FROM copies WHERE n < 12)
+            INSERT INTO context_search
+                SELECT 'code', 'noise-' || n, 'Area/ReadStockStatus.cs', 'noise', 'csharp',
+                    'read stock status', 'read stock status' FROM copies;
+            INSERT INTO context_search VALUES
+                ('code', 'target', 'Modules/Inventory/Application/Queries/GetStockStatusQueryHandler.cs', 'target',
+                    'csharp', 'Get Stock Status Query Handler', $body);
+            INSERT INTO context_search_identity(rowid, path, title) SELECT rowid, path, title FROM context_search;
+            """;
+        command.Parameters.AddWithValue("$body", "read stock status " + string.Concat(Enumerable.Repeat("unrelated detail ", 100)));
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "read stock status", 10, "Backend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.True(result.Ready);
+        Assert.Contains(result.Candidates, candidate => string.Equals(candidate.Path,
+            "Modules/Inventory/Application/Queries/GetStockStatusQueryHandler.cs", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task SearchAsync_DuplicateProjectionRowsDoNotChangeOtherFileScoresAsync() {
         await using SqliteConnection connection = new($"Data Source={_databasePath}");
         await connection.OpenAsync();

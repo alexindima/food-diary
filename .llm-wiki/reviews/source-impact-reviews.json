@@ -247,12 +247,16 @@
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
           "sha256": "6f7e748fc26a8376120b10e94fe99316c7ea88e8ee55caebc5fa3458bd5a6061"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
         }
       ],
-      "reason": "Compared current API snapshots with the deployed origin/master baseline: zero breaking changes and 336 additive entries. The compatibility workflow still separates structural gates from runtime semantics, and current full HTTP PostgreSQL verification passed 267 tests. The regenerated backend index only corrects IWebPushNotificationSender test-fixture referenceCount from one to two; its consumer-review guidance remains accurate.",
+      "reason": "The Node search change and matching read-only SqliteWikiContextSearch SQL preserve MCP response fields, query expansion, ranking rules and source fingerprints. Compilation and all 197 SQLite search tests passed, including a new real-database crowding regression that failed before the repair. Backend/frontend contract projection queries are outside the changed lexical search block, and application HTTP contracts are untouched.",
       "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:27.6130682Z"
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:18.0813842Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -294,14 +298,18 @@
       "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ad7e2d638828f84e518007243e83a8263ed9e097e6a8229054328093d7f4c60b"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "23c0c8f54dd9bbe386b2e879b71437869bd2f0378645bb3cf54bdb8b8d4fec91"
         }
       ],
-      "reason": "Reviewed existing recipe access identity rule using translated query terms. Shared Node and .NET policy semantics remain aligned; source navigation, security-evidence limits, corpus thresholds and ranking rule counts are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "ef1d724d6ed831a224c96ba6ce24e061af2f5161",
-      "reviewedAtUtc": "2026-09-28T00:17:25.5501672Z"
+      "reason": "Reviewed regenerated quality and runtime metadata against the new SQLite-search crowding test and the equivalent Node/.NET SQL. The failing test demonstrates duplicate projection rows exhausting a row budget; after repair all 197 focused tests pass, with frozen corpora, scoring policies and thresholds unchanged. Compiled query shapes and architecture dependency direction are unchanged; context regression validation remains required before push.",
+      "baseRef": "origin/master",
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:18.9152913Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -603,13 +611,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c1b6701a3447ab94708d1c285aff186e8ca975cef97aa7691443bcfbc498b871"
+          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
-      "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:14.9791357Z"
+      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "baseRef": "origin/master",
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:19.8208380Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -790,14 +798,18 @@
           "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+        },
+        {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
           "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
         }
       ],
-      "reason": "Reviewed the navigation pages against the refreshed sensitive-data, quality and runtime indexes and PERSONAL_DATA_LIFECYCLE changes for preferences, nutrition and atomic receipts. Account-owned tables cascade, receipts have explicit transactional purge and bounded expiry, and raw keys/private responses remain forbidden in logs. These pages correctly describe candidates and runtime/provider limitations rather than claiming security or privacy compliance. Deployment backups stay on the production host with restrictive permissions.",
+      "reason": "The repair changes only bounded, read-only lexical candidate selection. It adds no external provider calls or persisted query/private-path telemetry, retains prepared MATCH parameters, cancellation and reader command timeouts, and leaves sensitive-data and runtime query categories unchanged. Updated quality/runtime indexes reflect source positions rather than new security controls or exposure; navigation pages continue to distinguish candidates from verified runtime facts.",
       "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:29.6200223Z"
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:20.5634356Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -836,13 +848,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
+          "sha256": "8fb2f08f87a45df472750c6ad119438b98901e69b113c5f71643f66bd3cf462d"
         }
       ],
-      "reason": "Verified bounded avatar clearing: explicit null photo fields reach the Users domain; omitted fields retain the avatar; JSON presence flags are ignored on input; selected assets retain ownership checks; cleanup runs only for an actually changed reference and the UI does not delete before saving. Solution build passed, 589 Users tests, 23 PostgreSQL HTTP/Swagger tests, 2116 architecture tests, 5052 frontend tests and all verification gates passed. Native 390px Russian crop/upload/save/reload, discard without deletion, explicit removal and final retained goals were checked; no migration or provider/deployment change.",
-      "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:13:54.4555561Z"
+      "reason": "Reviewed regenerated quality and runtime metadata against the new SQLite-search crowding test and the equivalent Node/.NET SQL. The failing test demonstrates duplicate projection rows exhausting a row budget; after repair all 197 focused tests pass, with frozen corpora, scoring policies and thresholds unchanged. Compiled query shapes and architecture dependency direction are unchanged; context regression validation remains required before push.",
+      "baseRef": "origin/master",
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:21.3729860Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -911,13 +923,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "630375106ca89deda4f2c234ebc0ffbd9016849c048aa1570cea131591ba401d"
+          "sha256": "2f165f9e2577631031c044005ab2cfc961c95fb3f0d14f641ce2e043f2f5082b"
         }
       ],
-      "reason": "Topology changed only source fingerprint. DailyAdvice read-only repository preserves module-owned DbSet, AsNoTracking, cancellation, database group pagination and two-query shape. No external clients, jobs, DI, writes or deployment bindings changed; live loopback runtime CRUD and real PostgreSQL tests pass.",
-      "baseRef": "HEAD",
-      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
-      "reviewedAtUtc": "2026-10-03T08:43:42.4933571Z"
+      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "baseRef": "origin/master",
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:22.0771915Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -926,21 +938,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
+          "sha256": "8fb2f08f87a45df472750c6ad119438b98901e69b113c5f71643f66bd3cf462d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "630375106ca89deda4f2c234ebc0ffbd9016849c048aa1570cea131591ba401d"
+          "sha256": "2f165f9e2577631031c044005ab2cfc961c95fb3f0d14f641ce2e043f2f5082b"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         }
       ],
-      "reason": "Reviewed the navigation pages against the refreshed sensitive-data, quality and runtime indexes and PERSONAL_DATA_LIFECYCLE changes for preferences, nutrition and atomic receipts. Account-owned tables cascade, receipts have explicit transactional purge and bounded expiry, and raw keys/private responses remain forbidden in logs. These pages correctly describe candidates and runtime/provider limitations rather than claiming security or privacy compliance. Deployment backups stay on the production host with restrictive permissions.",
+      "reason": "The repair changes only bounded, read-only lexical candidate selection. It adds no external provider calls or persisted query/private-path telemetry, retains prepared MATCH parameters, cancellation and reader command timeouts, and leaves sensitive-data and runtime query categories unchanged. Updated quality/runtime indexes reflect source positions rather than new security controls or exposure; navigation pages continue to distinguish candidates from verified runtime facts.",
       "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:30.3640876Z"
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:22.8716024Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1220,6 +1232,21 @@
       "baseRef": "HEAD",
       "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
       "reviewedAtUtc": "2026-09-20T01:16:32.1703529Z"
+    },
+    {
+      "pageId": "workflow.self-maintenance",
+      "pagePath": ".llm-wiki/workflows/self-maintenance.md",
+      "pageSha256": "cadd8bca273e3bef459485ab3b121062598993e9a4dd7122021bbc670ba74bef",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4932ad931249a57c08eebbf333f63d7488472582dfa439f7c0311da8ce6190b9"
+        }
+      ],
+      "reason": "Reviewed the graph change as confined to searchContext lexical preselection: its existing configured budget now selects one best FTS row per distinct source path before limiting. Ranking policy, typed graph traversal, compiled-index query shapes, source authority and recovery rules remain unchanged. Query-context guidance was updated to describe the exact path budget and deterministic row tie-breaker.",
+      "baseRef": "origin/master",
+      "gitHead": "6dbb9ce2b405ad60c001acad54f9a911753bffd8",
+      "reviewedAtUtc": "2026-10-03T11:27:23.4260108Z"
     }
   ]
 }
