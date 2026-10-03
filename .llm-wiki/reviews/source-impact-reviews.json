@@ -207,18 +207,14 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "6cbbed7a8384a1ee576080716994d6379775944ad49cf202ac577945d4b25d9b"
-        },
-        {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "3a8d8e71926fc6adc993298e76a0f3e2d6d75c5e73ad5a491d122a3fd009011e"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "2d424426220623a205365776ecd76c865fc0363771cb213f44db1512ec7ca32f"
         }
       ],
-      "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:09:58.8255295Z"
+      "reason": "Reviewed the three-line frontend error-summary change against the workflow: last-successful ancestral API baseline and FailOnBreaking remain unchanged. The 20 breaks against e56eecf are still rejected and have not been accepted or waived.",
+      "baseRef": "HEAD",
+      "gitHead": "b29fd6ed46efb4768933ad383bef8272f9269b1f",
+      "reviewedAtUtc": "2026-10-03T19:05:42.7567281Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -656,13 +652,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
+          "sha256": "2d424426220623a205365776ecd76c865fc0363771cb213f44db1512ec7ca32f"
         }
       ],
-      "reason": "Only API baseline validation in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
+      "reason": "Reviewed frontend diagnostics and verification references: 4388 app tests and all configured coverage thresholds pass; all six changed specs pass ESLint and formatting. CI now prefers coverage errors after actual failed-suite/test summaries. YAML parsing and Git Bash syntax checks pass; index stages, regression catalogs, aggregate job requirements and report generation remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
-      "reviewedAtUtc": "2026-09-28T10:29:01.7428625Z"
+      "gitHead": "b29fd6ed46efb4768933ad383bef8272f9269b1f",
+      "reviewedAtUtc": "2026-10-03T19:05:43.3233216Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -893,13 +889,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "20648916f6a14706ab14a214b877e0d49a2ac8c20b1fac73db74e91e115581ba"
+          "sha256": "2d424426220623a205365776ecd76c865fc0363771cb213f44db1512ec7ca32f"
         }
       ],
-      "reason": "Only API baseline validation in ci-tests.yml changed; index generation and review-report behavior remain unchanged.",
+      "reason": "Reviewed frontend diagnostics and verification references: 4388 app tests and all configured coverage thresholds pass; all six changed specs pass ESLint and formatting. CI now prefers coverage errors after actual failed-suite/test summaries. YAML parsing and Git Bash syntax checks pass; index stages, regression catalogs, aggregate job requirements and report generation remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c2886d6ada011ae0accc8fd0b2e39915101e32c4",
-      "reviewedAtUtc": "2026-09-28T10:29:02.6724556Z"
+      "gitHead": "b29fd6ed46efb4768933ad383bef8272f9269b1f",
+      "reviewedAtUtc": "2026-10-03T19:05:43.9763150Z"
     },
     {
       "pageId": "workflow-risk-calibration",

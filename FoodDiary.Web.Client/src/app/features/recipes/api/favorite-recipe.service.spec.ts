@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/c
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
 import { FavoriteRecipeService } from './favorite-recipe.service';
@@ -26,6 +26,42 @@ beforeEach(() => {
 
 afterEach(() => {
     httpMock.verify();
+});
+
+describe('FavoriteRecipeService lookup pagination', () => {
+    it('collects favorites beyond the first lookup page and emits only the complete list', () => {
+        const firstPage = Array.from({ length: 100 }, (_, index) => ({
+            ...createFavoriteRecipe(),
+            id: `favorite-${index.toString()}`,
+            recipeId: `recipe-${index.toString()}`,
+        }));
+        const lastFavorite = { ...createFavoriteRecipe(), id: 'last-favorite', recipeId: 'last-recipe' };
+        const next = vi.fn();
+        service.getLookupPage().subscribe(next);
+
+        httpMock
+            .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '1' && req.params.get('limit') === '100')
+            .flush({ data: firstPage, page: 1, limit: 100, totalPages: 2, totalItems: 101 });
+        expect(next).not.toHaveBeenCalled();
+
+        httpMock
+            .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '2' && req.params.get('limit') === '100')
+            .flush({ data: [lastFavorite], page: 2, limit: 100, totalPages: 2, totalItems: 101 });
+        expect(next).toHaveBeenCalledExactlyOnceWith([...firstPage, lastFavorite]);
+    });
+
+    it('does not expose a partial lookup when a later favorites page fails', () => {
+        const next = vi.fn();
+        service.getLookupPage().subscribe(next);
+        httpMock
+            .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '1')
+            .flush({ data: [createFavoriteRecipe()], page: 1, limit: 100, totalPages: 2, totalItems: 101 });
+        expect(next).not.toHaveBeenCalled();
+        httpMock
+            .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '2')
+            .flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(next).toHaveBeenCalledExactlyOnceWith([]);
+    });
 });
 
 describe('FavoriteRecipeService', () => {

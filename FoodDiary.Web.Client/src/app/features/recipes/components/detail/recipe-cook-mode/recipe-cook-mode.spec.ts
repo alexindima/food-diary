@@ -1,11 +1,47 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { RecipeCookModeComponent } from './recipe-cook-mode';
 
 describe('RecipeCookModeComponent', () => {
+    it('opens the selected step photo with the entire gallery and clears photos when advancing', () => {
+        const recipe = createRecipe();
+        recipe.steps[0].images = [
+            { imageAssetId: 'photo-1', imageUrl: '/first.jpg' },
+            { imageAssetId: 'photo-2', imageUrl: '/second.jpg' },
+        ];
+        const { component, fixture, open } = setupComponent(recipe);
+        const root = fixture.nativeElement as HTMLElement;
+        const photos = root.querySelectorAll<HTMLButtonElement>('.recipe-cook-mode__photo');
+        expect(photos).toHaveLength(2);
+        photos[1].click();
+        expect(open).toHaveBeenCalledExactlyOnceWith(FdUiImagePreviewDialogComponent, {
+            size: 'lg',
+            data: { collageImages: [{ url: '/first.jpg' }, { url: '/second.jpg' }], initialIndex: 1 },
+        });
+        component['nextStep']();
+        fixture.detectChanges();
+        expect(root.querySelectorAll('.recipe-cook-mode__photo')).toHaveLength(0);
+    });
+
+    it('retains the legacy step photo when no gallery was stored', () => {
+        const recipe = createRecipe();
+        recipe.steps[0].images = [];
+        recipe.steps[0].imageUrl = '/legacy.jpg';
+        const { fixture, open } = setupComponent(recipe);
+        const photo = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.recipe-cook-mode__photo');
+        expect(photo?.querySelector('img')?.getAttribute('src')).toBe('/legacy.jpg');
+        photo?.click();
+        expect(open).toHaveBeenCalledExactlyOnceWith(FdUiImagePreviewDialogComponent, {
+            size: 'lg',
+            data: { collageImages: [{ url: '/legacy.jpg' }], initialIndex: 0 },
+        });
+    });
+
     it('steps through recipe instructions', () => {
         const { component, fixture } = setupComponent(createRecipe());
 
@@ -53,17 +89,19 @@ describe('RecipeCookModeComponent', () => {
 function setupComponent(recipe: Recipe): {
     component: RecipeCookModeComponent;
     fixture: ComponentFixture<RecipeCookModeComponent>;
+    open: ReturnType<typeof vi.fn>;
 } {
+    const open = vi.fn();
     TestBed.configureTestingModule({
         imports: [RecipeCookModeComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideTranslateTesting(), { provide: FdUiDialogService, useValue: { open } }],
     });
 
     const fixture = TestBed.createComponent(RecipeCookModeComponent);
     fixture.componentRef.setInput('recipe', recipe);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, fixture };
+    return { component: fixture.componentInstance, fixture, open };
 }
 
 function createRecipe(): Recipe {

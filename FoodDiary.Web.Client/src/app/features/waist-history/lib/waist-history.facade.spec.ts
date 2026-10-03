@@ -607,6 +607,25 @@ describe('Goal validation feedback', () => {
 });
 
 describe('WaistHistoryFacade loading recovery', () => {
+    it('recovers a failed rolling-month refresh without repeating a successful deletion', () => {
+        facade.initialize();
+        TestBed.tick();
+        facade.changeRange('year');
+        TestBed.tick();
+        const entry = facade.entries()[0];
+        const recoveredPoints = [{ startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumferenceCm: 75 }];
+        waistEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Month refresh unavailable')));
+        facade.deleteEntry(entry);
+        expect(waistEntriesService.remove).toHaveBeenCalledExactlyOnceWith(entry.id);
+        expect(facade.pageLoadError()).toBe(true);
+        expect(facade.deleteError()).toBeNull();
+        waistEntriesService.getSummary.mockReturnValueOnce(of(recoveredPoints));
+        facade.retryPageLoad();
+        expect(facade.pageLoadError()).toBe(false);
+        expect(facade.rollingMonthSummaryPoints()).toEqual(recoveredPoints);
+        expect(waistEntriesService.remove).toHaveBeenCalledTimes(1);
+    });
+
     it('recovers initial failure and suppresses duplicate pending retries', () => {
         waistEntriesService.getPageSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
         facade.initialize();
@@ -666,6 +685,20 @@ describe('WaistHistoryFacade pending entry edits', () => {
 });
 
 describe('Waist goal pending draft', () => {
+    it.each([
+        { system: 'metric', draft: '', expected: null },
+        { system: 'metric', draft: 'not-a-number', expected: undefined },
+        { system: 'metric', draft: '0', expected: undefined },
+        { system: 'metric', draft: '301', expected: undefined },
+        { system: 'imperial', draft: '124', expected: undefined },
+        { system: 'imperial', draft: '10', expected: 25.4 },
+    ] as const)('normalizes the defensive $system goal boundary for $draft', ({ system, draft, expected }) => {
+        measurements.setSystem(system);
+        facade.desiredWaistModel.set({ circumference: draft });
+        expect(facade['parseDesiredWaist']()).toBe(expected);
+        expect(userService.updateWaistGoal).not.toHaveBeenCalled();
+    });
+
     it('locks the target until failure and preserves the draft for retry', () => {
         facade.desiredWaistModel.set({ circumference: '70.5' });
         const pending = new Subject<never>();
@@ -673,6 +706,9 @@ describe('Waist goal pending draft', () => {
         facade.saveDesiredWaist();
         TestBed.tick();
         expect(facade.desiredWaistForm.circumference().disabled()).toBe(true);
+        facade.saveDesiredWaist();
+        facade.cancelWaistGoal();
+        expect(userService.updateWaistGoal).toHaveBeenCalledTimes(1);
         pending.error(new Error('Unavailable'));
         TestBed.tick();
         expect(facade.desiredWaistForm.circumference().disabled()).toBe(false);

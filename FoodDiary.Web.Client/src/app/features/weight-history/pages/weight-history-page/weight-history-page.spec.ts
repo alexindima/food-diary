@@ -3,7 +3,7 @@ import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } f
 import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -96,6 +96,45 @@ let context: Awaited<ReturnType<typeof setupAsync>>;
 beforeEach(async () => {
     context = await setupAsync();
 });
+describe('Weight history page retry actions', () => {
+    it('recovers the failed page through its visible retry button', () => {
+        const { fixture, facade } = context;
+        const load = vi.spyOn(TestBed.inject(WeightEntriesService), 'getPageSummary');
+        const initialLoadCount = load.mock.calls.length;
+        load.mockReturnValueOnce(throwError(() => new Error('Page unavailable')));
+        facade.retryPageLoad();
+        fixture.detectChanges();
+        const alert = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('[role="alert"]');
+        expect(alert?.parentElement?.hidden).toBe(false);
+        alert?.parentElement?.querySelector<HTMLButtonElement>('button')?.click();
+        fixture.detectChanges();
+        expect(facade.pageLoadError()).toBe(false);
+        expect(alert?.parentElement?.hidden).toBe(true);
+        expect(load).toHaveBeenCalledTimes(initialLoadCount + 2);
+    });
+
+    it('retries the failed chart from the rendered button without reloading measurements', () => {
+        const { fixture, facade } = context;
+        const service = TestBed.inject(WeightEntriesService);
+        const load = vi.spyOn(service, 'getSummary');
+        const pageLoad = vi.spyOn(service, 'getPageSummary');
+        const entries = facade.entries();
+        const pageLoadCount = pageLoad.mock.calls.length;
+        load.mockReturnValueOnce(throwError(() => new Error('Chart unavailable')));
+        facade.changeRange('week');
+        TestBed.tick();
+        fixture.detectChanges();
+        const banner = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.weight-history-page__chart-section > div');
+        expect(banner?.hidden).toBe(false);
+        banner?.querySelector<HTMLButtonElement>('button')?.click();
+        fixture.detectChanges();
+        expect(facade.summaryLoadError()).toBe(false);
+        expect(banner?.hidden).toBe(true);
+        expect(facade.entries()).toEqual(entries);
+        expect(pageLoad).toHaveBeenCalledTimes(pageLoadCount);
+    });
+});
+
 describe('Weight history page composition', () => {
     it('keeps the history tour target present while entries are deferred', async () => {
         TestBed.resetTestingModule();

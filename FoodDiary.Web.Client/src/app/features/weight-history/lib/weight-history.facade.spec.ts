@@ -674,6 +674,25 @@ describe('Goal validation feedback', () => {
 });
 
 describe('WeightHistoryFacade loading recovery', () => {
+    it('recovers a failed rolling-month refresh without repeating a successful deletion', () => {
+        facade.initialize();
+        TestBed.tick();
+        facade.changeRange('year');
+        TestBed.tick();
+        const entry = facade.entries()[0];
+        const recoveredPoints = [{ startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeightKg: 75 }];
+        weightEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Month refresh unavailable')));
+        facade.deleteEntry(entry);
+        expect(weightEntriesService.remove).toHaveBeenCalledExactlyOnceWith(entry.id);
+        expect(facade.pageLoadError()).toBe(true);
+        expect(facade.deleteError()).toBeNull();
+        weightEntriesService.getSummary.mockReturnValueOnce(of(recoveredPoints));
+        facade.retryPageLoad();
+        expect(facade.pageLoadError()).toBe(false);
+        expect(facade.rollingMonthSummaryPoints()).toEqual(recoveredPoints);
+        expect(weightEntriesService.remove).toHaveBeenCalledTimes(1);
+    });
+
     it('recovers initial failure and suppresses duplicate pending retries', () => {
         weightEntriesService.getPageSummary.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
         facade.initialize();
@@ -740,6 +759,9 @@ describe('Weight goal pending draft', () => {
         facade.saveDesiredWeight();
         TestBed.tick();
         expect(facade.desiredWeightForm.weight().disabled()).toBe(true);
+        facade.saveDesiredWeight();
+        facade.cancelWeightGoal();
+        expect(userService.updateWeightGoal).toHaveBeenCalledTimes(1);
         pending.error(new Error('Unavailable'));
         TestBed.tick();
         expect(facade.desiredWeightForm.weight().disabled()).toBe(false);

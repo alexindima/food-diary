@@ -779,6 +779,9 @@ jobs:
               failure_summary=$(sed -n '/Failed Tests/,$p' "$log_file" | head -n 240 || true)
             fi
             if [ -z "$failure_summary" ]; then
+              failure_summary=$(grep -E '^ERROR: Coverage' "$log_file" || true)
+            fi
+            if [ -z "$failure_summary" ]; then
               failure_summary=$(grep -E -A 20 '(^|[[:space:]])FAIL[[:space:]]|Error:|AssertionError' "$log_file" | head -n 240 || true)
             fi
             if [ -n "$failure_summary" ]; then
