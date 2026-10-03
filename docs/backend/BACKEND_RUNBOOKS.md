@@ -38,7 +38,7 @@ Current deploy sequence in `.github/workflows/deploy.yml`:
 3. Copy the repository `docker-compose.yml` to `/opt/fooddiary/docker-compose.yml`.
 4. Copy `/etc/fooddiary/fooddiary.env` to `/opt/fooddiary/.env`.
 5. Pull compose and direct GHCR images on the server.
-6. Run migrations through `docker compose --profile backend run --rm db-init update`.
+6. Stop the primary database writers (`api`, `telegram-bot`, `job-manager`), create and verify a restricted PostgreSQL backup under `/var/backups/fooddiary`, then run migrations through `docker compose --profile backend run --rm db-init update`. A failed backup restarts the existing containers before any schema change. After migration starts, preserve the backup and fix forward with compatible binaries; do not start old binaries against the split Users schema.
 7. Start `api` through the `backend` profile and `telegram-bot` through the `full` profile.
 8. Publish client static assets from the `client` image into `/var/www/...`.
 

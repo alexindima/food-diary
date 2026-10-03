@@ -22,14 +22,18 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "5426200344d5903cdacc4a110d566064a97bd33544c138eaac405d8526e44c86"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "27ac6dc291bdc38d4e2ca38b9c8ee530e2e20e43501fbd73f5cac16bed089e8d"
         }
       ],
-      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
+      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
       "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:55.7922835Z"
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:24.1496182Z"
     },
     {
       "pageId": "module.frontend",
@@ -139,14 +143,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "e74b85a69c543af29e311f8de1d70fd1e4bdd50e93eaa2b8fa48f9ae1466a2c3"
+          "path": "docs/adr/README.md",
+          "sha256": "e5d9cb3ca7980b2df78621807a7512c52b7be3cfac1ef267b2797af285e63ae1"
         }
       ],
-      "reason": "Removed the obsolete crash-dump runbook because automatic capture is being reverted after a confirmed production crash loop; no application API or schema changes.",
+      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
       "baseRef": "origin/master",
-      "gitHead": "0e815df97bbf90f89ca81deb937ea8e99f7ce02e",
-      "reviewedAtUtc": "2026-09-28T07:18:56.0078495Z"
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:24.9554042Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -203,14 +207,18 @@
       "pageSha256": "7cc11669a5954a46cda4441de015d508411697db3c545525ff0b69d3d919f623",
       "sources": [
         {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "6cbbed7a8384a1ee576080716994d6379775944ad49cf202ac577945d4b25d9b"
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
           "sha256": "9fcf185a42b2f7ccd4b3463dc7d225a63e71017f3fa5145a7c345225f6b348c4"
         }
       ],
-      "reason": "Reviewed actual Swagger schemas and PostgreSQL snapshots: no Users wire shape changes, BirthDateSpecified is JsonIgnore and cannot be bound or exposed. Explicit null now clears, omission preserves. Full snapshot adds only existing RecipeIngredientInput publicName/publicUnit from commit58c0b769b6; no recipe runtime edits. All six HTTP and Swagger tests passed without skips.",
-      "baseRef": "HEAD",
-      "gitHead": "214c9dd9bdfcdbda9638bd1b6c37856aebf08e7e",
-      "reviewedAtUtc": "2026-10-03T03:25:16.9658597Z"
+      "reason": "Verified the workflow remains accurate after the coordinated deployment edit: CI still checks zero-breaking compatibility against the latest successful ancestral push, and deploy still follows successful CI with digest-pinned images. Stopping writers and verifying a host-only backup before migrations implements ADR 0052 without changing HTTP payloads.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:25.8119238Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -220,12 +228,16 @@
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
           "sha256": "9f0e4d0c072f9bbf9fea4b5f4669a081feb97b39c12c4d1e016999e8a4c5b1ae"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "c13c4da524c54d360776ca93f97eaf88a8cbe6abc73667e7a1dc846da224f58b"
         }
       ],
-      "reason": "Reviewed generated architecture deltas from committed c1e5a7716 plus authorized frontend/profile changes. Complete solution build and 2116 architecture tests passed; scoped import restriction fixtures and strict dependency graph checks passed.",
-      "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:23.7803815Z"
+      "reason": "Reviewed the architecture-health workflow against the regenerated index and current ProjectDependencyMatrixTests. Existing dependency and cycle guardrails remain enforced, hotspot/removal entries remain candidates rather than deletion authority, and the current audit executed 2116 architecture tests successfully.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:26.4933619Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +246,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "323f2d0395ea523c560f92c4e9fa8bd270d2a772b772b1030f0d4b0584a10699"
+          "sha256": "6f7e748fc26a8376120b10e94fe99316c7ea88e8ee55caebc5fa3458bd5a6061"
         }
       ],
-      "reason": "Only two existing Admin group DTO test reference counts changed from new PostgreSQL pagination coverage; no request/response shape, route, authorization or snapshot changes. All 267 host integration tests including OpenAPI pass.",
-      "baseRef": "HEAD",
-      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
-      "reviewedAtUtc": "2026-10-03T08:43:41.8312014Z"
+      "reason": "Compared current API snapshots with the deployed origin/master baseline: zero breaking changes and 336 additive entries. The compatibility workflow still separates structural gates from runtime semantics, and current full HTTP PostgreSQL verification passed 267 tests. The regenerated backend index only corrects IWebPushNotificationSender test-fixture referenceCount from one to two; its consumer-review guidance remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:27.6130682Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -452,13 +464,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "dac9f2f93a24e7a2a365c0facadbaa4771790df951dba73f1d3f649d4ed6cab3"
+          "sha256": "e5d9cb3ca7980b2df78621807a7512c52b7be3cfac1ef267b2797af285e63ae1"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
-      "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:49.1077545Z"
+      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:28.1650715Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -776,12 +788,16 @@
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
+        },
+        {
+          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+          "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
         }
       ],
-      "reason": "This bounded change clears the authenticated user profile image through the existing authorized PATCH and post-save asset cleanup. No new health fields, credential handling, provider sharing, logs, caches or export surfaces. Native evidence used a dedicated loopback database and a synthetic account; its own unlinked test asset was deleted successfully. Credentials and confirmation tokens stayed outside the repository and output.",
-      "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:21:07.4340517Z"
+      "reason": "Reviewed the navigation pages against the refreshed sensitive-data, quality and runtime indexes and PERSONAL_DATA_LIFECYCLE changes for preferences, nutrition and atomic receipts. Account-owned tables cascade, receipts have explicit transactional purge and bounded expiry, and raw keys/private responses remain forbidden in logs. These pages correctly describe candidates and runtime/provider limitations rather than claiming security or privacy compliance. Deployment backups stay on the production host with restrictive permissions.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:29.6200223Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -909,14 +925,22 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "e1d2e2185e184d9708494466aac8afef72debc8e9a95511a052f4807c6d403f2"
+        },
+        {
           "path": ".llm-wiki/generated/runtime-topology.json",
           "sha256": "630375106ca89deda4f2c234ebc0ffbd9016849c048aa1570cea131591ba401d"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "1b2bb8804f6fe69fb99e1388654ae972f696a15233738466108775f48f2989fe"
         }
       ],
-      "reason": "Reviewed exact two-source patch: no changes to credentials, authorization, privacy, HTTP exposure or outbound integrations. Admin guards unchanged; new test uses existing test-auth factory against PostgreSQL. Live verification confined to own loopback database, local temporary test claims and synthetic advice fixtures, which were removed.",
-      "baseRef": "HEAD",
-      "gitHead": "0b1e09550200a2778ee2386980c11fc6be7f26b8",
-      "reviewedAtUtc": "2026-10-03T08:43:43.1135660Z"
+      "reason": "Reviewed the navigation pages against the refreshed sensitive-data, quality and runtime indexes and PERSONAL_DATA_LIFECYCLE changes for preferences, nutrition and atomic receipts. Account-owned tables cascade, receipts have explicit transactional purge and bounded expiry, and raw keys/private responses remain forbidden in logs. These pages correctly describe candidates and runtime/provider limitations rather than claiming security or privacy compliance. Deployment backups stay on the production host with restrictive permissions.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:30.3640876Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1058,12 +1082,16 @@
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
           "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "74d4482668b69123f9a98a1302a94c37ef9214718038bf4d695e9a5df316e240"
         }
       ],
-      "reason": "Verified current sources for the profile image selector, UpdateUserDto, PATCH request presence tracking, HTTP mapping, UpdateUserCommand/handler, UserProfileMediaUpdate and User.Profile domain application. The reproduced defect was omission of cleared fields plus premature selector deletion. The focused fix is supported by 589 Users tests, 23 HTTP/Swagger tests, 2116 architecture tests and native profile evidence.",
-      "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:21:09.056485Z"
+      "reason": "Reviewed the trace workflow against current frontend feature routes and compiled contracts after published composition boundaries. The documented bounded traversal, explicit missing/stale failures, source confirmation and distinction between navigation evidence and runtime proof remain accurate; this release preparation does not change trace implementations.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:31.1085934Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1152,12 +1180,16 @@
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
           "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
         }
       ],
-      "reason": "The existing profile image selector now stages removal until profile Save. Discard sends no DELETE and restores the saved image; Save serializes both image fields as null. Existing selected-image and omitted-field payloads have regression tests. Native mobile Russian flows verified upload/crop/save, removal/discard and removal/save/reload; 5052 frontend tests and all verification gates passed.",
-      "baseRef": "HEAD",
-      "gitHead": "7682c21997addcae5343fceb5857926d22660f89",
-      "reviewedAtUtc": "2026-10-03T07:21:06.6730817Z"
+      "reason": "Reviewed the component/API/translation discovery workflow against the refreshed frontend contract index and the new scoped AGENTS requirement for explicit cross-feature contracts with composition-bound implementations. Consumer-aware public inputs/outputs, transient provider credentials, locale pairs, keyboard and error-state guidance remain valid; the completed local frontend verification passed 5052 tests and rendered native audit evidence is retained.",
+      "baseRef": "origin/master",
+      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
+      "reviewedAtUtc": "2026-10-03T11:03:28.8848734Z"
     },
     {
       "pageId": "workflow.query-context",

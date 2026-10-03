@@ -586,6 +586,23 @@ jobs:
 
           docker compose --profile backend --profile full --profile mail-inbox pull
 
+          # The Users split migration requires a coordinated release of every primary DB writer.
+          backup_dir=/var/backups/fooddiary
+          install -d -m 0700 "$backup_dir"
+          backup_file="$backup_dir/predeploy-$(date -u +%Y%m%dT%H%M%SZ)-${DEPLOY_COMMIT_SHA}-main.dump"
+          docker compose --profile backend --profile full stop --timeout 60 api telegram-bot job-manager
+          if ! (
+            umask 077
+            docker compose exec -T postgres sh -c 'exec pg_dump --format=custom --username "$POSTGRES_USER" "$POSTGRES_DB"' < /dev/null > "$backup_file" &&
+              test -s "$backup_file" &&
+              docker compose exec -T postgres pg_restore --list < "$backup_file" > /dev/null
+          ); then
+            echo "Pre-migration backup failed; restarting the existing writers without changing the schema."
+            docker compose --profile backend --profile full start api telegram-bot job-manager
+            exit 1
+          fi
+          echo "Verified pre-migration database backup: $backup_file"
+
           docker compose --profile backend run -T --rm db-init update
           docker compose --profile backend run -T --rm mailrelay-db-init update
           docker compose --profile mail-inbox up -d mailinbox-postgres
