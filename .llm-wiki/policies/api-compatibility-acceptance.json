@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "coordinated-client-release-2026-10-04",
+  "baseCommit": "e56eecfb10580aa7ab0263bb61f7d5bd0014fc78",
+  "decision": "The user explicitly confirmed on 2026-10-04 that all clients can be updated simultaneously; accept these exact 20 reviewed contract changes.",
+  "clientRollout": "Deploy the current web and admin assets with the API. Update every supported mobile and external client to paginated routes/responses and cookie-based refresh before using the new contract. Preserve the CI-gated deployment and predeploy database backup.",
+  "snapshots": [
+    {
+      "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+      "beforeSha256": "46202a6508afae8afe554b3da37922a703391634986581ff6242c8302635396e",
+      "afterSha256": "3a8d8e71926fc6adc993298e76a0f3e2d6d75c5e73ad5a491d122a3fd009011e"
+    },
+    {
+      "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json",
+      "beforeSha256": "266e1d772d0e6665401c663fcfb5d6f2fb3a1aa53af5d2adcc89ec41909c6ac8",
+      "afterSha256": "2f37d821749936e58911be83f811ae9527d3e3393e3b24c47aa5781482bcaced"
+    }
+  ],
+  "acceptedChanges": [
+    {
+      "kind": "changed-parameter",
+      "location": "GET /api/v{version}/admin/mail-inbox/messages/page::query.Limit",
+      "description": "Parameter shape changed from '{\"type\":\"integer\",\"format\":\"int32\",\"default\":\"50\",\"minimum\":1,\"maximum\":200}' to '{\"type\":\"integer\",\"format\":\"int32\",\"default\":\"50\",\"minimum\":1,\"maximum\":100}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-parameter",
+      "location": "GET /api/v{version}/admin/mail-inbox/messages/page::query.Page",
+      "description": "Parameter shape changed from '{\"type\":\"integer\",\"format\":\"int32\",\"default\":\"1\",\"minimum\":1,\"maximum\":2147483647}' to '{\"type\":\"integer\",\"format\":\"int32\",\"default\":\"1\",\"minimum\":1,\"maximum\":10000}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-parameter",
+      "location": "GET /api/v{version}/dashboard::query.PageSize",
+      "description": "Public API parameter was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-parameter",
+      "location": "GET /api/v{version}/dietologist/clients/{clientuserid}/dashboard::query.PageSize",
+      "description": "Public API parameter was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-operation",
+      "location": "GET /api/v{version}/favorite-meals",
+      "description": "Public API operation was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-operation",
+      "location": "GET /api/v{version}/favorite-products",
+      "description": "Public API operation was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-operation",
+      "location": "GET /api/v{version}/favorite-recipes",
+      "description": "Public API operation was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-parameter",
+      "location": "GET /api/v{version}/lessons::query.PageSize",
+      "description": "Public API parameter was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/meal-plans::response.200::application/json",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/MealPlanSummaryHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/meal-plans::response.200::text/json",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/MealPlanSummaryHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/meal-plans::response.200::text/plain",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/MealPlanSummaryHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/MealPlanSummaryHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/recommendations/{recommendationid}/comments::response.200::application/json",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/RecommendationCommentHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/recommendations/{recommendationid}/comments::response.200::text/json",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/RecommendationCommentHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-response-schema",
+      "location": "GET /api/v{version}/recommendations/{recommendationid}/comments::response.200::text/plain",
+      "description": "Schema shape changed from '{\"type\":\"array\",\"nullable\":false,\"items\":\"{\\\"$ref\\\":\\\"#/components/schemas/RecommendationCommentHttpResponse\\\"}\"}' to '{\"$ref\":\"#/components/schemas/RecommendationCommentHttpResponsePagedHttpResponse\",\"nullable\":false}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-operation",
+      "location": "GET /api/v{version}/shopping-lists",
+      "description": "Public API operation was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-path",
+      "location": "/api/v{version}/users/waist-goals",
+      "description": "Public API path was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-parameter",
+      "location": "GET /api/v{version}/users/waist-goals/page::query.Cursor",
+      "description": "Parameter shape changed from '{\"type\":\"string\"}' to '{\"type\":\"string\",\"maxLength\":128}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-path",
+      "location": "/api/v{version}/users/weight-goals",
+      "description": "Public API path was removed.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "changed-parameter",
+      "location": "GET /api/v{version}/users/weight-goals/page::query.Cursor",
+      "description": "Parameter shape changed from '{\"type\":\"string\"}' to '{\"type\":\"string\",\"maxLength\":128}'.",
+      "dimension": "structural"
+    },
+    {
+      "kind": "removed-schema-property",
+      "location": "AuthenticationHttpResponse.refreshToken",
+      "description": "Schema property was removed.",
+      "dimension": "structural"
+    }
+  ]
+}

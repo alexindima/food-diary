@@ -13,6 +13,8 @@ sources:
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
   - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
+  - .llm-wiki/tools/LlmWikiApiAcceptance.ps1
+  - .llm-wiki/policies/api-compatibility-acceptance.json
 ---
 
 # Review API compatibility
@@ -34,6 +36,25 @@ restore an older response shape while still checking every change since the last
 accepted contract. If no successful ancestral run is available, CI retains the
 ordinary comparison base. Pull requests continue to compare with their target
 branch. The general Wiki change scope still uses the immediate push base.
+
+An explicitly approved coordinated client release may record its reviewed
+transition in `policies/api-compatibility-acceptance.json`. This is an exact
+acceptance record, not a new baseline: it names the original base commit,
+normalized SHA-256 fingerprints of both the old and new OpenAPI and payload
+snapshots, and every accepted change's kind, location, description and dimension.
+The report retains the full `breakingCount` and separately reports accepted and
+unaccepted breaks. `-FailOnBreaking` still rejects every unaccepted break. A
+different baseline, either changed snapshot, changed identity, missing payload
+or stale change list cannot inherit the acceptance; malformed records fail closed.
+Synthetic comparisons never load a repository release decision.
+
+The 2026-10-04 release records the user's explicit confirmation that every client
+can be updated with the API. Its 20 accepted breaks cover bounded pagination,
+retired collection routes and refresh-token transport through HttpOnly cookies.
+Deploy the current web/admin clients with the API and update every supported
+mobile or external client before it uses this contract. Older client compatibility
+is not promised by this release decision. The normal successful ancestral CI
+baseline takes over after release; later incompatible changes require a new review.
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. Property presence determines the format, so a

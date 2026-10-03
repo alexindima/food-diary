@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $tool = Join-Path $PSScriptRoot 'Test-LlmWikiApiCompatibility.ps1'
+. (Join-Path $PSScriptRoot 'LlmWikiApiAcceptance.ps1')
 
 function Assert-ApiCompatibility([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
@@ -165,4 +166,67 @@ Assert-ApiCompatibility ($toolText -match "'Modules/\*/Presentation/\*\*/\*\.cs'
 Assert-ApiCompatibility ($toolText -match "@\('Presentation', 'Presentation\.Contracts'\)") 'API compatibility does not discover unstaged module-owned Presentation DTOs from physical module roots.'
 Assert-ApiCompatibility ($toolText -match "notmatch '\[\\\\/\]\(\?:bin\|obj\)\[\\\\/\]'") 'API compatibility does not exclude generated module Presentation sources.'
 Assert-ApiCompatibility ($toolText -match 'Pair only exact-content delete/add candidates') 'API compatibility does not conservatively pair exact unstaged DTO moves.'
-Write-Host 'LLM Wiki API compatibility regression passed: request, response, parameter, moved DTO, and behavioral contracts are compared.'
+$approvalBase = '0123456789012345678901234567890123456789'
+$approvalChange = [pscustomobject]@{
+    kind = 'removed-operation'; location = 'GET /example'; description = 'Public API operation was removed.'; dimension = 'structural'
+}
+$approvalSnapshots = @(
+    [pscustomobject]@{ path = 'openapi.json'; beforeContent = '{"old":true}'; afterContent = '{"new":true}' }
+    [pscustomobject]@{ path = 'payload.json'; beforeContent = '{}'; afterContent = '{}' }
+)
+$approval = [pscustomobject]@{
+    schemaVersion = 1; id = 'synthetic-coordinated-release'; baseCommit = $approvalBase
+    decision = 'All clients may be updated together.'; clientRollout = 'Deploy every supported client with the API.'
+    snapshots = @($approvalSnapshots | ForEach-Object {
+        [pscustomobject]@{
+            path = $_.path
+            beforeSha256 = Get-LlmWikiApiContractFingerprint $_.beforeContent
+            afterSha256 = Get-LlmWikiApiContractFingerprint $_.afterContent
+        }
+    })
+    acceptedChanges = @($approvalChange)
+}
+$approvalArguments = @{ Manifest = $approval; BaseCommit = $approvalBase; Snapshots = $approvalSnapshots; BreakingChanges = @($approvalChange) }
+$accepted = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility ($accepted.status -eq 'applied' -and @($accepted.acceptedChanges).Count -eq 1 -and @($accepted.unacceptedChanges).Count -eq 0) 'The exact approved transition was not accepted.'
+$noApproval = Get-LlmWikiApiAcceptance -BreakingChanges @($approvalChange)
+Assert-ApiCompatibility (@($noApproval.unacceptedChanges).Count -eq 1) 'A missing release decision accepted a breaking change.'
+$approvalArguments.BaseCommit = 'ffffffffffffffffffffffffffffffffffffffff'
+$wrongBase = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility (@($wrongBase.acceptedChanges).Count -eq 0) 'A release decision accepted another baseline.'
+$approvalArguments.BaseCommit = $approvalBase
+$changedSnapshots = @($approvalSnapshots | ForEach-Object {
+    [pscustomobject]@{ path = $_.path; beforeContent = $_.beforeContent; afterContent = $_.afterContent }
+})
+$changedSnapshots[0].afterContent = '{"other":true}'
+$approvalArguments.Snapshots = $changedSnapshots
+$wrongFingerprint = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility ($wrongFingerprint.status -eq 'fingerprint-mismatch' -and @($wrongFingerprint.acceptedChanges).Count -eq 0) 'Unreviewed snapshot bytes inherited approval.'
+$approvalArguments.Snapshots = @($approvalSnapshots[0])
+$missingPayload = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility (@($missingPayload.acceptedChanges).Count -eq 0) 'Omitting the payload snapshot inherited approval.'
+$approvalArguments.Snapshots = $approvalSnapshots
+$approvalArguments.Snapshots = @($approvalSnapshots[0], $approvalSnapshots[0])
+$duplicateSnapshot = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility (@($duplicateSnapshot.acceptedChanges).Count -eq 0) 'Duplicate OpenAPI snapshots bypassed the payload fingerprint.'
+$approvalArguments.Snapshots = $approvalSnapshots
+$extraChange = [pscustomobject]@{
+    kind = 'removed-operation'; location = 'GET /other'; description = 'Public API operation was removed.'; dimension = 'structural'
+}
+$approvalArguments.BreakingChanges = @($approvalChange, $extraChange)
+$additionalBreak = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility (@($additionalBreak.acceptedChanges).Count -eq 1 -and @($additionalBreak.unacceptedChanges).Count -eq 1) 'An additional break inherited the release decision.'
+$modifiedChange = [pscustomobject]@{
+    kind = $approvalChange.kind; location = $approvalChange.location; description = 'A different contract change.'; dimension = 'structural'
+}
+$approvalArguments.BreakingChanges = @($modifiedChange)
+$modifiedBreak = Get-LlmWikiApiAcceptance @approvalArguments
+Assert-ApiCompatibility (@($modifiedBreak.acceptedChanges).Count -eq 0) 'Approval ignored the exact change description.'
+$invalidApproval = $approval | ConvertTo-Json -Depth 8 | ConvertFrom-Json
+$invalidApproval.acceptedChanges = @($approvalChange, $approvalChange)
+$invalidRejected = $false
+try { Get-LlmWikiApiAcceptance -Manifest $invalidApproval -BaseCommit $approvalBase -Snapshots $approvalSnapshots -BreakingChanges @($approvalChange) | Out-Null } catch { $invalidRejected = $true }
+Assert-ApiCompatibility $invalidRejected 'Duplicate approval identities were accepted.'
+Assert-ApiCompatibility ((Get-LlmWikiApiContractFingerprint "{}`r`n") -eq (Get-LlmWikiApiContractFingerprint "{}`n")) 'Windows and Linux line endings produced different fingerprints.'
+Assert-ApiCompatibility ($restriction.acceptedBreakingCount -eq 0) 'Synthetic comparisons inherited a repository release decision.'
+Write-Host 'LLM Wiki API compatibility regression passed: contract comparisons and exact release acceptance reject unapproved changes.'

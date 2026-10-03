@@ -93,6 +93,30 @@ if ($apiDimension.status -ne 'fail' -or @($apiDimension.issues).Count -ne 1) {
     throw 'Release readiness did not normalize a legacy API result without breakingChanges.'
 }
 
+$acceptedApiResult = [pscustomobject]@{
+    breakingCount = 1; acceptedBreakingCount = 1; unacceptedBreakingCount = 0
+    additiveCount = 0; breakingChanges = @($legacyApiResult.changes); changes = @($legacyApiResult.changes)
+}
+$readinessArguments = @{
+    PacketInput = $legacyApiPacket
+    ManifestPath = '.artifacts/llm-wiki/nonexistent-legacy-manifest.json'
+    AcceptancePath = '.artifacts/llm-wiki/nonexistent-legacy-acceptance.json'
+    EvidencePath = '.artifacts/llm-wiki/nonexistent-legacy-evidence.json'
+    Format = 'Json'
+}
+$acceptedReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') @readinessArguments -ApiCompatibilityInput $acceptedApiResult | ConvertFrom-Json
+$acceptedDimension = @($acceptedReadiness.dimensions | Where-Object id -eq 'api-compatibility')[0]
+if ($acceptedDimension.status -ne 'pass' -or @($acceptedDimension.issues).Count -ne 1 -or
+    $acceptedDimension.summary -notmatch 'explicitly accepted') {
+    throw 'Release readiness did not retain the approved breaking change and coordinated-release decision.'
+}
+$acceptedApiResult.breakingCount = 2
+$acceptedApiResult.unacceptedBreakingCount = 1
+$additionalReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') @readinessArguments -ApiCompatibilityInput $acceptedApiResult | ConvertFrom-Json
+if (@($additionalReadiness.dimensions | Where-Object id -eq 'api-compatibility')[0].status -ne 'fail') {
+    throw 'An accepted transition concealed an additional unaccepted API break in release readiness.'
+}
+
 $behavioralApiResult = [pscustomobject]@{
     breakingCount = 0
     additiveCount = 0

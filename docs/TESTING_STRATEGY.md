@@ -155,6 +155,17 @@ If backend HTTP routes, payloads, status codes, OpenAPI output, or Swagger-visib
 
 Presentation or host changes may require both presentation tests and integration snapshots.
 
+CI compares API contracts with the last successful ancestral CI push. Failed
+runs do not advance that baseline. An explicitly approved coordinated client
+upgrade may record its exact transition in
+`.llm-wiki/policies/api-compatibility-acceptance.json`: the base commit, before/after
+fingerprints of both contract snapshots, and complete accepted change identities.
+The guard still reports all breaking changes and fails on every unaccepted one;
+changed fingerprints, another baseline or stale identities cannot reuse approval.
+Synthetic comparisons do not load the record. Update all supported clients with
+the API for an accepted transition. See the Wiki API compatibility workflow for
+the release-specific decision and rollout obligations.
+
 ## Migration Tests And Safety
 
 For EF Core migrations:

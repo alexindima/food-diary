@@ -371,6 +371,7 @@
 button.nutrient-badges__chip--quality {
     position: relative;
     z-index: 2;
+    min-block-size: var(--fd-size-control-xxs);
     appearance: none;
     border: none;
     font-family: inherit;

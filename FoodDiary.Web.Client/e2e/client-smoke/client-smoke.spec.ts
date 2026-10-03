@@ -2,6 +2,10 @@ const PRODUCT_NUTRIENT_FIELD_COUNT = 6;
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, type Request, type Route, test } from '@playwright/test';
 
+import type { ShoppingListOverview } from '../../src/app/shared/models/shopping-list.data';
+import type { WaistHistoryPageSummary } from '../../src/app/shared/models/waist-entry.data';
+import type { WeightHistoryPageSummary } from '../../src/app/shared/models/weight-entry.data';
+
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
@@ -75,8 +79,8 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/recipes/public'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/recipes/public/categories'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/favorite-recipes'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/shopping-lists'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/shopping-lists/overview'), createResponse: createShoppingListsOverview },
     { matches: pathname => pathname.endsWith('/lessons'), createResponse: () => [] },
     { matches: pathname => pathname.endsWith('/statistics/summary'), createResponse: () => ({ nutrition: [], weight: [], waist: [] }) },
     { matches: pathname => pathname.endsWith('/weight-entries/page-summary'), createResponse: createWeightHistoryPageSummary },
@@ -240,7 +244,7 @@ test.describe('authenticated accessibility', () => {
         { name: 'desktop', width: 1440, height: 900 },
         { name: 'mobile', width: 390, height: 844 },
     ] as const) {
-        test(`has no detectable WCAG A/AA violations on ${viewport.name} routes`, async ({ page }) => {
+        test(`has no detectable WCAG A/AA violations on ${viewport.name} routes`, async ({ page }, testInfo) => {
             test.setTimeout(ACCESSIBILITY_TEST_TIMEOUT_MS);
             const runtimeErrors: string[] = [];
             page.on('pageerror', error => runtimeErrors.push(error.message));
@@ -270,6 +274,15 @@ test.describe('authenticated accessibility', () => {
 
                 expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);
                 expect.soft(runtimeErrors, `Runtime errors on ${route} (${viewport.name})`).toEqual([]);
+                if (route === '/products') {
+                    const quality = page.getByRole('button', { name: 'Healthiness', exact: true }).first();
+                    await quality.click();
+                    await expect(quality).toHaveAttribute('aria-expanded', 'true');
+                    await expect(page.locator('.nutrient-badges__explanation').first()).toBeVisible();
+                    await quality.click();
+                    await expect(quality).toHaveAttribute('aria-expanded', 'false');
+                    await page.screenshot({ path: testInfo.outputPath(`products-${viewport.name}.png`) });
+                }
                 runtimeErrors.length = 0;
             }
         });
@@ -399,10 +412,14 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
     await page.addStyleTag({ content: ACCESSIBILITY_STABILITY_CSS });
     await page.evaluate(async () => {
         await new Promise<void>(resolve => {
-            requestAnimationFrame(resolve);
+            requestAnimationFrame(() => {
+                resolve();
+            });
         });
         await new Promise<void>(resolve => {
-            requestAnimationFrame(resolve);
+            requestAnimationFrame(() => {
+                resolve();
+            });
         });
     });
 }
@@ -868,7 +885,7 @@ test.describe('dashboard regression writes', () => {
 
     test('applying a calculated goal updates the target without opening the details dialog', async ({ page }) => {
         const snapshot = createDashboardRegressionSnapshot();
-        const insight = { ...createTdeeInsight(), suggestedCalorieTarget: 2100 };
+        const insight: Record<string, unknown> = { ...createTdeeInsight(), suggestedCalorieTarget: 2100 };
         snapshot['tdeeInsight'] = insight;
         const requests: unknown[] = [];
         await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
@@ -1181,22 +1198,26 @@ function createFastingOverview(): Record<string, unknown> {
     };
 }
 
-function createWeightHistoryPageSummary(): Record<string, unknown> {
+function createShoppingListsOverview(): ShoppingListOverview {
+    return { selectedList: null, lists: { items: [], hasMore: false, nextPage: null } };
+}
+
+function createWeightHistoryPageSummary(): WeightHistoryPageSummary {
     return {
         entries: [],
         summary: [],
-        height: 175,
-        goal: { desiredWeight: null, startWeight: null, startedAtUtc: null },
+        heightCm: 175,
+        goal: { desiredWeightKg: null, startWeightKg: null, startedAtUtc: null },
         goalHistory: [],
     };
 }
 
-function createWaistHistoryPageSummary(): Record<string, unknown> {
+function createWaistHistoryPageSummary(): WaistHistoryPageSummary {
     return {
         entries: [],
         summary: [],
-        height: 175,
-        goal: { desiredWaist: null, startWaist: null, startedAtUtc: null },
+        heightCm: 175,
+        goal: { desiredWaistCm: null, startWaistCm: null, startedAtUtc: null },
         goalHistory: [],
     };
 }
@@ -1758,9 +1779,9 @@ async function editMealAmountAsync(page: Page, amount: string): Promise<void> {
     await page.getByRole('button', { name: /Edit manual item/ }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('spinbutton', { name: 'Amount' }).fill('0');
-    await expect(dialog.getByRole('button', { name: 'Save item', exact: true })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: 'Add to meal', exact: true })).toBeDisabled();
     await dialog.getByRole('spinbutton', { name: 'Amount' }).fill(amount);
-    await dialog.getByRole('button', { name: 'Save item', exact: true }).click();
+    await dialog.getByRole('button', { name: 'Add to meal', exact: true }).click();
     await expect(dialog).toHaveCount(0);
 }
 
@@ -1905,6 +1926,13 @@ function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favo
     return { recipe, favorite };
 }
 
+async function mockRecipeDetailAsync(page: Page, recipe: Record<string, unknown>): Promise<void> {
+    await page.route(
+        url => url.pathname === '/api/v1/recipes/recipe-1',
+        async route => route.fulfill({ json: recipe }),
+    );
+}
+
 test.describe('recipe redesign regression', () => {
     for (const width of MEAL_DIALOG_VIEWPORTS) {
         test(`recipe summary, cooking, photos and favorite undo at ${width}px`, async ({ page }, testInfo) => {
@@ -1926,7 +1954,7 @@ test.describe('recipe redesign regression', () => {
                     },
                 }),
             );
-            await page.route('**/api/v1/recipes/recipe-1', async route => route.fulfill({ json: recipe }));
+            await mockRecipeDetailAsync(page, recipe);
             await page.route('**/api/v1/favorite-recipes**', async route => {
                 const url = new URL(route.request().url());
                 if (url.pathname.endsWith('/page')) {

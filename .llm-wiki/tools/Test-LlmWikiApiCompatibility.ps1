@@ -20,6 +20,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absoluteSnapshotPath = Join-Path $repositoryRoot $SnapshotPath
 $absolutePayloadSnapshotPath = Join-Path $repositoryRoot $PayloadSnapshotPath
+. (Join-Path $PSScriptRoot 'LlmWikiApiAcceptance.ps1')
 
 function Get-Properties {
     param($Object)
@@ -783,6 +784,29 @@ if ($compareHttpDtos) {
 $breakingChanges = @($changes | Where-Object severity -eq 'breaking')
 $additiveChanges = @($changes | Where-Object severity -eq 'additive')
 $behavioralRestrictions = @($changes | Where-Object severity -eq 'behavioral-restriction')
+$acceptanceManifest = $null
+$acceptanceSnapshots = @()
+$baseCommit = ''
+# Synthetic comparisons never inherit a repository release decision.
+if (-not $PSBoundParameters.ContainsKey('BaseSnapshotContent') -and
+    -not $PSBoundParameters.ContainsKey('CurrentSnapshotContent') -and
+    -not $PSBoundParameters.ContainsKey('BasePayloadSnapshotContent') -and
+    -not $PSBoundParameters.ContainsKey('CurrentPayloadSnapshotContent') -and
+    -not $PSBoundParameters.ContainsKey('BaseHttpDtoContent') -and
+    -not $PSBoundParameters.ContainsKey('CurrentHttpDtoContent')) {
+    $acceptancePath = Join-Path $wikiRoot 'policies/api-compatibility-acceptance.json'
+    if (Test-Path -LiteralPath $acceptancePath -PathType Leaf) {
+        $acceptanceManifest = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
+        $baseCommit = [string](git -C $repositoryRoot rev-parse --verify "${BaseRef}^{commit}")
+        if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the API acceptance baseline commit.' }
+        $acceptanceSnapshots = @(
+            [pscustomobject]@{ path = $SnapshotPath; beforeContent = $baseText; afterContent = $currentText }
+            [pscustomobject]@{ path = $PayloadSnapshotPath; beforeContent = $basePayloadText; afterContent = $currentPayloadText }
+        )
+    }
+}
+$acceptance = Get-LlmWikiApiAcceptance -Manifest $acceptanceManifest -BaseCommit $baseCommit `
+    -Snapshots $acceptanceSnapshots -BreakingChanges $breakingChanges
 $result = [pscustomobject]@{
     baseRef = $BaseRef
     snapshotPath = $SnapshotPath
@@ -790,6 +814,9 @@ $result = [pscustomobject]@{
     snapshotFormat = $snapshotFormat
     httpDtoPaths = @($httpDtoPaths)
     breakingCount = $breakingChanges.Count
+    acceptedBreakingCount = @($acceptance.acceptedChanges).Count
+    unacceptedBreakingCount = @($acceptance.unacceptedChanges).Count
+    acceptance = $acceptance
     additiveCount = $additiveChanges.Count
     behavioralRestrictionCount = $behavioralRestrictions.Count
     breakingChanges = $breakingChanges
@@ -809,12 +836,12 @@ $result = [pscustomobject]@{
 if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 8
 } else {
-    Write-Host "API compatibility: $($result.breakingCount) structural breaking, $($result.additiveCount) structural additive, $($result.behavioralRestrictionCount) behavioral restriction(s)."
+    Write-Host "API compatibility: $($result.breakingCount) structural breaking ($($result.acceptedBreakingCount) explicitly accepted, $($result.unacceptedBreakingCount) unaccepted), $($result.additiveCount) structural additive, $($result.behavioralRestrictionCount) behavioral restriction(s)."
     foreach ($change in $changes) {
         Write-Host " - [$($change.severity)] $($change.kind): $($change.location) - $($change.description)"
     }
 }
 
-if ($FailOnBreaking -and $result.breakingCount -gt 0) {
+if ($FailOnBreaking -and $result.unacceptedBreakingCount -gt 0) {
     exit 1
 }

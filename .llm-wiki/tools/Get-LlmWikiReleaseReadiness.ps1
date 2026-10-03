@@ -102,24 +102,31 @@ if (-not $apiScope) {
     } else {
         & (Join-Path $PSScriptRoot 'Test-LlmWikiApiCompatibility.ps1') @apiArguments | ConvertFrom-Json
     }
-    $breakingChanges = if ($api.PSObject.Properties['breakingChanges']) {
+    $breakingChanges = @(if ($api.PSObject.Properties['breakingChanges']) {
         @($api.breakingChanges)
     } elseif ($api.PSObject.Properties['changes']) {
         @($api.changes | Where-Object severity -eq 'breaking')
     } else {
         @()
-    }
-    $behavioralRestrictions = if ($api.PSObject.Properties['behavioralRestrictions']) {
+    })
+    $behavioralRestrictions = @(if ($api.PSObject.Properties['behavioralRestrictions']) {
         @($api.behavioralRestrictions)
     } elseif ($api.PSObject.Properties['changes']) {
         @($api.changes | Where-Object severity -eq 'behavioral-restriction')
     } else {
         @()
+    })
+    $unacceptedBreakingCount = if ($api.PSObject.Properties['unacceptedBreakingCount']) {
+        [int]$api.unacceptedBreakingCount
+    } else {
+        [int]$api.breakingCount
     }
-    if ($api.breakingCount -gt 0) {
-        Add-Dimension 'api-compatibility' 15 'fail' "$($api.breakingCount) breaking API change(s) detected." $breakingChanges
+    if ($unacceptedBreakingCount -gt 0) {
+        Add-Dimension 'api-compatibility' 15 'fail' "$unacceptedBreakingCount unaccepted breaking API change(s) detected." $breakingChanges
     } elseif ((Get-ItemCount $behavioralRestrictions) -gt 0) {
         Add-Dimension 'api-compatibility' 15 'warning' "$(Get-ItemCount $behavioralRestrictions) behavioral API restriction(s) require explicit review; no schema-breaking change was detected." $behavioralRestrictions
+    } elseif ($api.PSObject.Properties['acceptedBreakingCount'] -and $api.acceptedBreakingCount -gt 0) {
+        Add-Dimension 'api-compatibility' 15 'pass' "$($api.acceptedBreakingCount) breaking API change(s) explicitly accepted for the exact coordinated client release." $breakingChanges
     } else {
         Add-Dimension 'api-compatibility' 15 'pass' 'No breaking API snapshot change was detected.'
     }

@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5795,
-    "wikiToolFiles": 206,
+    "productionFiles": 5796,
+    "wikiToolFiles": 207,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 983,
-    "criticalSymbolsWithTestReferences": 941,
+    "criticalSymbols": 984,
+    "criticalSymbolsWithTestReferences": 942,
     "criticalSymbolsWithoutTestReferences": 42,
     "debtMarkers": 12
   },
@@ -1330,11 +1330,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-      "nonBlankLines": 278,
-      "decisionPoints": 42,
+      "nonBlankLines": 285,
+      "decisionPoints": 44,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.56
+      "structuralRiskScore": 73.7
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
@@ -1615,6 +1615,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 24.14
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiApiAcceptance.ps1",
+      "nonBlankLines": 92,
+      "decisionPoints": 18,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 30.84
     },
     {
       "path": ".llm-wiki/tools/LlmWikiApplicationModulePaths.ps1",
@@ -58456,6 +58464,19 @@
       "testReferenceCount": 1,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiApiAcceptance",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiApiAcceptance.ps1",
+      "line": 1,
+      "testReferenceCount": 2,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
