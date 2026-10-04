@@ -123,6 +123,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var hidden = Recipe.Create(owner.Id, prefix + "-Private", 1, prepTime: 1, visibility: Visibility.Private);
         context.Users.Add(owner);
         context.Recipes.AddRange(slow, fast, tied, unknown, hidden);
+        // PostgreSQL stores microseconds; explicit dates avoid accidental ties from real-time creation.
+        context.Entry(slow).Property(recipe => recipe.CreatedOnUtc).CurrentValue = FixedNow;
+        context.Entry(fast).Property(recipe => recipe.CreatedOnUtc).CurrentValue = FixedNow.AddMinutes(1);
+        context.Entry(tied).Property(recipe => recipe.CreatedOnUtc).CurrentValue = FixedNow.AddMinutes(1);
+        context.Entry(unknown).Property(recipe => recipe.CreatedOnUtc).CurrentValue = FixedNow.AddMinutes(2);
         await context.SaveChangesAsync();
         var reader = new RecipeOverviewReadService(context);
         Recipe[] knownFast = [fast, tied];
@@ -138,7 +143,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal(new[] { slow.Id, tied.Id, unknown.Id, fast.Id }, names.Select(item => item.Id));
         (IReadOnlyList<RecipeOverviewReadItem> newest, _) = await reader.GetPagedAsync(UserId.Empty, includePublic: true, 1, 20, filters with { SortBy = "newest" });
         Recipe[] visible = [slow, fast, tied, unknown];
-        Assert.Equal(visible.OrderByDescending(recipe => recipe.CreatedOnUtc).ThenBy(recipe => recipe.Id.Value).Select(recipe => recipe.Id), newest.Select(item => item.Id));
+        Assert.Equal(visible.OrderByDescending(recipe => recipe.CreatedOnUtc)
+            .ThenBy(recipe => recipe.Id.Value.ToString("N"), StringComparer.Ordinal)
+            .Select(recipe => recipe.Id), newest.Select(item => item.Id));
     }
 
     [RequiresDockerFact]
